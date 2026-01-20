@@ -113,7 +113,7 @@ const Root: FC<CardRootProps> = ({
       onFocus={handleFocus}
       tabIndex={-1}
       role="option"
-      aria-label={ariaLabel}
+      aria-label={ariaLabel ?? `Card ${(index ?? 0) + 1}`}
       aria-selected={isSelected}
     >
       {children}
