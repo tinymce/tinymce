@@ -230,9 +230,9 @@ const assertTableStructureWithSizes = (
       ]
     };
 
-    const headHeaderCols = Arr.range(cols, () => s.element('th', colFields));
+    const headerRowCols = Arr.range(cols, () => s.element('th', colFields));
 
-    const colChildren = [
+    const bodyRowCols = [
       ...Arr.range(options.headerCols, () => s.element('th', colFields)),
       ...Arr.range(cols - options.headerCols, () => s.element('td', colFields))
     ];
@@ -241,21 +241,23 @@ const assertTableStructureWithSizes = (
       ? [ s.element('thead', {
         children: Arr.range(options.headerRows, () =>
           s.element('tr', {
-            children: (headerType === 'section') ? colChildren : headHeaderCols
+            children: (headerType === 'section') ? bodyRowCols : headerRowCols
           })
         )
       }) ]
       : [];
 
-    const bodyRows = Arr.range((headerType === 'cells')
-      ? rows
-      : rows - options.headerRows, (rowIndex) => s.element('tr', {
-      children: (headerType === 'cells') && (rowIndex < options.headerRows) ? headHeaderCols : colChildren
+    const bodyRowsWithHeaderRows = Arr.range(rows, (rowIndex) => s.element('tr', {
+      children: rowIndex < options.headerRows ? headerRowCols : bodyRowCols
+    }));
+
+    const bodyRows = Arr.range(rows - options.headerRows, () => s.element('tr', {
+      children: bodyRowCols
     }));
 
     const tableBody = (headerType !== 'cells' && options.headerRows < rows) || (headerType === 'cells')
       ? [ s.element('tbody', {
-        children: bodyRows
+        children: headerType === 'cells' ? bodyRowsWithHeaderRows : bodyRows
       }) ]
       : [];
 
