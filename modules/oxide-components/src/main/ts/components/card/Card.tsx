@@ -1,5 +1,5 @@
 import { Type } from '@ephox/katamari';
-import { useCallback, useEffect, type FC, type PropsWithChildren } from 'react';
+import { useCallback, type FC, type PropsWithChildren } from 'react';
 
 import * as Bem from '../../utils/Bem';
 
@@ -40,7 +40,7 @@ export interface CardHighlightProps extends PropsWithChildren {
 /**
  * Card Root component.
  * Container for a card with support for selection states.
- * Can be used standalone or within a CardList for keyboard navigation.
+ * Must be used within a CardList for proper keyboard navigation.
  */
 const Root: FC<CardRootProps> = ({
   children,
@@ -53,15 +53,8 @@ const Root: FC<CardRootProps> = ({
 }) => {
   const listContext = useCardListContext();
 
-  const isFocused = listContext
-    ? listContext.focusedIndex === index
-    : selected;
-
-  useEffect(() => {
-    if (listContext && index !== undefined && isFocused) {
-      listContext.setFocusedIndex(index);
-    }
-  }, [ listContext, index, isFocused ]);
+  const isFocused = listContext?.focusedIndex === index;
+  const isSelected = listContext?.selectedIndex === index;
 
   const handleClick = useCallback((e: React.MouseEvent) => {
     const target = e.target as HTMLElement;
@@ -83,6 +76,8 @@ const Root: FC<CardRootProps> = ({
   }, [ onSelect, listContext, index ]);
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    // Keyboard activation is handled by CardList's useFlowKeyNavigation
+    // Only need to check for interactive child elements
     if (e.key !== 'Enter' && e.key !== ' ') {
       return;
     }
@@ -97,12 +92,7 @@ const Root: FC<CardRootProps> = ({
         return;
       }
     }
-
-    if (!listContext && isFocused) {
-      e.preventDefault();
-      onSelect?.();
-    }
-  }, [ onSelect, listContext, isFocused ]);
+  }, []);
 
   const handleFocus = useCallback(() => {
     if (listContext && index !== undefined) {
@@ -110,19 +100,10 @@ const Root: FC<CardRootProps> = ({
     }
   }, [ listContext, index ]);
 
-  const isSelected = listContext
-    ? (listContext.selectedIndex === index)
-    : selected;
-
   const cardClassName = Bem.block('tox-card', {
-    'selected': listContext ? isFocused : selected,
+    'selected': isFocused || selected,
     'has-decision': hasDecision
   }) + (Type.isNonNullable(className) ? ` ${className}` : '');
-
-  const role = listContext ? 'option' : 'button';
-  const ariaAttribute = listContext
-    ? { 'aria-selected': isSelected }
-    : { 'aria-pressed': selected };
 
   return (
     <div
@@ -130,10 +111,10 @@ const Root: FC<CardRootProps> = ({
       onClick={handleClick}
       onKeyDown={handleKeyDown}
       onFocus={handleFocus}
-      tabIndex={isFocused ? 0 : -1}
-      role={role}
-      aria-label={ariaLabel ?? 'Card'}
-      {...ariaAttribute}
+      tabIndex={-1}
+      role="option"
+      aria-label={ariaLabel}
+      aria-selected={isSelected}
     >
       {children}
     </div>

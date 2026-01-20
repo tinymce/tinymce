@@ -52,7 +52,7 @@ export interface CardListProps extends PropsWithChildren {
 /**
  * CardList component for managing a collection of cards with keyboard navigation.
  *
- * Implements roving tabindex pattern and provides arrow key navigation between cards.
+ * Provides arrow key navigation between cards. Focus is managed programmatically.
  * Follows WCAG accessibility guidelines for listbox pattern.
  *
  * @example
