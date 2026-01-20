@@ -1,35 +1,36 @@
-import { Direction, SugarElement } from '@ephox/sugar';
-
 import type Editor from 'tinymce/core/api/Editor';
 import type { NodeChangeEvent } from 'tinymce/core/api/EventTypes';
 import type { Toolbar } from 'tinymce/core/api/ui/Ui';
 import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
-const getNodeChangeHandler = (editor: Editor, dir: 'ltr' | 'rtl') => (api: Toolbar.ToolbarToggleButtonInstanceApi) => {
-  const nodeChangeHandler = (e: EditorEvent<NodeChangeEvent>) => {
-    const element = SugarElement.fromDom(e.element);
-    api.setActive(Direction.getDirection(element) === dir);
-    api.setEnabled(editor.selection.isEditable());
-  };
-  editor.on('NodeChange', nodeChangeHandler);
-  api.setEnabled(editor.selection.isEditable());
-
-  return () => editor.off('NodeChange', nodeChangeHandler);
-};
-
 const register = (editor: Editor): void => {
+  const setupHandler = (dir: 'ltr' | 'rtl') => (api: Toolbar.ToolbarToggleButtonInstanceApi) => {
+    const nodeChangeHandler = (e: EditorEvent<NodeChangeEvent>) => {
+      const block = editor.dom.isBlock(e.element) ? e.element : editor.dom.getParent(e.element, editor.dom.isBlock);
+      if (block) {
+        const direction = editor.dom.getStyle(block, 'direction') || editor.dom.getAttrib(block, 'dir');
+        api.setActive(direction === dir);
+      }
+    };
+
+    editor.on('NodeChange', nodeChangeHandler);
+    return () => editor.off('NodeChange', nodeChangeHandler);
+  };
+
   editor.ui.registry.addToggleButton('ltr', {
     tooltip: 'Left to right',
     icon: 'ltr',
+    context: 'editable',
     onAction: () => editor.execCommand('mceDirectionLTR'),
-    onSetup: getNodeChangeHandler(editor, 'ltr')
+    onSetup: setupHandler('ltr'),
   });
 
   editor.ui.registry.addToggleButton('rtl', {
     tooltip: 'Right to left',
     icon: 'rtl',
+    context: 'editable',
     onAction: () => editor.execCommand('mceDirectionRTL'),
-    onSetup: getNodeChangeHandler(editor, 'rtl')
+    onSetup: setupHandler('rtl')
   });
 };
 
