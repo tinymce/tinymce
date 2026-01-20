@@ -12,6 +12,7 @@ import { TinyAssertions, TinyContentActions, TinyDom, TinySelections } from '@ep
 import { assert } from 'chai';
 
 import type Editor from 'tinymce/core/api/Editor';
+import type { TableHeaderType } from 'tinymce/models/dom/table/api/Options';
 
 interface Options {
   readonly headerRows: number;
@@ -186,7 +187,8 @@ const assertTableStructureWithSizes = (
   tableWidth: number | null,
   widths: Array<number | null>[],
   useColGroups: boolean,
-  options: Options = { headerRows: 0, headerCols: 0 }
+  options: Options = { headerRows: 0, headerCols: 0 },
+  headerType: TableHeaderType = 'section'
 ): void => {
   const tableWithColGroup = () => {
     const table = editor.dom.select('table')[0];
@@ -210,42 +212,67 @@ const assertTableStructureWithSizes = (
     });
   };
 
-  const structure = () => assertTableStructure(editor, ApproxStructure.build((s, str) => {
-    const tbody = s.element('tbody', {
-      children: Arr.range(rows, (rowIndex) =>
-        s.element('tr', {
-          children: Arr.range(cols, (colIndex) =>
-            s.element(colIndex < options.headerCols || rowIndex < options.headerRows ? 'th' : 'td', {
-              children: [
-                s.either([
-                  s.element('br', { }),
-                  s.text(str.contains('Cell'))
-                ])
-              ]
-            })
-          )
-        })
-      )
-    });
+  assertTableStructure(editor, ApproxStructure.build((s, str) => {
+    const colGroup = useColGroups
+      ? [ s.element('colgroup', {
+        children: Arr.range(cols, () =>
+          s.element('col', {})
+        )
+      }) ]
+      : [];
 
-    const colGroup = s.element('colgroup', {
-      children: Arr.range(cols, () =>
-        s.element('col', {})
-      )
-    });
+    const colFields = {
+      children: [
+        s.either([
+          s.element('br', { }),
+          s.text(str.contains('Cell'))
+        ])
+      ]
+    };
+
+    const headHeaderCols = Arr.range(cols, () => s.element('th', colFields));
+
+    const colChildren = [
+      ...Arr.range(options.headerCols, () => s.element('th', colFields)),
+      ...Arr.range(cols - options.headerCols, () => s.element('td', colFields))
+    ];
+
+    const tableHead = (headerType !== 'cells') && options.headerRows > 0
+      ? [ s.element('thead', {
+        children: Arr.range(options.headerRows, () =>
+          s.element('tr', {
+            children: (headerType === 'section') ? colChildren : headHeaderCols
+          })
+        )
+      }) ]
+      : [];
+
+    const bodyRows = Arr.range((headerType === 'cells')
+      ? rows
+      : rows - options.headerRows, (rowIndex) => s.element('tr', {
+      children: (headerType === 'cells') && (rowIndex < options.headerRows) ? headHeaderCols : colChildren
+    }));
+
+    const tableBody = (headerType !== 'cells' && options.headerRows < rows) || (headerType === 'cells')
+      ? [ s.element('tbody', {
+        children: bodyRows
+      }) ]
+      : [];
 
     return s.element('table', {
       attrs: { border: str.is('1') },
       styles: { 'border-collapse': str.is('collapse') },
-      children: useColGroups ? [ colGroup, tbody ] : [ tbody ]
+      children: [
+        ...colGroup,
+        ...tableHead,
+        ...tableBody
+      ]
     });
   }));
 
   if (useColGroups) {
-    structure();
     tableWithColGroup();
   } else {
-    structure();
     tableWithoutColGroup();
   }
 };
