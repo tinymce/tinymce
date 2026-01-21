@@ -91,7 +91,7 @@ describe('browser.components.CardTest', () => {
   describe('State Tests', () => {
     it('TINY-13459: Should apply selected CSS class when card is focused in list', async () => {
       const { container } = render(
-        <Card.CardList focusedIndex={0}>
+        <Card.CardList defaultFocusedIndex={0}>
           <Card.Root index={0}>
             <Card.Body>Content</Card.Body>
           </Card.Root>
@@ -105,7 +105,7 @@ describe('browser.components.CardTest', () => {
 
     it('TINY-13459: Should not apply selected CSS class when card is not focused', async () => {
       const { container } = render(
-        <Card.CardList focusedIndex={1}>
+        <Card.CardList defaultFocusedIndex={1}>
           <Card.Root index={0}>
             <Card.Body>Content</Card.Body>
           </Card.Root>
@@ -165,7 +165,7 @@ describe('browser.components.CardTest', () => {
   describe('Accessibility Tests - Card Component', () => {
     it('TINY-13459: Cards should always have tabIndex -1 (roving tabindex managed by CardList)', async () => {
       const { container } = render(
-        <Card.CardList focusedIndex={0}>
+        <Card.CardList defaultFocusedIndex={0}>
           <Card.Root index={0}>
             <Card.Body>Content</Card.Body>
           </Card.Root>
@@ -193,7 +193,7 @@ describe('browser.components.CardTest', () => {
 
     it('TINY-13459: Cards should have aria-selected attribute when in list', async () => {
       const { container } = render(
-        <Card.CardList selectedIndex={0}>
+        <Card.CardList defaultSelectedIndex={0}>
           <Card.Root index={0}>
             <Card.Body>Content</Card.Body>
           </Card.Root>
@@ -249,7 +249,7 @@ describe('browser.components.CardTest', () => {
 
     it('TINY-13459: Cards in list should have aria-selected attribute', async () => {
       const { container } = render(
-        <Card.CardList selectedIndex={0}>
+        <Card.CardList defaultSelectedIndex={0}>
           <Card.Root index={0}>
             <Card.Body>Card 1</Card.Body>
           </Card.Root>
@@ -287,16 +287,19 @@ describe('browser.components.CardTest', () => {
       expect(cards[2].className).not.toContain('tox-card--selected');
     });
 
-    it('TINY-13459: Should update focused card styling when focusedIndex changes', async () => {
+    it('TINY-13459: Should update focused card styling when focusedIndex changes (controlled)', async () => {
+      const onFocusedIndexChange = vi.fn();
       const { container, rerender } = render(
-        <Card.CardList focusedIndex={0}>
-          <Card.Root index={0}>
-            <Card.Body>Card 1</Card.Body>
-          </Card.Root>
-          <Card.Root index={1}>
-            <Card.Body>Card 2</Card.Body>
-          </Card.Root>
-        </Card.CardList>,
+        <Card.CardListController focusedIndex={0} onFocusedIndexChange={onFocusedIndexChange}>
+          <Card.CardList>
+            <Card.Root index={0}>
+              <Card.Body>Card 1</Card.Body>
+            </Card.Root>
+            <Card.Root index={1}>
+              <Card.Body>Card 2</Card.Body>
+            </Card.Root>
+          </Card.CardList>
+        </Card.CardListController>,
         { wrapper }
       );
 
@@ -305,14 +308,16 @@ describe('browser.components.CardTest', () => {
       expect(cards[1].className).not.toContain('tox-card--selected');
 
       rerender(
-        <Card.CardList focusedIndex={1}>
-          <Card.Root index={0}>
-            <Card.Body>Card 1</Card.Body>
-          </Card.Root>
-          <Card.Root index={1}>
-            <Card.Body>Card 2</Card.Body>
-          </Card.Root>
-        </Card.CardList>
+        <Card.CardListController focusedIndex={1} onFocusedIndexChange={onFocusedIndexChange}>
+          <Card.CardList>
+            <Card.Root index={0}>
+              <Card.Body>Card 1</Card.Body>
+            </Card.Root>
+            <Card.Root index={1}>
+              <Card.Body>Card 2</Card.Body>
+            </Card.Root>
+          </Card.CardList>
+        </Card.CardListController>
       );
 
       cards = container.querySelectorAll('.tox-card') as NodeListOf<HTMLElement>;
@@ -322,20 +327,22 @@ describe('browser.components.CardTest', () => {
   });
 
   describe('Keyboard Navigation Tests', () => {
-    it('TINY-13459: Should navigate between cards with arrow keys', async () => {
+    it('TINY-13459: Should navigate between cards with arrow keys (controlled)', async () => {
       const onFocusedIndexChange = vi.fn();
       const { container } = render(
-        <Card.CardList focusedIndex={0} onFocusedIndexChange={onFocusedIndexChange}>
-          <Card.Root index={0}>
-            <Card.Body>Card 1</Card.Body>
-          </Card.Root>
-          <Card.Root index={1}>
-            <Card.Body>Card 2</Card.Body>
-          </Card.Root>
-          <Card.Root index={2}>
-            <Card.Body>Card 3</Card.Body>
-          </Card.Root>
-        </Card.CardList>,
+        <Card.CardListController focusedIndex={0} onFocusedIndexChange={onFocusedIndexChange}>
+          <Card.CardList>
+            <Card.Root index={0}>
+              <Card.Body>Card 1</Card.Body>
+            </Card.Root>
+            <Card.Root index={1}>
+              <Card.Body>Card 2</Card.Body>
+            </Card.Root>
+            <Card.Root index={2}>
+              <Card.Body>Card 3</Card.Body>
+            </Card.Root>
+          </Card.CardList>
+        </Card.CardListController>,
         { wrapper }
       );
 
@@ -368,7 +375,7 @@ describe('browser.components.CardTest', () => {
     it('TINY-13459: Should call onSelectCard when Enter is pressed on focused card', async () => {
       const onSelectCard = vi.fn();
       const { container } = render(
-        <Card.CardList focusedIndex={1} onSelectCard={onSelectCard}>
+        <Card.CardList defaultFocusedIndex={1} onSelectCard={onSelectCard}>
           <Card.Root index={0}>
             <Card.Body>Card 1</Card.Body>
           </Card.Root>
@@ -576,7 +583,7 @@ describe('browser.components.CardTest', () => {
   describe('Snapshot Tests', () => {
     it('TINY-13459: Should match snapshot for focused card in list', async () => {
       const { asFragment } = render(
-        <Card.CardList focusedIndex={0}>
+        <Card.CardList defaultFocusedIndex={0}>
           <Card.Root index={0}>
             <Card.Header>Test Header</Card.Header>
             <Card.Body>Test content</Card.Body>
@@ -594,7 +601,7 @@ describe('browser.components.CardTest', () => {
 
     it('TINY-13459: Should match snapshot for selected card in list', async () => {
       const { asFragment } = render(
-        <Card.CardList selectedIndex={0} focusedIndex={0}>
+        <Card.CardList defaultFocusedIndex={0} defaultSelectedIndex={0}>
           <Card.Root index={0}>
             <Card.Header>Selected Card</Card.Header>
             <Card.Body>Selected content</Card.Body>
@@ -612,7 +619,7 @@ describe('browser.components.CardTest', () => {
 
     it('TINY-13459: Should match snapshot for CardList', async () => {
       const { asFragment } = render(
-        <Card.CardList focusedIndex={0} selectedIndex={1} ariaLabel="Review suggestions">
+        <Card.CardList defaultFocusedIndex={0} defaultSelectedIndex={1} ariaLabel="Review suggestions">
           <Card.Root index={0}>
             <Card.Header>First Card</Card.Header>
             <Card.Body>First content</Card.Body>

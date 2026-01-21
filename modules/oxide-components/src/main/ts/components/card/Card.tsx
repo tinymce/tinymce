@@ -185,5 +185,5 @@ export {
   Highlight
 };
 
-export { CardList } from './CardList';
+export { CardList, CardListController } from './CardList';
 export type { CardLayout, CardHighlightType } from './CardTypes';
