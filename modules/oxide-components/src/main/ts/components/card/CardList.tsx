@@ -1,4 +1,4 @@
-import { Optional } from '@ephox/katamari';
+import { Optional, Type } from '@ephox/katamari';
 import { useCallback, useMemo, useRef, useState, type FC, type PropsWithChildren } from 'react';
 
 import * as KeyboardNavigationHooks from '../../keynav/KeyboardNavigationHooks';
@@ -200,7 +200,7 @@ export const CardList: FC<CardListProps> = ({
     }
   });
 
-  const listClassName = Bem.block('tox-card-list') + (className ? ` ${className}` : '');
+  const listClassName = Bem.block('tox-card-list') + (Type.isNonNullable(className) ? ` ${className}` : '');
 
   return (
     <CardListContext.Provider value={contextValue}>
