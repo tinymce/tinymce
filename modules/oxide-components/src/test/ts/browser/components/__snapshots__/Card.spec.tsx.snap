@@ -11,11 +11,11 @@ exports[`browser.components.CardTest > Snapshot Tests > TINY-13459: Should match
       role="listbox"
     >
       <div
-        aria-label="Card"
+        aria-label="Card 1"
         aria-selected="false"
         class="tox-card tox-card--selected"
         role="option"
-        tabindex="0"
+        tabindex="-1"
       >
         <div
           class="tox-card__header"
@@ -45,7 +45,7 @@ exports[`browser.components.CardTest > Snapshot Tests > TINY-13459: Should match
         </div>
       </div>
       <div
-        aria-label="Card"
+        aria-label="Card 2"
         aria-selected="true"
         class="tox-card"
         role="option"
@@ -83,86 +83,98 @@ exports[`browser.components.CardTest > Snapshot Tests > TINY-13459: Should match
 </DocumentFragment>
 `;
 
-exports[`browser.components.CardTest > Snapshot Tests > TINY-13459: Should match snapshot for default card > Default card 1`] = `
+exports[`browser.components.CardTest > Snapshot Tests > TINY-13459: Should match snapshot for focused card in list > Focused card 1`] = `
 <DocumentFragment>
   <div
     class="tox"
   >
     <div
-      aria-label="Card"
-      aria-pressed="false"
-      class="tox-card"
-      role="button"
-      tabindex="-1"
+      aria-label="Card list"
+      class="tox-card-list"
+      role="listbox"
     >
       <div
-        class="tox-card__header"
+        aria-label="Card 1"
+        aria-selected="false"
+        class="tox-card tox-card--selected"
+        role="option"
+        tabindex="-1"
       >
-        Test Header
-      </div>
-      <div
-        class="tox-card__body"
-      >
-        Test content
-      </div>
-      <div
-        class="tox-card__actions tox-card__actions--flex-start"
-      >
-        <button
-          class="tox-button tox-button--secondary--outline "
-          type="button"
+        <div
+          class="tox-card__header"
         >
-          Skip
-        </button>
-        <button
-          class="tox-button tox-button--secondary--outline "
-          type="button"
+          Test Header
+        </div>
+        <div
+          class="tox-card__body"
         >
-          Apply
-        </button>
+          Test content
+        </div>
+        <div
+          class="tox-card__actions tox-card__actions--flex-start"
+        >
+          <button
+            class="tox-button tox-button--secondary--outline "
+            type="button"
+          >
+            Skip
+          </button>
+          <button
+            class="tox-button tox-button--secondary--outline "
+            type="button"
+          >
+            Apply
+          </button>
+        </div>
       </div>
     </div>
   </div>
 </DocumentFragment>
 `;
 
-exports[`browser.components.CardTest > Snapshot Tests > TINY-13459: Should match snapshot for selected card > Selected card 1`] = `
+exports[`browser.components.CardTest > Snapshot Tests > TINY-13459: Should match snapshot for selected card in list > Selected card 1`] = `
 <DocumentFragment>
   <div
     class="tox"
   >
     <div
-      aria-label="Card"
-      aria-pressed="true"
-      class="tox-card tox-card--selected"
-      role="button"
-      tabindex="0"
+      aria-label="Card list"
+      class="tox-card-list"
+      role="listbox"
     >
       <div
-        class="tox-card__header"
+        aria-label="Card 1"
+        aria-selected="true"
+        class="tox-card tox-card--selected"
+        role="option"
+        tabindex="-1"
       >
-        Selected Card
-      </div>
-      <div
-        class="tox-card__body"
-      >
-        Selected content
-      </div>
-      <div
-        class="tox-card__actions tox-card__actions--flex-start"
-      >
-        <button
-          class="tox-button tox-button--secondary--outline "
-          type="button"
+        <div
+          class="tox-card__header"
         >
-          Skip
-        </button>
-        <button
-          class="tox-button tox-button--secondary--outline "
-          type="button"
+          Selected Card
+        </div>
+        <div
+          class="tox-card__body"
         >
-          Apply
-        </button>
+          Selected content
+        </div>
+        <div
+          class="tox-card__actions tox-card__actions--flex-start"
+        >
+          <button
+            class="tox-button tox-button--secondary--outline "
+            type="button"
+          >
+            Skip
+          </button>
+          <button
+            class="tox-button tox-button--secondary--outline "
+            type="button"
+          >
+            Apply
+          </button>
+        </div>
       </div>
     </div>
   </div>
