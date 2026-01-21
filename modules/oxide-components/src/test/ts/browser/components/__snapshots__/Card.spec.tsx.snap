@@ -1,0 +1,182 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`browser.components.CardTest > Snapshot Tests > TINY-13459: Should match snapshot for CardList > CardList with multiple cards 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      aria-label="Review suggestions"
+      class="tox-card-list"
+      role="listbox"
+    >
+      <div
+        aria-label="Card 1"
+        aria-selected="false"
+        class="tox-card tox-card--selected"
+        role="option"
+        tabindex="-1"
+      >
+        <div
+          class="tox-card__header"
+        >
+          First Card
+        </div>
+        <div
+          class="tox-card__body"
+        >
+          First content
+        </div>
+        <div
+          class="tox-card__actions tox-card__actions--flex-start"
+        >
+          <button
+            class="tox-button tox-button--secondary--outline "
+            type="button"
+          >
+            Skip
+          </button>
+          <button
+            class="tox-button tox-button--secondary--outline "
+            type="button"
+          >
+            Apply
+          </button>
+        </div>
+      </div>
+      <div
+        aria-label="Card 2"
+        aria-selected="true"
+        class="tox-card"
+        role="option"
+        tabindex="-1"
+      >
+        <div
+          class="tox-card__header"
+        >
+          Second Card
+        </div>
+        <div
+          class="tox-card__body"
+        >
+          Second content
+        </div>
+        <div
+          class="tox-card__actions tox-card__actions--flex-start"
+        >
+          <button
+            class="tox-button tox-button--secondary--outline "
+            type="button"
+          >
+            Skip
+          </button>
+          <button
+            class="tox-button tox-button--secondary--outline "
+            type="button"
+          >
+            Apply
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.components.CardTest > Snapshot Tests > TINY-13459: Should match snapshot for focused card in list > Focused card 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      aria-label="Card list"
+      class="tox-card-list"
+      role="listbox"
+    >
+      <div
+        aria-label="Card 1"
+        aria-selected="false"
+        class="tox-card tox-card--selected"
+        role="option"
+        tabindex="-1"
+      >
+        <div
+          class="tox-card__header"
+        >
+          Test Header
+        </div>
+        <div
+          class="tox-card__body"
+        >
+          Test content
+        </div>
+        <div
+          class="tox-card__actions tox-card__actions--flex-start"
+        >
+          <button
+            class="tox-button tox-button--secondary--outline "
+            type="button"
+          >
+            Skip
+          </button>
+          <button
+            class="tox-button tox-button--secondary--outline "
+            type="button"
+          >
+            Apply
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.components.CardTest > Snapshot Tests > TINY-13459: Should match snapshot for selected card in list > Selected card 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      aria-label="Card list"
+      class="tox-card-list"
+      role="listbox"
+    >
+      <div
+        aria-label="Card 1"
+        aria-selected="true"
+        class="tox-card tox-card--selected"
+        role="option"
+        tabindex="-1"
+      >
+        <div
+          class="tox-card__header"
+        >
+          Selected Card
+        </div>
+        <div
+          class="tox-card__body"
+        >
+          Selected content
+        </div>
+        <div
+          class="tox-card__actions tox-card__actions--flex-start"
+        >
+          <button
+            class="tox-button tox-button--secondary--outline "
+            type="button"
+          >
+            Skip
+          </button>
+          <button
+            class="tox-button tox-button--secondary--outline "
+            type="button"
+          >
+            Apply
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
