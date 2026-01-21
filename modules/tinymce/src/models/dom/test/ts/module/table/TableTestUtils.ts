@@ -212,6 +212,8 @@ const assertTableStructureWithSizes = (
     });
   };
 
+  // In header types 'sectionCells' and 'cells', every cell in a header row is `th`.
+  // In header types 'sectionCells' and 'section', every header row is in the `thead`.
   assertTableStructure(editor, ApproxStructure.build((s, str) => {
     const colGroup = useColGroups
       ? [ s.element('colgroup', {
