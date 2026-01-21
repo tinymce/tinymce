@@ -239,64 +239,68 @@ Demonstrates the visual states of cards with status labels:
     }
   },
   render: () => {
+    const [ focusedIndex, setFocusedIndex ] = useState(0);
     const [ selectedIndex, setSelectedIndex ] = useState<number | undefined>(undefined);
 
     return (
       <div style={{ width: '316px' }}>
-        <Card.CardList
-          ariaLabel="Review suggestions with different states"
+        <Card.CardListController
+          focusedIndex={focusedIndex}
+          onFocusedIndexChange={setFocusedIndex}
           selectedIndex={selectedIndex}
           onSelectCard={setSelectedIndex}
         >
-          <Card.Root index={0}>
-            <Card.Header>
-              Review Suggestion
-            </Card.Header>
-            <Card.Body>
-              <p style={{ margin: 0 }}>This card has no status yet.</p>
-            </Card.Body>
-            <Card.Actions>
-              <Button variant="outlined" onClick={(e) => e.stopPropagation()}>
-                <Icon icon="close" />
-                Skip
-              </Button>
-              <Button variant="outlined" onClick={(e) => e.stopPropagation()}>
-                <Icon icon="checkmark" />
-                Apply
-              </Button>
-            </Card.Actions>
-          </Card.Root>
+          <Card.CardList ariaLabel="Review suggestions with different states">
+            <Card.Root index={0}>
+              <Card.Header>
+                Review Suggestion
+              </Card.Header>
+              <Card.Body>
+                <p style={{ margin: 0 }}>This card has no status yet.</p>
+              </Card.Body>
+              <Card.Actions>
+                <Button variant="outlined" onClick={(e) => e.stopPropagation()}>
+                  <Icon icon="close" />
+                  Skip
+                </Button>
+                <Button variant="outlined" onClick={(e) => e.stopPropagation()}>
+                  <Icon icon="checkmark" />
+                  Apply
+                </Button>
+              </Card.Actions>
+            </Card.Root>
 
-          <Card.Root index={1} hasDecision={true}>
-            <Card.Header>
-              <div className={Bem.element('tox-card', 'header-label')}>Applied</div>
-            </Card.Header>
-            <Card.Body>
-              <p style={{ margin: 0 }}>This suggestion has been applied.</p>
-            </Card.Body>
-            <Card.Actions>
-              <Button variant="outlined" onClick={(e) => e.stopPropagation()}>
-                <Icon icon="close" />
-                Revert
-              </Button>
-            </Card.Actions>
-          </Card.Root>
+            <Card.Root index={1} hasDecision={true}>
+              <Card.Header>
+                <div className={Bem.element('tox-card', 'header-label')}>Applied</div>
+              </Card.Header>
+              <Card.Body>
+                <p style={{ margin: 0 }}>This suggestion has been applied.</p>
+              </Card.Body>
+              <Card.Actions>
+                <Button variant="outlined" onClick={(e) => e.stopPropagation()}>
+                  <Icon icon="close" />
+                  Revert
+                </Button>
+              </Card.Actions>
+            </Card.Root>
 
-          <Card.Root index={2} hasDecision={true}>
-            <Card.Header>
-              <div className={Bem.element('tox-card', 'header-label')}>Skipped</div>
-            </Card.Header>
-            <Card.Body>
-              <p style={{ margin: 0 }}>This suggestion has been skipped.</p>
-            </Card.Body>
-            <Card.Actions>
-              <Button variant="outlined" onClick={(e) => e.stopPropagation()}>
-                <Icon icon="close" />
-                Revert
-              </Button>
-            </Card.Actions>
-          </Card.Root>
-        </Card.CardList>
+            <Card.Root index={2} hasDecision={true}>
+              <Card.Header>
+                <div className={Bem.element('tox-card', 'header-label')}>Skipped</div>
+              </Card.Header>
+              <Card.Body>
+                <p style={{ margin: 0 }}>This suggestion has been skipped.</p>
+              </Card.Body>
+              <Card.Actions>
+                <Button variant="outlined" onClick={(e) => e.stopPropagation()}>
+                  <Icon icon="close" />
+                  Revert
+                </Button>
+              </Card.Actions>
+            </Card.Root>
+          </Card.CardList>
+        </Card.CardListController>
       </div>
     );
   }
@@ -323,6 +327,7 @@ This simulates how cards would appear in a sidebar-style UI with full keyboard s
     }
   },
   render: () => {
+    const [ focusedIndex, setFocusedIndex ] = useState(0);
     const [ selectedIndex, setSelectedIndex ] = useState<number | undefined>(undefined);
 
     const reviews = [
@@ -344,36 +349,39 @@ This simulates how cards would appear in a sidebar-style UI with full keyboard s
           borderRadius: '6px'
         }}
       >
-        <Card.CardList
-          ariaLabel="Review suggestions"
+        <Card.CardListController
+          focusedIndex={focusedIndex}
+          onFocusedIndexChange={setFocusedIndex}
           selectedIndex={selectedIndex}
           onSelectCard={setSelectedIndex}
         >
-          {reviews.map((review, index) => (
-            <Card.Root key={review.id} index={index}>
-              <Card.Header title={review.title} />
-              <Card.Body>
-                <p style={{ margin: 0, fontSize: '14px' }}>{review.content}</p>
-              </Card.Body>
-              <Card.Actions>
-                <Button variant="outlined" onClick={(e) => {
-                  e.stopPropagation();
-                  setSelectedIndex(undefined);
-                }}>
-                  <Icon icon="close" />
-                  Skip
-                </Button>
-                <Button variant="outlined" onClick={(e) => {
-                  e.stopPropagation();
-                  setSelectedIndex(index);
-                }}>
-                  <Icon icon="checkmark" />
-                  Apply
-                </Button>
-              </Card.Actions>
-            </Card.Root>
-          ))}
-        </Card.CardList>
+          <Card.CardList ariaLabel="Review suggestions">
+            {reviews.map((review, index) => (
+              <Card.Root key={review.id} index={index}>
+                <Card.Header title={review.title} />
+                <Card.Body>
+                  <p style={{ margin: 0, fontSize: '14px' }}>{review.content}</p>
+                </Card.Body>
+                <Card.Actions>
+                  <Button variant="outlined" onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedIndex(undefined);
+                  }}>
+                    <Icon icon="close" />
+                    Skip
+                  </Button>
+                  <Button variant="outlined" onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedIndex(index);
+                  }}>
+                    <Icon icon="checkmark" />
+                    Apply
+                  </Button>
+                </Card.Actions>
+              </Card.Root>
+            ))}
+          </Card.CardList>
+        </Card.CardListController>
       </div>
     );
   }
@@ -403,6 +411,7 @@ This follows WCAG accessibility guidelines and the listbox pattern.
     }
   },
   render: () => {
+    const [ focusedIndex, setFocusedIndex ] = useState(0);
     const [ selectedIndex, setSelectedIndex ] = useState<number | undefined>(undefined);
 
     const reviews = [
@@ -415,35 +424,37 @@ This follows WCAG accessibility guidelines and the listbox pattern.
 
     return (
       <div style={{ width: '316px' }}>
-        <Card.CardList
-          ariaLabel="Review suggestions"
+        <Card.CardListController
+          focusedIndex={focusedIndex}
+          onFocusedIndexChange={setFocusedIndex}
           selectedIndex={selectedIndex}
           onSelectCard={setSelectedIndex}
-          cycles={false}
         >
-          {reviews.map((review, index) => (
-            <Card.Root key={review.id} index={index}>
-              <Card.Header title={review.title} />
-              <Card.Body>
-                <p style={{ margin: 0, fontSize: '14px' }}>{review.content}</p>
-              </Card.Body>
-              <Card.Actions>
-                <Button variant="outlined" onClick={(e) => {
-                  e.stopPropagation(); setSelectedIndex(undefined);
-                }}>
-                  <Icon icon="close" />
-                  Skip
-                </Button>
-                <Button variant="outlined" onClick={(e) => {
-                  e.stopPropagation(); setSelectedIndex(index);
-                }}>
-                  <Icon icon="checkmark" />
-                  Apply
-                </Button>
-              </Card.Actions>
-            </Card.Root>
-          ))}
-        </Card.CardList>
+          <Card.CardList ariaLabel="Review suggestions" cycles={false}>
+            {reviews.map((review, index) => (
+              <Card.Root key={review.id} index={index}>
+                <Card.Header title={review.title} />
+                <Card.Body>
+                  <p style={{ margin: 0, fontSize: '14px' }}>{review.content}</p>
+                </Card.Body>
+                <Card.Actions>
+                  <Button variant="outlined" onClick={(e) => {
+                    e.stopPropagation(); setSelectedIndex(undefined);
+                  }}>
+                    <Icon icon="close" />
+                    Skip
+                  </Button>
+                  <Button variant="outlined" onClick={(e) => {
+                    e.stopPropagation(); setSelectedIndex(index);
+                  }}>
+                    <Icon icon="checkmark" />
+                    Apply
+                  </Button>
+                </Card.Actions>
+              </Card.Root>
+            ))}
+          </Card.CardList>
+        </Card.CardListController>
       </div>
     );
   }
