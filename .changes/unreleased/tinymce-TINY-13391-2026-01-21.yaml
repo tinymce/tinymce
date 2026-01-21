@@ -1,0 +1,6 @@
+project: tinymce
+kind: Added
+body: New `table_default_header_rows` and `table_default_header_cols` options to set default table headers
+time: 2026-01-21T11:33:46.893719+10:00
+custom:
+    Issue: TINY-13391
