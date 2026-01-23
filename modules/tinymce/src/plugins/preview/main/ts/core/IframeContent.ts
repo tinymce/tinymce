@@ -1,11 +1,15 @@
-import { Arr, Obj } from '@ephox/katamari';
+import { Arr, Obj, Type } from '@ephox/katamari';
 import { Link } from '@ephox/sugar';
 
 import ScriptLoader from 'tinymce/core/api/dom/ScriptLoader';
 import type Editor from 'tinymce/core/api/Editor';
+import type { TinyMCE } from 'tinymce/core/api/Tinymce';
 import Tools from 'tinymce/core/api/util/Tools';
 
+import * as ContentCss from '../../../../../core/main/ts/init/ContentCss';
 import * as Options from '../api/Options';
+
+declare let tinymce: TinyMCE;
 
 const getComponentScriptsHtml = (editor: Editor) => {
   const urls = Arr.unique(Obj.values(editor.schema.getComponentUrls()));
@@ -24,8 +28,16 @@ const getPreviewHtml = (editor: Editor): string => {
   headHtml += `<base href="${encode(editor.documentBaseURI.getURI())}">`;
 
   const cors = Options.shouldUseContentCssCors(editor) ? ' crossorigin="anonymous"' : '';
+
   Tools.each(editor.contentCSS, (url) => {
-    headHtml += '<link type="text/css" rel="stylesheet" href="' + encode(editor.documentBaseURI.toAbsolute(url)) + '"' + cors + '>';
+    if (tinymce.Resource.has(ContentCss.toContentSkinResourceName(url))) {
+      const css = tinymce.Resource.get(ContentCss.toContentSkinResourceName(url));
+      if (Type.isString(css)) {
+        headHtml += '<style type="text/css">' + css + '</style>';
+      }
+    } else {
+      headHtml += '<link type="text/css" rel="stylesheet" href="' + encode(editor.documentBaseURI.toAbsolute(url)) + '"' + cors + '>';
+    }
   });
 
   if (contentStyle) {
@@ -40,7 +52,6 @@ const getPreviewHtml = (editor: Editor): string => {
 
   const directionality = editor.getBody().dir;
   const dirAttr = directionality ? ' dir="' + encode(directionality) + '"' : '';
-
   const previewHtml = (
     '<!DOCTYPE html>' +
     '<html>' +
