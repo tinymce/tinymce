@@ -87,6 +87,18 @@ describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
   const getBackgroundColor = (elm: SugarElement<Element>) =>
     Css.get(elm, 'background-color');
 
+  // When outline-style is 'none', the outline is not visible regardless of width.
+  // Firefox returns the computed width value (e.g., '3px') while Chrome returns '0px'.
+  // Only check color and style when style is 'none'.
+  const assertOutlineEqual = (actual: Outline, expected: Outline, message?: string) => {
+    if (expected.style === 'none') {
+      assert.equal(actual.style, expected.style, message);
+      assert.equal(actual.color, expected.color, message);
+    } else {
+      assert.deepEqual(actual, expected, message);
+    }
+  };
+
   const pAssertStyling = (editor: Editor, selector: string, expectedBackgroundColor: string, expectedOutline: Outline, expectedBoxShadow: string = 'none', checkOtherNodes: boolean = true) =>
     Waiter.pTryUntil('Should have correct styling', () => {
       const body = TinyDom.body(editor);
@@ -94,7 +106,7 @@ describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
       const actualBackgroundColor = getBackgroundColor(elm);
       const actualOutline = getOutline(elm);
       assert.equal(actualBackgroundColor, expectedBackgroundColor);
-      assert.deepEqual(actualOutline, expectedOutline);
+      assertOutlineEqual(actualOutline, expectedOutline);
       assert.equal(Css.get(elm, 'box-shadow'), expectedBoxShadow);
 
       if (checkOtherNodes) {
@@ -102,8 +114,8 @@ describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
         const children = SelectorFilter.children(elm, '*:not(source)'); // Source is a hidden element and Firefox returns empty strings for runtime style properties
         const isFigCaption = SugarNode.isTag('figcaption');
 
-        Arr.each(parents, (e) => assert.deepEqual(getOutline(e), noOutline, 'parent should not have outline'));
-        Arr.each(children, (e) => assert.deepEqual(getOutline(e), isFigCaption(e) ? emptyFigCaptionOutline : noOutline, 'child should not have outline'));
+        Arr.each(parents, (e) => assertOutlineEqual(getOutline(e), noOutline, 'parent should not have outline'));
+        Arr.each(children, (e) => assertOutlineEqual(getOutline(e), isFigCaption(e) ? emptyFigCaptionOutline : noOutline, 'child should not have outline'));
       }
     });
 
