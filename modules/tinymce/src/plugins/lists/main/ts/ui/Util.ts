@@ -52,13 +52,13 @@ const listSelector = listNames.join(',');
 const getParentList = (editor: Editor, node?: Node): HTMLElement | null => {
   const selectionStart = node || editor.selection.getStart(true);
 
-  return editor.dom.getParent(selectionStart, listSelector, getClosestListHost(editor, selectionStart));
+  return editor.dom.getParent(selectionStart, listSelector, getClosestListHost(editor, selectionStart, editor.selection.isCollapsed()));
 };
 
-const getClosestListHost = (editor: Editor, elm: Node): HTMLElement => {
+const getClosestListHost = (editor: Editor, elm: Node, isCollapsed: boolean): HTMLElement => {
   const parentBlocks = editor.dom.getParents<HTMLElement>(elm, editor.dom.isBlock);
   const isNotForcedRootBlock = (elm: HTMLElement) => elm.nodeName.toLowerCase() !== getForcedRootBlock(editor);
-  const parentBlock = Arr.find(parentBlocks, (elm) => isNotForcedRootBlock(elm) && isListHost(editor.schema, elm));
+  const parentBlock = Arr.find(parentBlocks, (elm) => (!isCollapsed || isNotForcedRootBlock(elm)) && isListHost(editor.schema, elm));
 
   return parentBlock.getOr(editor.getBody());
 };

@@ -14,7 +14,7 @@ const listSelector = listNames.join(',');
 const getParentList = (editor: Editor, node?: Node): HTMLElement | null => {
   const selectionStart = node || editor.selection.getStart(true);
 
-  return editor.dom.getParent(selectionStart, listSelector, getClosestListHost(editor, selectionStart));
+  return editor.dom.getParent(selectionStart, listSelector, getClosestListHost(editor, selectionStart, editor.selection.isCollapsed()));
 };
 
 const isParentListSelected = (parentList: HTMLElement | null, selectedBlocks: Element[]): boolean =>
@@ -36,9 +36,9 @@ const getSelectedSubLists = (editor: Editor): HTMLElement[] => {
   }
 };
 
-const findParentListItemsNodes = (editor: Editor, elms: Element[]): Element[] => {
+const findParentListItemsNodes = (editor: Editor, elms: Element[], isCollapsed: boolean): Element[] => {
   const listItemsElms = Tools.map(elms, (elm) => {
-    const parentLi = editor.dom.getParent(elm, 'li,dd,dt', getClosestListHost(editor, elm));
+    const parentLi = editor.dom.getParent(elm, 'li,dd,dt', getClosestListHost(editor, elm, isCollapsed));
 
     return parentLi ? parentLi : elm;
   });
@@ -48,7 +48,7 @@ const findParentListItemsNodes = (editor: Editor, elms: Element[]): Element[] =>
 
 const getSelectedListItems = (editor: Editor): Array<HTMLLIElement | HTMLElement> => {
   const selectedBlocks = editor.selection.getSelectedBlocks();
-  return Arr.filter(findParentListItemsNodes(editor, selectedBlocks), NodeType.isListItemNode);
+  return Arr.filter(findParentListItemsNodes(editor, selectedBlocks, editor.selection.isCollapsed()), NodeType.isListItemNode);
 };
 
 const getSelectedDlItems = (editor: Editor): HTMLElement[] =>
@@ -62,10 +62,10 @@ const getClosestEditingHost = (editor: Editor, elm: Element): HTMLElement => {
 const isListHost = (schema: Schema, node: Node): boolean =>
   !NodeType.isListNode(node) && !NodeType.isListItemNode(node) && Arr.exists(listNames, (listName) => schema.isValidChild(node.nodeName, listName));
 
-const getClosestListHost = (editor: Editor, elm: Node): HTMLElement => {
+const getClosestListHost = (editor: Editor, elm: Node, isCollapsed: boolean): HTMLElement => {
   const parentBlocks = editor.dom.getParents<HTMLElement>(elm, editor.dom.isBlock);
   const isNotForcedRootBlock = (elm: HTMLElement) => elm.nodeName.toLowerCase() !== Options.getForcedRootBlock(editor);
-  const parentBlock = Arr.find(parentBlocks, (elm) => isNotForcedRootBlock(elm) && isListHost(editor.schema, elm));
+  const parentBlock = Arr.find(parentBlocks, (elm) => (!isCollapsed || isNotForcedRootBlock(elm)) && isListHost(editor.schema, elm));
 
   return parentBlock.getOr(editor.getBody());
 };
@@ -77,7 +77,7 @@ const isListInsideAnLiWithFirstAndLastNotListElement = (list: SugarElement<Node>
   );
 
 const findLastParentListNode = (editor: Editor, elm: Element): Optional<HTMLOListElement | HTMLUListElement> => {
-  const parentLists = editor.dom.getParents<HTMLOListElement | HTMLUListElement>(elm, 'ol,ul', getClosestListHost(editor, elm));
+  const parentLists = editor.dom.getParents<HTMLOListElement | HTMLUListElement>(elm, 'ol,ul', getClosestListHost(editor, elm, true));
   return Arr.last(parentLists);
 };
 
@@ -90,7 +90,7 @@ const getSelectedLists = (editor: Editor): Array<HTMLOListElement | HTMLUListEle
 
 const getParentLists = (editor: Editor) => {
   const elm = editor.selection.getStart();
-  return editor.dom.getParents<HTMLOListElement | HTMLUListElement>(elm, 'ol,ul', getClosestListHost(editor, elm));
+  return editor.dom.getParents<HTMLOListElement | HTMLUListElement>(elm, 'ol,ul', getClosestListHost(editor, elm, editor.selection.isCollapsed()));
 };
 
 const getSelectedListRoots = (editor: Editor): HTMLElement[] => {
