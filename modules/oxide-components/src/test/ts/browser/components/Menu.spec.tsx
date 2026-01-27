@@ -42,7 +42,7 @@ const waitForElementText = async (getByText: (text: string) => Locator, text: st
   await expect.poll(() => getByText(text).element()).toBeVisible();
 };
 
-const expectActiveElementToHaveText = async (text: string) => {
+const pAssertActiveElementText = async (text: string) => {
   await expect.poll(() => document.activeElement?.textContent).toBe(text);
 };
 
@@ -201,19 +201,19 @@ describe('browser.MenuTest', () => {
       const { getByText } = render(<TestComponent />, { wrapper });
       await waitForElementText(getByText, 'Item 1');
 
-      await expectActiveElementToHaveText('Item 1');
+      await pAssertActiveElementText('Item 1');
 
       await userEvent.keyboard('{ArrowDown}');
-      await expectActiveElementToHaveText('Item 2');
+      await pAssertActiveElementText('Item 2');
 
       await userEvent.keyboard('{ArrowDown}');
-      await expectActiveElementToHaveText('Item 3');
+      await pAssertActiveElementText('Item 3');
 
       await userEvent.keyboard('{ArrowUp}');
-      await expectActiveElementToHaveText('Item 2');
+      await pAssertActiveElementText('Item 2');
 
       await userEvent.keyboard('{ArrowUp}');
-      await expectActiveElementToHaveText('Item 1');
+      await pAssertActiveElementText('Item 1');
     });
 
     it('Should skip disabled items when navigating', async () => {
@@ -232,10 +232,10 @@ describe('browser.MenuTest', () => {
       const { getByText } = render(<TestComponent />, { wrapper });
       await waitForElementText(getByText, 'Item 1');
 
-      await expectActiveElementToHaveText('Item 1');
+      await pAssertActiveElementText('Item 1');
 
       await userEvent.keyboard('{ArrowDown}');
-      await expectActiveElementToHaveText('Item 3');
+      await pAssertActiveElementText('Item 3');
     });
   });
 });
