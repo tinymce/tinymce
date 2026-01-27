@@ -42,6 +42,10 @@ const waitForElementText = async (getByText: (text: string) => Locator, text: st
   await expect.poll(() => getByText(text).element()).toBeVisible();
 };
 
+const expectActiveElementToHaveText = async (text: string) => {
+  await expect.poll(() => document.activeElement?.textContent).toBe(text);
+};
+
 // Reset positioning styles before matching the snapshot.
 // Postioning styles are calculated to a different value depending on the enviroment.
 // They are deterministic for one eviroment but differ between local machine and CI
@@ -197,19 +201,19 @@ describe('browser.MenuTest', () => {
       const { getByText } = render(<TestComponent />, { wrapper });
       await waitForElementText(getByText, 'Item 1');
 
-      await expect.poll(() => document.activeElement?.textContent).toBe('Item 1');
+      await expectActiveElementToHaveText('Item 1');
 
       await userEvent.keyboard('{ArrowDown}');
-      await expect.poll(() => document.activeElement?.textContent).toBe('Item 2');
+      await expectActiveElementToHaveText('Item 2');
 
       await userEvent.keyboard('{ArrowDown}');
-      await expect.poll(() => document.activeElement?.textContent).toBe('Item 3');
+      await expectActiveElementToHaveText('Item 3');
 
       await userEvent.keyboard('{ArrowUp}');
-      await expect.poll(() => document.activeElement?.textContent).toBe('Item 2');
+      await expectActiveElementToHaveText('Item 2');
 
       await userEvent.keyboard('{ArrowUp}');
-      await expect.poll(() => document.activeElement?.textContent).toBe('Item 1');
+      await expectActiveElementToHaveText('Item 1');
     });
 
     it('Should skip disabled items when navigating', async () => {
@@ -228,10 +232,10 @@ describe('browser.MenuTest', () => {
       const { getByText } = render(<TestComponent />, { wrapper });
       await waitForElementText(getByText, 'Item 1');
 
-      await expect.poll(() => document.activeElement?.textContent).toBe('Item 1');
+      await expectActiveElementToHaveText('Item 1');
 
       await userEvent.keyboard('{ArrowDown}');
-      await expect.poll(() => document.activeElement?.textContent).toBe('Item 3');
+      await expectActiveElementToHaveText('Item 3');
     });
   });
 });
