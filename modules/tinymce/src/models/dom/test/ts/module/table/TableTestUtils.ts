@@ -6,7 +6,7 @@
  */
 
 import { ApproxStructure, Assertions, type Cursors, Mouse, type StructAssert, UiFinder, Waiter } from '@ephox/agar';
-import { Arr } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { Attribute, Html, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 import { TinyAssertions, TinyContentActions, TinyDom, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -215,18 +215,16 @@ const assertTableStructureWithSizes = (
   // In header types 'sectionCells' and 'cells', every cell in a header row is `th`.
   // In header types 'sectionCells' and 'section', every header row is in the `thead`.
   assertTableStructure(editor, ApproxStructure.build((s, str) => {
-    const colGroup = useColGroups
-      ? [ s.element('colgroup', {
-        children: Arr.range(cols, () =>
-          s.element('col', {})
-        )
-      }) ]
-      : [];
+    const colGroup = s.element('colgroup', {
+      children: Arr.range(cols, () =>
+        s.element('col', {})
+      )
+    });
 
     const colFields = {
       children: [
         s.either([
-          s.element('br', { }),
+          s.element('br', {}),
           s.text(str.contains('Cell'))
         ])
       ]
@@ -239,37 +237,49 @@ const assertTableStructureWithSizes = (
       ...Arr.range(cols - options.headerCols, () => s.element('td', colFields))
     ];
 
-    const tableHead = (headerType !== 'cells') && options.headerRows > 0
-      ? [ s.element('thead', {
-        children: Arr.range(options.headerRows, () =>
+    const createTableHead = () => {
+      if (headerType !== 'cells' && options.headerRows > 0) {
+        const theadRows = Arr.range(options.headerRows, () =>
           s.element('tr', {
             children: (headerType === 'section') ? bodyRowCols : headerRowCols
-          })
-        )
-      }) ]
-      : [];
+          }));
 
-    const bodyRowsWithHeaderRows = Arr.range(rows, (rowIndex) => s.element('tr', {
-      children: rowIndex < options.headerRows ? headerRowCols : bodyRowCols
-    }));
+        return Optional.some(s.element('thead', {
+          children: theadRows
+        }));
+      }
 
-    const bodyRows = Arr.range(rows - options.headerRows, () => s.element('tr', {
-      children: bodyRowCols
-    }));
+      return Optional.none();
+    };
 
-    const tableBody = (headerType !== 'cells' && options.headerRows < rows) || (headerType === 'cells')
-      ? [ s.element('tbody', {
-        children: headerType === 'cells' ? bodyRowsWithHeaderRows : bodyRows
-      }) ]
-      : [];
+    const createTableBody = () => {
+      if (headerType === 'cells' || options.headerRows < rows) {
+        const bodyRowsWithHeaderRows = Arr.range(rows, (rowIndex) => s.element('tr', {
+          children: rowIndex < options.headerRows ? headerRowCols : bodyRowCols
+        }));
+
+        const bodyRows = Arr.range(rows - options.headerRows, () => s.element('tr', {
+          children: bodyRowCols
+        }));
+
+        return Optional.some(s.element('tbody', {
+          children: (headerType === 'cells') ? bodyRowsWithHeaderRows : bodyRows
+        }));
+      }
+
+      return Optional.none();
+    };
+
+    const tableHead = createTableHead();
+    const tableBody = createTableBody();
 
     return s.element('table', {
       attrs: { border: str.is('1') },
       styles: { 'border-collapse': str.is('collapse') },
       children: [
-        ...colGroup,
-        ...tableHead,
-        ...tableBody
+        ...useColGroups ? [ colGroup ] : [],
+        ...tableHead.toArray(),
+        ...tableBody.toArray()
       ]
     });
   }));
