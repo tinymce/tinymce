@@ -94,7 +94,7 @@
     }
 
     &__body {
-      padding: 0 @card-section-padding;
+      padding: @card-section-padding @card-section-padding 0 @card-section-padding;
       color: @card-text-color;
       font-size: @font-size-md;
 
@@ -139,6 +139,29 @@
       .tox-button--icon,
       .tox-button:has(.tox-icon:only-child) {
         padding: @pad-xs @pad-md;
+      }
+    }
+
+    // Skeleton-specific adjustments when card contains skeleton lines
+    &.tox-skeleton {
+      cursor: default;
+      pointer-events: none;
+      border-color: @border-color;
+      box-shadow: 0 1px 3px 0 fade(@color-black, 8%);
+
+      &:hover {
+        box-shadow: 0 1px 3px 0 fade(@color-black, 8%); // Keep same shadow on hover
+      }
+
+      .tox-skeleton__line {
+        border-radius: @control-border-radius;
+        margin: 0;
+      }
+
+      .tox-card__body {
+        display: flex;
+        flex-direction: column;
+        gap: @pad-xs;
       }
     }
   }

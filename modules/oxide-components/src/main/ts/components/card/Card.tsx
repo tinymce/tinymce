@@ -1,4 +1,4 @@
-import { Type } from '@ephox/katamari';
+import { Arr, Type } from '@ephox/katamari';
 import { useCallback, type FC, type PropsWithChildren } from 'react';
 
 import * as Bem from '../../utils/Bem';
@@ -17,6 +17,11 @@ export interface CardRootProps extends PropsWithChildren {
    * Required when used inside CardList for proper keyboard navigation.
    */
   readonly index?: number;
+  /**
+   * When true, displays skeleton loading state instead of children.
+   * Disables interactions and shows aria-busy attribute.
+   */
+  readonly loading?: boolean;
 }
 
 export interface CardHeaderProps extends PropsWithChildren {
@@ -38,8 +43,19 @@ export interface CardHighlightProps extends PropsWithChildren {
 }
 
 /**
+ * Card Skeleton component props.
+ * Displays a loading placeholder while card content is being fetched.
+ */
+export interface CardSkeletonProps {
+  /** Additional CSS class name */
+  readonly className?: string;
+  /** Number of skeleton lines to display in the body (default: 1) */
+  readonly lines?: number;
+}
+
+/**
  * Card Root component.
- * Container for a card with support for selection states.
+ * Container for a card with support for selection states and loading state.
  * Must be used within a CardList for proper keyboard navigation.
  */
 const Root: FC<CardRootProps> = ({
@@ -49,7 +65,8 @@ const Root: FC<CardRootProps> = ({
   selected = false,
   ariaLabel,
   hasDecision = false,
-  index
+  index,
+  loading = false
 }) => {
   const listContext = useCardListContext();
 
@@ -103,20 +120,35 @@ const Root: FC<CardRootProps> = ({
   const cardClassName = Bem.block('tox-card', {
     'selected': isFocused || selected,
     'has-decision': hasDecision
-  }) + (Type.isNonNullable(className) ? ` ${className}` : '');
+  })
+    + (loading ? ' tox-skeleton' : '')
+    + (Type.isNonNullable(className) ? ` ${className}` : '');
+
+  // Skeleton content to show when loading
+  const skeletonContent = (
+    <>
+      <div className={Bem.element('tox-card', 'body')}>
+        <div className="tox-skeleton__line" style={{ width: '100%' }} />
+      </div>
+      <div className={Bem.element('tox-card', 'actions')}>
+        <div className="tox-skeleton__line" style={{ width: '50%' }} />
+      </div>
+    </>
+  );
 
   return (
     <div
       className={cardClassName}
-      onClick={handleClick}
-      onKeyDown={handleKeyDown}
-      onFocus={handleFocus}
+      onClick={loading ? undefined : handleClick}
+      onKeyDown={loading ? undefined : handleKeyDown}
+      onFocus={loading ? undefined : handleFocus}
       tabIndex={-1}
       role="option"
       aria-label={ariaLabel ?? `Card ${(index ?? 0) + 1}`}
       aria-selected={isSelected}
+      aria-busy={loading}
     >
-      {children}
+      {loading ? skeletonContent : children}
     </div>
   );
 };
@@ -177,12 +209,37 @@ const Highlight: FC<CardHighlightProps> = ({ children, type }) => {
   );
 };
 
+/**
+ * Card Skeleton component.
+ * Displays a loading skeleton while card content is being fetched.
+ * Uses actual Card structure to maintain proper spacing and appearance.
+ */
+const Skeleton: FC<CardSkeletonProps> = ({ className, lines = 1 }) => {
+  const cardClassName = Bem.block('tox-card')
+    + ' tox-skeleton'
+    + (Type.isNonNullable(className) ? ` ${className}` : '');
+
+  return (
+    <div className={cardClassName} aria-hidden="true">
+      <div className={Bem.element('tox-card', 'body')}>
+        {Arr.range(lines, (i) => (
+          <div key={i} className="tox-skeleton__line" style={{ width: '100%' }} />
+        ))}
+      </div>
+      <div className={Bem.element('tox-card', 'actions')}>
+        <div className="tox-skeleton__line" style={{ width: '50%' }} />
+      </div>
+    </div>
+  );
+};
+
 export {
   Root,
   Header,
   Body,
   Actions,
-  Highlight
+  Highlight,
+  Skeleton
 };
 
 export { CardList, CardListController } from './CardList';
