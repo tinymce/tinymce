@@ -115,77 +115,37 @@ export const CardListController: FC<CardListControllerProps> = ({
 };
 
 /**
- * CardList component for managing a collection of cards with keyboard navigation.
- *
- * Can be used in two modes:
- * - **Uncontrolled**: Use directly with `defaultFocusedIndex` and `defaultSelectedIndex`
- * - **Controlled**: Wrap with `CardListController` to manage state externally
- *
- * Provides arrow key navigation between cards. Focus is managed programmatically.
- * Follows WCAG accessibility guidelines for listbox pattern.
- *
- * @example Uncontrolled usage
- * ```tsx
- * <CardList ariaLabel="Review suggestions" defaultFocusedIndex={0}>
- *   <Card.Root index={0}>...</Card.Root>
- *   <Card.Root index={1}>...</Card.Root>
- * </CardList>
- * ```
- *
- * @example Controlled usage
- * ```tsx
- * <CardListController focusedIndex={idx} onFocusedIndexChange={setIdx}>
- *   <CardList ariaLabel="Review suggestions">
- *     <Card.Root index={0}>...</Card.Root>
- *     <Card.Root index={1}>...</Card.Root>
- *   </CardList>
- * </CardListController>
- * ```
+ * Common rendering logic for CardList (shared by controlled and uncontrolled modes).
  */
-export const CardList: FC<CardListProps> = ({
+interface CardListImplProps {
+  readonly children: PropsWithChildren['children'];
+  readonly className?: string;
+  readonly ariaLabel?: string;
+  readonly cycles: boolean;
+  readonly focusedIndex: number;
+  readonly selectedIndex: number | undefined;
+  readonly setFocusedIndex: (index: number) => void;
+  readonly onSelectCard: ((index: number) => void) | undefined;
+}
+
+const CardListImpl: FC<CardListImplProps> = ({
   children,
   className,
   ariaLabel,
-  cycles = false,
-  defaultFocusedIndex = 0,
-  defaultSelectedIndex,
-  onSelectCard: uncontrolledOnSelectCard
+  cycles,
+  focusedIndex,
+  selectedIndex,
+  setFocusedIndex,
+  onSelectCard
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const controllerContext = useCardListControllerContext();
-  const isControlled = controllerContext !== null;
-
-  // Uncontrolled state (only used when not inside CardListController)
-  const [ uncontrolledFocusedIndex, setUncontrolledFocusedIndex ] = useState(defaultFocusedIndex);
-  const [ uncontrolledSelectedIndex, setUncontrolledSelectedIndex ] = useState(defaultSelectedIndex);
-
-  // Resolve actual values based on controlled vs uncontrolled mode
-  const focusedIndex = isControlled ? controllerContext.focusedIndex : uncontrolledFocusedIndex;
-  const selectedIndex = isControlled ? controllerContext.selectedIndex : uncontrolledSelectedIndex;
-
-  const setFocusedIndex = useCallback((index: number) => {
-    if (isControlled) {
-      controllerContext.onFocusedIndexChange(index);
-    } else {
-      setUncontrolledFocusedIndex(index);
-    }
-  }, [ isControlled, controllerContext ]);
-
-  const handleSelectCard = useCallback((index: number) => {
-    if (isControlled) {
-      controllerContext.onSelectCard?.(index);
-    } else {
-      uncontrolledOnSelectCard?.(index);
-      setUncontrolledSelectedIndex(index);
-    }
-  }, [ isControlled, controllerContext, uncontrolledOnSelectCard ]);
 
   const contextValue = useMemo<CardListContextValue>(() => ({
     focusedIndex,
     selectedIndex,
     setFocusedIndex,
-    onSelectCard: handleSelectCard
-  }), [ focusedIndex, selectedIndex, setFocusedIndex, handleSelectCard ]);
+    onSelectCard
+  }), [ focusedIndex, selectedIndex, setFocusedIndex, onSelectCard ]);
 
   KeyboardNavigationHooks.useFlowKeyNavigation({
     containerRef,
@@ -214,4 +174,83 @@ export const CardList: FC<CardListProps> = ({
       </div>
     </CardListContext.Provider>
   );
+};
+
+/**
+ * Controlled CardList - used inside CardListController.
+ */
+const CardListControlled: FC<CardListProps> = ({
+  children,
+  className,
+  ariaLabel,
+  cycles = false
+}) => {
+  const controllerContext = useCardListControllerContext();
+
+  if (controllerContext === null) {
+    throw new Error('CardList: Controlled mode requires CardListController wrapper');
+  }
+
+  const setFocusedIndex = useCallback((index: number) => {
+    controllerContext.onFocusedIndexChange(index);
+  }, [ controllerContext ]);
+
+  const handleSelectCard = useCallback((index: number) => {
+    controllerContext.onSelectCard?.(index);
+  }, [ controllerContext ]);
+
+  return (
+    <CardListImpl
+      children={children}
+      className={className}
+      ariaLabel={ariaLabel}
+      cycles={cycles}
+      focusedIndex={controllerContext.focusedIndex}
+      selectedIndex={controllerContext.selectedIndex}
+      setFocusedIndex={setFocusedIndex}
+      onSelectCard={handleSelectCard}
+    />
+  );
+};
+
+/**
+ * Uncontrolled CardList - standalone usage with internal state.
+ */
+const CardListUncontrolled: FC<CardListProps> = ({
+  children,
+  className,
+  ariaLabel,
+  cycles = false,
+  defaultFocusedIndex = 0,
+  defaultSelectedIndex,
+  onSelectCard
+}) => {
+  const [ focusedIndex, setFocusedIndex ] = useState(defaultFocusedIndex);
+  const [ selectedIndex, setSelectedIndex ] = useState(defaultSelectedIndex);
+
+  const handleSelectCard = useCallback((index: number) => {
+    onSelectCard?.(index);
+    setSelectedIndex(index);
+  }, [ onSelectCard ]);
+
+  return (
+    <CardListImpl
+      children={children}
+      className={className}
+      ariaLabel={ariaLabel}
+      cycles={cycles}
+      focusedIndex={focusedIndex}
+      selectedIndex={selectedIndex}
+      setFocusedIndex={setFocusedIndex}
+      onSelectCard={handleSelectCard}
+    />
+  );
+};
+
+export const CardList: FC<CardListProps> = (props) => {
+  const controllerContext = useCardListControllerContext();
+
+  return controllerContext !== null
+    ? <CardListControlled {...props} />
+    : <CardListUncontrolled {...props} />;
 };
