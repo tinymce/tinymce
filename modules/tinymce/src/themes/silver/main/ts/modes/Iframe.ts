@@ -115,6 +115,8 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
       rawUiConfig.sidebar,
       Options.getSidebarShow(editor)
     );
+
+    OuterContainer.setViews(outerContainer, rawUiConfig.views);
   });
 
   // TINY-10343: Using `SkinLoaded` instead of `PostRender` because if the skin loading takes too long you run in to rendering problems since things are measured before the CSS is being applied
@@ -130,8 +132,6 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
       outerContainer,
       identifyMenus(editor, rawUiConfig)
     );
-
-    OuterContainer.setViews(outerContainer, rawUiConfig.views);
 
     setupEvents(editor, uiRefs);
   });

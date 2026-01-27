@@ -30,12 +30,19 @@
     "@ephox/katamari": "^10.0.0",
     "@ephox/sand": "^7.0.0",
     "@ephox/sugar": "^10.0.0",
-    "fast-check": "^2.0.0"
+    "fast-check": "^4.4.0"
   },
   "peerDependencies": {
     "tinymce": ">=4.0.0"
   },
   "main": "./lib/main/ts/ephox/mcagar/api/Main.js",
   "module": "./lib/main/ts/ephox/mcagar/api/Main.js",
-  "types": "./lib/main/ts/ephox/mcagar/api/Main.d.ts"
+  "types": "./lib/main/ts/ephox/mcagar/api/Main.d.ts",
+  "exports": {
+    ".": {
+      "tiny:source": "./src/main/ts/ephox/mcagar/api/Main.ts",
+      "types": "./lib/main/ts/ephox/mcagar/api/Main.d.ts",
+      "default": "./lib/main/ts/ephox/mcagar/api/Main.js"
+    }
+  }
 }

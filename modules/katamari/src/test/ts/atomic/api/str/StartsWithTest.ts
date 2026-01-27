@@ -23,8 +23,8 @@ describe('atomic.katamari.api.str.StartsWithTest', () => {
 
   it('property test', () => {
     fc.assert(fc.property(
-      fc.asciiString(),
-      fc.asciiString(),
+      fc.string({ unit: 'binary-ascii' }),
+      fc.string({ unit: 'binary-ascii' }),
       (str, contents) => Strings.startsWith(contents + str, contents)
     ));
   });

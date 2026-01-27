@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: 'The `font-size` style on `li` elements was not copied to new list items.'
-time: 2025-11-18T11:45:16.117483+10:30
-custom:
-    Issue: TINY-13224

@@ -20,7 +20,7 @@ describe('LayoutBoundsTest', () => {
   );
 
   it('TINY-7545: the restricted layout bounds should always be inside the bounds', () => {
-    const bubbleArb = fc.integer(-20, 20);
+    const bubbleArb = fc.integer({ min: -20, max: 20 });
     fc.assert(fc.property(boundsArb(), restrictionArb, bubbleArb, bubbleArb, (bounds, restriction, bubbleLeft, bubbleRight) => {
       const newBounds = LayoutBounds.adjustBounds(bounds, restriction, SugarPosition(bubbleLeft, bubbleRight));
       assertInBounds(newBounds, bounds);
@@ -32,7 +32,7 @@ describe('LayoutBoundsTest', () => {
     const inBoundsRestriction = LayoutBounds.boundsRestriction(Boxes.bounds(0, 0, 10, 100), { left: LayoutBounds.AnchorBoxBounds.RightEdge });
     const outBoundsRestriction = LayoutBounds.boundsRestriction(Boxes.bounds(-20, 0, 10, 100), { left: LayoutBounds.AnchorBoxBounds.RightEdge });
     // Note: bubbleLeft needs to be at least 10 less than the bounds width to make sure it fits
-    fc.assert(fc.property(fc.integer(0, 90), fc.integer(0, 100), (bubbleLeft, bubbleTop) => {
+    fc.assert(fc.property(fc.integer({ min: 0, max: 90 }), fc.integer({ min: 0, max: 100 }), (bubbleLeft, bubbleTop) => {
       const newInBounds = LayoutBounds.adjustBounds(bounds, inBoundsRestriction, SugarPosition(bubbleLeft, bubbleTop));
       assert.equal(newInBounds.x, 10 + bubbleLeft, 'left bounds have been changed');
       assert.equal(newInBounds.right, bounds.right, 'right bounds are unchanged');
@@ -52,7 +52,7 @@ describe('LayoutBoundsTest', () => {
     const inBoundsRestriction = LayoutBounds.boundsRestriction(Boxes.bounds(0, 80, 100, 50), { bottom: LayoutBounds.AnchorBoxBounds.TopEdge });
     const outBoundsRestriction = LayoutBounds.boundsRestriction(Boxes.bounds(0, 150, 100, 50), { bottom: LayoutBounds.AnchorBoxBounds.TopEdge });
     // Note: bubbleTop needs to between the bounds top (0) and the anchor top (80) coords
-    fc.assert(fc.property(fc.integer(0, 100), fc.integer(0, 80), (bubbleLeft, bubbleTop) => {
+    fc.assert(fc.property(fc.integer({ min: 0, max: 100 }), fc.integer({ min: 0, max: 80 }), (bubbleLeft, bubbleTop) => {
       const newInBounds = LayoutBounds.adjustBounds(bounds, inBoundsRestriction, SugarPosition(bubbleLeft, -bubbleTop));
       assert.equal(newInBounds.x, bounds.x, 'left bounds are unchanged');
       assert.equal(newInBounds.right, bounds.right, 'right bounds are unchanged');

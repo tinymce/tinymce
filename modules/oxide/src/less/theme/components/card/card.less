@@ -1,0 +1,155 @@
+//
+// Card
+//
+
+@card-text-color: @text-color;
+@card-border-color: @color-tint;
+@card-background-color: @background-color;
+
+// Highlight colors - mixing with white at 80% opacity
+@card-added-background-color: mix(@color-success, @background-color, 20%);
+@card-deleted-background-color: mix(@color-error, @background-color, 20%);
+@card-modified-background-color: mix(@color-tint, @background-color, 20%);
+
+@card-section-padding: @pad-sm + @pad-xs;
+@card-section-gap: @pad-sm + @pad-xs;
+@card-button-gap: @pad-sm;
+@card-border-radius: @control-border-radius;
+@card-selected-border-width: @keyboard-focus-outline-width;
+@card-highlight-border-width: @keyboard-focus-outline-width;
+
+.tox {
+  .tox-card {
+    background-color: @card-background-color;
+    border-radius: @card-border-radius;
+    display: flex;
+    flex-direction: column;
+    gap: @card-section-gap;
+    cursor: pointer;
+    transition: box-shadow 0.15s ease-in-out, border 0.15s ease-in-out;
+    border: @card-selected-border-width solid transparent;
+
+    &:hover {
+      box-shadow: 0 4px 8px 0 fade(@color-black, 10%);
+    }
+
+    &--selected {
+      border-color: @card-border-color;
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 @keyboard-focus-outline-width @keyboard-focus-outline-color;
+      border-color: transparent;
+    }
+
+    &--has-decision {
+      background-color: darken(@background-color, 6%);
+
+      &:not(.tox-card--selected) {
+        border-color: @text-color-muted;
+      }
+
+      .tox-card__body {
+        color: @text-color-muted;
+      }
+
+      .tox-card__actions {
+        .tox-button--secondary--outline {
+          border-color: darken(@background-color, 12%);
+
+          &:hover:not(:disabled),
+          &:focus:not(:disabled) {
+            background-color: darken(@background-color, 12%);
+            border-color: darken(@background-color, 18%);
+          }
+
+          &:active:not(:disabled) {
+            background-color: darken(@background-color, 18%);
+            border-color: darken(@background-color, 18%);
+          }
+        }
+      }
+    }
+
+    &__header {
+      padding: @card-section-padding;
+      padding-bottom: 0;
+      color: @card-text-color;
+      font-size: @font-size-md;
+
+      font-weight: bold;
+      text-transform: uppercase;
+
+      display: flex;
+      flex-direction: column;
+      gap: @card-section-gap;
+
+      &-label {
+        font-size: @font-size-xs;
+        font-weight: bold;
+        text-transform: uppercase;
+        color: @card-text-color;
+      }
+    }
+
+    &__body {
+      padding: 0 @card-section-padding;
+      color: @card-text-color;
+      font-size: @font-size-md;
+
+      .tox-expandable-box {
+        border: none;
+        padding: 0;
+        gap: @card-section-gap;
+      }
+    }
+
+    &__highlight {
+      padding: @pad-xs (@pad-xs * 1.5);
+      border-bottom: @card-highlight-border-width solid @card-border-color;
+
+      &--added {
+        background-color: @card-added-background-color;
+      }
+
+      &--deleted {
+        background-color: @card-deleted-background-color;
+      }
+
+      &--modified {
+        background-color: @card-modified-background-color;
+      }
+    }
+
+    &__actions {
+      display: flex;
+      gap: @card-button-gap;
+      padding: 0 @card-section-padding @card-section-padding;
+
+      &--space-between {
+        justify-content: space-between;
+      }
+
+      &--flex-start {
+        justify-content: flex-start;
+      }
+
+      .tox-button,
+      .tox-button--icon,
+      .tox-button:has(.tox-icon:only-child) {
+        padding: @pad-xs @pad-md;
+      }
+    }
+  }
+
+  .tox-card-list {
+    display: flex;
+    flex-direction: column;
+    gap: @card-section-gap;
+
+    &:focus {
+      outline: none;
+    }
+  }
+}

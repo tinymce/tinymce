@@ -1,0 +1,6 @@
+project: tinymce
+kind: Improved
+body: 'The file upload feature of `link` and `image` dialogs now provide feedback when an unsupported file type is selected.'
+time: 2025-12-10T15:11:36.976908974+01:00
+custom:
+  Issue: TINY-13420

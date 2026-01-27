@@ -1,6 +1,0 @@
-project: tinymce
-kind: Changed
-body: Removing a line height sometimes did not remove it from all selected lines.
-time: 2025-11-13T16:00:32.068051+01:00
-custom:
-    Issue: TINY-13053

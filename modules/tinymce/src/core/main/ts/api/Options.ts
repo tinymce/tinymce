@@ -826,6 +826,11 @@ const register = (editor: Editor): void => {
     default: (_ctx: PatternTypes.DynamicPatternContext): PatternTypes.Pattern[] => [ ]
   });
 
+  registerOption('allow_noneditable', {
+    processor: 'boolean',
+    default: true
+  });
+
   registerOption('noneditable_class', {
     processor: 'string',
     default: 'mceNonEditable'
@@ -921,6 +926,10 @@ const register = (editor: Editor): void => {
     default: 'Anonymous'
   });
 
+  registerOption('content_id', {
+    processor: 'string',
+  });
+
   registerOption('fetch_users', {
     processor: (value) => {
       if (value === undefined) {
@@ -951,7 +960,7 @@ const register = (editor: Editor): void => {
     processor: (value: unknown) => StructureSchema.asRaw<DocumentsFileTypes[]>('documents_file_types', documentsFileTypesOptionsSchema, value).fold<DocumentsFileTypesProcessorReturnType>(
       (_err) => ({
         valid: false,
-        message: 'Must be a non-empty array of objects matching the configuration schema: https://www.tiny.cloud/docs/tinymce/latest/uploadcare/#documents-file-types'
+        message: 'Must be a non-empty array of objects matching the configuration schema: https://www.tiny.cloud/docs/tinymce/latest/uploadcare-documents/#documents-file-types'
       }),
       (val) => ({ valid: true, value: val })
     )
@@ -1078,6 +1087,7 @@ const getPasteTabSpaces = option('paste_tab_spaces');
 const shouldAllowHtmlDataUrls = option('allow_html_data_urls');
 const getTextPatterns = option('text_patterns');
 const getTextPatternsLookup = option('text_patterns_lookup');
+const shouldAllowNonEditable = option('allow_noneditable');
 const getNonEditableClass = option('noneditable_class');
 const getEditableClass = option('editable_class');
 const getNonEditableRegExps = option('noneditable_regexp');
@@ -1205,6 +1215,7 @@ export {
   getTextPatterns,
   getTextPatternsLookup,
   hasTextPatternsLookup,
+  shouldAllowNonEditable,
   getNonEditableClass,
   getNonEditableRegExps,
   getEditableClass,

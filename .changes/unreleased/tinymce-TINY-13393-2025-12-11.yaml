@@ -1,0 +1,6 @@
+project: tinymce
+kind: Changed
+body: The `border-color` style with multiple rgb colors would be compressed into `border` incorrectly
+time: 2025-12-11T09:50:23.942202+01:00
+custom:
+    Issue: TINY-13393

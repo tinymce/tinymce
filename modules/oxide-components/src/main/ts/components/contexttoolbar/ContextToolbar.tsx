@@ -31,7 +31,8 @@ const defaultToolbarGap = '6px';
 const Root: FC<ContextToolbarProps> = ({
   children,
   persistent = false,
-  anchorRef
+  anchorRef,
+  usePopover = false
 }) => {
   const [ isOpen, setIsOpen ] = useState(false);
   const triggerRef = useRef<HTMLDivElement>(null);
@@ -99,8 +100,9 @@ const Root: FC<ContextToolbarProps> = ({
     anchorRef,
     anchorElement: getAnchorElement(),
     getAnchorElement,
-    persistent
-  }), [ isOpen, openToolbar, closeToolbar, persistent, anchorRef, getAnchorElement ]);
+    persistent,
+    usePopover
+  }), [ isOpen, openToolbar, closeToolbar, persistent, anchorRef, getAnchorElement, usePopover ]);
 
   return (
     <ContextToolbarContext.Provider value={context}>
@@ -144,33 +146,40 @@ const Toolbar: FC<ToolbarProps> = ({
     triggerRef,
     getAnchorElement,
     close,
-    persistent
+    persistent,
+    usePopover
   } = useContextToolbarContext();
 
   useEffect(() => {
     const element = toolbarRef.current;
-    if (Type.isNonNullable(element)) {
-      if (isOpen) {
-        element.showPopover();
-        // Defer focus using queueMicrotask to ensure it runs after
-        // the Popover API's internal focus management is complete
-        window.queueMicrotask(() => {
-          const sugarElement = SugarElement.fromDom(element);
-          const firstGroup = SelectorFind.descendant(sugarElement, '.tox-toolbar__group');
-          const firstButton = firstGroup.bind((group) =>
-            SelectorFind.descendant(group, 'button, [role="button"]')
-          );
-
-          firstButton.fold(
-            () => element.focus(), // Falls back to container if no button found
-            (button) => Focus.focus(button as SugarElement<HTMLElement>) // Focus first button
-          );
-        });
-      } else {
+    if (Type.isNullable(element)) {
+      return;
+    }
+    if (!isOpen) {
+      if (usePopover) {
         element.hidePopover();
       }
-    };
-  }, [ isOpen, toolbarRef ]);
+      return;
+    }
+
+    if (usePopover) {
+      element.showPopover();
+    }
+    // Defer focus using queueMicrotask to ensure it runs after
+    // the Popover API's internal focus management is complete
+    window.queueMicrotask(() => {
+      const sugarElement = SugarElement.fromDom(element);
+      const firstGroup = SelectorFind.descendant(sugarElement, '.tox-toolbar__group');
+      const firstButton = firstGroup.bind((group) =>
+        SelectorFind.descendant(group, 'button, [role="button"]')
+      );
+
+      firstButton.fold(
+        () => element.focus(), // Falls back to container if no button found
+        (button) => Focus.focus(button as SugarElement<HTMLElement>) // Focus first button
+      );
+    });
+  }, [ usePopover, isOpen, toolbarRef ]);
 
   // Handle Escape key to close (unless persistent={true})
   KeyboardNavigationHooks.useSpecialKeyNavigation({
@@ -258,11 +267,12 @@ const Toolbar: FC<ToolbarProps> = ({
     <div
       ref={toolbarRef}
       // @ts-expect-error - TODO: Remove this expect error once we've upgraded to React 19+ (TINY-13129)
-      popover='manual'
+      popover={usePopover ? 'manual' : undefined}
       tabIndex={-1}
       className='tox-context-toolbar'
       style={{
         visibility: isOpen ? undefined : 'hidden',
+        pointerEvents: 'auto'
       }}
       onMouseDown={handleMouseDown}
     >

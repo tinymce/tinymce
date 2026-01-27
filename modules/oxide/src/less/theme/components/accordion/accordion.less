@@ -1,0 +1,323 @@
+//
+// Accordion
+//
+
+@accordion-border-radius: @control-border-radius; // 6px
+@accordion-border-color: @border-color;
+@accordion-background-color: @background-color;
+
+@accordion-item-background-color: darken(@background-color, 3%);
+@accordion-item-margin-bottom: @pad-sm;
+
+@accordion-header-padding: @pad-sm + @pad-xs;
+@accordion-header-font-size: @font-size-md;
+@accordion-header-font-weight: @font-weight-bold;
+@accordion-header-text-color: @text-color;
+@accordion-header-background-color: transparent;
+@accordion-header-hover-background-color: darken(@accordion-item-background-color, 5%);
+
+@accordion-icon-size: @base-value * 1.5;
+@accordion-icon-color: @text-color;
+@accordion-icon-margin: @pad-sm;
+
+@accordion-content-padding-x: @pad-sm + @pad-xs;
+@accordion-content-padding-y: @pad-sm;
+@accordion-content-background-color: transparent;
+
+@accordion-header-disabled-opacity: 0.5;
+@accordion-header-disabled-cursor: not-allowed;
+
+.tox when (@custom-properties-enabled = true) {
+  .tox-accordion {
+    --tox-private-accordion-item-background-color: light-dark(
+      hsl(from var(--tox-private-background-color) h s calc(l - 3)),
+      hsl(from var(--tox-private-background-color) h s calc(l + 3))
+    );
+
+    --tox-private-accordion-header-hover-background-color: light-dark(
+      hsl(from var(--tox-private-accordion-item-background-color, @accordion-item-background-color) h s calc(l - 5)),
+      hsl(from var(--tox-private-accordion-item-background-color, @accordion-item-background-color) h s calc(l + 5))
+    );
+
+    --tox-private-accordion-icon-color: var(--tox-private-text-color);
+
+    --tox-private-accordion-header-focus-outline: 0 0 0 var(--tox-private-keyboard-focus-outline-width) var(--tox-private-keyboard-focus-outline-color);
+  }
+}
+
+.tox {
+  .tox-accordion {
+    display: flex;
+    flex-direction: column;
+    gap: @accordion-item-margin-bottom;
+  }
+
+  .tox-accordion__item {
+    background-color: var(--tox-private-accordion-item-background-color, @accordion-item-background-color);
+    border: 1px solid var(--tox-private-border-color, @accordion-border-color);
+    border-radius: @control-border-radius;
+    position: relative;
+  }
+
+  .tox-accordion__heading {
+    margin: 0;
+    width: 100%;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .tox-accordion__header {
+    align-items: center;
+    background-color: @accordion-header-background-color;
+    border: none;
+    border-radius: @control-border-radius;
+    box-sizing: border-box;
+    color: var(--tox-private-text-color, @accordion-header-text-color);
+    cursor: pointer;
+    display: flex;
+    font-family: @font-stack;
+    font-size: @accordion-header-font-size;
+    font-weight: @accordion-header-font-weight;
+    line-height: @line-height-base;
+    outline: none;
+    padding: @accordion-header-padding;
+    text-align: left;
+    width: 100%;
+
+    // Add pseudo-element for focus outline (following toolbar-button.less pattern)
+    &::after {
+      border-radius: @control-border-radius;
+      bottom: 0;
+      box-shadow: var(--tox-private-accordion-header-focus-outline, 0 0 0 @keyboard-focus-outline-width @keyboard-focus-outline-color);
+      content: '';
+      left: 0;
+      opacity: 0;
+      pointer-events: none;
+      position: absolute;
+      right: 0;
+      top: 0;
+
+      @media (forced-colors: active) {
+        border: 2px solid highlight;
+      }
+    }
+
+    &:hover:not(.tox-accordion__header--disabled) {
+      background-color: var(--tox-private-accordion-header-hover-background-color, @accordion-header-hover-background-color);
+    }
+
+    &:focus:not(.tox-accordion__header--disabled) {
+      position: relative;
+      z-index: 1;
+
+      &::after {
+        opacity: 1;
+      }
+    }
+
+    &.tox-accordion__header--disabled {
+      cursor: @accordion-header-disabled-cursor;
+      opacity: @accordion-header-disabled-opacity;
+    }
+
+    &.tox-accordion__header--icon-end {
+      padding-right: @accordion-header-padding;
+    }
+  }
+
+  .tox-accordion__content--expanded .tox-accordion__content-inner {
+    padding-top: calc(@accordion-content-padding-y + 1px);
+  }
+
+  .tox-accordion__header-icon {
+    align-items: center;
+    color: var(--tox-private-accordion-icon-color, @accordion-icon-color);
+    display: flex;
+    flex-shrink: 0;
+    height: @accordion-icon-size;
+    justify-content: center;
+    width: @accordion-icon-size;
+
+    svg {
+      display: block;
+      fill: currentColor;
+      height: 100%;
+      width: 100%;
+      max-height: @accordion-icon-size;
+      max-width: @accordion-icon-size;
+    }
+  }
+
+  .tox-accordion__header:not(.tox-accordion__header--icon-end) .tox-accordion__header-icon {
+    margin-right: @accordion-icon-margin;
+    margin-left: 0;
+  }
+
+  .tox-accordion__header--icon-end .tox-accordion__header-icon {
+    margin-left: auto;
+  }
+
+  .tox-accordion__header-text {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .tox-accordion__header--icon-end .tox-accordion__header-text {
+    flex: 0 1 auto;
+    margin-right: @accordion-icon-margin;
+  }
+
+  .tox-accordion__content {
+    border-radius: @control-border-radius;
+
+    &.tox-accordion__content--collapsed {
+      display: none;
+    }
+
+    &.tox-accordion__content--expanded {
+      display: block;
+    }
+  }
+
+  .tox-accordion__content-inner {
+    padding: @accordion-content-padding-y @accordion-content-padding-x;
+
+    .tox-form__group {
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      > *:not(:first-child) {
+        margin-top: @pad-sm + @pad-xs;
+      }
+
+      > .tox-dropdown-content {
+        margin-top: 0;
+      }
+    }
+
+    .tox-button-group {
+      display: flex;
+      gap: @pad-sm;
+    }
+
+    .tox-accordion__model-button {
+      align-items: center;
+      appearance: none;
+      background: none;
+      border: none;
+      color: inherit;
+      cursor: pointer;
+      display: flex;
+      font-family: inherit;
+      font-size: inherit;
+      gap: @pad-xs;
+      margin: 0;
+      outline: none;
+      padding: 6px (@pad-sm + @pad-xs);
+      position: relative;
+
+      &::after {
+        border-radius: @accordion-border-radius;
+        bottom: 0;
+        box-shadow: 0 0 0 @keyboard-focus-outline-width @keyboard-focus-outline-color;
+        content: '';
+        left: 0;
+        opacity: 0;
+        pointer-events: none;
+        position: absolute;
+        right: 0;
+        top: 0;
+
+        @media (forced-colors: active) {
+          border: 2px solid highlight;
+        }
+      }
+
+      &:focus {
+        z-index: 1;
+
+        &::after {
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  .tox-accordion .tox-selectfield {
+    align-items: center;
+    background-color: @accordion-background-color;
+    border: 1px solid @accordion-border-color;
+    border-radius: @accordion-border-radius;
+    box-sizing: border-box;
+    display: flex;
+    height: 34px;
+    padding: 0 6px;
+    position: relative;
+    width: 100%;
+
+    &:focus-within {
+      box-shadow: 0 0 0 @keyboard-focus-outline-width @keyboard-focus-outline-color;
+      z-index: 1;
+
+      @media (forced-colors: active) {
+        border-color: highlight;
+        box-shadow: 0 0 0 2px highlight;
+      }
+    }
+
+    button {
+      appearance: none;
+      background: none;
+      border: none;
+      color: inherit;
+      cursor: pointer;
+      flex: 1;
+      font-family: inherit;
+      font-size: inherit;
+      line-height: inherit;
+      margin: 0;
+      outline: none;
+      padding: 5px 0;
+      text-align: left;
+    }
+
+    .tox-icon {
+      display: flex;
+      flex-shrink: 0;
+      padding: 9px 0;
+      pointer-events: none;
+
+      svg {
+        height: @base-value;
+        width: @base-value;
+      }
+    }
+  }
+}
+
+.tox[dir=rtl] {
+  .tox-accordion__header {
+    text-align: right;
+  }
+
+  .tox-accordion__header:not(.tox-accordion__header--icon-end) .tox-accordion__header-icon {
+    margin-left: @accordion-icon-margin;
+    margin-right: 0;
+  }
+
+  .tox-accordion__header--icon-end .tox-accordion__header-icon {
+    margin-right: auto;
+    margin-left: 0;
+  }
+
+  .tox-accordion__header--icon-end .tox-accordion__header-text {
+    margin-left: @accordion-icon-margin;
+    margin-right: 0;
+  }
+}

@@ -474,7 +474,9 @@ const contentBodyLoaded = (editor: Editor): void => {
   Lists.setup(editor);
   TouchEvents.setup(editor);
   DetailsElement.setup(editor);
-  NonEditableFilter.setup(editor);
+  if (Options.shouldAllowNonEditable(editor)) {
+    NonEditableFilter.setup(editor);
+  }
 
   if (!Rtc.isRtc(editor)) {
     MultiClickSelection.setup(editor);

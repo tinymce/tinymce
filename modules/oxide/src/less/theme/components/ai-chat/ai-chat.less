@@ -1,22 +1,40 @@
 .tox-ai when (@custom-properties-enabled = true) {
-  --tox-private-ai-user-prompt-background: hsl( from var(--tox-private-background-color) h s calc(l - 6));
+  --tox-private-background-secondary: hsl( from var(--tox-private-background-color) h s calc(l - 6));
   --tox-private-ai-footer-border-color: hsl( from var(--tox-private-background-color) h s calc(l - 11));
 }
 
-.tox-ai {
+.tox .tox-ai {
+
+  .tox-sidebar-content__title {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    margin-right: auto;
+  }
+
+  .tox-sidebar-content__actions {
+    display: flex;
+    gap: 8px;
+  }
+
   .tox-ai__user-prompt {
     display: flex;
     flex-direction: column;
     margin-left: auto;
     gap: inherit;
+    width: 100%;
   }
 
   .tox-ai__user-prompt__context {
     margin-left: auto;
+    display: flex;
+    flex-direction: column;
+    gap: inherit;
+    align-items: end;
   }
 
   .tox-ai__user-prompt__text {
-    background-color: var(--tox-private-ai-user-prompt-background, darken(@background-color, 6%));
+    background-color: var(--tox-private-background-secondary, darken(@background-color, 6%));
     padding: var(--tox-private-pad-sm, @pad-sm) 12px;
     border-radius: var(--tox-private-control-border-radius, @control-border-radius);
     max-width: 80%;
@@ -25,7 +43,8 @@
   }
 
   .tox-ai__scroll {
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
     background-color: var(--tox-private-background-color, @background-color);
     display: flex;
     padding: 12px;
@@ -36,6 +55,69 @@
     align-self: stretch;
   }
 
+  .tox-ai__spinner svg {
+    fill: var(--tox-private-color-tint, @color-tint);
+  }
+
+  .tox-ai__response {
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+  }
+
+  .tox-ai__response__header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .tox-ai__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .tox-ai__response-sources {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .tox-ai__response-sources-header {
+    display: block;
+  }
+
+  .tox-ai__response-sources-list {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    align-self: stretch;
+    flex-wrap: wrap;
+
+    .tox-tag {
+      border: 1px solid var(--tox-private-border-color, @border-color);
+      background-color: transparent;
+      max-width: 132px;
+      max-height: 24px;
+      cursor: pointer;
+
+      svg, img {
+        width: 16px;
+        height: 16px;
+        min-width: 16px;
+        min-height: 16px;
+        max-width: 16px;
+        max-height: 16px;
+      }
+
+      .tox-tag__label {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+    }
+  }
+
   .tox-ai__response-content {
     padding: var(--tox-private-pad-sm, @pad-sm) 0;
     color: var(--tox-private-text-color, @text-color);
@@ -44,22 +126,43 @@
     font-style: normal;
     font-weight: var(--tox-private-font-weight-normal, @font-weight-normal);
     line-height: var(--tox-private-line-height, 18px);
-    white-space: pre-wrap;
   }
 
   .tox-ai__response.tox-ai__response-streaming {
-    background: linear-gradient(180deg, var(--tox-private-color-black, @color-black) 0%, transparent 100%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    position: relative;
   }
 
-  .tox-ai__error-message {
+  .tox-ai__response.tox-ai__response-streaming::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: min(100px, 100%);
+    pointer-events: none;
+
+    // 60px of transparent background and then a gradient from transparent to background color. This ensures the loader and first line of streamed response don't have gradient style #TINY-13486
+    background: linear-gradient(to bottom, transparent 60px, transparent 60px, var(--tox-private-background-color, @background-color));
+  }
+
+  .tox-ai-error {
     border-radius: var(--tox-private-panel-border-radius, @panel-border-radius);
     border: 1px solid var(--tox-private-color-error, @color-error);
-    background: linear-gradient(0deg, color-mix(in srgb, var(--tox-private-color-white, @color-white) 90%, transparent) 0%, color-mix(in srgb, var(--tox-private-color-white, @color-white) 90%, transparent) 100%),  var(--tox-private-color-error, @color-error);
+    background: linear-gradient(0deg, rgba(from var(--tox-private-color-white, @color-white) r g b / 0.9) 0%,  rgba(from var(--tox-private-color-white, @color-white) r g b / 0.9) 100%), var(--tox-private-color-error, @color-error);
     padding: var(--tox-private-pad-sm, @pad-sm);
     width: 100%;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .tox-ai-error__message {
+    flex: 1 0 0;
+  }
+
+  .tox-ai-error__icon {
+    flex: 0 0 auto;
+    align-self: flex-start;
   }
 
   .tox-ai__footer {
@@ -80,4 +183,136 @@
     display: flex;
     gap: var(--tox-private-pad-sm, @pad-sm);
   }
+
+  .tox-ai__models-menu {
+    display: flex;
+    flex-direction: column;
+    padding: var(--tox-private-pad-xs, @pad-xs);
+    align-items: center;
+    border-radius: 0;
+    border: 0;
+    background: var(--tox-private-background-color, @background-color);
+    box-shadow: 0 0 40px 1px rgba(from var(--tox-private-color-black, @color-black) r g b / 0.15), 0 16px 16px -10px rgba(from var(--tox-private-color-black, @color-black) r g b / 0.15);
+    max-width: 350px;
+  }
+
+  .tox-ai__models-menu__item {
+    display: flex;
+    padding: var(--tox-private-pad-xs, @pad-xs) var(--tox-private-pad-sm, @pad-sm);
+    align-items: flex-start;
+    gap: var(--tox-private-pad-sm, @pad-sm);
+    align-self: stretch;
+    cursor: pointer;
+
+    .tox-ai__models-menu__item__checkmark {
+      margin-left: auto;
+      svg {
+        fill: transparent;
+      }
+    }
+
+    &.tox-ai__models-menu__item--selected .tox-ai__models-menu__item__checkmark {
+      svg {
+        fill: currentColor;
+      }
+    }
+  }
+
+  .tox-ai__models-menu__item__description {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    font-size: var(--tox-private-font-size-sm, @font-size-sm);
+  }
+
+  .tox-ai__models-menu__item__description__title {
+    font-weight: var(--tox-private-font-weight-bold, @font-weight-bold);
+  }
+
+  .tox-ai__models-menu__item__description__content {
+    color: var(--tox-private-text-color-muted, @text-color-muted);
+   }
+
+  .tox-collection__item--active:not(.tox-collection__item--state-disabled) .tox-ai__models-menu__item__description__content {
+    color: inherit;
+  }
+
+  .tox-ai__models-menu__item__description__ability {
+    font-weight: var(--tox-private-font-weight-bold, @font-weight-bold);
+  }
+
+  .tox-tooltip {
+    display: none;
+    padding: var(--tox-private-pad-xs, @pad-xs) 0 0;
+  }
+
+  .tox-ai-chat-history-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--tox-private-pad-sm, @pad-sm);
+    padding-top: var(--tox-private-pad-xs, @pad-xs);
+    width: 100%;
+  }
+
+  .tox-ai-chat-history-list__title {
+    color: var(--tox-private-text-color-muted, @text-color-muted);
+    font-size: var(--tox-private-font-size-sm, @font-size-sm);
+    font-weight: var(--tox-private-font-weight-bold, @font-weight-bold);
+    line-height: 18px;
+    letter-spacing: 1px;
+  }
+
+  .tox-ai-chat-history-list__item {
+    display: flex;
+    // TODO: Replace with a proper global variable once we have it setup
+    padding: 12px;
+    gap: 8px;
+    border-radius: var(--tox-private-control-border-radius, @control-border-radius);
+    cursor: pointer;
+
+    &:hover, &:focus {
+      background-color: var(--tox-private-background-secondary, darken(@background-color, 6%));
+    }
+    &.tox-ai-chat-history-list__item-edit-title {
+      background-color: var(--tox-private-background-secondary, darken(@background-color, 6%));
+      flex-direction: column;
+    }
+  }
+
+  .tox-ai-chat-history-list__item-edit-actions {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    gap: 8px;
+
+    .tox-ai__spinner svg {
+      fill: rgba(from var(--tox-private-color-white, @color-white) r g b / 0.5);
+    }
+  }
+
+
+  .tox-ai-chat-history-list__item-content {
+    display: flex;
+    flex-direction: column;
+    margin-right: auto;
+  }
+
+  .tox-ai-chat-history-list__item-actions {
+    display: flex;
+    align-items: center;
+  }
+
+  .tox-ai-chat-history-list__item-content-title {
+    color: var(--tox-private-text-color, @text-color);
+    font-size: var(--tox-private-font-size-base, @font-size-base);
+    font-weight: var(--tox-private-font-weight-bold, @font-weight-bold);
+    line-height: var(--tox-private-font-size-lg, @font-size-lg);
+  }
+
+  .tox-ai-chat-history-list__item-content-date {
+    color: var(--tox-private-text-color, @text-color);
+    font-size: var(--tox-private-font-size-xs, @font-size-xs);
+    line-height: var(--tox-private-line-height-base, @line-height-base);
+  }
+
 }
