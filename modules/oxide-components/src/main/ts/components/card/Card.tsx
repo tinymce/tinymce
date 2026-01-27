@@ -28,10 +28,6 @@ export interface CardHeaderProps extends PropsWithChildren {
   readonly title?: string;
 }
 
-/**
- * Card Body component props.
- * Contains the main content of the card.
- */
 export interface CardBodyProps extends PropsWithChildren {}
 
 export interface CardActionsProps extends PropsWithChildren {
@@ -42,22 +38,11 @@ export interface CardHighlightProps extends PropsWithChildren {
   readonly type: CardHighlightType;
 }
 
-/**
- * Card Skeleton component props.
- * Displays a loading placeholder while card content is being fetched.
- */
 export interface CardSkeletonProps {
-  /** Additional CSS class name */
   readonly className?: string;
-  /** Number of skeleton lines to display in the body (default: 1) */
   readonly lines?: number;
 }
 
-/**
- * Card Root component.
- * Container for a card with support for selection states and loading state.
- * Must be used within a CardList for proper keyboard navigation.
- */
 const Root: FC<CardRootProps> = ({
   children,
   className,
@@ -93,8 +78,6 @@ const Root: FC<CardRootProps> = ({
   }, [ onSelect, listContext, index ]);
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-    // Keyboard activation is handled by CardList's useFlowKeyNavigation
-    // Only need to check for interactive child elements
     if (e.key !== 'Enter' && e.key !== ' ') {
       return;
     }
@@ -124,7 +107,6 @@ const Root: FC<CardRootProps> = ({
     + (loading ? ' tox-skeleton' : '')
     + (Type.isNonNullable(className) ? ` ${className}` : '');
 
-  // Skeleton content to show when loading
   const skeletonContent = (
     <>
       <div className={Bem.element('tox-card', 'body')}>
@@ -153,10 +135,6 @@ const Root: FC<CardRootProps> = ({
   );
 };
 
-/**
- * Card Header component.
- * Displays the header/title section of the card.
- */
 const Header: FC<CardHeaderProps> = ({ children, title }) => {
   return (
     <div className={Bem.element('tox-card', 'header')}>
@@ -165,10 +143,6 @@ const Header: FC<CardHeaderProps> = ({ children, title }) => {
   );
 };
 
-/**
- * Card Body component.
- * Contains the main content of the card.
- */
 const Body: FC<CardBodyProps> = ({ children }) => {
   return (
     <div className={Bem.element('tox-card', 'body')}>
@@ -177,11 +151,6 @@ const Body: FC<CardBodyProps> = ({ children }) => {
   );
 };
 
-/**
- * Card Actions component.
- * Contains action buttons (Skip, Apply, Revert, etc.)
- * Default layout is flex-start (buttons on left with gap between them)
- */
 const Actions: FC<CardActionsProps> = ({ children, layout = 'flex-start' }) => {
   return (
     <div className={Bem.element('tox-card', 'actions', {
@@ -193,10 +162,6 @@ const Actions: FC<CardActionsProps> = ({ children, layout = 'flex-start' }) => {
   );
 };
 
-/**
- * Card Highlight component.
- * Displays highlighted text with added/deleted/modified styling.
- */
 const Highlight: FC<CardHighlightProps> = ({ children, type }) => {
   return (
     <div className={Bem.element('tox-card', 'highlight', {
@@ -209,11 +174,6 @@ const Highlight: FC<CardHighlightProps> = ({ children, type }) => {
   );
 };
 
-/**
- * Card Skeleton component.
- * Displays a loading skeleton while card content is being fetched.
- * Uses actual Card structure to maintain proper spacing and appearance.
- */
 const Skeleton: FC<CardSkeletonProps> = ({ className, lines = 1 }) => {
   const cardClassName = Bem.block('tox-card')
     + ' tox-skeleton'

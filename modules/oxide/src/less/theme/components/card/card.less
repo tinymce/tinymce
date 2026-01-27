@@ -17,6 +17,7 @@
 @card-border-radius: @control-border-radius;
 @card-selected-border-width: @keyboard-focus-outline-width;
 @card-highlight-border-width: @keyboard-focus-outline-width;
+@card-hover-box-shadow: 0 4px 8px 0 fade(@color-black, 10%);
 
 .tox {
   .tox-card {
@@ -30,7 +31,7 @@
     border: @card-selected-border-width solid transparent;
 
     &:hover {
-      box-shadow: 0 4px 8px 0 fade(@color-black, 10%);
+      box-shadow: @card-hover-box-shadow;
     }
 
     &--selected {
@@ -142,15 +143,14 @@
       }
     }
 
-    // Skeleton-specific adjustments when card contains skeleton lines
     &.tox-skeleton {
       cursor: default;
       pointer-events: none;
       border-color: @border-color;
-      box-shadow: 0 1px 3px 0 fade(@color-black, 8%);
+      box-shadow: none;
 
       &:hover {
-        box-shadow: 0 1px 3px 0 fade(@color-black, 8%); // Keep same shadow on hover
+        box-shadow: none;
       }
 
       .tox-skeleton__line {

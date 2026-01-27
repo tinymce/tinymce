@@ -69,30 +69,6 @@ export interface CardListProps extends PropsWithChildren {
   readonly onSelectCard?: (index: number) => void;
 }
 
-/**
- * CardListController provides controlled state for CardList via context.
- *
- * Wrap CardList with this component when you need to control the focus
- * and selection state externally.
- *
- * @example
- * ```tsx
- * const [focusedIndex, setFocusedIndex] = useState(0);
- * const [selectedIndex, setSelectedIndex] = useState<number>();
- *
- * <CardListController
- *   focusedIndex={focusedIndex}
- *   onFocusedIndexChange={setFocusedIndex}
- *   selectedIndex={selectedIndex}
- *   onSelectCard={setSelectedIndex}
- * >
- *   <CardList ariaLabel="Review suggestions">
- *     <Card.Root index={0}>...</Card.Root>
- *     <Card.Root index={1}>...</Card.Root>
- *   </CardList>
- * </CardListController>
- * ```
- */
 export const CardListController: FC<CardListControllerProps> = ({
   children,
   focusedIndex,
@@ -114,9 +90,6 @@ export const CardListController: FC<CardListControllerProps> = ({
   );
 };
 
-/**
- * Common rendering logic for CardList (shared by controlled and uncontrolled modes).
- */
 interface CardListImplProps {
   readonly children: PropsWithChildren['children'];
   readonly className?: string;
@@ -176,9 +149,6 @@ const CardListImpl: FC<CardListImplProps> = ({
   );
 };
 
-/**
- * Controlled CardList - used inside CardListController.
- */
 const CardListControlled: FC<CardListProps> = ({
   children,
   className,
@@ -213,9 +183,6 @@ const CardListControlled: FC<CardListProps> = ({
   );
 };
 
-/**
- * Uncontrolled CardList - standalone usage with internal state.
- */
 const CardListUncontrolled: FC<CardListProps> = ({
   children,
   className,
