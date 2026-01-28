@@ -206,7 +206,7 @@ const Item: FC<AccordionItemProps> = ({
   );
 
   return (
-    <div className="tox-accordion__item">
+    <div className={`tox-accordion__item${isExpanded ? ' tox-accordion__item--expanded' : ''}`}>
       <HeadingTag className="tox-accordion__heading">
         <button
           id={headerId}
