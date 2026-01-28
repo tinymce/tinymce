@@ -48,6 +48,8 @@ const waitForElementText = async (getByText: (text: string) => Locator, text: st
 const resetPostioningStyles = (fragment: DocumentFragment): DocumentFragment => {
   fragment.querySelectorAll('.tox-dropdown-content').forEach((dropdownContent) => {
     (dropdownContent as HTMLElement).style.maxWidth = '';
+    (dropdownContent as HTMLElement).style.minWidth = '';
+    (dropdownContent as HTMLElement).style.maxHeight = '';
     (dropdownContent as HTMLElement).style.top = '';
     (dropdownContent as HTMLElement).style.left = '';
   });
