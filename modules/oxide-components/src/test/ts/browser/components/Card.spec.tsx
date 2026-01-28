@@ -643,4 +643,139 @@ describe('browser.components.CardTest', () => {
       expect(asFragment()).toMatchSnapshot('CardList with multiple cards');
     });
   });
+
+  describe('Skeleton Tests', () => {
+    it('TINY-13458: Should render skeleton with default props', async () => {
+      const { container } = render(<Card.Skeleton />, { wrapper });
+      const skeleton = container.querySelector('.tox-card.tox-skeleton');
+      expect(skeleton).toBeTruthy();
+      expect(skeleton?.querySelectorAll('.tox-skeleton__line').length).toBe(2); // 1 body + 1 actions
+    });
+
+    it('TINY-13458: Should render skeleton with custom line count', async () => {
+      const { container } = render(<Card.Skeleton lines={2} />, { wrapper });
+      const skeleton = container.querySelector('.tox-card.tox-skeleton');
+      expect(skeleton?.querySelectorAll('.tox-skeleton__line').length).toBe(3); // 2 body + 1 actions
+    });
+
+    it('TINY-13458: Should be hidden from accessibility tree', async () => {
+      const { container } = render(<Card.Skeleton />, { wrapper });
+      const skeleton = container.querySelector('.tox-card.tox-skeleton');
+      expect(skeleton?.getAttribute('aria-hidden')).toBe('true');
+    });
+
+    it('TINY-13458: Should have tox-skeleton class for animation inheritance', async () => {
+      const { container } = render(<Card.Skeleton />, { wrapper });
+      const skeleton = container.querySelector('.tox-card');
+      expect(skeleton?.className).toContain('tox-skeleton');
+    });
+
+    it('TINY-13458: Should have proper card structure with body and actions', async () => {
+      const { container } = render(<Card.Skeleton />, { wrapper });
+      const body = container.querySelector('.tox-card__body');
+      const actions = container.querySelector('.tox-card__actions');
+      expect(body).toBeTruthy();
+      expect(actions).toBeTruthy();
+    });
+  });
+
+  describe('Loading State Tests', () => {
+    it('TINY-13458: Should show skeleton content when loading is true', async () => {
+      const { container } = render(
+        <Card.Root loading={true} index={0}>
+          <Card.Body>Content</Card.Body>
+        </Card.Root>,
+        { wrapper }
+      );
+      const card = container.querySelector('.tox-card');
+      expect(card?.className).toContain('tox-skeleton');
+      expect(card?.querySelectorAll('.tox-skeleton__line').length).toBe(2);
+    });
+
+    it('TINY-13458: Should show children when loading is false', async () => {
+      const { getByText } = render(
+        <Card.Root loading={false} index={0}>
+          <Card.Body>Loaded Content</Card.Body>
+        </Card.Root>,
+        { wrapper }
+      );
+      expect(getByText('Loaded Content').element()).toBeTruthy();
+    });
+
+    it('TINY-13458: Should have aria-busy when loading', async () => {
+      const { container } = render(
+        <Card.Root loading={true} index={0}>
+          <Card.Body>Content</Card.Body>
+        </Card.Root>,
+        { wrapper }
+      );
+      const card = container.querySelector('.tox-card');
+      expect(card?.getAttribute('aria-busy')).toBe('true');
+    });
+
+    it('TINY-13458: Should not have aria-busy when not loading', async () => {
+      const { container } = render(
+        <Card.Root loading={false} index={0}>
+          <Card.Body>Content</Card.Body>
+        </Card.Root>,
+        { wrapper }
+      );
+      const card = container.querySelector('.tox-card');
+      expect(card?.getAttribute('aria-busy')).toBe('false');
+    });
+
+    it('TINY-13458: Should not trigger onSelect when loading', async () => {
+      const onSelect = vi.fn();
+      const { container } = render(
+        <Card.Root loading={true} onSelect={onSelect} index={0}>
+          <Card.Body>Content</Card.Body>
+        </Card.Root>,
+        { wrapper }
+      );
+      const card = container.querySelector('.tox-card') as HTMLElement;
+      // Card has pointer-events: none when loading, so onClick should be undefined
+      // Try to trigger click event directly
+      card.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+      expect(onSelect).not.toHaveBeenCalled();
+    });
+
+    it('TINY-13458: Should trigger onSelect when not loading', async () => {
+      const onSelect = vi.fn();
+      const { container } = render(
+        <Card.Root loading={false} onSelect={onSelect} index={0}>
+          <Card.Body>Content</Card.Body>
+        </Card.Root>,
+        { wrapper }
+      );
+      const card = container.querySelector('.tox-card') as HTMLElement;
+      await userEvent.click(card);
+      expect(onSelect).toHaveBeenCalledTimes(1);
+    });
+
+    it('TINY-13458: Should transition from loading to loaded state', async () => {
+      const { container, rerender } = render(
+        <Card.Root loading={true} index={0}>
+          <Card.Body>Content</Card.Body>
+        </Card.Root>,
+        { wrapper }
+      );
+
+      // Initially loading
+      let card = container.querySelector('.tox-card');
+      expect(card?.className).toContain('tox-skeleton');
+      expect(card?.querySelectorAll('.tox-skeleton__line').length).toBe(2);
+
+      // Rerender with loading=false
+      rerender(
+        <Card.Root loading={false} index={0}>
+          <Card.Body>Content</Card.Body>
+        </Card.Root>
+      );
+
+      // Now loaded
+      card = container.querySelector('.tox-card');
+      expect(card?.className).not.toContain('tox-skeleton');
+      expect(container.textContent).toContain('Content');
+    });
+  });
 });

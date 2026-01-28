@@ -11,6 +11,7 @@ exports[`browser.components.CardTest > Snapshot Tests > TINY-13459: Should match
       role="listbox"
     >
       <div
+        aria-busy="false"
         aria-label="Card 1"
         aria-selected="false"
         class="tox-card tox-card--selected"
@@ -45,6 +46,7 @@ exports[`browser.components.CardTest > Snapshot Tests > TINY-13459: Should match
         </div>
       </div>
       <div
+        aria-busy="false"
         aria-label="Card 2"
         aria-selected="true"
         class="tox-card"
@@ -94,6 +96,7 @@ exports[`browser.components.CardTest > Snapshot Tests > TINY-13459: Should match
       role="listbox"
     >
       <div
+        aria-busy="false"
         aria-label="Card 1"
         aria-selected="false"
         class="tox-card tox-card--selected"
@@ -143,6 +146,7 @@ exports[`browser.components.CardTest > Snapshot Tests > TINY-13459: Should match
       role="listbox"
     >
       <div
+        aria-busy="false"
         aria-label="Card 1"
         aria-selected="true"
         class="tox-card tox-card--selected"
