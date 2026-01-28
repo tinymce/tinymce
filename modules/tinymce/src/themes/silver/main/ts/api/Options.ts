@@ -282,6 +282,10 @@ const register = (editor: Editor): void => {
     processor: 'string'
   });
 
+  registerOption('view_show', {
+    processor: 'string'
+  });
+
   // This option is being registered in the theme instead of the help plugin as it cannot be accessed from the theme when registered there
   registerOption('help_accessibility', {
     processor: 'boolean',
@@ -330,6 +334,7 @@ const useBranding = option('branding');
 const getResize = option('resize');
 const getPasteAsText = option('paste_as_text');
 const getSidebarShow = option('sidebar_show');
+const getViewShow = option('view_show');
 const promotionEnabled = option('promotion');
 const useHelpAccessibility = option('help_accessibility');
 const getDefaultFontStack = option('default_font_stack');
@@ -490,6 +495,7 @@ export {
   getResize,
   getPasteAsText,
   getSidebarShow,
+  getViewShow,
   useHelpAccessibility,
   getDefaultFontStack
 };
