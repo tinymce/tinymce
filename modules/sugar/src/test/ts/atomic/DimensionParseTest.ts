@@ -8,7 +8,7 @@ describe('atomic.sugar.DimensionParseTest', () => {
   it('All valid floats are valid', () => {
     fc.assert(fc.property(fc.oneof(
       // small to medium floats
-      fc.float(),
+      fc.float({ noNaN: true, noDefaultInfinity: true }),
       // big floats
       fc.tuple(
         fc.float({ noNaN: true, noDefaultInfinity: true }),
