@@ -141,12 +141,6 @@
         max-width: 16px;
         max-height: 16px;
       }
-
-      .tox-tag__label {
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
-      }
     }
   }
 
@@ -215,6 +209,7 @@
   .tox-ai__context {
     display: flex;
     gap: var(--tox-private-pad-sm, @pad-sm);
+    flex-wrap: wrap;
   }
 
   .tox-ai__footer-actions {
