@@ -183,6 +183,10 @@ const Item: FC<AccordionItemProps> = ({
     }
   }, [ disabled, toggleItem, id ]);
 
+  const itemClassName = Bem.element('tox-accordion', 'item', {
+    expanded: isExpanded,
+  });
+
   const headerClassName = Bem.element('tox-accordion', 'header', {
     'expanded': isExpanded,
     disabled,
@@ -206,7 +210,7 @@ const Item: FC<AccordionItemProps> = ({
   );
 
   return (
-    <div className={`tox-accordion__item${isExpanded ? ' tox-accordion__item--expanded' : ''}`}>
+    <div className={itemClassName}>
       <HeadingTag className="tox-accordion__heading">
         <button
           id={headerId}
