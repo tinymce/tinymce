@@ -53,10 +53,12 @@
   }
 
   .tox-accordion__item {
-    background-color: var(--tox-private-accordion-item-background-color, @accordion-item-background-color);
-    border: 1px solid var(--tox-private-border-color, @accordion-border-color);
     border-radius: @control-border-radius;
     position: relative;
+
+    &.tox-accordion__item--expanded {
+      background-color: var(--tox-private-accordion-item-background-color, @accordion-item-background-color);
+    }
   }
 
   .tox-accordion__heading {
