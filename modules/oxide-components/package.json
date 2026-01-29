@@ -29,8 +29,8 @@
   "types": "lib/src/main/ts/main.d.ts",
   "scripts": {
     "dev": "vite",
-    "build": "yarn build-storybook && tsc -b && vite build",
-    "lint": "eslint --max-warnings=0 src/**/*.ts?",
+    "build": "bun build-storybook && tsc -b && vite build",
+    "lint": "eslint --max-warnings=0 'src/**/*.ts' 'src/**/*.tsx'",
     "start": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "deploy-storybook": "gh-pages -d ./storybook-static --nojekyll --dest modules/oxide-components",
@@ -42,7 +42,7 @@
     "test-ci": "vitest --watch=false --reporter=default --reporter=junit --outputFile=scratch/test-results.xml",
     "test-browser-manual": "vitest --watch --project browser --browser.headless false",
     "test-browser-headless": "vitest run --project browser",
-    "ci": "yarn lint && yarn --cwd ../../ lerna run build --scope @tinymce/oxide-components --include-dependencies && yarn test"
+    "ci": "bun lint; lerna run build --scope @tinymce/oxide-components --include-dependencies; bun run test"
   },
   "peerDependencies": {
     "react": "^18.3.1",
@@ -61,8 +61,8 @@
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.5.0",
-    "@vitest/browser": "^4.0.5",
-    "@vitest/browser-playwright": "^4.0.5",
+    "@vitest/browser": "^4.0.15",
+    "@vitest/browser-playwright": "^4.0.15",
     "@vitest/coverage-v8": "^3.1.4",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",
@@ -77,14 +77,13 @@
     "storybook-addon-pseudo-states": "9.0.17",
     "terser": "^5.28.1",
     "vite": "^6.3.5",
-    "vitest": "^4.0.5",
+    "vitest": "^4.0.15",
     "vitest-browser-react": "^1.0.1"
   },
   "workspaces": {
     "nohoist": [
       "**/storybook",
-      "**/@storybook/**",
-      "**/vite**"
+      "**/@storybook/**"
     ]
   },
   "dependencies": {
