@@ -1,6 +1,6 @@
 project: tinymce
 kind: Fixed
-body: 'Load bundled content CSS into Preview Iframe '
+body: 'Bundled content CSS is now loaded into preview iframes'
 time: 2026-01-29T11:01:21.205711+10:00
 custom:
     Issue: TINY-13190
