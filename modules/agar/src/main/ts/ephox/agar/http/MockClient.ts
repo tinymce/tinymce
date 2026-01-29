@@ -266,7 +266,7 @@ export const stopMocking = async (): Promise<void> => {
   if (Shared.isMockingStoppedMessage(message)) {
     navigator.serviceWorker.removeEventListener('message', messageHandler);
     mockingEnabled = false;
-    await Promise.allSettled(inflightRequests.values());
+    // await Promise.allSettled(inflightRequests.values());
     infoLog('Mocking disabled');
   } else {
     throw new Error('Failed to stop mocking. Unexpected response from service worker.');
