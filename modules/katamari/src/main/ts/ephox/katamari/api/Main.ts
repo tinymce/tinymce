@@ -7,6 +7,8 @@ import { Future } from './Future';
 import { FutureResult } from './FutureResult';
 import * as Futures from './Futures';
 import { Global } from './Global';
+import * as HashMap from './HashMap';
+import * as HashSet from './HashSet';
 import * as Id from './Id';
 import * as Jam from './Jam';
 import { LazyValue } from './LazyValue';
@@ -47,6 +49,8 @@ export {
   FutureResult,
   Futures,
   Global,
+  HashMap,
+  HashSet,
   Id,
   Jam,
   LazyValue,
