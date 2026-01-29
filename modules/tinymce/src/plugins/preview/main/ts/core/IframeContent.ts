@@ -30,11 +30,10 @@ const getPreviewHtml = (editor: Editor): string => {
   const cors = Options.shouldUseContentCssCors(editor) ? ' crossorigin="anonymous"' : '';
 
   Tools.each(editor.contentCSS, (url) => {
-    if (tinymce.Resource.has(ContentCss.toContentSkinResourceName(url))) {
-      const css = tinymce.Resource.get(ContentCss.toContentSkinResourceName(url));
-      if (Type.isString(css)) {
-        headHtml += '<style type="text/css">' + css + '</style>';
-      }
+    const resourceName = ContentCss.toContentSkinResourceName(url);
+    const css = tinymce.Resource.has(resourceName) ? tinymce.Resource.get(resourceName) : null;
+    if (Type.isString(css)) {
+      headHtml += '<style type="text/css">' + css + '</style>';
     } else {
       headHtml += '<link type="text/css" rel="stylesheet" href="' + encode(editor.documentBaseURI.toAbsolute(url)) + '"' + cors + '>';
     }
