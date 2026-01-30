@@ -1,6 +1,8 @@
 import { after, before } from '@ephox/bedrock-client';
 import { Singleton } from '@ephox/katamari';
 
+import * as Waiter from '../api/Waiter';
+
 import * as HttpHandler from './HttpHandler';
 import * as MockClient from './MockClient';
 import type * as Shared from './Shared';
@@ -31,9 +33,11 @@ export const mockHttpHook = <T>(
       ...config,
       handler: (request, abortSignal) => HttpHandler.resolveRequest(requestHandlers, request, abortSignal)
     });
+    await Waiter.pWait(100);
   });
 
   after(async () => {
+    await Waiter.pWait(100);
     await MockClient.stopMocking();
   });
 
