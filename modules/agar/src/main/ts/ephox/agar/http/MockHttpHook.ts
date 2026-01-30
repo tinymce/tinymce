@@ -36,7 +36,8 @@ export const mockHttpHook = <T>(
     });
   });
 
-  after(async () => {
+  after(async function () {
+    this.timeout(10000);
     await MockClient.stopMocking();
   });
 
