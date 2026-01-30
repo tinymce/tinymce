@@ -1,4 +1,4 @@
-import { Arr, Obj, Type } from '@ephox/katamari';
+import { Arr, Obj, Type, Optional } from '@ephox/katamari';
 import { Link } from '@ephox/sugar';
 
 import ScriptLoader from 'tinymce/core/api/dom/ScriptLoader';
@@ -6,10 +6,9 @@ import type Editor from 'tinymce/core/api/Editor';
 import type { TinyMCE } from 'tinymce/core/api/Tinymce';
 import Tools from 'tinymce/core/api/util/Tools';
 
-import * as ContentCss from '../../../../../core/main/ts/init/ContentCss';
 import * as Options from '../api/Options';
 
-declare let tinymce: TinyMCE;
+declare const tinymce: TinyMCE;
 
 const getComponentScriptsHtml = (editor: Editor) => {
   const urls = Arr.unique(Obj.values(editor.schema.getComponentUrls()));
@@ -29,14 +28,16 @@ const getPreviewHtml = (editor: Editor): string => {
 
   const cors = Options.shouldUseContentCssCors(editor) ? ' crossorigin="anonymous"' : '';
 
+  // Duplicated in modules/tinymce/src/core/main/ts/init/ContentCss.ts
+  const toContentSkinResourceName = (url: string): string => 'content/' + url + '/content.css';
+
   Tools.each(editor.contentCSS, (url) => {
-    const resourceName = ContentCss.toContentSkinResourceName(url);
-    const css = tinymce.Resource.has(resourceName) ? tinymce.Resource.get(resourceName) : null;
-    if (Type.isString(css)) {
-      headHtml += '<style type="text/css">' + css + '</style>';
-    } else {
-      headHtml += '<link type="text/css" rel="stylesheet" href="' + encode(editor.documentBaseURI.toAbsolute(url)) + '"' + cors + '>';
-    }
+    const resourceName = toContentSkinResourceName(url);
+    const css = Optional.from(tinymce.Resource.get(resourceName))
+      .filter(Type.isString)
+      .map((css) => '<style type="text/css">' + css + '</style>')
+      .getOr('<link type="text/css" rel="stylesheet" href="' + encode(editor.documentBaseURI.toAbsolute(url)) + '"' + cors + '>');
+    headHtml += css;
   });
 
   if (contentStyle) {
