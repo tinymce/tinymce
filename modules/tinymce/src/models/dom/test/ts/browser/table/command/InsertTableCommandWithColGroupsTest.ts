@@ -18,6 +18,8 @@ describe('browser.tinymce.models.dom.table.command.InsertTableCommandWithColGrou
     table_use_colgroups: true
   }, []);
 
+  const headerType = 'cells';
+
   beforeEach(() => {
     hook.editor().setContent('');
   });
@@ -50,7 +52,7 @@ describe('browser.tinymce.models.dom.table.command.InsertTableCommandWithColGrou
     TableTestUtils.assertTableStructureWithSizes(editor, 2, 2, '%', 100, [
       [ 50, 50 ],
       [ 50, 50 ]
-    ], true, { headerRows: 1, headerCols: 0 });
+    ], true, { headerRows: 1, headerCols: 0 }, headerType);
     TinyAssertions.assertCursor(editor, [ 0, 1, 0, 0 ], 0);
   });
 
@@ -60,7 +62,7 @@ describe('browser.tinymce.models.dom.table.command.InsertTableCommandWithColGrou
     TableTestUtils.assertTableStructureWithSizes(editor, 2, 2, '%', 100, [
       [ 50, 50 ],
       [ 50, 50 ]
-    ], true, { headerRows: 0, headerCols: 1 });
+    ], true, { headerRows: 0, headerCols: 1 }, headerType);
     TinyAssertions.assertCursor(editor, [ 0, 1, 0, 0 ], 0);
   });
 
@@ -70,7 +72,7 @@ describe('browser.tinymce.models.dom.table.command.InsertTableCommandWithColGrou
     TableTestUtils.assertTableStructureWithSizes(editor, 2, 2, '%', 100, [
       [ 50, 50 ],
       [ 50, 50 ]
-    ], true, { headerRows: 1, headerCols: 1 });
+    ], true, { headerRows: 1, headerCols: 1 }, headerType);
     TinyAssertions.assertCursor(editor, [ 0, 1, 0, 0 ], 0);
   });
 
@@ -80,7 +82,7 @@ describe('browser.tinymce.models.dom.table.command.InsertTableCommandWithColGrou
     TableTestUtils.assertTableStructureWithSizes(editor, 2, 2, '%', 100, [
       [ 50, 50 ],
       [ 50, 50 ]
-    ], true, { headerRows: 2, headerCols: 2 });
+    ], true, { headerRows: 2, headerCols: 2 }, headerType);
     TinyAssertions.assertCursor(editor, [ 0, 1, 0, 0 ], 0);
   });
 
@@ -91,7 +93,7 @@ describe('browser.tinymce.models.dom.table.command.InsertTableCommandWithColGrou
     TableTestUtils.assertTableStructureWithSizes(editor, 2, 2, '%', 100, [
       [ 50, 50 ],
       [ 50, 50 ]
-    ], true, { headerRows: 2, headerCols: 2 });
+    ], true, { headerRows: 2, headerCols: 2 }, headerType);
     TinyAssertions.assertCursor(editor, [ 0, 1, 0, 0 ], 0);
   });
 });
