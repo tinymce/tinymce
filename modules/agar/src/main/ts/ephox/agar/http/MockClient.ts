@@ -243,6 +243,7 @@ export const startMocking = async (mockingConfig: MockingConfig): Promise<void> 
     return;
   }
 
+  debugLog('registerServiceWorker');
   await registerServiceWorker(defaultedConfig.serviceWorkerUrl);
 
   currentMockingConfig = defaultedConfig;
