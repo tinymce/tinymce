@@ -43,6 +43,11 @@ export interface CardSkeletonProps {
   readonly lines?: number;
 }
 
+const renderSkeletonLines = (lines: number) =>
+  Arr.range(lines, (i) => (
+    <div key={i} className={Bem.element('tox-skeleton', 'line')} style={{ width: '100%' }} />
+  ));
+
 const Root: FC<CardRootProps> = ({
   children,
   className,
@@ -110,10 +115,10 @@ const Root: FC<CardRootProps> = ({
   const skeletonContent = (
     <>
       <div className={Bem.element('tox-card', 'body')}>
-        <div className="tox-skeleton__line" style={{ width: '100%' }} />
+        {renderSkeletonLines(1)}
       </div>
       <div className={Bem.element('tox-card', 'actions')}>
-        <div className="tox-skeleton__line" style={{ width: '50%' }} />
+        <div className={Bem.element('tox-skeleton', 'line')} style={{ width: '50%' }} />
       </div>
     </>
   );
@@ -182,12 +187,10 @@ const Skeleton: FC<CardSkeletonProps> = ({ className, lines = 1 }) => {
   return (
     <div className={cardClassName} aria-hidden="true">
       <div className={Bem.element('tox-card', 'body')}>
-        {Arr.range(lines, (i) => (
-          <div key={i} className="tox-skeleton__line" style={{ width: '100%' }} />
-        ))}
+        {renderSkeletonLines(lines)}
       </div>
       <div className={Bem.element('tox-card', 'actions')}>
-        <div className="tox-skeleton__line" style={{ width: '50%' }} />
+        <div className={Bem.element('tox-skeleton', 'line')} style={{ width: '50%' }} />
       </div>
     </div>
   );

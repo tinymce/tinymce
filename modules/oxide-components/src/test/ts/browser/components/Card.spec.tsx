@@ -649,13 +649,13 @@ describe('browser.components.CardTest', () => {
       const { container } = render(<Card.Skeleton />, { wrapper });
       const skeleton = container.querySelector('.tox-card.tox-skeleton');
       expect(skeleton).toBeTruthy();
-      expect(skeleton?.querySelectorAll('.tox-skeleton__line').length).toBe(2); // 1 body + 1 actions
+      expect(skeleton?.querySelectorAll(Bem.elementSelector('tox-skeleton', 'line')).length).toBe(2); // 1 body + 1 actions
     });
 
     it('TINY-13458: Should render skeleton with custom line count', async () => {
       const { container } = render(<Card.Skeleton lines={2} />, { wrapper });
       const skeleton = container.querySelector('.tox-card.tox-skeleton');
-      expect(skeleton?.querySelectorAll('.tox-skeleton__line').length).toBe(3); // 2 body + 1 actions
+      expect(skeleton?.querySelectorAll(Bem.elementSelector('tox-skeleton', 'line')).length).toBe(3); // 2 body + 1 actions
     });
 
     it('TINY-13458: Should be hidden from accessibility tree', async () => {
