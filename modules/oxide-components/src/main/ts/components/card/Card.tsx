@@ -38,11 +38,6 @@ export interface CardHighlightProps extends PropsWithChildren {
   readonly type: CardHighlightType;
 }
 
-export interface CardSkeletonProps {
-  readonly className?: string;
-  readonly lines?: number;
-}
-
 const renderSkeletonLines = (lines: number) =>
   Arr.range(lines, (i) => (
     <div key={i} className={Bem.element('tox-skeleton', 'line')} style={{ width: '100%' }} />
@@ -179,30 +174,12 @@ const Highlight: FC<CardHighlightProps> = ({ children, type }) => {
   );
 };
 
-const Skeleton: FC<CardSkeletonProps> = ({ className, lines = 1 }) => {
-  const cardClassName = Bem.block('tox-card')
-    + ' tox-skeleton'
-    + (Type.isNonNullable(className) ? ` ${className}` : '');
-
-  return (
-    <div className={cardClassName} aria-hidden="true">
-      <div className={Bem.element('tox-card', 'body')}>
-        {renderSkeletonLines(lines)}
-      </div>
-      <div className={Bem.element('tox-card', 'actions')}>
-        <div className={Bem.element('tox-skeleton', 'line')} style={{ width: '50%' }} />
-      </div>
-    </div>
-  );
-};
-
 export {
   Root,
   Header,
   Body,
   Actions,
-  Highlight,
-  Skeleton
+  Highlight
 };
 
 export { CardList, CardListController } from './CardList';
