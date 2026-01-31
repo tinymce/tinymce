@@ -243,10 +243,9 @@ export const startMocking = async (mockingConfig: MockingConfig): Promise<void> 
     return;
   }
 
+  currentMockingConfig = defaultedConfig;
   debugLog('registerServiceWorker');
   await registerServiceWorker(defaultedConfig.serviceWorkerUrl);
-
-  currentMockingConfig = defaultedConfig;
 
   const message = await sendMessageToServiceWorker({ type: 'AGAR_MOCKING_START', logLevel: defaultedConfig.logLevel });
   if (Shared.isMockingStartedMessage(message)) {
