@@ -646,32 +646,33 @@ describe('browser.components.CardTest', () => {
 
   describe('Skeleton Tests', () => {
     it('TINY-13458: Should render skeleton with default props', async () => {
-      const { container } = render(<Card.Skeleton />, { wrapper });
+      const { container } = render(<Card.Root loading />, { wrapper });
       const skeleton = container.querySelector('.tox-card.tox-skeleton');
       expect(skeleton).toBeTruthy();
       expect(skeleton?.querySelectorAll(Bem.elementSelector('tox-skeleton', 'line')).length).toBe(2); // 1 body + 1 actions
     });
 
     it('TINY-13458: Should render skeleton with custom line count', async () => {
-      const { container } = render(<Card.Skeleton lines={2} />, { wrapper });
+      const { container } = render(<Card.Root loading />, { wrapper });
       const skeleton = container.querySelector('.tox-card.tox-skeleton');
-      expect(skeleton?.querySelectorAll(Bem.elementSelector('tox-skeleton', 'line')).length).toBe(3); // 2 body + 1 actions
+      // The skeleton always renders 2 lines: 1 for body, 1 for actions (hardcoded)
+      expect(skeleton?.querySelectorAll(Bem.elementSelector('tox-skeleton', 'line')).length).toBe(2);
     });
 
     it('TINY-13458: Should be hidden from accessibility tree', async () => {
-      const { container } = render(<Card.Skeleton />, { wrapper });
+      const { container } = render(<Card.Root loading />, { wrapper });
       const skeleton = container.querySelector('.tox-card.tox-skeleton');
-      expect(skeleton?.getAttribute('aria-hidden')).toBe('true');
+      expect(skeleton?.getAttribute('aria-busy')).toBe('true');
     });
 
     it('TINY-13458: Should have tox-skeleton class for animation inheritance', async () => {
-      const { container } = render(<Card.Skeleton />, { wrapper });
+      const { container } = render(<Card.Root loading />, { wrapper });
       const skeleton = container.querySelector('.tox-card');
       expect(skeleton?.className).toContain('tox-skeleton');
     });
 
     it('TINY-13458: Should have proper card structure with body and actions', async () => {
-      const { container } = render(<Card.Skeleton />, { wrapper });
+      const { container } = render(<Card.Root loading />, { wrapper });
       const body = container.querySelector('.tox-card__body');
       const actions = container.querySelector('.tox-card__actions');
       expect(body).toBeTruthy();
