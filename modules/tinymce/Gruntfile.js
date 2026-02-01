@@ -498,7 +498,7 @@ module.exports = function (grunt) {
               'modules/*/.stylelintrc',
               'modules/tinymce/tools',
               'bin',
-              '.bunfig.toml',
+              'bunfig.toml',
               'LICENSE.md',
               'NOTICES.txt',
               'README.md',
