@@ -6,8 +6,8 @@ Building TinyMCE
 See the monorepo root readme file for installation instructions.
 
 Now, build TinyMCE by using `grunt`. If you don't have `grunt-cli` installed globally, prefix with `bun` to execute the local grunt.
-```
-$ bun grunt
+```bash
+bun grunt
 ```
 
 Build tasks

@@ -51,5 +51,5 @@ Below is a list of commonly used parts of `katamari`
 
 ## Running Tests
 
-`$ bun test`
+`$ bun run test`
 

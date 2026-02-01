@@ -25,5 +25,5 @@
 # Tests
 `snooker` uses [`bedrock`](https://www.npmjs.com/package/@ephox/bedrock) to run tests.
 ## Running Tests
-`$ bun test-manual`
-`$ bun test`
+`$ bun run test-manual`
+`$ bun run test`

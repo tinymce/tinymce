@@ -122,6 +122,6 @@ Ajax.get(
 
 # Running Tests
 
-`$ bun test`
+`$ bun run test`
 
 These tests require [bedrock](https://www.npmjs.com/package/@ephox/bedrock) and chrome.

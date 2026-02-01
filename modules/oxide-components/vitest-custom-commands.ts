@@ -22,7 +22,7 @@ const mousemoveCommand: BrowserCommand<Parameters<Mouse['move']>> = async (conte
     // The moment vitest will expose mousemove event, we can remove this hack.
     const iframe = context.page.locator('iframe[name="vitest-iframe"]');
     const { top, left } = await iframe.evaluate((el) => el.getBoundingClientRect());
-    const scale = await iframe.evaluate((el) => Number(el.parentElement?.getAttribute('data-scale')));
+    const scale = await iframe.evaluate((el) => Number(el.parentElement?.getAttribute('data-scale')) || 1);
 
     await context.page.mouse.move(left + (x * scale), top + (y * scale), options);
   }

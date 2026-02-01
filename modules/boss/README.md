@@ -11,4 +11,4 @@
 # Tests
 `boss` uses [`bedrock`](https://www.npmjs.com/package/@ephox/bedrock) to run atomic tests.
 ## Running Tests
-`$ bun test`
+`$ bun run test`

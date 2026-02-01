@@ -24,7 +24,7 @@ Once you have the system requirements installed, follow these steps to set up th
 
 1. Install dependencies:
    ```sh
-   yarn
+   bun install
    ```
 
 2. Start the Colima server:
@@ -39,7 +39,7 @@ Once you have the system requirements installed, follow these steps to set up th
 
 4. Start the development server:
    ```sh
-   yarn dev
+   bun dev
    ```
 
 ## Folder Structure

@@ -6,7 +6,7 @@ Welcome to the TinyMCE monorepo. For TinyMCE itself look to the [modules/tinymce
 
 As TinyMCE transitioned to a modern codebase through 2017 and 2018 many external dependencies were added from previously closed-source projects. This became unwieldy to develop, so in June 2019 the decision was made to bring those projects together in a monorepo.
 
-This repo is built with Yarn workspaces and uses publish tooling support from Lerna. NPM is not supported and attempts to use it will fail.
+This repo is built with Bun workspaces and uses publish tooling support from Lerna. NPM is not supported and attempts to use it will fail.
 
 An important feature of this monorepo is the use of TypeScript 3.0 features "project references" and "build mode":
 https://www.typescriptlang.org/docs/handbook/project-references.html
@@ -125,12 +125,12 @@ All dev dependencies are in the project root, so to add or upgrade a specific de
 ### normal dependencies
 
 To add a dependency inside a monorepo package:
-`bun --filter <fullname> add <othername>`
+`bun add <othername> --cwd <workspace-path>`
 
 This works whether adding an external dependency or a dependency on another monorepo package.
 
-Note that both names must be the entire scoped `name` of the package, not the folder, for example
-`bun --filter @tinymce/oxide add @tinymce/oxide-icons-default`
+Note that you must specify the path to the workspace folder, for example:
+`bun add @tinymce/oxide-icons-default --cwd modules/oxide`
 
 ## Publishing process
 
