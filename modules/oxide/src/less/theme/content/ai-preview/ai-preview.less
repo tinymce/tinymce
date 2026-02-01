@@ -9,7 +9,7 @@
 @tinymceai-selected-outline-color: @selected-outline-color;
 @tinymceai-selected-box-shadow: 0 -2px 0 0 @tinymceai-selected-outline-color inset, 0 -2px 0 0 @tinymceai-selected-outline-color;
 
-@tinymceai-dim-overlay-color: #222f3e80;
+@tinymceai-dim-overlay-color: fade(@color-black, 20%);
 
 .diff-content(
   tinymceai,
@@ -19,6 +19,16 @@
   @tinymceai-selected-outline-color,
   @tinymceai-selected-box-shadow
 );
+
+.tox-tinymceai {
+  // Block class for tinymceai preview - required for Bem type generation
+  display: contents;
+}
+
+.tox-tinymceai__annotation {
+  // Base class for annotations - styling handled by modifier classes
+  display: revert;
+}
 
 div[tinymceai-data-pending-diff="true"], span[tinymceai-data-pending-diff="true"] {
   position: relative;

@@ -19,7 +19,7 @@ exports[`browser.components.ExpandableBoxTest > Should be able to expand and col
         </div>
       </div>
       <button
-        class="tox-button tox-button--naked "
+        class="tox-button tox-button--naked tox-expandable-box__toggle"
         type="button"
       >
         <span
@@ -55,7 +55,7 @@ exports[`browser.components.ExpandableBoxTest > Should be able to expand and col
         </div>
       </div>
       <button
-        class="tox-button tox-button--naked "
+        class="tox-button tox-button--naked tox-expandable-box__toggle"
         type="button"
       >
         <span
@@ -91,7 +91,7 @@ exports[`browser.components.ExpandableBoxTest > Should be able to expand and col
         </div>
       </div>
       <button
-        class="tox-button tox-button--naked "
+        class="tox-button tox-button--naked tox-expandable-box__toggle"
         type="button"
       >
         <span
@@ -127,7 +127,7 @@ exports[`browser.components.ExpandableBoxTest > Should be able to set maxHeight,
         </div>
       </div>
       <button
-        class="tox-button tox-button--naked "
+        class="tox-button tox-button--naked tox-expandable-box__toggle"
         type="button"
       >
         <span
@@ -163,7 +163,7 @@ exports[`browser.components.ExpandableBoxTest > Should be able to set maxHeight,
         </div>
       </div>
       <button
-        class="tox-button tox-button--naked "
+        class="tox-button tox-button--naked tox-expandable-box__toggle"
         type="button"
       >
         <span

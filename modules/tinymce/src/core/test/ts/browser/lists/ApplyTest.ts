@@ -22,6 +22,24 @@ describe('browser.tinymce.core.lists.ApplyTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   });
 
+  const forcedhook = TinyHooks.bddSetupLight<Editor>({
+    plugins: '',
+    add_unload_trigger: false,
+    disable_nodechange: true,
+    indent: false,
+    entities: 'raw',
+    extended_valid_elements:
+      'li[style|class|data-custom|data-custom1|data-custom2],ol[style|class|data-custom|data-custom1|data-custom2],' +
+      'ul[style|class|data-custom|data-custom1|data-custom2],dl,dt,dd,em,strong,span,#p,div,br',
+    forced_root_block: 'div',
+    valid_styles: {
+      '*': 'color,font-size,font-family,background-color,font-weight,' +
+        'font-style,text-decoration,float,margin,margin-top,margin-right,' +
+        'margin-bottom,margin-left,display,position,top,left,list-style-type'
+    },
+    base_url: '/project/tinymce/js/tinymce'
+  });
+
   it('TBA: Apply UL list to single P', () => {
     const editor = hook.editor();
     editor.setContent('<p>a</p>');
@@ -908,6 +926,49 @@ describe('browser.tinymce.core.lists.ApplyTest', () => {
     editor.execCommand('bold');
     editor.execCommand('InsertUnorderedList');
     TinyAssertions.assertContent(editor, '<p><strong>a</strong></p><ul><li></li></ul><p><strong>b</strong></p>');
+  });
+
+  it('TINY-13213: Apply OL to UL list', () => {
+    const editor = forcedhook.editor();
+    editor.setContent(
+      '<div>' +
+      '<div>' +
+      '<span>AAA</span>' +
+      '</div>' +
+      '<br>' +
+      '<div>' +
+      '<span>BBB</span>' +
+      '</div>' +
+      '<br>' +
+      '<div>' +
+      '<span>CCC</span>' +
+      '</div>' +
+      '</div>'
+    );
+
+    TinySelections.setSelection(editor, [ 0, 0, 0, 0 ], 2, [ 0, 1 ], 0);
+    editor.execCommand('InsertOrderedList');
+
+    TinyAssertions.assertContent(
+      editor,
+      '<div>' +
+      '<ol>' +
+      '<li>' +
+      '<span>AAA</span>' +
+      '</li>' +
+      '<li>' +
+      '</li>' +
+      '</ol>' +
+      '<div>' +
+      '<span>BBB</span>' +
+      '</div>' +
+      '<br>' +
+      '<div>' +
+      '<span>CCC</span>' +
+      '</div>' +
+      '</div>'
+    );
+    TinyAssertions.assertSelection(editor, [ 0, 0, 0, 0, 0 ], 2, [ 0, 0, 1 ], 0);
   });
 
   context('Parent context', () => {

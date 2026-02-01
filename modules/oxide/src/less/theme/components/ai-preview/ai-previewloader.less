@@ -1,0 +1,32 @@
+.tox .tox-tinymceai-previewloader when (@custom-properties-enabled = true) {
+  --tox-private-ai-preview-loader-box-shadow: 0 0 40px 1px hsl( from var(--tox-private-color-black) h s l / 15%), 0 16px 16px -10px hsl( from var(--tox-private-color-black) h s l / 15%);
+}
+
+.tox {
+  .tox-tinymceai-previewloader {
+    display: flex;
+    align-items: center;
+    width: fit-content;
+    height: fit-content;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    gap: var(--tox-private-pad-md, @pad-md);
+    padding: var(--tox-private-pad-sm, @pad-sm);
+    border-radius: var(--tox-private-panel-border-radius, @panel-border-radius);
+    box-shadow: var(--tox-private-ai-preview-loader-box-shadow, 0 0 40px 1px fade(@color-black, 15%), 0 16px 16px -10px fade(@color-black, 15%));
+    background-color: var(--tox-private-background-color, @background-color);
+
+    &__content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 var(--tox-private-pad-xs, @pad-xs);
+      gap: var(--tox-private-pad-sm, @pad-sm);
+    }
+  }
+}

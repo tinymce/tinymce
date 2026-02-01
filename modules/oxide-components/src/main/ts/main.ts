@@ -5,6 +5,7 @@ import { Tag } from './bespoke/tinymceai/tag/Tag';
 import * as Accordion from './components/accordion/Accordion';
 import { AutoResizingTextarea } from './components/autoresizingtextarea/AutoResizingTextarea';
 import { Button } from './components/button/Button';
+import * as Card from './components/card/Card';
 import * as ContextToolbar from './components/contexttoolbar/ContextToolbar';
 import * as Draggable from './components/draggable/Draggable';
 import * as Dropdown from './components/dropdown/Dropdown';
@@ -22,6 +23,7 @@ import type { UniverseResources } from './contexts/UniverseContext/UniverseTypes
 import * as KeyboardNavigationTypes from './keynav/keyboard/NavigationTypes';
 import * as KeyboardNavigationHooks from './keynav/KeyboardNavigationHooks';
 import * as Bem from './utils/Bem';
+import * as ContentUiBem from './utils/ContentUiBem';
 import * as FocusHelpers from './utils/FocusHelpers';
 
 export {
@@ -29,6 +31,8 @@ export {
   AutoResizingTextarea,
   Bem,
   Button,
+  Card,
+  ContentUiBem,
   ContextToolbar,
   Draggable,
   Dropdown,

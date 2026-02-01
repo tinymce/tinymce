@@ -67,10 +67,9 @@ const insert = (editor: Editor, columns: number, rows: number, colHeaders: numbe
 
 const insertTable = (editor: Editor, rows: number, columns: number, options: Record<string, number> = {}): HTMLTableElement | null => {
   const checkInput = (val: any) => Type.isNumber(val) && val > 0;
-
   if (checkInput(rows) && checkInput(columns)) {
-    const headerRows = options.headerRows || 0;
-    const headerColumns = options.headerColumns || 0;
+    const headerRows = options.headerRows ?? Options.defaultHeaderRows(editor);
+    const headerColumns = options.headerColumns ?? Options.defaultHeaderCols(editor);
     return insert(editor, columns, rows, headerColumns, headerRows);
   } else {
     // eslint-disable-next-line no-console
