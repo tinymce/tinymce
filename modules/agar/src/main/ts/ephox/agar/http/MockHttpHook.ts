@@ -21,6 +21,9 @@ export const mockHttpHook = <T>(
   const state = Singleton.value<T>();
 
   before(async function () {
+    // The default timeout is 2s, that isn't enough on slow connections
+    this.timeout(10000);
+
     if (!window.isSecureContext) {
       this.skip();
     }
@@ -33,7 +36,8 @@ export const mockHttpHook = <T>(
     });
   });
 
-  after(async () => {
+  after(async function () {
+    this.timeout(10000);
     await MockClient.stopMocking();
   });
 
