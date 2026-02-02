@@ -1,7 +1,7 @@
-import { Arr, Optional } from '@ephox/katamari';
+import { Arr, type Optional } from '@ephox/katamari';
 
 import type { KeyRuleHandler } from './KeyingModeTypes';
-import * as KeyMatch from './KeyMatch';
+import type * as KeyMatch from './KeyMatch';
 
 export interface KeyRule<C> {
   matches: KeyMatch.KeyMatcher;

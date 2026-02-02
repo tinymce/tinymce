@@ -5,5 +5,5 @@ This project contains the default icons for TinyMCE 8. Icons is loaded into the 
 ## Building the icon pack
 The icon pack build process uses [Node](http://nodejs.org/) and [Gulp](http://gulpjs.com/). Make sure you have both installed before you continue.
 
-1. Install dependencies with `yarn`
-2. Build the icon pack using the `yarn run build` command.
+1. Install dependencies with `bun`
+2. Build the icon pack using the `bun run build` command.

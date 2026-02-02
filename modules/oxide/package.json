@@ -11,7 +11,7 @@
     "test": "echo 'No tests'",
     "build": "grunt build",
     "start": "grunt start",
-    "prepublishOnly": "yarn ci",
+    "prepublishOnly": "bun ci",
     "ci": "grunt build"
   },
   "keywords": [

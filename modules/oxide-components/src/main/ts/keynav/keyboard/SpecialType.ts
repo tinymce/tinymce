@@ -1,5 +1,5 @@
 import { Arr, Optional, Type } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import type { SugarElement } from '@ephox/sugar';
 
 import type { GeneralKeyingConfig } from './KeyingModeTypes';
 import * as KeyingType from './KeyingType';

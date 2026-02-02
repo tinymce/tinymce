@@ -1,5 +1,5 @@
 import { Fun, Optional, Optionals } from '@ephox/katamari';
-import { SelectorFind, SugarElement } from '@ephox/sugar';
+import { SelectorFind, type SugarElement } from '@ephox/sugar';
 
 import * as DomMovement from '../../navigation/DomMovement';
 import * as DomNavigation from '../../navigation/DomNavigation';

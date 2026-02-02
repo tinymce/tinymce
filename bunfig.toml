@@ -1,0 +1,13 @@
+# Bun configuration file
+# Replaces .yarnrc settings
+
+[install]
+frozen-lockfile = true
+cache = true
+auto = true
+linker = "hoisted"
+
+
+# Runtime configuration - make bun handle PATH like yarn
+[run]
+shell = "system"
