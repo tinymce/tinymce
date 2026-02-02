@@ -2,7 +2,7 @@ import {
   type AlloyComponent, type AlloySpec, Behaviour, Composite, CustomList, Keying, type RawDomSchema, Sketcher, type SketchSpec, Toolbar, type UiSketcher
 } from '@ephox/alloy';
 import { FieldSchema } from '@ephox/boulder';
-import { Arr, Id, Optional, Optionals, type Result } from '@ephox/katamari';
+import { Arr, Id, Obj, Optional, Optionals, Type, type Result } from '@ephox/katamari';
 import { Attribute, Css, SelectorFind, type SugarElement } from '@ephox/sugar';
 
 import { ToolbarMode } from '../../api/Options';
@@ -72,7 +72,7 @@ interface OuterContainerApis {
   readonly focusToolbar: (comp: AlloyComponent) => void;
   readonly setMenubar: (comp: AlloyComponent, groups: MenubarItemSpec[]) => void;
   readonly focusMenubar: (comp: AlloyComponent) => void;
-  readonly setViews: (comp: AlloyComponent, viewConfigs: ViewTypes.ViewConfig) => void;
+  readonly setViews: (comp: AlloyComponent, viewConfigs: ViewTypes.ViewConfig, showView?: string) => void;
   readonly toggleView: (comp: AlloyComponent, name: string) => boolean;
   readonly whichView: (comp: AlloyComponent) => string | null;
   readonly showMainView: (comp: AlloyComponent) => void;
@@ -179,10 +179,14 @@ const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, Out
         SilverMenubar.focus(menubar);
       });
     },
-    setViews: (comp, viewConfigs) => {
+    setViews: (comp, viewConfigs, showView) => {
       Composite.parts.getPart(comp, detail, 'viewWrapper').each((wrapper) => {
         ViewWrapper.setViews(wrapper, viewConfigs);
       });
+      const configKey = showView?.toLowerCase();
+      if (Type.isString(configKey) && Obj.has(viewConfigs, configKey)) {
+        apis.toggleView(comp, configKey);
+      }
     },
     toggleView: (comp, name) => {
       return Composite.parts.getPart(comp, detail, 'viewWrapper').exists(
@@ -463,8 +467,8 @@ export default Sketcher.composite<OuterContainerSketchSpec, OuterContainerSketch
     focusToolbar: (apis, comp) => {
       apis.focusToolbar(comp);
     },
-    setViews: (apis, comp, views) => {
-      apis.setViews(comp, views);
+    setViews: (apis, comp, views, showView) => {
+      apis.setViews(comp, views, showView);
     },
     toggleView: (apis, comp, name) => {
       return apis.toggleView(comp, name);
