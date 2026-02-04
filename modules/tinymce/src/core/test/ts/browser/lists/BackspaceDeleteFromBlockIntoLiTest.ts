@@ -232,7 +232,7 @@ describe('browser.tinymce.core.lists.BackspaceDeleteFromBlockIntoLiTest', () => 
     editor.setContent('<ol><li>One Two Three</li></ol>');
     TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 'One '.length);
     TinyContentActions.keystroke(editor, Keys.backspace());
-    store.assertEq('Should have correct event', [ 'deleteContentBackward' ]);
+    store.assertEq('Should have the correct event', [ 'deleteContentBackward' ]);
     store.clear();
     TinyAssertions.assertContent(editor, '<ol><li>Two Three</li></ol>');
     editor.off('beforeinput', eventHandler);
@@ -248,7 +248,7 @@ describe('browser.tinymce.core.lists.BackspaceDeleteFromBlockIntoLiTest', () => 
     editor.setContent('<ul><li>One Two Three</li></ul>');
     TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 'One '.length);
     TinyContentActions.keystroke(editor, Keys.delete());
-    store.assertEq('Should have correct event', [ 'deleteContentForward' ]);
+    store.assertEq('Should have the correct event', [ 'deleteContentForward' ]);
     store.clear();
     TinyAssertions.assertContent(editor, '<ul><li>Two Three</li></ul>');
     editor.off('beforeinput', eventHandler);
