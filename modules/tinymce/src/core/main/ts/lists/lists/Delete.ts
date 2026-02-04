@@ -1,5 +1,6 @@
 import type Editor from '../../api/Editor';
 import VK from '../../api/util/VK';
+import * as InputEvents from '../../events/InputEvents';
 import * as Delete from '../actions/Delete';
 
 const setup = (editor: Editor): void => {
@@ -13,12 +14,12 @@ const setup = (editor: Editor): void => {
       if (e.keyCode === VK.BACKSPACE) {
         if (Delete.backspaceDelete(editor, false)) {
           e.preventDefault();
-          e.target.dispatchEvent(new InputEvent('beforeinput'));
+          InputEvents.fireBeforeInputEvent(editor, 'deleteContentBackward');
         }
       } else if (e.keyCode === VK.DELETE) {
         if (Delete.backspaceDelete(editor, true)) {
           e.preventDefault();
-          e.target.dispatchEvent(new InputEvent('beforeinput'));
+          InputEvents.fireBeforeInputEvent(editor, 'deleteContentForward');
         }
       }
     });
