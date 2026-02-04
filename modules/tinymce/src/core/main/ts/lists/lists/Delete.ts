@@ -13,10 +13,12 @@ const setup = (editor: Editor): void => {
       if (e.keyCode === VK.BACKSPACE) {
         if (Delete.backspaceDelete(editor, false)) {
           e.preventDefault();
+          e.target.dispatchEvent(new InputEvent('beforeinput'));
         }
       } else if (e.keyCode === VK.DELETE) {
         if (Delete.backspaceDelete(editor, true)) {
           e.preventDefault();
+          e.target.dispatchEvent(new InputEvent('beforeinput'));
         }
       }
     });
