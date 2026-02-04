@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Deleting a selection in an `li` didn't trigger `beforeinput`.
+time: 2026-02-04T08:27:07.575106296+01:00
+custom:
+    Issue: TINY-12793
