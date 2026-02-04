@@ -12,14 +12,14 @@ const setup = (editor: Editor): void => {
       }
 
       if (e.keyCode === VK.BACKSPACE) {
-        if (Delete.backspaceDelete(editor, false)) {
+        const beforeInput = InputEvents.fireBeforeInputEvent(editor, 'deleteContentBackward');
+        if (!beforeInput.isDefaultPrevented() && Delete.backspaceDelete(editor, false)) {
           e.preventDefault();
-          InputEvents.fireBeforeInputEvent(editor, 'deleteContentBackward');
         }
       } else if (e.keyCode === VK.DELETE) {
-        if (Delete.backspaceDelete(editor, true)) {
+        const beforeInput = InputEvents.fireBeforeInputEvent(editor, 'deleteContentForward');
+        if (!beforeInput.isDefaultPrevented() && Delete.backspaceDelete(editor, true)) {
           e.preventDefault();
-          InputEvents.fireBeforeInputEvent(editor, 'deleteContentForward');
         }
       }
     });
