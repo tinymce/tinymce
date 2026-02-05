@@ -1,4 +1,5 @@
 import { Arr, Optional, Type } from '@ephox/katamari';
+import { DomDescent } from '@ephox/phoenix';
 import { ContentEditable, Insert, PredicateFilter, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
 import type DOMUtils from '../api/dom/DOMUtils';
@@ -289,6 +290,19 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
     return true;
   };
 
+  const isInsideLiBeforeAList = (newBlock: Element) => {
+    const isList = (e: SugarElement) => /^(ul|ol|dl)$/.test(SugarNode.name(e));
+    return NodeType.isListItem(newBlock) && newBlock.firstChild?.nextSibling && isList(SugarElement.fromDom(newBlock.firstChild?.nextSibling));
+  };
+
+  const trimEmptySpacesInLeftLeaf = (newBlock: Element) => {
+    const leaf = DomDescent.toLeaf(SugarElement.fromDom(newBlock), 0).element;
+
+    if (SugarNode.isText(leaf) && dom.isEmpty(leaf.dom)) {
+      leaf.dom.remove();
+    }
+  };
+
   const insertNewBlockAfter = () => {
     let block: Element;
     // If the caret is at the end of a header we produce a P tag after it similar to Word unless we are in a hgroup
@@ -437,8 +451,12 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
     } else {
       dom.insertAfter(fragment, parentBlock);
     }
-    trimInlineElementsOnLeftSideOfBlock(dom, nonEmptyElementsMap, newBlock);
-    addBrToBlockIfNeeded(dom, parentBlock);
+    if (!isInsideLiBeforeAList(newBlock)) {
+      trimInlineElementsOnLeftSideOfBlock(dom, nonEmptyElementsMap, newBlock);
+      addBrToBlockIfNeeded(dom, parentBlock);
+    } else {
+      trimEmptySpacesInLeftLeaf(newBlock);
+    }
 
     if (dom.isEmpty(parentBlock)) {
       NewLineUtils.emptyBlock(parentBlock);
