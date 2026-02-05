@@ -6,7 +6,7 @@ import { useEffect, useRef } from 'react';
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta = {
-  title: 'KeyboardNavigationHooks/Escaping',
+  title: 'KeyboardNavigationHooks/EscapingType',
   component: (): React.ReactElement => {
     const ref = useRef<HTMLElement>(null);
     useEscapeKeyNavigation({
