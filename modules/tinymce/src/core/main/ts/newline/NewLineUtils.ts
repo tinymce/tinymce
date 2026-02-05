@@ -34,9 +34,8 @@ const moveToCaretPosition = (editor: Editor, root: Node): void => {
     return;
   }
 
-  if (/^(LI|DT|DD)$/.test(root.nodeName)) {
-    const isList = (e: SugarElement) => /^(ul|ol|dl)$/.test(SugarNode.name(e));
-    const findFirstList = (e: SugarElement) => isList(e) ? Optional.from(e) : PredicateFind.descendant(e, isList);
+  if (ElementType.isListItem(SugarElement.fromDom(root))) {
+    const findFirstList = (e: SugarElement) => ElementType.isList(e) ? Optional.from(e) : PredicateFind.descendant(e, ElementType.isList);
     const isEmpty = (e: SugarElement) => dom.isEmpty(e.dom);
 
     firstNonWhiteSpaceNodeSibling(root.firstChild).each((firstChild) => {

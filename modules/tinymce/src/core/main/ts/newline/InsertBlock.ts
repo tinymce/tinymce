@@ -13,6 +13,7 @@ import { findPreviousBr, isAfterBr } from '../caret/CaretBr';
 import * as CaretContainer from '../caret/CaretContainer';
 import CaretPosition from '../caret/CaretPosition';
 import { isAfterTable } from '../caret/CaretPositionPredicates';
+import { isList, isListItem } from '../dom/ElementType';
 import * as NodeType from '../dom/NodeType';
 import * as NormalizeRange from '../selection/NormalizeRange';
 import { isWhitespaceText } from '../text/Whitespace';
@@ -290,10 +291,9 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
     return true;
   };
 
-  const isInsideLiBeforeAList = (newBlock: Element) => {
-    const isList = (e: SugarElement) => /^(ul|ol|dl)$/.test(SugarNode.name(e));
-    const nextSibling = newBlock.firstChild?.nextSibling;
-    return NodeType.isListItem(newBlock) && nextSibling && isList(SugarElement.fromDom(nextSibling));
+  const isInsideLiBeforeAList = (newBlock: SugarElement<Element>) => {
+    const nextSibling = Traverse.firstChild(newBlock).bind(Traverse.nextSibling);
+    return isListItem(newBlock) && nextSibling.exists(isList);
   };
 
   const trimEmptySpacesInLeftLeaf = (newBlock: Element) => {
@@ -452,7 +452,7 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
     } else {
       dom.insertAfter(fragment, parentBlock);
     }
-    if (!isInsideLiBeforeAList(newBlock)) {
+    if (!isInsideLiBeforeAList(SugarElement.fromDom(newBlock))) {
       trimInlineElementsOnLeftSideOfBlock(dom, nonEmptyElementsMap, newBlock);
       addBrToBlockIfNeeded(dom, parentBlock);
     } else {
