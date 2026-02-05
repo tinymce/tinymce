@@ -68,7 +68,7 @@ const Trigger: FC<PropsWithChildren> = ({ children }) => {
 };
 
 interface ContentProps {
-  text: string;
+  readonly text: string;
 }
 
 const Content: FC<ContentProps> = ({ text }) => {
