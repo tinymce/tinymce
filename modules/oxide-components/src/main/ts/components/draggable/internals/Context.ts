@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react';
 
-import type { DraggableState } from './types';
+import type { DraggableState } from './Types';
 
 const DraggableContext = createContext<DraggableState | null>(null);
 
