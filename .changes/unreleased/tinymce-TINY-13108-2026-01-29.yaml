@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Attempting to remove a link after a `contentEditable="false"` element would not be possible.
+time: 2026-01-29T09:37:10.594557+01:00
+custom:
+    Issue: TINY-13108
