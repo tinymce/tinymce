@@ -1,4 +1,4 @@
-import { Arr, Fun, Obj, Optional, Optionals } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optional, Optionals, Unicode } from '@ephox/katamari';
 import { DomDescent } from '@ephox/phoenix';
 import { Css, Insert, PredicateFind, SugarElement, SugarNode } from '@ephox/sugar';
 
@@ -50,7 +50,7 @@ const moveToCaretPosition = (editor: Editor, root: Node): void => {
           }
         },
         (firstList) => {
-          Insert.before(firstList, SugarElement.fromHtml('<br data-mce-bogus="1" />'));
+          Insert.before(firstList, SugarElement.fromHtml(Unicode.nbsp));
         }
       );
     });

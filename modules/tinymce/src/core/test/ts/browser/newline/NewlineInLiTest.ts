@@ -46,7 +46,7 @@ describe('browser.tinymce.core.newline.NewlineInLiTest', () => {
     TinyAssertions.assertCursor(editor, [ 0, 2, 0 ], 0);
   });
 
-  it('TINY-12102: pressing enter in div inside li should insert a bogus br in new li', () => {
+  it('TINY-12102: pressing enter in div inside li should insert nbsp in new li', () => {
     const editor = hook.editor();
     editor.setContent(
       '<ul>'
@@ -74,7 +74,7 @@ describe('browser.tinymce.core.newline.NewlineInLiTest', () => {
       '<div>Item2</div>',
       '</li>',
       '<li>',
-      '<div><br data-mce-bogus="1">',
+      '<div>&nbsp;',
       '<ul>',
       '<li>level2</li>',
       '<li>level2</li>',
@@ -85,9 +85,9 @@ describe('browser.tinymce.core.newline.NewlineInLiTest', () => {
       '<li>',
       '<div>Item3</div>',
       '</li>',
-      '</ul>' ].join('');
-    TinyAssertions.assertContent(editor, expectedContent, { format: 'raw' });
-    TinyAssertions.assertCursor(editor, [ 0, 2, 0 ], 0);
+      '</ul>' ].join('\n');
+    TinyAssertions.assertContent(editor, expectedContent);
+    TinyAssertions.assertCursor(editor, [ 0, 2, 0, 0 ], 0);
   });
 
   it('TINY-12102: pressing enter in multiple nested spans in p inside li should insert bogus br in new li', () => {
