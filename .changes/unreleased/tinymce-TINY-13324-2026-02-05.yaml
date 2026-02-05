@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Some formatting were not applied to items in multilevel list.
+time: 2026-02-05T10:31:50.210409996+01:00
+custom:
+    Issue: TINY-13324
