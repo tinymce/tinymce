@@ -292,7 +292,8 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
 
   const isInsideLiBeforeAList = (newBlock: Element) => {
     const isList = (e: SugarElement) => /^(ul|ol|dl)$/.test(SugarNode.name(e));
-    return NodeType.isListItem(newBlock) && newBlock.firstChild?.nextSibling && isList(SugarElement.fromDom(newBlock.firstChild?.nextSibling));
+    const nextSibling = newBlock.firstChild?.nextSibling;
+    return NodeType.isListItem(newBlock) && nextSibling && isList(SugarElement.fromDom(nextSibling));
   };
 
   const trimEmptySpacesInLeftLeaf = (newBlock: Element) => {
