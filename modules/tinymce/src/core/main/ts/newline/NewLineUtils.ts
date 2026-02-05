@@ -50,7 +50,7 @@ const moveToCaretPosition = (editor: Editor, root: Node): void => {
           }
         },
         (firstList) => {
-          Insert.before(firstList, SugarElement.fromHtml(Unicode.nbsp));
+          Insert.before(firstList, SugarElement.fromText(Unicode.nbsp));
         }
       );
     });
