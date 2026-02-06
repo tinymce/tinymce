@@ -1,7 +1,7 @@
 import { Fun, Type, type Optional } from '@ephox/katamari';
 
 import * as OriginPredicates from './OriginPredicates';
-import type { AllowedOverflow, Origin, CssPosition, CssSize, Position, Shift } from './types';
+import type { AllowedOverflow, Origin, CssPosition, CssSize, Position, Shift } from './Types';
 
 const getTransform = (shift: Shift): string => `translate3d(${shift.x}px, ${shift.y}px, 0px)`;
 

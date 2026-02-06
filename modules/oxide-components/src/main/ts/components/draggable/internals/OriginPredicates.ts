@@ -1,4 +1,4 @@
-import type { Origin } from './types';
+import type { Origin } from './Types';
 
 const isTopLeft = (origin: Origin): origin is 'top-left' => origin === 'top-left';
 const isTopRight = (origin: Origin): origin is 'top-right' => origin === 'top-right';
