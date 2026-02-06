@@ -1,0 +1,6 @@
+project: tinymce
+kind: Added
+body: New `view_show` option to display a specified view on initialization.
+time: 2025-12-05T18:21:57.626433+10:00
+custom:
+    Issue: TINY-11967

@@ -1,6 +1,6 @@
 .tox-ai when (@custom-properties-enabled = true) {
   --tox-private-background-secondary: hsl( from var(--tox-private-background-color) h s calc(l - 6));
-  --tox-private-ai-footer-border-color: hsl( from var(--tox-private-background-color) h s calc(l - 11));
+  --tox-private-neutral-20: hsl( from var(--tox-private-background-color) h s calc(l - 11));
 }
 
 .tox .tox-ai {
@@ -14,7 +14,7 @@
 
   .tox-sidebar-content__actions {
     display: flex;
-    gap: 8px;
+    gap: var(--tox-private-pad-sm, @pad-sm);
   }
 
   .tox-ai__user-prompt {
@@ -68,8 +68,40 @@
   .tox-ai__response__header {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--tox-private-pad-sm, @pad-sm);
   }
+
+  .tox-ai__response-status {
+    display: flex;
+    color: var(--tox-private-text-color-muted,@text-color-muted);
+    font-size: var(--tox-private-font-size-sm, @font-size-sm);
+    line-height: calc(var(--tox-private-font-size-sm, @font-size-sm) + 4px);
+    gap: var(--tox-private-pad-xs, @pad-xs);
+    padding-top: var(--tox-private-pad-sm, @pad-sm);
+    & svg {
+      fill: var(--tox-private-text-color-muted,@text-color-muted);
+    }
+  }
+
+  .tox-ai__response-status-icon {
+    border-radius: 999px;
+    border: 1px solid var(--tox-private-neutral-20, darken(@background-color, 11%));
+    background-color: var(--tox-private-background-color, @background-color);
+    height: 24px;
+    flex: 0 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .tox-icon {
+      display: contents;
+    }
+  }
+
+  :nth-child(2 of .tox-ai__response-status-icon){
+    margin-left: calc((var(--tox-private-pad-sm, @pad-sm) + var(--tox-private-pad-xs, @pad-xs)) * -1);
+  }
+
 
   .tox-ai__icon {
     display: flex;
@@ -80,7 +112,7 @@
   .tox-ai__response-sources {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: var(--tox-private-pad-sm, @pad-sm);
   }
 
   .tox-ai__response-sources-header {
@@ -90,7 +122,7 @@
   .tox-ai__response-sources-list {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--tox-private-pad-sm, @pad-sm);
     align-self: stretch;
     flex-wrap: wrap;
 
@@ -109,12 +141,6 @@
         max-width: 16px;
         max-height: 16px;
       }
-
-      .tox-tag__label {
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
-      }
     }
   }
 
@@ -130,6 +156,12 @@
 
   .tox-ai__response.tox-ai__response-streaming {
     position: relative;
+
+    & .tox-ai__response-status {
+      color: var(--tox-private-text-color, @text-color);
+      font-size: var(--tox-private-font-size-md, @font-size-md);
+      line-height: calc(var(--tox-private-font-size-md, @font-size-md) + 4px);
+    }
   }
 
   .tox-ai__response.tox-ai__response-streaming::after {
@@ -152,7 +184,7 @@
     padding: var(--tox-private-pad-sm, @pad-sm);
     width: 100%;
     display: flex;
-    gap: 8px;
+    gap: var(--tox-private-pad-sm, @pad-sm);
     align-items: center;
   }
 
@@ -166,7 +198,7 @@
   }
 
   .tox-ai__footer {
-    border-top: 1px solid var(--tox-private-ai-footer-border-color, darken(@background-color, 11%));
+    border-top: 1px solid var(--tox-private-neutral-20, darken(@background-color, 11%));
     padding: 12px;
     gap: var(--tox-private-pad-sm, @pad-sm);
     background-color: var(--tox-private-background-color, @background-color);
@@ -176,7 +208,8 @@
 
   .tox-ai__context {
     display: flex;
-    gap: 8px;
+    gap: var(--tox-private-pad-sm, @pad-sm);
+    flex-wrap: wrap;
   }
 
   .tox-ai__footer-actions {
@@ -266,7 +299,7 @@
     display: flex;
     // TODO: Replace with a proper global variable once we have it setup
     padding: 12px;
-    gap: 8px;
+    gap: var(--tox-private-pad-sm, @pad-sm);
     border-radius: var(--tox-private-control-border-radius, @control-border-radius);
     cursor: pointer;
 
@@ -283,7 +316,7 @@
     display: flex;
     justify-content: flex-end;
     width: 100%;
-    gap: 8px;
+    gap: var(--tox-private-pad-sm, @pad-sm);
 
     .tox-ai__spinner svg {
       fill: rgba(from var(--tox-private-color-white, @color-white) r g b / 0.5);

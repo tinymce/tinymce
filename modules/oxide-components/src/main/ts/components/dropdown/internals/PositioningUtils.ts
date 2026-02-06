@@ -53,7 +53,7 @@ const getPositionStyles = ( {
       maxHeight: `${maxHeight}px`,
       top: `${top}px`,
       left: `${left}px`,
-      width: `${anchorRect.width}px`
+      minWidth: `${anchorRect.width}px`
     };
   }
 
@@ -75,7 +75,8 @@ const getPositionStyles = ( {
     return {
       maxWidth: `${maxWidth}px`,
       top: `${top}px`,
-      left: `${left}px`
+      left: `${left}px`,
+      minWidth: `${anchorRect.width}px`
     };
   }
 

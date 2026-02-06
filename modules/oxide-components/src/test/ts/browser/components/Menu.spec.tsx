@@ -1,11 +1,11 @@
 /* eslint-disable max-len */
-import { userEvent, type Locator } from '@vitest/browser/context';
 import type { ToggleMenuItemInstanceApi } from 'oxide-components/components/menu/internals/Types';
 import * as Menu from 'oxide-components/components/menu/Menu';
 import * as MenuRenderer from 'oxide-components/components/menu/MenuRenderer';
 import { UniverseProvider } from 'oxide-components/contexts/UniverseContext/UniverseProvider';
 import * as Bem from 'oxide-components/utils/Bem';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
+import { userEvent, type Locator } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 
 const iconResolver = (icon: string): string => {
@@ -42,12 +42,18 @@ const waitForElementText = async (getByText: (text: string) => Locator, text: st
   await expect.poll(() => getByText(text).element()).toBeVisible();
 };
 
+const pAssertActiveElementText = async (text: string) => {
+  await expect.poll(() => document.activeElement?.textContent).toBe(text);
+};
+
 // Reset positioning styles before matching the snapshot.
 // Postioning styles are calculated to a different value depending on the enviroment.
 // They are deterministic for one eviroment but differ between local machine and CI
 const resetPostioningStyles = (fragment: DocumentFragment): DocumentFragment => {
   fragment.querySelectorAll('.tox-dropdown-content').forEach((dropdownContent) => {
     (dropdownContent as HTMLElement).style.maxWidth = '';
+    (dropdownContent as HTMLElement).style.minWidth = '';
+    (dropdownContent as HTMLElement).style.maxHeight = '';
     (dropdownContent as HTMLElement).style.top = '';
     (dropdownContent as HTMLElement).style.left = '';
   });
@@ -176,5 +182,62 @@ describe('browser.MenuTest', () => {
     await waitForElementText(getByText, 'Nested menu item 1');
     const fragment = resetPostioningStyles(asFragment());
     expect(fragment).toMatchSnapshot('2. After opening submenu');
+  });
+
+  describe('Keyboard Navigation', () => {
+    // TODO: currently the auto focus is added manually to the first element. It should always focus first not disabled item. Only one item should be active at the time. Improve the behavior and add tests #TINY-13425
+
+    it('Should navigate down through menu items with arrow keys', async () => {
+      const TestComponent = () => {
+        return (
+          <UniverseProvider resources={mockUniverse}>
+            <Menu.Root>
+              <Menu.Item onAction={vi.fn()} autoFocus={true}>Item 1</Menu.Item>
+              <Menu.Item onAction={vi.fn()}>Item 2</Menu.Item>
+              <Menu.Item onAction={vi.fn()}>Item 3</Menu.Item>
+            </Menu.Root>
+          </UniverseProvider>
+        );
+      };
+
+      const { getByText } = render(<TestComponent />, { wrapper });
+      await waitForElementText(getByText, 'Item 1');
+
+      await pAssertActiveElementText('Item 1');
+
+      await userEvent.keyboard('{ArrowDown}');
+      await pAssertActiveElementText('Item 2');
+
+      await userEvent.keyboard('{ArrowDown}');
+      await pAssertActiveElementText('Item 3');
+
+      await userEvent.keyboard('{ArrowUp}');
+      await pAssertActiveElementText('Item 2');
+
+      await userEvent.keyboard('{ArrowUp}');
+      await pAssertActiveElementText('Item 1');
+    });
+
+    it('Should skip disabled items when navigating', async () => {
+      const TestComponent = () => {
+        return (
+          <UniverseProvider resources={mockUniverse}>
+            <Menu.Root>
+              <Menu.Item onAction={vi.fn()} autoFocus={true}>Item 1</Menu.Item>
+              <Menu.Item enabled={false} onAction={vi.fn()}>Item 2</Menu.Item>
+              <Menu.Item onAction={vi.fn()}>Item 3</Menu.Item>
+            </Menu.Root>
+          </UniverseProvider>
+        );
+      };
+
+      const { getByText } = render(<TestComponent />, { wrapper });
+      await waitForElementText(getByText, 'Item 1');
+
+      await pAssertActiveElementText('Item 1');
+
+      await userEvent.keyboard('{ArrowDown}');
+      await pAssertActiveElementText('Item 3');
+    });
   });
 });

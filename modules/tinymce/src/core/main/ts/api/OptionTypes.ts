@@ -261,6 +261,7 @@ interface BaseEditorOptions {
   valid_elements?: string;
   valid_styles?: string | Record<string, string>;
   verify_html?: boolean;
+  view_show?: string;
   visual?: boolean;
   visual_anchor_class?: string;
   visual_table_class?: string;
