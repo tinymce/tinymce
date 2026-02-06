@@ -2,6 +2,11 @@
   width: 24px;
   height: 24px;
 
+  &--small {
+    width: 16px;
+    height: 16px;
+  }
+
   &--circle {
     svg {
       animation: tox-rotation 1s linear infinite;
@@ -25,5 +30,13 @@
       &:nth-child(1) { animation-delay: -.32s; }
       &:nth-child(2) { animation-delay: -.16s; }
     }
+  }
+
+  // Make the dots smaller to fix small 16x16 spinner container
+  &.tox-ai__spinner--dots.tox-ai__spinner--small {
+    > div {
+      width: 4px;
+      height: 4px;
+    } 
   }
 }
