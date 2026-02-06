@@ -44,7 +44,7 @@ export const ExpandableBox: FC<ExpandableBoxProps> = ({
         {children}
       </div>
       {
-        overflowing && <Button variant="naked" type="button" onClick={() => onToggle?.()} className={Bem.element('tox-expandable-box', 'toggle')}>
+        overflowing && <Button variant="naked" type="button" onClick={() => onToggle?.()} >
           <Icon icon={expanded ? 'chevron-up' : 'chevron-down'} />
           {expanded ? collapseLabel : expandLabel}
         </Button>
