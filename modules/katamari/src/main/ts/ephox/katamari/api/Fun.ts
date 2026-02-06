@@ -23,8 +23,18 @@ const constant = <T>(value: T): () => T => {
   };
 };
 
+const constantAsync = <T>(value: T): () => Promise<T> => {
+  return () => {
+    return Promise.resolve(value);
+  };
+};
+
 const identity = <T = any>(x: T): T => {
   return x;
+};
+
+const identityAsync = <T = any>(x: T): Promise<T> => {
+  return Promise.resolve(x);
 };
 
 const tripleEquals = <T>(a: T, b: T): boolean => {
@@ -68,6 +78,9 @@ const call = (f: () => any): void => {
 
 const never: (...args: any[]) => false = constant<false>(false);
 const always: (...args: any[]) => true = constant<true>(true);
+
+const neverAsync: (...args: any[]) => Promise<false> = constantAsync<false>(false);
+const alwaysAsync: (...args: any[]) => Promise<true> = constantAsync<true>(true);
 
 /* Used to weaken types */
 const weaken = <A, B extends A>(b: B): A => b;
@@ -122,7 +135,9 @@ export {
   compose,
   compose1,
   constant,
+  constantAsync,
   identity,
+  identityAsync,
   tripleEquals,
   curry,
   not,
@@ -130,7 +145,9 @@ export {
   apply,
   call,
   never,
+  neverAsync,
   always,
+  alwaysAsync,
   weaken,
   pipe
 };
