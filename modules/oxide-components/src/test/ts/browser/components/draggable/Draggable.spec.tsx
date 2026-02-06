@@ -1,5 +1,5 @@
 import * as Draggable from 'oxide-components/components/draggable/Draggable';
-import type { DraggableProps } from 'oxide-components/components/draggable/internals/types';
+import type { DraggableProps } from 'oxide-components/components/draggable/internals/Types';
 import { classes } from 'oxide-components/utils/Styles';
 import type { ReactNode } from 'react';
 import { describe, expect, it, afterEach, beforeAll } from 'vitest';
