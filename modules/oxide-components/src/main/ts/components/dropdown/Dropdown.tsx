@@ -57,7 +57,12 @@ const Content = forwardRef<HTMLDivElement, DropdownContentProps>(({ children, on
     const onToggle = (e: Event) => {
       updateToggleState(e as ToggleEvent);
       if ((e as ToggleEvent).newState === 'closed') {
-        triggerRef.current?.focus();
+        // Only refocus trigger if focus was inside the dropdown content or nothing is focused
+        // This prevents stealing focus from other elements (like sibling menu items)
+        const focusWasInContent = contentRef.current?.contains(document.activeElement);
+        if (focusWasInContent || document.activeElement === document.body) {
+          triggerRef.current?.focus();
+        }
         onClose?.();
       }
     };
@@ -149,11 +154,6 @@ const Trigger: FC<PropsWithChildren> = ({ children }) => {
   return cloneElement(child, {
     ref: (el: HTMLElement) => {
       triggerRef.current = el;
-      if (Type.isFunction(child.props.ref )) {
-        child.props.ref(el);
-      } else if (Type.isNonNullable(child.props.ref)) {
-        child.props.ref.current = el;
-      }
     },
     ...triggerEvents.includes('click') && onClickTriggerProps,
     ...triggerEvents.includes('hover') && onHoverTriggerProps,
@@ -166,12 +166,22 @@ export interface DropdownProps extends PropsWithChildren {
   // margin/gap between the trigger button and anchored container
   readonly gap?: number;
   readonly triggerEvents?: Array<'click' | 'hover'>;
+  readonly onOpenChange?: (isOpen: boolean) => void;
 }
 
-const Root: FC<DropdownProps> = ({ children, side = 'top', align = 'start', gap = 8, triggerEvents = [ 'click' ] }) => {
+const Root: FC<DropdownProps> = ({ children, side = 'top', align = 'start', gap = 8, triggerEvents = [ 'click' ], onOpenChange }) => {
   const triggerRef = useRef<HTMLElement | undefined>();
   const contentRef = useRef<HTMLDivElement | undefined>();
   const [ isOpen, setIsOpen ] = useState(false);
+
+  const firstRender = useRef<boolean>(true);
+
+  useEffect(() => {
+    if (!firstRender.current) {
+      onOpenChange?.(isOpen);
+    }
+    firstRender.current = false;
+  }, [ isOpen, onOpenChange ]);
 
   // debounced hide popover function on mouse leave (used when trigger events include hover)
   const debouncedHideHoverablePopover = useMemo(() => Throttler.last((e: MouseEvent) => {
