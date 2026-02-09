@@ -19,7 +19,6 @@ set -e
 #   Full release: ./release-libs.sh --batch --merge --version --yes
 #
 # EXCLUDED PACKAGES:
-#   tinymce, oxide, oxide-components, oxide-icons-default
 #   These follow a different release process and are managed separately.
 #
 # RECOVERY:
@@ -42,15 +41,11 @@ PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 # Configuration
 CHANGES_DIR="$PROJECT_ROOT/.changes/unreleased"
-EXCLUDED_PACKAGES=("tinymce" "oxide" "oxide-components" "oxide-icons-default")
+EXCLUDED_PACKAGES=("tinymce")
 
 # Flags
 DRY_RUN=false
-YES=false
-INTERACTIVE_VERSIONS=false
-BATCH_CHANGELOG=false
 MERGE_CHANGELOG=false
-UPDATE_VERSIONS=false
 CHANGED_ONLY=false
 
 # Usage function
@@ -62,38 +57,24 @@ Automate changelog generation and versioning for library packages.
 
 OPTIONS:
     -h, --help              Show this help message
-    -n, --dry-run           Preview changes without applying them
-    -y, --yes               Skip confirmation prompts
-    -i, --interactive       Prompt to confirm/override each version
-    --batch                 Batch changelog fragments into versioned files
-                            (Use during development - does NOT set release date)
+    -n, --dry-run           Preview what would happen without making changes
     --merge                 Merge changelog into CHANGELOG.md and set release date
                             (Use on actual release day only)
-    --version               Update package versions with Lerna
-    --changed               Only release packages with changes
-                            (Default: all packages get at least a patch bump for synchronized releases)
+    --changed               Only show changed packages (filters lerna version scope)
+                            (Default: lerna will prompt for all packages)
 
 EXAMPLES:
-    # Preview what would be changed (dry-run)
-    $(basename "$0") --dry-run --batch --version
+    # Interactive version update and changelog generation (typical workflow)
+    $(basename "$0")
 
-    # Batch changelogs only (all packages)
-    $(basename "$0") --batch
-
-    # Batch and version (typical pre-release workflow - all packages)
-    $(basename "$0") --batch --version
-
-    # Batch and version with custom version prompts
-    $(basename "$0") --batch --version --interactive
-
-    # Merge changelogs on release day (sets dates)
+    # Include changelog merge (for release day)
     $(basename "$0") --merge
 
-    # Full release workflow without prompts (all packages)
-    $(basename "$0") --batch --merge --version --yes
+    # Only process packages with changes
+    $(basename "$0") --changed
 
-    # Only release packages with changes
-    $(basename "$0") --changed --batch --version
+    # Preview without making changes
+    $(basename "$0") --dry-run
 
 EOF
 }
@@ -109,24 +90,8 @@ while [[ $# -gt 0 ]]; do
             DRY_RUN=true
             shift
             ;;
-        -y|--yes)
-            YES=true
-            shift
-            ;;
-        -i|--interactive)
-            INTERACTIVE_VERSIONS=true
-            shift
-            ;;
-        --batch)
-            BATCH_CHANGELOG=true
-            shift
-            ;;
         --merge)
             MERGE_CHANGELOG=true
-            shift
-            ;;
-        --version)
-            UPDATE_VERSIONS=true
             shift
             ;;
         --changed)
@@ -255,61 +220,14 @@ count_changes() {
     echo "$count"
 }
 
-# Prompt for version override (interactive versions mode)
-prompt_version() {
-    local package=$1
-    local current_version=$2
-    local suggested_version=$3
-    local change_count=$4
-
-    # Get change kinds for context
-    local kinds=""
-    for file in "$CHANGES_DIR"/"$package"-*.yaml; do
-        if [[ -f "$file" ]]; then
-            local kind=$(grep '^kind:' "$file" | sed 's/kind: *//')
-            if [[ -n "$kind" ]]; then
-                if [[ -n "$kinds" ]]; then kinds+=", "; fi
-                kinds+="$kind"
-            fi
-        fi
-    done
-
-    echo "" >&2
-    echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}" >&2
-    echo -e "${GREEN}📦 Package: ${YELLOW}$package${NC}" >&2
-    echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}" >&2
-    echo -e "  Current version:   ${YELLOW}$current_version${NC}" >&2
-    echo -e "  Suggested version: ${GREEN}$suggested_version${NC}" >&2
-    echo -e "  Changes: $change_count ($kinds)" >&2
-    echo "" >&2
-    echo -e "  ${BLUE}Press Enter to accept suggested version, or type a different version:${NC}" >&2
-    read -p "  Version for $package [$suggested_version]: " version_input
-
-    # Use suggested version if empty input
-    if [[ -z "$version_input" ]]; then
-        echo "$suggested_version"
-    else
-        # Basic validation (semantic version format)
-        if [[ "$version_input" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9.]+)?(\+[a-zA-Z0-9.]+)?$ ]]; then
-            echo "$version_input"
-        else
-            echo -e "${RED}  Invalid version format. Using suggested: $suggested_version${NC}" >&2
-            echo "$suggested_version"
-        fi
-    fi
-}
-
-# Batch changelog for a package
-# Note: changie batch supports packages with or without changes via --allow-no-changes
+# Batch changelog for a package with the version that lerna set
 batch_changelog() {
     local package=$1
     local version=$2
 
-    echo -e "${BLUE}  → Batching changelog for $package to version $version${NC}"
+    echo -e "${BLUE}  → Generating changelog for $package version $version${NC}"
 
-    if [[ "$DRY_RUN" == true ]]; then
-        changie batch "$version" --project "$package" --dry-run
-    else
+    if [[ "$DRY_RUN" == false ]]; then
         changie batch "$version" --project "$package"
     fi
 }
@@ -325,24 +243,17 @@ merge_changelog() {
     fi
 }
 
-# Update package version with Lerna
-update_package_version() {
+# Get version that lerna set for a package
+get_lerna_version() {
     local package=$1
-    local version=$2
+    local package_json="$PROJECT_ROOT/modules/$package/package.json"
 
-    echo -e "${BLUE}  → Updating package.json for $package to $version${NC}"
-
-    if [[ "$DRY_RUN" == false ]]; then
-        # Use lerna version with specific package scope
-        # Note: --force-publish updates package.json version, does NOT publish to NPM
-        npx lerna version "$version" \
-            --no-git-tag-version \
-            --no-push \
-            --yes \
-            --scope "@ephox/$package" \
-            --force-publish \
-            --loglevel=error
+    if [[ ! -f "$package_json" ]]; then
+        echo "unknown"
+        return 1
     fi
+
+    jq -r '.version' "$package_json"
 }
 
 # Check for required tools
@@ -454,12 +365,7 @@ main() {
             change_count=0
         fi
 
-        # Allow interactive version override if flag is set
-        if [[ "$INTERACTIVE_VERSIONS" == true ]]; then
-            next_version=$(prompt_version "$package" "$current_version" "$suggested_version" "$change_count")
-        else
-            next_version="$suggested_version"
-        fi
+        next_version="$suggested_version"
 
         package_list+=("$package")
         current_versions+=("$current_version")
@@ -468,39 +374,24 @@ main() {
         has_changes_flags+=("$has_changes_flag")
     done
 
-    # Clear screen context after interactive prompts for cleaner display
-    if [[ "$INTERACTIVE_VERSIONS" == true ]]; then
-        echo ""
-        echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-        echo ""
-    fi
-
     # Display table
-    echo -e "${BLUE}┌──────────────────────┬──────────────┬──────────────┬──────────┬──────────┐${NC}"
-    echo -e "${BLUE}│ Package              │ Current Ver  │ Next Ver     │ Changes  │ Type     │${NC}"
-    echo -e "${BLUE}├──────────────────────┼──────────────┼──────────────┼──────────┼──────────┤${NC}"
+    echo -e "${BLUE}┌──────────────────────┬──────────────┬──────────────┬──────────┐${NC}"
+    echo -e "${BLUE}│ Package              │ Current Ver  │ Suggested    │ Changes  │${NC}"
+    echo -e "${BLUE}├──────────────────────┼──────────────┼──────────────┼──────────┤${NC}"
 
     for i in "${!package_list[@]}"; do
-        local type_label=""
-        if [[ "${has_changes_flags[$i]}" == "yes" ]]; then
-            type_label="auto"
-        else
-            type_label="patch"
-        fi
-
-        printf "${BLUE}│${NC} %-20s ${BLUE}│${NC} %-12s ${BLUE}│${NC} %-12s ${BLUE}│${NC} %-8s ${BLUE}│${NC} %-8s ${BLUE}│${NC}\n" \
+        printf "${BLUE}│${NC} %-20s ${BLUE}│${NC} %-12s ${BLUE}│${NC} %-12s ${BLUE}│${NC} %-8s ${BLUE}│${NC}\n" \
             "${package_list[$i]}" \
             "${current_versions[$i]}" \
             "${next_versions[$i]}" \
-            "${change_counts[$i]}" \
-            "$type_label"
+            "${change_counts[$i]}"
     done
 
-    echo -e "${BLUE}└──────────────────────┴──────────────┴──────────────┴──────────┴──────────┘${NC}"
+    echo -e "${BLUE}└──────────────────────┴──────────────┴──────────────┴──────────┘${NC}"
     echo ""
 
     # Show detailed change breakdown
-    echo -e "${BLUE}Change Details:${NC}"
+    echo -e "${BLUE}Change Summary:${NC}"
     for i in "${!package_list[@]}"; do
         local pkg="${package_list[$i]}"
         local kinds=""
@@ -523,78 +414,91 @@ main() {
             fi
         done
 
-        echo -e "  ${GREEN}$pkg${NC}: $kinds"
-        if [[ -n "$issues" ]]; then
-            echo -e "    Issues: $issues"
+        if [[ -n "$kinds" ]]; then
+            echo -e "  ${GREEN}$pkg${NC}: $kinds"
+            if [[ -n "$issues" ]]; then
+                echo -e "    Issues: $issues"
+            fi
+        else
+            echo -e "  ${GREEN}$pkg${NC}: No changes (will use patch bump)"
         fi
     done
     echo ""
 
-    # Check if any actions are specified
-    if [[ "$BATCH_CHANGELOG" == false ]] && [[ "$MERGE_CHANGELOG" == false ]] && [[ "$UPDATE_VERSIONS" == false ]]; then
-        echo -e "${YELLOW}⚠️  No actions specified. Use --batch, --merge, or --version flags.${NC}"
-        echo ""
-        echo "Examples:"
-        echo "  $(basename "$0") --batch --version"
-        echo "  $(basename "$0") --merge"
-        echo ""
+    echo -e "${YELLOW}Note: Suggested versions are from changie. You'll be prompted by lerna to select actual versions.${NC}"
+    echo ""
+
+    if [[ "$DRY_RUN" == true ]]; then
+        echo -e "${YELLOW}Dry-run complete. Run without --dry-run to proceed.${NC}"
         exit 0
     fi
 
-    # Show what will be performed
-    echo -e "${BLUE}Actions to perform:${NC}"
-    if [[ "$BATCH_CHANGELOG" == true ]]; then
-        echo -e "  ✓ Batch changelog fragments"
+    # Prepare lerna version command with scope if --changed was specified
+    local lerna_cmd="npx lerna version --no-push --no-changelog"
+    if [[ "$CHANGED_ONLY" == true ]]; then
+        # Add scope for each package with changes
+        for pkg in "${packages[@]}"; do
+            lerna_cmd+=" --scope @ephox/$pkg"
+        done
     fi
-    if [[ "$MERGE_CHANGELOG" == true ]]; then
-        echo -e "  ✓ Merge changelog (set date)"
-    fi
-    if [[ "$UPDATE_VERSIONS" == true ]]; then
-        echo -e "  ✓ Update package versions"
-    fi
+
+    # Run lerna version interactively
+    echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo -e "${GREEN}Running lerna version${NC}"
+    echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo ""
+    echo -e "${BLUE}Lerna will now prompt you to select versions for each package.${NC}"
+    echo -e "${BLUE}Use the suggested versions above as guidance.${NC}"
+    echo -e "${BLUE}You can cancel at any time by pressing Ctrl+C or saying 'N' to lerna's prompts.${NC}"
     echo ""
 
-    # Confirm if not in yes mode and not dry-run
-    if [[ "$YES" == false ]] && [[ "$DRY_RUN" == false ]]; then
-        read -p "Continue? (y/N): " -n 1 -r
+    read -p "Press Enter to continue with lerna version..."
+    echo ""
+
+    # Run lerna version (interactive)
+    # Temporarily disable exit-on-error to handle lerna cancellation gracefully
+    set +e
+    eval "$lerna_cmd"
+    lerna_exit_code=$?
+    set -e
+
+    if [[ $lerna_exit_code -ne 0 ]]; then
         echo ""
-        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-            echo -e "${RED}Aborted.${NC}"
-            exit 0
-        fi
+        echo -e "${RED}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+        echo -e "${RED}Error: lerna version failed or was cancelled${NC}"
+        echo -e "${RED}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
         echo ""
+        echo -e "${YELLOW}Operation cancelled. Check 'git status' to see if any changes were made.${NC}"
+        echo -e "${YELLOW}You can undo any changes with: git reset --hard${NC}"
+        exit 1
     fi
 
-    # Process each package
-    for i in "${!package_list[@]}"; do
-        package="${package_list[$i]}"
-        current_version="${current_versions[$i]}"
-        next_version="${next_versions[$i]}"
-        has_changes_flag="${has_changes_flags[$i]}"
+    echo ""
 
-        echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-        if [[ "$has_changes_flag" == "yes" ]]; then
-            echo -e "${GREEN}Processing: $package ($current_version → $next_version)${NC}"
-        else
-            echo -e "${GREEN}Processing: $package ($current_version → $next_version) [patch - no changes]${NC}"
-        fi
-        echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    # Generate changelogs based on versions lerna set
+    echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo -e "${GREEN}Generating changelogs${NC}"
+    echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo ""
 
-        # Batch changelog (if flag is set)
-        if [[ "$BATCH_CHANGELOG" == true ]]; then
-            batch_changelog "$package" "$next_version"
+    # Process each package - get version lerna set and generate changelog
+    for package in "${packages[@]}"; do
+        # Get the version that lerna actually set
+        new_version=$(get_lerna_version "$package")
+
+        if [[ "$new_version" == "unknown" ]]; then
+            echo -e "${YELLOW}Warning: Could not read version for $package, skipping changelog${NC}"
+            continue
         fi
 
-        if [[ "$DRY_RUN" == false ]]; then
-            # Merge changelog (if flag is set)
-            if [[ "$MERGE_CHANGELOG" == true ]]; then
-                merge_changelog "$package"
-            fi
+        echo -e "${GREEN}Processing: $package (version: $new_version)${NC}"
 
-            # Update package version with Lerna (if flag is set)
-            if [[ "$UPDATE_VERSIONS" == true ]]; then
-                update_package_version "$package" "$next_version"
-            fi
+        # Batch changelog with the version lerna set
+        batch_changelog "$package" "$new_version"
+
+        # Merge changelog (if flag is set)
+        if [[ "$MERGE_CHANGELOG" == true ]]; then
+            merge_changelog "$package"
         fi
 
         echo ""
@@ -605,20 +509,24 @@ main() {
     echo -e "${GREEN}║  Summary                                                       ║${NC}"
     echo -e "${GREEN}╚════════════════════════════════════════════════════════════════╝${NC}"
     echo ""
-
-    if [[ "$DRY_RUN" == true ]]; then
-        echo -e "${YELLOW}✓ Dry-run completed successfully${NC}"
-        echo -e "${YELLOW}  Run with --execute to apply changes${NC}"
-    else
-        echo -e "${GREEN}✓ Release preparation completed${NC}"
-        echo -e "${GREEN}  ${#packages[@]} package(s) processed${NC}"
-        echo ""
-        echo -e "${BLUE}Next steps:${NC}"
-        echo -e "  1. Review the changes (git status, git diff)"
-        echo -e "  2. Commit the changes: ${YELLOW}git add . && git commit -m 'chore: release libraries'${NC}"
-        echo -e "  3. Create tags if needed"
-        echo -e "  4. Push changes: ${YELLOW}git push${NC}"
+    echo -e "${GREEN}✓ Release preparation completed${NC}"
+    echo -e "${GREEN}  ${#packages[@]} package(s) processed${NC}"
+    echo ""
+    echo -e "${BLUE}What was done:${NC}"
+    echo -e "  ✓ Lerna updated package.json versions and interdependencies"
+    echo -e "  ✓ Changelogs generated from change fragments"
+    if [[ "$MERGE_CHANGELOG" == true ]]; then
+        echo -e "  ✓ Changelogs merged into CHANGELOG.md files"
     fi
+    echo ""
+    echo -e "${BLUE}Next steps:${NC}"
+    echo -e "  1. Review the changes (git status, git diff)"
+    echo -e "  2. Build and test to verify everything works"
+    if [[ "$MERGE_CHANGELOG" == false ]]; then
+        echo -e "  3. Run with --merge when ready to finalize changelogs"
+    fi
+    echo -e "  3. Lerna has already created the commit and tags"
+    echo -e "  4. Push changes: ${YELLOW}git push --follow-tags${NC}"
     echo ""
 }
 
