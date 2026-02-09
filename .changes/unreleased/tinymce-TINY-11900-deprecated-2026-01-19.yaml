@@ -1,7 +1,0 @@
-project: tinymce
-kind: Deprecated
-body: |-
-  The default value of `allow_html_in_comments` will change from `true` to `false` in TinyMCE 8.x.
-time: 2026-01-19T00:00:00.000000+10:00
-custom:
-    Issue: TINY-11900
