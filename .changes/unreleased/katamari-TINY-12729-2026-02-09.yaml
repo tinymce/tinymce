@@ -1,0 +1,6 @@
+project: katamari
+kind: Added
+body: Added async functions `constantAsync`, `identityAsync`, `neverAsync` and `alwaysAsync` to the `Fun` module.
+time: 2026-02-09T16:02:46.626274+10:00
+custom:
+    Issue: TINY-12729
