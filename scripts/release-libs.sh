@@ -4,8 +4,9 @@ set -e
 
 # ============================================================================
 # OVERVIEW:
-#   This script coordinates changelog generation (via changie) and version
-#   updates (via lerna) for all public library packages in the monorepo.
+#   This script provides a preview of suggested version updates for library
+#   packages, then runs lerna version which automatically generates changelogs
+#   via the version lifecycle hook.
 #
 # PREREQUISITES:
 #   - changie (changelog management): https://changie.dev
@@ -14,18 +15,28 @@ set -e
 #   - npx (Node package executor)
 #
 # TYPICAL WORKFLOWS:
-#   Pre-release:  ./release-libs.sh --batch --version
-#   Release day:  ./release-libs.sh --merge
-#   Full release: ./release-libs.sh --batch --merge --version --yes
+#   Interactive:  ./release-libs.sh
+#   Changed only: ./release-libs.sh --changed
+#   Dry run:      ./release-libs.sh --dry-run
+#
+# HOW IT WORKS:
+#   1. Script scans packages and shows version suggestions
+#   2. User confirms to proceed
+#   3. Script runs `npx lerna version`
+#   4. Lerna version lifecycle hook automatically:
+#      - Generates changelogs from change fragments
+#      - Merges changelogs into CHANGELOG.md files
+#      - Commits everything (package.json + changelogs) with tags
 #
 # EXCLUDED PACKAGES:
-#   These follow a different release process and are managed separately.
+#   tinymce, oxide-components - Fully excluded (different release process)
+#   oxide, oxide-icons-default - Versioned by lerna but skip changie
 #
 # RECOVERY:
-#   If the script fails partway through:
-#   1. Check git status to see what was changed
-#   2. Either: git reset --hard to start over, or
-#   3. Re-run with --changed to process remaining packages
+#   If lerna fails partway through:
+#   1. Check git status to see what was committed
+#   2. Use: git reset --hard HEAD~1 to undo the commit
+#   3. Use: git tag -d <tag> to remove any tags created
 # ============================================================================
 
 # Colors for output
@@ -41,11 +52,13 @@ PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 # Configuration
 CHANGES_DIR="$PROJECT_ROOT/.changes/unreleased"
-EXCLUDED_PACKAGES=("tinymce")
+# Packages excluded from lerna entirely (different release process)
+EXCLUDED_PACKAGES=("tinymce" "oxide-components")
+# Packages that skip changie but are still versioned by lerna
+SKIP_CHANGIE_PACKAGES=("oxide" "oxide-icons-default")
 
 # Flags
 DRY_RUN=false
-MERGE_CHANGELOG=false
 CHANGED_ONLY=false
 
 # Usage function
@@ -53,28 +66,27 @@ usage() {
     cat <<EOF
 Usage: $(basename "$0") [OPTIONS]
 
-Automate changelog generation and versioning for library packages.
+Preview version updates and run lerna version with automatic changelog generation.
 
 OPTIONS:
     -h, --help              Show this help message
     -n, --dry-run           Preview what would happen without making changes
-    --merge                 Merge changelog into CHANGELOG.md and set release date
-                            (Use on actual release day only)
     --changed               Only show changed packages (filters lerna version scope)
                             (Default: lerna will prompt for all packages)
 
 EXAMPLES:
-    # Interactive version update and changelog generation (typical workflow)
+    # Interactive version update with changelog generation (typical workflow)
     $(basename "$0")
-
-    # Include changelog merge (for release day)
-    $(basename "$0") --merge
 
     # Only process packages with changes
     $(basename "$0") --changed
 
     # Preview without making changes
     $(basename "$0") --dry-run
+
+NOTE:
+    Changelogs are automatically generated and merged during lerna version
+    via the version lifecycle hook. No separate merge step is needed.
 
 EOF
 }
@@ -88,10 +100,6 @@ while [[ $# -gt 0 ]]; do
             ;;
         -n|--dry-run)
             DRY_RUN=true
-            shift
-            ;;
-        --merge)
-            MERGE_CHANGELOG=true
             shift
             ;;
         --changed)
@@ -220,42 +228,6 @@ count_changes() {
     echo "$count"
 }
 
-# Batch changelog for a package with the version that lerna set
-batch_changelog() {
-    local package=$1
-    local version=$2
-
-    echo -e "${BLUE}  → Generating changelog for $package version $version${NC}"
-
-    if [[ "$DRY_RUN" == false ]]; then
-        changie batch "$version" --project "$package"
-    fi
-}
-
-# Merge changelog into CHANGELOG.md
-merge_changelog() {
-    local package=$1
-
-    echo -e "${BLUE}  → Merging changelog for $package${NC}"
-
-    if [[ "$DRY_RUN" == false ]]; then
-        changie merge --project "$package"
-    fi
-}
-
-# Get version that lerna set for a package
-get_lerna_version() {
-    local package=$1
-    local package_json="$PROJECT_ROOT/modules/$package/package.json"
-
-    if [[ ! -f "$package_json" ]]; then
-        echo "unknown"
-        return 1
-    fi
-
-    jq -r '.version' "$package_json"
-}
-
 # Check for required tools
 check_prerequisites() {
     local missing=()
@@ -280,6 +252,35 @@ check_prerequisites() {
                     ;;
             esac
         done
+        exit 1
+    fi
+
+    # Verify changie configuration exists
+    if [[ ! -f "$PROJECT_ROOT/.changie.yaml" ]]; then
+        echo -e "${RED}Error: .changie.yaml not found in project root${NC}"
+        echo -e "${YELLOW}Changie needs to be configured before running this script.${NC}"
+        exit 1
+    fi
+
+    # Verify lerna lifecycle hook is configured
+    local hook_script="$PROJECT_ROOT/scripts/lerna-changie-hook.sh"
+    if [[ ! -f "$hook_script" ]]; then
+        echo -e "${RED}Error: Lerna changelog hook not found: $hook_script${NC}"
+        exit 1
+    fi
+
+    if [[ ! -x "$hook_script" ]]; then
+        echo -e "${RED}Error: Lerna changelog hook is not executable: $hook_script${NC}"
+        echo -e "${YELLOW}Run: chmod +x $hook_script${NC}"
+        exit 1
+    fi
+
+    # Verify package.json has version script configured
+    local package_json="$PROJECT_ROOT/package.json"
+    if ! grep -q '"version".*lerna-changie-hook.sh' "$package_json" 2>/dev/null; then
+        echo -e "${RED}Error: package.json is missing the version lifecycle script${NC}"
+        echo -e "${YELLOW}Add this to the scripts section of package.json:${NC}"
+        echo -e '${BLUE}    "version": "./scripts/lerna-changie-hook.sh"${NC}'
         exit 1
     fi
 }
@@ -433,8 +434,32 @@ main() {
         exit 0
     fi
 
-    # Prepare lerna version command with scope if --changed was specified
-    local lerna_cmd="npx lerna version --no-push --no-changelog"
+    # Confirm before proceeding
+    echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo -e "${YELLOW}Ready to run lerna version${NC}"
+    echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo ""
+    echo -e "${BLUE}Lerna will:${NC}"
+    echo -e "  1. Prompt you to select versions for each package"
+    echo -e "  2. Update all package.json files and interdependencies"
+    echo -e "  3. ${GREEN}Automatically generate changelogs${NC} (via version lifecycle hook)"
+    echo -e "  4. ${GREEN}Merge changelogs into CHANGELOG.md files${NC}"
+    echo -e "  5. Create a git commit with all changes"
+    echo -e "  6. Create git tags for each package"
+    echo ""
+    echo -e "${BLUE}Use the suggested versions above as guidance.${NC}"
+    echo -e "${BLUE}You can cancel at any time by pressing Ctrl+C.${NC}"
+    echo ""
+
+    read -p "Continue? (y/n) " -r
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        echo -e "${YELLOW}Cancelled by user.${NC}"
+        exit 0
+    fi
+
+    # Build lerna command
+    local lerna_cmd="npx lerna version --no-push"
     if [[ "$CHANGED_ONLY" == true ]]; then
         # Add scope for each package with changes
         for pkg in "${packages[@]}"; do
@@ -442,21 +467,14 @@ main() {
         done
     fi
 
-    # Run lerna version interactively
+    echo ""
     echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo -e "${GREEN}Running lerna version${NC}"
     echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo ""
-    echo -e "${BLUE}Lerna will now prompt you to select versions for each package.${NC}"
-    echo -e "${BLUE}Use the suggested versions above as guidance.${NC}"
-    echo -e "${BLUE}You can cancel at any time by pressing Ctrl+C or saying 'N' to lerna's prompts.${NC}"
-    echo ""
-
-    read -p "Press Enter to continue with lerna version..."
-    echo ""
 
     # Run lerna version (interactive)
-    # Temporarily disable exit-on-error to handle lerna cancellation gracefully
+    # The version lifecycle hook will automatically generate and merge changelogs
     set +e
     eval "$lerna_cmd"
     lerna_exit_code=$?
@@ -469,64 +487,31 @@ main() {
         echo -e "${RED}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
         echo ""
         echo -e "${YELLOW}Operation cancelled. Check 'git status' to see if any changes were made.${NC}"
-        echo -e "${YELLOW}You can undo any changes with: git reset --hard${NC}"
+        echo -e "${YELLOW}To undo: git reset --hard HEAD~1 && git tag -d <tags>${NC}"
         exit 1
     fi
 
     echo ""
-
-    # Generate changelogs based on versions lerna set
-    echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-    echo -e "${GREEN}Generating changelogs${NC}"
-    echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-    echo ""
-
-    # Process each package - get version lerna set and generate changelog
-    for package in "${packages[@]}"; do
-        # Get the version that lerna actually set
-        new_version=$(get_lerna_version "$package")
-
-        if [[ "$new_version" == "unknown" ]]; then
-            echo -e "${YELLOW}Warning: Could not read version for $package, skipping changelog${NC}"
-            continue
-        fi
-
-        echo -e "${GREEN}Processing: $package (version: $new_version)${NC}"
-
-        # Batch changelog with the version lerna set
-        batch_changelog "$package" "$new_version"
-
-        # Merge changelog (if flag is set)
-        if [[ "$MERGE_CHANGELOG" == true ]]; then
-            merge_changelog "$package"
-        fi
-
-        echo ""
-    done
 
     # Summary
     echo -e "${GREEN}╔════════════════════════════════════════════════════════════════╗${NC}"
     echo -e "${GREEN}║  Summary                                                       ║${NC}"
     echo -e "${GREEN}╚════════════════════════════════════════════════════════════════╝${NC}"
     echo ""
-    echo -e "${GREEN}✓ Release preparation completed${NC}"
-    echo -e "${GREEN}  ${#packages[@]} package(s) processed${NC}"
+    echo -e "${GREEN}✓ Release completed successfully${NC}"
+    echo -e "${GREEN}  ${#packages[@]} package(s) released${NC}"
     echo ""
     echo -e "${BLUE}What was done:${NC}"
     echo -e "  ✓ Lerna updated package.json versions and interdependencies"
     echo -e "  ✓ Changelogs generated from change fragments"
-    if [[ "$MERGE_CHANGELOG" == true ]]; then
-        echo -e "  ✓ Changelogs merged into CHANGELOG.md files"
-    fi
+    echo -e "  ✓ Changelogs merged into CHANGELOG.md files"
+    echo -e "  ✓ Git commit created with all changes"
+    echo -e "  ✓ Git tags created for each package"
     echo ""
     echo -e "${BLUE}Next steps:${NC}"
-    echo -e "  1. Review the changes (git status, git diff)"
+    echo -e "  1. Review the changes: ${YELLOW}git show HEAD${NC}"
     echo -e "  2. Build and test to verify everything works"
-    if [[ "$MERGE_CHANGELOG" == false ]]; then
-        echo -e "  3. Run with --merge when ready to finalize changelogs"
-    fi
-    echo -e "  3. Lerna has already created the commit and tags"
-    echo -e "  4. Push changes: ${YELLOW}git push --follow-tags${NC}"
+    echo -e "  3. Push changes: ${YELLOW}git push --follow-tags${NC}"
     echo ""
 }
 
