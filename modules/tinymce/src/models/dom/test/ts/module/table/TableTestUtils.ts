@@ -113,6 +113,8 @@ const deleteRow = (editor: Editor): boolean =>
 
 const pDragHandle = async (editor: Editor, id: string, dx: number, dy: number): Promise<void> => {
   const body = TinyDom.body(editor);
+  // Wait for handles to be ready
+  await Waiter.pWaitBetweenUserActions();
   const resizeHandle = await Waiter.pTryUntil('wait for resize handlers',
     () => UiFinder.findIn(body, '#mceResizeHandle' + id).getOrDie()
   );

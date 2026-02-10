@@ -257,6 +257,7 @@ describe('browser.tinymce.models.dom.table.UnmergeCellTableResizeTest', () => {
   };
 
   const pMergeResizeUnmergeMeasureWidth = async (editor: Editor, scenario: Scenario) => {
+    editor.focus();
     const table = insertTable(editor, scenario.html);
     await TableTestUtils.pDragHandle(editor, 'se', -100, 0);
     TableTestUtils.mergeCells(editor, scenario.select);
