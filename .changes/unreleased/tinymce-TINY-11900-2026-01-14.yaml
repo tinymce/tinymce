@@ -1,7 +1,0 @@
-project: tinymce
-kind: Security
-body: |-
-  Introduced `allow_html_in_comments` option (boolean, default: `true`) to control handling of HTML-like syntax in comment nodes. This option will default to `false` in TinyMCE 8.x.
-time: 2026-01-14T09:49:32.442507+10:00
-custom:
-    Issue: TINY-11900
