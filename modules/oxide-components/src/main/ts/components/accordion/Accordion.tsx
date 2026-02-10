@@ -1,5 +1,16 @@
 import { Arr, Optional, Type } from '@ephox/katamari';
-import { createContext, useCallback, useContext, useMemo, useRef, useState, type FC, type PropsWithChildren } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useRef,
+  useState,
+  type FC,
+  type PropsWithChildren,
+  type MouseEvent as ReactMouseEvent,
+  type KeyboardEvent as ReactKeyboardEvent
+} from 'react';
 
 import * as KeyboardNavigationHooks from '../../keynav/KeyboardNavigationHooks';
 import * as Bem from '../../utils/Bem';
@@ -107,7 +118,7 @@ const Root: FC<AccordionRootProps> = ({
 
   KeyboardNavigationHooks.useFlowKeyNavigation({
     containerRef,
-    selector: '.tox-accordion__header:not([aria-disabled="true"])',
+    selector: '.tox-accordion__item:not([aria-disabled="true"])',
     allowVertical: true,
     allowHorizontal: false,
     cycles: false,
@@ -183,6 +194,67 @@ const Item: FC<AccordionItemProps> = ({
     }
   }, [ disabled, toggleItem, id ]);
 
+  const handleItemClick = useCallback((e: ReactMouseEvent) => {
+    const target = e.target as HTMLElement;
+    const currentTarget = e.currentTarget as HTMLElement;
+
+    // Always focus the item when clicked - MOVE THIS UP
+    currentTarget.focus();
+
+    if (target !== currentTarget) {
+      const isInteractive = target.matches('button, a, input, textarea, select') ||
+        target.closest('button, a, input, textarea, select');
+      if (isInteractive) {
+        return;  // Don't toggle (button already did), but we've already focused the item
+      }
+    }
+
+    if (!disabled) {
+      toggleItem(id);
+    }
+  }, [ disabled, toggleItem, id ]);
+
+  const handleItemKeyDown = useCallback((e: ReactKeyboardEvent) => {
+    if (e.key !== 'Enter' && e.key !== ' ') {
+      return;
+    }
+
+    const target = e.target as HTMLElement;
+    const currentTarget = e.currentTarget as HTMLElement;
+
+    if (target !== currentTarget) {
+      const isInteractive = target.matches('button, a, input, textarea, select') ||
+        target.closest('button, a, input, textarea, select');
+
+      if (isInteractive) {
+        return;
+      }
+
+      e.preventDefault();
+      if (!disabled) {
+        toggleItem(id);
+      }
+    }
+  }, [ disabled, toggleItem, id ]);
+
+  const handleItemEscape = useCallback((e: ReactKeyboardEvent) => {
+    // Only handle Escape key
+    if (e.key !== 'Escape') {
+      return;
+    }
+
+    const target = e.target as HTMLElement;
+    const currentTarget = e.currentTarget as HTMLElement;
+
+    // If focus is on something inside the item (not the item itself)
+    if (target !== currentTarget) {
+      e.preventDefault();
+      e.stopPropagation();
+      // Return focus to the accordion item
+      currentTarget.focus();
+    }
+  }, []);
+
   const itemClassName = Bem.element('tox-accordion', 'item', {
     expanded: isExpanded,
   });
@@ -210,7 +282,14 @@ const Item: FC<AccordionItemProps> = ({
   );
 
   return (
-    <div className={itemClassName}>
+    <div
+      className={itemClassName}
+      tabIndex={-1}
+      onMouseDown={((e) => e.preventDefault())}
+      onClick={handleItemClick}
+      onKeyDown={handleItemKeyDown}
+      onKeyDownCapture={handleItemEscape}
+    >
       <HeadingTag className="tox-accordion__heading">
         <button
           id={headerId}
@@ -221,6 +300,7 @@ const Item: FC<AccordionItemProps> = ({
           aria-disabled={disabled}
           onClick={handleClick}
           disabled={disabled}
+          tabIndex={-1}
         >
           {iconPosition === 'start' ? (
             <>
