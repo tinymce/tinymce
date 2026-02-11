@@ -495,6 +495,7 @@ module.exports = function (grunt) {
               'modules/*/webpack.config.js',
               'modules/*/.stylelintignore',
               'modules/*/.stylelintrc',
+              'modules/oxide/tasks',
               'modules/tinymce/tools',
               'bin',
               '.yarnrc',
