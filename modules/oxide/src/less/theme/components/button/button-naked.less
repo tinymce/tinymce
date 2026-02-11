@@ -6,6 +6,7 @@
 //
 
 @button-naked-icon-color: @text-color;
+@button-naked-text-color: @text-color;
 
 @button-naked-hover-background-color: .bg-luma-checker(fade(@button-naked-icon-color, 12%), fade(@button-naked-icon-color, 20%))[@result];
 @button-naked-hover-border-color: transparent;
@@ -16,6 +17,7 @@
 @button-naked-disabled-border-color: transparent;
 @button-naked-disabled-box-shadow: unset;
 @button-naked-disabled-icon-color: fade(@button-naked-icon-color, 50%);
+@button-naked-disabled-text-color: @button-naked-disabled-icon-color;
 
 @button-naked-focus-background-color: @button-naked-hover-background-color;
 @button-naked-focus-border-color: @button-naked-hover-border-color;
@@ -27,21 +29,42 @@
 @button-naked-active-box-shadow: unset;
 @button-naked-active-icon-color: @button-naked-icon-color;
 
+// Enabled state
+@button-naked-enabled-background-color: contrast(@background-color, mix(darken(@background-color, 6%), @color-tint, 70%), mix(lighten(@background-color, 15%), @color-tint, 70%));
+@button-naked-enabled-border-color: @button-naked-enabled-background-color;
+@button-naked-enabled-box-shadow: unset;
+@button-naked-enabled-text-color: @button-naked-text-color;
+
+@button-naked-enabled-focus-background-color: @button-naked-enabled-hover-background-color;
+@button-naked-enabled-focus-border-color: @button-naked-enabled-hover-background-color;
+@button-naked-enabled-focus-box-shadow: @button-naked-enabled-box-shadow;
+@button-naked-enabled-focus-text-color: @button-naked-enabled-text-color;
+
+@button-naked-enabled-hover-background-color: darken(@button-naked-enabled-background-color, 5%);
+@button-naked-enabled-hover-border-color: @button-naked-enabled-hover-background-color;
+@button-naked-enabled-hover-box-shadow: @button-naked-enabled-box-shadow;
+@button-naked-enabled-hover-text-color: @button-naked-enabled-text-color;
+
+@button-naked-enabled-active-background-color: darken(@button-naked-enabled-background-color, 10%);
+@button-naked-enabled-active-border-color: @button-naked-enabled-active-background-color;
+@button-naked-enabled-active-box-shadow: @button-naked-enabled-box-shadow;
+@button-naked-enabled-active-text-color: @button-naked-enabled-text-color;
+
 .tox {
   .tox-button--naked when (@custom-properties-enabled = true) {
     // Naked button variant only styles the text color as the background and border are transparent by design
     --tox-private-button-naked-text-color: var(--tox-private-text-color);
 
-    /* 
-      Button state variables - to be decided if we want them. 
-      If we do: 
+    /*
+      Button state variables - to be decided if we want them.
+      If we do:
         1. They should inherit from button base variables (as they do now).
-        2. While skinning the change of the base variable will result with others being calculated/inherited from it. 
-        3. In this case it is also possible to skin each state separately. 
-      If we don't: 
-        1. They should be removed. 
-        2. Different states of the button should use base button variables and calculate from them if neccessary, but not create new variables. 
-        3. In this case it is NOT possible to skin each state separately. 
+        2. While skinning the change of the base variable will result with others being calculated/inherited from it.
+        3. In this case it is also possible to skin each state separately.
+      If we don't:
+        1. They should be removed.
+        2. Different states of the button should use base button variables and calculate from them if neccessary, but not create new variables.
+        3. In this case it is NOT possible to skin each state separately.
     */
     --tox-private-button-naked-disabled-text-color: hsl(from var(--tox-private-button-naked-text-color) h s l / 50%);
 
@@ -65,6 +88,30 @@
     );
     --tox-private-button-naked-active-border-color: var(--tox-private-button-naked-active-background-color);
     --tox-private-button-naked-active-text-color: var(--tox-private-button-naked-text-color);
+
+    /* Enabled state*/
+    --tox-private-button-naked-enabled-background-color: light-dark(
+      mix(darken(@background-color, 6%), @color-tint, 70%),
+      mix(lighten(@background-color, 15%), @color-tint, 70%)
+    );
+
+    --tox-private-button-naked-enabled-border-color: var(--tox-private-button-naked-enabled-background-color);
+    --tox-private-button-naked-enabled-text-color: var(--tox-private-button-naked-text-color);
+
+    /* Enabled + focus state */
+    --tox-private-button-naked-enabled-focus-background-color: hsl(from var(--tox-private-button-naked-enabled-background-color) h s calc(l - 5));
+    --tox-private-button-naked-enabled-focus-border-color: var(--tox-private-button-naked-enabled-focus-background-color);
+    --tox-private-button-naked-enabled-focus-text-color: var(--tox-private-button-naked-enabled-text-color);
+
+    /* Enabled + hover state */
+    --tox-private-button-naked-enabled-hover-background-color: hsl(from var(--tox-private-button-naked-enabled-background-color) h s calc(l - 5));
+    --tox-private-button-naked-enabled-hover-border-color: var(--tox-private-button-naked-enabled-hover-background-color);
+    --tox-private-button-naked-enabled-hover-text-color: var(--tox-private-button-naked-enabled-text-color);
+
+    /* Enabled + active state */
+    --tox-private-button-naked-enabled-active-background-color: hsl(from var(--tox-private-button-naked-enabled-background-color) h s calc(l - 10));
+    --tox-private-button-naked-enabled-active-border-color: var(--tox-private-button-naked-enabled-active-background-color);
+    --tox-private-button-naked-enabled-active-text-color: var(--tox-private-button-naked-enabled-text-color);
   }
 
   .tox-button--naked {
@@ -100,6 +147,39 @@
       color: var(--tox-private-button-naked-active-text-color, @button-naked-active-icon-color);
       box-shadow: @button-naked-active-box-shadow;
     }
+
+    /* Enabled state */
+    &.tox-button--enabled {
+      background-color: var(--tox-private-button-naked-enabled-background-color, @button-naked-enabled-background-color);
+      border-color: var(--tox-private-button-naked-enabled-border-color, @button-naked-enabled-border-color);
+      color: var(--tox-private-button-naked-enabled-text-color, @button-naked-enabled-text-color);
+      box-shadow: @button-naked-enabled-box-shadow;
+
+      &[disabled] {
+        color: var(--tox-private-button-naked-disabled-text-color, @button-naked-disabled-text-color);
+        cursor: not-allowed;
+      }
+
+      &:focus:not(:disabled) {
+        background-color: var(--tox-private-button-naked-enabled-focus-background-color, @button-naked-enabled-focus-background-color);
+        border-color: var(--tox-private-button-naked-enabled-focus-border-color, @button-naked-enabled-focus-border-color);
+        color: var(--tox-private-button-naked-enabled-focus-text-color, @button-naked-enabled-focus-text-color);
+        box-shadow: @button-naked-enabled-focus-box-shadow;
+      }
+
+      &:hover:not(:disabled) {
+        background-color: var(--tox-private-button-naked-enabled-hover-background-color, @button-naked-enabled-hover-background-color);
+        border-color: var(--tox-private-button-naked-enabled-hover-border-color, @button-naked-enabled-hover-border-color);
+        color: var(--tox-private-button-naked-enabled-hover-text-color, @button-naked-enabled-hover-text-color);
+        box-shadow: @button-naked-enabled-hover-box-shadow;
+      }
+
+      &:active:not(:disabled) {
+        background-color: var(--tox-private-button-naked-enabled-active-background-color, @button-naked-enabled-active-background-color);
+        border-color: var(--tox-private-button-naked-enabled-active-border-color, @button-naked-enabled-active-border-color);
+        color: var(--tox-private-button-naked-enabled-active-text-color, @button-naked-enabled-active-text-color);
+        box-shadow: @button-naked-enabled-active-box-shadow;
+      }
+    }
   }
 }
-
