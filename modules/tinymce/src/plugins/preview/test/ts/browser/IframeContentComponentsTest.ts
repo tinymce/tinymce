@@ -15,7 +15,6 @@ describe('browser.tinymce.plugins.preview.core.IframeContentTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'preview',
     base_url: '/project/tinymce/js/tinymce',
-    content_css: '/project/tinymce/js/tinymce/skins/content/default/content.css',
     setup: (editor: Editor) => {
       editor.on('PreInit', () => {
         editor.schema.addCustomElements({
