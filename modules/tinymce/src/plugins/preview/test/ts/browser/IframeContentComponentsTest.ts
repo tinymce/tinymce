@@ -15,7 +15,6 @@ describe('browser.tinymce.plugins.preview.core.IframeContentTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'preview',
     base_url: '/project/tinymce/js/tinymce',
-    content_css: '/project/tinymce/js/tinymce/skins/content/default/content.css',
     setup: (editor: Editor) => {
       editor.on('PreInit', () => {
         editor.schema.addCustomElements({
@@ -30,13 +29,13 @@ describe('browser.tinymce.plugins.preview.core.IframeContentTest', () => {
     const editor = hook.editor();
 
     assert.include(
-      IframeContent.getPreviewHtml(editor),
+      IframeContent.getPreviewHtml(editor, []),
       `<script src="${fakeComponentUrl1}"></script>`,
       'Should include the component script with the url from fakeComponentUrl1'
     );
 
     assert.include(
-      IframeContent.getPreviewHtml(editor),
+      IframeContent.getPreviewHtml(editor, []),
       `<script src="${fakeComponentUrl2}"></script>`,
       'Should include the component script with the url from fakeComponentUrl2'
     );
@@ -48,13 +47,13 @@ describe('browser.tinymce.plugins.preview.core.IframeContentTest', () => {
     ScriptLoader.ScriptLoader._setCrossOrigin(Fun.constant('anonymous'));
 
     assert.include(
-      IframeContent.getPreviewHtml(editor),
+      IframeContent.getPreviewHtml(editor, []),
       `<script src="${fakeComponentUrl1}" crossorigin="anonymous"></script>`,
       'Should include the component script with crossorigin attribute and the url from fakeComponentUrl1'
     );
 
     assert.include(
-      IframeContent.getPreviewHtml(editor),
+      IframeContent.getPreviewHtml(editor, []),
       `<script src="${fakeComponentUrl2}" crossorigin="anonymous"></script>`,
       'Should include the component script with crossorigin attribute and the url from fakeComponentUrl2'
     );
@@ -68,13 +67,13 @@ describe('browser.tinymce.plugins.preview.core.IframeContentTest', () => {
     ScriptLoader.ScriptLoader._setReferrerPolicy('no-referrer');
 
     assert.include(
-      IframeContent.getPreviewHtml(editor),
+      IframeContent.getPreviewHtml(editor, []),
       `<script src="${fakeComponentUrl1}" referrerpolicy="no-referrer"></script>`,
       'Should include the component script with referrerpolicy attribute and the url from fakeComponentUrl1'
     );
 
     assert.include(
-      IframeContent.getPreviewHtml(editor),
+      IframeContent.getPreviewHtml(editor, []),
       `<script src="${fakeComponentUrl2}" referrerpolicy="no-referrer"></script>`,
       'Should include the component script with referrerpolicy attribute and the url from fakeComponentUrl2'
     );

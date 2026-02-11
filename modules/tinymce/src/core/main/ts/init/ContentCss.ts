@@ -8,6 +8,7 @@ declare let tinymce: TinyMCE;
 
 const isContentCssSkinName = (url: string) => /^[a-z0-9\-]+$/i.test(url);
 
+// Duplicated in modules/tinymce/src/plugins/preview/main/ts/core/IframeContent.ts
 const toContentSkinResourceName = (url: string): string => 'content/' + url + '/content.css';
 
 const isBundledCssSkinName = (url: string) => tinymce.Resource.has(toContentSkinResourceName(url));
