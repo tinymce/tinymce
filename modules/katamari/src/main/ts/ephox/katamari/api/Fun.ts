@@ -24,17 +24,15 @@ const constant = <T>(value: T): () => T => {
 };
 
 const constantAsync = <T>(value: T): () => Promise<T> => {
-  return () => {
-    return Promise.resolve(value);
-  };
+  return async () => value;
 };
 
 const identity = <T = any>(x: T): T => {
   return x;
 };
 
-const identityAsync = <T = any>(x: T): Promise<T> => {
-  return Promise.resolve(x);
+const identityAsync = async <T = any>(x: T): Promise<T> => {
+  return x;
 };
 
 const tripleEquals = <T>(a: T, b: T): boolean => {
