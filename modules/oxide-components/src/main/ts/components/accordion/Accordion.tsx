@@ -130,10 +130,15 @@ const Root: FC<AccordionRootProps> = ({
       const isInteractive = activeElement?.matches(INTERACTIVE_SELECTOR) ?? false;
       if (isInteractive) {
         return Optional.none();
-      } else {
-        focused.dom.click();
-        return Optional.some(true);
       }
+
+      // If the item is already focused, let React's onKeyDown handler deal with it
+      if (activeElement === focused.dom) {
+        return Optional.none();
+      }
+
+      focused.dom.click();
+      return Optional.some(true);
     }
   });
 
