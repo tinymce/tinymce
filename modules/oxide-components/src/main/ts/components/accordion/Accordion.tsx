@@ -124,6 +124,7 @@ const Root: FC<AccordionRootProps> = ({
     allowVertical: true,
     allowHorizontal: false,
     cycles: false,
+    focusIn: true,
     execute: (focused) => {
       const activeElement = document.activeElement;
       const isInteractive = activeElement?.matches(INTERACTIVE_SELECTOR) ?? false;
@@ -138,7 +139,7 @@ const Root: FC<AccordionRootProps> = ({
 
   return (
     <AccordionContext.Provider value={contextValue}>
-      <div ref={containerRef} className="tox-accordion">
+      <div ref={containerRef} className="tox-accordion" tabIndex={0}>
         {children}
       </div>
     </AccordionContext.Provider>
@@ -269,8 +270,14 @@ const Item: FC<AccordionItemProps> = ({
 
     if (target !== currentTarget) {
       e.preventDefault();
-      e.stopPropagation();
       currentTarget.focus();
+      const isInteractive = target.matches(INTERACTIVE_SELECTOR) ||
+        target.hasAttribute('contenteditable') ||
+        target.getAttribute('role') === 'textbox';
+
+      if (!isInteractive) {
+        e.stopPropagation();
+      }
     }
   }, []);
 
@@ -306,12 +313,20 @@ const Item: FC<AccordionItemProps> = ({
       tabIndex={-1}
       aria-disabled={disabled}
       onMouseDown={(e) => {
-        e.currentTarget.focus();
-        e.preventDefault();
+        const target = e.target as HTMLElement;
+        const currentTarget = e.currentTarget as HTMLElement;
+
+        const clickedHeader = target.closest(Bem.elementSelector('tox-accordion', 'header'));
+        if (Type.isNonNullable(clickedHeader) || (target === currentTarget)) {
+          e.currentTarget.focus();
+          e.preventDefault();
+        }
       }}
       onClick={handleItemClick}
-      onKeyDown={handleItemKeyDown}
-      onKeyDownCapture={handleItemEscape}
+      onKeyDown={(e) => {
+        handleItemKeyDown(e);
+        handleItemEscape(e);
+      }}
     >
       <HeadingTag className="tox-accordion__heading">
         <button
