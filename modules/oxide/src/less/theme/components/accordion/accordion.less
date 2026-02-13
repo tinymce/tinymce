@@ -56,6 +56,14 @@
 
     &.tox-accordion__item--expanded {
       background-color: var(--tox-private-accordion-item-background-color, @accordion-item-background-color);
+    
+      .tox-accordion__header {
+        padding-bottom: @pad-xs;
+      }
+      
+      .tox-accordion__content-inner {
+        padding-top: @pad-xs;
+      }    
     }
 
     &::after {
