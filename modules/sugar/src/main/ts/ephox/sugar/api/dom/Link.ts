@@ -59,7 +59,12 @@ const getPreventClicksOnLinksScript = (): string => {
   return `<script>(${fn.toString()})(${isMacOSOrIOS})</script>`;
 };
 
+const getPreventClicksOnLinksScriptElement = (): SugarElement<HTMLScriptElement> => {
+  return SugarElement.fromHtml(getPreventClicksOnLinksScript());
+};
+
 export {
   addStylesheet,
-  getPreventClicksOnLinksScript
+  getPreventClicksOnLinksScript,
+  getPreventClicksOnLinksScriptElement
 };
