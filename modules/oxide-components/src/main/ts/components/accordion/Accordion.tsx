@@ -206,6 +206,11 @@ const Item: FC<AccordionItemProps> = ({
     const target = e.target as HTMLElement;
     const currentTarget = e.currentTarget as HTMLElement;
 
+    const clickedHeader = target.closest(Bem.elementSelector('tox-accordion', 'header'));
+    if (!clickedHeader && target !== currentTarget) {
+      return;
+    }
+
     if (target !== currentTarget) {
       const isInteractive = target.matches(INTERACTIVE_SELECTOR) ||
         target.closest(INTERACTIVE_SELECTOR);
@@ -227,7 +232,7 @@ const Item: FC<AccordionItemProps> = ({
     }
 
     const activeElement = document.activeElement;
-    const isInteractive = activeElement?.matches(INTERACTIVE_SELECTOR);
+    const isInteractive = activeElement?.matches(INTERACTIVE_SELECTOR) ?? false;
     if (isInteractive) {
       return;
     }
@@ -235,10 +240,14 @@ const Item: FC<AccordionItemProps> = ({
     const target = e.target as HTMLElement;
     const currentTarget = e.currentTarget as HTMLElement;
 
-    if (target !== currentTarget) {
+    if (target === currentTarget) {
+      e.preventDefault();
+      if (!disabled) {
+        toggleItem(id);
+      }
+    } else {
       const isInteractiveTarget = target.matches(INTERACTIVE_SELECTOR) ||
         target.closest(INTERACTIVE_SELECTOR);
-
       if (isInteractiveTarget) {
         return;
       }
@@ -295,6 +304,7 @@ const Item: FC<AccordionItemProps> = ({
     <div
       className={itemClassName}
       tabIndex={-1}
+      aria-disabled={disabled}
       onMouseDown={(e) => {
         e.currentTarget.focus();
         e.preventDefault();

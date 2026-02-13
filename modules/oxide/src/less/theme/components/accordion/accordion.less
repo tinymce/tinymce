@@ -32,7 +32,6 @@
     --tox-private-accordion-item-background-color: light-dark(
       hsl(from var(--tox-private-background-color) h s calc(l - 3)),
       hsl(from var(--tox-private-background-color) h s calc(l + 3)));
-
     --tox-private-accordion-header-hover-background-color: light-dark(
       hsl(from var(--tox-private-accordion-item-background-color, @accordion-item-background-color) h s calc(l - 5)),
       hsl(from var(--tox-private-accordion-item-background-color, @accordion-item-background-color) h s calc(l + 5)));
@@ -63,22 +62,19 @@
         padding-bottom: @pad-xs;
       }
       
-      .tox-accordion__content-inner {
+      .tox-accordion__content--expanded .tox-accordion__content-inner {
         padding-top: @pad-xs;
       }    
     }
 
     &::after {
       border-radius: @control-border-radius;
-      bottom: 0;
       box-shadow: var(--tox-private-accordion-header-focus-outline, 0 0 0 @keyboard-focus-outline-width @keyboard-focus-outline-color);
       content: '';
-      left: 0;
+      inset: 0;
       opacity: 0;
       pointer-events: none;
       position: absolute;
-      right: 0;
-      top: 0;
 
       @media (forced-colors: active) {
         border: 2px solid highlight;
