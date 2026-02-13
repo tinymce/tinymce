@@ -217,6 +217,11 @@
     gap: var(--tox-private-pad-sm, @pad-sm);
   }
 
+  .tox-ai-model-selection-button {
+    display: flex;
+    gap: var(--tox-private-pad-xs, @pad-xs);
+  }
+
   .tox-ai__models-menu {
     display: flex;
     flex-direction: column;
@@ -227,11 +232,12 @@
     background: var(--tox-private-background-color, @background-color);
     box-shadow: 0 0 40px 1px rgba(from var(--tox-private-color-black, @color-black) r g b / 0.15), 0 16px 16px -10px rgba(from var(--tox-private-color-black, @color-black) r g b / 0.15);
     max-width: 350px;
+    gap: 0;
   }
 
   .tox-ai__models-menu__item {
     display: flex;
-    padding: var(--tox-private-pad-xs, @pad-xs) var(--tox-private-pad-sm, @pad-sm);
+    padding: var(--tox-private-pad-sm, @pad-sm) calc(var(--tox-private-pad-sm, @pad-sm) * .75);
     align-items: flex-start;
     gap: var(--tox-private-pad-sm, @pad-sm);
     align-self: stretch;
@@ -255,22 +261,35 @@
     display: flex;
     flex-direction: column;
     align-items: start;
-    font-size: var(--tox-private-font-size-sm, @font-size-sm);
   }
 
   .tox-ai__models-menu__item__description__title {
     font-weight: var(--tox-private-font-weight-bold, @font-weight-bold);
+    font-size: var(--tox-private-font-size-sm, @font-size-sm);
+    // Since we don't have defined line-height variables, we use the same raw values provided by the design
+    // c.f: https://www.figma.com/design/utz67QpX0v3NDG36hzSawt/🚀-TinyMCE---UX-UI-Design?node-id=20649-19617&m=dev
+    line-height: calc(var(--tox-private-font-size-sm, @font-size-sm) * 1.28572);
   }
 
   .tox-ai__models-menu__item__description__content {
     color: var(--tox-private-text-color-muted, @text-color-muted);
+    font-size: var(--tox-private-font-size-xs, @font-size-xs);
+    // Since we don't have defined line-height variables, we use the same raw values provided by the design
+    // c.f: https://www.figma.com/design/utz67QpX0v3NDG36hzSawt/🚀-TinyMCE---UX-UI-Design?node-id=20649-19617&m=dev
+    line-height: calc(var(--tox-private-font-size-xs, @font-size-xs) * 1.33333);
    }
 
-  .tox-collection__item--active:not(.tox-collection__item--state-disabled) .tox-ai__models-menu__item__description__content {
-    color: inherit;
+  .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
+    .tox-ai__models-menu__item__description__content, .tox-ai__models-menu__item__description__ability {
+      color: inherit;
+    }
   }
 
   .tox-ai__models-menu__item__description__ability {
+    color: var(--tox-private-text-color, @text-color);
+  }
+
+  .tox-ai__models-menu__item__description__ability__enabled {
     font-weight: var(--tox-private-font-weight-bold, @font-weight-bold);
   }
 

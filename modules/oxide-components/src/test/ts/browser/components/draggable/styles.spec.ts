@@ -1,5 +1,5 @@
 import { Optional } from '@ephox/katamari';
-import { getPositioningStyles } from 'oxide-components/components/draggable/internals/styles';
+import { getPositioningStyles } from 'oxide-components/components/draggable/internals/Styles';
 import { describe, expect, it } from 'vitest';
 
 // This test should be atomic test but I ran on some issues with module resolution in node environment.

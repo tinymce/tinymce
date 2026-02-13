@@ -1,10 +1,10 @@
 import { Optional } from '@ephox/katamari';
 import { type FC, useState, useMemo, useRef, useCallback, forwardRef } from 'react';
 
-import { boundaries, clamp, delta, position } from './internals/calculations';
-import { useDraggable, DraggableContext } from './internals/context';
-import { getPositioningStyles } from './internals/styles';
-import type { DraggableProps, DraggableHandleProps, Shift, Position, Boundaries, CssPosition } from './internals/types';
+import { boundaries, clamp, delta, position } from './internals/Calculations';
+import { useDraggable, DraggableContext } from './internals/Context';
+import { getPositioningStyles } from './internals/Styles';
+import type { DraggableProps, DraggableHandleProps, Shift, Position, Boundaries, CssPosition } from './internals/Types';
 
 const Root = forwardRef<HTMLDivElement, DraggableProps>(({ children, style, origin = 'top-left', initialPosition = { x: 0, y: 0 }, declaredSize, onDragStart, onDragEnd, ...props }, ref) => {
   const [ shift, setShift ] = useState<Shift>({ x: 0, y: 0 });
