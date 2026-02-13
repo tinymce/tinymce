@@ -22,7 +22,7 @@ interface AccordionContextValue {
   readonly allowMultiple: boolean;
 }
 
-const INTERACTIVE_SELECTOR = 'button, a, input, textarea, select, [contenteditable="true"], [role="textbox"]';
+const INTERACTIVE_SELECTOR = 'button, a, input, textarea, select, [contenteditable], [role="textbox"]';
 
 const AccordionContext = createContext<AccordionContextValue | null>(null);
 
