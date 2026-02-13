@@ -22,6 +22,8 @@ interface AccordionContextValue {
   readonly allowMultiple: boolean;
 }
 
+const INTERACTIVE_SELECTOR = 'button, a, input, textarea, select';
+
 const AccordionContext = createContext<AccordionContextValue | null>(null);
 
 const useAccordion = (): AccordionContextValue => {
@@ -124,14 +126,13 @@ const Root: FC<AccordionRootProps> = ({
     cycles: false,
     execute: (focused) => {
       const activeElement = document.activeElement;
-      const isInteractive = activeElement?.matches('button, a, input, textarea, select');
-      
+      const isInteractive = activeElement?.matches(INTERACTIVE_SELECTOR) ?? false;
       if (isInteractive) {
         return Optional.none();
+      } else {
+        focused.dom.click();
+        return Optional.some(true);
       }
-
-      focused.dom.click();
-      return Optional.some(true);
     }
   });
 
@@ -206,10 +207,10 @@ const Item: FC<AccordionItemProps> = ({
     const currentTarget = e.currentTarget as HTMLElement;
 
     if (target !== currentTarget) {
-      const isInteractive = target.matches('button, a, input, textarea, select') ||
-        target.closest('button, a, input, textarea, select');
+      const isInteractive = target.matches(INTERACTIVE_SELECTOR) ||
+        target.closest(INTERACTIVE_SELECTOR);
       if (isInteractive) {
-        return;  // Don't focus or toggle for interactive elements
+        return;
       }
     }
 
@@ -224,11 +225,9 @@ const Item: FC<AccordionItemProps> = ({
     if (e.key !== 'Enter' && e.key !== ' ') {
       return;
     }
-  
-    // Check if any focused element is interactive, not just the event target
+
     const activeElement = document.activeElement;
-    const isInteractive = activeElement?.matches('button, a, input, textarea, select');
-    
+    const isInteractive = activeElement?.matches(INTERACTIVE_SELECTOR);
     if (isInteractive) {
       return;
     }
@@ -237,8 +236,8 @@ const Item: FC<AccordionItemProps> = ({
     const currentTarget = e.currentTarget as HTMLElement;
 
     if (target !== currentTarget) {
-      const isInteractiveTarget = target.matches('button, a, input, textarea, select') ||
-        target.closest('button, a, input, textarea, select');
+      const isInteractiveTarget = target.matches(INTERACTIVE_SELECTOR) ||
+        target.closest(INTERACTIVE_SELECTOR);
 
       if (isInteractiveTarget) {
         return;
@@ -252,7 +251,6 @@ const Item: FC<AccordionItemProps> = ({
   }, [ disabled, toggleItem, id ]);
 
   const handleItemEscape = useCallback((e: ReactKeyboardEvent) => {
-    // Only handle Escape key
     if (e.key !== 'Escape') {
       return;
     }
@@ -260,11 +258,9 @@ const Item: FC<AccordionItemProps> = ({
     const target = e.target as HTMLElement;
     const currentTarget = e.currentTarget as HTMLElement;
 
-    // If focus is on something inside the item (not the item itself)
     if (target !== currentTarget) {
       e.preventDefault();
       e.stopPropagation();
-      // Return focus to the accordion item
       currentTarget.focus();
     }
   }, []);

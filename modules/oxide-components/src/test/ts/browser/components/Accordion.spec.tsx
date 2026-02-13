@@ -137,23 +137,23 @@ describe('browser.components.AccordionTest', () => {
       </Accordion.Root>,
       { wrapper }
     );
-  
+
     const selector = Bem.elementSelector('tox-accordion', 'item');
     const items = SelectorFilter.descendants<HTMLElement>(SugarElement.fromDom(container), selector);
-    
+
     const item1 = Arr.head(items).getOrDie();
     const item2 = Arr.get(items, 1).getOrDie();
     const item3 = Arr.get(items, 2).getOrDie();
-  
+
     item1.dom.focus();
     expect(document.activeElement).toBe(item1.dom);
-  
+
     await userEvent.keyboard('{ArrowDown}');
     expect(document.activeElement).toBe(item2.dom);
-  
+
     await userEvent.keyboard('{ArrowDown}');
     expect(document.activeElement).toBe(item3.dom);
-  
+
     await userEvent.keyboard('{ArrowUp}');
     expect(document.activeElement).toBe(item2.dom);
   });
