@@ -123,6 +123,13 @@ const Root: FC<AccordionRootProps> = ({
     allowHorizontal: false,
     cycles: false,
     execute: (focused) => {
+      const activeElement = document.activeElement;
+      const isInteractive = activeElement?.matches('button, a, input, textarea, select');
+      
+      if (isInteractive) {
+        return Optional.none();
+      }
+
       focused.dom.click();
       return Optional.some(true);
     }
@@ -198,16 +205,15 @@ const Item: FC<AccordionItemProps> = ({
     const target = e.target as HTMLElement;
     const currentTarget = e.currentTarget as HTMLElement;
 
-    // Always focus the item when clicked - MOVE THIS UP
-    currentTarget.focus();
-
     if (target !== currentTarget) {
       const isInteractive = target.matches('button, a, input, textarea, select') ||
         target.closest('button, a, input, textarea, select');
       if (isInteractive) {
-        return;  // Don't toggle (button already did), but we've already focused the item
+        return;  // Don't focus or toggle for interactive elements
       }
     }
+
+    currentTarget.focus();
 
     if (!disabled) {
       toggleItem(id);
@@ -218,15 +224,23 @@ const Item: FC<AccordionItemProps> = ({
     if (e.key !== 'Enter' && e.key !== ' ') {
       return;
     }
+  
+    // Check if any focused element is interactive, not just the event target
+    const activeElement = document.activeElement;
+    const isInteractive = activeElement?.matches('button, a, input, textarea, select');
+    
+    if (isInteractive) {
+      return;
+    }
 
     const target = e.target as HTMLElement;
     const currentTarget = e.currentTarget as HTMLElement;
 
     if (target !== currentTarget) {
-      const isInteractive = target.matches('button, a, input, textarea, select') ||
+      const isInteractiveTarget = target.matches('button, a, input, textarea, select') ||
         target.closest('button, a, input, textarea, select');
 
-      if (isInteractive) {
+      if (isInteractiveTarget) {
         return;
       }
 
@@ -285,7 +299,10 @@ const Item: FC<AccordionItemProps> = ({
     <div
       className={itemClassName}
       tabIndex={-1}
-      onMouseDown={((e) => e.preventDefault())}
+      onMouseDown={(e) => {
+        e.currentTarget.focus();
+        e.preventDefault();
+      }}
       onClick={handleItemClick}
       onKeyDown={handleItemKeyDown}
       onKeyDownCapture={handleItemEscape}
