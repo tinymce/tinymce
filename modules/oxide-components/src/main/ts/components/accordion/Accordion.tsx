@@ -22,7 +22,7 @@ interface AccordionContextValue {
   readonly allowMultiple: boolean;
 }
 
-const INTERACTIVE_SELECTOR = 'button, a, input, textarea, select';
+const INTERACTIVE_SELECTOR = 'button, a, input, textarea, select, [contenteditable="true"], [role="textbox"]';
 
 const AccordionContext = createContext<AccordionContextValue | null>(null);
 
@@ -271,10 +271,8 @@ const Item: FC<AccordionItemProps> = ({
     if (target !== currentTarget) {
       e.preventDefault();
       currentTarget.focus();
-      const isInteractive = target.matches(INTERACTIVE_SELECTOR) ||
-        target.hasAttribute('contenteditable') ||
-        target.getAttribute('role') === 'textbox';
 
+      const isInteractive = target.matches(INTERACTIVE_SELECTOR);
       if (!isInteractive) {
         e.stopPropagation();
       }
