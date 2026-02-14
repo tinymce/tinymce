@@ -144,6 +144,7 @@ const Root: FC<AccordionRootProps> = ({
 
   return (
     <AccordionContext.Provider value={contextValue}>
+      {/* TODO TINY-13777: Revisit tab order */}
       <div ref={containerRef} className="tox-accordion" tabIndex={0}>
         {children}
       </div>
