@@ -32,7 +32,7 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
   const selection = editor.selection, dom = editor.dom;
 
   const rootNode = editor.getBody();
-  const fakeCaret = FakeCaret(editor, rootNode, dom.isBlock, () => EditorFocus.hasFocus(editor));
+  const fakeCaret = FakeCaret(editor, rootNode, (node: Node) => dom.isBlock(node) || NodeType.isUcVideo(node), () => EditorFocus.hasFocus(editor));
   const realSelectionId = 'sel-' + dom.uniqueId();
   const elementSelectionAttr = 'data-mce-selected';
   let selectedElement: Element | null;
