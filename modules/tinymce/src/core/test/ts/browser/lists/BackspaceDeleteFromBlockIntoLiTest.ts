@@ -1,4 +1,4 @@
-import { Keys } from '@ephox/agar';
+import { Keys, TestStore } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
@@ -220,5 +220,37 @@ describe('browser.tinymce.core.lists.BackspaceDeleteFromBlockIntoLiTest', () => 
         '</div>' +
       '</li>' +
     '</ul>');
+  });
+
+  it('TINY-12793: beforeinput event should be triggered deleting a selection inside a li (backspace)', () => {
+    const store = TestStore<string>();
+    const editor = hook.editor();
+    const eventHandler = (e: InputEvent) => {
+      store.add(e.inputType);
+    };
+    editor.on('beforeinput', eventHandler);
+    editor.setContent('<ol><li>One Two Three</li></ol>');
+    TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 'One '.length);
+    TinyContentActions.keystroke(editor, Keys.backspace());
+    store.assertEq('Should have the correct event', [ 'deleteContentBackward' ]);
+    store.clear();
+    TinyAssertions.assertContent(editor, '<ol><li>Two Three</li></ol>');
+    editor.off('beforeinput', eventHandler);
+  });
+
+  it('TINY-12793: beforeinput event should be triggered deleting a selection inside a li (delete)', () => {
+    const store = TestStore<string>();
+    const editor = hook.editor();
+    const eventHandler = (e: InputEvent) => {
+      store.add(e.inputType);
+    };
+    editor.on('beforeinput', eventHandler);
+    editor.setContent('<ul><li>One Two Three</li></ul>');
+    TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 'One '.length);
+    TinyContentActions.keystroke(editor, Keys.delete());
+    store.assertEq('Should have the correct event', [ 'deleteContentForward' ]);
+    store.clear();
+    TinyAssertions.assertContent(editor, '<ul><li>Two Three</li></ul>');
+    editor.off('beforeinput', eventHandler);
   });
 });

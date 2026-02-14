@@ -6,6 +6,7 @@ import RangeUtils from '../../api/dom/RangeUtils';
 import DomTreeWalker from '../../api/dom/TreeWalker';
 import type Editor from '../../api/Editor';
 import * as NodeStructureBookmark from '../../bookmark/NodeStructureBookmark';
+import * as InputEvents from '../../events/InputEvents';
 import * as NodeType from '../lists/NodeType';
 import * as NormalizeLists from '../lists/NormalizeLists';
 import * as ListRangeUtils from '../lists/RangeUtils';
@@ -272,7 +273,7 @@ const hasListSelection = (editor: Editor): boolean => {
   return Type.isNonNullable(startListParent) || Selection.getSelectedListItems(editor).length > 0;
 };
 
-const backspaceDeleteRange = (editor: Editor): boolean => {
+const backspaceDeleteRange = (editor: Editor, isForward: boolean): boolean => {
   if (hasListSelection(editor)) {
     editor.undoManager.transact(() => {
       // Some delete actions may prevent the input event from being fired. If we do not detect it, we fire it ourselves.
@@ -280,6 +281,7 @@ const backspaceDeleteRange = (editor: Editor): boolean => {
       const inputHandler = () => shouldFireInput = false;
 
       editor.on('input', inputHandler);
+      InputEvents.fireBeforeInputEvent(editor, isForward ? 'deleteContentForward' : 'deleteContentBackward');
       editor.execCommand('Delete');
       editor.off('input', inputHandler);
 
@@ -299,7 +301,7 @@ const backspaceDeleteRange = (editor: Editor): boolean => {
 const backspaceDelete = (editor: Editor, isForward: boolean): boolean => {
   const selection = editor.selection;
   return !Util.isWithinNonEditableList(editor, selection.getNode()) && (selection.isCollapsed() ?
-    backspaceDeleteCaret(editor, isForward) : backspaceDeleteRange(editor)
+    backspaceDeleteCaret(editor, isForward) : backspaceDeleteRange(editor, isForward)
   );
 };
 
