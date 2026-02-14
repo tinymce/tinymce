@@ -10,7 +10,7 @@ const meta = {
   parameters: {
     layout: 'centered',
   },
-  tags: [ 'autodocs', 'skip-visual-testing' ],
+  tags: [ 'autodocs' ],
 } satisfies Meta<typeof Tag>;
 
 export default meta;
@@ -35,4 +35,20 @@ export const ClosableTag: Story = {
       <Tag {...args} />
     </UniverseProvider>
   )
+};
+
+export const FocusedClosableTag: Story = {
+  args: {
+    closeable: true,
+    link: false,
+    label: 'Value',
+    onClose: Fun.noop
+  },
+  render: (args) => {
+    return (
+      <UniverseProvider resources={resources}>
+        <Tag ref={(el) => el?.focus()} {...args} />
+      </UniverseProvider>
+    );
+  }
 };
