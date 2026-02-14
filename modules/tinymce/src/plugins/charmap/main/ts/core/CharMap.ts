@@ -1,4 +1,4 @@
-import { Arr } from '@ephox/katamari';
+import { Arr, Type } from '@ephox/katamari';
 
 import type Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
@@ -373,7 +373,7 @@ const getCharsFromOption = (optionValue: Char[] | (() => Char[]) | undefined): C
     return charmapFilter(optionValue);
   }
 
-  if (typeof optionValue === 'function') {
+  if (Type.isFunction(optionValue)) {
     return optionValue();
   }
 
