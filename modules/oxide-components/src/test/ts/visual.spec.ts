@@ -59,3 +59,18 @@ for (const story of dropdownStories) {
   });
 }
 
+// This component has custom visual tests as the trigger button needs to be hovered over before the screenshot
+const hoveroverStories = Object.values(storybook.entries).filter(
+  (e) => e.type === 'story' && e.tags.includes('hover-visual-testing')
+);
+
+for (const story of hoveroverStories) {
+  test(`${story.title} ${story.name} should not have visual hover regressions`, async ({
+    page,
+  }, workerInfo) => {
+    await visualTest(story, page, workerInfo, async () => {
+      await page.getByTitle('hover').hover();
+      await expect(page.getByText('Message')).toBeVisible();
+    });
+  });
+}
