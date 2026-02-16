@@ -1,6 +1,6 @@
 project: sugar
 kind: Added
-body: Provide HTML script element to prevent clicks on links
+body: Function returning Sugar script element to prevent link clicks
 time: 2026-02-13T15:53:23.178687+10:00
 custom:
     Issue: TINY-13676
