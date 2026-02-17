@@ -76,7 +76,6 @@ const menu: JSX.Element = (
     <Menu.Item
       key={Id.generate('menu-item')}
       icon={<Icon icon='item'></Icon>}
-      autoFocus={true}
       // eslint-disable-next-line no-console
       onAction= {() => console.log('Clicked Menu item 1')}
     >
@@ -99,7 +98,6 @@ const menu: JSX.Element = (
       submenuContent={
         <Menu.Root>
           <Menu.Item
-            autoFocus={true}
             key={Id.generate('menu-item')}
             icon={'item'}
             // eslint-disable-next-line no-console
@@ -125,7 +123,6 @@ const menu: JSX.Element = (
             submenuContent={
               <Menu.Root>
                 <Menu.Item
-                  autoFocus={true}
                   key={Id.generate('menu-item')}
                   icon={'item'}
                   // eslint-disable-next-line no-console

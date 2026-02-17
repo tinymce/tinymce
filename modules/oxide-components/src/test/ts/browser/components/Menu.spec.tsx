@@ -75,7 +75,6 @@ describe('browser.MenuTest', () => {
         <UniverseProvider resources={mockUniverse}>
           <Menu.Root>
             <Menu.Item
-              autoFocus={true}
               // eslint-disable-next-line no-console
               onAction= {() => console.log('Clicked Menu item 1')}
             >{'Menu item 1'}</Menu.Item>
@@ -90,7 +89,6 @@ describe('browser.MenuTest', () => {
               icon={'item'}
               submenuContent={<Menu.Root>
                 <Menu.Item
-                  autoFocus={true}
                   // eslint-disable-next-line no-console
                   onAction= {() => console.log('Clicked nested menu item 1')}
                 >
@@ -192,7 +190,7 @@ describe('browser.MenuTest', () => {
         return (
           <UniverseProvider resources={mockUniverse}>
             <Menu.Root>
-              <Menu.Item onAction={vi.fn()} autoFocus={true}>Item 1</Menu.Item>
+              <Menu.Item onAction={vi.fn()}>Item 1</Menu.Item>
               <Menu.Item onAction={vi.fn()}>Item 2</Menu.Item>
               <Menu.Item onAction={vi.fn()}>Item 3</Menu.Item>
             </Menu.Root>
@@ -223,7 +221,7 @@ describe('browser.MenuTest', () => {
         return (
           <UniverseProvider resources={mockUniverse}>
             <Menu.Root>
-              <Menu.Item onAction={vi.fn()} autoFocus={true}>Item 1</Menu.Item>
+              <Menu.Item onAction={vi.fn()}>Item 1</Menu.Item>
               <Menu.Item enabled={false} onAction={vi.fn()}>Item 2</Menu.Item>
               <Menu.Item onAction={vi.fn()}>Item 3</Menu.Item>
             </Menu.Root>
