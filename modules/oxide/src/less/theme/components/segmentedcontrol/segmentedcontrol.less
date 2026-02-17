@@ -68,9 +68,12 @@
     }
   }
 
-  input:focus + .tox-segmented-control__segment,
-  input:focus ~ .tox-segmented-control__segment {
+  .tox-segmented-control__segment:focus {
     outline: 2px solid var(--tox-private-color-tint, @color-tint);
     outline-offset: 2px;
+  }
+  
+  .tox-segmented-control__segment:focus:not(:focus-visible) {
+    outline: none;
   }
 }
