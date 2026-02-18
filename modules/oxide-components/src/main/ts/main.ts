@@ -15,7 +15,7 @@ import { Icon } from './components/icon/Icon';
 import { IconButton } from './components/iconbutton/IconButton';
 import * as Menu from './components/menu/Menu';
 import * as MenuRenderer from './components/menu/MenuRenderer';
-import { SegmentedControl } from './components/segmentedcontrol/SegmentedControl';
+import * as SegmentedControl from './components/segmentedcontrol/SegmentedControl';
 import { ToolbarInputForm } from './components/toolbarInputForm/ToolbarInputForm';
 import { useUniverse } from './contexts/UniverseContext/Universe';
 import { UniverseProvider } from './contexts/UniverseContext/UniverseProvider';

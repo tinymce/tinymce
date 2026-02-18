@@ -1,147 +1,157 @@
-import { Type } from '@ephox/katamari';
+import { Optional, Type } from '@ephox/katamari';
+import { Focus, SelectorFind, SugarElement } from '@ephox/sugar';
 import {
+  createContext,
   forwardRef,
   type FunctionComponent,
   type HTMLAttributes,
-  useRef,
-  useEffect
+  type ReactNode,
+  useContext,
+  useEffect,
+  useRef
 } from 'react';
 
+import * as KeyboardNavigationHooks from '../../keynav/KeyboardNavigationHooks';
 import * as Bem from '../../utils/Bem';
 
-interface SegmentedControlProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onClick'> {
-  readonly leftLabel: string;
-  readonly rightLabel: string;
-  readonly checked: boolean;
+interface SegmentedControlContextValue {
+  readonly value: string;
+  readonly onChange: (value: string) => void;
   readonly disabled?: boolean;
-  readonly onClick: () => void;
-  readonly onKeyDown?: (e: React.KeyboardEvent) => void;
 }
 
-const SegmentedControl: FunctionComponent<SegmentedControlProps> = forwardRef<HTMLDivElement, SegmentedControlProps>(
+interface SegmentedControlRootProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onChange'> {
+  readonly value: string;
+  readonly onChange: (value: string) => void;
+  readonly disabled?: boolean;
+  readonly children: ReactNode;
+}
+
+interface SegmentedControlOptionProps {
+  readonly value: string;
+  readonly disabled?: boolean;
+  readonly children: ReactNode;
+}
+
+const SegmentedControlContext = createContext<SegmentedControlContextValue | null>(null);
+
+const useSegmentedControlContext = (): SegmentedControlContextValue => {
+  const context = useContext(SegmentedControlContext);
+  if (!Type.isNonNullable(context)) {
+    throw new Error('SegmentedControl.Option must be used within SegmentedControl.Root');
+  }
+  return context;
+};
+
+const Root: FunctionComponent<SegmentedControlRootProps> = forwardRef<HTMLDivElement, SegmentedControlRootProps>(
   ({
-    leftLabel,
-    rightLabel,
-    checked,
-    onClick,
-    onKeyDown,
+    value,
+    onChange,
     disabled,
+    children,
     ...rest
   }, ref) => {
-    const leftSegmentRef = useRef<HTMLSpanElement>(null);
-    const rightSegmentRef = useRef<HTMLSpanElement>(null);
-    const shouldFocusLeft = useRef(false);
-    const shouldFocusRight = useRef(false);
+    const containerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-      if (shouldFocusLeft.current && Type.isNonNullable(leftSegmentRef.current)) {
-        leftSegmentRef.current.focus();
-        shouldFocusLeft.current = false;
-      }
-      if (shouldFocusRight.current && Type.isNonNullable(rightSegmentRef.current)) {
-        rightSegmentRef.current.focus();
-        shouldFocusRight.current = false;
-      }
-    }, [ checked ]);
-
-    const handleLeftSegmentClick = () => {
-      if (!disabled && checked) {
-        onClick();
-      }
-    };
-
-    const handleRightSegmentClick = () => {
-      if (!disabled && !checked) {
-        onClick();
-      }
-    };
-
-    const handleLeftSegmentKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
-      if (disabled) {
-        return;
-      }
-
-      if (e.key === ' ' || e.key === 'Enter') {
-        e.preventDefault();
-        if (checked) {
-          onClick();
+      if (Type.isNonNullable(ref)) {
+        if (typeof ref === 'function') {
+          ref(containerRef.current);
+        } else if (typeof ref === 'object' && Type.isNonNullable(ref)) {
+          ref.current = containerRef.current;
         }
-      } else if (e.key === 'ArrowRight') {
-        e.preventDefault();
-        if (!checked) {
-          shouldFocusRight.current = true;
-          onClick();
-        }
-      } else if (Type.isFunction(onKeyDown)) {
-        onKeyDown(e);
       }
-    };
+    }, [ ref ]);
 
-    const handleRightSegmentKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
-      if (disabled) {
-        return;
-      }
-
-      if (e.key === ' ' || e.key === 'Enter') {
-        e.preventDefault();
-        if (!checked) {
-          onClick();
+    KeyboardNavigationHooks.useFlowKeyNavigation({
+      containerRef,
+      selector: '[role="radio"]',
+      allowHorizontal: true,
+      allowVertical: false,
+      cycles: true,
+      execute: (focused: SugarElement<HTMLElement>) => {
+        const optionValue = focused.dom.getAttribute('data-value');
+        if (Type.isNonNullable(optionValue) && optionValue !== value && !disabled) {
+          onChange(optionValue);
         }
-      } else if (e.key === 'ArrowLeft') {
-        e.preventDefault();
-        if (checked) {
-          shouldFocusLeft.current = true;
-          onClick();
-        }
-      } else if (Type.isFunction(onKeyDown)) {
-        onKeyDown(e);
+        return Optional.some(true);
       }
-    };
+    });
 
-    const getTabIndex = (isActive: boolean): number => {
-      if (disabled) {
-        return -1;
+    useEffect(() => {
+      if (Type.isNonNullable(containerRef.current)) {
+        SelectorFind.descendant<HTMLElement>(
+          SugarElement.fromDom(containerRef.current),
+          `[role="radio"][data-value="${value}"]`
+        ).each(Focus.focus);
       }
-      return isActive ? 0 : -1;
+    }, [ value ]);
+
+    const contextValue: SegmentedControlContextValue = {
+      value,
+      onChange,
+      disabled
     };
 
     return (
-      <div
-        ref={ref}
-        className={Bem.block('tox-segmented-control', { disabled })}
-        role="radiogroup"
-        aria-disabled={disabled}
-        {...rest}
-      >
-        <span
-          ref={leftSegmentRef}
-          className={Bem.element('tox-segmented-control', 'segment', { active: !checked })}
-          role="radio"
-          aria-checked={!checked}
+      <SegmentedControlContext.Provider value={contextValue}>
+        <div
+          ref={containerRef}
+          className={Bem.block('tox-segmented-control', { disabled })}
+          role="radiogroup"
           aria-disabled={disabled}
-          tabIndex={getTabIndex(!checked)}
-          onClick={handleLeftSegmentClick}
-          onKeyDown={handleLeftSegmentKeyDown}
+          {...rest}
         >
-          {leftLabel}
-        </span>
-        <span
-          ref={rightSegmentRef}
-          className={Bem.element('tox-segmented-control', 'segment', { active: checked })}
-          role="radio"
-          aria-checked={checked}
-          aria-disabled={disabled}
-          tabIndex={getTabIndex(checked)}
-          onClick={handleRightSegmentClick}
-          onKeyDown={handleRightSegmentKeyDown}
-        >
-          {rightLabel}
-        </span>
-      </div>
+          {children}
+        </div>
+      </SegmentedControlContext.Provider>
     );
   }
 );
 
+const Option: FunctionComponent<SegmentedControlOptionProps> = ({
+  value: optionValue,
+  disabled: optionDisabled,
+  children
+}) => {
+  const {
+    value: selectedValue,
+    onChange,
+    disabled: groupDisabled
+  } = useSegmentedControlContext();
+
+  const isActive = selectedValue === optionValue;
+  const isDisabled = groupDisabled || optionDisabled;
+
+  const getTabIndex = (): number => {
+    if (isDisabled) {
+      return -1;
+    }
+    return isActive ? 0 : -1;
+  };
+
+  const handleClick = () => {
+    if (!isDisabled && !isActive) {
+      onChange(optionValue);
+    }
+  };
+
+  return (
+    <span
+      className={Bem.element('tox-segmented-control', 'segment', { active: isActive })}
+      role="radio"
+      aria-checked={isActive}
+      aria-disabled={isDisabled ? 'true' : 'false'}
+      tabIndex={getTabIndex()}
+      data-value={optionValue}
+      onClick={handleClick}
+    >
+      {children}
+    </span>
+  );
+};
+
 export {
-  SegmentedControl
+  Root,
+  Option
 };
