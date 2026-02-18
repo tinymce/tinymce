@@ -1,5 +1,5 @@
-import { Arr, Optional, Type } from '@ephox/katamari';
-import { Focus, Selectors, SugarElement } from '@ephox/sugar';
+import { Optional, Type } from '@ephox/katamari';
+import type { SugarElement } from '@ephox/sugar';
 import {
   createContext,
   forwardRef,
@@ -77,17 +77,6 @@ const Root = forwardRef<HTMLDivElement, SegmentedControlRootProps>(
         return Optional.some(true);
       }
     });
-
-    useEffect(() => {
-      if (Type.isNonNullable(containerRef.current)) {
-        const container = SugarElement.fromDom(containerRef.current);
-        const radioElements = Selectors.all<HTMLElement>('[role="radio"]', container);
-        Arr.find(radioElements, (element: SugarElement<HTMLElement>) => {
-          const dataValue = element.dom.getAttribute('data-value');
-          return dataValue === value;
-        }).each(Focus.focus);
-      }
-    }, [ value ]);
 
     const contextValue: SegmentedControlContextValue = {
       value,
