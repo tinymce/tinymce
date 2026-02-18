@@ -1,5 +1,5 @@
-import { Optional, Type } from '@ephox/katamari';
-import { Focus, SelectorFind, SugarElement } from '@ephox/sugar';
+import { Arr, Optional, Type } from '@ephox/katamari';
+import { Focus, Selectors, SugarElement } from '@ephox/sugar';
 import {
   createContext,
   forwardRef,
@@ -43,7 +43,7 @@ const useSegmentedControlContext = (): SegmentedControlContextValue => {
   return context;
 };
 
-const Root: FunctionComponent<SegmentedControlRootProps> = forwardRef<HTMLDivElement, SegmentedControlRootProps>(
+const Root = forwardRef<HTMLDivElement, SegmentedControlRootProps>(
   ({
     value,
     onChange,
@@ -80,10 +80,12 @@ const Root: FunctionComponent<SegmentedControlRootProps> = forwardRef<HTMLDivEle
 
     useEffect(() => {
       if (Type.isNonNullable(containerRef.current)) {
-        SelectorFind.descendant<HTMLElement>(
-          SugarElement.fromDom(containerRef.current),
-          `[role="radio"][data-value="${value}"]`
-        ).each(Focus.focus);
+        const container = SugarElement.fromDom(containerRef.current);
+        const radioElements = Selectors.all<HTMLElement>('[role="radio"]', container);
+        Arr.find(radioElements, (element: SugarElement<HTMLElement>) => {
+          const dataValue = element.dom.getAttribute('data-value');
+          return dataValue === value;
+        }).each(Focus.focus);
       }
     }, [ value ]);
 
