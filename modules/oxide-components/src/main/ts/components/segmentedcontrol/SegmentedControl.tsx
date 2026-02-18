@@ -1,6 +1,5 @@
 import { Type } from '@ephox/katamari';
 import {
-  type InputHTMLAttributes,
   forwardRef,
   type FunctionComponent,
   useRef,
@@ -9,7 +8,7 @@ import {
 
 import * as Bem from '../../utils/Bem';
 
-interface SegmentedControlProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'onClick'> {
+interface SegmentedControlProps {
   readonly leftLabel: string;
   readonly rightLabel: string;
   readonly checked: boolean;
@@ -18,16 +17,14 @@ interface SegmentedControlProps extends Omit<InputHTMLAttributes<HTMLInputElemen
   onKeyDown?: (e: React.KeyboardEvent) => void;
 }
 
-const SegmentedControl: FunctionComponent<SegmentedControlProps> = forwardRef<HTMLInputElement, SegmentedControlProps>(
+const SegmentedControl: FunctionComponent<SegmentedControlProps> = forwardRef<HTMLDivElement, SegmentedControlProps>(
   ({
     leftLabel,
     rightLabel,
     checked,
     onClick,
     onKeyDown,
-    name,
-    disabled,
-    ...rest
+    disabled
   }, ref) => {
     const leftSegmentRef = useRef<HTMLSpanElement>(null);
     const rightSegmentRef = useRef<HTMLSpanElement>(null);
@@ -101,21 +98,11 @@ const SegmentedControl: FunctionComponent<SegmentedControlProps> = forwardRef<HT
 
     return (
       <div
+        ref={ref}
         className={Bem.block('tox-segmented-control', { disabled })}
         role="radiogroup"
         aria-disabled={disabled}
       >
-        <input
-          type='checkbox'
-          ref={ref}
-          checked={checked}
-          name={name}
-          disabled={disabled}
-          aria-checked={checked}
-          tabIndex={-1}
-          readOnly
-          {...rest}
-        />
         <span
           ref={leftSegmentRef}
           className={Bem.element('tox-segmented-control', 'segment', { active: !checked })}

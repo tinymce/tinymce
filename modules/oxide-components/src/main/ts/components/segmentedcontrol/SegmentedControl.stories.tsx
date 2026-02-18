@@ -21,7 +21,6 @@ type Story = StoryObj<typeof meta>;
 export const LeftActive: Story = {
   args: {
     checked: false,
-    name: 'segmented-left-active',
     leftLabel: 'Diff mode',
     rightLabel: 'Preview',
   },
@@ -45,7 +44,6 @@ export const LeftActive: Story = {
 export const RightActive: Story = {
   args: {
     checked: true,
-    name: 'segmented-right-active',
     leftLabel: 'Diff mode',
     rightLabel: 'Preview',
   },
@@ -69,7 +67,6 @@ export const RightActive: Story = {
 export const ShortLabels: Story = {
   args: {
     checked: false,
-    name: 'segmented-short',
     leftLabel: 'Off',
     rightLabel: 'On',
   },
@@ -93,7 +90,6 @@ export const ShortLabels: Story = {
 export const LongLabels: Story = {
   args: {
     checked: false,
-    name: 'segmented-long',
     leftLabel: 'Show changes',
     rightLabel: 'Hide changes',
   },
@@ -117,7 +113,6 @@ export const LongLabels: Story = {
 export const Disabled: Story = {
   args: {
     checked: false,
-    name: 'segmented-disabled',
     leftLabel: 'Diff mode',
     rightLabel: 'Preview',
     disabled: true,
@@ -153,7 +148,6 @@ export const Disabled: Story = {
 
 export const Interactive: Story = {
   args: {
-    name: 'segmented-interactive',
     leftLabel: 'Left',
     rightLabel: 'Right',
     checked: false,
@@ -172,28 +166,24 @@ export const Interactive: Story = {
       }}>
         <SegmentedControl
           checked={state1}
-          name="segmented-1"
           leftLabel="Diff mode"
           rightLabel="Preview"
           onClick={() => setState1(!state1)}
         />
         <SegmentedControl
           checked={state2}
-          name="segmented-2"
           leftLabel="Edit"
           rightLabel="View"
           onClick={() => setState2(!state2)}
         />
         <SegmentedControl
           checked={state3}
-          name="segmented-3"
           leftLabel="Light"
           rightLabel="Dark"
           onClick={() => setState3(!state3)}
         />
         <SegmentedControl
           checked={false}
-          name="segmented-4"
           leftLabel="Disabled"
           rightLabel="Control"
           disabled
