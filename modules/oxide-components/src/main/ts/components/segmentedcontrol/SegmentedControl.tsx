@@ -1,5 +1,5 @@
 import { Optional, Type } from '@ephox/katamari';
-import type { SugarElement } from '@ephox/sugar';
+import { Attribute, type SugarElement } from '@ephox/sugar';
 import {
   createContext,
   forwardRef,
@@ -68,8 +68,8 @@ const Root = forwardRef<HTMLDivElement, SegmentedControlRootProps>(
       allowVertical: false,
       cycles: true,
       execute: (focused: SugarElement<HTMLElement>) => {
-        const optionValue = focused.dom.getAttribute('data-value');
-        const isOptionDisabled = focused.dom.getAttribute('aria-disabled') === 'true';
+        const optionValue = Attribute.get(focused, 'data-value');
+        const isOptionDisabled = Attribute.get(focused, 'aria-disabled') === 'true';
 
         if (Type.isNonNullable(optionValue) && optionValue !== value && !disabled && !isOptionDisabled) {
           onChange(optionValue);
