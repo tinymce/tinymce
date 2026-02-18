@@ -5,7 +5,7 @@ import {
   forwardRef,
   type FunctionComponent,
   type HTMLAttributes,
-  type ReactNode,
+  type PropsWithChildren,
   useContext,
   useEffect,
   useRef
@@ -20,18 +20,16 @@ interface SegmentedControlContextValue {
   readonly disabled?: boolean;
 }
 
-interface SegmentedControlRootProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onChange'> {
+interface SegmentedControlRootProps extends PropsWithChildren<Omit<HTMLAttributes<HTMLDivElement>, 'onChange'>> {
   readonly value: string;
   readonly onChange: (value: string) => void;
   readonly disabled?: boolean;
-  readonly children: ReactNode;
 }
 
-interface SegmentedControlOptionProps {
+type SegmentedControlOptionProps = PropsWithChildren<{
   readonly value: string;
   readonly disabled?: boolean;
-  readonly children: ReactNode;
-}
+}>;
 
 const SegmentedControlContext = createContext<SegmentedControlContextValue | null>(null);
 
