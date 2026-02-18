@@ -69,7 +69,10 @@ const Root = forwardRef<HTMLDivElement, SegmentedControlRootProps>(
       cycles: true,
       execute: (focused: SugarElement<HTMLElement>) => {
         const optionValue = focused.dom.getAttribute('data-value');
-        if (Type.isNonNullable(optionValue) && optionValue !== value && !disabled) {
+        const isOptionDisabled = focused.dom.getAttribute('aria-disabled') === 'true';
+        const isOptionNotFocusable = focused.dom.tabIndex === -1;
+
+        if (Type.isNonNullable(optionValue) && optionValue !== value && !disabled && !isOptionDisabled && !isOptionNotFocusable) {
           onChange(optionValue);
         }
         return Optional.some(true);
