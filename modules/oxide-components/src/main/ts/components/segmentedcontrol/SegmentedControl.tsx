@@ -2,19 +2,20 @@ import { Type } from '@ephox/katamari';
 import {
   forwardRef,
   type FunctionComponent,
+  type HTMLAttributes,
   useRef,
   useEffect
 } from 'react';
 
 import * as Bem from '../../utils/Bem';
 
-interface SegmentedControlProps {
+interface SegmentedControlProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onClick'> {
   readonly leftLabel: string;
   readonly rightLabel: string;
   readonly checked: boolean;
   readonly disabled?: boolean;
-  onClick: () => void;
-  onKeyDown?: (e: React.KeyboardEvent) => void;
+  readonly onClick: () => void;
+  readonly onKeyDown?: (e: React.KeyboardEvent) => void;
 }
 
 const SegmentedControl: FunctionComponent<SegmentedControlProps> = forwardRef<HTMLDivElement, SegmentedControlProps>(
@@ -24,7 +25,8 @@ const SegmentedControl: FunctionComponent<SegmentedControlProps> = forwardRef<HT
     checked,
     onClick,
     onKeyDown,
-    disabled
+    disabled,
+    ...rest
   }, ref) => {
     const leftSegmentRef = useRef<HTMLSpanElement>(null);
     const rightSegmentRef = useRef<HTMLSpanElement>(null);
@@ -96,12 +98,20 @@ const SegmentedControl: FunctionComponent<SegmentedControlProps> = forwardRef<HT
       }
     };
 
+    const getTabIndex = (isActive: boolean): number => {
+      if (disabled) {
+        return -1;
+      }
+      return isActive ? 0 : -1;
+    };
+
     return (
       <div
         ref={ref}
         className={Bem.block('tox-segmented-control', { disabled })}
         role="radiogroup"
         aria-disabled={disabled}
+        {...rest}
       >
         <span
           ref={leftSegmentRef}
@@ -109,7 +119,7 @@ const SegmentedControl: FunctionComponent<SegmentedControlProps> = forwardRef<HT
           role="radio"
           aria-checked={!checked}
           aria-disabled={disabled}
-          tabIndex={!checked ? 0 : -1}
+          tabIndex={getTabIndex(!checked)}
           onClick={handleLeftSegmentClick}
           onKeyDown={handleLeftSegmentKeyDown}
         >
@@ -121,7 +131,7 @@ const SegmentedControl: FunctionComponent<SegmentedControlProps> = forwardRef<HT
           role="radio"
           aria-checked={checked}
           aria-disabled={disabled}
-          tabIndex={checked ? 0 : -1}
+          tabIndex={getTabIndex(checked)}
           onClick={handleRightSegmentClick}
           onKeyDown={handleRightSegmentKeyDown}
         >
