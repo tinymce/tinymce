@@ -1,0 +1,71 @@
+.tox {
+  .tox-segmented-control when (@custom-properties-enabled = true) {
+    --tox-private-segmented-control-border-color: light-dark(
+      hsl(from var(--tox-private-color-white) h s calc(l - 20)),
+      hsl(from var(--tox-private-color-white) h s l / 15%)
+    );
+    --tox-private-segmented-control-active-border-color: var(--tox-private-color-tint);
+    --tox-private-segmented-control-active-text-color: var(--tox-private-color-tint);
+    --tox-private-segmented-control-active-bg-color: light-dark(
+      hsl(from var(--tox-private-color-tint) h calc(s * 0.7) calc(l + 35)),
+      hsl(from var(--tox-private-color-tint) h s calc(l - 30) / 30%)
+    );
+    --tox-private-segmented-control-text-color: var(--tox-private-text-color);
+  }
+
+  .tox-segmented-control {
+    display: inline-flex;
+    position: relative;
+    border: 1px solid var(--tox-private-segmented-control-border-color, @border-color-light);
+    border-radius: var(--tox-private-control-border-radius, @control-border-radius);
+    overflow: hidden;
+    background-color: var(--tox-private-background-color, @background-color);
+  }
+
+  .tox-segmented-control__segment {
+    flex: 1;
+    padding: var(--tox-private-pad-xs, @pad-xs) var(--tox-private-pad-sm, @pad-sm);
+    cursor: pointer;
+    background: transparent;
+    font-size: var(--tox-private-font-size-sm, @font-size-sm);
+    font-weight: var(--tox-private-font-weight-normal, @font-weight-normal);
+    line-height: var(--tox-private-control-line-height, 24px);
+    border: 1px solid transparent;
+    border-radius: calc(var(--tox-private-control-border-radius, @control-border-radius) - 3px);
+    text-align: center;
+    white-space: nowrap;
+    display: inline-block;
+    vertical-align: middle;
+    margin: var(--tox-private-pad-xs, @pad-xs);
+    color: var(--tox-private-segmented-control-text-color, @text-color);
+
+    &--active {
+      border-color: var(--tox-private-segmented-control-active-border-color, @color-tint);
+      color: var(--tox-private-segmented-control-active-text-color, @color-tint);
+      background-color: var(--tox-private-segmented-control-active-bg-color, fade(@color-tint, 15%));
+    }
+  }
+
+  .tox-segmented-control:not(.tox-segmented-control--disabled) {
+    .tox-segmented-control__segment {
+      transition: all 0.2s;
+    }
+  }
+
+  .tox-segmented-control.tox-segmented-control--disabled {
+    .tox-segmented-control__segment {
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+  }
+
+  .tox-segmented-control__segment:focus {
+    outline: 2px solid var(--tox-private-color-tint, @color-tint);
+    outline-offset: 2px;
+  }
+  
+  .tox-segmented-control__segment:focus:not(:focus-visible) {
+    outline: none;
+  }
+}
