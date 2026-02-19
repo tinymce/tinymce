@@ -1,4 +1,4 @@
-import { Type } from '@ephox/katamari';
+import { Arr, Type } from '@ephox/katamari';
 import { useCallback, type FC, type PropsWithChildren } from 'react';
 
 import * as Bem from '../../utils/Bem';
@@ -17,16 +17,17 @@ export interface CardRootProps extends PropsWithChildren {
    * Required when used inside CardList for proper keyboard navigation.
    */
   readonly index?: number;
+  /**
+   * When true, displays skeleton loading state instead of children.
+   * Disables interactions and shows aria-busy attribute.
+   */
+  readonly loading?: boolean;
 }
 
 export interface CardHeaderProps extends PropsWithChildren {
   readonly title?: string;
 }
 
-/**
- * Card Body component props.
- * Contains the main content of the card.
- */
 export interface CardBodyProps extends PropsWithChildren {}
 
 export interface CardActionsProps extends PropsWithChildren {
@@ -37,11 +38,11 @@ export interface CardHighlightProps extends PropsWithChildren {
   readonly type: CardHighlightType;
 }
 
-/**
- * Card Root component.
- * Container for a card with support for selection states.
- * Must be used within a CardList for proper keyboard navigation.
- */
+const renderSkeletonLines = (lines: number) =>
+  Arr.range(lines, (i) => (
+    <div key={i} className={Bem.element('tox-skeleton', 'line')} style={{ width: '100%' }} />
+  ));
+
 const Root: FC<CardRootProps> = ({
   children,
   className,
@@ -49,7 +50,8 @@ const Root: FC<CardRootProps> = ({
   selected = false,
   ariaLabel,
   hasDecision = false,
-  index
+  index,
+  loading = false
 }) => {
   const listContext = useCardListContext();
 
@@ -76,8 +78,6 @@ const Root: FC<CardRootProps> = ({
   }, [ onSelect, listContext, index ]);
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-    // Keyboard activation is handled by CardList's useFlowKeyNavigation
-    // Only need to check for interactive child elements
     if (e.key !== 'Enter' && e.key !== ' ') {
       return;
     }
@@ -103,28 +103,38 @@ const Root: FC<CardRootProps> = ({
   const cardClassName = Bem.block('tox-card', {
     'selected': isFocused || selected,
     'has-decision': hasDecision
-  }) + (Type.isNonNullable(className) ? ` ${className}` : '');
+  })
+    + (loading ? ' tox-skeleton' : '')
+    + (Type.isNonNullable(className) ? ` ${className}` : '');
+
+  const skeletonContent = (
+    <>
+      <div className={Bem.element('tox-card', 'body')}>
+        {renderSkeletonLines(1)}
+      </div>
+      <div className={Bem.element('tox-card', 'actions')}>
+        <div className={Bem.element('tox-skeleton', 'line')} style={{ width: '50%' }} />
+      </div>
+    </>
+  );
 
   return (
     <div
       className={cardClassName}
-      onClick={handleClick}
-      onKeyDown={handleKeyDown}
-      onFocus={handleFocus}
+      onClick={loading ? undefined : handleClick}
+      onKeyDown={loading ? undefined : handleKeyDown}
+      onFocus={loading ? undefined : handleFocus}
       tabIndex={-1}
       role="option"
       aria-label={ariaLabel ?? `Card ${(index ?? 0) + 1}`}
       aria-selected={isSelected}
+      aria-busy={loading}
     >
-      {children}
+      {loading ? skeletonContent : children}
     </div>
   );
 };
 
-/**
- * Card Header component.
- * Displays the header/title section of the card.
- */
 const Header: FC<CardHeaderProps> = ({ children, title }) => {
   return (
     <div className={Bem.element('tox-card', 'header')}>
@@ -133,10 +143,6 @@ const Header: FC<CardHeaderProps> = ({ children, title }) => {
   );
 };
 
-/**
- * Card Body component.
- * Contains the main content of the card.
- */
 const Body: FC<CardBodyProps> = ({ children }) => {
   return (
     <div className={Bem.element('tox-card', 'body')}>
@@ -145,11 +151,6 @@ const Body: FC<CardBodyProps> = ({ children }) => {
   );
 };
 
-/**
- * Card Actions component.
- * Contains action buttons (Skip, Apply, Revert, etc.)
- * Default layout is flex-start (buttons on left with gap between them)
- */
 const Actions: FC<CardActionsProps> = ({ children, layout = 'flex-start' }) => {
   return (
     <div className={Bem.element('tox-card', 'actions', {
@@ -161,10 +162,6 @@ const Actions: FC<CardActionsProps> = ({ children, layout = 'flex-start' }) => {
   );
 };
 
-/**
- * Card Highlight component.
- * Displays highlighted text with added/deleted/modified styling.
- */
 const Highlight: FC<CardHighlightProps> = ({ children, type }) => {
   return (
     <div className={Bem.element('tox-card', 'highlight', {

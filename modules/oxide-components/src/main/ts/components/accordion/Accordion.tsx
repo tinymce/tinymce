@@ -1,5 +1,16 @@
 import { Arr, Optional, Type } from '@ephox/katamari';
-import { createContext, useCallback, useContext, useMemo, useRef, useState, type FC, type PropsWithChildren } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useRef,
+  useState,
+  type FC,
+  type PropsWithChildren,
+  type MouseEvent as ReactMouseEvent,
+  type KeyboardEvent as ReactKeyboardEvent
+} from 'react';
 
 import * as KeyboardNavigationHooks from '../../keynav/KeyboardNavigationHooks';
 import * as Bem from '../../utils/Bem';
@@ -10,6 +21,8 @@ interface AccordionContextValue {
   readonly toggleItem: (id: string) => void;
   readonly allowMultiple: boolean;
 }
+
+const INTERACTIVE_SELECTOR = 'button, a, input, textarea, select, [contenteditable], [role="textbox"]';
 
 const AccordionContext = createContext<AccordionContextValue | null>(null);
 
@@ -107,11 +120,23 @@ const Root: FC<AccordionRootProps> = ({
 
   KeyboardNavigationHooks.useFlowKeyNavigation({
     containerRef,
-    selector: '.tox-accordion__header:not([aria-disabled="true"])',
+    selector: '.tox-accordion__item:not([aria-disabled="true"])',
     allowVertical: true,
     allowHorizontal: false,
     cycles: false,
+    focusIn: true,
     execute: (focused) => {
+      const activeElement = document.activeElement;
+      const isInteractive = activeElement?.matches(INTERACTIVE_SELECTOR) ?? false;
+      if (isInteractive) {
+        return Optional.none();
+      }
+
+      // If the item is already focused, let React's onKeyDown handler deal with it
+      if (activeElement === focused.dom) {
+        return Optional.none();
+      }
+
       focused.dom.click();
       return Optional.some(true);
     }
@@ -119,7 +144,8 @@ const Root: FC<AccordionRootProps> = ({
 
   return (
     <AccordionContext.Provider value={contextValue}>
-      <div ref={containerRef} className="tox-accordion">
+      {/* TODO TINY-13777: Revisit tab order */}
+      <div ref={containerRef} className="tox-accordion" tabIndex={0}>
         {children}
       </div>
     </AccordionContext.Provider>
@@ -183,6 +209,82 @@ const Item: FC<AccordionItemProps> = ({
     }
   }, [ disabled, toggleItem, id ]);
 
+  const handleItemClick = useCallback((e: ReactMouseEvent) => {
+    const target = e.target as HTMLElement;
+    const currentTarget = e.currentTarget as HTMLElement;
+
+    const clickedHeader = target.closest(Bem.elementSelector('tox-accordion', 'header'));
+    if (!clickedHeader && target !== currentTarget) {
+      return;
+    }
+
+    if (target !== currentTarget) {
+      const isInteractive = target.matches(INTERACTIVE_SELECTOR) ||
+        target.closest(INTERACTIVE_SELECTOR);
+      if (isInteractive) {
+        return;
+      }
+    }
+
+    currentTarget.focus();
+
+    if (!disabled) {
+      toggleItem(id);
+    }
+  }, [ disabled, toggleItem, id ]);
+
+  const handleItemKeyDown = useCallback((e: ReactKeyboardEvent) => {
+    if (e.key !== 'Enter' && e.key !== ' ') {
+      return;
+    }
+
+    const activeElement = document.activeElement;
+    const isInteractive = activeElement?.matches(INTERACTIVE_SELECTOR) ?? false;
+    if (isInteractive) {
+      return;
+    }
+
+    const target = e.target as HTMLElement;
+    const currentTarget = e.currentTarget as HTMLElement;
+
+    if (target === currentTarget) {
+      e.preventDefault();
+      if (!disabled) {
+        toggleItem(id);
+      }
+    } else {
+      const isInteractiveTarget = target.matches(INTERACTIVE_SELECTOR) ||
+        target.closest(INTERACTIVE_SELECTOR);
+      if (isInteractiveTarget) {
+        return;
+      }
+
+      e.preventDefault();
+      if (!disabled) {
+        toggleItem(id);
+      }
+    }
+  }, [ disabled, toggleItem, id ]);
+
+  const handleItemEscape = useCallback((e: ReactKeyboardEvent) => {
+    if (e.key !== 'Escape') {
+      return;
+    }
+
+    const target = e.target as HTMLElement;
+    const currentTarget = e.currentTarget as HTMLElement;
+
+    if (target !== currentTarget) {
+      e.preventDefault();
+      currentTarget.focus();
+
+      const isInteractive = target.matches(INTERACTIVE_SELECTOR);
+      if (!isInteractive) {
+        e.stopPropagation();
+      }
+    }
+  }, []);
+
   const itemClassName = Bem.element('tox-accordion', 'item', {
     expanded: isExpanded,
   });
@@ -210,7 +312,26 @@ const Item: FC<AccordionItemProps> = ({
   );
 
   return (
-    <div className={itemClassName}>
+    <div
+      className={itemClassName}
+      tabIndex={-1}
+      aria-disabled={disabled}
+      onMouseDown={(e) => {
+        const target = e.target as HTMLElement;
+        const currentTarget = e.currentTarget as HTMLElement;
+
+        const clickedHeader = target.closest(Bem.elementSelector('tox-accordion', 'header'));
+        if (Type.isNonNullable(clickedHeader) || (target === currentTarget)) {
+          e.currentTarget.focus();
+          e.preventDefault();
+        }
+      }}
+      onClick={handleItemClick}
+      onKeyDown={(e) => {
+        handleItemKeyDown(e);
+        handleItemEscape(e);
+      }}
+    >
       <HeadingTag className="tox-accordion__heading">
         <button
           id={headerId}
@@ -221,6 +342,7 @@ const Item: FC<AccordionItemProps> = ({
           aria-disabled={disabled}
           onClick={handleClick}
           disabled={disabled}
+          tabIndex={-1}
         >
           {iconPosition === 'start' ? (
             <>

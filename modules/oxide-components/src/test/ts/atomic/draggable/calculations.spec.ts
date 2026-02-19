@@ -1,4 +1,4 @@
-import { delta, clamp, boundaries, position } from 'oxide-components/components/draggable/internals/calculations';
+import { delta, clamp, boundaries, position } from 'oxide-components/components/draggable/internals/Calculations';
 import { describe, expect, it } from 'vitest';
 
 describe('browser.draggable.calculations', () => {

@@ -1,0 +1,18 @@
+@import '../../content/diff/diff';
+
+.tox .tox-ai-review__empty-state {
+  padding: 12px;
+  color: var(--tox-private-text-color-muted, @text-color-muted);
+  font-size: var(--tox-private-font-size-sm, @font-size-sm);
+}
+
+.tox {
+  .diff-content(
+    tinymceai,
+    @added-background-color,
+    @modified-background-color,
+    @removed-background-color,
+    @selected-outline-color,
+    @selected-box-shadow
+  );
+}

@@ -1,10 +1,11 @@
 import type Editor from 'tinymce/core/api/Editor';
 
 import * as IframeContent from '../core/IframeContent';
+import type { ContentCssResource } from '../core/Types';
 
-export const open = (editor: Editor): void => {
+export const open = (editor: Editor, contentCssResources: ContentCssResource[]): void => {
 
-  const content = IframeContent.getPreviewHtml(editor);
+  const content = IframeContent.getPreviewHtml(editor, contentCssResources);
 
   const dataApi = editor.windowManager.open({
     title: 'Preview',

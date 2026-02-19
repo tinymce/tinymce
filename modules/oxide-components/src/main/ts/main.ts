@@ -15,7 +15,7 @@ import { Icon } from './components/icon/Icon';
 import { IconButton } from './components/iconbutton/IconButton';
 import * as Menu from './components/menu/Menu';
 import * as MenuRenderer from './components/menu/MenuRenderer';
-import { ToggleSwitch } from './components/toggleswitch/ToggleSwitch';
+import * as SegmentedControl from './components/segmentedcontrol/SegmentedControl';
 import { ToolbarInputForm } from './components/toolbarInputForm/ToolbarInputForm';
 import * as Tooltip from './components/tooltip/Tooltip';
 import { useUniverse } from './contexts/UniverseContext/Universe';
@@ -49,9 +49,9 @@ export {
   MenuRenderer,
   Spinner,
   Tag,
-  ToggleSwitch,
   ToolbarInputForm,
   Tooltip,
+  SegmentedControl,
   UniverseProvider,
   useUniverse,
   UserPromptBubble

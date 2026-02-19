@@ -1,7 +1,7 @@
 import { Obj } from '@ephox/katamari';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { getAll as getAllIcons } from '@tinymce/oxide-icons-default';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Button, ExpandableBox, UniverseProvider } from '../../main';
 import * as Bem from '../../utils/Bem';
@@ -460,3 +460,54 @@ This follows WCAG accessibility guidelines and the listbox pattern.
   }
 };
 
+export const SkeletonLoading: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: `
+**Skeleton Loading State with Transition**
+
+Demonstrates the \`loading\` prop on Card.Root that internally handles skeleton state.
+The card automatically transitions from skeleton to loaded content when \`loading\` changes from \`true\` to \`false\`.
+
+This matches the Suggested Edits pattern where the card container remains the same but content switches between skeleton and loaded state.
+
+**Try it:** The card shows skeleton for 2 seconds, then transitions to show the actual content.
+        `
+      }
+    }
+  },
+  render: () => {
+    const [ loading, setLoading ] = useState(true);
+
+    // Simulate data loading
+    useEffect(() => {
+      const timer = setTimeout(() => setLoading(false), 2000);
+      return () => clearTimeout(timer);
+    }, []);
+
+    return (
+      <div style={{ width: '316px' }}>
+        <Card.CardList>
+          <Card.Root loading={loading} index={0}>
+            <Card.Body>
+              <p style={{ margin: 0 }}>
+                Barcelona is football's most exceptional institution club, combining sporting excellence with cultural significance.
+              </p>
+            </Card.Body>
+            <Card.Actions>
+              <Button variant="outlined">
+                <Icon icon="close" />
+                Skip
+              </Button>
+              <Button variant="outlined">
+                <Icon icon="checkmark" />
+                Apply
+              </Button>
+            </Card.Actions>
+          </Card.Root>
+        </Card.CardList>
+      </div>
+    );
+  }
+};

@@ -1,4 +1,5 @@
-import { SelectorFind, SugarElement } from '@ephox/sugar';
+import { Arr } from '@ephox/katamari';
+import { SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 import { getAll as getAllIcons } from '@tinymce/oxide-icons-default';
 import { userEvent } from '@vitest/browser/context';
 import * as Accordion from 'oxide-components/components/accordion/Accordion';
@@ -122,7 +123,7 @@ describe('browser.components.AccordionTest', () => {
   });
 
   it('TINY-13450: Should navigate between items with arrow keys', async () => {
-    const { getByRole } = render(
+    const { container } = render(
       <Accordion.Root>
         <Accordion.Item id="item1" title="Item 1">
           <p>Content 1</p>
@@ -137,21 +138,24 @@ describe('browser.components.AccordionTest', () => {
       { wrapper }
     );
 
-    const button1 = getByRole('button', { name: /Item 1/i });
-    const button2 = getByRole('button', { name: /Item 2/i });
-    const button3 = getByRole('button', { name: /Item 3/i });
+    const selector = Bem.elementSelector('tox-accordion', 'item');
+    const items = SelectorFilter.descendants<HTMLElement>(SugarElement.fromDom(container), selector);
 
-    button1.element().focus();
-    expect(document.activeElement).toBe(button1.element());
+    const item1 = Arr.head(items).getOrDie();
+    const item2 = Arr.get(items, 1).getOrDie();
+    const item3 = Arr.get(items, 2).getOrDie();
+
+    item1.dom.focus();
+    expect(document.activeElement).toBe(item1.dom);
 
     await userEvent.keyboard('{ArrowDown}');
-    expect(document.activeElement).toBe(button2.element());
+    expect(document.activeElement).toBe(item2.dom);
 
     await userEvent.keyboard('{ArrowDown}');
-    expect(document.activeElement).toBe(button3.element());
+    expect(document.activeElement).toBe(item3.dom);
 
     await userEvent.keyboard('{ArrowUp}');
-    expect(document.activeElement).toBe(button2.element());
+    expect(document.activeElement).toBe(item2.dom);
   });
 
   it('TINY-13450: Should not expand disabled items', async () => {

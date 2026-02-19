@@ -21,6 +21,7 @@ interface NonLinkTagProps {
 interface LinkTagProps {
   readonly link: true;
   readonly href: string;
+  readonly target?: string;
 }
 
 interface NonClosableProps {
@@ -40,6 +41,8 @@ export const Tag = forwardRef<HTMLDivElement | HTMLAnchorElement, TagProps>((pro
   const { label, icon, closeable, ariaLabel, link, ...rest } = props;
   const disabled = closeable && props.disabled === true;
   const href = link ? props.href : undefined;
+  const target = link ? (props.target ?? '_blank') : undefined;
+  const rel = link && target === '_blank' ? 'noopener noreferrer' : undefined;
 
   const content = (
     <>
@@ -54,7 +57,14 @@ export const Tag = forwardRef<HTMLDivElement | HTMLAnchorElement, TagProps>((pro
   );
 
   return link ? (
-    <a className={Bem.block('tox-tag')} href={href} ref={ref as React.Ref<HTMLAnchorElement>} {...rest}>
+    <a
+      className={Bem.block('tox-tag')}
+      href={href}
+      target={target}
+      rel={rel}
+      ref={ref as React.Ref<HTMLAnchorElement>}
+      {...rest}
+    >
       {content}
     </a>
   ) : (
