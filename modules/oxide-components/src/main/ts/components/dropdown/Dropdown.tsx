@@ -11,10 +11,10 @@ const isInDropdownContent = (contentRef: React.MutableRefObject<HTMLDivElement |
 };
 
 interface DropdownContentProps extends PropsWithChildren<HTMLAttributes<HTMLDivElement>> {
-  onClose?: () => void;
+  readonly onOpenChange?: (isOpen: boolean) => void;
 }
 
-const Content = forwardRef<HTMLDivElement, DropdownContentProps>(({ children, onClose, ...props }, ref) => {
+const Content = forwardRef<HTMLDivElement, DropdownContentProps>(({ children, onOpenChange, ...props }, ref) => {
   const { triggerRef, side, align, gap, contentRef, triggerEvents, debouncedHideHoverablePopover, isOpen, setIsOpen } = useDropdown();
 
   const [ positioningStyles, setPositioningStyles ] = useState<CSSProperties>({ opacity: '0' });
@@ -57,8 +57,15 @@ const Content = forwardRef<HTMLDivElement, DropdownContentProps>(({ children, on
     const onToggle = (e: Event) => {
       updateToggleState(e as ToggleEvent);
       if ((e as ToggleEvent).newState === 'closed') {
-        triggerRef.current?.focus();
-        onClose?.();
+        // Only refocus trigger if focus was inside the dropdown content or nothing is focused
+        // This prevents stealing focus from other elements (like sibling menu items)
+        const focusWasInContent = contentRef.current?.contains(document.activeElement);
+        if (focusWasInContent || document.activeElement === document.body) {
+          triggerRef.current?.focus();
+        }
+        onOpenChange?.(false);
+      } else {
+        onOpenChange?.(true);
       }
     };
 
@@ -67,7 +74,7 @@ const Content = forwardRef<HTMLDivElement, DropdownContentProps>(({ children, on
     return () => {
       element.removeEventListener('toggle', onToggle);
     };
-  }, [ contentRef, triggerRef, updateToggleState, onClose ]);
+  }, [ contentRef, triggerRef, updateToggleState, onOpenChange ]);
 
   useEffect(() => {
     if (isOpen) {

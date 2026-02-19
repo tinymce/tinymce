@@ -5,12 +5,11 @@ import * as Bem from '../../../utils/Bem';
 import { Icon } from '../../icon/Icon';
 import type { ToggleMenuItemInstanceApi, ToggleMenuItemProps } from '../internals/Types';
 
-export const ToggleItem = forwardRef<HTMLButtonElement, ToggleMenuItemProps>(({ autoFocus = false, enabled = true, onSetup, icon, active = false, shortcut, onAction, children }, ref) => {
+export const ToggleItem = forwardRef<HTMLButtonElement, ToggleMenuItemProps>(({ enabled = true, onSetup, icon, active = false, shortcut, onAction, children }, ref) => {
   const [ state, setState ] = useState({
     enabled,
     active,
     focused: false,
-    hovered: false,
   });
   const id = useId();
   const stateRef = useRef(state);
@@ -56,17 +55,19 @@ export const ToggleItem = forwardRef<HTMLButtonElement, ToggleMenuItemProps>(({ 
       disabled={!state.enabled}
       aria-selected={state.active}
       onFocus={() => setState({ ...state, focused: true })}
-      onPointerEnter={() => setState({ ...state, hovered: true })}
-      onPointerLeave={() => setState({ ...state, hovered: false })}
+      onPointerMove={(e) => {
+        if (state.enabled) {
+          e.currentTarget.focus();
+        }
+      }}
       onBlur={() => setState({ ...state, focused: false })}
       onClick={() => onAction(api)}
       className={Bem.element('tox-collection', 'item', {
         'enabled': state.active,
-        'active': state.focused || state.hovered,
+        'active': state.focused,
         'state-disabled': !state.enabled,
       })}
       ref={ref}
-      autoFocus={autoFocus}
       aria-keyshortcuts={shortcut}
     >
       {itemIcon && <div className={Bem.element('tox-collection', 'item-icon')}>{itemIcon}</div>}
