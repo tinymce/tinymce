@@ -210,6 +210,21 @@
     display: flex;
     gap: var(--tox-private-pad-sm, @pad-sm);
     flex-wrap: wrap;
+    max-height: calc(
+      ( 2 *
+        (2 * var(--tox-private-pad-xs, @pad-xs) + var(--tox-private-base-value, @base-value)) 
+      ) +
+      var(--tox-private-pad-sm, @pad-sm)
+    ); // Two rows of tags + the gap between them. Height of the tag is calculated from padding top and bottom + line height 
+    overflow: auto;
+  }
+
+  .tox-ai__context-more {
+    display: flex;
+    flex-direction: column;
+    gap: var(--tox-private-pad-sm, @pad-sm);
+    padding: var(--tox-private-pad-sm, @pad-sm);
+    overflow: auto;
   }
 
   .tox-ai__footer-actions {

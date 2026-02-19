@@ -86,15 +86,20 @@ const Content = forwardRef<HTMLDivElement, DropdownContentProps>(({ children, on
   }, [ isOpen, updatePosition, children ]);
 
   useEffect(() => {
-    const onScrollAndResize = () => {
+    const onResize = () => {
       contentRef.current?.hidePopover();
     };
-    window.addEventListener('scroll', onScrollAndResize, true);
-    window.addEventListener('resize', onScrollAndResize);
+    const onOutsideScroll = (e: Event) => {
+      if (!(e.target instanceof Node) || !isInDropdownContent(contentRef, e.target)) {
+        contentRef.current?.hidePopover();
+      }
+    };
+    window.addEventListener('scroll', onOutsideScroll, true);
+    window.addEventListener('resize', onResize);
 
     return () => {
-      window.removeEventListener('scroll', onScrollAndResize, true);
-      window.removeEventListener('resize', onScrollAndResize);
+      window.removeEventListener('scroll', onOutsideScroll, true);
+      window.removeEventListener('resize', onResize);
     };
   }, [ updatePosition, triggerRef, contentRef ]);
 
