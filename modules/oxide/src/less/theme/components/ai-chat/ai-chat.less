@@ -249,7 +249,7 @@
 
   .tox-ai__models-menu__item {
     display: flex;
-    padding: var(--tox-private-pad-sm, @pad-sm) calc(var(--tox-private-pad-sm, @pad-sm) * .75);
+    padding: calc(var(--tox-private-pad-md, @pad-md) * 0.75);
     align-items: flex-start;
     gap: var(--tox-private-pad-sm, @pad-sm);
     align-self: stretch;
@@ -281,6 +281,7 @@
     // Since we don't have defined line-height variables, we use the same raw values provided by the design
     // c.f: https://www.figma.com/design/utz67QpX0v3NDG36hzSawt/🚀-TinyMCE---UX-UI-Design?node-id=20649-19617&m=dev
     line-height: calc(var(--tox-private-font-size-sm, @font-size-sm) * 1.28572);
+    padding-bottom: @pad-xs;
   }
 
   .tox-ai__models-menu__item__description__content {
@@ -289,16 +290,22 @@
     // Since we don't have defined line-height variables, we use the same raw values provided by the design
     // c.f: https://www.figma.com/design/utz67QpX0v3NDG36hzSawt/🚀-TinyMCE---UX-UI-Design?node-id=20649-19617&m=dev
     line-height: calc(var(--tox-private-font-size-xs, @font-size-xs) * 1.33333);
-   }
+  }
 
   .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
-    .tox-ai__models-menu__item__description__content, .tox-ai__models-menu__item__description__ability {
-      color: inherit;
-    }
+    .tox-ai__models-menu__item__description__content {
+      .tox-ai__models-menu__item__description__ability {
+        color: inherit;
+      }
+      .tox-ai__models-menu__item__description__content {
+        color: rgba(from var(--tox-private-color-white, @color-white) r g b / 0.7);
+      }
+    };
   }
 
   .tox-ai__models-menu__item__description__ability {
     color: var(--tox-private-text-color, @text-color);
+    padding-bottom: @pad-xs;
   }
 
   .tox-ai__models-menu__item__description__ability__enabled {
