@@ -286,6 +286,10 @@
   .tox-ai-model-selection-button {
     display: flex;
     gap: var(--tox-private-pad-xs, @pad-xs);
+
+    &[disabled] {
+      background-color: var(--tox-private-button-secondary-outline-disabled-background-color, transparent);
+    }
   }
 
   .tox-ai__footer-note {
