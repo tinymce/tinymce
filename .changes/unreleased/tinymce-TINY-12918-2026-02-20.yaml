@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Dialogs would not restore focus after being unblocked.
+time: 2026-02-20T13:28:47.458155+10:00
+custom:
+    Issue: TINY-12918
