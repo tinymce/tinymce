@@ -66,7 +66,8 @@ const renderUrlDialog = (internalDialog: Dialog.UrlDialog, extra: SilverDialogCo
 
   const dialogEvents = SilverDialogEvents.initUrlDialog(
     () => instanceApi,
-    SilverDialogCommon.getEventExtras(() => dialog, backstage.shared.providers, extra)
+    SilverDialogCommon.getEventExtras(() => dialog, backstage.shared.providers, extra),
+    backstage.shared.getSink
   );
 
   // Add the styles for the modal width/height
