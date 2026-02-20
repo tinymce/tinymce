@@ -17,6 +17,7 @@ import * as Menu from './components/menu/Menu';
 import * as MenuRenderer from './components/menu/MenuRenderer';
 import * as SegmentedControl from './components/segmentedcontrol/SegmentedControl';
 import { ToolbarInputForm } from './components/toolbarInputForm/ToolbarInputForm';
+import * as Tooltip from './components/tooltip/Tooltip';
 import { useUniverse } from './contexts/UniverseContext/Universe';
 import { UniverseProvider } from './contexts/UniverseContext/UniverseProvider';
 import type { UniverseResources } from './contexts/UniverseContext/UniverseTypes';
@@ -44,15 +45,16 @@ export {
   IconButton,
   KeyboardNavigationHooks,
   KeyboardNavigationTypes,
-  Spinner,
-  Tag,
   Menu,
   MenuRenderer,
+  Spinner,
+  Tag,
+  ToolbarInputForm,
+  Tooltip,
   SegmentedControl,
   UniverseProvider,
   useUniverse,
-  UserPromptBubble,
-  ToolbarInputForm
+  UserPromptBubble
 };
 
 export type { UniverseResources };
