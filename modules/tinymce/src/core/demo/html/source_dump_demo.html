@@ -5,7 +5,12 @@
 </head>
 <body>
 	  <h2>TinyMCE Source Dump Demo Page</h2>
-		<p><textarea id="editor"></textarea></p>
+		<p><textarea id="editor">
+      <p><iframe></iframe></p>
+      <p><iframe src="https://google.com/"><p>Lorem ipsum</p></iframe></p>
+      <p><iframe><p>hello</p></iframe></p>
+      <p><iframe><img src="https://www.google.com/logos/google.jpg" onerror=alert(1)></iframe></p>
+    </textarea></p>
     <p>
       <textarea id="source" style="width: 100%; height: 500px;"></textarea><br />
       <input type="checkbox" id="raw" />Raw html

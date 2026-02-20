@@ -1,5 +1,5 @@
 import { Arr, Fun, Obj, Optional, Strings, Type } from '@ephox/katamari';
-import { Attribute, NodeTypes, Remove, Replication, SugarElement } from '@ephox/sugar';
+import { Attribute, Html, NodeTypes, Remove, Replication, SugarElement, SugarNode } from '@ephox/sugar';
 import createDompurify, { type Config, type DOMPurify, type UponSanitizeAttributeHookEvent, type UponSanitizeElementHookEvent } from 'dompurify';
 
 import type { DomParserSettings } from '../api/html/DomParser';
@@ -54,6 +54,13 @@ const processNode = (node: Node, settings: DomParserSettings, schema: Schema, sc
 
   // Construct the sugar element wrapper
   const element = SugarElement.fromDom(node) as SugarElement<Element>;
+
+  // Iframes are a special case as DOMPurify doesn't allow them through at all, even if they are in the schema,
+  // so we need to temporarily store their content and then restore it after sanitization
+  if (SugarNode.isTag('iframe')(element)) {
+    Attribute.set(element, 'data-mce-tmp', Html.get(element));
+    Html.set(element, '');
+  }
 
   // Determine if we're dealing with an internal attribute
   const isInternalElement = Attribute.has(element, internalElementAttr);
@@ -168,12 +175,29 @@ const filterAttributes = (ele: Element, settings: DomParserSettings, schema: Sch
   }
 };
 
+const restoreIframeContent = (node: Node) => {
+  // Construct the sugar element wrapper
+  const element = SugarElement.fromDom(node) as SugarElement<Element>;
+
+  // Restore the content of any iframes that we sanitized earlier
+  if (SugarNode.isTag('iframe')(element) && Attribute.has(element, 'data-mce-tmp')) {
+    Optional.from(Attribute.get(element, 'data-mce-tmp')).each((content) => {
+      Html.set(element, content);
+    });
+    Attribute.remove(element, 'data-mce-tmp');
+  }
+};
+
 const setupPurify = (settings: DomParserSettings, schema: Schema, namespaceTracker: Namespace.NamespaceTracker): DOMPurify => {
   const purify = createDompurify();
 
   // We use this to add new tags to the allow-list as we parse, if we notice that a tag has been banned but it's still in the schema
   purify.addHook('uponSanitizeElement', (ele, evt) => {
     processNode(ele, settings, schema, namespaceTracker.track(ele), evt);
+  });
+
+  purify.addHook('afterSanitizeElements', (ele, evt) => {
+    restoreIframeContent(ele);
   });
 
   // Let's do the same thing for attributes
