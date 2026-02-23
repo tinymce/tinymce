@@ -10,6 +10,7 @@ import Tools from '../api/util/Tools';
 import VK from '../api/util/VK';
 import * as CaretContainer from '../caret/CaretContainer';
 import * as Empty from '../dom/Empty';
+import * as InputEvents from '../events/InputEvents';
 import * as Rtc from '../Rtc';
 
 /**
@@ -106,6 +107,7 @@ const Quirks = (editor: Editor): Quirks => {
         // Manually empty the editor
         e.preventDefault();
         editor.setContent('');
+        InputEvents.fireBeforeInputEvent(editor, keyCode === DELETE ? 'deleteContentForward' : 'deleteContentBackward');
 
         if (body.firstChild && dom.isBlock(body.firstChild)) {
           editor.selection.setCursorLocation(body.firstChild, 0);
