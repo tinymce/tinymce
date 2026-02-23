@@ -13,7 +13,7 @@
 @button-naked-hover-box-shadow: unset;
 @button-naked-hover-icon-color: @button-naked-icon-color;
 
-@button-naked-disabled-background-color: @button-naked-hover-background-color;
+@button-naked-disabled-background-color: transparent;
 @button-naked-disabled-border-color: transparent;
 @button-naked-disabled-box-shadow: unset;
 @button-naked-disabled-icon-color: fade(@button-naked-icon-color, 50%);
@@ -121,7 +121,7 @@
     color: var(--tox-private-button-naked-text-color, @button-naked-icon-color);
 
     &[disabled] {
-      background-color: transparent;
+      background-color: @button-naked-disabled-background-color;
       border-color: @button-naked-disabled-border-color;
       color: var(--tox-private-button-naked-disabled-text-color, @button-naked-disabled-icon-color);
       cursor: not-allowed;
