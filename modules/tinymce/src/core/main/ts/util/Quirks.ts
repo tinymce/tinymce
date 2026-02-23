@@ -106,8 +106,8 @@ const Quirks = (editor: Editor): Quirks => {
 
         // Manually empty the editor
         e.preventDefault();
-        editor.setContent('');
         InputEvents.fireBeforeInputEvent(editor, keyCode === DELETE ? 'deleteContentForward' : 'deleteContentBackward');
+        editor.setContent('');
 
         if (body.firstChild && dom.isBlock(body.firstChild)) {
           editor.selection.setCursorLocation(body.firstChild, 0);
