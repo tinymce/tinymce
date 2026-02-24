@@ -246,13 +246,13 @@ describe('browser.tinymce.core.lists.BackspaceDeleteFromBlockIntoLiTest', () => 
   it('TINY-12793: beforeinput event should be triggered deleting a selection inside a li (delete)', () => {
     const store = TestStore<string>();
     const editor = hook.editor();
-    const eventHandler = (e: InputEvent) => {
+    const beforeInputHandler = (e: InputEvent) => {
       store.add(e.inputType);
     };
     const inputHandler = (e: InputEvent) => {
       store.add(e.type);
     };
-    editor.on('beforeinput', eventHandler);
+    editor.on('beforeinput', beforeInputHandler);
     editor.on('input', inputHandler);
     editor.setContent('<ul><li>One Two Three</li></ul>');
     TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 'One '.length);
@@ -260,7 +260,7 @@ describe('browser.tinymce.core.lists.BackspaceDeleteFromBlockIntoLiTest', () => 
     store.assertEq('Should have the correct event', [ 'deleteContentForward', 'input' ]);
     store.clear();
     TinyAssertions.assertContent(editor, '<ul><li>Two Three</li></ul>');
-    editor.off('beforeinput', eventHandler);
+    editor.off('beforeinput', beforeInputHandler);
     editor.off('input', inputHandler);
   });
 
