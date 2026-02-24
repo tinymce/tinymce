@@ -264,7 +264,7 @@ describe('browser.tinymce.core.lists.BackspaceDeleteFromBlockIntoLiTest', () => 
     editor.off('input', inputHandler);
   });
 
-  it('TINY-12793: preventing beforeinut should not trigger input event nor delete the content', () => {
+  it('TINY-12793: preventing beforeinput should not trigger input event nor delete the content', () => {
     const store = TestStore<string>();
     const editor = hook.editor();
     const beforeInputHandler = (e: InputEvent) => {
