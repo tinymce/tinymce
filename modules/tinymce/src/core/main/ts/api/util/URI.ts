@@ -51,31 +51,27 @@ const blockSvgDataUris = (allowSvgDataUrls: boolean | undefined, tagName?: strin
   }
 };
 
-const decodeUri = (encodedUri: string) => {
-  try {
-    // Might throw malformed URI sequence
-    return decodeURIComponent(encodedUri);
-  } catch {
-    // Fallback to non UTF-8 decoder
-    return unescape(encodedUri);
-  }
-};
-
 export const isInvalidUri = (settings: SafeUriOptions, uri: string, tagName?: string): boolean => {
+  try {
   // remove all whitespaces from decoded uri to prevent impact on regex matching
-  const decodedUri = decodeUri(uri).replace(/\s/g, '');
+  // When we update our dist to 2024 ( or later ) we may wish to make an internal function we use everywhere which also uses
+  // String.toWellFormed to allow us to cover more uris.
+    const decodedUri = decodeURIComponent(uri).replace(/\s/g, '');
 
-  if (settings.allow_script_urls) {
-    return false;
-  // Ensure we don't have a javascript URI, as that is not safe since it allows arbitrary JavaScript execution
-  } else if (/((java|vb)script|mhtml):/i.test(decodedUri)) {
+    if (settings.allow_script_urls) {
+      return false;
+      // Ensure we don't have a javascript URI, as that is not safe since it allows arbitrary JavaScript execution
+    } else if (/((java|vb)script|mhtml):/i.test(decodedUri)) {
+      return true;
+    } else if (settings.allow_html_data_urls) {
+      return false;
+    } else if (/^data:image\//i.test(decodedUri)) {
+      return blockSvgDataUris(settings.allow_svg_data_urls, tagName) && /^data:image\/svg\+xml/i.test(decodedUri);
+    } else {
+      return /^data:/i.test(decodedUri);
+    }
+  } catch (_) {
     return true;
-  } else if (settings.allow_html_data_urls) {
-    return false;
-  } else if (/^data:image\//i.test(decodedUri)) {
-    return blockSvgDataUris(settings.allow_svg_data_urls, tagName) && /^data:image\/svg\+xml/i.test(decodedUri);
-  } else {
-    return /^data:/i.test(decodedUri);
   }
 };
 

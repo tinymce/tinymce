@@ -1,0 +1,6 @@
+project: tinymce
+kind: Security
+body: Removed escape/unescape use
+time: 2026-02-24T08:24:13.131288+01:00
+custom:
+    Issue: TINY-13674

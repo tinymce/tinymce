@@ -6,8 +6,6 @@ import AstNode from 'tinymce/core/api/html/Node';
 import * as Nodes from './Nodes';
 import * as Sanitize from './Sanitize';
 
-declare let unescape: any;
-
 const setup = (editor: Editor): void => {
   editor.on('PreInit', () => {
     const { schema, serializer, parser } = editor;
@@ -79,7 +77,7 @@ const setup = (editor: Editor): void => {
         // Inject innerhtml
         const innerHtml = node.attr('data-mce-html');
         if (innerHtml) {
-          const fragment = Sanitize.parseAndSanitize(editor, realElmName, unescape(innerHtml));
+          const fragment = Sanitize.parseAndSanitize(editor, realElmName, decodeURIComponent(innerHtml));
           Arr.each(fragment.children(), (child) => realElm.append(child));
         }
 

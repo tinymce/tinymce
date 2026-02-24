@@ -42,7 +42,6 @@ import Quirks from '../util/Quirks';
 import * as ContentCss from './ContentCss';
 import * as InitComponents from './InitComponents';
 
-declare const escape: any;
 declare let tinymce: TinyMCE;
 
 const DOM = DOMUtils.DOM;
@@ -367,7 +366,7 @@ const preInit = (editor: Editor) => {
     editor.on('BeforeSetContent', (e) => {
       Tools.each(protect, (pattern) => {
         e.content = e.content.replace(pattern, (str) => {
-          return '<!--mce:protected ' + escape(str) + '-->';
+          return '<!--mce:protected ' + encodeURIComponent(str) + '-->';
         });
       });
     });

@@ -9,8 +9,6 @@ import * as Options from '../api/Options';
 
 import { Parser } from './Parser';
 
-declare let escape: any;
-
 const isLiveEmbedNode = (node: AstNode): boolean => {
   const name = node.name;
   return name === 'iframe' || name === 'video' || name === 'audio';
@@ -106,7 +104,7 @@ const createPreviewNode = (editor: Editor, node: AstNode): AstNode => {
     // Recreate the child nodes using the sanitized inner HTML
     const sanitizedHtml = previewWrapper.attr('data-mce-html');
     if (Type.isNonNullable(sanitizedHtml)) {
-      appendNodeContent(editor, name, previewNode, unescape(sanitizedHtml));
+      appendNodeContent(editor, name, previewNode, decodeURIComponent(sanitizedHtml));
     }
   }
 
@@ -144,7 +142,7 @@ const retainAttributesAndInnerHtml = (editor: Editor, sourceNode: AstNode, targe
   Arr.each(sourceNode.children(), (child) => tempNode.append(child));
   const innerHtml = serializer.serialize(tempNode);
   if (innerHtml) {
-    targetNode.attr('data-mce-html', escape(innerHtml));
+    targetNode.attr('data-mce-html', encodeURIComponent(innerHtml));
     targetNode.empty();
   }
 };

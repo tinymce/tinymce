@@ -9,8 +9,6 @@ import * as Zwsp from 'tinymce/core/text/Zwsp';
 
 import * as ViewBlock from '../../module/test/ViewBlock';
 
-declare const escape: any;
-
 describe('browser.tinymce.core.dom.SerializerTest', () => {
   const DOM = DOMUtils.DOM;
   const viewBlock = ViewBlock.bddSetup();
@@ -615,13 +613,13 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
 
     ser.setRules('noscript[test]');
 
-    setTestHtml('<!--mce:protected ' + escape('<noscript test="test"><br></noscript>') + '-->');
+    setTestHtml('<!--mce:protected ' + encodeURIComponent('<noscript test="test"><br></noscript>') + '-->');
     assert.equal(ser.serialize(getTestElement()), '<noscript test="test"><br></noscript>');
 
-    setTestHtml('<!--mce:protected ' + escape('<noscript><br></noscript>') + '-->');
+    setTestHtml('<!--mce:protected ' + encodeURIComponent('<noscript><br></noscript>') + '-->');
     assert.equal(ser.serialize(getTestElement()), '<noscript><br></noscript>');
 
-    setTestHtml('<!--mce:protected ' + escape('<noscript><!-- text --><br></noscript>') + '-->');
+    setTestHtml('<!--mce:protected ' + encodeURIComponent('<noscript><!-- text --><br></noscript>') + '-->');
     assert.equal(ser.serialize(getTestElement()), '<noscript><!-- text --><br></noscript>');
   });
 
