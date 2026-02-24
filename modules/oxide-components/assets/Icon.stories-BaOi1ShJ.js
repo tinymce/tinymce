@@ -1,0 +1,26 @@
+import{j as n}from"./iframe-D7X_vIp1.js";import{I as t}from"./Icon-tuIusUXX.js";import{U as r}from"./UniverseProvider-Bb2RD4jj.js";import{g as s}from"./Obj-DUQpguIS.js";import"./preload-helper-PPVm8Dsz.js";import"./Optional-DbTLtGQT.js";const c={"chevron-down":'<svg width="10" height="10"><path d="M8.7 2.2c.3-.3.8-.3 1 0 .4.4.4.9 0 1.2L5.7 7.8c-.3.3-.9.3-1.2 0L.2 3.4a.8.8 0 0 1 0-1.2c.3-.3.8-.3 1.1 0L5 6l3.7-3.8Z" fill-rule="nonzero"/></svg>',"chevron-up":'<svg width="10" height="10"><path d="M8.7 7.8 5 4 1.3 7.8c-.3.3-.8.3-1 0a.8.8 0 0 1 0-1.2l4.1-4.4c.3-.3.9-.3 1.2 0l4.2 4.4c.3.3.3.9 0 1.2-.3.3-.8.3-1.1 0Z" fill-rule="nonzero"/></svg>'},i={getIcon:e=>s(c,e).getOrDie("Failed to get icon")},v={title:"components/Icon",parameters:{docs:{description:{component:`
+An icon component that renders an SVG icon based on the provided icon name and resolver function.
+
+## Usage
+
+\`\`\`tsx
+import { Icon } from 'oxide-components';
+
+<Icon icon="chevron-down" />
+\`\`\`
+
+## Example
+
+\`\`\`tsx
+<Icon icon="chevron-down" />
+\`\`\`
+
+## How it works
+
+The \`Icon\` component uses the underlying UniverseContext state to fetch the SVG markup for the specified \`icon\`. This means that the Icon component always needs to be nested within a UniverseProvider.
+        `}}},component:t,decorators:[e=>n.jsx(r,{resources:i,children:n.jsx(e,{})})],tags:["autodocs","skip-visual-testing"]},a=e=>n.jsx("div",{style:{padding:"20px",border:"1px solid lightgray",display:"inline-block"},children:n.jsx(t,{...e})}),d={icon:"chevron-down"},o={args:{...d},render:a};o.parameters={...o.parameters,docs:{...o.parameters?.docs,source:{originalSource:`{
+  args: {
+    ...defaultProps
+  },
+  render
+}`,...o.parameters?.docs?.source}}};const f=["Default"];export{o as Default,f as __namedExportsOrder,v as default};
