@@ -62,7 +62,10 @@ export const Tag = forwardRef<HTMLDivElement | HTMLAnchorElement, TagProps>((pro
       <span className={Bem.element('tox-tag', 'label')}>{label}</span>
       {closeable && (
         <span className={Bem.element('tox-tag', 'close')}>
-          <IconButton icon='source-close' variant='naked' disabled={disabled} onClick={props.onClose} aria-label={ariaLabel} />
+          <IconButton icon='source-close' variant='naked' disabled={disabled} aria-label={ariaLabel} onClick={(e) => {
+            e.preventDefault();
+            props.onClose();
+          }} />
         </span>
       )}
     </>
