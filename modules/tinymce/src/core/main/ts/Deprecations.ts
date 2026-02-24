@@ -18,7 +18,7 @@ const removedOptions = (
   'template_cdate_classes,template_mdate_classes,template_selected_content_classes,template_preview_replace_values,template_replace_values,templates,template_cdate_format,template_mdate_format'
 ).split(',');
 
-const deprecatedOptions: string[] = [ 'content_css_cors' ];
+const deprecatedOptions: string[] = [ 'content_css_cors', 'exportpdf_converter_options' ];
 
 const removedPlugins = 'bbcode,colorpicker,contextmenu,fullpage,legacyoutput,spellchecker,template,textcolor,rtc'.split(',');
 
