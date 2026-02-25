@@ -28,7 +28,8 @@ const runTests = async () => {
     await waitForServer();
 
     try {
-      execSync('yarn playwright test', {
+      const workers = process.env.PW_WORKERS ? ` --workers=${process.env.PW_WORKERS}` : ''
+      execSync(`yarn playwright test${workers}`, {
         stdio: 'inherit'
       });
     } catch (testError) {
