@@ -1,5 +1,5 @@
 import { Optional, Type } from '@ephox/katamari';
-import { useCallback, useMemo, useRef, useState, type FC, type PropsWithChildren } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, type FC, type PropsWithChildren } from 'react';
 
 import * as KeyboardNavigationHooks from '../../keynav/KeyboardNavigationHooks';
 import * as Bem from '../../utils/Bem';
@@ -112,6 +112,11 @@ const CardListImpl: FC<CardListImplProps> = ({
   onSelectCard
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const card = containerRef.current?.querySelectorAll<HTMLElement>('.tox-card')[focusedIndex];
+    card?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }, [ focusedIndex ]);
 
   const contextValue = useMemo<CardListContextValue>(() => ({
     focusedIndex,

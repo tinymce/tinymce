@@ -280,8 +280,13 @@ const backspaceDeleteRange = (editor: Editor, isForward: boolean): boolean => {
       let shouldFireInput = true;
       const inputHandler = () => shouldFireInput = false;
 
+      const beforeInputEvent = InputEvents.fireBeforeInputEvent(editor, isForward ? 'deleteContentForward' : 'deleteContentBackward');
+
+      if (beforeInputEvent.isDefaultPrevented()) {
+        return;
+      }
+
       editor.on('input', inputHandler);
-      InputEvents.fireBeforeInputEvent(editor, isForward ? 'deleteContentForward' : 'deleteContentBackward');
       editor.execCommand('Delete');
       editor.off('input', inputHandler);
 
