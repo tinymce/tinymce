@@ -363,33 +363,64 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
 
   it('TINY-13830: ForwardDelete all contents should trigger beforeinput', () => {
     const editor = hook.editor();
-    const eventHandler = (e: InputEvent) => {
+    const beforeInputHandler = (e: InputEvent) => {
       store.add(e.inputType);
     };
-    editor.on('beforeinput', eventHandler);
+    const inputHandler = (e: InputEvent) => {
+      store.add(e.type);
+    };
+    editor.on('beforeinput', beforeInputHandler);
+    editor.on('input', inputHandler);
     editor.setContent('<p>abc</p>');
     editor.execCommand('SelectAll');
     TinyContentActions.keystroke(editor, Keys.delete());
     TinyAssertions.assertRawContent(editor, '<p><br data-mce-bogus="1"></p>');
     assert.equal(editor.selection.getStart(true).nodeName, 'P');
-    store.assertEq('Should have the correct event', [ 'deleteContentForward' ]);
+    store.assertEq('Should have the correct event', [ 'deleteContentForward', 'input' ]);
     store.clear();
-    editor.off('beforeinput', eventHandler);
+    editor.off('beforeinput', beforeInputHandler);
+    editor.off('input', inputHandler);
   });
 
   it('TINY-13830: Delete all contents should trigger beforeinput', () => {
     const editor = hook.editor();
-    const eventHandler = (e: InputEvent) => {
+    const beforeInputHandler = (e: InputEvent) => {
       store.add(e.inputType);
     };
-    editor.on('beforeinput', eventHandler);
+    const inputHandler = (e: InputEvent) => {
+      store.add(e.type);
+    };
+    editor.on('beforeinput', beforeInputHandler);
+    editor.on('input', inputHandler);
     editor.setContent('<p>abc</p>');
     editor.execCommand('SelectAll');
     TinyContentActions.keystroke(editor, Keys.backspace());
     TinyAssertions.assertRawContent(editor, '<p><br data-mce-bogus="1"></p>');
     assert.equal(editor.selection.getStart(true).nodeName, 'P');
+    store.assertEq('Should have the correct event', [ 'deleteContentBackward', 'input' ]);
+    store.clear();
+    editor.off('beforeinput', beforeInputHandler);
+    editor.off('input', inputHandler);
+  });
+
+  it('TINY-13830: preventing beforeinput should not trigger input event nor delete the content', () => {
+    const editor = hook.editor();
+    const beforeInputHandler = (e: InputEvent) => {
+      e.preventDefault();
+      store.add(e.inputType);
+    };
+    const inputHandler = (e: InputEvent) => {
+      store.add(e.type);
+    };
+    editor.on('beforeinput', beforeInputHandler);
+    editor.on('input', inputHandler);
+    editor.setContent('<p>abc</p>');
+    editor.execCommand('SelectAll');
+    TinyContentActions.keystroke(editor, Keys.backspace());
+    TinyAssertions.assertContent(editor, '<p>abc</p>');
     store.assertEq('Should have the correct event', [ 'deleteContentBackward' ]);
     store.clear();
-    editor.off('beforeinput', eventHandler);
+    editor.off('beforeinput', beforeInputHandler);
+    editor.off('input', inputHandler);
   });
 });
