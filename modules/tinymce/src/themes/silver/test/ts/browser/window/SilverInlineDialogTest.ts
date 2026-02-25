@@ -270,56 +270,26 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogTest', () => {
 
   it('TINY-12918: Inline persistent dialog should remain focused after being blocked and unblocked', async () => {
     const editor = hook.editor();
-    const createBlockDialogSpec = (): Dialog.DialogSpec<{}> => ({
-      title: 'Block dialog',
-      body: {
-        type: 'panel',
-        items: [
-          {
-            type: 'htmlpanel',
-            html: 'Block dialog for 50ms.'
-          }
-        ]
-      },
-      buttons: [
-        {
-          type: 'custom',
-          text: 'Block',
-          name: 'block',
-          primary: true
-        }
-      ],
-      onAction: (api, details) => {
-        if (details.name === 'block') {
-          api.block('');
-          setTimeout(() => {
-            api.unblock();
-          }, 50);
-        }
-      }
-    });
-
-    const api = DialogUtils.openWithStore(editor, createBlockDialogSpec(), { inline: 'bottom', persistent: true }, store);
+    const api = DialogUtils.openWithStore(editor, dialogSpec, { inline: 'bottom', persistent: true }, store);
     await TinyUiActions.pWaitForDialog(editor);
 
     // Verify the dialog is focused initially
     await FocusTools.pTryOnSelector(
       'Focus should be on the block button',
       SugarDocument.getDocument(),
-      'button[data-mce-name="Block"]'
+      'input'
     );
 
-    // Click the block button
-    Mouse.trueClickOn(SugarBody.body(), 'button[data-mce-name="Block"]');
-
-    // Wait for the dialog to be unblocked (50ms + some buffer)
-    await Waiter.pWait(100);
+    // Block the dialog for a short time to simulate an async action, then unblock it
+    api.block('Blocking dialog for test');
+    await Waiter.pWait(10);
+    api.unblock();
 
     // Verify the dialog is still focused after unblocking
     await FocusTools.pTryOnSelector(
-      'Focus should still be on the dialog after unblocking',
+      'Focus should be on initial input after unblocking',
       SugarDocument.getDocument(),
-      '[role="dialog"] button'
+      'input'
     );
 
     api.close();
