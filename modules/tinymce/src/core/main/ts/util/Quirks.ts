@@ -106,15 +106,18 @@ const Quirks = (editor: Editor): Quirks => {
 
         // Manually empty the editor
         e.preventDefault();
-        SymulateDelete.SymulateDelete(editor, keyCode === DELETE, () => editor.setContent(''));
+        SymulateDelete.symulateDelete(editor, keyCode === DELETE, () => editor.setContent('')).fold(
+          Fun.noop,
+          () => {
+            if (body.firstChild && dom.isBlock(body.firstChild)) {
+              editor.selection.setCursorLocation(body.firstChild, 0);
+            } else {
+              editor.selection.setCursorLocation(body, 0);
+            }
 
-        if (body.firstChild && dom.isBlock(body.firstChild)) {
-          editor.selection.setCursorLocation(body.firstChild, 0);
-        } else {
-          editor.selection.setCursorLocation(body, 0);
-        }
-
-        editor.nodeChanged();
+            editor.nodeChanged();
+          }
+        );
       }
     });
   };
