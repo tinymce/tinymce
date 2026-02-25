@@ -47,6 +47,22 @@
   .tox-sidebar-content__actions {
     display: flex;
     gap: var(--tox-private-pad-sm, @pad-sm);
+
+    .tox-ai__complete-review {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding-top: 4px;
+      padding-bottom: 4px;
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+  
+    .tox-ai__review-menu-separator {
+      border-bottom: 1px solid @collection-item-separator-color;
+      height: 0;
+      margin: @collection-item-separator-margin-y 0;
+    }
   }
 
   .tox-ai__user-prompt {
