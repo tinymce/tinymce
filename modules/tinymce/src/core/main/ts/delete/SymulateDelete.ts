@@ -15,8 +15,11 @@ const symulateDelete = (editor: Editor, isForward: boolean, deleteFun: () => voi
   }
 
   editor.on('input', inputHandler);
-  deleteFun();
-  editor.off('input', inputHandler);
+  try {
+    deleteFun();
+  } finally {
+    editor.off('input', inputHandler);
+  }
 
   if (shouldFireInput) {
     editor.dispatch('input');
