@@ -229,11 +229,13 @@ timestamps { notifyStatusChange(
           def s_buckets = "${buckets}"
           def name = "${os}-${platform.browser}${platform.version ?: ''}-${platform.provider}${suffix}"
           processes[name] = {
-            container('node') {
-              grunt('list-changed-browser')
-              bedrockRemoteTools.tinyWorkSishTunnel()
-              bedrockRemoteTools.withRemoteCreds(platform.provider) {
-                runRemoteTests(name, platform.browser, platform.provider, platform.os, platform.version, s_bucket, s_buckets, runAllTests)
+            stage(name) {
+              container('node') {
+                grunt('list-changed-browser')
+                bedrockRemoteTools.tinyWorkSishTunnel()
+                bedrockRemoteTools.withRemoteCreds(platform.provider) {
+                  runRemoteTests(name, platform.browser, platform.provider, platform.os, platform.version, s_bucket, s_buckets, runAllTests)
+                }
               }
             }
           }
@@ -241,52 +243,39 @@ timestamps { notifyStatusChange(
       }
 
       processes['headless'] = {
-        container('node') {
-          // sh '''
-          // for i in $(seq 1 60); do
-          //   if curl -fsS http://127.0.0.1:4444/wd/hub/status >/dev/null; then
-          //     echo "Selenium is up"
-          //     exit 0
-          //   fi
-          //   echo "Waiting for Selenium..."
-          //   sleep 2
-          // done
-          // echo "Selenium did not become ready"
-          // exit 1
-          // '''
-          grunt('list-changed-headless')
-          runHeadlessTests(runAllTests)
+        stage('headless') {
+          container('node') {
+            grunt('list-changed-headless')
+            runHeadlessTests(runAllTests)
+          }
         }
       }
 
       processes['playwright'] = {
-        container('playwright') {
-          sh '''
-          node -e "console.log('cpus=' + require('os').cpus().length)"
-          nproc
-          grep -c ^processor /proc/cpuinfo
-          '''
-          exec('cat /sys/fs/cgroup/cpu.max 2>/dev/null || true')
-          exec('yarn -s --cwd modules/oxide-components test-ci')
-          junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results.xml'
-          def visualTestStatus
-          withEnv(["PW_WORKERS=2"]) {
-            visualTestStatus = exec(script: 'yarn -s --cwd modules/oxide-components test-visual-ci', returnStatus: true)
+        stage('playwright') {
+          container('playwright') {
+            exec('yarn -s --cwd modules/oxide-components test-ci')
+            junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results.xml'
+            def visualTestStatus
+            // Limit the number of workers allowed to avoid hanging
+            withEnv(["PW_WORKERS=1"]) {
+              visualTestStatus = exec(script: 'yarn -s --cwd modules/oxide-components test-visual-ci', returnStatus: true)
+            }
+            if (visualTestStatus == 4) {
+              unstable("Visual tests failed")
+            } else if (visualTestStatus != 0) {
+              error("Unexpected error running visual tests")
+            }
+            junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results-visual.xml'
+            exec('find modules/oxide-components -name "*.png" -type f || echo "No PNG files found"')
+            archiveArtifacts artifacts: 'modules/oxide-components/test-results/**/*.png', allowEmptyArchive: true, fingerprint: true
           }
-          if (visualTestStatus == 4) {
-            unstable("Visual tests failed")
-          } else if (visualTestStatus != 0) {
-            error("Unexpected error running visual tests")
-          }
-          junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results-visual.xml'
-          exec('find modules/oxide-components -name "*.png" -type f || echo "No PNG files found"')
-          archiveArtifacts artifacts: 'modules/oxide-components/test-results/**/*.png', allowEmptyArchive: true, fingerprint: true
         }
       }
 
-    stage('Tests') {
+    // stage('Tests') {
       parallel processes
-    }
+    // }
 
     container('node') {
 
