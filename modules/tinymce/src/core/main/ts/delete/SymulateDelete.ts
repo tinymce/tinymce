@@ -3,7 +3,7 @@ import { Result } from '@ephox/katamari';
 import type Editor from '../api/Editor';
 import * as InputEvents from '../events/InputEvents';
 
-const symulateDelete = (editor: Editor, isForward: boolean, deleteFun: () => void): Result<undefined, undefined> => {
+const symulateDelete = (editor: Editor, isForward: boolean, deleteFun: () => void): Result<void, void> => {
   // Some delete actions may prevent the input event from being fired. If we do not detect it, we fire it ourselves.
   let shouldFireInput = true;
   const inputHandler = () => shouldFireInput = false;
