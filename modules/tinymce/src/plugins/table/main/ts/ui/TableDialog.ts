@@ -25,6 +25,12 @@ interface ApplicableCellProperties {
   readonly cellpadding: boolean;
 }
 
+interface ResetOptions {
+  cssProps: string[];
+  attrs: string[];
+  useCss: boolean;
+}
+
 // Explore the layers of the table till we find the first layer of tds or ths
 const styleTDTH = (dom: DOMUtils, elm: Element, name: string | StyleMap, value?: string | number): void => {
   if (elm.tagName === 'TD' || elm.tagName === 'TH') {
@@ -51,6 +57,14 @@ const applyDataToElement = (editor: Editor, tableElm: HTMLTableElement, data: Ta
   const hasAdvancedTableTab = Options.hasAdvancedTableTab(editor);
   const borderIsZero = parseFloat(data.border) === 0;
 
+  const resetTableStylesOrAttributes = (dom: DOMUtils, table: HTMLElement, options: ResetOptions) => {
+    if (options.useCss) {
+      options.attrs.forEach((attr) => dom.setAttrib(table, attr, null));
+    } else {
+      options.cssProps.forEach((prop) => dom.setStyle(table, prop, ''));
+    }
+  };
+
   if (!Type.isUndefined(data.class) && data.class !== 'mce-no-match') {
     attrs.class = data.class;
   }
@@ -59,7 +73,7 @@ const applyDataToElement = (editor: Editor, tableElm: HTMLTableElement, data: Ta
 
   if (shouldStyleWithCss) {
     styles.width = Utils.addPxSuffix(data.width);
-  } else if (dom.getAttrib(tableElm, 'width')) {
+  } else {
     attrs.width = Utils.removePxSuffix(data.width);
   }
 
@@ -108,6 +122,10 @@ const applyDataToElement = (editor: Editor, tableElm: HTMLTableElement, data: Ta
 
   dom.setStyles(tableElm, { ...Options.getDefaultStyles(editor), ...styles });
   dom.setAttribs(tableElm, { ...Options.getDefaultAttributes(editor), ...attrs });
+
+  // TINY-12797: Remove either CSS styles or attributes based on `table_style_by_css`
+  // TODO: Extend to other styles/attributes that overlap
+  resetTableStylesOrAttributes(dom, tableElm, { cssProps: [ 'width' ], attrs: [ 'width' ], useCss: shouldStyleWithCss });
 };
 
 const onSubmitTableForm = (editor: Editor, tableElm: HTMLTableElement | null | undefined, oldData: TableData, api: Dialog.DialogInstanceApi<TableData>): void => {
