@@ -1,5 +1,5 @@
 import { Type } from '@ephox/katamari';
-import { useLayoutEffect, useRef, useState, type FC, type PropsWithChildren } from 'react';
+import { forwardRef, useLayoutEffect, useRef, useState, type PropsWithChildren } from 'react';
 
 import * as Bem from '../../utils/Bem';
 import { Button } from '../button/Button';
@@ -19,14 +19,14 @@ export interface ExpandableBoxProps extends PropsWithChildren {
 }
 
 /** Expandable container box */
-export const ExpandableBox: FC<ExpandableBoxProps> = ({
+export const ExpandableBox = forwardRef<HTMLDivElement, ExpandableBoxProps>(({
   maxHeight = 80,
   expanded = false,
   onToggle,
   expandLabel = 'Expand',
   collapseLabel = 'Collapse',
   children
-}) => {
+}, ref) => {
   const contentRef = useRef<HTMLDivElement | null>(null);
   const [ overflowing, setOverflowing ] = useState(false);
   const contentClass = Bem.element('tox-expandable-box', 'content', { expanded, overflowing: overflowing && !expanded });
@@ -39,7 +39,7 @@ export const ExpandableBox: FC<ExpandableBoxProps> = ({
   }, [ children, maxHeight ]);
 
   return (
-    <div className={Bem.block('tox-expandable-box')}>
+    <div ref={ref} className={Bem.block('tox-expandable-box')}>
       <div ref={contentRef} className={contentClass} style={{ maxHeight: expanded ? undefined : `${maxHeight}px` }}>
         {children}
       </div>
@@ -51,4 +51,4 @@ export const ExpandableBox: FC<ExpandableBoxProps> = ({
       }
     </div>
   );
-};
+});

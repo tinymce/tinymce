@@ -1,15 +1,47 @@
+@tinymceai-border-width: 1px;
+@tinymceai-focus-border-width: 2px;
+
 .tox-ai when (@custom-properties-enabled = true) {
   --tox-private-background-secondary: hsl( from var(--tox-private-background-color) h s calc(l - 6));
   --tox-private-neutral-20: hsl( from var(--tox-private-background-color) h s calc(l - 11));
+  --tox-private-tinymceai-border-width: 1px;
+  --tox-private-tinymceai-focus-border-width: 2px;
 }
 
 .tox .tox-ai {
+
+  .tox-expandable-box {
+    &:focus:not(:disabled) {
+       outline: 2px solid var(--tox-private-color-tint, @color-tint);
+       outline-offset: var(--tox-private-tinymceai-border-width, @tinymceai-border-width);
+       box-shadow: 0 0 0 1px var(--tox-private-color-white, @color-white);
+       border-radius: var(--tox-private-control-border-radius, @control-border-radius);
+     }
+  }
+
+  .tox-sidebar-content__header {
+    border: var(--tox-private-tinymceai-focus-border-width, @tinymceai-focus-border-width) solid var(--tox-private-background-color, @background-color);
+    padding: calc(var(--tox-private-pad-sm, @pad-sm) - var(--tox-private-tinymceai-focus-border-width, @tinymceai-focus-border-width)) calc(12px - var(--tox-private-tinymceai-focus-border-width, @tinymceai-focus-border-width));
+
+    &:focus:not(:disabled) {
+       border: var(--tox-private-tinymceai-focus-border-width, @tinymceai-focus-border-width) solid var(--tox-private-color-tint, @color-tint);
+       border-radius: var(--tox-private-control-border-radius, @control-border-radius);
+    }
+  }
+
 
   .tox-sidebar-content__title {
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
     margin-right: auto;
+
+    &:focus:not(:disabled) {
+       outline: 2px solid var(--tox-private-color-tint, @color-tint);
+       outline-offset: var(--tox-private-tinymceai-border-width, @tinymceai-border-width);
+       box-shadow: 0 0 0 1px var(--tox-private-color-white, @color-white);
+       border-radius: var(--tox-private-control-border-radius, @control-border-radius);
+    }
   }
 
   .tox-sidebar-content__actions {
@@ -40,6 +72,13 @@
     max-width: 80%;
     align-self: flex-end;
     color: var(--tox-private-text-color, @text-color);
+
+    &:focus:not(:disabled) {
+       outline: 2px solid var(--tox-private-color-tint, @color-tint);
+       outline-offset: var(--tox-private-tinymceai-border-width, @tinymceai-border-width);
+       box-shadow: 0 0 0 1px var(--tox-private-color-white, @color-white);
+       border-radius: var(--tox-private-control-border-radius, @control-border-radius);
+     }
   }
 
   .tox-ai__scroll {
@@ -47,12 +86,23 @@
     overflow-x: hidden;
     background-color: var(--tox-private-background-color, @background-color);
     display: flex;
-    padding: 12px;
+    padding: calc(12px - var(--tox-private-tinymceai-focus-border-width, @tinymceai-focus-border-width));
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
     flex: 1 0 0;
     align-self: stretch;
+    border: var(--tox-private-tinymceai-focus-border-width, @tinymceai-focus-border-width) solid var(--tox-private-background-color, @background-color);
+
+    &:focus:not(:disabled) {
+       border: var(--tox-private-tinymceai-focus-border-width, @tinymceai-focus-border-width) solid var(--tox-private-color-tint, @color-tint);
+       border-radius: var(--tox-private-control-border-radius, @control-border-radius);
+    }
+
+    &--review {
+      background-color: var(--tox-private-background-secondary, darken(@background-color, 6%));
+      border: none;
+    }
   }
 
   .tox-ai__spinner svg {
@@ -198,12 +248,19 @@
   }
 
   .tox-ai__footer {
-    border-top: 1px solid var(--tox-private-neutral-20, darken(@background-color, 11%));
-    padding: 12px;
+    padding: calc(12px - var(--tox-private-tinymceai-focus-border-width, @tinymceai-focus-border-width));
     gap: var(--tox-private-pad-sm, @pad-sm);
     background-color: var(--tox-private-background-color, @background-color);
     display: flex;
     flex-direction: column;
+
+    border: var(--tox-private-tinymceai-focus-border-width, @tinymceai-focus-border-width) solid var(--tox-private-background-color, @background-color);
+    border-top: 1px solid var(--tox-private-neutral-20, darken(@background-color, 11%));
+
+    &:focus:not(:disabled) {
+       border: var(--tox-private-tinymceai-focus-border-width, @tinymceai-focus-border-width) solid var(--tox-private-color-tint, @color-tint);
+       border-radius: var(--tox-private-control-border-radius, @control-border-radius);
+    }
   }
 
   .tox-ai__context {
@@ -212,11 +269,10 @@
     flex-wrap: wrap;
     max-height: calc(
       ( 2 *
-        (2 * var(--tox-private-pad-xs, @pad-xs) + var(--tox-private-base-value, @base-value)) 
+        (2 * var(--tox-private-pad-xs, @pad-xs) + var(--tox-private-base-value, @base-value))
       ) +
       var(--tox-private-pad-sm, @pad-sm)
-    ); // Two rows of tags + the gap between them. Height of the tag is calculated from padding top and bottom + line height 
-    overflow: auto;
+    ); // Two rows of tags + the gap between them. Height of the tag is calculated from padding top and bottom + line height
   }
 
   .tox-ai__context-more {
@@ -264,7 +320,7 @@
 
   .tox-ai__models-menu__item {
     display: flex;
-    padding: var(--tox-private-pad-sm, @pad-sm) calc(var(--tox-private-pad-sm, @pad-sm) * .75);
+    padding: calc(var(--tox-private-pad-md, @pad-md) * 0.75);
     align-items: flex-start;
     gap: var(--tox-private-pad-sm, @pad-sm);
     align-self: stretch;
@@ -296,6 +352,7 @@
     // Since we don't have defined line-height variables, we use the same raw values provided by the design
     // c.f: https://www.figma.com/design/utz67QpX0v3NDG36hzSawt/🚀-TinyMCE---UX-UI-Design?node-id=20649-19617&m=dev
     line-height: calc(var(--tox-private-font-size-sm, @font-size-sm) * 1.28572);
+    padding-bottom: @pad-xs;
   }
 
   .tox-ai__models-menu__item__description__content {
@@ -304,16 +361,22 @@
     // Since we don't have defined line-height variables, we use the same raw values provided by the design
     // c.f: https://www.figma.com/design/utz67QpX0v3NDG36hzSawt/🚀-TinyMCE---UX-UI-Design?node-id=20649-19617&m=dev
     line-height: calc(var(--tox-private-font-size-xs, @font-size-xs) * 1.33333);
-   }
+  }
 
   .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
-    .tox-ai__models-menu__item__description__content, .tox-ai__models-menu__item__description__ability {
-      color: inherit;
-    }
+    .tox-ai__models-menu__item__description__content {
+      .tox-ai__models-menu__item__description__ability {
+        color: inherit;
+      }
+      .tox-ai__models-menu__item__description__content_body {
+        color: rgba(from var(--tox-private-color-white, @color-white) r g b / 0.7);
+      }
+    };
   }
 
   .tox-ai__models-menu__item__description__ability {
     color: var(--tox-private-text-color, @text-color);
+    padding-bottom: @pad-xs;
   }
 
   .tox-ai__models-menu__item__description__ability__enabled {
@@ -394,4 +457,28 @@
     line-height: var(--tox-private-line-height-base, @line-height-base);
   }
 
+  .tox-sidebar-content__message {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: center;
+    gap: var(--tox-private-pad-md, @pad-md);
+    width: 100%;
+  }
+
+  .tox-sidebar-content__message-text {
+    text-align: center;
+    color: var(--tox-private-text-color, @text-color);
+    font-size: var(--tox-private-font-size-md, @font-size-base);
+    font-weight: var(--tox-private-font-weight-normal, @font-weight-normal);
+    line-height: 20px;
+  }
+
+  .tox-sidebar-content__message-action {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-self: stretch;
+  }
 }
