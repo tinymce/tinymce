@@ -1,5 +1,5 @@
 import { Bem, IconButton } from 'oxide-components/main';
-import React from 'react';
+import * as React from 'react';
 
 interface BaseProps {
   readonly message: string;

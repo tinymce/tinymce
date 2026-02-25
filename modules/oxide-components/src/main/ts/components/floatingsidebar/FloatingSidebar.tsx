@@ -1,9 +1,10 @@
+import { Type } from '@ephox/katamari';
 import type { Property } from 'csstype';
-import type { CSSProperties, FC, PropsWithChildren } from 'react';
+import { forwardRef, useCallback, type CSSProperties, type PropsWithChildren } from 'react';
 
 import * as Bem from '../../utils/Bem';
-import { classes } from '../../utils/Styles';
 import * as Draggable from '../draggable/Draggable';
+
 import '../../module/css';
 export interface FloatingSidebarProps extends PropsWithChildren {
   isOpen?: boolean;
@@ -15,7 +16,7 @@ export interface FloatingSidebarProps extends PropsWithChildren {
 }
 interface HeaderProps extends PropsWithChildren {};
 
-const Root: FC<FloatingSidebarProps> = ({ isOpen = true, children, style, origin = 'top-right', initialPosition = { x: 0, y: 0 }, onDragStart, onDragEnd }) => {
+const Root = forwardRef<HTMLDivElement, FloatingSidebarProps>(({ isOpen = true, children, style, origin = 'top-right', initialPosition = { x: 0, y: 0 }, onDragStart, onDragEnd }, ref) => {
   return (
     <Draggable.Root
       className={Bem.block('tox-floating-sidebar', { open: isOpen })}
@@ -26,20 +27,31 @@ const Root: FC<FloatingSidebarProps> = ({ isOpen = true, children, style, origin
       onDragStart={onDragStart}
       onDragEnd={onDragEnd}
       style={style}
+      ref={ref}
     >
-      <aside className={classes([ 'tox-floating-sidebar__content-wrapper' ])}>
-        { children }
+      <aside className={Bem.element('tox-floating-sidebar', 'content-wrapper')}>
+        {children}
       </aside>
     </Draggable.Root>
   );
-};
+});
 
-const Header: FC<HeaderProps> = ({ children }) => {
+const Header = forwardRef<HTMLDivElement, HeaderProps>(({ children }, ref) => {
+  const refCallback = useCallback((node: HTMLDivElement | null) => {
+    if (ref) {
+      if (Type.isFunction(ref)) {
+        ref(node);
+      } else {
+        ref.current = node;
+      }
+    }
+  }, [ ref ]);
+
   return (
     <Draggable.Handle>
-      <header className={classes([ 'tox-sidebar-content__header', 'tox-floating-sidebar__header' ])}>{ children }</header>
+      <header ref={refCallback} className={`${Bem.element('tox-sidebar-content', 'header')} ${Bem.element('tox-floating-sidebar', 'header')}`}>{ children }</header>
     </Draggable.Handle>
   );
-};
+});
 
-export { Root, Header };
+export { Header, Root };
