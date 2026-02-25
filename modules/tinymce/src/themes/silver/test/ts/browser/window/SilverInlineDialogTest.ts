@@ -275,7 +275,7 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogTest', () => {
 
     // Verify the dialog is focused initially
     await FocusTools.pTryOnSelector(
-      'Focus should be on the block button',
+      'Focus should be on the input when dialog opens',
       SugarDocument.getDocument(),
       'input'
     );
