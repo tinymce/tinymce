@@ -457,4 +457,28 @@
     line-height: var(--tox-private-line-height-base, @line-height-base);
   }
 
+  .tox-sidebar-content__message {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: center;
+    gap: var(--tox-private-pad-md, @pad-md);
+    width: 100%;
+  }
+
+  .tox-sidebar-content__message-text {
+    text-align: center;
+    color: var(--tox-private-text-color, @text-color);
+    font-size: var(--tox-private-font-size-md, @font-size-base);
+    font-weight: var(--tox-private-font-weight-normal, @font-weight-normal);
+    line-height: 20px;
+  }
+
+  .tox-sidebar-content__message-action {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-self: stretch;
+  }
 }
