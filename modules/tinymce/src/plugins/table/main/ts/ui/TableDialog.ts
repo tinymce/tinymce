@@ -57,7 +57,7 @@ const applyDataToElement = (editor: Editor, tableElm: HTMLTableElement, data: Ta
 
   styles.height = Utils.addPxSuffix(data.height);
 
-  // TINY-12797: Apply only CSS width or attribute based on `table_style_by_css`
+  // TINY-12797: Make sure only CSS width or attribute is applied based on `table_style_by_css` option
   if (shouldStyleWithCss) {
     styles.width = Utils.addPxSuffix(data.width);
     attrs.width = null;
