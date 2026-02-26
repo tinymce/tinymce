@@ -203,8 +203,8 @@ timestamps { notifyStatusChange(
 
       def branchBuildPlatforms = [
         winChrome,
-        // winFirefox,
-        // macSafari,
+        winFirefox,
+        macSafari,
       ]
 
       def primaryBuildPlatforms = branchBuildPlatforms + [
@@ -273,9 +273,9 @@ timestamps { notifyStatusChange(
         }
       }
 
-    // stage('Tests') {
+    stage('Tests') {
       parallel processes
-    // }
+    }
 
     container('node') {
 
