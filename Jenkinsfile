@@ -103,10 +103,10 @@ def nodeImg = devPods.getContainerDefaultArgs([
   runAsGroup: '1000',
   runAsUser: '1000'
 ]) + [
-  resourceRequestCpu: '2',
-  resourceLimitCpu: '4',
-  resourceRequestMemory: '6Gi',
-  resourceLimitMemory: '6Gi'
+  resourceRequestCpu: '5',
+  resourceLimitCpu: '6',
+  resourceRequestMemory: '8Gi',
+  resourceLimitMemory: '8Gi'
 ] + devPods.midStorage()
 
 def seleniumImg = [
@@ -121,7 +121,7 @@ def seleniumImg = [
   ]
 ] + [
   // lower resources than this and selenium has trouble starting up
-  resourceRequestCpu: '256m',
+  resourceRequestCpu: '500m',
   resourceLimitCpu: '500m',
   resourceRequestMemory: '500Mi',
   resourceLimitMemory: '500Mi'
@@ -137,9 +137,9 @@ def playwrightImg = [
   args: 'infinity',
   alwaysPullImage: true
 ] + [
-  resourceRequestCpu: '750m',
+  resourceRequestCpu: '1',
   resourceLimitCpu: '2',
-  resourceRequestMemory: '1Gi',
+  resourceRequestMemory: '2Gi',
   resourceLimitMemory: '2Gi'
 ]
 
@@ -193,8 +193,8 @@ timestamps { notifyStatusChange(
     }
 
       // Test here
-      def winChrome = [ browser: 'chrome', provider: 'aws', os: 'windows', buckets: 2 ]
-      def winFirefox = [ browser: 'firefox', provider: 'aws', os: 'windows', buckets: 2 ]
+      def winChrome = [ browser: 'chrome', provider: 'aws', os: 'windows', buckets: 1 ]
+      def winFirefox = [ browser: 'firefox', provider: 'aws', os: 'windows', buckets: 1 ]
       def winEdge = [ browser: 'edge', provider: 'lambdatest', os: 'windows', buckets: 1 ]
 
       def macChrome = [ browser: 'chrome', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ]
@@ -214,11 +214,13 @@ timestamps { notifyStatusChange(
       ];
 
       def buildingPrimary = env.BRANCH_NAME == props.primaryBranch
-      def platforms = buildingPrimary ? primaryBuildPlatforms : branchBuildPlatforms
+      // def platforms = buildingPrimary ? primaryBuildPlatforms : branchBuildPlatforms
+      def platforms = primaryBuildPlatforms
 
       def processes = [:]
       def runAllTests = buildingPrimary
 
+      def stagger = 0
       for (int i = 0; i < platforms.size(); i++) {
         def platform = platforms.get(i)
         def buckets = platform.buckets ?: 1
@@ -228,9 +230,12 @@ timestamps { notifyStatusChange(
           def s_bucket = "${bucket}"
           def s_buckets = "${buckets}"
           def name = "${os}-${platform.browser}${platform.version ?: ''}-${platform.provider}${suffix}"
+          def delaySeconds = stagger * 12
+          stagger++
           processes[name] = {
             stage(name) {
               container('node') {
+                sleep( time: delaySeconds, unit: 'SECONDS')
                 grunt('list-changed-browser')
                 bedrockRemoteTools.tinyWorkSishTunnel()
                 bedrockRemoteTools.withRemoteCreds(platform.provider) {
