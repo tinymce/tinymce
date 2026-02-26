@@ -55,6 +55,7 @@ const findWordsWithIndices = <T>(chars: Word<T>, sChars: string[], characterMap:
     if (isWordBoundary(characterMap, i)) {
       const ch = sChars[i];
       if (
+        (options.specialChars && Arr.contains(options.specialChars, ch)) ||
         (options.includeWhitespace || !WHITESPACE.test(ch)) &&
         (options.includePunctuation || !PUNCTUATION.test(ch))
       ) {
@@ -95,12 +96,16 @@ const findWordsWithIndices = <T>(chars: Word<T>, sChars: string[], characterMap:
 export interface WordOptions {
   includeWhitespace?: boolean;
   includePunctuation?: boolean;
+  specialChars?: string[];
 }
 
 const getDefaultOptions = (): WordOptions => ({
   includeWhitespace: false,
   includePunctuation: false
 });
+
+const overwritenCharacterMap = (characterMap: CharacterMap, extractedChars: string[], specialChars: string[]): CharacterMap =>
+  Arr.map(characterMap, (v, i) => Arr.contains(specialChars, extractedChars[i]) ? 0 : v );
 
 const getWordsWithIndices = <T>(chars: Word<T>, extract: (char: T) => string, options?: WordOptions): WordsWithIndices<T> => {
   options = {
@@ -109,7 +114,11 @@ const getWordsWithIndices = <T>(chars: Word<T>, extract: (char: T) => string, op
   };
   const extractedChars: string[] = Arr.map(chars, extract);
   const characterMap: CharacterMap = classify(extractedChars);
-  return findWordsWithIndices(chars, extractedChars, characterMap, options);
+  if (options.specialChars) {
+    return findWordsWithIndices(chars, extractedChars, overwritenCharacterMap(characterMap, extractedChars, options.specialChars), options);
+  } else {
+    return findWordsWithIndices(chars, extractedChars, characterMap, options);
+  }
 };
 
 const getWords = <T>(chars: Word<T>, extract: (char: T) => string, options?: WordOptions): Word<T>[] =>
