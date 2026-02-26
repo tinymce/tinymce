@@ -86,7 +86,6 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
         width: str.is('100%')
       }
     })));
-    // TinyAssertions.assertContent(editor, '<table style="border-collapse: collapse;" border="2px" width="100%"><tbody><tr><td>&nbsp;</td></tr></tbody></table>');
     await TableTestUtils.pOpenTableDialog(editor);
     TableTestUtils.assertDialogValues(getExpectedData('2px', '100%'), false, generalLabels);
     await TableTestUtils.pClickDialogButton(editor, false);
