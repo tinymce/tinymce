@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Dialogs did not retain focus when using the block/unblock API.
+time: 2026-02-20T13:28:47.458155+10:00
+custom:
+    Issue: TINY-12918
