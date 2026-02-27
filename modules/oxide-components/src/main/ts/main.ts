@@ -1,5 +1,4 @@
 import { UserPromptBubble } from './bespoke/tinymceai/bubbles/UserPromptBubble';
-import ErrorMessage from './bespoke/tinymceai/error/ErrorMessage';
 import { Spinner } from './bespoke/tinymceai/spinner/Spinner';
 import { Tag } from './bespoke/tinymceai/tag/Tag';
 import * as Accordion from './components/accordion/Accordion';
@@ -39,7 +38,6 @@ export {
   ContextToolbar,
   Draggable,
   Dropdown,
-  ErrorMessage,
   ExpandableBox,
   FloatingSidebar,
   FocusHelpers,
