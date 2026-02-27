@@ -125,7 +125,7 @@ def seleniumImg = [
   resourceLimitCpu: '500m',
   resourceRequestMemory: '500Mi',
   resourceLimitMemory: '500Mi'
-]
+] + devPods.lowStorage()
 
 def playwrightImg = [
   name: 'playwright',
@@ -141,7 +141,7 @@ def playwrightImg = [
   resourceLimitCpu: '2',
   resourceRequestMemory: '2Gi',
   resourceLimitMemory: '2Gi'
-]
+] + devPods.lowStorage()
 
 timestamps { notifyStatusChange(
   branches: ['main', 'release/7', 'release/8'],
@@ -262,7 +262,7 @@ timestamps { notifyStatusChange(
             junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results.xml'
             def visualTestStatus
             // Limit the number of workers allowed to avoid hanging IO
-            withEnv(["PW_WORKERS=1"]) {
+            withEnv(["PW_WORKERS=2"]) {
               visualTestStatus = exec(script: 'yarn -s --cwd modules/oxide-components test-visual-ci', returnStatus: true)
             }
             if (visualTestStatus == 4) {
