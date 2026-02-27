@@ -1,4 +1,4 @@
-import { Arr, Fun, Optional, Optionals, Type } from '@ephox/katamari';
+import { Arr, Optional, Optionals, Type } from '@ephox/katamari';
 import { Compare, ContentEditable, PredicateFind, Remove, SugarElement, SugarNode } from '@ephox/sugar';
 
 import type DOMUtils from '../../api/dom/DOMUtils';
@@ -276,10 +276,9 @@ const hasListSelection = (editor: Editor): boolean => {
 const backspaceDeleteRange = (editor: Editor, isForward: boolean): boolean => {
   if (hasListSelection(editor)) {
     editor.undoManager.transact(() => {
-      SymulateDelete.symulateDelete(editor, isForward, () => editor.execCommand('Delete')).fold(
-        Fun.noop,
-        () => NormalizeLists.normalizeLists(editor.dom, editor.getBody())
-      );
+      if (SymulateDelete.symulateDelete(editor, isForward, () => editor.execCommand('Delete'))) {
+        NormalizeLists.normalizeLists(editor.dom, editor.getBody());
+      }
     });
 
     return true;

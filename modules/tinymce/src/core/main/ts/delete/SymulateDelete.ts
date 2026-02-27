@@ -1,9 +1,8 @@
-import { Result } from '@ephox/katamari';
 
 import type Editor from '../api/Editor';
 import * as InputEvents from '../events/InputEvents';
 
-const symulateDelete = (editor: Editor, isForward: boolean, deleteFun: () => void): Result<void, void> => {
+const symulateDelete = (editor: Editor, isForward: boolean, deleteFun: () => void): boolean => {
   // Some delete actions may prevent the input event from being fired. If we do not detect it, we fire it ourselves.
   let shouldFireInput = true;
   const inputHandler = () => shouldFireInput = false;
@@ -11,7 +10,7 @@ const symulateDelete = (editor: Editor, isForward: boolean, deleteFun: () => voi
   const beforeInputEvent = InputEvents.fireBeforeInputEvent(editor, isForward ? 'deleteContentForward' : 'deleteContentBackward');
 
   if (beforeInputEvent.isDefaultPrevented()) {
-    return Result.error(undefined);
+    return false;
   }
 
   editor.on('input', inputHandler);
@@ -24,7 +23,7 @@ const symulateDelete = (editor: Editor, isForward: boolean, deleteFun: () => voi
   if (shouldFireInput) {
     editor.dispatch('input');
   }
-  return Result.value(undefined);
+  return true;
 };
 
 export {
