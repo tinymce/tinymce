@@ -198,7 +198,7 @@ const Toolbar: FC<ToolbarProps> = ({
   // Handle Escape key to close (unless persistent={true})
   KeyboardNavigationHooks.useSpecialKeyNavigation({
     containerRef: toolbarRef,
-    onEscape: Type.isNullable(onEscape) ? undefined : onEscape,
+    ...(Type.isNonNullable(onEscape) ? { onEscape } : { })
   });
 
   KeyboardNavigationHooks.useTabKeyNavigation({
