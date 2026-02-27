@@ -236,19 +236,9 @@ timestamps { notifyStatusChange(
             stage(name) {
               container('node') {
                 sleep( time: delaySeconds, unit: 'SECONDS')
-                // /tmp writes to container instead of shared volume for durable tasks IO
-                withEnv([
-                  "TMPDIR=/tmp",
-                  "TMP=/tmp",
-                  "TEMP=/tmp",
-                  "XDG_CACHE_HOME=/tmp/.cache",
-                  "YARN_CACHE_FOLDER=/tmp/yarn-cache",
-                  "npm_config_cache=/tmp/npm-cache"
-                ]) {
-                  grunt('list-changed-browser')
-                  bedrockRemoteTools.withRemoteCreds(platform.provider) {
-                    runRemoteTests(name, platform.browser, platform.provider, platform.os, platform.version, s_bucket, s_buckets, runAllTests)
-                  }
+                grunt('list-changed-browser')
+                bedrockRemoteTools.withRemoteCreds(platform.provider) {
+                  runRemoteTests(name, platform.browser, platform.provider, platform.os, platform.version, s_bucket, s_buckets, runAllTests)
                 }
               }
             }
@@ -259,17 +249,8 @@ timestamps { notifyStatusChange(
       processes['headless'] = {
         stage('headless') {
           container('node') {
-            withEnv([
-              "TMPDIR=/tmp",
-              "TMP=/tmp",
-              "TEMP=/tmp",
-              "XDG_CACHE_HOME=/tmp/.cache",
-              "YARN_CACHE_FOLDER=/tmp/yarn-cache",
-              "npm_config_cache=/tmp/npm-cache"
-            ]) {
-              grunt('list-changed-headless')
-              runHeadlessTests(runAllTests)
-            }
+            grunt('list-changed-headless')
+            runHeadlessTests(runAllTests)
           }
         }
       }
@@ -277,29 +258,21 @@ timestamps { notifyStatusChange(
       processes['playwright'] = {
         stage('playwright') {
           container('playwright') {
-            withEnv([
-              "TMPDIR=/tmp",
-              "TMP=/tmp",
-              "TEMP=/tmp",
-              "XDG_CACHE_HOME=/tmp/.cache",
-              "PW_WORKERS=1"
-            ]) {
-              exec('yarn -s --cwd modules/oxide-components test-ci')
-              junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results.xml'
-              def visualTestStatus
-              // Limit the number of workers allowed to avoid hanging
-              // withEnv(["PW_WORKERS=1"]) {
-                visualTestStatus = exec(script: 'yarn -s --cwd modules/oxide-components test-visual-ci', returnStatus: true)
-              // }
-              if (visualTestStatus == 4) {
-                unstable("Visual tests failed")
-              } else if (visualTestStatus != 0) {
-                error("Unexpected error running visual tests")
-              }
-              junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results-visual.xml'
-              exec('find modules/oxide-components -name "*.png" -type f || echo "No PNG files found"')
-              archiveArtifacts artifacts: 'modules/oxide-components/test-results/**/*.png', allowEmptyArchive: true, fingerprint: true
+            exec('yarn -s --cwd modules/oxide-components test-ci')
+            junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results.xml'
+            def visualTestStatus
+            // Limit the number of workers allowed to avoid hanging IO
+            withEnv(["PW_WORKERS=1"]) {
+              visualTestStatus = exec(script: 'yarn -s --cwd modules/oxide-components test-visual-ci', returnStatus: true)
             }
+            if (visualTestStatus == 4) {
+              unstable("Visual tests failed")
+            } else if (visualTestStatus != 0) {
+              error("Unexpected error running visual tests")
+            }
+            junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results-visual.xml'
+            exec('find modules/oxide-components -name "*.png" -type f || echo "No PNG files found"')
+            archiveArtifacts artifacts: 'modules/oxide-components/test-results/**/*.png', allowEmptyArchive: true, fingerprint: true
           }
         }
       }
