@@ -1,4 +1,4 @@
-import { Fun } from '@ephox/katamari';
+import { Fun, Type } from '@ephox/katamari';
 import { type SugarElement, TextContent } from '@ephox/sugar';
 
 import type { SimpleGenerators } from 'ephox/snooker/api/Generators';
@@ -21,7 +21,7 @@ export default (): SimpleGenerators => {
   };
 
   const replace = (elem: SugarElement<Node> | string | number) => {
-    if (typeof elem === 'string' || typeof elem === 'number') {
+    if (Type.isString(elem) || Type.isNumber(elem)) {
       const r = `h(${elem})_${replaceCounter}`;
       replaceCounter++;
       return r;

@@ -4,6 +4,7 @@ declare const module: any;
 declare const window: any;
 
 const exportToModuleLoaders = (tinymce: TinyMCE) => {
+  // eslint-disable-next-line @tinymce/prefer-katamari-type
   if (typeof module === 'object') {
     try {
       module.exports = tinymce;
