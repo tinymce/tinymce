@@ -9,6 +9,7 @@ import type { EditorEvent } from '../api/util/EventDispatcher';
 import Tools from '../api/util/Tools';
 import VK from '../api/util/VK';
 import * as CaretContainer from '../caret/CaretContainer';
+import * as SymulateDelete from '../delete/SymulateDelete';
 import * as Empty from '../dom/Empty';
 import * as Rtc from '../Rtc';
 
@@ -105,15 +106,13 @@ const Quirks = (editor: Editor): Quirks => {
 
         // Manually empty the editor
         e.preventDefault();
-        editor.setContent('');
-
-        if (body.firstChild && dom.isBlock(body.firstChild)) {
-          editor.selection.setCursorLocation(body.firstChild, 0);
-        } else {
-          editor.selection.setCursorLocation(body, 0);
+        if (SymulateDelete.symulateDelete(editor, keyCode === DELETE, () => editor.setContent(''))) {
+          if (body.firstChild && dom.isBlock(body.firstChild)) {
+            editor.selection.setCursorLocation(body.firstChild, 0);
+          } else {
+            editor.selection.setCursorLocation(body, 0);
+          }
         }
-
-        editor.nodeChanged();
       }
     });
   };

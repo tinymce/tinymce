@@ -25,7 +25,30 @@ interface EventSpec<A> {
 type FireApiCallback<A, S extends EventSpec<A>, E extends CustomEvent> = (api: A, spec: S, event: E, self: AlloyComponent) => void;
 type FireApiFunc<A, S extends EventSpec<A>> = <E extends CustomEvent>(name: string, f: FireApiCallback<A, S, E>) => AlloyEvents.AlloyEventKeyAndHandler<E>;
 
-const initCommonEvents = <A, S extends EventSpec<A>>(fireApiEvent: FireApiFunc<A, S>, extras: ExtraListeners): AlloyEvents.AlloyEventKeyAndHandler<any>[] => [
+const focusFirstTabbable = (getSink: () => Result<AlloyComponent, any>, component: AlloyComponent): void => {
+  // TODO: add a test for focusIn (TINY-10125)
+  const focusIn = () => component.getSystem().isConnected() ? Keying.focusIn(component) : undefined;
+  const isDisabled = (focused: SugarElement<HTMLElement>) => Attribute.has(focused, 'disabled') || Attribute.getOpt(focused, 'aria-disabled').exists((val) => val === 'true');
+  const rootNode = SugarShadowDom.getRootNode(component.element);
+  const current = Focus.active(rootNode);
+
+  Focus.active(rootNode).fold(focusIn, (focused) => {
+    // We need to check if the focused element is disabled because apparently firefox likes to leave focus on disabled elements.
+    if (isDisabled(focused)) {
+      focusIn();
+    // And we need the below check for IE, which likes to leave focus on the parent of disabled elements
+    } else if (current.exists((cur) => Compare.contains(focused, cur) && isDisabled(cur))) {
+      focusIn();
+    // Lastly if something outside the sink has focus then return the focus back to the dialog
+    } else {
+      getSink().toOptional()
+        .filter((sink) => !Compare.contains(sink.element, focused))
+        .each(focusIn);
+    }
+  });
+};
+
+const initCommonEvents = <A, S extends EventSpec<A>>(fireApiEvent: FireApiFunc<A, S>, extras: ExtraListeners, getSink: () => Result<AlloyComponent, any>): AlloyEvents.AlloyEventKeyAndHandler<any>[] => [
   // When focus moves onto a tab-placeholder, skip to the next thing in the tab sequence
   AlloyEvents.runWithTarget(NativeEvents.focusin(), NavigableObject.onFocus),
 
@@ -46,12 +69,15 @@ const initCommonEvents = <A, S extends EventSpec<A>>(fireApiEvent: FireApiFunc<A
     AlloyTriggers.emit(self, formCloseEvent);
   }),
 
-  AlloyEvents.run<FormUnblockEvent>(formUnblockEvent, (_c, _se) => extras.onUnblock()),
+  AlloyEvents.run<FormUnblockEvent>(formUnblockEvent, (component, _se) => {
+    extras.onUnblock();
+    focusFirstTabbable(getSink, component);
+  }),
 
   AlloyEvents.run<FormBlockEvent>(formBlockEvent, (_c, se) => extras.onBlock(se.event))
 ];
 
-const initUrlDialog = (getInstanceApi: () => Dialog.UrlDialogInstanceApi, extras: ExtraListeners): AlloyEvents.AlloyEventKeyAndHandler<any>[] => {
+const initUrlDialog = (getInstanceApi: () => Dialog.UrlDialogInstanceApi, extras: ExtraListeners, getSink: () => Result<AlloyComponent, any>): AlloyEvents.AlloyEventKeyAndHandler<any>[] => {
   const fireApiEvent: FireApiFunc<Dialog.UrlDialogInstanceApi, Dialog.UrlDialog> = (eventName, f) =>
     AlloyEvents.run(eventName, (c, se) => {
       withSpec(c, (spec, _c) => {
@@ -65,7 +91,7 @@ const initUrlDialog = (getInstanceApi: () => Dialog.UrlDialogInstanceApi, extras
     });
   };
   return [
-    ...initCommonEvents<Dialog.UrlDialogInstanceApi, Dialog.UrlDialog>(fireApiEvent, extras),
+    ...initCommonEvents<Dialog.UrlDialogInstanceApi, Dialog.UrlDialog>(fireApiEvent, extras, getSink),
 
     fireApiEvent<FormActionEvent>(formActionEvent, (api, spec, event) => {
       spec.onAction(api, { name: event.name });
@@ -88,7 +114,7 @@ const initDialog = <T extends Dialog.DialogData>(getInstanceApi: () => Dialog.Di
   };
 
   return [
-    ...initCommonEvents<Dialog.DialogInstanceApi<T>, Dialog.Dialog<T>>(fireApiEvent, extras),
+    ...initCommonEvents<Dialog.DialogInstanceApi<T>, Dialog.Dialog<T>>(fireApiEvent, extras, getSink),
 
     fireApiEvent<FormSubmitEvent>(formSubmitEvent, (api, spec) => spec.onSubmit(api)),
 
@@ -97,28 +123,8 @@ const initDialog = <T extends Dialog.DialogData>(getInstanceApi: () => Dialog.Di
     }),
 
     fireApiEvent<FormActionEvent>(formActionEvent, (api, spec, event, component) => {
-      // TODO: add a test for focusIn (TINY-10125)
-      const focusIn = () => component.getSystem().isConnected() ? Keying.focusIn(component) : undefined;
-      const isDisabled = (focused: SugarElement<HTMLElement>) => Attribute.has(focused, 'disabled') || Attribute.getOpt(focused, 'aria-disabled').exists((val) => val === 'true');
-      const rootNode = SugarShadowDom.getRootNode(component.element);
-      const current = Focus.active(rootNode);
-
       spec.onAction(api, { name: event.name, value: event.value });
-
-      Focus.active(rootNode).fold(focusIn, (focused) => {
-        // We need to check if the focused element is disabled because apparently firefox likes to leave focus on disabled elements.
-        if (isDisabled(focused)) {
-          focusIn();
-        // And we need the below check for IE, which likes to leave focus on the parent of disabled elements
-        } else if (current.exists((cur) => Compare.contains(focused, cur) && isDisabled(cur))) {
-          focusIn();
-        // Lastly if something outside the sink has focus then return the focus back to the dialog
-        } else {
-          getSink().toOptional()
-            .filter((sink) => !Compare.contains(sink.element, focused))
-            .each(focusIn);
-        }
-      });
+      focusFirstTabbable(getSink, component);
     }),
 
     fireApiEvent<FormTabChangeEvent>(formTabChangeEvent, (api, spec, event) => {
