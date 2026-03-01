@@ -262,7 +262,7 @@ timestamps { notifyStatusChange(
             junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results.xml'
             def visualTestStatus
             // Limit the number of workers allowed to avoid hanging IO
-            withEnv(["PW_WORKERS=2"]) {
+            withEnv(["PW_WORKERS=1"]) {
               visualTestStatus = exec(script: 'yarn -s --cwd modules/oxide-components test-visual-ci', returnStatus: true)
             }
             if (visualTestStatus == 4) {
