@@ -126,7 +126,9 @@ const Content = forwardRef<HTMLDivElement, DropdownContentProps>(({ children, on
   </div>;
 });
 
-const Trigger: FC<PropsWithChildren> = ({ children }) => {
+interface TriggerInternalProps extends PropsWithChildren<HTMLAttributes<HTMLElement>> {}
+
+const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, ...props }, ref) => {
   const { triggerRef, contentRef, triggerEvents, debouncedHideHoverablePopover, isOpen } = useDropdown();
 
   let child = Children.toArray(children)[0];
@@ -136,41 +138,60 @@ const Trigger: FC<PropsWithChildren> = ({ children }) => {
   child = child as ReactElement;
 
   const onHoverTriggerProps = {
-    onMouseEnter: (e: MouseEvent) => {
-      child.props.onMouseEnter?.(e);
-      debouncedHideHoverablePopover.cancel();
-      contentRef.current?.showPopover();
+    onMouseEnter: (e: MouseEvent<HTMLElement>) => {
+      if (!e.isDefaultPrevented()) {
+        child.props.onMouseEnter?.(e);
+        props.onMouseEnter?.(e);
+        debouncedHideHoverablePopover.cancel();
+        contentRef.current?.showPopover();
+      }
     },
-    onMouseLeave: (e: MouseEvent) => {
-      child.props.onMouseLeave?.(e);
-      debouncedHideHoverablePopover.throttle(e);
+    onMouseLeave: (e: MouseEvent<HTMLElement>) => {
+      if (!e.isDefaultPrevented()) {
+        child.props.onMouseLeave?.(e);
+        props.onMouseLeave?.(e);
+        debouncedHideHoverablePopover.throttle(e);
+      }
     }
   };
 
   const onClickTriggerProps = {
-    onClick: (e: MouseEvent) => {
-      child.props.onClick?.(e);
-      if (isOpen) {
-        contentRef.current?.hidePopover();
-      } else {
-        contentRef.current?.showPopover();
+    onClick: (e: MouseEvent<HTMLElement>) => {
+      if (!e.isDefaultPrevented()) {
+        child.props.onClick?.(e);
+        props.onClick?.(e);
+        if (isOpen) {
+          contentRef.current?.hidePopover();
+        } else {
+          contentRef.current?.showPopover();
+        }
       }
     }
   };
 
   return cloneElement(child, {
+    ...props,
     ref: (el: HTMLElement) => {
       triggerRef.current = el;
-      if (Type.isFunction(child.props.ref )) {
+      if (Type.isFunction(child.props.ref)) {
         child.props.ref(el);
       } else if (Type.isNonNullable(child.props.ref)) {
         child.props.ref.current = el;
+      }
+      if (Type.isFunction(ref)) {
+        ref(el);
+      } else if (Type.isNonNullable(ref)) {
+        ref.current = el;
       }
     },
     ...triggerEvents.includes('click') && onClickTriggerProps,
     ...triggerEvents.includes('hover') && onHoverTriggerProps,
   });
-};
+});
+
+const Trigger: React.ForwardRefExoticComponent<
+  PropsWithChildren & React.RefAttributes<HTMLElement>
+> = TriggerImpl;
 
 export interface DropdownProps extends PropsWithChildren {
   readonly side?: 'top' | 'bottom' | 'left' | 'right';
