@@ -47,6 +47,22 @@
   .tox-sidebar-content__actions {
     display: flex;
     gap: var(--tox-private-pad-sm, @pad-sm);
+
+    .tox-ai__complete-review {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding-top: var(--tox-private-pad-xs, @pad-xs);
+      padding-bottom: var(--tox-private-pad-xs, @pad-xs);
+      padding-left: var(--tox-private-pad-md, @pad-md);
+      padding-right: var(--tox-private-pad-md, @pad-md);
+    }
+  
+    .tox-ai__review-menu-separator {
+      border-bottom: 1px solid @collection-item-separator-color;
+      height: 0;
+      margin: @collection-item-separator-margin-y 0;
+    }
   }
 
   .tox-ai__user-prompt {
@@ -281,6 +297,12 @@
     gap: var(--tox-private-pad-sm, @pad-sm);
     padding: var(--tox-private-pad-sm, @pad-sm);
     overflow: auto;
+  }
+
+  .tox-ai__stop-generating {
+    display: flex;
+    align-items: center;
+    gap: 6px;
   }
 
   .tox-ai__footer-actions {
