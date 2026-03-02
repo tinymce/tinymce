@@ -121,10 +121,10 @@ def seleniumImg = [
   ]
 ] + [
   // lower resources than this and selenium has trouble starting up
-  resourceRequestCpu: '500m',
-  resourceLimitCpu: '500m',
-  resourceRequestMemory: '500Mi',
-  resourceLimitMemory: '500Mi'
+  resourceRequestCpu: '600m',
+  resourceLimitCpu: '600m',
+  resourceRequestMemory: '600Mi',
+  resourceLimitMemory: '600Mi'
 ] + devPods.lowStorage()
 
 def playwrightImg = [
@@ -230,7 +230,7 @@ timestamps { notifyStatusChange(
           def s_bucket = "${bucket}"
           def s_buckets = "${buckets}"
           def name = "${os}-${platform.browser}${platform.version ?: ''}-${platform.provider}${suffix}"
-          def delaySeconds = stagger * 22
+          def delaySeconds = stagger * 10
           stagger++
           processes[name] = {
             stage(name) {
