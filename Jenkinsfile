@@ -214,8 +214,7 @@ timestamps { notifyStatusChange(
       ];
 
       def buildingPrimary = env.BRANCH_NAME == props.primaryBranch
-      // def platforms = buildingPrimary ? primaryBuildPlatforms : branchBuildPlatforms
-      def platforms = primaryBuildPlatforms
+      def platforms = buildingPrimary ? primaryBuildPlatforms : branchBuildPlatforms
 
       def processes = [:]
       def runAllTests = buildingPrimary
