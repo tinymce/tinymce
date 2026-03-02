@@ -103,6 +103,8 @@ def nodeImg = devPods.getContainerDefaultArgs([
   runAsGroup: '1000',
   runAsUser: '1000'
 ]) + [
+  // we can probably make this leaner if we condition primary vs branch
+  // primary needs more io/mem/cpu to handle extra concurrent tests
   resourceRequestCpu: '8',
   resourceLimitCpu: '8',
   resourceRequestMemory: '10Gi',
@@ -120,7 +122,8 @@ def seleniumImg = [
     failureThreshold: 6
   ]
 ] + [
-  // lower resources than this and selenium has trouble starting up
+  // lower resources than this and selenium has trouble staying up
+  // selenium cango down to 500m/500Mi but crashes if things in the pod start leaking
   resourceRequestCpu: '600m',
   resourceLimitCpu: '600m',
   resourceRequestMemory: '600Mi',
@@ -192,89 +195,88 @@ timestamps { notifyStatusChange(
       }
     }
 
-      // Test here
-      def winChrome = [ browser: 'chrome', provider: 'aws', os: 'windows', buckets: 1 ]
-      def winFirefox = [ browser: 'firefox', provider: 'lambdatest', os: 'windows', buckets: 1 ]
-      def winEdge = [ browser: 'edge', provider: 'lambdatest', os: 'windows', buckets: 1 ]
+    def winChrome = [ browser: 'chrome', provider: 'aws', os: 'windows', buckets: 1 ]
+    def winFirefox = [ browser: 'firefox', provider: 'lambdatest', os: 'windows', buckets: 1 ]
+    def winEdge = [ browser: 'edge', provider: 'lambdatest', os: 'windows', buckets: 1 ]
 
-      def macChrome = [ browser: 'chrome', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ]
-      def macFirefox = [ browser: 'firefox', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ]
-      def macSafari = [ browser: 'safari', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ]
+    def macChrome = [ browser: 'chrome', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ]
+    def macFirefox = [ browser: 'firefox', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ]
+    def macSafari = [ browser: 'safari', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ]
 
-      def branchBuildPlatforms = [
-        winChrome,
-        winFirefox,
-        macSafari,
-      ]
+    def branchBuildPlatforms = [
+      winChrome,
+      winFirefox,
+      macSafari,
+    ]
 
-      def primaryBuildPlatforms = branchBuildPlatforms + [
-        winEdge,
-        macChrome,
-        macFirefox
-      ];
+    def primaryBuildPlatforms = branchBuildPlatforms + [
+      winEdge,
+      macChrome,
+      macFirefox
+    ];
 
-      def buildingPrimary = env.BRANCH_NAME == props.primaryBranch
-      def platforms = buildingPrimary ? primaryBuildPlatforms : branchBuildPlatforms
+    def buildingPrimary = env.BRANCH_NAME == props.primaryBranch
+    def platforms = buildingPrimary ? primaryBuildPlatforms : branchBuildPlatforms
 
-      def processes = [:]
-      def runAllTests = buildingPrimary
+    def processes = [:]
+    def runAllTests = buildingPrimary
 
-      def stagger = 0
-      for (int i = 0; i < platforms.size(); i++) {
-        def platform = platforms.get(i)
-        def buckets = platform.buckets ?: 1
-        for (int bucket = 1; bucket <= buckets; bucket ++) {
-          def suffix = buckets == 1 ? "" : "-" + bucket + "-" + buckets
-          def os = String.valueOf(platform.os).startsWith('mac') ? 'Mac' : 'Win'
-          def s_bucket = "${bucket}"
-          def s_buckets = "${buckets}"
-          def name = "${os}-${platform.browser}${platform.version ?: ''}-${platform.provider}${suffix}"
-          def delaySeconds = stagger * 10
-          stagger++
-          processes[name] = {
-            stage(name) {
-              container('node') {
-                sleep( time: delaySeconds, unit: 'SECONDS')
-                grunt('list-changed-browser')
-                bedrockRemoteTools.withRemoteCreds(platform.provider) {
-                  runRemoteTests(name, platform.browser, platform.provider, platform.os, platform.version, s_bucket, s_buckets, runAllTests)
-                }
+    def stagger = 0
+    for (int i = 0; i < platforms.size(); i++) {
+      def platform = platforms.get(i)
+      def buckets = platform.buckets ?: 1
+      for (int bucket = 1; bucket <= buckets; bucket ++) {
+        def suffix = buckets == 1 ? "" : "-" + bucket + "-" + buckets
+        def os = String.valueOf(platform.os).startsWith('mac') ? 'Mac' : 'Win'
+        def s_bucket = "${bucket}"
+        def s_buckets = "${buckets}"
+        def name = "${os}-${platform.browser}${platform.version ?: ''}-${platform.provider}${suffix}"
+        def delaySeconds = stagger * 10
+        stagger++
+        processes[name] = {
+          stage(name) {
+            container('node') {
+              sleep( time: delaySeconds, unit: 'SECONDS')
+              grunt('list-changed-browser')
+              bedrockRemoteTools.withRemoteCreds(platform.provider) {
+                runRemoteTests(name, platform.browser, platform.provider, platform.os, platform.version, s_bucket, s_buckets, runAllTests)
               }
             }
           }
         }
       }
+    }
 
-      processes['headless'] = {
-        stage('headless') {
-          container('node') {
-            grunt('list-changed-headless')
-            runHeadlessTests(runAllTests)
-          }
+    processes['headless'] = {
+      stage('headless') {
+        container('node') {
+          grunt('list-changed-headless')
+          runHeadlessTests(runAllTests)
         }
       }
+    }
 
-      processes['playwright'] = {
-        stage('playwright') {
-          container('playwright') {
-            exec('yarn -s --cwd modules/oxide-components test-ci')
-            junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results.xml'
-            def visualTestStatus
-            // Limit the number of workers allowed to avoid hanging IO
-            withEnv(["PW_WORKERS=1"]) {
-              visualTestStatus = exec(script: 'yarn -s --cwd modules/oxide-components test-visual-ci', returnStatus: true)
-            }
-            if (visualTestStatus == 4) {
-              unstable("Visual tests failed")
-            } else if (visualTestStatus != 0) {
-              error("Unexpected error running visual tests")
-            }
-            junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results-visual.xml'
-            exec('find modules/oxide-components -name "*.png" -type f || echo "No PNG files found"')
-            archiveArtifacts artifacts: 'modules/oxide-components/test-results/**/*.png', allowEmptyArchive: true, fingerprint: true
+    processes['playwright'] = {
+      stage('playwright') {
+        container('playwright') {
+          exec('yarn -s --cwd modules/oxide-components test-ci')
+          junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results.xml'
+          def visualTestStatus
+          // Limit the number of workers allowed to avoid hanging IO
+          withEnv(["PW_WORKERS=1"]) {
+            visualTestStatus = exec(script: 'yarn -s --cwd modules/oxide-components test-visual-ci', returnStatus: true)
           }
+          if (visualTestStatus == 4) {
+            unstable("Visual tests failed")
+          } else if (visualTestStatus != 0) {
+            error("Unexpected error running visual tests")
+          }
+          junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results-visual.xml'
+          exec('find modules/oxide-components -name "*.png" -type f || echo "No PNG files found"')
+          archiveArtifacts artifacts: 'modules/oxide-components/test-results/**/*.png', allowEmptyArchive: true, fingerprint: true
         }
       }
+    }
 
     stage('Tests') {
       container('node') {
