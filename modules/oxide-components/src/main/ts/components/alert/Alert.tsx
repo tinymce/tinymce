@@ -14,7 +14,7 @@ const calculateClassFromSeverity = (severity: 'error' | 'warning'): string => {
   }
 };
 
-interface BaseAlertProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'className'> {
+interface BaseAlertProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'className' | 'role'> {
   readonly message: string;
   readonly severity: 'error' | 'warning';
   readonly actions?: ReactNode;
