@@ -47,6 +47,7 @@ The Alert component displays warning/error feedback with optional action and rem
 - \`severity\`: \`error\` | \`warning\`
 - \`actions\`: optional slot for one or more action buttons/components
 - \`removable\`: optional close affordance (requires \`onRemove\`)
+- \`closeAriaLabel\`: optional accessible label for the close button (defaults to \`Close\`)
         `
       }
     }
@@ -62,12 +63,13 @@ The Alert component displays warning/error feedback with optional action and rem
 export default meta;
 type Story = StoryObj<AlertProps>;
 
-export const Error: Story = {};
+export const ErrorAlert: Story = {};
 
 export const ErrorRemovable: Story = {
   args: {
     removable: true,
-    onRemove: fn()
+    onRemove: fn(),
+    closeAriaLabel: 'Dismiss alert'
   }
 };
 

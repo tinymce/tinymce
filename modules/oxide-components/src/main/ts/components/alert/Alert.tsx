@@ -18,6 +18,7 @@ interface BaseAlertProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'
   readonly message: string;
   readonly severity: 'error' | 'warning';
   readonly actions?: ReactNode;
+  readonly closeAriaLabel?: string;
 }
 
 interface NonRemovableAlertProps {
@@ -38,6 +39,7 @@ export const Alert = forwardRef<HTMLDivElement, AlertProps>(({
   removable = false,
   onRemove,
   actions,
+  closeAriaLabel = 'Close',
   ...domProps
 }, ref) => {
   return (
@@ -45,7 +47,6 @@ export const Alert = forwardRef<HTMLDivElement, AlertProps>(({
       ref={ref}
       className={calculateClassFromSeverity(severity)}
       role='alert'
-      aria-live='polite'
       {...domProps}
     >
       <div className={Bem.element('tox-alert', 'body')}>
@@ -63,7 +64,7 @@ export const Alert = forwardRef<HTMLDivElement, AlertProps>(({
           variant='naked'
           icon='close'
           onClick={onRemove}
-          aria-label='Close'
+          aria-label={closeAriaLabel}
         />
       )}
     </div>
