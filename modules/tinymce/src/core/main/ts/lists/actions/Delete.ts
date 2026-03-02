@@ -6,7 +6,7 @@ import RangeUtils from '../../api/dom/RangeUtils';
 import DomTreeWalker from '../../api/dom/TreeWalker';
 import type Editor from '../../api/Editor';
 import * as NodeStructureBookmark from '../../bookmark/NodeStructureBookmark';
-import * as InputEvents from '../../events/InputEvents';
+import * as SymulateDelete from '../../delete/SymulateDelete';
 import * as NodeType from '../lists/NodeType';
 import * as NormalizeLists from '../lists/NormalizeLists';
 import * as ListRangeUtils from '../lists/RangeUtils';
@@ -276,25 +276,9 @@ const hasListSelection = (editor: Editor): boolean => {
 const backspaceDeleteRange = (editor: Editor, isForward: boolean): boolean => {
   if (hasListSelection(editor)) {
     editor.undoManager.transact(() => {
-      // Some delete actions may prevent the input event from being fired. If we do not detect it, we fire it ourselves.
-      let shouldFireInput = true;
-      const inputHandler = () => shouldFireInput = false;
-
-      const beforeInputEvent = InputEvents.fireBeforeInputEvent(editor, isForward ? 'deleteContentForward' : 'deleteContentBackward');
-
-      if (beforeInputEvent.isDefaultPrevented()) {
-        return;
+      if (SymulateDelete.symulateDelete(editor, isForward, () => editor.execCommand('Delete'))) {
+        NormalizeLists.normalizeLists(editor.dom, editor.getBody());
       }
-
-      editor.on('input', inputHandler);
-      editor.execCommand('Delete');
-      editor.off('input', inputHandler);
-
-      if (shouldFireInput) {
-        editor.dispatch('input');
-      }
-
-      NormalizeLists.normalizeLists(editor.dom, editor.getBody());
     });
 
     return true;

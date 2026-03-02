@@ -267,4 +267,31 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogTest', () => {
       'iframe.tox-edit-area__iframe'
     );
   });
+
+  it('TINY-12918: Inline persistent dialog should remain focused after being blocked and unblocked', async () => {
+    const editor = hook.editor();
+    const api = DialogUtils.openWithStore(editor, dialogSpec, { inline: 'bottom', persistent: true }, store);
+    await TinyUiActions.pWaitForDialog(editor);
+
+    // Verify the dialog is focused initially
+    await FocusTools.pTryOnSelector(
+      'Focus should be on the input when dialog opens',
+      SugarDocument.getDocument(),
+      'input'
+    );
+
+    // Block the dialog for a short time to simulate an async action, then unblock it
+    api.block('Blocking dialog for test');
+    await Waiter.pWait(10);
+    api.unblock();
+
+    // Verify the dialog is still focused after unblocking
+    await FocusTools.pTryOnSelector(
+      'Focus should be on initial input after unblocking',
+      SugarDocument.getDocument(),
+      'input'
+    );
+
+    api.close();
+  });
 });

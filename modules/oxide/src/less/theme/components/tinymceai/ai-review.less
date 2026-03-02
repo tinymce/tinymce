@@ -1,11 +1,5 @@
 @import '../../content/diff/diff';
 
-.tox .tox-ai-review__empty-state {
-  padding: 12px;
-  color: var(--tox-private-text-color-muted, @text-color-muted);
-  font-size: var(--tox-private-font-size-sm, @font-size-sm);
-}
-
 .tox {
   .diff-content(
     tinymceai,
@@ -15,4 +9,36 @@
     @selected-outline-color,
     @selected-box-shadow
   );
+
+  .tox-ai__scroll {
+    .tox-ai__review-sidebar-container {
+      scrollbar-gutter: stable;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+
+      .tox-ai__review-initializing {
+        padding: var(--tox-private-pad-md, @pad-md);
+      }
+
+      .tox-ai__review-description {
+        padding-bottom: var(--tox-private-pad-sm, @pad-sm);
+        font-size: var(--tox-private-font-size-sm, @font-size-sm);
+      }
+
+      .tox-ai__review-input-container {
+        margin-bottom: 12px;
+
+        .tox-ai__review-input-button {
+          width: 100%;
+          background-color: var(--tox-private-background-color, @background-color);
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+      }
+    }
+  }
 }
