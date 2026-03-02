@@ -1,4 +1,5 @@
 import { Assertions, Logger, Step } from '@ephox/agar';
+import { Type } from '@ephox/katamari';
 
 import type { Editor } from '../../alien/EditorTypes';
 import { TinyDom } from '../TinyDom';
@@ -64,7 +65,7 @@ const execCommand = <T extends Editor = Editor> (editor: T, cmd: string, ui?: bo
 const findContainer = <T extends Editor = Editor> (editor: T, selector: string | Node) => {
   let container;
 
-  if (typeof selector === 'string') {
+  if (Type.isString(selector)) {
     container = editor.dom.select(selector)[0];
   } else {
     container = selector;
