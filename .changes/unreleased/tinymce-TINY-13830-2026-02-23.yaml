@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Selecting all content and deleting it did not trigger the `beforeinput` event.
+time: 2026-02-23T11:59:15.443136408+01:00
+custom:
+    Issue: TINY-13830

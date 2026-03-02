@@ -138,7 +138,8 @@ const Trigger: FC<TriggerProps> = ({
 
 const Toolbar: FC<ToolbarProps> = ({
   children,
-  onMouseDown
+  onMouseDown,
+  onEscape: passedOnEscape
 }) => {
   const {
     isOpen,
@@ -181,10 +182,23 @@ const Toolbar: FC<ToolbarProps> = ({
     });
   }, [ usePopover, isOpen, toolbarRef ]);
 
+  const onEscape = useMemo(() => {
+    if (persistent) {
+      return passedOnEscape;
+    }
+    if (Type.isNullable(passedOnEscape)) {
+      return close;
+    }
+    return () => {
+      passedOnEscape();
+      close();
+    };
+  }, [ persistent, passedOnEscape, close ]);
+
   // Handle Escape key to close (unless persistent={true})
   KeyboardNavigationHooks.useSpecialKeyNavigation({
     containerRef: toolbarRef,
-    onEscape: persistent ? undefined : close,
+    ...(Type.isNonNullable(onEscape) ? { onEscape } : { })
   });
 
   KeyboardNavigationHooks.useTabKeyNavigation({
