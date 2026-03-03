@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-set -e
+# Enable strict mode
+set -euo pipefail
 
 # ============================================================================
 # LERNA VERSION LIFECYCLE HOOK

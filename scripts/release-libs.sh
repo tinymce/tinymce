@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-set -e
+# Enable strict mode
+set -euo pipefail
 
 # ============================================================================
 # OVERVIEW:
@@ -16,7 +17,6 @@ set -e
 #
 # TYPICAL WORKFLOWS:
 #   Interactive:  ./release-libs.sh
-#   Changed only: ./release-libs.sh --changed
 #   Dry run:      ./release-libs.sh --dry-run
 #
 # HOW IT WORKS:
@@ -40,26 +40,56 @@ set -e
 # ============================================================================
 
 # Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-NC='\033[0m' # No Color
+readonly RED='\033[0;31m'
+readonly GREEN='\033[0;32m'
+readonly YELLOW='\033[1;33m'
+readonly BLUE='\033[0;34m'
+readonly NC='\033[0m' # No Color
 
-# Script directory
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+# Script directory and project root
+readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+readonly PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 # Configuration
-CHANGES_DIR="$PROJECT_ROOT/.changes/unreleased"
+readonly CHANGES_DIR="$PROJECT_ROOT/.changes/unreleased"
 # Packages excluded from lerna entirely (different release process)
-EXCLUDED_PACKAGES=("tinymce" "oxide-components")
+readonly EXCLUDED_PACKAGES=("tinymce" "oxide-components")
 # Packages that skip changie but are still versioned by lerna
-SKIP_CHANGIE_PACKAGES=("oxide" "oxide-icons-default")
+readonly SKIP_CHANGIE_PACKAGES=("oxide" "oxide-icons-default")
 
 # Flags
 DRY_RUN=false
-CHANGED_ONLY=false
+
+# ============================================================================
+# Helper Functions for Colored Output
+# ============================================================================
+
+# Print error message to stderr
+print_error() {
+    echo -e "${RED}$*${NC}" >&2
+}
+
+# Print success message
+print_success() {
+    echo -e "${GREEN}$*${NC}"
+}
+
+# Print warning message
+print_warning() {
+    echo -e "${YELLOW}$*${NC}"
+}
+
+# Print info message
+print_info() {
+    echo -e "${BLUE}$*${NC}"
+}
+
+# Print separator line
+print_separator() {
+    local char="${1:-━}"
+    local color="${2:-$BLUE}"
+    echo -e "${color}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${char}${NC}"
+}
 
 # Usage function
 usage() {
@@ -71,15 +101,10 @@ Preview version updates and run lerna version with automatic changelog generatio
 OPTIONS:
     -h, --help              Show this help message
     -n, --dry-run           Preview what would happen without making changes
-    --changed               Only show changed packages (filters lerna version scope)
-                            (Default: lerna will prompt for all packages)
 
 EXAMPLES:
     # Interactive version update with changelog generation (typical workflow)
     $(basename "$0")
-
-    # Only process packages with changes
-    $(basename "$0") --changed
 
     # Preview without making changes
     $(basename "$0") --dry-run
@@ -102,21 +127,27 @@ while [[ $# -gt 0 ]]; do
             DRY_RUN=true
             shift
             ;;
-        --changed)
-            CHANGED_ONLY=true
-            shift
-            ;;
         *)
-            echo -e "${RED}Error: Unknown option: $1${NC}"
+            print_error "Error: Unknown option: $1"
             usage
             exit 1
             ;;
     esac
 done
 
-# Helper function to check if package should be excluded
+# ============================================================================
+# Package Helper Functions
+# ============================================================================
+
+# Check if package should be excluded from processing
+# Args:
+#   $1 - Package name
+# Returns:
+#   0 if excluded, 1 otherwise
 is_excluded() {
-    local package=$1
+    local package="$1"
+    local excluded
+
     for excluded in "${EXCLUDED_PACKAGES[@]}"; do
         if [[ "$package" == "$excluded"* ]]; then
             return 0
@@ -125,43 +156,82 @@ is_excluded() {
     return 1
 }
 
-# Extract package name from scoped package (e.g., @ephox/katamari -> katamari)
+# Extract package name from scoped package
+# Examples: @ephox/katamari -> katamari, @tinymce/foo -> foo
 # Assumes packages are scoped as @ephox/* or @tinymce/*
+# Used for accessing files in modules/ directory
+# Args:
+#   $1 - Scoped package name
+# Output:
+#   Unscoped package name
 extract_package_name() {
-    local scoped_name=$1
+    local scoped_name="$1"
     # Remove @ephox/ or @tinymce/ prefix
     echo "$scoped_name" | sed 's/@[^/]*\///'
 }
 
 # Get all packages from lerna (excludes private packages automatically)
+# Returns full scoped package names (e.g., @ephox/katamari, @tinymce/whatever)
+# Output:
+#   Sorted list of full scoped package names, one per line
+# Exits:
+#   1 if lerna command fails
 get_all_packages() {
-    local packages=()
+    local -a packages=()
+    local line pkg_dir
+    local lerna_output lerna_stderr lerna_exit_code
 
-    # Get lerna list output (excludes private packages)
-    while IFS= read -r line; do
-        # Skip empty lines, package manager messages, and lerna metadata
-        if [[ -n "$line" ]] && \
-           [[ "$line" != "yarn"* ]] && \
-           [[ "$line" != "npm"* ]] && \
-           [[ "$line" != "lerna"* ]] && \
-           [[ "$line" != "Done"* ]] && \
-           [[ "$line" != "\$"* ]]; then
-            local pkg_name=$(extract_package_name "$line")
-            # Skip if excluded
-            if ! is_excluded "$pkg_name"; then
-                packages+=("$pkg_name")
-            fi
+    # Capture lerna output and errors
+    lerna_stderr=$(mktemp)
+    if ! lerna_output=$(npx lerna list --loglevel=error 2>"$lerna_stderr"); then
+        lerna_exit_code=$?
+        print_error "Error: Failed to run 'npx lerna list' (exit code: $lerna_exit_code)"
+        if [[ -s "$lerna_stderr" ]]; then
+            print_error "Lerna error output:"
+            cat "$lerna_stderr" >&2
         fi
-    done < <(npx lerna list --loglevel=error 2>/dev/null || true)
+        rm -f "$lerna_stderr"
+        exit 1
+    fi
+    rm -f "$lerna_stderr"
 
-    # Sort packages
+    # Parse lerna output (excludes private packages automatically)
+    while IFS= read -r line; do
+        # Skip empty lines and noise from package managers
+        if [[ -z "$line" ]] || \
+           [[ "$line" == "yarn"* ]] || \
+           [[ "$line" == "npm"* ]] || \
+           [[ "$line" == "lerna"* ]] || \
+           [[ "$line" == "Done"* ]] || \
+           [[ "$line" == "\$"* ]]; then
+            continue
+        fi
+
+        pkg_dir=$(extract_package_name "$line")
+        # Skip if excluded from processing
+        if ! is_excluded "$pkg_dir"; then
+            packages+=("$line")
+        fi
+    done <<< "$lerna_output"
+
+    # Sort and deduplicate packages
     printf '%s\n' "${packages[@]}" | sort -u
 }
 
 # Check if package has unreleased changes
+# Args:
+#   $1 - Full scoped package name (e.g., @ephox/katamari)
+# Returns:
+#   0 if changes exist, 1 otherwise
 has_changes() {
-    local package=$1
-    for file in "$CHANGES_DIR"/"$package"-*.yaml; do
+    local scoped_name="$1"
+    local package
+    local file
+
+    package=$(extract_package_name "$scoped_name")
+
+    # Check for any YAML change fragments for this package
+    for file in "$CHANGES_DIR"/"${package}"-*.yaml; do
         if [[ -f "$file" ]]; then
             return 0
         fi
@@ -170,24 +240,43 @@ has_changes() {
 }
 
 # Get current version from package.json
+# Args:
+#   $1 - Full scoped package name (e.g., @ephox/katamari)
+# Output:
+#   Current version or "unknown" if package.json not found
 get_current_version() {
-    local package=$1
-    local package_json="$PROJECT_ROOT/modules/$package/package.json"
+    local scoped_name="$1"
+    local package package_json
+
+    package=$(extract_package_name "$scoped_name")
+    package_json="$PROJECT_ROOT/modules/$package/package.json"
 
     if [[ ! -f "$package_json" ]]; then
         echo "unknown"
-        return
+        return 1
     fi
 
-    jq -r '.version' "$package_json"
+    jq -r '.version' "$package_json" 2>/dev/null || echo "unknown"
 }
 
-# Get next version using changie
+# Get next version using changie auto-calculation
+# Args:
+#   $1 - Full scoped package name (e.g., @ephox/katamari)
+# Output:
+#   Next version based on change fragments
+# Returns:
+#   0 on success, 1 on error
 get_next_version() {
-    local package=$1
-    local next_version
+    local scoped_name="$1"
+    local package next_version
 
-    next_version=$(cd "$PROJECT_ROOT" && changie next auto --project "$package" 2>/dev/null | tr -d '%' | sed 's/^'$package'//')
+    package=$(extract_package_name "$scoped_name")
+
+    # Run changie to calculate next version from change fragments
+    next_version=$(cd "$PROJECT_ROOT" && \
+        changie next auto --project "$package" 2>/dev/null | \
+        tr -d '%' | \
+        sed "s/^${package}//")
 
     if [[ -z "$next_version" ]]; then
         echo "error"
@@ -197,17 +286,26 @@ get_next_version() {
     echo "$next_version"
 }
 
-# Calculate next patch version
+# Calculate next patch version by incrementing patch number
+# Used for packages without changes to maintain synchronized releases
+# Args:
+#   $1 - Current version (e.g., 1.2.3)
+# Output:
+#   Next patch version (e.g., 1.2.4) or "error" if invalid
+# Returns:
+#   0 on success, 1 if version format is invalid
 get_next_patch_version() {
-    local current_version=$1
+    local current_version="$1"
+    local major minor patch next_patch
 
-    # Parse version components
+    # Parse semantic version (major.minor.patch)
     if [[ $current_version =~ ^([0-9]+)\.([0-9]+)\.([0-9]+) ]]; then
-        local major="${BASH_REMATCH[1]}"
-        local minor="${BASH_REMATCH[2]}"
-        local patch="${BASH_REMATCH[3]}"
-        local next_patch=$((patch + 1))
+        major="${BASH_REMATCH[1]}"
+        minor="${BASH_REMATCH[2]}"
+        patch="${BASH_REMATCH[3]}"
+        next_patch=$((patch + 1))
         echo "${major}.${minor}.${next_patch}"
+        return 0
     else
         echo "error"
         return 1
@@ -215,11 +313,19 @@ get_next_patch_version() {
 }
 
 # Count change fragments for a package
+# Args:
+#   $1 - Full scoped package name (e.g., @ephox/katamari)
+# Output:
+#   Number of YAML change fragments found
 count_changes() {
-    local package=$1
-    local count=0
+    local scoped_name="$1"
+    local package count
 
-    for file in "$CHANGES_DIR"/"$package"-*.yaml; do
+    package=$(extract_package_name "$scoped_name")
+    count=0
+
+    # Count YAML files matching pattern: {package}-*.yaml
+    for file in "$CHANGES_DIR"/"${package}"-*.yaml; do
         if [[ -f "$file" ]]; then
             ((count++))
         fi
@@ -228,15 +334,23 @@ count_changes() {
     echo "$count"
 }
 
-# Check for required tools
+# ============================================================================
+# Prerequisite Checks
+# ============================================================================
+
+# Check for required tools and configuration
+# Exits with error if any prerequisites are missing
 check_prerequisites() {
-    local missing=()
+    local -a missing=()
+    local tool hook_script package_json
+
+    # Check for required command-line tools
     command -v changie >/dev/null 2>&1 || missing+=("changie")
     command -v jq >/dev/null 2>&1 || missing+=("jq")
     command -v npx >/dev/null 2>&1 || missing+=("npx/node")
 
     if [[ ${#missing[@]} -gt 0 ]]; then
-        echo -e "${RED}Error: Missing required tools: ${missing[*]}${NC}"
+        print_error "Error: Missing required tools: ${missing[*]}"
         echo ""
         echo "Please install:"
         for tool in "${missing[@]}"; do
@@ -257,91 +371,87 @@ check_prerequisites() {
 
     # Verify changie configuration exists
     if [[ ! -f "$PROJECT_ROOT/.changie.yaml" ]]; then
-        echo -e "${RED}Error: .changie.yaml not found in project root${NC}"
-        echo -e "${YELLOW}Changie needs to be configured before running this script.${NC}"
+        print_error "Error: .changie.yaml not found in project root"
+        print_warning "Changie needs to be configured before running this script."
         exit 1
     fi
 
     # Verify lerna lifecycle hook is configured
-    local hook_script="$PROJECT_ROOT/scripts/lerna-changie-hook.sh"
+    hook_script="$PROJECT_ROOT/scripts/lerna-changie-hook.sh"
     if [[ ! -f "$hook_script" ]]; then
-        echo -e "${RED}Error: Lerna changelog hook not found: $hook_script${NC}"
+        print_error "Error: Lerna changelog hook not found: $hook_script"
         exit 1
     fi
 
     if [[ ! -x "$hook_script" ]]; then
-        echo -e "${RED}Error: Lerna changelog hook is not executable: $hook_script${NC}"
-        echo -e "${YELLOW}Run: chmod +x $hook_script${NC}"
+        print_error "Error: Lerna changelog hook is not executable: $hook_script"
+        print_warning "Run: chmod +x $hook_script"
         exit 1
     fi
 
     # Verify package.json has version script configured
-    local package_json="$PROJECT_ROOT/package.json"
+    package_json="$PROJECT_ROOT/package.json"
     if ! grep -q '"version".*lerna-changie-hook.sh' "$package_json" 2>/dev/null; then
-        echo -e "${RED}Error: package.json is missing the version lifecycle script${NC}"
-        echo -e "${YELLOW}Add this to the scripts section of package.json:${NC}"
-        echo -e '${BLUE}    "version": "./scripts/lerna-changie-hook.sh"${NC}'
+        print_error "Error: package.json is missing the version lifecycle script"
+        print_warning "Add this to the scripts section of package.json:"
+        print_info '    "version": "./scripts/lerna-changie-hook.sh"'
         exit 1
     fi
 }
 
-# Main function
+# ============================================================================
+# Main Function
+# ============================================================================
+
 main() {
-    cd "$PROJECT_ROOT"
+    local -a all_packages packages package_list current_versions next_versions change_counts has_changes_flags
+    local current_version change_count suggested_version has_changes_flag next_version
+    local package i pkg pkg_dir kinds issues file kind issue
+    local -a lerna_args
+    local lerna_exit_code
+
+    # Change to project root directory
+    cd "$PROJECT_ROOT" || {
+        print_error "Error: Cannot change to project root: $PROJECT_ROOT"
+        exit 1
+    }
 
     # Check prerequisites before starting
     check_prerequisites
 
-    echo -e "${GREEN}╔════════════════════════════════════════════════════════════════╗${NC}"
-    echo -e "${GREEN}║  Library Release Automation                                   ║${NC}"
-    echo -e "${GREEN}╚════════════════════════════════════════════════════════════════╝${NC}"
+    # Print header
+    print_success "╔════════════════════════════════════════════════════════════════╗"
+    print_success "║  Library Release Automation                                   ║"
+    print_success "╚════════════════════════════════════════════════════════════════╝"
     echo ""
 
     if [[ "$DRY_RUN" == true ]]; then
-        echo -e "${YELLOW}🔍 DRY-RUN MODE: Previewing changes only${NC}"
+        print_warning "🔍 DRY-RUN MODE: Previewing changes only"
         echo ""
     fi
 
     # Get packages from lerna (source of truth for valid, public packages)
-    echo -e "${BLUE}📦 Scanning packages from lerna...${NC}"
+    print_info "📦 Scanning packages from lerna..."
     all_packages=()
     while IFS= read -r line; do
         all_packages+=("$line")
     done < <(get_all_packages)
 
     if [[ ${#all_packages[@]} -eq 0 ]]; then
-        echo -e "${YELLOW}No packages found.${NC}"
+        print_warning "No packages found."
         exit 0
     fi
 
-    # Filter to only packages with changes if --changed flag is set
-    if [[ "$CHANGED_ONLY" == true ]]; then
-        echo -e "${BLUE}📦 Filtering to packages with unreleased changes (--changed mode)...${NC}"
-        packages=()
-        for pkg in "${all_packages[@]}"; do
-            if has_changes "$pkg"; then
-                packages+=("$pkg")
-            fi
-        done
-
-        if [[ ${#packages[@]} -eq 0 ]]; then
-            echo -e "${YELLOW}No packages with unreleased changes found.${NC}"
-            exit 0
-        fi
-
-        echo -e "${GREEN}Found ${#packages[@]} package(s) with changes (out of ${#all_packages[@]} total):${NC}"
-    else
-        packages=("${all_packages[@]}")
-        echo -e "${GREEN}Found ${#packages[@]} package(s):${NC}"
-    fi
+    packages=("${all_packages[@]}")
+    print_success "Found ${#packages[@]} package(s):"
     echo ""
 
-    # Collect version information
-    declare -a package_list=()
-    declare -a current_versions=()
-    declare -a next_versions=()
-    declare -a change_counts=()
-    declare -a has_changes_flags=()
+    # Collect version information for all packages
+    package_list=()
+    current_versions=()
+    next_versions=()
+    change_counts=()
+    has_changes_flags=()
 
     for package in "${packages[@]}"; do
         current_version=$(get_current_version "$package")
@@ -352,14 +462,14 @@ main() {
         # - Packages WITHOUT changes: Bump patch version to keep synchronized releases
         if has_changes "$package"; then
             if ! suggested_version=$(get_next_version "$package"); then
-                echo -e "${RED}Error: Failed to determine next version for $package${NC}"
+                print_error "Error: Failed to determine next version for $package"
                 exit 1
             fi
             has_changes_flag="yes"
         else
-            # No changes - use patch bump
+            # No changes - use patch bump to keep packages in sync
             if ! suggested_version=$(get_next_patch_version "$current_version"); then
-                echo -e "${RED}Error: Failed to calculate patch version for $package${NC}"
+                print_error "Error: Failed to calculate patch version for $package"
                 exit 1
             fi
             has_changes_flag="no"
@@ -375,10 +485,10 @@ main() {
         has_changes_flags+=("$has_changes_flag")
     done
 
-    # Display table
-    echo -e "${BLUE}┌──────────────────────┬──────────────┬──────────────┬──────────┐${NC}"
-    echo -e "${BLUE}│ Package              │ Current Ver  │ Suggested    │ Changes  │${NC}"
-    echo -e "${BLUE}├──────────────────────┼──────────────┼──────────────┼──────────┤${NC}"
+    # Display summary table
+    print_info "┌──────────────────────┬──────────────┬──────────────┬──────────┐"
+    print_info "│ Package              │ Current Ver  │ Suggested    │ Changes  │"
+    print_info "├──────────────────────┼──────────────┼──────────────┼──────────┤"
 
     for i in "${!package_list[@]}"; do
         printf "${BLUE}│${NC} %-20s ${BLUE}│${NC} %-12s ${BLUE}│${NC} %-12s ${BLUE}│${NC} %-8s ${BLUE}│${NC}\n" \
@@ -388,130 +498,145 @@ main() {
             "${change_counts[$i]}"
     done
 
-    echo -e "${BLUE}└──────────────────────┴──────────────┴──────────────┴──────────┘${NC}"
+    print_info "└──────────────────────┴──────────────┴──────────────┴──────────┘"
     echo ""
 
     # Show detailed change breakdown
-    echo -e "${BLUE}Change Summary:${NC}"
+    print_info "Change Summary:"
     for i in "${!package_list[@]}"; do
-        local pkg="${package_list[$i]}"
-        local kinds=""
-        local issues=""
+        pkg="${package_list[$i]}"
+        pkg_dir=$(extract_package_name "$pkg")
+        kinds=""
+        issues=""
 
-        # Extract kinds and issues
-        for file in "$CHANGES_DIR"/"$pkg"-*.yaml; do
+        # Extract change kinds and related issues from YAML fragments
+        for file in "$CHANGES_DIR"/"${pkg_dir}"-*.yaml; do
             if [[ -f "$file" ]]; then
-                local kind=$(grep '^kind:' "$file" | sed 's/kind: *//')
-                local issue=$(grep '^\s*Issue:' "$file" | sed 's/.*Issue: *//')
+                kind=$(grep '^kind:' "$file" | sed 's/kind: *//')
+                issue=$(grep '^\s*Issue:' "$file" | sed 's/.*Issue: *//')
 
                 if [[ -n "$kind" ]]; then
-                    if [[ -n "$kinds" ]]; then kinds+=", "; fi
+                    [[ -n "$kinds" ]] && kinds+=", "
                     kinds+="$kind"
                 fi
                 if [[ -n "$issue" ]]; then
-                    if [[ -n "$issues" ]]; then issues+=", "; fi
+                    [[ -n "$issues" ]] && issues+=", "
                     issues+="#$issue"
                 fi
             fi
         done
 
+        # Display package changes
         if [[ -n "$kinds" ]]; then
-            echo -e "  ${GREEN}$pkg${NC}: $kinds"
+            print_success "  $pkg: $kinds"
             if [[ -n "$issues" ]]; then
-                echo -e "    Issues: $issues"
+                echo "    Issues: $issues"
             fi
         else
-            echo -e "  ${GREEN}$pkg${NC}: No changes (will use patch bump)"
+            print_success "  $pkg: No changes (will use patch bump)"
         fi
     done
     echo ""
 
-    echo -e "${YELLOW}Note: Suggested versions are from changie. You'll be prompted by lerna to select actual versions.${NC}"
+    print_warning "Note: Suggested versions are from changie. You'll be prompted by lerna to select actual versions."
     echo ""
 
+    # Exit early if dry-run mode
     if [[ "$DRY_RUN" == true ]]; then
-        echo -e "${YELLOW}Dry-run complete. Run without --dry-run to proceed.${NC}"
+        print_warning "Dry-run complete. Run without --dry-run to proceed."
         exit 0
     fi
 
-    # Confirm before proceeding
-    echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-    echo -e "${YELLOW}Ready to run lerna version${NC}"
-    echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    # Confirm before proceeding with actual release
+    print_separator "━" "$YELLOW"
+    print_warning "Ready to run lerna version"
+    print_separator "━" "$YELLOW"
     echo ""
-    echo -e "${BLUE}Lerna will:${NC}"
-    echo -e "  1. Prompt you to select versions for each package"
-    echo -e "  2. Update all package.json files and interdependencies"
-    echo -e "  3. ${GREEN}Automatically generate changelogs${NC} (via version lifecycle hook)"
-    echo -e "  4. ${GREEN}Merge changelogs into CHANGELOG.md files${NC}"
-    echo -e "  5. Create a git commit with all changes"
-    echo -e "  6. Create git tags for each package"
+    print_info "Lerna will:"
+    echo "  1. Prompt you to select versions for each package"
+    echo "  2. Update all package.json files and interdependencies"
+    print_success "  3. Automatically generate changelogs (via version lifecycle hook)"
+    print_success "  4. Merge changelogs into CHANGELOG.md files"
+    echo "  5. Create a git commit with all changes"
+    echo "  6. Create git tags for each package"
     echo ""
-    echo -e "${BLUE}Use the suggested versions above as guidance.${NC}"
-    echo -e "${BLUE}You can cancel at any time by pressing Ctrl+C.${NC}"
+    print_info "Use the suggested versions above as guidance."
+    print_info "You can cancel at any time by pressing Ctrl+C."
     echo ""
 
+    # Get user confirmation
     read -p "Continue? (y/n) " -r
     echo
     if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-        echo -e "${YELLOW}Cancelled by user.${NC}"
+        print_warning "Cancelled by user."
         exit 0
     fi
 
-    # Build lerna command
-    local lerna_cmd="npx lerna version --no-push"
-    if [[ "$CHANGED_ONLY" == true ]]; then
-        # Add scope for each package with changes
-        for pkg in "${packages[@]}"; do
-            lerna_cmd+=" --scope @ephox/$pkg"
-        done
-    fi
+    # Build lerna command (--no-push to allow review before pushing)
+    lerna_args=("npx" "lerna" "version" "--no-push")
 
     echo ""
-    echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-    echo -e "${GREEN}Running lerna version${NC}"
-    echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    print_separator "━" "$GREEN"
+    print_success "Running lerna version"
+    print_separator "━" "$GREEN"
     echo ""
 
     # Run lerna version (interactive)
     # The version lifecycle hook will automatically generate and merge changelogs
     set +e
-    eval "$lerna_cmd"
+    "${lerna_args[@]}"
     lerna_exit_code=$?
     set -e
 
+    # Handle lerna failure or cancellation
     if [[ $lerna_exit_code -ne 0 ]]; then
         echo ""
-        echo -e "${RED}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-        echo -e "${RED}Error: lerna version failed or was cancelled${NC}"
-        echo -e "${RED}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+        print_separator "━" "$RED"
+        print_error "Error: lerna version failed or was cancelled"
+        print_separator "━" "$RED"
         echo ""
-        echo -e "${YELLOW}Operation cancelled. Check 'git status' to see if any changes were made.${NC}"
-        echo -e "${YELLOW}To undo: git reset --hard HEAD~1 && git tag -d <tags>${NC}"
+        print_warning "Operation cancelled. Check 'git status' to see if any changes were made."
+        print_warning "To undo: git reset --hard HEAD~1 && git tag -d <tags>"
         exit 1
     fi
 
     echo ""
 
-    # Summary
-    echo -e "${GREEN}╔════════════════════════════════════════════════════════════════╗${NC}"
-    echo -e "${GREEN}║  Summary                                                       ║${NC}"
-    echo -e "${GREEN}╚════════════════════════════════════════════════════════════════╝${NC}"
+    # Display success summary
+    print_success "╔════════════════════════════════════════════════════════════════╗"
+    print_success "║  Summary                                                       ║"
+    print_success "╚════════════════════════════════════════════════════════════════╝"
     echo ""
-    echo -e "${GREEN}✓ Release completed successfully${NC}"
-    echo -e "${GREEN}  ${#packages[@]} package(s) released${NC}"
+    print_success "✓ Release completed successfully"
+    print_success "  ${#packages[@]} package(s) released"
     echo ""
-    echo -e "${BLUE}What was done:${NC}"
-    echo -e "  ✓ Lerna updated package.json versions and interdependencies"
-    echo -e "  ✓ Changelogs generated from change fragments"
-    echo -e "  ✓ Changelogs merged into CHANGELOG.md files"
-    echo -e "  ✓ Git commit created with all changes"
-    echo -e "  ✓ Git tags created for each package"
+    print_info "What was done:"
+    echo "  ✓ Lerna updated package.json versions and interdependencies"
+    echo "  ✓ Changelogs generated from change fragments"
+    echo "  ✓ Changelogs merged into CHANGELOG.md files"
+    echo "  ✓ Git commit created with all changes"
+    echo "  ✓ Git tags created for each package"
     echo ""
-    echo -e "${BLUE}Next steps:${NC}"
-    echo -e "  1. Review the changes: ${YELLOW}git show HEAD${NC}"
-    echo -e "  2. Build and test to verify everything works"
-    echo -e "  3. Push changes: ${YELLOW}git push --follow-tags${NC}"
+    print_info "Next steps:"
+    print_warning "  1. Review the changes: git show HEAD"
+    echo "  2. Build and test to verify everything works"
+    print_warning "  3. Push changes: git push --follow-tags"
+    echo ""
+    print_info "If you need to undo (before pushing):"
+    echo "  # Remove the commit but keep changes in working directory:"
+    print_warning "  git reset --soft HEAD~1"
+    echo ""
+    echo "  # Remove the commit AND discard all changes:"
+    print_warning "  git reset --hard HEAD~1"
+    echo ""
+    echo "  # Reset all local tags to match remote (removes local-only tags):"
+    print_warning "  git tag -l | xargs git tag -d && git fetch --tags"
+    echo ""
+    echo "  # Or delete specific package tags:"
+    print_warning "  git tag -l | grep -E '@(ephox|tinymce)/' | xargs git tag -d"
+    echo ""
+    echo "  # Or delete individual tags:"
+    print_warning "  git tag -d @ephox/katamari@1.2.3 @ephox/agar@2.3.4"
     echo ""
 }
 
