@@ -1,13 +1,16 @@
 import { Optional, Type } from '@ephox/katamari';
 import { Attribute, type SugarElement } from '@ephox/sugar';
-import React, {
+import {
   createContext,
   forwardRef, type HTMLAttributes,
   type PropsWithChildren,
   useContext,
   useEffect,
   useMemo,
-  useRef
+  useRef,
+  Children,
+  isValidElement,
+  type ReactElement
 } from 'react';
 
 import * as KeyboardNavigationHooks from '../../keynav/KeyboardNavigationHooks';
@@ -62,10 +65,10 @@ const Root = forwardRef<HTMLDivElement, SegmentedControlRootProps>(
     }, [ ref ]);
 
     const firstOptionValue = useMemo(() => {
-      const childArray = React.Children.toArray(children);
+      const childArray = Children.toArray(children);
       const firstNonDisabledOption = childArray.find(
-        (child): child is React.ReactElement<SegmentedControlOptionProps> =>
-          React.isValidElement(child) &&
+        (child): child is ReactElement<SegmentedControlOptionProps> =>
+          isValidElement(child) &&
           typeof child.type !== 'string' &&
           !disabled &&
           !child.props.disabled
