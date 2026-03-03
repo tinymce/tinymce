@@ -1,4 +1,4 @@
-import { Arr } from '@ephox/katamari';
+import { Arr, HashSet } from '@ephox/katamari';
 
 import { type CharacterMap, classify } from './StringMapper';
 import * as UnicodeData from './UnicodeData';
@@ -104,8 +104,10 @@ const getDefaultOptions = (): WordOptions => ({
   includePunctuation: false
 });
 
-const overwrittenCharacterMap = (characterMap: CharacterMap, extractedChars: string[], specialChars: string[]): CharacterMap =>
-  Arr.map(characterMap, (v, i) => Arr.contains(specialChars, extractedChars[i]) ? 0 : v );
+const overwrittenCharacterMap = (characterMap: CharacterMap, extractedChars: string[], specialChars: string[]): CharacterMap => {
+  const specialCharSet = HashSet.make(...specialChars);
+  return Arr.map(characterMap, (v, i) => HashSet.contains(specialCharSet, extractedChars[i]) ? 0 : v);
+};
 
 const getWordsWithIndices = <T>(chars: Word<T>, extract: (char: T) => string, options?: WordOptions): WordsWithIndices<T> => {
   options = {
@@ -114,7 +116,7 @@ const getWordsWithIndices = <T>(chars: Word<T>, extract: (char: T) => string, op
   };
   const extractedChars: string[] = Arr.map(chars, extract);
   const characterMap: CharacterMap = classify(extractedChars);
-  if (options.specialChars) {
+  if (options.specialChars && options.specialChars.length > 0) {
     return findWordsWithIndices(chars, extractedChars, overwrittenCharacterMap(characterMap, extractedChars, options.specialChars), options);
   } else {
     return findWordsWithIndices(chars, extractedChars, characterMap, options);
