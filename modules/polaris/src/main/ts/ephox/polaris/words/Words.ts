@@ -117,8 +117,13 @@ const getWordsWithIndices = <T>(chars: Word<T>, extract: (char: T) => string, op
   };
   const extractedChars: string[] = Arr.map(chars, extract);
   const characterMap: CharacterMap = classify(extractedChars);
-  if (options.specialChars && options.specialChars.length > 0) {
-    return findWordsWithIndices(chars, extractedChars, overwrittenCharacterMap(characterMap, extractedChars, options.specialChars), options);
+  const specialChars = Arr.filter(options.specialChars ?? [], (ch) => ch.length === 1);
+
+  if (specialChars.length > 0) {
+    return findWordsWithIndices(chars, extractedChars, overwrittenCharacterMap(characterMap, extractedChars, specialChars), {
+      ...options,
+      specialChars
+    });
   } else {
     return findWordsWithIndices(chars, extractedChars, characterMap, options);
   }
