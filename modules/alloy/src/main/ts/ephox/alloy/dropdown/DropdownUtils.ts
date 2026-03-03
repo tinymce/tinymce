@@ -234,6 +234,7 @@ const makeSandbox = (
     if (extras !== undefined && extras.onOpen !== undefined) {
       extras.onOpen(component, menu);
     }
+    TieredMenu.repositionMenus(menu);
   };
 
   const onClose = (component: AlloyComponent, menu: AlloyComponent) => {

@@ -2,9 +2,7 @@ import { Optional, Type } from '@ephox/katamari';
 import { Attribute, type SugarElement } from '@ephox/sugar';
 import {
   createContext,
-  forwardRef,
-  type FunctionComponent,
-  type HTMLAttributes,
+  forwardRef, type HTMLAttributes,
   type PropsWithChildren,
   useContext,
   useEffect,
@@ -100,11 +98,14 @@ const Root = forwardRef<HTMLDivElement, SegmentedControlRootProps>(
   }
 );
 
-const Option: FunctionComponent<SegmentedControlOptionProps> = ({
-  value: optionValue,
-  disabled: optionDisabled,
-  children
-}) => {
+const Option = forwardRef<HTMLSpanElement, SegmentedControlOptionProps>((
+  {
+    value: optionValue,
+    disabled: optionDisabled,
+    children
+  },
+  ref
+) => {
   const {
     value: selectedValue,
     onChange,
@@ -129,6 +130,7 @@ const Option: FunctionComponent<SegmentedControlOptionProps> = ({
 
   return (
     <span
+      ref={ref}
       className={Bem.element('tox-segmented-control', 'segment', { active: isActive })}
       role="radio"
       aria-checked={isActive}
@@ -140,7 +142,7 @@ const Option: FunctionComponent<SegmentedControlOptionProps> = ({
       {children}
     </span>
   );
-};
+});
 
 export {
   Root,
