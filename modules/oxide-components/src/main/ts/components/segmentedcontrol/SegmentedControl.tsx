@@ -1,11 +1,12 @@
 import { Optional, Type } from '@ephox/katamari';
 import { Attribute, type SugarElement } from '@ephox/sugar';
-import {
+import React, {
   createContext,
   forwardRef, type HTMLAttributes,
   type PropsWithChildren,
   useContext,
   useEffect,
+  useMemo,
   useRef
 } from 'react';
 
@@ -16,6 +17,7 @@ interface SegmentedControlContextValue {
   readonly value: string;
   readonly onChange: (value: string) => void;
   readonly disabled?: boolean;
+  readonly firstOptionValue: string | null;
 }
 
 interface SegmentedControlRootProps extends PropsWithChildren<Omit<HTMLAttributes<HTMLDivElement>, 'onChange'>> {
@@ -59,6 +61,18 @@ const Root = forwardRef<HTMLDivElement, SegmentedControlRootProps>(
       }
     }, [ ref ]);
 
+    const firstOptionValue = useMemo(() => {
+      const childArray = React.Children.toArray(children);
+      const firstNonDisabledOption = childArray.find(
+        (child): child is React.ReactElement<SegmentedControlOptionProps> =>
+          React.isValidElement(child) &&
+          typeof child.type !== 'string' &&
+          !disabled &&
+          !child.props.disabled
+      );
+      return firstNonDisabledOption?.props.value ?? null;
+    }, [ children, disabled ]);
+
     KeyboardNavigationHooks.useFlowKeyNavigation({
       containerRef,
       selector: '[role="radio"]',
@@ -79,7 +93,8 @@ const Root = forwardRef<HTMLDivElement, SegmentedControlRootProps>(
     const contextValue: SegmentedControlContextValue = {
       value,
       onChange,
-      disabled
+      disabled,
+      firstOptionValue
     };
 
     return (
@@ -109,17 +124,19 @@ const Option = forwardRef<HTMLSpanElement, SegmentedControlOptionProps>((
   const {
     value: selectedValue,
     onChange,
-    disabled: groupDisabled
+    disabled: groupDisabled,
+    firstOptionValue
   } = useSegmentedControlContext();
 
   const isActive = selectedValue === optionValue;
   const isDisabled = groupDisabled || optionDisabled;
+  const isFirstOption = firstOptionValue === optionValue;
 
   const getTabIndex = (): number => {
     if (isDisabled) {
       return -1;
     }
-    return isActive ? 0 : -1;
+    return isFirstOption ? 0 : -1;
   };
 
   const handleClick = () => {
