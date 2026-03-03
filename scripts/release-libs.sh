@@ -183,8 +183,9 @@ get_all_packages() {
 
     # Capture lerna output and errors
     lerna_stderr=$(mktemp)
-    if ! lerna_output=$(npx lerna list --loglevel=error 2>"$lerna_stderr"); then
-        lerna_exit_code=$?
+    lerna_output=$(npx lerna list --loglevel=error 2>"$lerna_stderr")
+    lerna_exit_code=$?
+    if [ "$lerna_exit_code" -ne 0 ]; then
         print_error "Error: Failed to run 'npx lerna list' (exit code: $lerna_exit_code)"
         if [[ -s "$lerna_stderr" ]]; then
             print_error "Lerna error output:"
@@ -327,7 +328,7 @@ count_changes() {
     # Count YAML files matching pattern: {package}-*.yaml
     for file in "$CHANGES_DIR"/"${package}"-*.yaml; do
         if [[ -f "$file" ]]; then
-            ((count++))
+            count=$((count + 1))
         fi
     done
 
@@ -513,7 +514,7 @@ main() {
         for file in "$CHANGES_DIR"/"${pkg_dir}"-*.yaml; do
             if [[ -f "$file" ]]; then
                 kind=$(grep '^kind:' "$file" | sed 's/kind: *//')
-                issue=$(grep '^\s*Issue:' "$file" | sed 's/.*Issue: *//')
+                issue=$( (grep '^[[:space:]]*Issue:' "$file" || true) | sed 's/.*Issue: *//')
 
                 if [[ -n "$kind" ]]; then
                     [[ -n "$kinds" ]] && kinds+=", "
