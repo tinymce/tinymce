@@ -1,4 +1,4 @@
-import { Optional, Type } from '@ephox/katamari';
+import { Arr, Optional, Type } from '@ephox/katamari';
 import { Attribute, type SugarElement } from '@ephox/sugar';
 import {
   createContext,
@@ -66,14 +66,13 @@ const Root = forwardRef<HTMLDivElement, SegmentedControlRootProps>(
 
     const firstOptionValue = useMemo(() => {
       const childArray = Children.toArray(children);
-      const firstNonDisabledOption = childArray.find(
-        (child): child is ReactElement<SegmentedControlOptionProps> =>
-          isValidElement(child) &&
-          typeof child.type !== 'string' &&
-          !disabled &&
-          !child.props.disabled
+
+      const validOptions = Arr.filter(childArray, (child): child is ReactElement<SegmentedControlOptionProps> =>
+        isValidElement(child) && typeof child.type !== 'string'
       );
-      return firstNonDisabledOption?.props.value ?? null;
+
+      const firstNonDisabledOption = Arr.find(validOptions, (option) => !disabled && !option.props.disabled);
+      return firstNonDisabledOption.map((option) => option.props.value).getOrNull();
     }, [ children, disabled ]);
 
     KeyboardNavigationHooks.useFlowKeyNavigation({
