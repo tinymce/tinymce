@@ -104,7 +104,7 @@ const getDefaultOptions = (): WordOptions => ({
   includePunctuation: false
 });
 
-const overwritenCharacterMap = (characterMap: CharacterMap, extractedChars: string[], specialChars: string[]): CharacterMap =>
+const overwrittenCharacterMap = (characterMap: CharacterMap, extractedChars: string[], specialChars: string[]): CharacterMap =>
   Arr.map(characterMap, (v, i) => Arr.contains(specialChars, extractedChars[i]) ? 0 : v );
 
 const getWordsWithIndices = <T>(chars: Word<T>, extract: (char: T) => string, options?: WordOptions): WordsWithIndices<T> => {
@@ -115,7 +115,7 @@ const getWordsWithIndices = <T>(chars: Word<T>, extract: (char: T) => string, op
   const extractedChars: string[] = Arr.map(chars, extract);
   const characterMap: CharacterMap = classify(extractedChars);
   if (options.specialChars) {
-    return findWordsWithIndices(chars, extractedChars, overwritenCharacterMap(characterMap, extractedChars, options.specialChars), options);
+    return findWordsWithIndices(chars, extractedChars, overwrittenCharacterMap(characterMap, extractedChars, options.specialChars), options);
   } else {
     return findWordsWithIndices(chars, extractedChars, characterMap, options);
   }
