@@ -107,7 +107,7 @@ const getDefaultOptions = (): WordOptions => ({
 
 const overwrittenCharacterMap = (characterMap: CharacterMap, extractedChars: string[], specialChars: string[]): CharacterMap => {
   const specialCharSet = HashSet.make(...specialChars);
-  return Arr.map(characterMap, (v, i) => HashSet.contains(specialCharSet, extractedChars[i]) ? 0 : v);
+  return Arr.map(characterMap, (v, i) => HashSet.contains(specialCharSet, extractedChars[i]) ? UnicodeData.characterIndices.ALETTER : v);
 };
 
 const getWordsWithIndices = <T>(chars: Word<T>, extract: (char: T) => string, options?: WordOptions): WordsWithIndices<T> => {
