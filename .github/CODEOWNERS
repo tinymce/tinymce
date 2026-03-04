@@ -1,8 +1,8 @@
 * @tinymce/tinymce-reviewers
 
 # Oxide changes should include the design team as well
-/modules/oxide/ @tinymce/tinymce-reviewers @noxuhax
-/modules/oxide-icons-default/ @tinymce/tinymce-reviewers @noxuhax
+/modules/oxide/ @tinymce/tinymce-reviewers @ztomaszyk
+/modules/oxide-icons-default/ @tinymce/tinymce-reviewers @ztomaszyk
 
 # Katamari changes should include the integrations team as well
 /modules/katamari/ @tinymce/tinymce-reviewers @tinymce/integrations-team
