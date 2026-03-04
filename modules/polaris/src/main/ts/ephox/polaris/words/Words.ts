@@ -1,4 +1,4 @@
-import { Arr, HashSet, Optional } from '@ephox/katamari';
+import { Arr, HashSet } from '@ephox/katamari';
 
 import { type CharacterMap, classify } from './StringMapper';
 import * as UnicodeData from './UnicodeData';
@@ -42,7 +42,7 @@ const findWordsWithIndices = <T>(chars: Word<T>, sChars: string[], characterMap:
   const words: Word<T>[] = [];
   const indices: WordIndex[] = [];
   let word: Word<T> = [];
-  const specialCharSetOpt = options.specialChars ? Optional.some(HashSet.make(...options.specialChars)) : Optional.none();
+  const specialCharSet = HashSet.make(...(options.specialChars ?? []));
 
   // Loop through each character in the classification map and determine whether
   // it precedes a word boundary, building an array of distinct words as we go.
@@ -56,7 +56,7 @@ const findWordsWithIndices = <T>(chars: Word<T>, sChars: string[], characterMap:
     if (isWordBoundary(characterMap, i)) {
       const ch = sChars[i];
       if (
-        specialCharSetOpt.exists((specialCharSet) => HashSet.contains(specialCharSet, ch)) ||
+        HashSet.contains(specialCharSet, ch) ||
         (options.includeWhitespace || !WHITESPACE.test(ch)) &&
         (options.includePunctuation || !PUNCTUATION.test(ch))
       ) {
