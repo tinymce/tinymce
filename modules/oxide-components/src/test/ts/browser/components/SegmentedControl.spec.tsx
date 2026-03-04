@@ -5,7 +5,7 @@ import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 
 describe('browser.components.SegmentedControl', () => {
-  it('TINY-13470: Should render with correct initial value', async () => {
+  it('TINY-13937: Should render with correct initial value and first option in tab order', async () => {
     const { container } = render(
       <SegmentedControl.Root value="diff" onChange={vi.fn()}>
         <SegmentedControl.Option value="diff">Diff mode</SegmentedControl.Option>
@@ -65,7 +65,7 @@ describe('browser.components.SegmentedControl', () => {
     expect(onChangeSpy).not.toHaveBeenCalled();
   });
 
-  it('TINY-13470: Should update aria-checked when value changes', async () => {
+  it('TINY-13937: Should update aria-checked when value changes but keep tabindex on first option', async () => {
     const TestComponent = () => {
       const [ value, setValue ] = React.useState('diff');
 
@@ -85,13 +85,33 @@ describe('browser.components.SegmentedControl', () => {
 
     expect(diffOption.getAttribute('aria-checked')).toBe('true');
     expect(previewOption.getAttribute('aria-checked')).toBe('false');
+    expect(diffOption.getAttribute('tabindex')).toBe('0');
+    expect(previewOption.getAttribute('tabindex')).toBe('-1');
 
     await userEvent.click(previewOption);
 
     await expect.poll(() => previewOption.getAttribute('aria-checked')).toBe('true');
     await expect.poll(() => diffOption.getAttribute('aria-checked')).toBe('false');
-    await expect.poll(() => previewOption.getAttribute('tabindex')).toBe('0');
-    await expect.poll(() => diffOption.getAttribute('tabindex')).toBe('-1');
+    await expect.poll(() => diffOption.getAttribute('tabindex')).toBe('0');
+    await expect.poll(() => previewOption.getAttribute('tabindex')).toBe('-1');
+  });
+
+  it('TINY-13937: Should keep first option in tab order when non-first option is selected', async () => {
+    const { container } = render(
+      <SegmentedControl.Root value="preview" onChange={vi.fn()}>
+        <SegmentedControl.Option value="diff">Diff mode</SegmentedControl.Option>
+        <SegmentedControl.Option value="preview">Preview</SegmentedControl.Option>
+      </SegmentedControl.Root>
+    );
+
+    const options = container.querySelectorAll('[role="radio"]');
+    const diffOption = options[0] as HTMLElement;
+    const previewOption = options[1] as HTMLElement;
+
+    expect(diffOption.getAttribute('aria-checked')).toBe('false');
+    expect(previewOption.getAttribute('aria-checked')).toBe('true');
+    expect(diffOption.getAttribute('tabindex')).toBe('0');
+    expect(previewOption.getAttribute('tabindex')).toBe('-1');
   });
 
   it('TINY-13470: Should work with three or more options', async () => {
@@ -169,6 +189,25 @@ describe('browser.components.SegmentedControl', () => {
     previewOption.click();
 
     expect(onChangeSpy).not.toHaveBeenCalled();
+  });
+
+  it('TINY-13937: Should put first non-disabled option in tab order when first option is disabled', () => {
+    const { container } = render(
+      <SegmentedControl.Root value="preview" onChange={vi.fn()}>
+        <SegmentedControl.Option value="diff" disabled>Diff mode</SegmentedControl.Option>
+        <SegmentedControl.Option value="preview">Preview</SegmentedControl.Option>
+        <SegmentedControl.Option value="edit">Edit</SegmentedControl.Option>
+      </SegmentedControl.Root>
+    );
+
+    const options = container.querySelectorAll('[role="radio"]');
+    const diffOption = options[0] as HTMLElement;
+    const previewOption = options[1] as HTMLElement;
+    const editOption = options[2] as HTMLElement;
+
+    expect(diffOption.getAttribute('tabindex')).toBe('-1');
+    expect(previewOption.getAttribute('tabindex')).toBe('0');
+    expect(editOption.getAttribute('tabindex')).toBe('-1');
   });
 
   it('TINY-13470: Should apply custom className and aria-label', () => {
