@@ -1,0 +1,102 @@
+//
+// Alert
+//
+
+@alert-border-width: 1px;
+@alert-border-radius: @panel-border-radius;
+@alert-padding-y: @pad-xs;
+@alert-padding-x: @pad-sm;
+@alert-font-size: @font-size-sm;
+@alert-font-weight: @font-weight-normal;
+@alert-line-height: 18px;
+@alert-text-color: @text-color;
+@alert-error-color: @color-error;
+@alert-warning-color: @color-warning;
+@alert-overlay-color: rgba(from @color-white r g b / 0.8);
+@alert-content-padding-y: @pad-sm;
+@alert-content-gap: @pad-sm;
+@alert-actions-gap: @pad-xs;
+@alert-gap: 4px;
+
+.tox when (@custom-properties-enabled = true) {
+  .tox-alert {
+    --tox-private-alert-border-radius: var(--tox-private-panel-border-radius);
+    --tox-private-alert-font-size: var(--tox-private-font-size-sm);
+    --tox-private-alert-font-weight: var(--tox-private-font-weight-normal);
+    --tox-private-alert-text-color: var(--tox-private-text-color);
+    --tox-private-alert-error-color: var(--tox-private-color-error);
+    --tox-private-alert-warning-color: var(--tox-private-color-warning);
+    --tox-private-alert-overlay-color: rgba(from var(--tox-private-color-white) r g b / 0.8);
+    --tox-private-alert-content-padding-y: var(--tox-private-pad-sm);
+    --tox-private-alert-content-gap: var(--tox-private-pad-sm);
+    --tox-private-alert-actions-gap: var(--tox-private-pad-xs);
+    --tox-private-alert-gap: 4px;
+  }
+}
+
+.tox {
+  .tox-alert {
+    align-items: flex-start;
+    align-self: stretch;
+    border-radius: var(--tox-private-alert-border-radius, @alert-border-radius);
+    border-style: solid;
+    border-width: @alert-border-width;
+    box-sizing: border-box;
+    color: var(--tox-private-alert-text-color, @alert-text-color);
+    display: flex;
+    font-size: var(--tox-private-alert-font-size, @alert-font-size);
+    font-weight: var(--tox-private-alert-font-weight, @alert-font-weight);
+    gap: var(--tox-private-alert-gap, @alert-gap);
+    line-height: @alert-line-height;
+    padding: @alert-padding-y @alert-padding-x;
+    width: 100%;
+  }
+
+  .tox-alert--error {
+    background: linear-gradient(
+      0deg,
+      var(--tox-private-alert-overlay-color, @alert-overlay-color) 0%,
+      var(--tox-private-alert-overlay-color, @alert-overlay-color) 100%
+    ),
+    var(--tox-private-alert-error-color, @alert-error-color);
+    border-color: var(--tox-private-alert-error-color, @alert-error-color);
+  }
+
+  .tox-alert--warning {
+    background: linear-gradient(
+      0deg,
+      var(--tox-private-alert-overlay-color, @alert-overlay-color) 0%,
+      var(--tox-private-alert-overlay-color, @alert-overlay-color) 100%
+    ),
+    var(--tox-private-alert-warning-color, @alert-warning-color);
+    border-color: var(--tox-private-alert-warning-color, @alert-warning-color);
+  }
+
+  .tox-alert__body {
+    display: flex;
+    flex: 1 0 0;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .tox-alert__content {
+    align-items: center;
+    display: flex;
+    flex: 1 0 0;
+    gap: var(--tox-private-alert-content-gap, @alert-content-gap);
+    padding: var(--tox-private-alert-content-padding-y, @alert-content-padding-y) 0;
+  }
+
+  .tox-alert__message {
+    margin: 0;
+    text-align: left;
+  }
+
+  .tox-alert__actions {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--tox-private-alert-actions-gap, @alert-actions-gap);
+    justify-content: flex-start;
+  }
+}
