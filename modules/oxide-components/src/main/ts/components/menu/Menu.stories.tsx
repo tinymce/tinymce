@@ -194,4 +194,3 @@ export const MenuInADropdown: Story = {
     </>);
   }
 };
-

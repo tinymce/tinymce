@@ -23,7 +23,7 @@ const isMenuItemOutsideContainer = (relatedTarget: Element | null, container: El
   });
 };
 
-export const SubmenuItem = forwardRef<HTMLButtonElement, SubmenuProps>(({ enabled = true, icon, onSetup, children, submenusSide = 'right', submenuContent }, ref) => {
+export const SubmenuItem = forwardRef<HTMLDivElement, SubmenuProps>(({ enabled = true, icon, onSetup, children, submenusSide = 'right', submenuContent }, ref) => {
   const [ state, setState ] = useState({
     enabled,
     focused: false,
@@ -56,6 +56,14 @@ export const SubmenuItem = forwardRef<HTMLButtonElement, SubmenuProps>(({ enable
     return Fun.noop;
   }, [ onSetup, api ]);
 
+  const submenuContentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!state.enabled) {
+      submenuContentRef.current?.hidePopover();
+    }
+  }, [ state.enabled ]);
+
   const itemIcon = Type.isString(icon)
     ? <Icon icon={icon} />
     : icon;
@@ -71,10 +79,10 @@ export const SubmenuItem = forwardRef<HTMLButtonElement, SubmenuProps>(({ enable
     <Dropdown.Root
       side={submenusSide}
       align={'start'}
-      triggerEvents={[ 'click', 'hover' ]}
+      triggerEvents={state.enabled ? [ 'click', 'hover' ] : []}
     >
       <Dropdown.Trigger>
-        <button
+        <div
           id={id}
           ref={ref}
           style={{ boxSizing: 'border-box', width: '100%' }}
@@ -82,7 +90,6 @@ export const SubmenuItem = forwardRef<HTMLButtonElement, SubmenuProps>(({ enable
           role='menuitem'
           aria-haspopup={'true'}
           aria-disabled={!state.enabled}
-          disabled={!state.enabled}
           onFocus={() => setState((prev) => ({ ...prev, focused: true, focusMovedToOtherMenuItem: false }))}
           onPointerMove={(e) => {
             if (state.enabled) {
@@ -107,9 +114,9 @@ export const SubmenuItem = forwardRef<HTMLButtonElement, SubmenuProps>(({ enable
           <div className={Bem.element('tox-collection', 'item-caret')}>
             <Icon icon={'chevron-right'} />
           </div>
-        </button>
+        </div>
       </Dropdown.Trigger>
-      <Dropdown.Content onOpenChange={handleOpenChange}>
+      <Dropdown.Content ref={submenuContentRef} onOpenChange={handleOpenChange}>
         <div
           onBlur={(e) => {
             const relatedTarget = e.relatedTarget;

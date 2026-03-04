@@ -5,7 +5,7 @@ import * as Bem from '../../../utils/Bem';
 import { Icon } from '../../icon/Icon';
 import type { ToggleMenuItemInstanceApi, ToggleMenuItemProps } from '../internals/Types';
 
-export const ToggleItem = forwardRef<HTMLButtonElement, ToggleMenuItemProps>(({ enabled = true, onSetup, icon, active = false, shortcut, onAction, children }, ref) => {
+export const ToggleItem = forwardRef<HTMLDivElement, ToggleMenuItemProps>(({ enabled = true, onSetup, icon, active = false, shortcut, onAction, children }, ref) => {
   const [ state, setState ] = useState({
     enabled,
     active,
@@ -46,14 +46,13 @@ export const ToggleItem = forwardRef<HTMLButtonElement, ToggleMenuItemProps>(({ 
     : icon;
 
   return (
-    <button
+    <div
       id={id}
       tabIndex={-1}
       role='menuitemcheckbox'
       aria-haspopup={false}
       aria-disabled={!state.enabled}
-      disabled={!state.enabled}
-      aria-selected={state.active}
+      aria-checked={state.active}
       onFocus={() => setState({ ...state, focused: true })}
       onPointerMove={(e) => {
         if (state.enabled) {
@@ -61,7 +60,11 @@ export const ToggleItem = forwardRef<HTMLButtonElement, ToggleMenuItemProps>(({ 
         }
       }}
       onBlur={() => setState({ ...state, focused: false })}
-      onClick={() => onAction(api)}
+      onClick={() => {
+        if (state.enabled) {
+          onAction(api);
+        }
+      }}
       className={Bem.element('tox-collection', 'item', {
         'enabled': state.active,
         'active': state.focused,
@@ -76,6 +79,6 @@ export const ToggleItem = forwardRef<HTMLButtonElement, ToggleMenuItemProps>(({ 
       <div className={Bem.element('tox-collection', 'item-checkmark')} >
         <Icon icon={'checkmark'} />
       </div>
-    </button>
+    </div>
   );
 });
