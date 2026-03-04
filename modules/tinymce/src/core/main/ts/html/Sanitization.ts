@@ -55,11 +55,21 @@ const processNode = (node: Node, settings: DomParserSettings, schema: Schema, sc
   // Construct the sugar element wrapper
   const element = SugarElement.fromDom(node) as SugarElement<Element>;
 
-  // Iframes are a special case as DOMPurify doesn't allow them through at all, even if they are in the schema,
-  // so we need to temporarily store their content and then restore it after sanitization
-  if (SugarNode.isTag('iframe')(element)) {
-    Attribute.set(element, 'data-mce-tmp', Html.get(element));
-    Html.set(element, '');
+  if (settings.sanitize) {
+    // TINY-9655: Preserve the content of script, meta and style tags if they are valid elements in the schema
+    const shouldKeepContent =
+      (lcTagName === 'script' && schema.isValid('script')) ||
+      (lcTagName === 'meta' && schema.isValid('meta')) ||
+      (lcTagName === 'style' && schema.isValid('style'));
+
+    if (SugarNode.isHTMLElement(element) && shouldKeepContent) {
+      Attribute.set(element, 'data-mce-tmp', Html.get(element));
+    }
+
+    // TINY-9655: Clear innerHTML of script, meta, style, and iframe to prevent DOMPurify from removing them entirely
+    if (shouldKeepContent || (lcTagName === 'iframe' && schema.isValid('iframe'))) {
+      Html.set(element, '');
+    }
   }
 
   // Determine if we're dealing with an internal attribute
@@ -175,16 +185,17 @@ const filterAttributes = (ele: Element, settings: DomParserSettings, schema: Sch
   }
 };
 
-const restoreIframeContent = (node: Node) => {
+const restoreValidContent = (node: Node) => {
   // Construct the sugar element wrapper
   const element = SugarElement.fromDom(node) as SugarElement<Element>;
 
-  // Restore the content of any iframes that we sanitized earlier
-  if (SugarNode.isTag('iframe')(element) && Attribute.has(element, 'data-mce-tmp')) {
+  if ((SugarNode.isTag('script')(element))
+    || (SugarNode.isTag('meta')(element))
+    || (SugarNode.isTag('style')(element))) {
     Optional.from(Attribute.get(element, 'data-mce-tmp')).each((content) => {
       Html.set(element, content);
+      Attribute.remove(element, 'data-mce-tmp');
     });
-    Attribute.remove(element, 'data-mce-tmp');
   }
 };
 
@@ -197,7 +208,7 @@ const setupPurify = (settings: DomParserSettings, schema: Schema, namespaceTrack
   });
 
   purify.addHook('afterSanitizeElements', (ele, evt) => {
-    restoreIframeContent(ele);
+    restoreValidContent(ele);
   });
 
   // Let's do the same thing for attributes
