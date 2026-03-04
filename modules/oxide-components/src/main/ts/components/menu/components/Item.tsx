@@ -53,7 +53,11 @@ export const Item = forwardRef<HTMLDivElement, MenuItemProps>(({ enabled = true,
         }
       }}
       onBlur={() => setState({ ...state, focused: false })}
-      onClick={() => onAction(api)}
+      onClick={() => {
+        if (state.enabled) {
+          onAction(api);
+        }
+      }}
       className={Bem.element('tox-collection', 'item', {
         'active': state.focused,
         'state-disabled': !state.enabled,
