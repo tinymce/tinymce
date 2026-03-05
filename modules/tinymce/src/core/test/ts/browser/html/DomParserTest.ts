@@ -791,32 +791,22 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
         );
       });
 
-      it.only('TINY-9655: keep valid script, style, and meta elements but remove xss', () => {
+      it('TINY-9655: remove invalid script elements', () => {
+        const serializer = HtmlSerializer();
+        const parser = DomParser(scenario.settings, Schema());
+
+        assert.equal(serializer.serialize(parser.parse('<script src="example.js" onload="alert(document.domain)">var variable;</script>')), '');
+      });
+
+      it('TINY-9655: keep valid script elements but remove xss ', () => {
         const serializer = HtmlSerializer();
         const parser = DomParser(scenario.settings, Schema({
-          valid_children: '+body[script,style,meta]',
-          extended_valid_elements: 'script[src],style[src,type],meta[name,content]'
+          extended_valid_elements: 'script[src]'
         }));
 
         assert.equal(
-          serializer.serialize(parser.parse('<script src="example.js" onload"alert(document.domain)">var variable;</script>')),
-          scenario.isSanitizeEnabled
-            ? '<script src="example.js">var variable;</script>'
-            : '<script src="example.js" onload"alert(document.domain)">var variable;</script>'
-        );
-
-        assert.equal(
-          serializer.serialize(parser.parse('<style type="text/css" onload="alert(document.domain)">p { border: 1px solid black }</style>')),
-          scenario.isSanitizeEnabled
-            ? '<style type="text/css">p { border: 1px solid black }</style>'
-            : '<style type="text/css" onload="alert(document.domain)">p { border: 1px solid black }</style>'
-        );
-
-        assert.equal(
-          serializer.serialize(parser.parse('<meta name="x" content="y" onload="alert(document.domain)"><img src="a"/></meta>')),
-          scenario.isSanitizeEnabled
-            ? '<meta name="x" content="y"></meta>'
-            : '<meta name="x" content="y"><img src="a"/></meta>'
+          serializer.serialize(parser.parse('<script src="example.js" onload="alert(document.domain)">var variable;</script>')),
+          '<script src="example.js">var variable;</script>'
         );
       });
 

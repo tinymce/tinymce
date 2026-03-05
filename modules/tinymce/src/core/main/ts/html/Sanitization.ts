@@ -56,18 +56,16 @@ const processNode = (node: Node, settings: DomParserSettings, schema: Schema, sc
   const element = SugarElement.fromDom(node) as SugarElement<Element>;
 
   if (settings.sanitize) {
-    // TINY-9655: Preserve the content of script, meta and style tags if they are valid elements in the schema
-    const shouldKeepContent =
-      (lcTagName === 'script' && schema.isValid('script')) ||
-      (lcTagName === 'meta' && schema.isValid('meta')) ||
-      (lcTagName === 'style' && schema.isValid('style'));
-
-    if (SugarNode.isHTMLElement(element) && shouldKeepContent) {
+    // TINY-9655: Preserve the content of script tags if they are valid elements in the schema
+    const isHTMLElement = SugarNode.isHTMLElement(element);
+    const shouldKeepContent = lcTagName === 'script' && schema.isValid('script');
+    if (isHTMLElement && shouldKeepContent) {
       Attribute.set(element, 'data-mce-tmp', Html.get(element));
     }
 
-    // TINY-9655: Clear innerHTML of script, meta, style, and iframe to prevent DOMPurify from removing them entirely
-    if (shouldKeepContent || (lcTagName === 'iframe' && schema.isValid('iframe'))) {
+    // TINY-9655: Clear innerHTML of script and iframe tags to prevent DOMPurify from removing them entirely
+    const shouldClearContent = lcTagName === 'iframe' && schema.isValid('iframe');
+    if (isHTMLElement && (shouldKeepContent || shouldClearContent)) {
       Html.set(element, '');
     }
   }
@@ -189,9 +187,7 @@ const restoreValidContent = (node: Node) => {
   // Construct the sugar element wrapper
   const element = SugarElement.fromDom(node) as SugarElement<Element>;
 
-  if ((SugarNode.isTag('script')(element))
-    || (SugarNode.isTag('meta')(element))
-    || (SugarNode.isTag('style')(element))) {
+  if (SugarNode.isTag('script')(element)) {
     Optional.from(Attribute.get(element, 'data-mce-tmp')).each((content) => {
       Html.set(element, content);
       Attribute.remove(element, 'data-mce-tmp');
