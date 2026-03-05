@@ -42,6 +42,14 @@
       }
     }
 
+    & > * {
+      /* 
+        If there is not enough space, then do not scale down anything, except for label, which has flex-shrink set to 1.
+        In general we expect two small items in tag (icon and close button) and one large (usually label).
+      */
+      flex-shrink: 0;
+    }
+
     .tox-icon {
       height: var(--tox-private-base-value, @base-value);
     }
@@ -50,6 +58,8 @@
       text-overflow: ellipsis;
       overflow: hidden;
       white-space: nowrap;
+      /* If there is not enough space, then shrink the label. */
+      flex-shrink: 1;
     }
 
     .tox-tag__close {

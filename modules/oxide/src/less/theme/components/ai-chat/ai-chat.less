@@ -79,6 +79,11 @@
     flex-direction: column;
     gap: inherit;
     align-items: end;
+    width: 100%;
+
+    .tox-tag {
+      max-width: 100%;
+    }
   }
 
   .tox-ai__user-prompt__text {
@@ -289,6 +294,11 @@
       ) +
       var(--tox-private-pad-sm, @pad-sm)
     ); // Two rows of tags + the gap between them. Height of the tag is calculated from padding top and bottom + line height
+
+    .tox-tag {
+      // TODO: define as variable
+      max-width: 150px;
+    }
   }
 
   .tox-ai__context-more {
@@ -297,6 +307,11 @@
     gap: var(--tox-private-pad-sm, @pad-sm);
     padding: var(--tox-private-pad-sm, @pad-sm);
     overflow: auto;
+    max-width: 370px;
+
+    .tox-tag {
+      max-width: 100%;
+    }
   }
 
   .tox-ai__stop-generating {
