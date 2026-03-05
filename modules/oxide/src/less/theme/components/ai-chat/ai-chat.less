@@ -1,11 +1,13 @@
 @tinymceai-border-width: 1px;
 @tinymceai-focus-border-width: 2px;
+@tinymceai-context-more-max-width: 370px;
 
 .tox-ai when (@custom-properties-enabled = true) {
   --tox-private-background-secondary: hsl( from var(--tox-private-background-color) h s calc(l - 6));
   --tox-private-neutral-20: hsl( from var(--tox-private-background-color) h s calc(l - 11));
   --tox-private-tinymceai-border-width: 1px;
   --tox-private-tinymceai-focus-border-width: 2px;
+  --tox-private-tinymceai-context-more-max-width: 370px;
 }
 
 .tox .tox-ai {
@@ -296,8 +298,8 @@
     ); // Two rows of tags + the gap between them. Height of the tag is calculated from padding top and bottom + line height
 
     .tox-tag {
-      // TODO: define as variable
-      max-width: 150px;
+      /* Maximum width of tag is half the size of sidebar */
+      max-width: calc((100% - var(--tox-private-pad-sm, @pad-sm)) / 2);
     }
   }
 
@@ -307,7 +309,7 @@
     gap: var(--tox-private-pad-sm, @pad-sm);
     padding: var(--tox-private-pad-sm, @pad-sm);
     overflow: auto;
-    max-width: 370px;
+    max-width: var(--tox-private-tinymceai-context-more-max-width, @tinymceai-context-more-max-width);
 
     .tox-tag {
       max-width: 100%;
