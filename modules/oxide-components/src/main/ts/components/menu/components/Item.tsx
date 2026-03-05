@@ -5,7 +5,7 @@ import * as Bem from '../../../utils/Bem';
 import { Icon } from '../../icon/Icon';
 import type { CommonMenuItemInstanceApi, MenuItemProps } from '../internals/Types';
 
-export const Item = forwardRef<HTMLButtonElement, MenuItemProps>(({ enabled = true, onSetup, icon, shortcut, onAction, children }, ref) => {
+export const Item = forwardRef<HTMLDivElement, MenuItemProps>(({ enabled = true, onSetup, icon, shortcut, onAction, children }, ref) => {
   const [ state, setState ] = useState({
     enabled,
     focused: false,
@@ -40,13 +40,12 @@ export const Item = forwardRef<HTMLButtonElement, MenuItemProps>(({ enabled = tr
     : icon;
 
   return (
-    <button
+    <div
       id={id}
       tabIndex={-1}
       role='menuitem'
       aria-haspopup={false}
       aria-disabled={!state.enabled}
-      disabled={!state.enabled}
       onFocus={() => setState({ ...state, focused: true })}
       onPointerMove={(e) => {
         if (state.enabled) {
@@ -54,7 +53,11 @@ export const Item = forwardRef<HTMLButtonElement, MenuItemProps>(({ enabled = tr
         }
       }}
       onBlur={() => setState({ ...state, focused: false })}
-      onClick={() => onAction(api)}
+      onClick={() => {
+        if (state.enabled) {
+          onAction(api);
+        }
+      }}
       className={Bem.element('tox-collection', 'item', {
         'active': state.focused,
         'state-disabled': !state.enabled,
@@ -65,6 +68,6 @@ export const Item = forwardRef<HTMLButtonElement, MenuItemProps>(({ enabled = tr
       {itemIcon && <div className={Bem.element('tox-collection', 'item-icon')}>{itemIcon}</div>}
       <div className={Bem.element('tox-collection', 'item-label')}>{children}</div>
       {shortcut && <div className={Bem.element('tox-collection', 'item-accessory')}>{shortcut}</div>}
-    </button>
+    </div>
   );
 });

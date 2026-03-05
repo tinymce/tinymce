@@ -1,4 +1,5 @@
 /* eslint-disable max-len */
+import type { CommonMenuItemInstanceApi } from 'oxide-components/components/menu/internals/Types';
 import * as Menu from 'oxide-components/components/menu/Menu';
 import { UniverseProvider } from 'oxide-components/contexts/UniverseContext/UniverseProvider';
 import * as Bem from 'oxide-components/utils/Bem';
@@ -119,7 +120,7 @@ describe('browser.SubmenuItemTest', () => {
     expect(getByText('Deeply Nested Item').element()).toBeVisible();
   });
 
-  it('Should not open submenu when disabled', async () => {
+  it('Should not open submenu on hover when disabled', async () => {
     const TestComponent = () => {
       return (
         <UniverseProvider resources={mockUniverse}>
@@ -147,5 +148,155 @@ describe('browser.SubmenuItemTest', () => {
     await new Promise((resolve) => setTimeout(resolve, 300));
 
     expect(getByText('Nested Item').query()).toBeNull();
+  });
+
+  it('Should not open submenu on click when disabled', async () => {
+    const TestComponent = () => {
+      return (
+        <UniverseProvider resources={mockUniverse}>
+          <Menu.Root>
+            <Menu.SubmenuItem
+              enabled={false}
+              submenuContent={
+                <Menu.Root>
+                  <Menu.Item onAction={vi.fn()}>Nested Item</Menu.Item>
+                </Menu.Root>
+              }
+            >
+              Submenu
+            </Menu.SubmenuItem>
+          </Menu.Root>
+        </UniverseProvider>
+      );
+    };
+
+    const { getByText } = render(<TestComponent />, { wrapper });
+    await waitForElementText(getByText, 'Submenu');
+
+    await userEvent.click(getByText('Submenu'));
+
+    await new Promise((resolve) => setTimeout(resolve, 300));
+
+    expect(getByText('Nested Item').query()).toBeNull();
+  });
+
+  it('Should render with aria-disabled and disabled class when enabled={false}', async () => {
+    const TestComponent = () => {
+      return (
+        <UniverseProvider resources={mockUniverse}>
+          <Menu.Root>
+            <Menu.SubmenuItem
+              enabled={false}
+              submenuContent={
+                <Menu.Root>
+                  <Menu.Item onAction={vi.fn()}>Nested Item</Menu.Item>
+                </Menu.Root>
+              }
+            >
+              Disabled Submenu
+            </Menu.SubmenuItem>
+          </Menu.Root>
+        </UniverseProvider>
+      );
+    };
+
+    const { getByText, container } = render(<TestComponent />, { wrapper });
+    await waitForElementText(getByText, 'Disabled Submenu');
+
+    const item = container.querySelector('[role="menuitem"]') as HTMLElement;
+
+    expect(item.getAttribute('aria-disabled')).toBe('true');
+    expect(item.className).toContain('tox-collection__item--state-disabled');
+  });
+
+  it('Should update enabled state via API', async () => {
+    let apiRef: CommonMenuItemInstanceApi | undefined;
+    const onSetupSpy = vi.fn((api: CommonMenuItemInstanceApi) => {
+      apiRef = api;
+      return vi.fn();
+    });
+
+    const TestComponent = () => {
+      return (
+        <UniverseProvider resources={mockUniverse}>
+          <Menu.Root>
+            <Menu.SubmenuItem
+              onSetup={onSetupSpy}
+              submenuContent={
+                <Menu.Root>
+                  <Menu.Item onAction={vi.fn()}>Nested Item</Menu.Item>
+                </Menu.Root>
+              }
+            >
+              Submenu
+            </Menu.SubmenuItem>
+          </Menu.Root>
+        </UniverseProvider>
+      );
+    };
+
+    const { getByText, container } = render(<TestComponent />, { wrapper });
+    await waitForElementText(getByText, 'Submenu');
+
+    const item = container.querySelector('[role="menuitem"]') as HTMLElement;
+
+    expect(item.getAttribute('aria-disabled')).toBe('false');
+    expect(apiRef).toBeDefined();
+
+    if (apiRef) {
+      expect(apiRef.isEnabled()).toBe(true);
+
+      apiRef.setEnabled(false);
+      await expect.poll(() => item.getAttribute('aria-disabled')).toBe('true');
+      expect(apiRef.isEnabled()).toBe(false);
+      expect(item.className).toContain('tox-collection__item--state-disabled');
+
+      apiRef.setEnabled(true);
+      await expect.poll(() => item.getAttribute('aria-disabled')).toBe('false');
+      expect(apiRef.isEnabled()).toBe(true);
+    }
+  });
+
+  it('Should not open submenu on hover after being disabled via API', async () => {
+    let apiRef: CommonMenuItemInstanceApi | undefined;
+    const onSetupSpy = vi.fn((api: CommonMenuItemInstanceApi) => {
+      apiRef = api;
+      return vi.fn();
+    });
+
+    const TestComponent = () => {
+      return (
+        <UniverseProvider resources={mockUniverse}>
+          <Menu.Root>
+            <Menu.SubmenuItem
+              onSetup={onSetupSpy}
+              submenuContent={
+                <Menu.Root>
+                  <Menu.Item onAction={vi.fn()}>Nested Item</Menu.Item>
+                </Menu.Root>
+              }
+            >
+              Submenu
+            </Menu.SubmenuItem>
+          </Menu.Root>
+        </UniverseProvider>
+      );
+    };
+
+    const { getByText, container } = render(<TestComponent />, { wrapper });
+    await waitForElementText(getByText, 'Submenu');
+
+    const item = container.querySelector('[role="menuitem"]') as HTMLElement;
+
+    expect(apiRef).toBeDefined();
+    if (apiRef) {
+      apiRef.setEnabled(false);
+      await expect.poll(() => item.getAttribute('aria-disabled')).toBe('true');
+
+      await userEvent.hover(getByText('Submenu'));
+      await new Promise((resolve) => setTimeout(resolve, 300));
+
+      expect(getByText('Nested Item').query()).toBeNull();
+    }
   });
 });
