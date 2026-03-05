@@ -79,7 +79,7 @@ export const SubmenuItem = forwardRef<HTMLDivElement, SubmenuProps>(({ enabled =
     <Dropdown.Root
       side={submenusSide}
       align={'start'}
-      triggerEvents={state.enabled ? [ 'click', 'hover' ] : []}
+      triggerEvents={state.enabled ? [ 'click', 'hover', 'arrows' ] : []}
     >
       <Dropdown.Trigger>
         <div
