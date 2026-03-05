@@ -1427,4 +1427,63 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
       assert.equal(content, insertTable, 'Content should not include resize bars');
     });
   });
+
+  context('table_style_by_css: false', () => {
+    const hook = TinyHooks.bddSetup<Editor>({
+      ...defaultSettings,
+      table_style_by_css: false
+    }, []);
+
+    it('TINY-12797: resize should work for table with width attribute (percentage value)', async () => {
+      const editor = hook.editor();
+      const attrPercentTable = '<table width="100%"><tbody><tr><td style="width: 50%;"></td><td style="width: 50%;"></td></tr></tbody></table>';
+      editor.setContent('');
+      const measurements = await pInsertResizeMeasure(
+        editor,
+        pResizeWithCornerHandle,
+        () => TableTestUtils.insertRaw(editor, attrPercentTable)
+      );
+
+      assertUnitsBeforeResize(measurements.before, { tableWidth: '%', tdWidth: '%' });
+      assertUnitsAfterResize(measurements.after, { tableWidth: '%', tableHeight: 'px', trHeight: 'px', tdWidth: '%' });
+
+      assertRawSizesBeforeResize(measurements.before, { tableWidth: 100, tdWidths: [ 50, 50 ] });
+      assertRawSizesAfterResize(measurements.after, {
+        tableWidth: ((editorBodyInternalWidth - 100) / editorBodyInternalWidth) * 100,
+        tableHeight: defaultCellHeightOverall,
+        trHeights: [ defaultCellHeightOverall ],
+        tdWidths: [ 50, 50 ],
+      });
+
+      assertEventData(lastObjectResizeStartEvent, 'objectresizestart');
+      assertEventData(lastObjectResizedEvent, 'objectresized');
+    });
+
+    it('TINY-12797: resize should work for table with width attribute (pixel value)', async () => {
+      const editor = hook.editor();
+      const attrPixelTable = '<table width="200"><tbody><tr><td></td><td></td></tr></tbody></table>';
+      editor.setContent('');
+      const measurements = await pInsertResizeMeasure(
+        editor,
+        pResizeWithCornerHandle,
+        () => TableTestUtils.insertRaw(editor, attrPixelTable)
+      );
+
+      assertUnitsBeforeResize(measurements.before, { tableWidth: 'px' });
+      assertUnitsAfterResize(measurements.after, { tableWidth: 'px', tableHeight: 'px', trHeight: 'px', tdWidth: 'px' });
+
+      assertRawSizesBeforeResize(measurements.before, {
+        tableWidth: 200,
+      });
+      assertRawSizesAfterResize(measurements.after, {
+        tableWidth: 100,
+        tableHeight: defaultCellHeightOverall,
+        trHeights: [ defaultCellHeightOverall ],
+        tdWidths: [ 50 - defaultCellPadding - defaultCellBorder, 50 - defaultCellPadding - defaultCellBorder ],
+      });
+
+      assertEventData(lastObjectResizeStartEvent, 'objectresizestart');
+      assertEventData(lastObjectResizedEvent, 'objectresized');
+    });
+  });
 });
