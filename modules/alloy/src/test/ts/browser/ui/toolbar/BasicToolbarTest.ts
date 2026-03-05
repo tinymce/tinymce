@@ -105,7 +105,7 @@ UnitTest.asynctest('BasicToolbarTest', (success, failure) => {
               children: [
                 s.element('div', {
                   attrs: {
-                    role: str.is('toolbar')
+                    role: str.is('group')
                   },
                   children: [
                     s.element('button', { html: str.is('a1') }),
