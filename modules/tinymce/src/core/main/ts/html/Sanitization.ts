@@ -203,7 +203,7 @@ const setupPurify = (settings: DomParserSettings, schema: Schema, namespaceTrack
     processNode(ele, settings, schema, namespaceTracker.track(ele), evt);
   });
 
-  purify.addHook('afterSanitizeElements', (ele, evt) => {
+  purify.addHook('afterSanitizeElements', (ele) => {
     restoreValidContent(ele);
   });
 
