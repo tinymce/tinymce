@@ -1459,31 +1459,36 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
       assertEventData(lastObjectResizedEvent, 'objectresized');
     });
 
-    it('TINY-12797: resize should work for table with width attribute (pixel value)', async () => {
-      const editor = hook.editor();
-      const attrPixelTable = '<table width="200"><tbody><tr><td></td><td></td></tr></tbody></table>';
-      editor.setContent('');
-      const measurements = await pInsertResizeMeasure(
-        editor,
-        pResizeWithCornerHandle,
-        () => TableTestUtils.insertRaw(editor, attrPixelTable)
-      );
+    Arr.each([
+      { label: 'width without unit', width: '200' },
+      { label: 'width with unit', width: '200px' }
+    ], ({ label, width }) => {
+      it(`TINY-12797: resize should work for table with width attribute (${label})`, async () => {
+        const editor = hook.editor();
+        const attrPixelTable = `<table width="${width}"><tbody><tr><td></td><td></td></tr></tbody></table>`;
+        editor.setContent('');
+        const measurements = await pInsertResizeMeasure(
+          editor,
+          pResizeWithCornerHandle,
+          () => TableTestUtils.insertRaw(editor, attrPixelTable)
+        );
 
-      assertUnitsBeforeResize(measurements.before, { tableWidth: 'px' });
-      assertUnitsAfterResize(measurements.after, { tableWidth: 'px', tableHeight: 'px', trHeight: 'px', tdWidth: 'px' });
+        assertUnitsBeforeResize(measurements.before, { tableWidth: 'px' });
+        assertUnitsAfterResize(measurements.after, { tableWidth: 'px', tableHeight: 'px', trHeight: 'px', tdWidth: 'px' });
 
-      assertRawSizesBeforeResize(measurements.before, {
-        tableWidth: 200,
+        assertRawSizesBeforeResize(measurements.before, {
+          tableWidth: 200,
+        });
+        assertRawSizesAfterResize(measurements.after, {
+          tableWidth: 100,
+          tableHeight: defaultCellHeightOverall,
+          trHeights: [ defaultCellHeightOverall ],
+          tdWidths: [ 50 - defaultCellPadding - defaultCellBorder, 50 - defaultCellPadding - defaultCellBorder ],
+        });
+
+        assertEventData(lastObjectResizeStartEvent, 'objectresizestart');
+        assertEventData(lastObjectResizedEvent, 'objectresized');
       });
-      assertRawSizesAfterResize(measurements.after, {
-        tableWidth: 100,
-        tableHeight: defaultCellHeightOverall,
-        trHeights: [ defaultCellHeightOverall ],
-        tdWidths: [ 50 - defaultCellPadding - defaultCellBorder, 50 - defaultCellPadding - defaultCellBorder ],
-      });
-
-      assertEventData(lastObjectResizeStartEvent, 'objectresizestart');
-      assertEventData(lastObjectResizedEvent, 'objectresized');
     });
   });
 });
