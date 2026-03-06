@@ -198,7 +198,7 @@ describe('browser.tinymce.plugins.table.HelpersTest', () => {
       '<caption>A caption</caption><tbody><tr><td>a</td></tr></tbody>' +
       '</table>'
     );
-    const table = UiFinder.findIn<HTMLTableElement>(TinyDom.body(editor), 'table.foo').getOrDie();
+    const table = UiFinder.findIn(TinyDom.body(editor), 'table.foo').getOrDie();
     const tableData = Helpers.extractDataFromTableElement(editor, table.dom, true);
     assert.equal(tableData.class, 'foo mce-item-table', 'Extracts class');
     assert.equal(tableData.width, '20px', 'Extracts width');
@@ -214,7 +214,7 @@ describe('browser.tinymce.plugins.table.HelpersTest', () => {
     editor.setContent(
       '<table class="foo" style="margin-left: auto; margin-right: 0px"><tbody><tr><td style="padding: 99px;">a</td></tr></tbody></table>'
     );
-    const table = UiFinder.findIn<HTMLTableElement>(TinyDom.body(editor), 'table.foo').getOrDie();
+    const table = UiFinder.findIn(TinyDom.body(editor), 'table.foo').getOrDie();
     const tableData = Helpers.extractDataFromTableElement(editor, table.dom, true);
     assert.equal(tableData.cellpadding, '99px', 'Extracts cellpadding from td');
     assert.equal(tableData.align, 'right', 'Extracts align');
@@ -225,7 +225,7 @@ describe('browser.tinymce.plugins.table.HelpersTest', () => {
     editor.setContent(
       '<table class="foo" style="margin-left: 0px; margin-right: auto;"><tbody><tr><td style="padding: 99px;">a</td></tr></tbody></table>'
     );
-    const table = UiFinder.findIn<HTMLTableElement>(TinyDom.body(editor), 'table.foo').getOrDie();
+    const table = UiFinder.findIn(TinyDom.body(editor), 'table.foo').getOrDie();
     const tableData = Helpers.extractDataFromTableElement(editor, table.dom, true);
     assert.equal(tableData.align, 'left', 'Extracts align');
   });
@@ -235,7 +235,7 @@ describe('browser.tinymce.plugins.table.HelpersTest', () => {
     editor.setContent(
       '<table class="foo" style="border-width: 5px" border="1"><tbody><tr><td>a</td></tr></tbody></table>'
     );
-    const table = UiFinder.findIn<HTMLTableElement>(TinyDom.body(editor), 'table.foo').getOrDie();
+    const table = UiFinder.findIn(TinyDom.body(editor), 'table.foo').getOrDie();
     const tableData = Helpers.extractDataFromTableElement(editor, table.dom, true);
     assert.equal(tableData.border, '5px', 'Extracts border-width');
   });
@@ -245,7 +245,7 @@ describe('browser.tinymce.plugins.table.HelpersTest', () => {
     editor.setContent(
       '<table class="foo" style="border: 5px solid red" border="1"><tbody><tr><td>a</td></tr></tbody></table>'
     );
-    const table = UiFinder.findIn<HTMLTableElement>(TinyDom.body(editor), 'table.foo').getOrDie();
+    const table = UiFinder.findIn(TinyDom.body(editor), 'table.foo').getOrDie();
     const tableData = Helpers.extractDataFromTableElement(editor, table.dom, true);
     assert.equal(tableData.border, '5px', 'Extracts border-width');
   });
@@ -256,7 +256,7 @@ describe('browser.tinymce.plugins.table.HelpersTest', () => {
     editor.setContent(
       '<table class="foo" border="5"><tbody><tr><td>a</td></tr></tbody></table>'
     );
-    const table = UiFinder.findIn<HTMLTableElement>(TinyDom.body(editor), 'table.foo').getOrDie();
+    const table = UiFinder.findIn(TinyDom.body(editor), 'table.foo').getOrDie();
     const tableData = Helpers.extractDataFromTableElement(editor, table.dom, true);
     assert.equal(tableData.border, '5', 'Extracts border');
     editor.options.unset('table_style_by_css');
@@ -268,7 +268,7 @@ describe('browser.tinymce.plugins.table.HelpersTest', () => {
     editor.setContent(
       '<table class="foo"><tbody><tr><td style="border-width: 5px;">a</td></tr></tbody></table>'
     );
-    const table = UiFinder.findIn<HTMLTableElement>(TinyDom.body(editor), 'table.foo').getOrDie();
+    const table = UiFinder.findIn(TinyDom.body(editor), 'table.foo').getOrDie();
     const tableData = Helpers.extractDataFromTableElement(editor, table.dom, true);
     assert.equal(tableData.border, '5px', 'Extracts border-width');
     editor.options.unset('table_style_by_css');
@@ -279,7 +279,7 @@ describe('browser.tinymce.plugins.table.HelpersTest', () => {
     editor.setContent(
       '<table class="foo" style="border: 5px double red" border="1"><tbody><tr><td>a</td></tr></tbody></table>'
     );
-    const table = UiFinder.findIn<HTMLTableElement>(TinyDom.body(editor), 'table.foo').getOrDie();
+    const table = UiFinder.findIn(TinyDom.body(editor), 'table.foo').getOrDie();
     const tableData = Helpers.extractDataFromTableElement(editor, table.dom, true);
     assert.equal(tableData.border, '5px', 'Extracts border-width');
     assert.equal(tableData.borderstyle, 'double', 'Extracts border-style');
