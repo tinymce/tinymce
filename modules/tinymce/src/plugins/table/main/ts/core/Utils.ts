@@ -5,7 +5,6 @@
  Make sure that if making changes to this file, the other files are updated as well
  */
 
-import { Optional, Strings } from '@ephox/katamari';
 import { Compare, ContentEditable, PredicateFind, SugarElement, SugarNode } from '@ephox/sugar';
 
 import type Editor from 'tinymce/core/api/Editor';
@@ -25,15 +24,6 @@ const removePxSuffix = (size: string): string =>
 const addPxSuffix = (size: string): string =>
   /^\d+(\.\d+)?$/.test(size) ? size + 'px' : size;
 
-const getRawValue = (prop: string) => (editor: Editor, elm: HTMLElement): Optional<string> => {
-  const raw = editor.dom.getStyle(elm, prop) || editor.dom.getAttrib(elm, prop);
-  // If value is read from the attribute, a pixel value can have no unit
-  return Optional.from(raw).filter(Strings.isNotEmpty).map((value) => addPxSuffix(value));
-};
-
-const getRawWidth = getRawValue('width');
-const getRawHeight = getRawValue('height');
-
 const getSelectionStart = (editor: Editor): SugarElement<Element> =>
   SugarElement.fromDom(editor.selection.getStart());
 
@@ -49,8 +39,6 @@ export {
   getIsRoot,
   addPxSuffix,
   removePxSuffix,
-  getRawWidth,
-  getRawHeight,
   getSelectionStart,
   getSelectionEnd,
   isInEditableContext
