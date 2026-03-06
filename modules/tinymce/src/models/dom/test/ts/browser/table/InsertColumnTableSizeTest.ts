@@ -177,7 +177,7 @@ describe('browser.tinymce.models.dom.table.InsertColumnTableSizeTest', () => {
   context('Insert columns, erase column and assert the table width does not change', () => {
     it('table which is empty', () => pInsertColumnAssertWidth(emptyTable));
 
-    it('table with width attribute', () => pInsertColumnAssertWidth(attrTable));
+    it('TINY-12797: table with width attribute', () => pInsertColumnAssertWidth(attrTable));
 
     it('table with contents in some cells', () => pInsertColumnAssertWidth(contentsInSomeCells));
 
