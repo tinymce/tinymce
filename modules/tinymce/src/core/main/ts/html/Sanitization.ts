@@ -1,11 +1,12 @@
 import { Arr, Fun, Obj, Optional, Strings, Type } from '@ephox/katamari';
-import { Attribute, Html, NodeTypes, Remove, Replication, SugarElement, SugarNode } from '@ephox/sugar';
+import { Attribute, Html, NodeTypes, Remove, Replication, SugarElement } from '@ephox/sugar';
 import createDompurify, { type Config, type DOMPurify, type UponSanitizeAttributeHookEvent, type UponSanitizeElementHookEvent } from 'dompurify';
 
 import type { DomParserSettings } from '../api/html/DomParser';
 import type Schema from '../api/html/Schema';
 import Tools from '../api/util/Tools';
 import * as URI from '../api/util/URI';
+import * as ElementType from '../dom/ElementType';
 import * as NodeType from '../dom/NodeType';
 
 import * as KeepHtmlComments from './KeepHtmlComments';
@@ -57,15 +58,14 @@ const processNode = (node: Node, settings: DomParserSettings, schema: Schema, sc
 
   if (settings.sanitize) {
     // TINY-9655: Preserve the content of script tags if they are valid elements in the schema
-    const isHTMLElement = SugarNode.isHTMLElement(element);
-    const shouldKeepContent = lcTagName === 'script' && schema.isValid('script');
-    if (isHTMLElement && shouldKeepContent) {
+    const shouldKeepContent = ElementType.isScript(element) && schema.isValid('script');
+    if (shouldKeepContent) {
       Attribute.set(element, 'data-mce-tmp', Html.get(element));
     }
 
     // TINY-9655: Clear innerHTML of script and iframe tags to prevent DOMPurify from removing them entirely
-    const shouldClearContent = lcTagName === 'iframe' && schema.isValid('iframe');
-    if (isHTMLElement && (shouldKeepContent || shouldClearContent)) {
+    const shouldClearContent = ElementType.isIframe(element) && schema.isValid('iframe');
+    if (shouldKeepContent || shouldClearContent) {
       Html.set(element, '');
     }
   }
@@ -187,7 +187,7 @@ const restoreValidContent = (node: Node) => {
   // Construct the sugar element wrapper
   const element = SugarElement.fromDom(node) as SugarElement<Element>;
 
-  if (SugarNode.isTag('script')(element)) {
+  if (ElementType.isScript(element)) {
     Optional.from(Attribute.get(element, 'data-mce-tmp')).each((content) => {
       Html.set(element, content);
       Attribute.remove(element, 'data-mce-tmp');
