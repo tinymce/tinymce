@@ -679,14 +679,16 @@ describe('browser.tinymce.models.dom.table.ModifyColumnsTableResizeTest', () => 
   context('Table with table_style_by_css: false', () => {
     const hook = TinyHooks.bddSetupLight<Editor>({
       ...baseSettings,
-      table_style_by_css: false
+      table_style_by_css: false,
+      table_column_resizing: 'preservetable'
     }, []);
 
     Arr.each([
-      { label: 'pixel value', width: '125' },
-      { label: 'percentage value', width: '50%' },
+      { label: 'unitless width', width: '125' },
+      { label: 'pixel width', width: '125px' },
+      { label: 'percentage width', width: '50%' },
     ], ({ label, width }) => {
-      it(`TINY-12797: Column actions should work when width is an attribute and ${label}`, () => {
+      it(`TINY-12797: Column actions should work when width is an attribute (${label})`, () => {
         const editor = hook.editor();
         const content = (`
             <table width="${width}">
