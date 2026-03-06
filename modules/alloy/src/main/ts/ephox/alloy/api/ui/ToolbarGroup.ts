@@ -23,7 +23,7 @@ const factory: CompositeSketchFactory<ToolbarGroupDetail, ToolbarGroupSpec> = (d
 
   domModification: {
     attributes: {
-      role: 'toolbar'
+      role: 'group'
     }
   }
 });
