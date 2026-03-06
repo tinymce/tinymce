@@ -166,8 +166,8 @@ const getRowType = (elm: HTMLTableRowElement) =>
     return TableOperations.getRowsType(table, target);
   }).getOr('');
 
-const extractDataFromTableElement = (editor: Editor, elm: Element, hasAdvTableTab: boolean): TableData => {
-  const getBorder = (dom: DOMUtils, elm: Element) => {
+const extractDataFromTableElement = (editor: Editor, elm: HTMLTableElement, hasAdvTableTab: boolean): TableData => {
+  const getBorder = (dom: DOMUtils, elm: HTMLTableElement) => {
     // Cases (in order to check):
     // 1. shouldStyleWithCss - extract border-width style if it exists
     // 2. !shouldStyleWithCss && border attribute - set border attribute as value
@@ -192,8 +192,8 @@ const extractDataFromTableElement = (editor: Editor, elm: Element, hasAdvTableTa
     dom.getAttrib(elm, 'cellpadding') || Styles.getTDTHOverallStyle(dom, elm, 'padding');
 
   return {
-    width: dom.getStyle(elm, 'width') || dom.getAttrib(elm, 'width'),
-    height: dom.getStyle(elm, 'height') || dom.getAttrib(elm, 'height'),
+    width: Utils.getRawWidth(editor, elm).getOr(''),
+    height: Utils.getRawHeight(editor, elm).getOr(''),
     cellspacing: cellspacing ?? '',
     cellpadding: cellpadding ?? '',
     border: getBorder(dom, elm),
@@ -207,7 +207,7 @@ const extractDataFromTableElement = (editor: Editor, elm: Element, hasAdvTableTa
 const extractDataFromRowElement = (editor: Editor, elm: HTMLTableRowElement, hasAdvancedRowTab: boolean): RowData => {
   const dom = editor.dom;
   return {
-    height: dom.getStyle(elm, 'height') || dom.getAttrib(elm, 'height'),
+    height: Utils.getRawHeight(editor, elm).getOr(''),
     class: dom.getAttrib(elm, 'class', ''),
     type: getRowType(elm),
     align: getHAlignment(editor, elm),
@@ -219,10 +219,8 @@ const extractDataFromCellElement = (editor: Editor, cell: HTMLTableCellElement, 
   const dom = editor.dom;
   const colElm = column.getOr(cell);
 
-  const getStyle = (element: HTMLElement, style: string) => dom.getStyle(element, style) || dom.getAttrib(element, style);
-
   return {
-    width: getStyle(colElm, 'width'),
+    width: Utils.getRawWidth(editor, colElm).getOr(''),
     scope: dom.getAttrib(cell, 'scope'),
     celltype: Utils.getNodeName(cell) as 'td' | 'th',
     class: dom.getAttrib(cell, 'class', ''),
