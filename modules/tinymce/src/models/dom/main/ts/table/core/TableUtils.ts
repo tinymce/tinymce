@@ -39,16 +39,20 @@ const getPixelWidth = (elm: HTMLElement): number =>
 const getPixelHeight = (elm: HTMLElement): number =>
   elm.getBoundingClientRect().height;
 
+const addPxSuffix = (size: string): string =>
+  /^\d+(\.\d+)?$/.test(size) ? size + 'px' : size;
+
 const getRawValue = (prop: string) => (editor: Editor, elm: HTMLElement): Optional<string> => {
   const raw = editor.dom.getStyle(elm, prop) || editor.dom.getAttrib(elm, prop);
-  return Optional.from(raw).filter(Strings.isNotEmpty);
+  // If value is read from the attribute, a pixel value can have no unit
+  return Optional.from(raw).filter(Strings.isNotEmpty).map((value) => addPxSuffix(value));
 };
-
-const getRawWidth = getRawValue('width');
-const getRawHeight = getRawValue('height');
 
 const isPercentage = (value: string): boolean => /^(\d+(\.\d+)?)%$/.test(value);
 const isPixel = (value: string): boolean => /^(\d+(\.\d+)?)px$/.test(value);
+
+const getRawWidth = getRawValue('width');
+const getRawHeight = getRawValue('height');
 
 const isInEditableContext = (cell: SugarElement<HTMLTableCellElement | HTMLTableCaptionElement>): boolean =>
   PredicateFind.closest(cell, SugarNode.isTag('table')).exists(ContentEditable.isEditable);
