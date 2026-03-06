@@ -12,7 +12,7 @@ exports[`browser.MenuTest > Should be able to open submenus > 1. Before open sub
       <div
         class="tox-collection__group"
       >
-        <button
+        <div
           aria-disabled="false"
           aria-haspopup="false"
           class="tox-collection__item tox-collection__item--active"
@@ -25,11 +25,11 @@ exports[`browser.MenuTest > Should be able to open submenus > 1. Before open sub
           >
             Menu item 1
           </div>
-        </button>
-        <button
+        </div>
+        <div
+          aria-checked="false"
           aria-disabled="false"
           aria-haspopup="false"
-          aria-selected="false"
           class="tox-collection__item"
           id=":r1:"
           role="menuitemcheckbox"
@@ -96,8 +96,8 @@ exports[`browser.MenuTest > Should be able to open submenus > 1. Before open sub
               </svg>
             </span>
           </div>
-        </button>
-        <button
+        </div>
+        <div
           aria-disabled="false"
           aria-haspopup="true"
           class="tox-collection__item"
@@ -174,7 +174,7 @@ exports[`browser.MenuTest > Should be able to open submenus > 1. Before open sub
               </svg>
             </span>
           </div>
-        </button>
+        </div>
         <div
           class="tox-dropdown-content"
           popover="auto"
@@ -198,7 +198,7 @@ exports[`browser.MenuTest > Should be able to open submenus > 2. After opening s
       <div
         class="tox-collection__group"
       >
-        <button
+        <div
           aria-disabled="false"
           aria-haspopup="false"
           class="tox-collection__item"
@@ -211,11 +211,11 @@ exports[`browser.MenuTest > Should be able to open submenus > 2. After opening s
           >
             Menu item 1
           </div>
-        </button>
-        <button
+        </div>
+        <div
+          aria-checked="false"
           aria-disabled="false"
           aria-haspopup="false"
-          aria-selected="false"
           class="tox-collection__item"
           id=":r1:"
           role="menuitemcheckbox"
@@ -282,8 +282,8 @@ exports[`browser.MenuTest > Should be able to open submenus > 2. After opening s
               </svg>
             </span>
           </div>
-        </button>
-        <button
+        </div>
+        <div
           aria-disabled="false"
           aria-haspopup="true"
           class="tox-collection__item tox-collection__item--active"
@@ -360,7 +360,7 @@ exports[`browser.MenuTest > Should be able to open submenus > 2. After opening s
               </svg>
             </span>
           </div>
-        </button>
+        </div>
         <div
           class="tox-dropdown-content"
           popover="auto"
@@ -374,7 +374,7 @@ exports[`browser.MenuTest > Should be able to open submenus > 2. After opening s
               <div
                 class="tox-collection__group"
               >
-                <button
+                <div
                   aria-disabled="false"
                   aria-haspopup="false"
                   class="tox-collection__item tox-collection__item--active"
@@ -387,13 +387,12 @@ exports[`browser.MenuTest > Should be able to open submenus > 2. After opening s
                   >
                     Nested menu item 1
                   </div>
-                </button>
-                <button
+                </div>
+                <div
+                  aria-checked="false"
                   aria-disabled="true"
                   aria-haspopup="false"
-                  aria-selected="false"
                   class="tox-collection__item tox-collection__item--state-disabled"
-                  disabled=""
                   id=":r4:"
                   role="menuitemcheckbox"
                   tabindex="-1"
@@ -459,7 +458,7 @@ exports[`browser.MenuTest > Should be able to open submenus > 2. After opening s
                       </svg>
                     </span>
                   </div>
-                </button>
+                </div>
               </div>
             </div>
           </div>
@@ -482,7 +481,7 @@ exports[`browser.MenuTest > Should be able to render using MenuRenderer > 1. Bef
       <div
         class="tox-collection__group"
       >
-        <button
+        <div
           aria-disabled="false"
           aria-haspopup="false"
           class="tox-collection__item tox-collection__item--active"
@@ -495,11 +494,11 @@ exports[`browser.MenuTest > Should be able to render using MenuRenderer > 1. Bef
           >
             Menu item 1
           </div>
-        </button>
-        <button
+        </div>
+        <div
+          aria-checked="false"
           aria-disabled="false"
           aria-haspopup="false"
-          aria-selected="false"
           class="tox-collection__item"
           id=":r6:"
           role="menuitemcheckbox"
@@ -566,8 +565,8 @@ exports[`browser.MenuTest > Should be able to render using MenuRenderer > 1. Bef
               </svg>
             </span>
           </div>
-        </button>
-        <button
+        </div>
+        <div
           aria-disabled="false"
           aria-haspopup="true"
           class="tox-collection__item"
@@ -637,7 +636,7 @@ exports[`browser.MenuTest > Should be able to render using MenuRenderer > 1. Bef
               </svg>
             </span>
           </div>
-        </button>
+        </div>
         <div
           class="tox-dropdown-content"
           popover="auto"
@@ -661,7 +660,7 @@ exports[`browser.MenuTest > Should be able to render using MenuRenderer > 2. Aft
       <div
         class="tox-collection__group"
       >
-        <button
+        <div
           aria-disabled="false"
           aria-haspopup="false"
           class="tox-collection__item"
@@ -674,11 +673,11 @@ exports[`browser.MenuTest > Should be able to render using MenuRenderer > 2. Aft
           >
             Menu item 1
           </div>
-        </button>
-        <button
+        </div>
+        <div
+          aria-checked="false"
           aria-disabled="false"
           aria-haspopup="false"
-          aria-selected="false"
           class="tox-collection__item"
           id=":r6:"
           role="menuitemcheckbox"
@@ -745,8 +744,8 @@ exports[`browser.MenuTest > Should be able to render using MenuRenderer > 2. Aft
               </svg>
             </span>
           </div>
-        </button>
-        <button
+        </div>
+        <div
           aria-disabled="false"
           aria-haspopup="true"
           class="tox-collection__item tox-collection__item--active"
@@ -816,7 +815,7 @@ exports[`browser.MenuTest > Should be able to render using MenuRenderer > 2. Aft
               </svg>
             </span>
           </div>
-        </button>
+        </div>
         <div
           class="tox-dropdown-content"
           popover="auto"
@@ -830,7 +829,7 @@ exports[`browser.MenuTest > Should be able to render using MenuRenderer > 2. Aft
               <div
                 class="tox-collection__group"
               >
-                <button
+                <div
                   aria-disabled="false"
                   aria-haspopup="false"
                   class="tox-collection__item"
@@ -843,11 +842,11 @@ exports[`browser.MenuTest > Should be able to render using MenuRenderer > 2. Aft
                   >
                     Nested menu item 1
                   </div>
-                </button>
-                <button
+                </div>
+                <div
+                  aria-checked="false"
                   aria-disabled="false"
                   aria-haspopup="false"
-                  aria-selected="false"
                   class="tox-collection__item"
                   id=":r9:"
                   role="menuitemcheckbox"
@@ -914,7 +913,7 @@ exports[`browser.MenuTest > Should be able to render using MenuRenderer > 2. Aft
                       </svg>
                     </span>
                   </div>
-                </button>
+                </div>
               </div>
             </div>
           </div>

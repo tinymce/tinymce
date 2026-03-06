@@ -1,0 +1,6 @@
+project: alloy
+kind: Fixed
+body: 'Dropdown menus with `matchWidth: true` would be located to the left of their parent if the content was sufficiently long.'
+time: 2026-02-20T15:56:34.92117+01:00
+custom:
+    Issue: TINY-4531

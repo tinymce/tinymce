@@ -1,5 +1,5 @@
 import { Throttler, Type, Obj } from '@ephox/katamari';
-import { Children, cloneElement, forwardRef, isValidElement, useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type FC, type HTMLAttributes, type MouseEvent, type PropsWithChildren, type ReactElement } from 'react';
+import { Children, cloneElement, forwardRef, isValidElement, useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type FC, type HTMLAttributes, type MouseEvent, type PropsWithChildren, type ReactElement, type KeyboardEvent } from 'react';
 
 import { Bem } from '../../main';
 
@@ -103,6 +103,32 @@ const Content = forwardRef<HTMLDivElement, DropdownContentProps>(({ children, on
     };
   }, [ updatePosition, triggerRef, contentRef ]);
 
+  const onHoverTriggerProps = {
+    onMouseLeave: (e: MouseEvent<HTMLDivElement>) => {
+      props.onMouseLeave?.(e);
+      debouncedHideHoverablePopover.throttle(e);
+    },
+    onMouseEnter: (e: MouseEvent<HTMLDivElement>) => {
+      props.onMouseEnter?.(e);
+      debouncedHideHoverablePopover.cancel();
+    }
+  };
+
+  const onArrowTriggerProps = {
+    onKeyUp: (e: KeyboardEvent<HTMLDivElement>) => {
+      props.onKeyUp?.(e);
+      if (e.key === 'ArrowLeft') {
+        e.stopPropagation();
+        contentRef.current?.hidePopover();
+      }
+    }
+  };
+
+  const contentProps = {
+    ...props,
+    ...triggerEvents.includes('hover') && onHoverTriggerProps,
+    ...triggerEvents.includes('arrows') && onArrowTriggerProps
+  };
   return <div
     // @ts-expect-error - TODO: Remove this expect error once we've upgraded to React 19+
     popover='auto'
@@ -116,17 +142,15 @@ const Content = forwardRef<HTMLDivElement, DropdownContentProps>(({ children, on
       }
     }}
     style={{ ...positioningStyles }}
-    { ...(triggerEvents.includes('hover')) && {
-      onMouseLeave: debouncedHideHoverablePopover.throttle,
-      onMouseEnter: () => debouncedHideHoverablePopover.cancel()
-    }}
-    { ...props }
+    { ...contentProps }
   >
     {isOpen && children}
   </div>;
 });
 
-const Trigger: FC<PropsWithChildren> = ({ children }) => {
+interface TriggerInternalProps extends PropsWithChildren<HTMLAttributes<HTMLElement>> {}
+
+const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, ...props }, ref) => {
   const { triggerRef, contentRef, triggerEvents, debouncedHideHoverablePopover, isOpen } = useDropdown();
 
   let child = Children.toArray(children)[0];
@@ -136,48 +160,77 @@ const Trigger: FC<PropsWithChildren> = ({ children }) => {
   child = child as ReactElement;
 
   const onHoverTriggerProps = {
-    onMouseEnter: (e: MouseEvent) => {
-      child.props.onMouseEnter?.(e);
-      debouncedHideHoverablePopover.cancel();
-      contentRef.current?.showPopover();
+    onMouseEnter: (e: MouseEvent<HTMLElement>) => {
+      if (!e.isDefaultPrevented()) {
+        child.props.onMouseEnter?.(e);
+        props.onMouseEnter?.(e);
+        debouncedHideHoverablePopover.cancel();
+        contentRef.current?.showPopover();
+      }
     },
-    onMouseLeave: (e: MouseEvent) => {
-      child.props.onMouseLeave?.(e);
-      debouncedHideHoverablePopover.throttle(e);
+    onMouseLeave: (e: MouseEvent<HTMLElement>) => {
+      if (!e.isDefaultPrevented()) {
+        child.props.onMouseLeave?.(e);
+        props.onMouseLeave?.(e);
+        debouncedHideHoverablePopover.throttle(e);
+      }
     }
   };
 
   const onClickTriggerProps = {
-    onClick: (e: MouseEvent) => {
-      child.props.onClick?.(e);
-      if (isOpen) {
-        contentRef.current?.hidePopover();
-      } else {
+    onClick: (e: MouseEvent<HTMLElement>) => {
+      if (!e.isDefaultPrevented()) {
+        child.props.onClick?.(e);
+        props.onClick?.(e);
+        if (isOpen) {
+          contentRef.current?.hidePopover();
+        } else {
+          contentRef.current?.showPopover();
+        }
+      }
+    }
+  };
+
+  const onArrowTriggerProps = {
+    onKeyUp: (e: KeyboardEvent) => {
+      child.props.onKeyUp?.(e);
+      if (e.key === 'ArrowRight') {
         contentRef.current?.showPopover();
       }
     }
   };
 
   return cloneElement(child, {
+    ...props,
     ref: (el: HTMLElement) => {
       triggerRef.current = el;
-      if (Type.isFunction(child.props.ref )) {
+      if (Type.isFunction(child.props.ref)) {
         child.props.ref(el);
       } else if (Type.isNonNullable(child.props.ref)) {
         child.props.ref.current = el;
       }
+      if (Type.isFunction(ref)) {
+        ref(el);
+      } else if (Type.isNonNullable(ref)) {
+        ref.current = el;
+      }
     },
     ...triggerEvents.includes('click') && onClickTriggerProps,
     ...triggerEvents.includes('hover') && onHoverTriggerProps,
+    ...triggerEvents.includes('arrows') && onArrowTriggerProps
   });
-};
+});
+
+const Trigger: React.ForwardRefExoticComponent<
+  PropsWithChildren & React.RefAttributes<HTMLElement>
+> = TriggerImpl;
 
 export interface DropdownProps extends PropsWithChildren {
   readonly side?: 'top' | 'bottom' | 'left' | 'right';
   readonly align?: 'start' | 'center' | 'end';
   // margin/gap between the trigger button and anchored container
   readonly gap?: number;
-  readonly triggerEvents?: Array<'click' | 'hover'>;
+  readonly triggerEvents?: Array<'click' | 'hover' | 'arrows'>;
 }
 
 const Root: FC<DropdownProps> = ({ children, side = 'top', align = 'start', gap = 8, triggerEvents = [ 'click' ] }) => {

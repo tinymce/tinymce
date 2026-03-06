@@ -110,4 +110,76 @@ describe('browser.MenuItemTest', () => {
       expect(apiRef.isEnabled()).toBe(true);
     }
   });
+
+  it('Should render with aria-disabled and disabled class when enabled={false}', async () => {
+    const TestComponent = () => {
+      return (
+        <UniverseProvider resources={mockUniverse}>
+          <Menu.Root>
+            <Menu.Item enabled={false} onAction={vi.fn()}>Disabled Item</Menu.Item>
+          </Menu.Root>
+        </UniverseProvider>
+      );
+    };
+
+    const { getByText, container } = render(<TestComponent />, { wrapper });
+    await waitForElementText(getByText, 'Disabled Item');
+
+    const item = container.querySelector('[role="menuitem"]') as HTMLElement;
+
+    expect(item.getAttribute('aria-disabled')).toBe('true');
+    expect(item.className).toContain('tox-collection__item--state-disabled');
+  });
+
+  it('Should not trigger onAction when clicked while disabled', async () => {
+    const onActionSpy = vi.fn();
+    const TestComponent = () => {
+      return (
+        <UniverseProvider resources={mockUniverse}>
+          <Menu.Root>
+            <Menu.Item enabled={false} onAction={onActionSpy}>Disabled Item</Menu.Item>
+          </Menu.Root>
+        </UniverseProvider>
+      );
+    };
+
+    const { getByText } = render(<TestComponent />, { wrapper });
+    await waitForElementText(getByText, 'Disabled Item');
+
+    await userEvent.click(getByText('Disabled Item'));
+    expect(onActionSpy).not.toHaveBeenCalled();
+  });
+
+  it('Should not trigger onAction when disabled via API', async () => {
+    let apiRef: CommonMenuItemInstanceApi | undefined;
+    const onActionSpy = vi.fn();
+    const onSetupSpy = vi.fn((api: CommonMenuItemInstanceApi) => {
+      apiRef = api;
+      return vi.fn();
+    });
+
+    const TestComponent = () => {
+      return (
+        <UniverseProvider resources={mockUniverse}>
+          <Menu.Root>
+            <Menu.Item onSetup={onSetupSpy} onAction={onActionSpy}>Test Item</Menu.Item>
+          </Menu.Root>
+        </UniverseProvider>
+      );
+    };
+
+    const { getByText, container } = render(<TestComponent />, { wrapper });
+    await waitForElementText(getByText, 'Test Item');
+
+    const item = container.querySelector('[role="menuitem"]') as HTMLElement;
+
+    expect(apiRef).toBeDefined();
+    if (apiRef) {
+      apiRef.setEnabled(false);
+      await expect.poll(() => item.getAttribute('aria-disabled')).toBe('true');
+
+      await userEvent.click(getByText('Test Item'));
+      expect(onActionSpy).not.toHaveBeenCalled();
+    }
+  });
 });
