@@ -1,4 +1,4 @@
-import { Arr } from '@ephox/katamari';
+import { Arr, HashSet } from '@ephox/katamari';
 
 import { type CharacterMap, classify } from './StringMapper';
 import * as UnicodeData from './UnicodeData';
@@ -42,6 +42,7 @@ const findWordsWithIndices = <T>(chars: Word<T>, sChars: string[], characterMap:
   const words: Word<T>[] = [];
   const indices: WordIndex[] = [];
   let word: Word<T> = [];
+  const specialCharSet = HashSet.make(...(options.specialChars ?? []));
 
   // Loop through each character in the classification map and determine whether
   // it precedes a word boundary, building an array of distinct words as we go.
@@ -55,6 +56,7 @@ const findWordsWithIndices = <T>(chars: Word<T>, sChars: string[], characterMap:
     if (isWordBoundary(characterMap, i)) {
       const ch = sChars[i];
       if (
+        HashSet.contains(specialCharSet, ch) ||
         (options.includeWhitespace || !WHITESPACE.test(ch)) &&
         (options.includePunctuation || !PUNCTUATION.test(ch))
       ) {
@@ -95,12 +97,18 @@ const findWordsWithIndices = <T>(chars: Word<T>, sChars: string[], characterMap:
 export interface WordOptions {
   includeWhitespace?: boolean;
   includePunctuation?: boolean;
+  specialChars?: string[];
 }
 
 const getDefaultOptions = (): WordOptions => ({
   includeWhitespace: false,
   includePunctuation: false
 });
+
+const overwrittenCharacterMap = (characterMap: CharacterMap, extractedChars: string[], specialChars: string[]): CharacterMap => {
+  const specialCharSet = HashSet.make(...specialChars);
+  return Arr.map(characterMap, (v, i) => HashSet.contains(specialCharSet, extractedChars[i]) ? UnicodeData.characterIndices.ALETTER : v);
+};
 
 const getWordsWithIndices = <T>(chars: Word<T>, extract: (char: T) => string, options?: WordOptions): WordsWithIndices<T> => {
   options = {
@@ -109,7 +117,16 @@ const getWordsWithIndices = <T>(chars: Word<T>, extract: (char: T) => string, op
   };
   const extractedChars: string[] = Arr.map(chars, extract);
   const characterMap: CharacterMap = classify(extractedChars);
-  return findWordsWithIndices(chars, extractedChars, characterMap, options);
+  const specialChars = Arr.filter(options.specialChars ?? [], (ch) => ch.length === 1);
+
+  if (specialChars.length > 0) {
+    return findWordsWithIndices(chars, extractedChars, overwrittenCharacterMap(characterMap, extractedChars, specialChars), {
+      ...options,
+      specialChars
+    });
+  } else {
+    return findWordsWithIndices(chars, extractedChars, characterMap, options);
+  }
 };
 
 const getWords = <T>(chars: Word<T>, extract: (char: T) => string, options?: WordOptions): Word<T>[] =>

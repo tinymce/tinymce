@@ -57,7 +57,7 @@
       padding-left: var(--tox-private-pad-md, @pad-md);
       padding-right: var(--tox-private-pad-md, @pad-md);
     }
-  
+
     .tox-ai__review-menu-separator {
       border-bottom: 1px solid @collection-item-separator-color;
       height: 0;
@@ -135,6 +135,10 @@
     display: flex;
     align-items: center;
     gap: var(--tox-private-pad-sm, @pad-sm);
+
+    .tox-icon svg {
+      fill: var(--tox-private-color-tint, @color-tint);
+    }
   }
 
   .tox-ai__response-status {
@@ -323,7 +327,7 @@
     height: 24px;
     justify-content: center;
     letter-spacing: 0px;
-    padding: @pad-sm @pad-xl 0px @pad-xl;
+    padding-top: var(--tox-private-pad-sm, @pad-sm);
     width: 100%;
   }
 
