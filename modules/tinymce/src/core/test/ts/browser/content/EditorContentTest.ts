@@ -609,7 +609,7 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
 
       it('TINY-10305: setContent html should sanitize content that can cause mXSS via ZWNBSP trimming', () => {
         const editor = hook.editor();
-        editor.setContent('<p>test</p><!--\ufeff><iframe onload=alert(document.domain)>-></body>-->');
+        editor.setContent('<p>test</p><!--\ufeff><script onload=alert(document.domain)>-></body>-->');
         TinyAssertions.assertRawContent(editor, '<p>test</p><!---->');
       });
 
