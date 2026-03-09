@@ -1,6 +1,7 @@
 /* eslint-disable max-len */
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { UniverseProvider } from 'oxide-components/main';
+import { fn } from 'storybook/test';
 
 import { ToolbarInputForm, type ToolbarInputFormProps } from './ToolbarInputForm';
 
@@ -60,16 +61,15 @@ const mockUniverse = {
 };
 
 const render = (args: ToolbarInputFormProps): JSX.Element => {
-  return <ToolbarInputForm onSubmit={args.onSubmit} placeholder={args.placeholder} label={args.label}></ToolbarInputForm>;
+  return <ToolbarInputForm {...args} />;
 };
 
 export const Example: Story = {
   args: {
     label: 'Some input:',
     placeholder: 'value...',
-    onSubmit: (value) => {
-      window.alert(`Form submitted with value: ${value}`);
-    }
+    onSubmit: fn(),
+    onEscape: fn()
   },
   parameters: {
     docs: {
@@ -86,9 +86,8 @@ export const Url: Story = {
   args: {
     label: 'URL',
     placeholder: 'http://',
-    onSubmit: (value) => {
-      window.alert(`Form submitted with value: ${value}`);
-    }
+    onSubmit: fn(),
+    onEscape: fn()
   },
   parameters: {
     docs: {
