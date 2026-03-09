@@ -459,7 +459,10 @@
     border-radius: var(--tox-private-control-border-radius, @control-border-radius);
     cursor: pointer;
 
-    &:hover, &:focus-visible {
+    &.tox-ai-chat-history-list__item--active {
+      background-color: var(--tox-private-background-secondary, darken(@background-color, 6%));
+    }
+    &:focus, &:focus-visible {
       background-color: var(--tox-private-background-secondary, darken(@background-color, 6%));
     }
     &.tox-ai-chat-history-list__item-edit-title {
