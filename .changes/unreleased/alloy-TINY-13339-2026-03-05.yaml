@@ -1,0 +1,6 @@
+project: alloy
+kind: Fixed
+body: Toolbars incorrectly had the role "group" instead of "toolbar". Toolbar groups incorrectly had the role "toolbar" instead of "group".
+time: 2026-03-05T14:15:46.648502+10:00
+custom:
+    Issue: TINY-13339
