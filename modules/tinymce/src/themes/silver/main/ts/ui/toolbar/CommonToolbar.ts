@@ -50,15 +50,10 @@ export interface ToolbarGroup {
 }
 
 const renderToolbarGroupCommon = (toolbarGroup: ToolbarGroup) => {
-  const attributes = toolbarGroup.label.isNone() ?
-    toolbarGroup.title.fold(
-      () => ({}),
-      (title) => ({ attributes: { 'aria-label': title }})
-    )
-    : toolbarGroup.label.fold(
-      () => ({}),
-      (label) => ({ attributes: { 'aria-label': label }})
-    );
+  const attributes = toolbarGroup.label.or(toolbarGroup.title).fold(
+    () => ({}),
+    (label) => ({ attributes: { 'aria-label': label }})
+  );
 
   return {
     dom: {
@@ -259,4 +254,3 @@ const renderToolbar = (toolbarSpec: ToolbarSpec): SketchSpec => {
 };
 
 export { renderFloatingMoreToolbar, renderSlidingMoreToolbar, renderToolbar, renderToolbarGroup };
-

@@ -201,7 +201,7 @@ describe('browser.tinymce.core.init.EditorInitializationTest', () => {
                 s.element('div', {
                   classes: [ arr.has('tox-toolbar') ],
                   attrs: {
-                    role: str.is('group')
+                    role: str.is('toolbar')
                   }
                 }),
                 s.element('div', {

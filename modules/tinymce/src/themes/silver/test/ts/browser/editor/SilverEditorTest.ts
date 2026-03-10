@@ -176,7 +176,7 @@ describe('browser.tinymce.themes.silver.editor.SilverEditorTest', () => {
                     children: [
                       s.element('div', {
                         classes: [ arr.has('tox-toolbar__primary') ],
-                        attrs: { role: str.is('group') },
+                        attrs: { role: str.is('toolbar') },
                         children: [
                           s.element('div', {
                             classes: [ arr.has('tox-toolbar__group') ],

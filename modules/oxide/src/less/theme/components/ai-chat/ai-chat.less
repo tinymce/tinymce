@@ -1,17 +1,19 @@
 @tinymceai-border-width: 1px;
 @tinymceai-focus-border-width: 2px;
+@tinymceai-context-more-max-width: 320px;
 
 .tox-ai when (@custom-properties-enabled = true) {
   --tox-private-background-secondary: hsl( from var(--tox-private-background-color) h s calc(l - 6));
   --tox-private-neutral-20: hsl( from var(--tox-private-background-color) h s calc(l - 11));
   --tox-private-tinymceai-border-width: 1px;
   --tox-private-tinymceai-focus-border-width: 2px;
+  --tox-private-tinymceai-context-more-max-width: 320px;
 }
 
 .tox .tox-ai {
 
   .tox-expandable-box {
-    &:focus:not(:disabled) {
+    &:focus-visible:not(:disabled) {
        outline: 2px solid var(--tox-private-color-tint, @color-tint);
        outline-offset: var(--tox-private-tinymceai-border-width, @tinymceai-border-width);
        box-shadow: 0 0 0 1px var(--tox-private-color-white, @color-white);
@@ -23,7 +25,7 @@
     border: var(--tox-private-tinymceai-focus-border-width, @tinymceai-focus-border-width) solid var(--tox-private-background-color, @background-color);
     padding: calc(var(--tox-private-pad-sm, @pad-sm) - var(--tox-private-tinymceai-focus-border-width, @tinymceai-focus-border-width)) calc(12px - var(--tox-private-tinymceai-focus-border-width, @tinymceai-focus-border-width));
 
-    &:focus:not(:disabled) {
+    &:focus-visible:not(:disabled) {
        border: var(--tox-private-tinymceai-focus-border-width, @tinymceai-focus-border-width) solid var(--tox-private-color-tint, @color-tint);
        border-radius: var(--tox-private-control-border-radius, @control-border-radius);
     }
@@ -36,7 +38,7 @@
     white-space: nowrap;
     margin-right: auto;
 
-    &:focus:not(:disabled) {
+    &:focus-visible:not(:disabled) {
        outline: 2px solid var(--tox-private-color-tint, @color-tint);
        outline-offset: var(--tox-private-tinymceai-border-width, @tinymceai-border-width);
        box-shadow: 0 0 0 1px var(--tox-private-color-white, @color-white);
@@ -57,7 +59,7 @@
       padding-left: var(--tox-private-pad-md, @pad-md);
       padding-right: var(--tox-private-pad-md, @pad-md);
     }
-  
+
     .tox-ai__review-menu-separator {
       border-bottom: 1px solid @collection-item-separator-color;
       height: 0;
@@ -79,6 +81,11 @@
     flex-direction: column;
     gap: inherit;
     align-items: end;
+    width: 100%;
+
+    .tox-tag {
+      max-width: 100%;
+    }
   }
 
   .tox-ai__user-prompt__text {
@@ -89,7 +96,7 @@
     align-self: flex-end;
     color: var(--tox-private-text-color, @text-color);
 
-    &:focus:not(:disabled) {
+    &:focus-visible:not(:disabled) {
        outline: 2px solid var(--tox-private-color-tint, @color-tint);
        outline-offset: var(--tox-private-tinymceai-border-width, @tinymceai-border-width);
        box-shadow: 0 0 0 1px var(--tox-private-color-white, @color-white);
@@ -110,7 +117,7 @@
     align-self: stretch;
     border: var(--tox-private-tinymceai-focus-border-width, @tinymceai-focus-border-width) solid var(--tox-private-background-color, @background-color);
 
-    &:focus:not(:disabled) {
+    &:focus-visible:not(:disabled) {
        border: var(--tox-private-tinymceai-focus-border-width, @tinymceai-focus-border-width) solid var(--tox-private-color-tint, @color-tint);
        border-radius: var(--tox-private-control-border-radius, @control-border-radius);
     }
@@ -135,6 +142,10 @@
     display: flex;
     align-items: center;
     gap: var(--tox-private-pad-sm, @pad-sm);
+
+    .tox-icon svg {
+      fill: var(--tox-private-color-tint, @color-tint);
+    }
   }
 
   .tox-ai__response-status {
@@ -273,7 +284,7 @@
     border: var(--tox-private-tinymceai-focus-border-width, @tinymceai-focus-border-width) solid var(--tox-private-background-color, @background-color);
     border-top: 1px solid var(--tox-private-neutral-20, darken(@background-color, 11%));
 
-    &:focus:not(:disabled) {
+    &:focus-visible:not(:disabled) {
        border: var(--tox-private-tinymceai-focus-border-width, @tinymceai-focus-border-width) solid var(--tox-private-color-tint, @color-tint);
        border-radius: var(--tox-private-control-border-radius, @control-border-radius);
     }
@@ -289,6 +300,11 @@
       ) +
       var(--tox-private-pad-sm, @pad-sm)
     ); // Two rows of tags + the gap between them. Height of the tag is calculated from padding top and bottom + line height
+
+    .tox-tag {
+      /* Maximum width of tag is half the size of sidebar */
+      max-width: calc((100% - var(--tox-private-pad-sm, @pad-sm)) / 2);
+    }
   }
 
   .tox-ai__context-more {
@@ -297,6 +313,11 @@
     gap: var(--tox-private-pad-sm, @pad-sm);
     padding: var(--tox-private-pad-sm, @pad-sm);
     overflow: auto;
+    max-width: var(--tox-private-tinymceai-context-more-max-width, @tinymceai-context-more-max-width);
+
+    .tox-tag {
+      max-width: 100%;
+    }
   }
 
   .tox-ai__stop-generating {
@@ -387,8 +408,9 @@
 
   .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
     .tox-ai__models-menu__item__description__content {
+      color: inherit;
       .tox-ai__models-menu__item__description__ability {
-        color: inherit;
+        color: var(--tox-private-color-white, @color-white);
       }
       .tox-ai__models-menu__item__description__content_body {
         color: rgba(from var(--tox-private-color-white, @color-white) r g b / 0.7);
@@ -416,6 +438,10 @@
     gap: var(--tox-private-pad-sm, @pad-sm);
     padding-top: var(--tox-private-pad-xs, @pad-xs);
     width: 100%;
+
+    .tox-collection__group {
+      gap: var(--tox-private-pad-sm, @pad-sm);
+    }
   }
 
   .tox-ai-chat-history-list__title {
@@ -434,7 +460,7 @@
     border-radius: var(--tox-private-control-border-radius, @control-border-radius);
     cursor: pointer;
 
-    &:hover, &:focus {
+    &:hover, &:focus-visible {
       background-color: var(--tox-private-background-secondary, darken(@background-color, 6%));
     }
     &.tox-ai-chat-history-list__item-edit-title {

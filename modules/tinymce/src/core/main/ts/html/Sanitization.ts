@@ -1,11 +1,12 @@
 import { Arr, Fun, Obj, Optional, Strings, Type } from '@ephox/katamari';
-import { Attribute, NodeTypes, Remove, Replication, SugarElement } from '@ephox/sugar';
+import { Attribute, Html, NodeTypes, Remove, Replication, SugarElement } from '@ephox/sugar';
 import createDompurify, { type Config, type DOMPurify, type UponSanitizeAttributeHookEvent, type UponSanitizeElementHookEvent } from 'dompurify';
 
 import type { DomParserSettings } from '../api/html/DomParser';
 import type Schema from '../api/html/Schema';
 import Tools from '../api/util/Tools';
 import * as URI from '../api/util/URI';
+import * as ElementType from '../dom/ElementType';
 import * as NodeType from '../dom/NodeType';
 
 import * as KeepHtmlComments from './KeepHtmlComments';
@@ -54,6 +55,20 @@ const processNode = (node: Node, settings: DomParserSettings, schema: Schema, sc
 
   // Construct the sugar element wrapper
   const element = SugarElement.fromDom(node) as SugarElement<Element>;
+
+  if (settings.sanitize) {
+    // TINY-9655: Preserve the content of script tags if they are valid elements in the schema
+    const shouldKeepContent = ElementType.isScript(element) && schema.isValid('script');
+    if (shouldKeepContent) {
+      Attribute.set(element, 'data-mce-tmp', Html.get(element));
+    }
+
+    // TINY-9655: Clear innerHTML of script and iframe tags to prevent DOMPurify from removing them entirely
+    const shouldClearContent = ElementType.isIframe(element) && schema.isValid('iframe');
+    if (shouldKeepContent || shouldClearContent) {
+      Html.set(element, '');
+    }
+  }
 
   // Determine if we're dealing with an internal attribute
   const isInternalElement = Attribute.has(element, internalElementAttr);
@@ -168,12 +183,28 @@ const filterAttributes = (ele: Element, settings: DomParserSettings, schema: Sch
   }
 };
 
+const restoreValidContent = (node: Node) => {
+  // Construct the sugar element wrapper
+  const element = SugarElement.fromDom(node) as SugarElement<Element>;
+
+  if (ElementType.isScript(element)) {
+    Optional.from(Attribute.get(element, 'data-mce-tmp')).each((content) => {
+      Html.set(element, content);
+      Attribute.remove(element, 'data-mce-tmp');
+    });
+  }
+};
+
 const setupPurify = (settings: DomParserSettings, schema: Schema, namespaceTracker: Namespace.NamespaceTracker): DOMPurify => {
   const purify = createDompurify();
 
   // We use this to add new tags to the allow-list as we parse, if we notice that a tag has been banned but it's still in the schema
   purify.addHook('uponSanitizeElement', (ele, evt) => {
     processNode(ele, settings, schema, namespaceTracker.track(ele), evt);
+  });
+
+  purify.addHook('afterSanitizeElements', (ele) => {
+    restoreValidContent(ele);
   });
 
   // Let's do the same thing for attributes
