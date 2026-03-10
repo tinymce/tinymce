@@ -44,8 +44,10 @@ const addPxSuffix = (size: string): string =>
 
 const getRawValue = (prop: string) => (editor: Editor, elm: HTMLElement): Optional<string> => {
   const raw = editor.dom.getStyle(elm, prop) || editor.dom.getAttrib(elm, prop);
-  // If value is read from the attribute, a pixel value can have no unit
-  return Optional.from(raw).filter(Strings.isNotEmpty).map((value) => addPxSuffix(value));
+  // If a value has no unit, assume it is a pixel value
+  return Optional.from(raw)
+    .filter(Strings.isNotEmpty)
+    .map(addPxSuffix);
 };
 
 const isPercentage = (value: string): boolean => /^(\d+(\.\d+)?)%$/.test(value);
