@@ -23,6 +23,7 @@ export interface ContextToolbarContextValue {
 export interface ToolbarProps {
   readonly children: ReactNode;
   readonly onMouseDown?: MouseEventHandler<HTMLDivElement>;
+  readonly onEscape?: () => void;
 }
 
 export interface TriggerProps {

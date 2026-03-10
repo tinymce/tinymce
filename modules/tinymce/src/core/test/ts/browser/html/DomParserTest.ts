@@ -782,14 +782,31 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
         );
       });
 
-      // TINY-9624: Safari encodes the iframe innerHTML is `&lt;textarea&gt;`. On Chrome and Firefox, the innerHTML is `<textarea>`, causing
-      // the mXSS cleaner in DOMPurify to run and remove the iframe.
       it('parse iframe XSS', () => {
         const serializer = HtmlSerializer();
 
         assert.equal(
           serializer.serialize(DomParser(scenario.settings).parse('<iframe><textarea></iframe><img src="a" onerror="alert(document.domain)" />')),
-          scenario.isSanitizeEnabled ? '<img src="a">' : '<iframe><textarea></iframe><img src="a">'
+          scenario.isSanitizeEnabled ? '<iframe></iframe><img src="a">' : '<iframe><textarea></iframe><img src="a">'
+        );
+      });
+
+      it('TINY-9655: remove invalid script elements', () => {
+        const serializer = HtmlSerializer();
+        const parser = DomParser(scenario.settings, Schema());
+
+        assert.equal(serializer.serialize(parser.parse('<script src="example.js" onload="alert(document.domain)">var variable;</script>')), '');
+      });
+
+      it('TINY-9655: keep valid script elements but remove xss ', () => {
+        const serializer = HtmlSerializer();
+        const parser = DomParser(scenario.settings, Schema({
+          extended_valid_elements: 'script[src]'
+        }));
+
+        assert.equal(
+          serializer.serialize(parser.parse('<script src="example.js" onload="alert(document.domain)">var variable;</script>')),
+          '<script src="example.js">var variable;</script>'
         );
       });
 

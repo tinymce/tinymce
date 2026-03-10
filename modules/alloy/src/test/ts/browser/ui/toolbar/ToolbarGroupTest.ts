@@ -75,7 +75,7 @@ UnitTest.asynctest('ToolbarGroupTest', (success, failure) => {
         ApproxStructure.build((s, str, arr) => s.element('div', {
           classes: [ arr.not('group-items') ],
           attrs: {
-            'role': str.is('toolbar'),
+            'role': str.is('group'),
             'data-alloy-tabstop': str.is('true')
           },
           children: [

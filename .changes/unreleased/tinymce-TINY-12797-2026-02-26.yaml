@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Setting width via Table Properties did not apply when `table_style_by_css` is `false`.
+time: 2026-02-26T09:33:26.847782+10:00
+custom:
+    Issue: TINY-12797

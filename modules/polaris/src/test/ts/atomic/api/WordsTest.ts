@@ -82,4 +82,17 @@ UnitTest.test('api.Words.words', () => {
   assertWords([ ], '\ufeff ');
   assertWords([ 'a' ], 'a\ufeff');
   assertWords([ 'a' ], 'a\ufeff ');
+
+  // TINY-12235: It's possible to allow specific special characters inside the words
+  assertWords([ 'abc,def' ], 'abc,def', { specialChars: [ ',' ] });
+  assertWords([ 'abc,def,' ], 'abc,def,', { specialChars: [ ',' ] });
+  assertWords([ 'abc,def,ghi' ], 'abc,def,ghi', { specialChars: [ ',' ] });
+  assertWords([ 'abc,def', 'ghi' ], 'abc,def ghi', { specialChars: [ ',' ] });
+  assertWords([ 'abc,def,', 'ghi' ], 'abc,def, ghi', { specialChars: [ ',' ] });
+  assertWords([ 'abc,def,ghi', '123' ], 'abc,def,ghi 123', { specialChars: [ ',' ] });
+
+  assertWords([ 'abc,def,' ], 'abc,def,', { specialChars: [ ',', '.' ] });
+  assertWords([ 'abc,def.ghi' ], 'abc,def.ghi', { specialChars: [ ',', '.' ] });
+  assertWords([ 'abc,def.', 'ghi' ], 'abc,def. ghi', { specialChars: [ ',', '.' ] });
+  assertWords([ 'abc,def.ghi', '123' ], 'abc,def.ghi 123', { specialChars: [ ',', '.' ] });
 });

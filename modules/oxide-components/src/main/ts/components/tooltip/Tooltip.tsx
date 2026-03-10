@@ -1,13 +1,13 @@
 import { Fun, Type } from '@ephox/katamari';
 import { Bem } from 'oxide-components/main';
-import { Children, cloneElement, createContext, isValidElement, useCallback, useContext, useLayoutEffect, useMemo, useRef, useState, type FC, type PropsWithChildren, type ReactNode } from 'react';
+import { Children, cloneElement, createContext, forwardRef, isValidElement, useCallback, useContext, useLayoutEffect, useMemo, useRef, useState, type FC, type HTMLAttributes, type PropsWithChildren, type ReactNode } from 'react';
 
 interface TooltipState {
   readonly isOpen: boolean;
   readonly delayForShow: number;
   readonly delayForHide: number;
   readonly setIsOpen: (isOpen: boolean) => void;
-  readonly contentRef: React.RefObject<HTMLDivElement | null>;
+  readonly contentRef: React.MutableRefObject<HTMLDivElement | null>;
   readonly triggerRef: React.MutableRefObject<HTMLDivElement | null>;
 }
 
@@ -22,19 +22,10 @@ const defaultState: TooltipState = {
 
 const TooltipContext = createContext<TooltipState>(defaultState);
 
-const Trigger: FC<PropsWithChildren> = ({ children }) => {
+interface TriggerInternalProps extends PropsWithChildren<HTMLAttributes<HTMLElement>> {}
+
+const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, ...props }, ref) => {
   const { setIsOpen, triggerRef } = useContext(TooltipContext);
-
-  const onMouseEnter = useCallback(() => {
-    setIsOpen(true);
-  }, [ setIsOpen ]);
-
-  const onMouseLeave = useCallback(() => {
-    setIsOpen(false);
-  }, [ setIsOpen ]);
-
-  const onFocus = onMouseEnter;
-  const onBlur = onMouseLeave;
 
   const count = Children.count(children);
   if (count === 0) {
@@ -47,8 +38,9 @@ const Trigger: FC<PropsWithChildren> = ({ children }) => {
   }
 
   return cloneElement(theChild, {
+    ...props,
     ref: (el: HTMLDivElement | null) => {
-      // Only forward non-null values to preserve the child's ref during React's cleanup phase
+      // Only forward non-null values to internal refs to preserve state during React's cleanup phase
       if (el !== null) {
         triggerRef.current = el;
         // TODO: Remove this cast weirdness once we migrate to react 19
@@ -59,19 +51,53 @@ const Trigger: FC<PropsWithChildren> = ({ children }) => {
           childWithRef.ref.current = el;
         }
       }
+      // Always forward to the consumer's ref, including null for proper cleanup
+      if (Type.isFunction(ref)) {
+        ref(el);
+      } else if (Type.isNonNullable(ref)) {
+        ref.current = el;
+      }
     },
-    onMouseEnter,
-    onMouseLeave,
-    onFocus,
-    onBlur,
+    onMouseEnter: (e: React.MouseEvent<HTMLElement>) => {
+      if (!e.isDefaultPrevented()) {
+        theChild.props.onMouseEnter?.(e);
+        props.onMouseEnter?.(e);
+        setIsOpen(true);
+      }
+    },
+    onMouseLeave: (e: React.MouseEvent<HTMLElement>) => {
+      if (!e.isDefaultPrevented()) {
+        theChild.props.onMouseLeave?.(e);
+        props.onMouseLeave?.(e);
+        setIsOpen(false);
+      }
+    },
+    onFocus: (e: React.FocusEvent<HTMLElement>) => {
+      if (!e.isDefaultPrevented()) {
+        theChild.props.onFocus?.(e);
+        props.onFocus?.(e);
+        setIsOpen(true);
+      }
+    },
+    onBlur: (e: React.FocusEvent<HTMLElement>) => {
+      if (!e.isDefaultPrevented()) {
+        theChild.props.onBlur?.(e);
+        props.onBlur?.(e);
+        setIsOpen(false);
+      }
+    },
   });
-};
+});
+
+const Trigger: React.ForwardRefExoticComponent<
+  PropsWithChildren & React.RefAttributes<HTMLElement>
+> = TriggerImpl;
 
 interface ContentProps {
   readonly text: string;
 }
 
-const Content: FC<ContentProps> = ({ text }) => {
+const Content = forwardRef<HTMLDivElement, ContentProps>(({ text }, ref) => {
   const { isOpen, contentRef, triggerRef, delayForShow, delayForHide } = useContext(TooltipContext);
 
   const updatePosition = useCallback(() => {
@@ -117,14 +143,22 @@ const Content: FC<ContentProps> = ({ text }) => {
   }, [ isOpen, contentRef, updatePosition, delayForShow, delayForHide ]);
 
   return (
-    // @ts-expect-error - TODO: Remove this expect error once we've upgraded to React 19+
-    <div ref={contentRef} popover='hint' className={Bem.block('tox-tooltip', {
-      up: true
-    })}>
+    <div ref={(el: HTMLDivElement) => {
+      contentRef.current = el;
+      if (Type.isFunction(ref)) {
+        ref(el);
+      } else if (Type.isNonNullable(ref)) {
+        ref.current = el;
+      }
+    }}
+    // @ts-expect-error We should remove this expect error once we've migrated to React 19 and can use the new popover API types
+    popover='hint'
+    className={Bem.block('tox-tooltip', { up: true })}
+    >
       <div className={Bem.element('tox-tooltip', 'body')}>{text}</div>
     </div>
   );
-};
+});
 
 const Root: FC<PropsWithChildren> = ({ children }) => {
   const [ state, setState ] = useState({

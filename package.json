@@ -36,11 +36,12 @@
     "headless-test-manual": "grunt headless-manual",
     "bedrock": "bedrock --chunk=5000 --customRoutes modules/tinymce/src/core/test/json/routes.json",
     "test-one": "yarn tsc && yarn bedrock-auto -b chrome-headless -f",
-    "tinymce-dev": "yarn --cwd modules/tinymce dev"
+    "tinymce-dev": "yarn --cwd modules/tinymce dev",
+    "version": "./scripts/lerna-changie-hook.sh"
   },
   "devDependencies": {
-    "@ephox/bedrock-client": "^15.0.0",
-    "@ephox/bedrock-server": "^15.2.0",
+    "@ephox/bedrock-client": "^16.0.0",
+    "@ephox/bedrock-server": "^16.0.0",
     "@ephox/oxide-icons-tools": "^4.0.0",
     "@ephox/swag": "^4.6.0",
     "@rspack/cli": "^1.6.7",
