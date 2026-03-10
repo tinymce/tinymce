@@ -44,7 +44,7 @@ const setup = (editor: Editor): void => {
           editor.off('ToggleSidebar', handleToggle);
         };
       },
-      context: 'any'
+      context: spec.context
     });
   });
 };

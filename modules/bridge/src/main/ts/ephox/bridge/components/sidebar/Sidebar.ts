@@ -13,6 +13,7 @@ export interface SidebarSpec {
   onShow?: (api: SidebarInstanceApi) => void;
   onSetup?: (api: SidebarInstanceApi) => (api: SidebarInstanceApi) => void;
   onHide?: (api: SidebarInstanceApi) => void;
+  context?: string;
 }
 
 export interface Sidebar {
@@ -21,6 +22,7 @@ export interface Sidebar {
   onShow: (api: SidebarInstanceApi) => void;
   onSetup: (api: SidebarInstanceApi) => (api: SidebarInstanceApi) => void;
   onHide: (api: SidebarInstanceApi) => void;
+  context: string;
 }
 
 export const sidebarSchema = StructureSchema.objOf([
@@ -28,7 +30,8 @@ export const sidebarSchema = StructureSchema.objOf([
   ComponentSchema.optionalTooltip,
   FieldSchema.defaultedFunction('onShow', Fun.noop),
   FieldSchema.defaultedFunction('onHide', Fun.noop),
-  ComponentSchema.onSetup
+  ComponentSchema.onSetup,
+  FieldSchema.defaultedString('context', 'any')
 ]);
 
 export const createSidebar = (spec: SidebarSpec): Result<Sidebar, StructureSchema.SchemaError<any>> => StructureSchema.asRaw('sidebar', sidebarSchema, spec);

@@ -42,12 +42,14 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarTest', () => {
           logEvent(eventName)(api);
           return Fun.noop;
         };
+
         editor.ui.registry.addSidebar('mysidebar1', {
           tooltip: 'My sidebar 1',
           icon: 'bold',
           onSetup: handleSetup('mysidebar1:render'),
           onShow: logEvent('mysidebar1:show'),
-          onHide: logEvent('mysidebar1:hide')
+          onHide: logEvent('mysidebar1:hide'),
+          context: 'testcontext'
         });
 
         editor.ui.registry.addSidebar('mysidebar2', {
@@ -171,6 +173,7 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarTest', () => {
   });
 
   const assertButtonEnabled = (selector: string) => UiFinder.notExists(SugarBody.body(), `[data-mce-name="${selector}"][aria-disabled="true"]`);
+  const assertButtonDisabled = (selector: string) => UiFinder.exists(SugarBody.body(), `[data-mce-name="${selector}"][aria-disabled="true"]`);
 
   context('Sidebar toggle button', () => {
     const hook = TinyHooks.bddSetup<Editor>({
@@ -222,6 +225,40 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarTest', () => {
       assertButtonEnabled('mysidebar1');
 
       editor.mode.set('design');
+    });
+  });
+
+  context('Button enabled/disabled by context', () => {
+    let contextEnabled = true;
+
+    const hook = TinyHooks.bddSetupLight<Editor>({
+      base_url: '/project/tinymce/js/tinymce',
+      toolbar: 'mysidebar1',
+      setup: (editor: Editor) => {
+        editor.ui.registry.addContext('testcontext', () => contextEnabled);
+
+        editor.ui.registry.addSidebar('mysidebar1', {
+          tooltip: 'My sidebar 1',
+          icon: 'bold',
+          context: 'testcontext'
+        });
+      }
+    });
+
+    it('TINY-14034: Button should toggle enabled state on/off based on context predicate', () => {
+      const editor = hook.editor();
+
+      assertButtonEnabled('mysidebar1');
+
+      contextEnabled = false;
+      editor.nodeChanged();
+
+      assertButtonDisabled('mysidebar1');
+
+      contextEnabled = true;
+      editor.nodeChanged();
+
+      assertButtonEnabled('mysidebar1');
     });
   });
 });
