@@ -1,4 +1,5 @@
 import { context, describe, it } from '@ephox/bedrock-client';
+import { Arr } from '@ephox/katamari';
 import { SelectorFind, Width } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -670,6 +671,43 @@ describe('browser.tinymce.models.dom.table.ModifyColumnsTableResizeTest', () => 
           mceTableInsertColBefore: 1.5,
           mceTableInsertColAfter: 1.5,
           mceTableDeleteCol: 0.5
+        });
+      });
+    });
+  });
+
+  context('Table with table_style_by_css: false', () => {
+    const hook = TinyHooks.bddSetupLight<Editor>({
+      ...baseSettings,
+      table_style_by_css: false,
+      table_column_resizing: 'preservetable'
+    }, []);
+
+    Arr.each([
+      { label: 'unitless width', width: '125' },
+      { label: 'pixel width', width: '125px' },
+      { label: 'percentage width', width: '50%' },
+    ], ({ label, width }) => {
+      it(`TINY-12797: Column actions should work when width is an attribute (${label})`, () => {
+        const editor = hook.editor();
+        const content = (`
+            <table width="${width}">
+              <tbody>
+                <tr>
+                  <td></td>
+                  <td data-mce-selected="1"></td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+        `);
+        performCommandsAndAssertWidths(editor, content, {
+          mceTableInsertColBefore: 1,
+          mceTableInsertColAfter: 1,
+          mceTableDeleteCol: 1
         });
       });
     });
