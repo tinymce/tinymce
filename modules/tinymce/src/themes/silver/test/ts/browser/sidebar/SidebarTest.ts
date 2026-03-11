@@ -48,8 +48,7 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarTest', () => {
           icon: 'bold',
           onSetup: handleSetup('mysidebar1:render'),
           onShow: logEvent('mysidebar1:show'),
-          onHide: logEvent('mysidebar1:hide'),
-          context: 'testcontext'
+          onHide: logEvent('mysidebar1:hide')
         });
 
         editor.ui.registry.addSidebar('mysidebar2', {
