@@ -58,9 +58,6 @@
       background-color: var(--tox-private-accordion-item-background-color, @accordion-item-background-color);
       border: 1px solid var(--tox-private-border-color, @accordion-border-color);
 
-      .tox-accordion__header {
-        padding-bottom: @pad-xs;
-      }
       
       .tox-accordion__content--expanded .tox-accordion__content-inner {
         padding-top: @pad-xs;
@@ -239,6 +236,7 @@
     }
 
     .tox-accordion__model-button {
+      border-radius: @accordion-border-radius;
       align-items: center;
       appearance: none;
       background: none;
