@@ -46,14 +46,14 @@ type Story = StoryObj<typeof meta>;
 const render = (args: Dropdown.DropdownProps): JSX.Element => {
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-      <Dropdown.Root side={args.side} align={args.align}>
+      <Dropdown.Root {...args}>
         <Dropdown.Trigger>
           <Button variant='secondary'>
             Click me to toggle dropdown
           </Button>
         </Dropdown.Trigger>
         <Dropdown.Content>
-          <div style={{ width: '400px', height: '300px' }}></div>
+          <div style={{ width: '400px', height: '300px' }}>Hello I am the content</div>
         </Dropdown.Content>
       </Dropdown.Root>
     </div>
