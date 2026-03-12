@@ -15,7 +15,7 @@
     width: var(--tox-private-floating-sidebar-width);
     height: var(--tox-private-floating-sidebar-height);
     background-color: var(--tox-private-floating-sidebar-background-color, @sidebar-background-color);
-    border-radius: 12px;
+    border-radius: var(--tox-private-panel-border-radius, @panel-border-radius);
     overflow: hidden;
 
     &:not(&--open) {
