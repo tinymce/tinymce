@@ -80,7 +80,12 @@ div[tinymceai-data-pending-diff="true"], span[tinymceai-data-pending-diff="true"
 }
 
 .tox-tinymceai__diff-focus-overlay {
-  display: inherit;
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  overflow: hidden;
+  pointer-events: none;
 }
 
 .tox-tinymceai__diff-focus-overlay-dim {
