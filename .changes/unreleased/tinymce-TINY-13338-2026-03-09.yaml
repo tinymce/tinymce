@@ -1,0 +1,6 @@
+project: tinymce
+kind: Changed
+body: Element Path now uses the ARIA-role "group" with an aria-label
+time: 2026-03-09T16:58:10.821607+10:00
+custom:
+    Issue: TINY-13338
