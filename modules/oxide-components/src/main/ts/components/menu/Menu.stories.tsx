@@ -12,7 +12,9 @@ const meta = {
   decorators: [
     (Story) => (
       <UniverseProvider resources={mockUniverse}>
-        <Story />
+        <div style={{ height: '100vh', width: '100vw', paddingTop: '40vh', paddingInlineStart: '35vw' }}>
+          <Story />
+        </div>
       </UniverseProvider>
     )
   ],
