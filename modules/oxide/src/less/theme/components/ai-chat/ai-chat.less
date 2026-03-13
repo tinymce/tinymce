@@ -11,6 +11,7 @@
 }
 
 .tox .tox-ai {
+  --response-status-icon-height: max(24px, calc(var(--tox-private-font-size-sm, @font-size-sm) + 4px));
 
   .tox-expandable-box {
     &:focus-visible:not(:disabled) {
@@ -152,8 +153,8 @@
     display: flex;
     color: var(--tox-private-text-color-muted,@text-color-muted);
     font-size: var(--tox-private-font-size-sm, @font-size-sm);
-    line-height: calc(var(--tox-private-font-size-sm, @font-size-sm) + 4px);
     gap: var(--tox-private-pad-xs, @pad-xs);
+    line-height: var(--response-status-icon-height);
     padding-top: var(--tox-private-pad-sm, @pad-sm);
     & svg {
       fill: var(--tox-private-text-color-muted,@text-color-muted);
@@ -164,7 +165,7 @@
     border-radius: 999px;
     border: 1px solid var(--tox-private-neutral-20, darken(@background-color, 11%));
     background-color: var(--tox-private-background-color, @background-color);
-    height: 24px;
+    height: var(--response-status-icon-height);
     flex: 0 0 24px;
     display: flex;
     align-items: center;
