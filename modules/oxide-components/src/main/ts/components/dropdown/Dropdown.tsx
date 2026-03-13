@@ -74,6 +74,8 @@ const Content = forwardRef<HTMLDivElement, DropdownContentProps>(({ children, on
     ...triggerEvents.includes('hover') && onHoverTriggerProps,
     ...triggerEvents.includes('arrows') && onArrowTriggerProps
   };
+  const insetProps = PositioningUtils.getInset(side, gap);
+  const positionArea = PositioningUtils.getPositionArea(side, align);
   return <div
     // @ts-expect-error - TODO: Remove this expect error once we've upgraded to React 19+
     popover='auto'
@@ -87,9 +89,9 @@ const Content = forwardRef<HTMLDivElement, DropdownContentProps>(({ children, on
       }
     }}
     style={{
-      ...PositioningUtils.getInset(side, gap),
+      ...insetProps,
       position: 'absolute',
-      positionArea: PositioningUtils.getPositionArea(side, align),
+      positionArea,
       positionTryOrder: 'most-height',
       positionTryFallbacks: 'flip-block, flip-inline, flip-block flip-inline'
     // react types lack the position attributes, but they work at runtime?
