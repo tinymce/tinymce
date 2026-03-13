@@ -1,4 +1,4 @@
-import { Optional, Type } from '@ephox/katamari';
+import { Arr, Optional, Type } from '@ephox/katamari';
 import { Attribute, type SugarElement } from '@ephox/sugar';
 import {
   createContext,
@@ -6,7 +6,11 @@ import {
   type PropsWithChildren,
   useContext,
   useEffect,
-  useRef
+  useMemo,
+  useRef,
+  Children,
+  isValidElement,
+  type ReactElement
 } from 'react';
 
 import * as KeyboardNavigationHooks from '../../keynav/KeyboardNavigationHooks';
@@ -16,6 +20,7 @@ interface SegmentedControlContextValue {
   readonly value: string;
   readonly onChange: (value: string) => void;
   readonly disabled?: boolean;
+  readonly firstOptionValue: string | null;
 }
 
 interface SegmentedControlRootProps extends PropsWithChildren<Omit<HTMLAttributes<HTMLDivElement>, 'onChange'>> {
@@ -59,6 +64,17 @@ const Root = forwardRef<HTMLDivElement, SegmentedControlRootProps>(
       }
     }, [ ref ]);
 
+    const firstOptionValue = useMemo(() => {
+      const childArray = Children.toArray(children);
+
+      const validOptions = Arr.filter(childArray, (child): child is ReactElement<SegmentedControlOptionProps> =>
+        isValidElement(child) && typeof child.type !== 'string'
+      );
+
+      const firstNonDisabledOption = Arr.find(validOptions, (option) => !disabled && !option.props.disabled);
+      return firstNonDisabledOption.map((option) => option.props.value).getOrNull();
+    }, [ children, disabled ]);
+
     KeyboardNavigationHooks.useFlowKeyNavigation({
       containerRef,
       selector: '[role="radio"]',
@@ -79,7 +95,8 @@ const Root = forwardRef<HTMLDivElement, SegmentedControlRootProps>(
     const contextValue: SegmentedControlContextValue = {
       value,
       onChange,
-      disabled
+      disabled,
+      firstOptionValue
     };
 
     return (
@@ -109,17 +126,19 @@ const Option = forwardRef<HTMLSpanElement, SegmentedControlOptionProps>((
   const {
     value: selectedValue,
     onChange,
-    disabled: groupDisabled
+    disabled: groupDisabled,
+    firstOptionValue
   } = useSegmentedControlContext();
 
   const isActive = selectedValue === optionValue;
   const isDisabled = groupDisabled || optionDisabled;
+  const isFirstOption = firstOptionValue === optionValue;
 
   const getTabIndex = (): number => {
     if (isDisabled) {
       return -1;
     }
-    return isActive ? 0 : -1;
+    return isFirstOption ? 0 : -1;
   };
 
   const handleClick = () => {

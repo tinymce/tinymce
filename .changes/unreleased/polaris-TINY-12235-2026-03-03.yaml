@@ -1,0 +1,6 @@
+project: polaris
+kind: Added
+body: New option `specialChars` for `Words.getWordsWithIndices` and `Words.getWords`.
+time: 2026-03-03T08:34:18.295288533+01:00
+custom:
+    Issue: TINY-12235

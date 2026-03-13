@@ -19,7 +19,7 @@ describe('browser.tinymce.core.html.SanitizationTest', () => {
 
     it('Sanitize iframe HTML', () => testHtmlSanitizer({
       input: '<iframe src="x"><script>alert(1)</script></iframe><iframe src="javascript:alert(1)"></iframe>',
-      expected: '<iframe></iframe>',
+      expected: '<iframe src="x"></iframe><iframe></iframe>',
       mimeType: 'text/html'
     }));
 

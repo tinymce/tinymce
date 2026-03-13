@@ -70,13 +70,13 @@ describe('browser.MenuToggleItemTest', () => {
 
     const item = container.querySelector('[role="menuitemcheckbox"]') as HTMLElement;
 
-    expect(item.getAttribute('aria-selected')).toBe('false');
+    expect(item.getAttribute('aria-checked')).toBe('false');
 
     await userEvent.click(item);
-    await expect.poll(() => item.getAttribute('aria-selected')).toBe('true');
+    await expect.poll(() => item.getAttribute('aria-checked')).toBe('true');
 
     await userEvent.click(item);
-    await expect.poll(() => item.getAttribute('aria-selected')).toBe('false');
+    await expect.poll(() => item.getAttribute('aria-checked')).toBe('false');
   });
 
   it('Should respect initial active state', async () => {
@@ -95,7 +95,7 @@ describe('browser.MenuToggleItemTest', () => {
 
     const item = container.querySelector('[role="menuitemcheckbox"]') as HTMLElement;
 
-    expect(item.getAttribute('aria-selected')).toBe('true');
+    expect(item.getAttribute('aria-checked')).toBe('true');
     expect(item.className).toContain('tox-collection__item--enabled');
   });
 
@@ -124,11 +124,122 @@ describe('browser.MenuToggleItemTest', () => {
     expect(apiRef).toBeDefined();
     if (apiRef) {
       expect(apiRef.isActive()).toBe(false);
-      expect(item.getAttribute('aria-selected')).toBe('false');
+      expect(item.getAttribute('aria-checked')).toBe('false');
 
       apiRef.setActive(true);
-      await expect.poll(() => item.getAttribute('aria-selected')).toBe('true');
+      await expect.poll(() => item.getAttribute('aria-checked')).toBe('true');
       expect(apiRef.isActive()).toBe(true);
+    }
+  });
+
+  it('Should render with aria-disabled and disabled class when enabled={false}', async () => {
+    const TestComponent = () => {
+      return (
+        <UniverseProvider resources={mockUniverse}>
+          <Menu.Root>
+            <Menu.ToggleItem enabled={false} onAction={vi.fn()}>Disabled Toggle</Menu.ToggleItem>
+          </Menu.Root>
+        </UniverseProvider>
+      );
+    };
+
+    const { getByText, container } = render(<TestComponent />, { wrapper });
+    await waitForElementText(getByText, 'Disabled Toggle');
+
+    const item = container.querySelector('[role="menuitemcheckbox"]') as HTMLElement;
+
+    expect(item.getAttribute('aria-disabled')).toBe('true');
+    expect(item.className).toContain('tox-collection__item--state-disabled');
+  });
+
+  it('Should not trigger onAction when clicked while disabled', async () => {
+    const onActionSpy = vi.fn();
+    const TestComponent = () => {
+      return (
+        <UniverseProvider resources={mockUniverse}>
+          <Menu.Root>
+            <Menu.ToggleItem enabled={false} onAction={onActionSpy}>Disabled Toggle</Menu.ToggleItem>
+          </Menu.Root>
+        </UniverseProvider>
+      );
+    };
+
+    const { getByText } = render(<TestComponent />, { wrapper });
+    await waitForElementText(getByText, 'Disabled Toggle');
+
+    await userEvent.click(getByText('Disabled Toggle'));
+    expect(onActionSpy).not.toHaveBeenCalled();
+  });
+
+  it('Should not trigger onAction when disabled via API', async () => {
+    let apiRef: ToggleMenuItemInstanceApi | undefined;
+    const onActionSpy = vi.fn();
+    const onSetupSpy = vi.fn((api: ToggleMenuItemInstanceApi) => {
+      apiRef = api;
+      return vi.fn();
+    });
+
+    const TestComponent = () => {
+      return (
+        <UniverseProvider resources={mockUniverse}>
+          <Menu.Root>
+            <Menu.ToggleItem onSetup={onSetupSpy} onAction={onActionSpy}>Toggle Item</Menu.ToggleItem>
+          </Menu.Root>
+        </UniverseProvider>
+      );
+    };
+
+    const { getByText, container } = render(<TestComponent />, { wrapper });
+    await waitForElementText(getByText, 'Toggle Item');
+
+    const item = container.querySelector('[role="menuitemcheckbox"]') as HTMLElement;
+
+    expect(apiRef).toBeDefined();
+    if (apiRef) {
+      apiRef.setEnabled(false);
+      await expect.poll(() => item.getAttribute('aria-disabled')).toBe('true');
+
+      await userEvent.click(getByText('Toggle Item'));
+      expect(onActionSpy).not.toHaveBeenCalled();
+    }
+  });
+
+  it('Should update enabled state via API', async () => {
+    let apiRef: ToggleMenuItemInstanceApi | undefined;
+    const onSetupSpy = vi.fn((api: ToggleMenuItemInstanceApi) => {
+      apiRef = api;
+      return vi.fn();
+    });
+
+    const TestComponent = () => {
+      return (
+        <UniverseProvider resources={mockUniverse}>
+          <Menu.Root>
+            <Menu.ToggleItem onSetup={onSetupSpy} onAction={vi.fn()}>Toggle Item</Menu.ToggleItem>
+          </Menu.Root>
+        </UniverseProvider>
+      );
+    };
+
+    const { getByText, container } = render(<TestComponent />, { wrapper });
+    await waitForElementText(getByText, 'Toggle Item');
+
+    const item = container.querySelector('[role="menuitemcheckbox"]') as HTMLElement;
+
+    expect(item.getAttribute('aria-disabled')).toBe('false');
+    expect(apiRef).toBeDefined();
+
+    if (apiRef) {
+      expect(apiRef.isEnabled()).toBe(true);
+
+      apiRef.setEnabled(false);
+      await expect.poll(() => item.getAttribute('aria-disabled')).toBe('true');
+      expect(apiRef.isEnabled()).toBe(false);
+      expect(item.className).toContain('tox-collection__item--state-disabled');
+
+      apiRef.setEnabled(true);
+      await expect.poll(() => item.getAttribute('aria-disabled')).toBe('false');
+      expect(apiRef.isEnabled()).toBe(true);
     }
   });
 
@@ -151,16 +262,15 @@ describe('browser.MenuToggleItemTest', () => {
     const toggle1 = menuItems[0] as HTMLElement;
     const toggle2 = menuItems[1] as HTMLElement;
 
-    expect(toggle1.getAttribute('aria-selected')).toBe('false');
-    expect(toggle2.getAttribute('aria-selected')).toBe('false');
+    expect(toggle1.getAttribute('aria-checked')).toBe('false');
+    expect(toggle2.getAttribute('aria-checked')).toBe('false');
 
     await userEvent.click(toggle1);
-    await expect.poll(() => toggle1.getAttribute('aria-selected')).toBe('true');
-    expect(toggle2.getAttribute('aria-selected')).toBe('false');
+    await expect.poll(() => toggle1.getAttribute('aria-checked')).toBe('true');
+    expect(toggle2.getAttribute('aria-checked')).toBe('false');
 
     await userEvent.click(toggle2);
-    await expect.poll(() => toggle2.getAttribute('aria-selected')).toBe('true');
-    expect(toggle1.getAttribute('aria-selected')).toBe('true');
+    await expect.poll(() => toggle2.getAttribute('aria-checked')).toBe('true');
+    expect(toggle1.getAttribute('aria-checked')).toBe('true');
   });
 });
-

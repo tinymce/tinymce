@@ -129,6 +129,21 @@ describe('browser.tinymce.models.dom.table.InsertColumnTableSizeTest', () => {
           '</table>'
   };
 
+  const attrTable = {
+    html: '<table width="100%" border="1">' +
+          '<tbody>' +
+            '<tr>' +
+              '<td></td>' +
+              '<td></td>' +
+            '</tr>' +
+            '<tr>' +
+              '<td></td>' +
+              '<td></td>' +
+            '</tr>' +
+          '</tbody>' +
+          '</table>'
+  };
+
   const insertTable = (editor: Editor, table: string) => {
     editor.setContent(table);
     const bodyElem = TinyDom.body(editor);
@@ -161,6 +176,8 @@ describe('browser.tinymce.models.dom.table.InsertColumnTableSizeTest', () => {
 
   context('Insert columns, erase column and assert the table width does not change', () => {
     it('table which is empty', () => pInsertColumnAssertWidth(emptyTable));
+
+    it('TINY-12797: table with width attribute', () => pInsertColumnAssertWidth(attrTable));
 
     it('table with contents in some cells', () => pInsertColumnAssertWidth(contentsInSomeCells));
 
