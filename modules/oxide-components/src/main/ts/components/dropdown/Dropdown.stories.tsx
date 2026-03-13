@@ -30,7 +30,7 @@ const meta = {
   },
   decorators: [
     (Story) => (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <div style={{ height: '100vh', width: '100vw', paddingTop: '40vh', paddingInlineStart: '35vw' }}>
         <Story />
       </div>
     )
@@ -55,11 +55,11 @@ const render = (args: Dropdown.DropdownProps): JSX.Element => {
     <Dropdown.Root {...args}>
       <Dropdown.Trigger>
         <Button variant='secondary'>
-          Click me to toggle dropdown
+          Click to toggle
         </Button>
       </Dropdown.Trigger>
       <Dropdown.Content>
-        <div style={{ width: '400px', height: '300px' }}>Hello I am the content</div>
+        <div style={{ width: '200px', height: '100px' }}>Hello I am the content</div>
       </Dropdown.Content>
     </Dropdown.Root>
   );
