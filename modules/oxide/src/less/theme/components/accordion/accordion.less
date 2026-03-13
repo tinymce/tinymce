@@ -2,31 +2,6 @@
 // Accordion
 //
 
-@accordion-border-radius: @control-border-radius; // 6px
-@accordion-border-color: @border-color;
-@accordion-background-color: @background-color;
-
-@accordion-item-background-color: darken(@background-color, 3%);
-@accordion-item-margin-bottom: @pad-sm;
-
-@accordion-header-padding: @pad-sm + @pad-xs;
-@accordion-header-font-size: @font-size-md;
-@accordion-header-font-weight: @font-weight-bold;
-@accordion-header-text-color: @text-color;
-@accordion-header-background-color: transparent;
-@accordion-header-hover-background-color: darken(@accordion-item-background-color, 5%);
-
-@accordion-icon-size: @base-value * 1.5;
-@accordion-icon-color: @text-color;
-@accordion-icon-margin: @pad-sm;
-
-@accordion-content-padding-x: @pad-sm + @pad-xs;
-@accordion-content-padding-y: @pad-sm;
-@accordion-content-background-color: transparent;
-
-@accordion-header-disabled-opacity: 0.5;
-@accordion-header-disabled-cursor: not-allowed;
-
 .tox when (@custom-properties-enabled = true) {
   .tox-accordion {
     --tox-private-accordion-item-background-color: light-dark(
@@ -35,37 +10,36 @@
     --tox-private-accordion-header-hover-background-color: light-dark(
       hsl(from var(--tox-private-accordion-item-background-color, @accordion-item-background-color) h s calc(l - 5)),
       hsl(from var(--tox-private-accordion-item-background-color, @accordion-item-background-color) h s calc(l + 5)));
-
-    --tox-private-accordion-icon-color: var(--tox-private-text-color);
-
-    --tox-private-accordion-header-focus-outline: 0 0 0 var(--tox-private-keyboard-focus-outline-width) var(--tox-private-keyboard-focus-outline-color);
   }
 }
+
+@accordion-item-background-color: darken(@background-color, 3%);
+@accordion-header-hover-background-color: darken(@accordion-item-background-color, 5%);
 
 .tox {
   .tox-accordion {
     display: flex;
     flex-direction: column;
-    gap: @accordion-item-margin-bottom;
+    gap: var(--tox-private-pad-sm, @pad-sm);
   }
 
   .tox-accordion__item {
-    background-color: var(--tox-private-background-color, @accordion-background-color);
-    border-radius: @control-border-radius;
+    background-color: var(--tox-private-background-color, @background-color);
+    color: var(--tox-private-text-color, @text-color);
+    border-radius: var(--tox-private-control-border-radius, @control-border-radius);
     position: relative;
 
     &.tox-accordion__item--expanded {
       background-color: var(--tox-private-accordion-item-background-color, @accordion-item-background-color);
 
-      
       .tox-accordion__content--expanded .tox-accordion__content-inner {
-        padding-top: @pad-xs;
-      }    
+        padding-top: var(--tox-private-pad-xs, @pad-xs);
+      }
     }
 
     &::after {
-      border-radius: @control-border-radius;
-      box-shadow: var(--tox-private-accordion-header-focus-outline, 0 0 0 @keyboard-focus-outline-width @keyboard-focus-outline-color);
+      border-radius: var(--tox-private-control-border-radius, @control-border-radius);
+      box-shadow: 0 0 0 var(--tox-private-keyboard-focus-outline-width, @keyboard-focus-outline-width) var(--tox-private-keyboard-focus-outline-color, @keyboard-focus-outline-color);
       content: '';
       inset: 0;
       opacity: 0;
@@ -98,27 +72,27 @@
 
   .tox-accordion__header {
     align-items: center;
-    background-color: @accordion-header-background-color;
+    background-color: transparent;
     border: none;
-    border-radius: @control-border-radius;
+    border-radius: var(--tox-private-control-border-radius, @control-border-radius);
     box-sizing: border-box;
-    color: var(--tox-private-text-color, @accordion-header-text-color);
+    color: var(--tox-private-text-color, @text-color);
     cursor: pointer;
     display: flex;
-    font-family: @font-stack;
-    font-size: @accordion-header-font-size;
-    font-weight: @accordion-header-font-weight;
-    line-height: @line-height-base;
+    font-family: var(--tox-private-font-stack, @font-stack);
+    font-size: var(--tox-private-font-size-md, @font-size-md);
+    font-weight: var(--tox-private-font-weight-bold, @font-weight-bold);
+    line-height: var(--tox-private-line-height-base, @line-height-base);
     outline: none;
-    padding: @accordion-header-padding;
+    padding: calc(var(--tox-private-pad-sm, @pad-sm) + var(--tox-private-pad-xs, @pad-xs));
     text-align: left;
     width: 100%;
 
     // Add pseudo-element for focus outline (following toolbar-button.less pattern)
     &::after {
-      border-radius: @control-border-radius;
+      border-radius: var(--tox-private-control-border-radius, @control-border-radius);
       bottom: 0;
-      box-shadow: var(--tox-private-accordion-header-focus-outline, 0 0 0 @keyboard-focus-outline-width @keyboard-focus-outline-color);
+      box-shadow: 0 0 0 var(--tox-private-keyboard-focus-outline-width, @keyboard-focus-outline-width) var(--tox-private-keyboard-focus-outline-color, @keyboard-focus-outline-color);
       content: '';
       left: 0;
       opacity: 0;
@@ -146,40 +120,40 @@
     }
 
     &.tox-accordion__header--disabled {
-      cursor: @accordion-header-disabled-cursor;
-      opacity: @accordion-header-disabled-opacity;
+      cursor: not-allowed;
+      opacity: 0.5;
     }
 
     &.tox-accordion__header--icon-end {
-      padding-right: @accordion-header-padding;
+      padding-right: calc(var(--tox-private-pad-sm, @pad-sm) + var(--tox-private-pad-xs, @pad-xs));
     }
   }
 
   .tox-accordion__content--expanded .tox-accordion__content-inner {
-    padding-top: calc(@accordion-content-padding-y + 1px);
+    padding-top: calc(var(--tox-private-pad-sm, @pad-sm) + 1px);
   }
 
   .tox-accordion__header-icon {
     align-items: center;
-    color: var(--tox-private-accordion-icon-color, @accordion-icon-color);
+    color: var(--tox-private-text-color, @text-color);
     display: flex;
     flex-shrink: 0;
-    height: @accordion-icon-size;
+    height: calc(var(--tox-private-base-value, @base-value) * 1.5);
     justify-content: center;
-    width: @accordion-icon-size;
+    width: calc(var(--tox-private-base-value, @base-value) * 1.5);
 
     svg {
       display: block;
       fill: currentColor;
       height: 100%;
       width: 100%;
-      max-height: @accordion-icon-size;
-      max-width: @accordion-icon-size;
+      max-height: calc(var(--tox-private-base-value, @base-value) * 1.5);
+      max-width: calc(var(--tox-private-base-value, @base-value) * 1.5);
     }
   }
 
   .tox-accordion__header:not(.tox-accordion__header--icon-end) .tox-accordion__header-icon {
-    margin-right: @accordion-icon-margin;
+    margin-right: var(--tox-private-pad-sm, @pad-sm);
     margin-left: 0;
   }
 
@@ -197,11 +171,11 @@
 
   .tox-accordion__header--icon-end .tox-accordion__header-text {
     flex: 0 1 auto;
-    margin-right: @accordion-icon-margin;
+    margin-right: var(--tox-private-pad-sm, @pad-sm);
   }
 
   .tox-accordion__content {
-    border-radius: @control-border-radius;
+    border-radius: var(--tox-private-control-border-radius, @control-border-radius);
 
     &.tox-accordion__content--collapsed {
       display: none;
@@ -213,7 +187,7 @@
   }
 
   .tox-accordion__content-inner {
-    padding: @accordion-content-padding-y @accordion-content-padding-x (@pad-sm + @pad-xs);
+    padding: var(--tox-private-pad-sm, @pad-sm) calc(var(--tox-private-pad-sm, @pad-sm) + var(--tox-private-pad-xs, @pad-xs)) calc(var(--tox-private-pad-sm, @pad-sm) + var(--tox-private-pad-xs, @pad-xs));
 
     .tox-form__group {
       &:last-child {
@@ -221,7 +195,7 @@
       }
 
       > *:not(:first-child) {
-        margin-top: @pad-sm + @pad-xs;
+        margin-top: calc(var(--tox-private-pad-sm, @pad-sm) + var(--tox-private-pad-xs, @pad-xs));
       }
 
       > .tox-dropdown-content {
@@ -231,11 +205,11 @@
 
     .tox-button-group {
       display: flex;
-      gap: @pad-sm;
+      gap: var(--tox-private-pad-sm, @pad-sm);
     }
 
     .tox-accordion__model-button {
-      border-radius: @accordion-border-radius;
+      border-radius: var(--tox-private-control-border-radius, @control-border-radius);
       align-items: center;
       appearance: none;
       background: none;
@@ -245,16 +219,16 @@
       display: flex;
       font-family: inherit;
       font-size: inherit;
-      gap: @pad-xs;
+      gap: var(--tox-private-pad-xs, @pad-xs);
       margin: 0;
       outline: none;
-      padding: 6px (@pad-sm + @pad-xs);
+      padding: 6px calc(var(--tox-private-pad-sm, @pad-sm) + var(--tox-private-pad-xs, @pad-xs));
       position: relative;
 
       &::after {
-        border-radius: @accordion-border-radius;
+        border-radius: var(--tox-private-control-border-radius, @control-border-radius);
         bottom: 0;
-        box-shadow: 0 0 0 @keyboard-focus-outline-width @keyboard-focus-outline-color;
+        box-shadow: 0 0 0 var(--tox-private-keyboard-focus-outline-width, @keyboard-focus-outline-width) var(--tox-private-keyboard-focus-outline-color, @keyboard-focus-outline-color);
         content: '';
         left: 0;
         opacity: 0;
@@ -280,9 +254,9 @@
 
   .tox-accordion .tox-selectfield {
     align-items: center;
-    background-color: @accordion-background-color;
-    border: 1px solid @accordion-border-color;
-    border-radius: @accordion-border-radius;
+    background-color: var(--tox-private-background-color, @background-color);
+    border: 1px solid var(--tox-private-border-color, @border-color);
+    border-radius: var(--tox-private-control-border-radius, @control-border-radius);
     box-sizing: border-box;
     display: flex;
     height: 34px;
@@ -291,7 +265,7 @@
     width: 100%;
 
     &:focus-within {
-      box-shadow: 0 0 0 @keyboard-focus-outline-width @keyboard-focus-outline-color;
+      box-shadow: 0 0 0 var(--tox-private-keyboard-focus-outline-width, @keyboard-focus-outline-width) var(--tox-private-keyboard-focus-outline-color, @keyboard-focus-outline-color);
       z-index: 1;
 
       @media (forced-colors: active) {
@@ -323,8 +297,8 @@
       pointer-events: none;
 
       svg {
-        height: @base-value;
-        width: @base-value;
+        height: var(--tox-private-base-value, @base-value);
+        width: var(--tox-private-base-value, @base-value);
       }
     }
   }
@@ -336,7 +310,7 @@
   }
 
   .tox-accordion__header:not(.tox-accordion__header--icon-end) .tox-accordion__header-icon {
-    margin-left: @accordion-icon-margin;
+    margin-left: var(--tox-private-pad-sm, @pad-sm);
     margin-right: 0;
   }
 
@@ -346,7 +320,7 @@
   }
 
   .tox-accordion__header--icon-end .tox-accordion__header-text {
-    margin-left: @accordion-icon-margin;
+    margin-left: var(--tox-private-pad-sm, @pad-sm);
     margin-right: 0;
   }
 }
