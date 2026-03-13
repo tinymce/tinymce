@@ -1,3 +1,5 @@
+import { Type } from '@ephox/katamari';
+
 import type Editor from '../api/Editor';
 import Tools from '../api/util/Tools';
 import * as Rtc from '../Rtc';
@@ -16,7 +18,7 @@ interface ProcessedValue {
 }
 
 const processValue = (value: string | DetailsWithContent): ProcessedValue => {
-  if (typeof value !== 'string') {
+  if (!Type.isString(value)) {
     const details = Tools.extend({
       paste: value.paste,
       data: {

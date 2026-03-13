@@ -1,4 +1,4 @@
-import { Arr } from '@ephox/katamari';
+import { Arr, Type } from '@ephox/katamari';
 
 import type Editor from '../api/Editor';
 import type { SetContentEvent } from '../api/EventTypes';
@@ -34,7 +34,7 @@ const replaceMatchWithSpan = (editor: Editor, content: string, cls: string) => {
 
     return (
       '<span class="' + cls + '" data-mce-content="' + editor.dom.encode(args[0]) + '">' +
-      editor.dom.encode(typeof args[1] === 'string' ? args[1] : args[0]) + '</span>'
+      editor.dom.encode(Type.isString(args[1]) ? args[1] : args[0]) + '</span>'
     );
   };
 };
