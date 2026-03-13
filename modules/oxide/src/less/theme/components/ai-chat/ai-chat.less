@@ -22,8 +22,6 @@
   .tox-sidebar-content__header {
     border: var(--tox-private-tinymceai-focus-border-width, @tinymceai-focus-border-width) solid var(--tox-private-background-color, @background-color);
     padding: calc(var(--tox-private-pad-sm, @pad-sm) - var(--tox-private-tinymceai-focus-border-width, @tinymceai-focus-border-width)) calc(12px - var(--tox-private-tinymceai-focus-border-width, @tinymceai-focus-border-width));
-    border-bottom: var(--tox-private-tinymceai-border-width, @tinymceai-border-width) solid var(--tox-private-neutral-20, darken(@background-color, 11%));
-    box-shadow: none;
 
     &:focus:not(:disabled) {
        border: var(--tox-private-tinymceai-focus-border-width, @tinymceai-focus-border-width) solid var(--tox-private-color-tint, @color-tint);
@@ -41,7 +39,7 @@
     &:focus:not(:disabled) {
        outline: 2px solid var(--tox-private-color-tint, @color-tint);
        outline-offset: var(--tox-private-tinymceai-border-width, @tinymceai-border-width);
-       border-bottom: var(--tox-private-tinymceai-border-width, @tinymceai-border-width) solid var(--tox-private-color-white, @color-white);
+       box-shadow: 0 0 0 1px var(--tox-private-color-white, @color-white);
        border-radius: var(--tox-private-control-border-radius, @control-border-radius);
     }
   }
