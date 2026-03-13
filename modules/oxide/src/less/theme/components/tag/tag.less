@@ -53,6 +53,7 @@
 
     .tox-icon {
       height: var(--tox-private-base-value, @base-value);
+      fill: var(--tox-private-text-color, @text-color);
     }
 
     .tox-tag__label {
@@ -61,6 +62,7 @@
       white-space: nowrap;
       /* If there is not enough space, then shrink the label. */
       flex-shrink: 1;
+      color: var(--tox-private-text-color, @text-color);
     }
 
     .tox-tag__close {
@@ -69,6 +71,7 @@
       .tox-button.tox-button--icon {
         border: 0;
         padding: 0;
+        color: var(--tox-private-text-color-muted, @text-color-muted);
 
         &::before {
           box-shadow: none;
