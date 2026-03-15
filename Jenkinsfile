@@ -177,20 +177,26 @@ timestamps { notifyStatusChange(
 
 
       stage('Deps') {
-        // cancel build if primary branch doesn't merge cleanly
-        gitMerge(primaryBranch)
-        yarnInstall()
+        // 15 min: yarn install should never take this long; fail fast if it hangs
+        timeout(time: 15, unit: 'MINUTES') {
+          // cancel build if primary branch doesn't merge cleanly
+          gitMerge(primaryBranch)
+          yarnInstall()
+        }
       }
 
       stage('Build') {
-        // verify no errors in changelog merge
-        exec("yarn changie-merge")
-        withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
-          // type check and build TinyMCE
-          exec("yarn ci-all-seq")
+        // 30 min: full build + type-check; if it exceeds this something is badly wrong
+        timeout(time: 30, unit: 'MINUTES') {
+          // verify no errors in changelog merge
+          exec("yarn changie-merge")
+          withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
+            // type check and build TinyMCE
+            exec("yarn ci-all-seq")
 
-          // validate documentation generator
-          exec("yarn tinymce-grunt shell:moxiedoc")
+            // validate documentation generator
+            exec("yarn tinymce-grunt shell:moxiedoc")
+          }
         }
       }
     }
@@ -236,10 +242,14 @@ timestamps { notifyStatusChange(
         processes[name] = {
           stage(name) {
             container('node') {
-              sleep( time: delaySeconds, unit: 'SECONDS')
-              grunt('list-changed-browser')
-              bedrockRemoteTools.withRemoteCreds(platform.provider) {
-                runRemoteTests(name, platform.browser, platform.provider, platform.os, platform.version, s_bucket, s_buckets, runAllTests)
+              // 60 min activity-based: resets on any log output; catches silent network stalls
+              // (e.g. LambdaTest/AWS connection drops that produce no output indefinitely)
+              timeout(time: 60, unit: 'MINUTES', activity: true) {
+                sleep( time: delaySeconds, unit: 'SECONDS')
+                grunt('list-changed-browser')
+                bedrockRemoteTools.withRemoteCreds(platform.provider) {
+                  runRemoteTests(name, platform.browser, platform.provider, platform.os, platform.version, s_bucket, s_buckets, runAllTests)
+                }
               }
             }
           }
@@ -250,8 +260,11 @@ timestamps { notifyStatusChange(
     processes['headless'] = {
       stage('headless') {
         container('node') {
-          grunt('list-changed-headless')
-          runHeadlessTests(runAllTests)
+          // 60 min: headless Selenium tests should complete well within this
+          timeout(time: 60, unit: 'MINUTES') {
+            grunt('list-changed-headless')
+            runHeadlessTests(runAllTests)
+          }
         }
       }
     }
@@ -259,30 +272,39 @@ timestamps { notifyStatusChange(
     processes['playwright'] = {
       stage('playwright') {
         container('playwright') {
-          exec('yarn -s --cwd modules/oxide-components test-ci')
-          junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results.xml'
-          def visualTestStatus
-          // Limit the number of workers allowed to avoid hanging IO
-          withEnv(["PW_WORKERS=1"]) {
-            visualTestStatus = exec(script: 'yarn -s --cwd modules/oxide-components test-visual-ci', returnStatus: true)
+          // 60 min: playwright unit + visual tests should complete well within this
+          timeout(time: 60, unit: 'MINUTES') {
+            exec('yarn -s --cwd modules/oxide-components test-ci')
+            junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results.xml'
+            def visualTestStatus
+            // Limit the number of workers allowed to avoid hanging IO
+            withEnv(["PW_WORKERS=1"]) {
+              visualTestStatus = exec(script: 'yarn -s --cwd modules/oxide-components test-visual-ci', returnStatus: true)
+            }
+            if (visualTestStatus == 4) {
+              unstable("Visual tests failed")
+            } else if (visualTestStatus != 0) {
+              error("Unexpected error running visual tests")
+            }
+            junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results-visual.xml'
+            exec('find modules/oxide-components -name "*.png" -type f || echo "No PNG files found"')
+            archiveArtifacts artifacts: 'modules/oxide-components/test-results/**/*.png', allowEmptyArchive: true, fingerprint: true
           }
-          if (visualTestStatus == 4) {
-            unstable("Visual tests failed")
-          } else if (visualTestStatus != 0) {
-            error("Unexpected error running visual tests")
-          }
-          junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results-visual.xml'
-          exec('find modules/oxide-components -name "*.png" -type f || echo "No PNG files found"')
-          archiveArtifacts artifacts: 'modules/oxide-components/test-results/**/*.png', allowEmptyArchive: true, fingerprint: true
         }
       }
     }
 
     stage('Tests') {
-      container('node') {
-        bedrockRemoteTools.tinyWorkSishTunnel()
+      // 90 min: absolute ceiling across all parallel branches (sish tunnel + all remote/headless/playwright)
+      timeout(time: 90, unit: 'MINUTES') {
+        // TODO: consider wrapping in try/finally to publish scratch/TEST-*.xml as a safety net
+        // for results written before a timeout fires. Held back due to potential double-reporting
+        // since runBedrockTest already publishes junit per test.
+        container('node') {
+          bedrockRemoteTools.tinyWorkSishTunnel()
+        }
+        parallel processes
       }
-      parallel processes
     }
 
     container('node') {
