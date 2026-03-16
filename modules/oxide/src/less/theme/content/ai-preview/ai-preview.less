@@ -42,13 +42,6 @@ div[tinymceai-data-pending-diff="true"], span[tinymceai-data-pending-diff="true"
   background: @color-white;
 }
 
-.tox-tinymceai__dim-overlay {
-  position: fixed;
-  inset: 0;
-  background: @tinymceai-dim-overlay-color;
-  pointer-events: none;
-}
-
 .tox-tinymceai__preview-body {
   position: relative;
   min-height: 100%;
@@ -87,12 +80,14 @@ div[tinymceai-data-pending-diff="true"], span[tinymceai-data-pending-diff="true"
 }
 
 .tox-tinymceai__diff-focus-overlay {
-  position: fixed;
-  inset: 0;
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  overflow: hidden;
   pointer-events: none;
 }
 
 .tox-tinymceai__diff-focus-overlay-dim {
   fill: @tinymceai-dim-overlay-color;
 }
-
