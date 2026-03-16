@@ -154,7 +154,7 @@
     color: var(--tox-private-text-color-muted,@text-color-muted);
     font-size: var(--tox-private-font-size-sm, @font-size-sm);
     gap: var(--tox-private-pad-xs, @pad-xs);
-    line-height: var(--response-status-icon-height);
+    line-height: var(--response-status-icon-height, @font-size-sm);
     padding-top: var(--tox-private-pad-sm, @pad-sm);
     & svg {
       fill: var(--tox-private-text-color-muted,@text-color-muted);
@@ -165,7 +165,7 @@
     border-radius: 999px;
     border: 1px solid var(--tox-private-neutral-20, darken(@background-color, 11%));
     background-color: var(--tox-private-background-color, @background-color);
-    height: var(--response-status-icon-height);
+    height: var(--response-status-icon-height, @font-size-sm);
     flex: 0 0 24px;
     display: flex;
     align-items: center;
