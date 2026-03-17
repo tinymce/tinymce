@@ -1,5 +1,6 @@
 .tox-floating-sidebar when (@custom-properties-enabled = true) {
   --tox-private-floating-sidebar-box-shadow: 0 0 40px 1px hsl( from var(--tox-private-color-black) h s l / 15%), 0 16px 16px -10px hsl( from var(--tox-private-color-black) h s l / 15%);
+  --tox-private-floating-sidebar-background-color: light-dark(hsl( from var(--tox-private-background-color) h s calc(l - 6)), hsl( from var(--tox-private-background-color) h s calc(l + 10)));
 }
 
 .tox {
@@ -13,8 +14,8 @@
     box-shadow: var(--tox-private-floating-sidebar-box-shadow, 0 0 40px 1px fade(@color-black, 15%), 0 16px 16px -10px fade(@color-black, 15%));
     width: var(--tox-private-floating-sidebar-width);
     height: var(--tox-private-floating-sidebar-height);
-    background-color: var(--tox-private-background-color, @background-color);
-    border-radius: 12px;
+    background-color: var(--tox-private-floating-sidebar-background-color, @sidebar-background-color);
+    border-radius: var(--tox-private-panel-border-radius, @panel-border-radius);
     overflow: hidden;
 
     &:not(&--open) {
@@ -35,5 +36,9 @@
 
   .tox-floating-sidebar__header {
     position: relative;
+  }
+
+  .tox-floating-sidebar .tox-ai__scroll:has(.tox-card-list) {
+    background-color: inherit;
   }
 }

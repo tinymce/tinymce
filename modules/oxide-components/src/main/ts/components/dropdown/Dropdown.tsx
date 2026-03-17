@@ -209,6 +209,16 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
       } else if (Type.isNonNullable(child.props.ref)) {
         child.props.ref.current = el;
       }
+      // TODO: This needs to changes once we upgrade to react 19
+      // @ts-expect-error This is needed because preact sets the ref on the child object not on its props
+      if (Type.isFunction(child.ref)) {
+        // @ts-expect-error This is needed because preact sets the ref on the child object not on its props
+        child.ref(el);
+        // @ts-expect-error This is needed because preact sets the ref on the child object not on its props
+      } else if (Type.isNonNullable(child.ref)) {
+        // @ts-expect-error This is needed because preact sets the ref on the child object not on its props
+        child.ref.current = el;
+      }
       if (Type.isFunction(ref)) {
         ref(el);
       } else if (Type.isNonNullable(ref)) {

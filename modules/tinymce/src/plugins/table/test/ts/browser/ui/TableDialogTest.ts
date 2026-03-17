@@ -393,33 +393,41 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
     TableTestUtils.assertDialogValues(getExpectedData(1), false, generalLabels);
     TableTestUtils.setDialogValues({ border: '2px' }, false, generalLabels);
     await TableTestUtils.pClickDialogButton(editor, true);
-    TinyAssertions.assertContent(editor, '<table style="width: 60%; border-width: 2px; border-collapse: collapse;" border="1" width="60%"><tbody><tr><td style="border-width: 2px;">&nbsp;</td></tr></tbody></table>');
+    TinyAssertions.assertContent(editor, '<table style="width: 60%; border-width: 2px; border-collapse: collapse;" border="1"><tbody><tr><td style="border-width: 2px;">&nbsp;</td></tr></tbody></table>');
     await TableTestUtils.pOpenTableDialog(editor);
     TableTestUtils.assertDialogValues(getExpectedData(2), false, generalLabels);
     await TableTestUtils.pClickDialogButton(editor, false);
   });
 
   it('TINY-8758: Default width should be added as style', async () => {
-    const getExpectedData = (borderWidth: number, width: string) => ({
+    const getExpectedData = (borderWidth: string, width: string) => ({
       width,
       height: '',
       cellspacing: '',
       cellpadding: '',
-      border: borderWidth + 'px',
+      border: borderWidth,
       caption: false,
       align: ''
     });
 
     const editor = hook.editor();
-    editor.setContent('<table style="border-collapse: collapse;" border="1px"><tbody><tr><td>&nbsp;</td></tr></tbody></table>');
-    setCursor(editor);
+    editor.setContent('<p></p>');
     await TableTestUtils.pOpenTableDialog(editor);
-    TableTestUtils.assertDialogValues(getExpectedData(1, ''), false, generalLabels);
+    TableTestUtils.assertDialogValues(getExpectedData('1', '100%'), false, generalLabels);
     TableTestUtils.setDialogValues({ border: '2px' }, false, generalLabels);
     await TableTestUtils.pClickDialogButton(editor, true);
-    TinyAssertions.assertContent(editor, '<table style="border-width: 2px; border-collapse: collapse;" border="1"><tbody><tr><td style="border-width: 2px;">&nbsp;</td></tr></tbody></table>');
+    TableTestUtils.assertTableStructure(editor, ApproxStructure.build((s, str, _arr) => s.element('table', {
+      styles: {
+        'width': str.is('100%'),
+        'border-collapse': str.is('collapse'),
+        'border-width': str.is('2px')
+      },
+      attrs: {
+        border: str.is('1')
+      }
+    })));
     await TableTestUtils.pOpenTableDialog(editor);
-    TableTestUtils.assertDialogValues(getExpectedData(2, ''), false, generalLabels);
+    TableTestUtils.assertDialogValues(getExpectedData('2px', '100%'), false, generalLabels);
     await TableTestUtils.pClickDialogButton(editor, false);
   });
 
@@ -476,6 +484,27 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
       editor.execCommand('mceInsertTableDialog');
       UiFinder.notExists(SugarBody.body(), '.tox-dialog');
     });
+  });
+
+  it('TINY-12797: CSS style width should be applied when updating values in table dialog', async () => {
+    const getExpectedData = (width: string) => ({
+      width,
+      height: '',
+      cellspacing: '',
+      cellpadding: '',
+      border: 1 + 'px',
+      caption: false,
+      align: ''
+    });
+
+    const editor = hook.editor();
+    editor.setContent('<table style="border-collapse: collapse;" border="1px" width="100%"><tbody><tr><td>&nbsp;</td></tr></tbody></table>');
+    setCursor(editor);
+    await TableTestUtils.pOpenTableDialog(editor);
+    TableTestUtils.assertDialogValues(getExpectedData('100%'), false, generalLabels);
+    TableTestUtils.setDialogValues({ width: '50%' }, false, generalLabels);
+    await TableTestUtils.pClickDialogButton(editor, true);
+    TinyAssertions.assertContent(editor, '<table style="width: 50%; border-width: 1px; border-collapse: collapse;" border="1"><tbody><tr><td>&nbsp;</td></tr></tbody></table>');
   });
 
   context('Applying data to cells (TD/TH)', () => {

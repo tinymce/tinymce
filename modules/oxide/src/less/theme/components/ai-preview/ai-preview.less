@@ -1,3 +1,5 @@
+@tinymceai-dim-overlay-color: fade(@color-black, 20%);
+
 .tox {
   .tox-ai__preview-host {
     width: 100%;
@@ -43,5 +45,30 @@
 
   .tox-ai__preview-host:empty {
     pointer-events: none;
+  }
+
+  .tox-ai__preview-overlay {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+
+    &--hidden {
+      visibility: hidden;
+    }
+
+    &--pass-through {
+      pointer-events: none;
+    }
+
+    &--dim {
+      background: @tinymceai-dim-overlay-color;
+    }
+
+    &--centered {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
   }
 }
