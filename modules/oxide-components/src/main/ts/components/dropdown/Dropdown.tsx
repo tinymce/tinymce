@@ -127,7 +127,15 @@ const Content = forwardRef<HTMLDivElement, DropdownContentProps>(({ children, on
   const contentProps = {
     ...props,
     ...triggerEvents.includes('hover') && onHoverTriggerProps,
-    ...triggerEvents.includes('arrows') && onArrowTriggerProps
+    ...triggerEvents.includes('arrows') && onArrowTriggerProps,
+    onKeyDown: (e: KeyboardEvent<HTMLDivElement>) => {
+      props.onKeyDown?.(e);
+      if (e.key === 'Escape') {
+        e.stopPropagation();
+        e.preventDefault();
+        contentRef.current?.hidePopover();
+      }
+    }
   };
   return <div
     // @ts-expect-error - TODO: Remove this expect error once we've upgraded to React 19+
