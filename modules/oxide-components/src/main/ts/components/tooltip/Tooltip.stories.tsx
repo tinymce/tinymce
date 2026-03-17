@@ -12,7 +12,7 @@ const mockUniverse = {
 };
 
 const meta = {
-  title: 'components/tooltip',
+  title: 'components/Tooltip',
   component: (props) =>
     <Tooltip.Root>
       <Tooltip.Trigger>
