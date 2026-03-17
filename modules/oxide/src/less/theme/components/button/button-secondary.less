@@ -47,7 +47,7 @@
 @button-secondary-active-text-color: @button-secondary-text-color;
 
 // Enabled state
-@button-secondary-enabled-background-color: contrast(@background-color, mix(darken(@background-color, 6%), @color-tint, 70%), mix(lighten(@background-color, 15%), @color-tint, 70%));
+@button-secondary-enabled-background-color: multiply(white, contrast(@background-color, fade(@color-tint, 35), fade(@color-tint, 65))); // copied from toolbar button enabled state, we want to match the colors here
 @button-secondary-enabled-background-image: @button-secondary-background-image;
 @button-secondary-enabled-border-color: @button-secondary-enabled-background-color;
 @button-secondary-enabled-box-shadow: @button-secondary-box-shadow;
@@ -113,13 +113,12 @@
     --tox-private-button-secondary-active-text-color: var(--tox-private-button-secondary-text-color);
 
     /* Enabled state 
-      Do we use this button as a toggle that can be enabled? 
-      If not - these variables and enabled state styles should be removed
+      (used in AI chat)
     */
     --tox-private-button-secondary-enabled-background-color: light-dark(
-      mix(darken(@background-color, 6%), @color-tint, 70%),
-      mix(lighten(@background-color, 15%), @color-tint, 70%)
-    );
+      multiply(white, fade(@color-tint, 35)),
+      multiply(white, fade(@color-tint, 65))
+    ); /* blue20 and blue40 from figma - figure out CSS color calculation */
 
     --tox-private-button-secondary-enabled-border-color: var(--tox-private-button-secondary-enabled-background-color);
     --tox-private-button-secondary-enabled-text-color: var(--tox-private-button-secondary-text-color);
