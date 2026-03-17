@@ -95,12 +95,12 @@ const Content = forwardRef<HTMLDivElement, DropdownContentProps>(({ children, on
         ref.current = el;
       }
     }}
+    { ...contentProps }
     style={{
       ...insetProps,
       // @ts-expect-error - TODO: Remove this expect error once we've upgraded to React 19+
       positionArea: area,
     }}
-    { ...contentProps }
   >
     {isOpen && children}
   </div>;
@@ -131,7 +131,9 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
         child.props.onMouseEnter?.(e);
         props.onMouseEnter?.(e);
         debouncedHideHoverablePopover.cancel();
-        showContentPopover();
+        if (!isOpen) {
+          showContentPopover();
+        }
       }
     },
     onMouseLeave: (e: MouseEvent<HTMLElement>) => {
@@ -160,7 +162,7 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
   const onArrowTriggerProps = {
     onKeyUp: (e: KeyboardEvent) => {
       child.props.onKeyUp?.(e);
-      if (e.key === 'ArrowRight') {
+      if (e.key === 'ArrowRight' && !isOpen) {
         showContentPopover();
       }
     }
