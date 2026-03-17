@@ -26,25 +26,27 @@
   }
 
   .tox-tooltip--anchor {
+    display: none;
+    padding: var(--tox-private-pad-xs, @pad-xs) 0 0;
     position: absolute;
     position-try-order: most-height;
     position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
     height: fit-content;
   }
 
-  .tox-tooltip--anchor .tox-tooltip--up {
+  .tox-tooltip--anchor.tox-tooltip--up {
     position-area: block-end;
   }
 
-  .tox-tooltip--anchor .tox-tooltip--down {
+  .tox-tooltip--anchor.tox-tooltip--down {
     position-area: block-start;
   }
 
-  .tox-tooltip--anchor .tox-tooltip--left {
+  .tox-tooltip--anchor.tox-tooltip--left {
     position-area: inline-start;
   }
 
-  .tox-tooltip--anchor .tox-tooltip--right {
+  .tox-tooltip--anchor.tox-tooltip--right {
     position-area: inline-end;
   }
 

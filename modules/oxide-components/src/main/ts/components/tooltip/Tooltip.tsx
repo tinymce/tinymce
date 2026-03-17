@@ -124,7 +124,7 @@ const Content = forwardRef<HTMLDivElement, ContentProps>(({ text }, ref) => {
     } else if (!isOpen && contentRef.current) {
       const timeoutId = setTimeout(() => {
         if (contentRef.current) {
-          contentRef.current.style.display = 'none';
+          contentRef.current.style.display = '';
           contentRef.current.hidePopover();
         }
       }, delayForHide);
