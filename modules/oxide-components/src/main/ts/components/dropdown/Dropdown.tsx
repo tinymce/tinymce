@@ -83,9 +83,8 @@ const Content = forwardRef<HTMLDivElement, DropdownContentProps>(({ children, on
     }
   };
   const insetProps = PositioningUtils.getInset(side, gap);
-  const positionArea = PositioningUtils.getPositionArea(side, align);
+  const area = PositioningUtils.getPositionArea(side, align);
   return <div
-    // @ts-expect-error - TODO: Remove this expect error once we've upgraded to React 19+
     popover='auto'
     className={Bem.block('tox-dropdown-content')}
     ref={(el: HTMLDivElement) => {
@@ -98,12 +97,9 @@ const Content = forwardRef<HTMLDivElement, DropdownContentProps>(({ children, on
     }}
     style={{
       ...insetProps,
-      position: 'absolute',
-      positionArea,
-      positionTryOrder: 'most-height',
-      positionTryFallbacks: 'flip-block, flip-inline, flip-block flip-inline'
-    // react types lack the position attributes, but they work at runtime?
-    } as any}
+      // @ts-expect-error - TODO: Remove this expect error once we've upgraded to React 19+
+      positionArea: area,
+    }}
     { ...contentProps }
   >
     {isOpen && children}
