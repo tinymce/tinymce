@@ -100,24 +100,20 @@ interface ContentProps {
 const Content = forwardRef<HTMLDivElement, ContentProps>(({ text }, ref) => {
   const { isOpen, contentRef, triggerRef, delayForShow, delayForHide } = useContext(TooltipContext);
 
-  const updatePosition = useCallback(() => {
-    if (triggerRef.current && contentRef.current) {
-      const triggerRect = triggerRef.current.getBoundingClientRect();
-      contentRef.current.style.display = 'inline-block';
-      contentRef.current.style.height = 'fit-content';
-      contentRef.current.style.top = `${triggerRect.top + triggerRect.height}px`;
-      contentRef.current.style.position = 'fixed';
-      const contentRect = contentRef.current.getBoundingClientRect();
-      contentRef.current.style.left = `${triggerRect.left - contentRect.width / 2 + triggerRect.width / 2}px`;
-    }
-  }, [ contentRef, triggerRef ]);
-
   useLayoutEffect(() => {
+    const showContentPopover = () => {
+      if (contentRef.current) {
+        contentRef.current.style.display = 'inline-block';
+
+        // @ts-expect-error - TODO: Remove this expect error once we've upgraded to React 19+
+        contentRef.current.showPopover({ source: triggerRef.current });
+      }
+    };
+
     if (isOpen) {
       const timeoutId = setTimeout(() => {
         if (contentRef.current) {
-          contentRef.current.showPopover();
-          updatePosition();
+          showContentPopover();
         }
       }, delayForShow);
       return () => {
@@ -140,7 +136,7 @@ const Content = forwardRef<HTMLDivElement, ContentProps>(({ text }, ref) => {
     } else {
       return Fun.noop;
     }
-  }, [ isOpen, contentRef, updatePosition, delayForShow, delayForHide ]);
+  }, [ isOpen, contentRef, triggerRef, delayForShow, delayForHide ]);
 
   return (
     <div ref={(el: HTMLDivElement) => {
@@ -153,7 +149,7 @@ const Content = forwardRef<HTMLDivElement, ContentProps>(({ text }, ref) => {
     }}
     // @ts-expect-error We should remove this expect error once we've migrated to React 19 and can use the new popover API types
     popover='hint'
-    className={Bem.block('tox-tooltip', { up: true })}
+    className={Bem.block('tox-tooltip', { up: true, anchor: true })}
     >
       <div className={Bem.element('tox-tooltip', 'body')}>{text}</div>
     </div>

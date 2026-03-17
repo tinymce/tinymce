@@ -25,6 +25,29 @@
     z-index: @z-index-menu;
   }
 
+  .tox-tooltip--anchor {
+    position: absolute;
+    position-try-order: most-height;
+    position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
+    height: fit-content;
+  }
+
+  .tox-tooltip--anchor .tox-tooltip--up {
+    position-area: block-end;
+  }
+
+  .tox-tooltip--anchor .tox-tooltip--down {
+    position-area: block-start;
+  }
+
+  .tox-tooltip--anchor .tox-tooltip--left {
+    position-area: inline-start;
+  }
+
+  .tox-tooltip--anchor .tox-tooltip--right {
+    position-area: inline-end;
+  }
+
   .tox-tooltip__body {
     background-color: @tooltip-background-color;
     border-radius: @tooltip-border-radius;
