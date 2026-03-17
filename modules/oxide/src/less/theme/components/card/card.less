@@ -48,7 +48,12 @@
       background-color: darken(@background-color, 6%);
 
       &:not(.tox-card--selected) {
+        border-width: 1px;
         border-color: @text-color-muted;
+      }
+
+      .tox-card__header {
+        font-size: @font-size-xs;
       }
 
       .tox-card__body {
@@ -146,7 +151,6 @@
     &.tox-skeleton {
       cursor: default;
       pointer-events: none;
-      border-color: @border-color;
       box-shadow: none;
 
       &:hover {

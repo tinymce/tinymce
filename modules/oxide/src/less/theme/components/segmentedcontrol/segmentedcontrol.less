@@ -7,8 +7,8 @@
     --tox-private-segmented-control-active-border-color: var(--tox-private-color-tint);
     --tox-private-segmented-control-active-text-color: var(--tox-private-color-tint);
     --tox-private-segmented-control-active-bg-color: light-dark(
-      hsl(from var(--tox-private-color-tint) h calc(s * 0.7) calc(l + 35)),
-      hsl(from var(--tox-private-color-tint) h s calc(l - 30) / 30%)
+      hsl(from var(--tox-private-color-tint) h s l / 10%),
+      hsl(from var(--tox-private-color-tint) h s l / 10%)
     );
     --tox-private-segmented-control-text-color: var(--tox-private-text-color);
   }
@@ -16,9 +16,11 @@
   .tox-segmented-control {
     display: inline-flex;
     position: relative;
-    border: 1px solid var(--tox-private-segmented-control-border-color, @border-color-light);
+    border: none;
     border-radius: var(--tox-private-control-border-radius, @control-border-radius);
+    box-shadow: inset 0 0 0 1px var(--tox-private-segmented-control-border-color, @border-color-light);
     overflow: hidden;
+    padding: var(--tox-private-pad-xs, @pad-xs);
     background-color: var(--tox-private-background-color, @background-color);
   }
 
@@ -29,20 +31,19 @@
     background: transparent;
     font-size: var(--tox-private-font-size-sm, @font-size-sm);
     font-weight: var(--tox-private-font-weight-normal, @font-weight-normal);
-    line-height: var(--tox-private-control-line-height, 24px);
+    line-height: 16px;
     border: 1px solid transparent;
-    border-radius: calc(var(--tox-private-control-border-radius, @control-border-radius) - 3px);
+    border-radius: calc(var(--tox-private-control-border-radius, @control-border-radius) - 1px);
     text-align: center;
     white-space: nowrap;
     display: inline-block;
     vertical-align: middle;
-    margin: var(--tox-private-pad-xs, @pad-xs);
     color: var(--tox-private-segmented-control-text-color, @text-color);
 
     &--active {
       border-color: var(--tox-private-segmented-control-active-border-color, @color-tint);
       color: var(--tox-private-segmented-control-active-text-color, @color-tint);
-      background-color: var(--tox-private-segmented-control-active-bg-color, fade(@color-tint, 15%));
+      background-color: var(--tox-private-segmented-control-active-bg-color, fade(@color-tint, 10%));
     }
   }
 

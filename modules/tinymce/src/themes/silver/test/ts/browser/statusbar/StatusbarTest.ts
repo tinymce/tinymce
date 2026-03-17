@@ -33,6 +33,10 @@ describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
     const elementPathSpec: ApproxStructure.Builder<StructAssert> = (s, str, arr) =>
       s.element('div', {
         classes: [ arr.has('tox-statusbar__path') ],
+        attrs: {
+          'role': str.is('group'),
+          'aria-label': str.is('Element Path')
+        },
         children: [
           s.element('div', { children: [ s.text(str.is('p')) ], attrs: { 'aria-level': str.none() }}),
           s.element('div', { children: [ s.text(str.is(' › ')) ] }),
@@ -355,7 +359,7 @@ describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
 
     const pFocusElementPath = async (editor: Editor, doc: SugarElement<Document>) => {
       TinyContentActions.keystroke(editor, 122, { alt: true });
-      await FocusTools.pTryOnSelector( 'Assert element path is focused', doc, 'div[role=navigation] .tox-statusbar__path-item');
+      await FocusTools.pTryOnSelector( 'Assert element path is focused', doc, 'div[role=group] .tox-statusbar__path-item');
       // Wait so focus/tooltip handlers run after key action
       await Waiter.pWait(0);
     };
