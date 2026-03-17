@@ -13,6 +13,8 @@
 .tox .tox-ai {
 
   .tox-expandable-box {
+    padding: var(--tox-private-pad-sm, @pad-sm) calc(var(--tox-private-pad-md, @pad-md) * 0.75);
+
     &:focus-visible:not(:disabled) {
        outline: 2px solid var(--tox-private-color-tint, @color-tint);
        outline-offset: var(--tox-private-tinymceai-border-width, @tinymceai-border-width);
@@ -103,7 +105,7 @@
 
   .tox-ai__user-prompt__text {
     background-color: var(--tox-private-background-secondary, darken(@background-color, 6%));
-    padding: var(--tox-private-pad-sm, @pad-sm) 12px;
+    padding: var(--tox-private-pad-sm, @pad-sm) calc(var(--tox-private-pad-md, @pad-md) * 0.75);
     border-radius: var(--tox-private-control-border-radius, @control-border-radius);
     max-width: 80%;
     align-self: flex-end;
