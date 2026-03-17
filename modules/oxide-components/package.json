@@ -41,7 +41,7 @@
     "test-visual-local-update": "node ./visual-regression-test.mjs update",
     "test-ci": "vitest --watch=false --reporter=default --reporter=junit --outputFile=scratch/test-results.xml",
     "test-browser-manual": "vitest --watch --browser.headless false",
-    "test-browser-headless": "vitest run --watch",
+    "test-browser-headless": "vitest --watch",
     "ci": "yarn lint && yarn --cwd ../../ lerna run build --scope @tinymce/oxide-components --include-dependencies && yarn test"
   },
   "peerDependencies": {

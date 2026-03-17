@@ -36,7 +36,6 @@ const meta = {
     )
   ],
   parameters: {
-    layout: 'centered',
     docs: {
       description: {
         component: `A dropdown component. Contains a button and an anchored container that can be used for creating menus.`

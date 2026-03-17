@@ -118,8 +118,11 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
   child = child as ReactElement;
 
   const showContentPopover = () => {
-    // lib.dom.ts is out of date
-    (contentRef.current as any)?.showPopover({ source: triggerRef.current });
+    // @ts-expect-error - TODO: Remove this expect error once we've upgraded to React 19+
+    contentRef.current?.showPopover({
+      // specifying the source sets up an implicit `anchor` relationship
+      source: triggerRef.current
+    });
   };
 
   const onHoverTriggerProps = {
