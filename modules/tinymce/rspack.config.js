@@ -52,18 +52,6 @@ const generateDemoIndex = (app) => {
   app.get('/', (_, res) => res.send(html))
 };
 
-const modulesDir = path.resolve(__dirname, "../");
-
-// TINY-13010: Rename alias once we remove the old package prefix
-const alias = Object.fromEntries(
-  fs.readdirSync(modulesDir).map((name) => {
-    if (name === 'persona') {
-      return [`@tinymce/${name}`, path.join(modulesDir, name, "src/main/ts/main.ts")]
-    }
-    return [`@ephox/${name}`, path.join(modulesDir, name, "src/main/ts/ephox", name, "api/Main.ts")]
-  })
-);
-
 function create(entries, tsConfig, outDir = ".") {
   const resolvedEntries = Object.fromEntries(Object.entries(entries).map(([k, v]) => [k, path.resolve(__dirname, v)]));
   return {
@@ -72,7 +60,16 @@ function create(entries, tsConfig, outDir = ".") {
     mode: "development",
     devtool: "inline-source-map",
     target: "web",
-    plugins: [new TsCheckerRspackPlugin()],
+    plugins: [
+      new TsCheckerRspackPlugin({
+        async: true,
+        devServer: true,
+        typescript: {
+          build: true,
+          configFile: path.resolve(tsConfig),
+        }
+      })
+    ],
     optimization: {
       removeAvailableModules: false,
       removeEmptyChunks: false,
@@ -82,12 +79,12 @@ function create(entries, tsConfig, outDir = ".") {
     ignoreWarnings: [/export .* was not found in/],
 
     resolve: {
+      conditionNames: [ 'tiny:source', '...' ],
       extensions: [".ts", ".js"],
       tsConfig: {
         configFile: path.resolve(tsConfig),
         references: "auto",
       },
-      alias,
     },
     watchOptions: {
       ignored: ["**/node_modules/**"]
@@ -143,7 +140,6 @@ function create(entries, tsConfig, outDir = ".") {
     },
 
     stats: {
-      logging: "verbose",
       assets: false,
       modulesSpace: 5,
     }

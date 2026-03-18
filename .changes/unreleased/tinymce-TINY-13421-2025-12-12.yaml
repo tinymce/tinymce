@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Now `link` dialog allows uploading empty files.
+time: 2025-12-12T13:44:40.562814449+01:00
+custom:
+  Issue: TINY-13421

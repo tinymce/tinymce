@@ -1,0 +1,54 @@
+.tox .tox-ai__spinner {
+  --tox-private-spinner-color: var(--tox-private-color-tint, @color-tint);
+
+  // the size same as icons
+  --tox-private-spinner-size: 24px;
+  --tox-private-spinner-circle-width: 3px;
+  --tox-private-spinner-dot-size: 6px;
+
+  width: var(--tox-private-spinner-size);
+  aspect-ratio: 1 / 1;
+
+  &--small {
+    // size of small icons
+    --tox-private-spinner-size: 16px;
+    --tox-private-spinner-circle-width: 2px;
+    --tox-private-spinner-dot-size: 4px;
+  }
+
+  &--circle {
+    animation: tox-rotation 1s linear infinite;
+    border-radius: 50%;
+    background: conic-gradient(
+      var(--tox-private-spinner-color) 0% calc(360deg - 30deg),
+      transparent calc(360deg - 30deg) 100%
+    );
+    mask: radial-gradient(
+      calc((var(--tox-private-spinner-size) - var(--tox-private-spinner-circle-width) * 2) / 2),
+      #0000 98%,
+      #000
+    );
+  }
+
+  &--dots {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+
+    > div {
+      animation: tox-bouncing-dots 1.5s ease-in-out 0s infinite both;
+      aspect-ratio: 1 / 1;
+      width: var(--tox-private-spinner-dot-size);
+      background-color: var(--tox-private-spinner-color);
+      border-radius: 100%;
+
+      &:nth-child(1) {
+        animation-delay: -0.32s;
+      }
+      &:nth-child(2) {
+        animation-delay: -0.16s;
+      }
+    }
+  }
+}

@@ -6,7 +6,7 @@ import { describe, expect, it } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 
-describe('browser.AutoResizingTextareaTest', () => {
+describe('browser.components.AutoResizingTextareaTest', () => {
   it('Sanity check', async () => {
     const placeHolder = 'Placeholder for disabled textarea';
     const { getByTestId } = render(

@@ -1,5 +1,6 @@
+import { Keys, TestStore } from '@ephox/agar';
 import { before, describe, it } from '@ephox/bedrock-client';
-import { LegacyUnit, TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
+import { LegacyUnit, TinyAssertions, TinyContentActions, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import type Editor from 'tinymce/core/api/Editor';
@@ -11,6 +12,8 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
       this.skip();
     }
   });
+
+  const store = TestStore<string>();
 
   const hook = TinyHooks.bddSetupLight<Editor>({
     add_unload_trigger: false,
@@ -356,5 +359,68 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
     editor.dispatch('keydown', { keyCode: 8 } as KeyboardEvent);
     TinyAssertions.assertRawContent(editor, '<p><br data-mce-bogus="1"></p>');
     assert.equal(editor.selection.getStart(true).nodeName, 'P');
+  });
+
+  it('TINY-13830: ForwardDelete all contents should trigger beforeinput', () => {
+    const editor = hook.editor();
+    const beforeInputHandler = (e: InputEvent) => {
+      store.add(e.inputType);
+    };
+    const inputHandler = (e: InputEvent) => {
+      store.add(e.type);
+    };
+    editor.on('beforeinput', beforeInputHandler);
+    editor.on('input', inputHandler);
+    editor.setContent('<p>abc</p>');
+    editor.execCommand('SelectAll');
+    TinyContentActions.keystroke(editor, Keys.delete());
+    TinyAssertions.assertRawContent(editor, '<p><br data-mce-bogus="1"></p>');
+    assert.equal(editor.selection.getStart(true).nodeName, 'P');
+    store.assertEq('Should have the correct event', [ 'deleteContentForward', 'input' ]);
+    store.clear();
+    editor.off('beforeinput', beforeInputHandler);
+    editor.off('input', inputHandler);
+  });
+
+  it('TINY-13830: Delete all contents should trigger beforeinput', () => {
+    const editor = hook.editor();
+    const beforeInputHandler = (e: InputEvent) => {
+      store.add(e.inputType);
+    };
+    const inputHandler = (e: InputEvent) => {
+      store.add(e.type);
+    };
+    editor.on('beforeinput', beforeInputHandler);
+    editor.on('input', inputHandler);
+    editor.setContent('<p>abc</p>');
+    editor.execCommand('SelectAll');
+    TinyContentActions.keystroke(editor, Keys.backspace());
+    TinyAssertions.assertRawContent(editor, '<p><br data-mce-bogus="1"></p>');
+    assert.equal(editor.selection.getStart(true).nodeName, 'P');
+    store.assertEq('Should have the correct event', [ 'deleteContentBackward', 'input' ]);
+    store.clear();
+    editor.off('beforeinput', beforeInputHandler);
+    editor.off('input', inputHandler);
+  });
+
+  it('TINY-13830: preventing beforeinput should not trigger input event nor delete the content', () => {
+    const editor = hook.editor();
+    const beforeInputHandler = (e: InputEvent) => {
+      e.preventDefault();
+      store.add(e.inputType);
+    };
+    const inputHandler = (e: InputEvent) => {
+      store.add(e.type);
+    };
+    editor.on('beforeinput', beforeInputHandler);
+    editor.on('input', inputHandler);
+    editor.setContent('<p>abc</p>');
+    editor.execCommand('SelectAll');
+    TinyContentActions.keystroke(editor, Keys.backspace());
+    TinyAssertions.assertContent(editor, '<p>abc</p>');
+    store.assertEq('Should have the correct event', [ 'deleteContentBackward' ]);
+    store.clear();
+    editor.off('beforeinput', beforeInputHandler);
+    editor.off('input', inputHandler);
   });
 });

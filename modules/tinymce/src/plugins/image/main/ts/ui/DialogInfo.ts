@@ -25,6 +25,10 @@ const collect = (editor: Editor): Promise<ImageDialogInfo> => {
     });
   });
 
+  const alertErr = (message: string, callback: () => void): void => {
+    editor.windowManager.alert(message, callback);
+  };
+
   const classList = ListUtils.sanitize(Options.getClassList(editor));
   const hasAdvTab = Options.hasAdvTab(editor);
   const hasUploadTab = Options.hasUploadTab(editor);
@@ -41,6 +45,7 @@ const collect = (editor: Editor): Promise<ImageDialogInfo> => {
     (preUrl) => Type.isString(preUrl) && preUrl.length > 0);
 
   return futureImageList.then((imageList): ImageDialogInfo => ({
+    alertErr,
     image,
     imageList,
     classList,

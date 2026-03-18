@@ -1,15 +1,20 @@
 import tinyPlugin from '@tinymce/eslint-plugin';
 import onlyWarn from 'eslint-plugin-only-warn';
 import { defineConfig } from "eslint/config";
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 export default defineConfig(
   [
-    tinyPlugin.configs.editor,
+    ...tinyPlugin.configs.editor,
     {
       languageOptions: {
         parserOptions: {
           projectService: true,
-          tsconfigRootDir: "."
+          tsconfigRootDir: __dirname
         },
       },
       plugins: {

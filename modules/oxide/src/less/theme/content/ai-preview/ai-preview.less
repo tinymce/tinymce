@@ -1,0 +1,112 @@
+//
+// TinyMCEAI
+//
+
+@tinymceai-added-background-color: @added-background-color;
+@tinymceai-modified-background-color: @modified-background-color;
+@tinymceai-removed-background-color: @removed-background-color;
+
+@tinymceai-selected-outline-color: @selected-outline-color;
+@tinymceai-selected-box-shadow: 0 -2px 0 0 @tinymceai-selected-outline-color inset, 0 -2px 0 0 @tinymceai-selected-outline-color;
+
+@tinymceai-dim-overlay-color: fade(@color-black, 20%);
+
+.diff-content(
+  tinymceai,
+  @tinymceai-added-background-color,
+  @tinymceai-modified-background-color,
+  @tinymceai-removed-background-color,
+  @tinymceai-selected-outline-color,
+  @tinymceai-selected-box-shadow
+);
+
+.tox-tinymceai {
+  // Block class for tinymceai preview - required for Bem type generation
+  display: contents;
+}
+
+.tox-tinymceai__annotation {
+  // Base class for annotations - styling handled by modifier classes
+  display: revert;
+}
+
+.tox-tinymceai__annotation--added__highlight,
+.tox-tinymceai__annotation--modified__highlight,
+.tox-tinymceai__annotation--removed__highlight {
+  cursor: pointer;
+}
+
+div[tinymceai-data-pending-diff="true"], span[tinymceai-data-pending-diff="true"] {
+  position: relative;
+  z-index: 1;
+  background: @color-white;
+}
+
+.tox-tinymceai__preview-body {
+  position: relative;
+  min-height: 100%;
+}
+
+.tox-tinymceai__preview-body--show-preview {
+  .tox-tinymceai__annotation--added.tox-tinymceai__annotation--preview-highlight,
+  .tox-tinymceai__annotation--modified.tox-tinymceai__annotation--preview-highlight {
+    border-bottom: 3px solid @color-tint;
+    cursor: pointer;
+  }
+
+  .tox-tinymceai__annotation--added__selected,
+  .tox-tinymceai__annotation--modified__selected {
+    background-color: fade(@color-tint, 20%);
+    border-top: 3px solid @color-tint;
+    border-bottom: 3px solid @color-tint;
+    box-shadow: none;
+    text-decoration: none;
+  }
+
+  // TEMP: Show deleted content when its review card is selected.
+  // Makes deletions visible and scrollable in preview mode.
+  // TODO: Replace with a proper visual marker that doesn't reveal full deleted content.
+  .tox-tinymceai__annotation--removed.tox-tinymceai__annotation--removed__selected {
+    display: inline;
+    background-color: fade(@color-error, 20%);
+    border-top: 3px solid @color-error;
+    border-bottom: 3px solid @color-error;
+    box-shadow: none;
+    text-decoration: line-through;
+  }
+
+  img, video, iframe {
+    &.tox-tinymceai__annotation--added.tox-tinymceai__annotation--preview-highlight,
+    &.tox-tinymceai__annotation--modified.tox-tinymceai__annotation--preview-highlight {
+      outline: 0.25em solid fade(@color-tint, 20%);
+      padding: 0.25em;
+    }
+
+    &.tox-tinymceai__annotation--added__selected,
+    &.tox-tinymceai__annotation--modified__selected {
+      border: 0.25em solid fade(@color-tint, 20%);
+      outline: 0.125em solid @color-tint;
+      padding: 0;
+    }
+
+    &.tox-tinymceai__annotation--removed.tox-tinymceai__annotation--removed__selected {
+      display: inline;
+      border: 0.25em solid fade(@color-error, 20%);
+      outline: 0.125em solid @color-error;
+      padding: 0;
+    }
+  }
+}
+
+.tox-tinymceai__diff-focus-overlay {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.tox-tinymceai__diff-focus-overlay-dim {
+  fill: @tinymceai-dim-overlay-color;
+}

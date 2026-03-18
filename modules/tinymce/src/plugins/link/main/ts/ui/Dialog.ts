@@ -111,7 +111,8 @@ const createBlobCache = (editor: Editor) => (file: File, blobUri: string, dataUr
     blobUri,
     name: file.name?.replace(/\.[^\.]+$/, ''),
     filename: file.name,
-    base64: dataUrl.split(',')[1]
+    base64: dataUrl.split(',')[1],
+    allowEmptyFile: true
   });
 
 const addToBlobCache = (editor: Editor) => (blobInfo: BlobInfo): void => {
@@ -161,7 +162,8 @@ const makeDialogBody = (
   titleText: Dialog.InputSpec[],
   catalogs: LinkDialogCatalog,
   hasUploadPanel: boolean,
-  fileTypes: DocumentsFileTypes[]
+  fileTypes: DocumentsFileTypes[],
+  onInvalidFiles: () => Promise<void>
 ): Dialog.PanelSpec | Dialog.TabPanelSpec => {
 
   const generalPanelItems = Arr.flatten<Dialog.BodyComponentSpec>([
@@ -186,7 +188,7 @@ const makeDialogBody = (
           name: 'general',
           items: generalPanelItems
         }],
-        [ UploadTab.makeTab(fileTypes) ]
+        [ UploadTab.makeTab(fileTypes, onInvalidFiles) ]
       ])
     };
     return tabPanel;
@@ -199,7 +201,6 @@ const makeDialogBody = (
 };
 
 const makeDialog = (settings: LinkDialogInfo, onSubmit: (api: Dialog.DialogInstanceApi<LinkDialogData>) => void, editor: Editor): Dialog.DialogSpec<LinkDialogData> => {
-
   const urlInput: Dialog.UrlInputSpec[] = [
     {
       name: 'url',
@@ -232,7 +233,6 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit: (api: Dialog.DialogInsta
   const catalogs = settings.catalogs;
   const dialogDelta = DialogChanges.init(initialData, catalogs);
 
-  const body = makeDialogBody(urlInput, displayText, titleText, catalogs, settings.hasUploadPanel, Options.getDocumentsFileTypes(editor));
   const helpers: Helpers = {
     addToBlobCache: addToBlobCache(editor),
     createBlobCache: createBlobCache(editor),
@@ -240,6 +240,15 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit: (api: Dialog.DialogInsta
     uploadFile: uploadFile(editor),
     getExistingBlobInfo: getExistingBlobInfo(editor)
   };
+  const body = makeDialogBody(
+    urlInput,
+    displayText,
+    titleText,
+    catalogs,
+    settings.hasUploadPanel,
+    Options.getDocumentsFileTypes(editor),
+    () => new Promise((r) => helpers.alertErr('Selected files do not have allowed extensions', r))
+  );
   return {
     title: 'Insert/Edit Link',
     size: 'normal',

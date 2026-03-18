@@ -35,6 +35,13 @@
   "main": "./lib/main/ts/ephox/robin/api/Main.js",
   "module": "./lib/main/ts/ephox/robin/api/Main.js",
   "types": "./lib/main/ts/ephox/robin/api/Main.d.ts",
+  "exports": {
+    ".": {
+      "tiny:source": "./src/main/ts/ephox/robin/api/Main.ts",
+      "types": "./lib/main/ts/ephox/robin/api/Main.d.ts",
+      "default": "./lib/main/ts/ephox/robin/api/Main.js"
+    }
+  },
   "scripts": {
     "test": "bedrock-auto -b chrome-headless -d src/test",
     "test-manual": "bedrock -d src/test",

@@ -95,4 +95,19 @@ describe('browser.tinymce.models.dom.table.TableSizingModeTest', () => {
       }
     }), { width: '400px' });
   });
+
+  it('TINY-12797: Default width should be an attribute with auto sizing and table_style_by_css disabled', () => {
+    const editor = hook.editor();
+    editor.options.unset('table_sizing_mode');
+    editor.options.set('table_style_by_css', false);
+    test(editor, (s, str) => s.element('table', {
+      styles: {
+        'border-collapse': str.is('collapse'),
+        'width': str.none()
+      },
+      attrs: {
+        width: str.is('100%')
+      }
+    }));
+  });
 });

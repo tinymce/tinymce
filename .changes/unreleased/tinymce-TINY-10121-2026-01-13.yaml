@@ -1,0 +1,6 @@
+project: tinymce
+kind: Added
+body: 'The noneditable feature can now be disabled with the new `allow_noneditable` option.'
+time: 2026-01-13T13:57:48.402737+10:00
+custom:
+    Issue: TINY-10121

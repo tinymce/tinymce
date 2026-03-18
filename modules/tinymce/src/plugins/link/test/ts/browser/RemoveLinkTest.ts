@@ -48,6 +48,61 @@ describe('browser.tinymce.plugins.link.RemoveLinkTest', () => {
     TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 4 ], 2);
   });
 
+  context('Near other CET/CEF elements', () => {
+    it('TINY-13108: CET element before link', () => {
+      const editor = hook.editor();
+      editor.setContent('<p><span data-keep-span="YES">Content</span><a href="Link">Link</a></p>');
+      TinySelections.setCursor(editor, [ 0, 1, 0 ], 1);
+      TinyUiActions.clickOnUi(editor, 'button[data-mce-name="unlink"]');
+      TinyAssertions.assertContentPresence(editor, { a: 0 });
+      TinyAssertions.assertSelection(editor, [ 0, 1 ], 1, [ 0, 1 ], 1);
+    });
+
+    it('TINY-13108: CEF element before link', () => {
+      const editor = hook.editor();
+      editor.setContent('<p><span data-keep-span="YES" contenteditable="false">Content</span><a href="Link">Link</a></p>');
+      TinySelections.setCursor(editor, [ 0, 1, 0 ], 1);
+      TinyUiActions.clickOnUi(editor, 'button[data-mce-name="unlink"]');
+      TinyAssertions.assertContentPresence(editor, { a: 0 });
+      TinyAssertions.assertSelection(editor, [ 0, 1 ], 1, [ 0, 1 ], 1);
+    });
+
+    it('TINY-13108: CEF NBSP element before link', () => {
+      const editor = hook.editor();
+      editor.setContent('<p><span data-keep-span="YES" contenteditable="false">&nbsp;</span><a href="Link">Link</a></p>');
+      TinySelections.setCursor(editor, [ 0, 1, 0 ], 1);
+      TinyUiActions.clickOnUi(editor, 'button[data-mce-name="unlink"]');
+      TinyAssertions.assertContentPresence(editor, { a: 0 });
+      TinyAssertions.assertSelection(editor, [ 0, 1 ], 1, [ 0, 1 ], 1);
+    });
+    it('TINY-13108: CET element after link', () => {
+      const editor = hook.editor();
+      editor.setContent('<p><a href="Link">Link</a><span data-keep-span="YES">Content</span></p>');
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
+      TinyUiActions.clickOnUi(editor, 'button[data-mce-name="unlink"]');
+      TinyAssertions.assertContentPresence(editor, { a: 0 });
+      TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 1);
+    });
+
+    it('TINY-13108: CEF element after link', () => {
+      const editor = hook.editor();
+      editor.setContent('<p><a href="Link">Link</a><span data-keep-span="YES" contenteditable="false">Content</span></p>');
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
+      TinyUiActions.clickOnUi(editor, 'button[data-mce-name="unlink"]');
+      TinyAssertions.assertContentPresence(editor, { a: 0 });
+      TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 1);
+    });
+
+    it('TINY-13108: CEF NBSP element after link', () => {
+      const editor = hook.editor();
+      editor.setContent('<p><a href="Link">Link</a><span data-keep-span="YES" contenteditable="false">&nbsp;</span></p>');
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
+      TinyUiActions.clickOnUi(editor, 'button[data-mce-name="unlink"]');
+      TinyAssertions.assertContentPresence(editor, { a: 0 });
+      TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 1);
+    });
+  });
+
   context('Block links', () => {
     it('TINY-9172: Removing root level link should convert it to regular text block', () => {
       const editor = hook.editor();

@@ -1,4 +1,4 @@
-import { Arr, Optional, Obj, Type } from '@ephox/katamari';
+import { Arr, Obj, Optional, Type } from '@ephox/katamari';
 
 import type DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import type Editor from 'tinymce/core/api/Editor';
@@ -125,8 +125,8 @@ const linkDomMutation = (editor: Editor, attachState: AttachState, data: LinkDia
 
 const unlinkSelection = (editor: Editor): void => {
   const dom = editor.dom, selection = editor.selection;
-  const bookmark = selection.getBookmark();
   const rng = selection.getRng().cloneRange();
+  const bookmark = selection.getBookmark();
 
   // Extend the selection out to the entire anchor element
   const startAnchorElm = dom.getParent(rng.startContainer, 'a[href]', editor.getBody());

@@ -285,7 +285,10 @@ const Styles = (settings: StylesSettings = {}, schema?: Schema): Styles => {
         compress('border', '-style');
         compress('padding', '');
         compress('margin', '');
-        compress2('border', 'border-width', 'border-style', 'border-color');
+
+        if (!/(#.* rgb(a?)\(.*)|(rgb(a?)\(.*\) )/.test(styles['border-color'])) {
+          compress2('border', 'border-width', 'border-style', 'border-color');
+        }
 
         // Remove pointless border, IE produces these
         if (styles.border === 'medium none') {

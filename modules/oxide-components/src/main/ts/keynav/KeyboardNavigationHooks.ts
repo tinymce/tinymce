@@ -2,8 +2,10 @@ import { Fun } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import { useEffect, type RefObject } from 'react';
 
+import * as EscapingType from './keyboard/escaping/EscapingType';
+import * as ExecutingType from './keyboard/execution/ExecutionType';
 import * as FlowType from './keyboard/flowtype/FlowType';
-import * as KeyingType from './keyboard/KeyingType';
+import type * as KeyingType from './keyboard/KeyingType';
 import * as SpecialType from './keyboard/SpecialType';
 import * as TabbingType from './keyboard/TabbingType';
 
@@ -36,8 +38,7 @@ export const useTabKeyNavigation = (props: TabKeyingProps): void => {
     } else {
       return Fun.noop;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [ props ]);
 };
 
 export interface FlowKeyingProps extends BaseProps, FlowType.FlowConfig { }
@@ -52,8 +53,7 @@ export const useFlowKeyNavigation = (props: FlowKeyingProps): void => {
     } else {
       return Fun.noop;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ ]);
+  }, [ props ]);
 };
 
 export interface SpecialKeyingProps extends BaseProps, SpecialType.SpecialConfig { }
@@ -68,6 +68,36 @@ export const useSpecialKeyNavigation = (props: SpecialKeyingProps): void => {
     } else {
       return Fun.noop;
     }
-  }
-  , [ props ]);
+  }, [ props ]);
+};
+
+export interface ExecutingConfig extends BaseProps, ExecutingType.ExecutingConfig { }
+
+export const useExecutionType = (props: ExecutingConfig): void => {
+  useEffect(() => {
+    const { containerRef } = props;
+
+    if (containerRef.current) {
+      const handlers = ExecutingType.create(SugarElement.fromDom(containerRef.current), props);
+      return bindEvents(containerRef.current, handlers);
+    } else {
+      return Fun.noop;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+};
+
+export interface EscapeKeyProps extends BaseProps, EscapingType.EscapingConfig { }
+
+export const useEscapeKeyNavigation = (props: EscapeKeyProps): void => {
+  useEffect(() => {
+    const { containerRef } = props;
+
+    if (containerRef.current) {
+      const handlers = EscapingType.create(SugarElement.fromDom(containerRef.current), props);
+      return bindEvents(containerRef.current, handlers);
+    } else {
+      return Fun.noop;
+    }
+  }, [ props ]);
 };

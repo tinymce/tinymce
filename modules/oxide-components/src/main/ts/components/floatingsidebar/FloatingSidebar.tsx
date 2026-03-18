@@ -1,68 +1,57 @@
-import { useEffect, useRef, type FC, type PropsWithChildren } from 'react';
+import { Type } from '@ephox/katamari';
+import type { Property } from 'csstype';
+import { forwardRef, useCallback, type CSSProperties, type PropsWithChildren } from 'react';
 
-import { classes } from '../../utils/Styles';
+import * as Bem from '../../utils/Bem';
 import * as Draggable from '../draggable/Draggable';
-import '../../module/css';
-import type { CssPosition } from '../draggable/internals/types';
 
-interface InitialPosition {
-  x: number;
-  y: number;
-  origin: 'topleft' | 'topright' | 'bottomleft' | 'bottomright';
-}
+import '../../module/css';
 export interface FloatingSidebarProps extends PropsWithChildren {
   isOpen?: boolean;
-  height?: number;
-  initialPosition?: InitialPosition;
+  origin?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+  initialPosition?: { x: Property.Top; y: Property.Left };
+  style?: CSSProperties;
+  onDragStart?: () => void;
+  onDragEnd?: () => void;
 }
 interface HeaderProps extends PropsWithChildren {};
 
-const transformToCss = (position: InitialPosition): CssPosition => {
-  switch (position.origin) {
-    case 'topleft':
-      return { top: `${position.y}px`, left: `${position.x}px` } as const;
-    case 'topright':
-      return { top: `${position.y}px`, left: `calc(${position.x}px - var(--tox-private-floating-sidebar-width))` } as const;
-    case 'bottomleft':
-      return { top: `calc(${position.y}px - var(--tox-private-floating-sidebar-height))`, left: `${position.x}px` } as const;
-    case 'bottomright':
-      return { top: `calc(${position.y}px - var(--tox-private-floating-sidebar-height))`, left: `calc(${position.x}px - var(--tox-private-floating-sidebar-width))` } as const;
-  }
-};
-
-const Root: FC<FloatingSidebarProps> = ({ isOpen = true, height = 600, children, ...props }) => {
-  const elementRef = useRef<HTMLDivElement | null>(null);
-  const initialPosition = transformToCss(props.initialPosition ?? { x: 0, y: 0, origin: 'topleft' });
-
-  useEffect(() => {
-    const element = elementRef.current;
-    if (element) {
-      isOpen ? element.showPopover() : element.hidePopover();
-    }
-  }, [ isOpen ]);
-
+const Root = forwardRef<HTMLDivElement, FloatingSidebarProps>(({ isOpen = true, children, style, origin = 'top-right', initialPosition = { x: 0, y: 0 }, onDragStart, onDragEnd }, ref) => {
   return (
     <Draggable.Root
-      ref={elementRef}
-      popover="manual"
-      className={classes([ 'tox-floating-sidebar' ])}
-      style={{ '--tox-private-floating-sidebar-requested-height': `${height}px` }}
+      className={Bem.block('tox-floating-sidebar', { open: isOpen })}
+      origin={origin}
       initialPosition={initialPosition}
+      allowedOverflow={{ horizontal: 0.8 }}
       declaredSize={{ width: 'var(--tox-private-floating-sidebar-width)', height: 'var(--tox-private-floating-sidebar-height)' }}
+      onDragStart={onDragStart}
+      onDragEnd={onDragEnd}
+      style={style}
+      ref={ref}
     >
-      <aside className={classes([ 'tox-floating-sidebar__content-wrapper' ])}>
-        { children }
+      <aside className={Bem.element('tox-floating-sidebar', 'content-wrapper')}>
+        {children}
       </aside>
     </Draggable.Root>
   );
-};
+});
 
-const Header: FC<HeaderProps> = ({ children }) => {
+const Header = forwardRef<HTMLDivElement, HeaderProps>(({ children }, ref) => {
+  const refCallback = useCallback((node: HTMLDivElement | null) => {
+    if (ref) {
+      if (Type.isFunction(ref)) {
+        ref(node);
+      } else {
+        ref.current = node;
+      }
+    }
+  }, [ ref ]);
+
   return (
     <Draggable.Handle>
-      <header className={classes([ 'tox-sidebar-content__header', 'tox-floating-sidebar__header' ])}>{ children }</header>
+      <header ref={refCallback} className={`${Bem.element('tox-sidebar-content', 'header')} ${Bem.element('tox-floating-sidebar', 'header')}`}>{ children }</header>
     </Draggable.Handle>
   );
-};
+});
 
-export { Root, Header };
+export { Header, Root };

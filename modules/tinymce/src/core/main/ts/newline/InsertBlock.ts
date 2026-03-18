@@ -1,4 +1,5 @@
 import { Arr, Optional, Type } from '@ephox/katamari';
+import { DomDescent } from '@ephox/phoenix';
 import { ContentEditable, Insert, PredicateFilter, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
 import type DOMUtils from '../api/dom/DOMUtils';
@@ -12,6 +13,7 @@ import { findPreviousBr, isAfterBr } from '../caret/CaretBr';
 import * as CaretContainer from '../caret/CaretContainer';
 import CaretPosition from '../caret/CaretPosition';
 import { isAfterTable } from '../caret/CaretPositionPredicates';
+import { isList, isListItem } from '../dom/ElementType';
 import * as NodeType from '../dom/NodeType';
 import * as NormalizeRange from '../selection/NormalizeRange';
 import { isWhitespaceText } from '../text/Whitespace';
@@ -289,6 +291,19 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
     return true;
   };
 
+  const isInsideLiBeforeAList = (newBlock: SugarElement<Element>) => {
+    const nextSibling = Traverse.firstChild(newBlock).bind(Traverse.nextSibling);
+    return isListItem(newBlock) && nextSibling.exists(isList);
+  };
+
+  const trimEmptySpacesInLeftLeaf = (newBlock: Element) => {
+    const leaf = DomDescent.toLeaf(SugarElement.fromDom(newBlock), 0).element;
+
+    if (SugarNode.isText(leaf) && dom.isEmpty(leaf.dom)) {
+      leaf.dom.remove();
+    }
+  };
+
   const insertNewBlockAfter = () => {
     let block: Element;
     // If the caret is at the end of a header we produce a P tag after it similar to Word unless we are in a hgroup
@@ -437,8 +452,12 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
     } else {
       dom.insertAfter(fragment, parentBlock);
     }
-    trimInlineElementsOnLeftSideOfBlock(dom, nonEmptyElementsMap, newBlock);
-    addBrToBlockIfNeeded(dom, parentBlock);
+    if (!isInsideLiBeforeAList(SugarElement.fromDom(newBlock))) {
+      trimInlineElementsOnLeftSideOfBlock(dom, nonEmptyElementsMap, newBlock);
+      addBrToBlockIfNeeded(dom, parentBlock);
+    } else {
+      trimEmptySpacesInLeftLeaf(newBlock);
+    }
 
     if (dom.isEmpty(parentBlock)) {
       NewLineUtils.emptyBlock(parentBlock);

@@ -31,7 +31,7 @@
     "@ephox/polaris": "^7.0.0",
     "@ephox/sand": "^7.0.0",
     "@ephox/sugar": "^10.0.0",
-    "fast-check": "^2.0.0"
+    "fast-check": "^4.4.0"
   },
   "devDependencies": {
     "@ephox/agar-sw": "^1.0.0",
@@ -51,5 +51,12 @@
   ],
   "main": "./lib/main/ts/ephox/agar/api/Main.js",
   "module": "./lib/main/ts/ephox/agar/api/Main.js",
-  "types": "./lib/main/ts/ephox/agar/api/Main.d.ts"
+  "types": "./lib/main/ts/ephox/agar/api/Main.d.ts",
+  "exports": {
+    ".": {
+      "tiny:source": "./src/main/ts/ephox/agar/api/Main.ts",
+      "types": "./lib/main/ts/ephox/agar/api/Main.d.ts",
+      "default": "./lib/main/ts/ephox/agar/api/Main.js"
+    }
+  }
 }

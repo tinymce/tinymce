@@ -9,8 +9,8 @@ import type Editor from 'tinymce/core/api/Editor';
 import type { BlobInfo } from 'tinymce/core/api/file/BlobCache';
 import Plugin from 'tinymce/plugins/link/Plugin';
 
-const pTriggerUpload = async (editor: Editor, fileName: string) => {
-  const file = new window.File([ 'test content' ], fileName, { type: 'text/plain' });
+const pTriggerUpload = async (editor: Editor, fileName: string, content: string = 'test content') => {
+  const file = new window.File([ content ], fileName, { type: 'text/plain' });
   await FileInput.pRunOnPatchedFileInput([ file ], async () => {
     const dialog = await TinyUiActions.pWaitForDialog(editor);
     const button = UiFinder.findIn(dialog, 'button:contains("Browse for a file")').getOrDie();
@@ -54,6 +54,23 @@ describe('browser.tinymce.plugins.link.DialogUpdateTest', () => {
     Mouse.clickOn(SugarBody.body(), 'div[role="tab"]:contains("Upload")');
     const fileName = 'test.txt';
     await pTriggerUpload(editor, fileName);
+    // this is needed to wait that the modal is updated
+    await UiFinder.pWaitFor<HTMLInputElement>('label with text URL should be loaded', SugarBody.body(), 'label:contains("URL")');
+    assertInputValue('URL', `url:${fileName}`);
+    assertInputValue('Text to display', `filename:${fileName}`);
+    assertInputValue('Title', `filename:${fileName}`);
+
+    TinyUiActions.cancelDialog(editor);
+  });
+
+  it('TINY-13421: uploading an empty file should set "URL", "Text to display" and "Title" fields', async () => {
+    const editor = hook.editor();
+    editor.resetContent('');
+    editor.execCommand('mceLink');
+    await TinyUiActions.pWaitForDialog(editor);
+    Mouse.clickOn(SugarBody.body(), 'div[role="tab"]:contains("Upload")');
+    const fileName = 'test.txt';
+    await pTriggerUpload(editor, fileName, '');
     // this is needed to wait that the modal is updated
     await UiFinder.pWaitFor<HTMLInputElement>('label with text URL should be loaded', SugarBody.body(), 'label:contains("URL")');
     assertInputValue('URL', `url:${fileName}`);

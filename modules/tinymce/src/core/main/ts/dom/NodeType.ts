@@ -121,7 +121,7 @@ interface UcVideo extends HTMLElement {
   height: number;
 }
 
-const isUcVideo = (el: Element): el is UcVideo => el.nodeName.toLowerCase() === ucVideoNodeName;
+const isUcVideo = matchNodeName<UcVideo>(ucVideoNodeName);
 
 export {
   isText,

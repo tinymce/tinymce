@@ -128,8 +128,17 @@ describe('browser.agar.http.HttpMockingTest', () => {
         },
         field: value
       });
+    }),
+    Http.del('/custom/empty/200', async () => {
+      return new window.Response(null, { status: 200 });
+    }),
+    Http.del('/custom/empty/204', async () => {
+      return new window.Response(null, { status: 204 });
+    }),
+    Http.del('/custom/empty/304', async () => {
+      return new window.Response(null, { status: 304 });
     })
-  ], { logLevel: 'info', name: 'test' });
+  ], { logLevel: 'debug', name: 'test' });
 
   beforeEach(() => {
     abortSignalState.clear();
@@ -326,5 +335,29 @@ describe('browser.agar.http.HttpMockingTest', () => {
     }, json);
     Assert.eq('Should be expected status', 200, response.status);
     Assert.eq('Should be expected content-type', 'application/json', response.headers.get('Content-Type'));
+  });
+
+  it('TINY-13544: Should handle empty response for 200 del response', async () => {
+    const response = await window.fetch('/custom/empty/200', {
+      method: 'DELETE'
+    });
+
+    Assert.eq('Should be expected status', 200, response.status);
+  });
+
+  it('TINY-13544: Should handle empty response for 204 del response', async () => {
+    const response = await window.fetch('/custom/empty/204', {
+      method: 'DELETE'
+    });
+
+    Assert.eq('Should be expected status', 204, response.status);
+  });
+
+  it('TINY-13544: Should handle empty response for 304 del response', async () => {
+    const response = await window.fetch('/custom/empty/304', {
+      method: 'DELETE'
+    });
+
+    Assert.eq('Should be expected status', 304, response.status);
   });
 });

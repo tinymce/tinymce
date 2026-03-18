@@ -21,6 +21,9 @@ const closePort = (port: MessagePort) => {
   port.close();
 };
 
+const canHaveBody = (status: number, method: string) =>
+  status !== 204 && status !== 304 && method.toUpperCase() !== 'HEAD';
+
 const sendRequestToClient = async (client: Client, request: Request): Promise<Response> => {
   const body = await request.arrayBuffer();
   const requestId = crypto.randomUUID();
@@ -82,11 +85,14 @@ const sendRequestToClient = async (client: Client, request: Request): Promise<Re
           }
         });
 
-        resolve(new Response(reader, {
-          status: headData.status,
-          statusText: headData.statusText,
-          headers: headData.headers
-        }));
+        resolve(new Response(
+          canHaveBody(headData.status, request.method) ? reader : null,
+          {
+            status: headData.status,
+            statusText: headData.statusText,
+            headers: headData.headers
+          }
+        ));
       } else {
         closePort(incomingPort);
         reject(new Error('Unexpected message from client expected response head.'));

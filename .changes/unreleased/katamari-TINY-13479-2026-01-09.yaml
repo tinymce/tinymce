@@ -1,0 +1,6 @@
+project: katamari
+kind: Added
+body: New `HashSet` and `HashMap` APIs.
+time: 2026-01-09T14:06:31.290549+10:00
+custom:
+    Issue: TINY-13479

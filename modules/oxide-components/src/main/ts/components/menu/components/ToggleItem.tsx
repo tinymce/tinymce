@@ -1,0 +1,84 @@
+import { Fun, Type } from '@ephox/katamari';
+import { forwardRef, useEffect, useId, useMemo, useRef, useState } from 'react';
+
+import * as Bem from '../../../utils/Bem';
+import { Icon } from '../../icon/Icon';
+import type { ToggleMenuItemInstanceApi, ToggleMenuItemProps } from '../internals/Types';
+
+export const ToggleItem = forwardRef<HTMLDivElement, ToggleMenuItemProps>(({ enabled = true, onSetup, icon, active = false, shortcut, onAction, children }, ref) => {
+  const [ state, setState ] = useState({
+    enabled,
+    active,
+    focused: false,
+  });
+  const id = useId();
+  const stateRef = useRef(state);
+
+  useEffect(() => {
+    stateRef.current = state;
+  }, [ state ]);
+
+  useEffect(() => {
+    setState((prevState) => ({ ...prevState, enabled, active }));
+  }, [ enabled, active ]);
+
+  const api: ToggleMenuItemInstanceApi = useMemo(() => ({
+    isEnabled: () => stateRef.current.enabled,
+    setEnabled: (newEnabled: boolean) => {
+      setState((prev) => ({ ...prev, enabled: newEnabled }));
+    },
+    isActive: () => stateRef.current.active,
+    setActive: (newActive: boolean) => {
+      setState((prev) => ({ ...prev, active: newActive }));
+    }
+  }), []);
+
+  useEffect(() => {
+    if (onSetup) {
+      const teardown = onSetup(api);
+      return () => teardown(api);
+    }
+    return Fun.noop;
+  }, [ onSetup, api ]);
+
+  const itemIcon = Type.isString(icon)
+    ? <Icon icon={icon} />
+    : icon;
+
+  return (
+    <div
+      id={id}
+      tabIndex={-1}
+      role='menuitemcheckbox'
+      aria-haspopup={false}
+      aria-disabled={!state.enabled}
+      aria-checked={state.active}
+      onFocus={() => setState({ ...state, focused: true })}
+      onPointerMove={(e) => {
+        if (state.enabled) {
+          e.currentTarget.focus();
+        }
+      }}
+      onBlur={() => setState({ ...state, focused: false })}
+      onClick={() => {
+        if (state.enabled) {
+          onAction(api);
+        }
+      }}
+      className={Bem.element('tox-collection', 'item', {
+        'enabled': state.active,
+        'active': state.focused,
+        'state-disabled': !state.enabled,
+      })}
+      ref={ref}
+      aria-keyshortcuts={shortcut}
+    >
+      {itemIcon && <div className={Bem.element('tox-collection', 'item-icon')}>{itemIcon}</div>}
+      <div className={Bem.element('tox-collection', 'item-label')}>{children}</div>
+      {shortcut && <div className={Bem.element('tox-collection', 'item-accessory')}>{shortcut}</div>}
+      <div className={Bem.element('tox-collection', 'item-checkmark')} >
+        <Icon icon={'checkmark'} />
+      </div>
+    </div>
+  );
+});

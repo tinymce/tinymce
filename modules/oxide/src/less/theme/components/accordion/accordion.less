@@ -1,0 +1,325 @@
+//
+// Accordion
+//
+
+.tox when (@custom-properties-enabled = true) {
+  .tox-accordion {
+    --tox-private-accordion-item-background-color: light-dark(
+      hsl(from var(--tox-private-background-color) h s calc(l - 3)),
+      hsl(from var(--tox-private-background-color) h s calc(l + 3)));
+    --tox-private-accordion-header-hover-background-color: light-dark(
+      hsl(from var(--tox-private-accordion-item-background-color, @accordion-item-background-color) h s calc(l - 5)),
+      hsl(from var(--tox-private-accordion-item-background-color, @accordion-item-background-color) h s calc(l + 5)));
+  }
+}
+
+@accordion-item-background-color: darken(@background-color, 3%);
+@accordion-header-hover-background-color: darken(@accordion-item-background-color, 5%);
+
+.tox {
+  .tox-accordion {
+    display: flex;
+    flex-direction: column;
+    gap: var(--tox-private-pad-sm, @pad-sm);
+  }
+
+  .tox-accordion__item {
+    background-color: var(--tox-private-background-color, @background-color);
+    color: var(--tox-private-text-color, @text-color);
+    border-radius: var(--tox-private-control-border-radius, @control-border-radius);
+    position: relative;
+
+    &.tox-accordion__item--expanded {
+      background-color: var(--tox-private-accordion-item-background-color, @accordion-item-background-color);
+
+      .tox-accordion__content--expanded .tox-accordion__content-inner {
+        padding-top: var(--tox-private-pad-xs, @pad-xs);
+      }
+    }
+
+    &::after {
+      border-radius: var(--tox-private-control-border-radius, @control-border-radius);
+      box-shadow: 0 0 0 var(--tox-private-keyboard-focus-outline-width, @keyboard-focus-outline-width) var(--tox-private-keyboard-focus-outline-color, @keyboard-focus-outline-color);
+      content: '';
+      inset: 0;
+      opacity: 0;
+      pointer-events: none;
+      position: absolute;
+
+      @media (forced-colors: active) {
+        border: 2px solid highlight;
+      }
+    }
+
+    &:focus {
+      outline: none;
+      z-index: 1;
+
+      &::after {
+        opacity: 1;
+      }
+    }
+  }
+
+  .tox-accordion__heading {
+    margin: 0;
+    width: 100%;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .tox-accordion__header {
+    align-items: center;
+    border: none;
+    border-radius: var(--tox-private-control-border-radius, @control-border-radius);
+    box-sizing: border-box;
+    color: var(--tox-private-text-color, @text-color);
+    cursor: pointer;
+    display: flex;
+    font-family: var(--tox-private-font-stack, @font-stack);
+    font-size: var(--tox-private-font-size-md, @font-size-md);
+    font-weight: var(--tox-private-font-weight-bold, @font-weight-bold);
+    line-height: var(--tox-private-line-height-base, @line-height-base);
+    outline: none;
+    padding: calc(var(--tox-private-pad-sm, @pad-sm) + var(--tox-private-pad-xs, @pad-xs));
+    text-align: left;
+    width: 100%;
+
+    // Add pseudo-element for focus outline (following toolbar-button.less pattern)
+    &::after {
+      border-radius: var(--tox-private-control-border-radius, @control-border-radius);
+      bottom: 0;
+      box-shadow: 0 0 0 var(--tox-private-keyboard-focus-outline-width, @keyboard-focus-outline-width) var(--tox-private-keyboard-focus-outline-color, @keyboard-focus-outline-color);
+      content: '';
+      left: 0;
+      opacity: 0;
+      pointer-events: none;
+      position: absolute;
+      right: 0;
+      top: 0;
+
+      @media (forced-colors: active) {
+        border: 2px solid highlight;
+      }
+    }
+
+    &:hover:not(.tox-accordion__header--disabled) {
+      background-color: var(--tox-private-accordion-header-hover-background-color, @accordion-header-hover-background-color);
+    }
+
+    &:focus:not(.tox-accordion__header--disabled) {
+      position: relative;
+      z-index: 1;
+
+      &::after {
+        opacity: 1;
+      }
+    }
+
+    &.tox-accordion__header--disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+
+    &.tox-accordion__header--icon-end {
+      padding-right: calc(var(--tox-private-pad-sm, @pad-sm) + var(--tox-private-pad-xs, @pad-xs));
+    }
+  }
+
+  .tox-accordion__content--expanded .tox-accordion__content-inner {
+    padding-top: calc(var(--tox-private-pad-sm, @pad-sm) + 1px);
+  }
+
+  .tox-accordion__header-icon {
+    align-items: center;
+    color: var(--tox-private-text-color, @text-color);
+    display: flex;
+    flex-shrink: 0;
+    height: calc(var(--tox-private-base-value, @base-value) * 1.5);
+    justify-content: center;
+    width: calc(var(--tox-private-base-value, @base-value) * 1.5);
+
+    svg {
+      display: block;
+      fill: currentColor;
+      height: 100%;
+      width: 100%;
+      max-height: calc(var(--tox-private-base-value, @base-value) * 1.5);
+      max-width: calc(var(--tox-private-base-value, @base-value) * 1.5);
+    }
+  }
+
+  .tox-accordion__header:not(.tox-accordion__header--icon-end) .tox-accordion__header-icon {
+    margin-right: var(--tox-private-pad-sm, @pad-sm);
+    margin-left: 0;
+  }
+
+  .tox-accordion__header--icon-end .tox-accordion__header-icon {
+    margin-left: auto;
+  }
+
+  .tox-accordion__header-text {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .tox-accordion__header--icon-end .tox-accordion__header-text {
+    flex: 0 1 auto;
+    margin-right: var(--tox-private-pad-sm, @pad-sm);
+  }
+
+  .tox-accordion__content {
+    border-radius: var(--tox-private-control-border-radius, @control-border-radius);
+
+    &.tox-accordion__content--collapsed {
+      display: none;
+    }
+
+    &.tox-accordion__content--expanded {
+      display: block;
+    }
+  }
+
+  .tox-accordion__content-inner {
+    padding: var(--tox-private-pad-sm, @pad-sm) calc(var(--tox-private-pad-sm, @pad-sm) + var(--tox-private-pad-xs, @pad-xs)) calc(var(--tox-private-pad-sm, @pad-sm) + var(--tox-private-pad-xs, @pad-xs));
+
+    .tox-form__group {
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      > *:not(:first-child) {
+        margin-top: calc(var(--tox-private-pad-sm, @pad-sm) + var(--tox-private-pad-xs, @pad-xs));
+      }
+
+      > .tox-dropdown-content {
+        margin-top: 0;
+      }
+    }
+
+    .tox-button-group {
+      display: flex;
+      gap: var(--tox-private-pad-sm, @pad-sm);
+    }
+
+    .tox-accordion__model-button {
+      border-radius: var(--tox-private-control-border-radius, @control-border-radius);
+      align-items: center;
+      appearance: none;
+      background: none;
+      border: none;
+      color: inherit;
+      cursor: pointer;
+      display: flex;
+      font-family: inherit;
+      font-size: inherit;
+      gap: var(--tox-private-pad-xs, @pad-xs);
+      margin: 0;
+      outline: none;
+      padding: 6px calc(var(--tox-private-pad-sm, @pad-sm) + var(--tox-private-pad-xs, @pad-xs));
+      position: relative;
+
+      &::after {
+        border-radius: var(--tox-private-control-border-radius, @control-border-radius);
+        bottom: 0;
+        box-shadow: 0 0 0 var(--tox-private-keyboard-focus-outline-width, @keyboard-focus-outline-width) var(--tox-private-keyboard-focus-outline-color, @keyboard-focus-outline-color);
+        content: '';
+        left: 0;
+        opacity: 0;
+        pointer-events: none;
+        position: absolute;
+        right: 0;
+        top: 0;
+
+        @media (forced-colors: active) {
+          border: 2px solid highlight;
+        }
+      }
+
+      &:focus {
+        z-index: 1;
+
+        &::after {
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  .tox-accordion .tox-selectfield {
+    align-items: center;
+    background-color: var(--tox-private-background-color, @background-color);
+    border: 1px solid var(--tox-private-border-color, @border-color);
+    border-radius: var(--tox-private-control-border-radius, @control-border-radius);
+    box-sizing: border-box;
+    display: flex;
+    height: 34px;
+    padding: 0 6px;
+    position: relative;
+    width: 100%;
+
+    &:focus-within {
+      box-shadow: 0 0 0 var(--tox-private-keyboard-focus-outline-width, @keyboard-focus-outline-width) var(--tox-private-keyboard-focus-outline-color, @keyboard-focus-outline-color);
+      z-index: 1;
+
+      @media (forced-colors: active) {
+        border-color: highlight;
+        box-shadow: 0 0 0 2px highlight;
+      }
+    }
+
+    button {
+      appearance: none;
+      background: none;
+      border: none;
+      color: inherit;
+      cursor: pointer;
+      flex: 1;
+      font-family: inherit;
+      font-size: inherit;
+      line-height: inherit;
+      margin: 0;
+      outline: none;
+      padding: 5px 0;
+      text-align: left;
+    }
+
+    .tox-icon {
+      display: flex;
+      flex-shrink: 0;
+      padding: 9px 0;
+      pointer-events: none;
+
+      svg {
+        height: var(--tox-private-base-value, @base-value);
+        width: var(--tox-private-base-value, @base-value);
+      }
+    }
+  }
+}
+
+.tox[dir=rtl] {
+  .tox-accordion__header {
+    text-align: right;
+  }
+
+  .tox-accordion__header:not(.tox-accordion__header--icon-end) .tox-accordion__header-icon {
+    margin-left: var(--tox-private-pad-sm, @pad-sm);
+    margin-right: 0;
+  }
+
+  .tox-accordion__header--icon-end .tox-accordion__header-icon {
+    margin-right: auto;
+    margin-left: 0;
+  }
+
+  .tox-accordion__header--icon-end .tox-accordion__header-text {
+    margin-left: var(--tox-private-pad-sm, @pad-sm);
+    margin-right: 0;
+  }
+}

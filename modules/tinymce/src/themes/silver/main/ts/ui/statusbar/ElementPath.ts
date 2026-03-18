@@ -107,7 +107,8 @@ const renderElementPath = (editor: Editor, settings: ElementPathSettings, provid
       tag: 'div',
       classes: [ 'tox-statusbar__path' ],
       attributes: {
-        role: 'navigation'
+        'role': 'group',
+        'aria-label': providersBackstage.translate('Element Path')
       }
     },
     behaviours: Behaviour.derive([

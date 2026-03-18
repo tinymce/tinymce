@@ -62,6 +62,7 @@ interface BaseEditorOptions {
   allow_conditional_comments?: boolean;
   allow_html_data_urls?: boolean;
   allow_html_in_named_anchor?: boolean;
+  allow_noneditable?: boolean;
   allow_script_urls?: boolean;
   allow_svg_data_urls?: boolean;
   allow_unsafe_link_target?: boolean;
@@ -228,6 +229,7 @@ interface BaseEditorOptions {
   submit_patch?: boolean;
   suffix?: string;
   user_id?: string;
+  content_id?: string;
   table_tab_navigation?: boolean;
   target?: HTMLElement;
   text_patterns?: RawPattern[] | false;
@@ -259,6 +261,7 @@ interface BaseEditorOptions {
   valid_elements?: string;
   valid_styles?: string | Record<string, string>;
   verify_html?: boolean;
+  view_show?: string;
   visual?: boolean;
   visual_anchor_class?: string;
   visual_table_class?: string;

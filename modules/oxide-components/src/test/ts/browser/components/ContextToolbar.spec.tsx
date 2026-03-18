@@ -1,8 +1,8 @@
-import { page, userEvent } from '@vitest/browser/context';
 import * as ContextToolbar from 'oxide-components/components/contexttoolbar/ContextToolbar';
 import { classes } from 'oxide-components/utils/Styles';
 import { Fragment, type ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
+import { page, userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 
 const triggerTestId = 'context-toolbar-trigger';
@@ -25,7 +25,7 @@ const Wrapper = ({ children }: { children: ReactNode }) => {
   );
 };
 
-describe('browser.ContextToolbar.ContextToolbar', () => {
+describe('browser.components.ContextToolbar', () => {
   it('TINY-13071: Should render trigger and toolbar', async () => {
     const { getByTestId } = render(
       <Fragment>
@@ -154,6 +154,102 @@ describe('browser.ContextToolbar.ContextToolbar', () => {
 
     await userEvent.keyboard('{Escape}');
 
+    await expect.element(toolbar).toBeVisible();
+  });
+
+  it('TINY-13794: Should call onEscape and close toolbar when persistent={false}', async () => {
+    const onEscape = vi.fn();
+    const { getByTestId } = render(
+      <Fragment>
+        <div className='tox' style={{ position: 'relative' }}>
+          <ContextToolbar.Root persistent={false}>
+            <ContextToolbar.Trigger>
+              <div data-testid={triggerTestId}>Click Me</div>
+            </ContextToolbar.Trigger>
+            <ContextToolbar.Toolbar onEscape={onEscape}>
+              <ContextToolbar.Group>
+                <div data-testid={toolbarTestId}>Toolbar Content</div>
+              </ContextToolbar.Group>
+            </ContextToolbar.Toolbar>
+          </ContextToolbar.Root>
+        </div>
+      </Fragment>,
+      { wrapper: Wrapper }
+    );
+
+    const trigger = getByTestId(triggerTestId);
+    await trigger.click();
+
+    const toolbar = getByTestId(toolbarTestId);
+    await expect.element(toolbar).toBeVisible();
+
+    await userEvent.keyboard('{Escape}');
+
+    expect(onEscape).toHaveBeenCalledOnce();
+    await expect.element(toolbar).not.toBeVisible();
+  });
+
+  it('TINY-13794: Should call onEscape but keep toolbar open when persistent={true}', async () => {
+    const onEscape = vi.fn();
+    const { getByTestId } = render(
+      <Fragment>
+        <div className='tox' style={{ position: 'relative' }}>
+          <ContextToolbar.Root persistent={true}>
+            <ContextToolbar.Trigger>
+              <div data-testid={triggerTestId}>Click Me</div>
+            </ContextToolbar.Trigger>
+            <ContextToolbar.Toolbar onEscape={onEscape}>
+              <ContextToolbar.Group>
+                <div data-testid={toolbarTestId}>Toolbar Content</div>
+              </ContextToolbar.Group>
+            </ContextToolbar.Toolbar>
+          </ContextToolbar.Root>
+        </div>
+      </Fragment>,
+      { wrapper: Wrapper }
+    );
+
+    const trigger = getByTestId(triggerTestId);
+    await trigger.click();
+
+    const toolbar = getByTestId(toolbarTestId);
+    await expect.element(toolbar).toBeVisible();
+
+    await userEvent.keyboard('{Escape}');
+
+    expect(onEscape).toHaveBeenCalledOnce();
+    await expect.element(toolbar).toBeVisible();
+  });
+
+  it('TINY-13794: Should let Escape event bubble when persistent={true} and no onEscape provided', async () => {
+    const parentKeyUp = vi.fn();
+    const { getByTestId } = render(
+      <Fragment>
+        <div className='tox' style={{ position: 'relative' }} onKeyUp={parentKeyUp}>
+          <ContextToolbar.Root persistent={true}>
+            <ContextToolbar.Trigger>
+              <div data-testid={triggerTestId}>Click Me</div>
+            </ContextToolbar.Trigger>
+            <ContextToolbar.Toolbar>
+              <ContextToolbar.Group>
+                <div data-testid={toolbarTestId}>Toolbar Content</div>
+              </ContextToolbar.Group>
+            </ContextToolbar.Toolbar>
+          </ContextToolbar.Root>
+        </div>
+      </Fragment>,
+      { wrapper: Wrapper }
+    );
+
+    const trigger = getByTestId(triggerTestId);
+    await trigger.click();
+
+    const toolbar = getByTestId(toolbarTestId);
+    await expect.element(toolbar).toBeVisible();
+
+    await userEvent.keyboard('{Escape}');
+
+    expect(parentKeyUp).toHaveBeenCalled();
     await expect.element(toolbar).toBeVisible();
   });
 

@@ -19,7 +19,7 @@ describe('atomic.katamari.api.arr.FlattenTest', () => {
   it('is consistent with chunking', () => {
     fc.assert(fc.property(
       fc.array(fc.integer()),
-      fc.integer(1, 5),
+      fc.integer({ min: 1, max: 5 }),
       (arr, chunkSize) => {
         const chunks = Arr.chunk(arr, chunkSize);
         const bound = Arr.flatten(chunks);

@@ -881,7 +881,7 @@ describe('browser.tinymce.core.content.insert.InsertContentTest', () => {
       const editor = hook.editor();
       editor.setContent('<p>initial</p>');
       TinySelections.setCursor(editor, [ 0 ], 0);
-      editor.insertContent('<!--\ufeff><iframe onload=alert(document.domain)>-></body>-->');
+      editor.insertContent('<!--\ufeff><script onload=alert(document.domain)>-></body>-->');
       TinyAssertions.assertRawContent(editor, '<p><!---->initial</p>');
     });
   });

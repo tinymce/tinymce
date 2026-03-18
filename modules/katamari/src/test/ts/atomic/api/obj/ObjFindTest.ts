@@ -5,6 +5,7 @@ import fc from 'fast-check';
 import * as Arr from 'ephox/katamari/api/Arr';
 import * as Fun from 'ephox/katamari/api/Fun';
 import * as Obj from 'ephox/katamari/api/Obj';
+import { arbAsciiDict } from 'ephox/katamari/test/arb/ArbDataTypes';
 
 describe('atomic.katamari.api.obj.ObjFindTest', () => {
   it('ObjFindTest', () => {
@@ -42,7 +43,7 @@ describe('atomic.katamari.api.obj.ObjFindTest', () => {
 
   it('the value found by find always passes predicate', () => {
     fc.assert(fc.property(
-      fc.dictionary(fc.asciiString(), fc.json()),
+      arbAsciiDict(fc.json()),
       fc.func(fc.boolean()),
       (obj, pred) => {
         // It looks like the way that fc.fun works is it cares about all of its arguments, so therefore
@@ -64,7 +65,7 @@ describe('atomic.katamari.api.obj.ObjFindTest', () => {
 
   it('If predicate is always false, then find is always none', () => {
     fc.assert(fc.property(
-      fc.dictionary(fc.asciiString(), fc.json()),
+      arbAsciiDict(fc.json()),
       (obj) => {
         const value = Obj.find(obj, Fun.never);
         return value.isNone();
@@ -84,7 +85,7 @@ describe('atomic.katamari.api.obj.ObjFindTest', () => {
 
   it('If predicate is always true, then value is always the some(first), or none if dict is empty', () => {
     fc.assert(fc.property(
-      fc.dictionary(fc.asciiString(), fc.json()),
+      arbAsciiDict(fc.json()),
       (obj) => {
         const value = Obj.find(obj, Fun.always);
         // No order is specified, so we cannot know what "first" is

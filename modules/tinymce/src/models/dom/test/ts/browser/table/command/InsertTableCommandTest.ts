@@ -19,6 +19,8 @@ describe('browser.tinymce.models.dom.table.command.InsertTableCommandTest', () =
     table_use_colgroups: false
   }, [], true);
 
+  const headerType = 'cells';
+
   const assertNumNewUndoLevels = (editor: Editor, expected: number) => {
     // Add one to expected to account for the initial undo level
     assert.lengthOf(editor.undoManager.data, expected + 1, 'Number of new undo levels');
@@ -59,7 +61,7 @@ describe('browser.tinymce.models.dom.table.command.InsertTableCommandTest', () =
     TableTestUtils.assertTableStructureWithSizes(editor, 2, 2, '%', 100, [
       [ 50, 50 ],
       [ 50, 50 ]
-    ], false, { headerRows: 1, headerCols: 0 });
+    ], false, { headerRows: 1, headerCols: 0 }, headerType);
     assertNumNewUndoLevels(editor, 1);
     TinyAssertions.assertCursor(editor, [ 0, 0, 0, 0 ], 0);
   });
@@ -70,7 +72,7 @@ describe('browser.tinymce.models.dom.table.command.InsertTableCommandTest', () =
     TableTestUtils.assertTableStructureWithSizes(editor, 2, 2, '%', 100, [
       [ 50, 50 ],
       [ 50, 50 ]
-    ], false, { headerRows: 0, headerCols: 1 });
+    ], false, { headerRows: 0, headerCols: 1 }, headerType);
     assertNumNewUndoLevels(editor, 1);
     TinyAssertions.assertCursor(editor, [ 0, 0, 0, 0 ], 0);
   });
@@ -81,7 +83,7 @@ describe('browser.tinymce.models.dom.table.command.InsertTableCommandTest', () =
     TableTestUtils.assertTableStructureWithSizes(editor, 2, 2, '%', 100, [
       [ 50, 50 ],
       [ 50, 50 ]
-    ], false, { headerRows: 1, headerCols: 1 });
+    ], false, { headerRows: 1, headerCols: 1 }, headerType);
     assertNumNewUndoLevels(editor, 1);
     TinyAssertions.assertCursor(editor, [ 0, 0, 0, 0 ], 0);
   });
@@ -92,7 +94,7 @@ describe('browser.tinymce.models.dom.table.command.InsertTableCommandTest', () =
     TableTestUtils.assertTableStructureWithSizes(editor, 2, 2, '%', 100, [
       [ 50, 50 ],
       [ 50, 50 ]
-    ], false, { headerRows: 2, headerCols: 2 });
+    ], false, { headerRows: 2, headerCols: 2 }, headerType);
     assertNumNewUndoLevels(editor, 1);
     TinyAssertions.assertCursor(editor, [ 0, 0, 0, 0 ], 0);
   });
@@ -103,7 +105,7 @@ describe('browser.tinymce.models.dom.table.command.InsertTableCommandTest', () =
     TableTestUtils.assertTableStructureWithSizes(editor, 2, 2, '%', 100, [
       [ 50, 50 ],
       [ 50, 50 ]
-    ], false, { headerRows: 2, headerCols: 2 });
+    ], false, { headerRows: 2, headerCols: 2 }, headerType);
     assertNumNewUndoLevels(editor, 1);
     TinyAssertions.assertCursor(editor, [ 0, 0, 0, 0 ], 0);
   });

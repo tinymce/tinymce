@@ -1,0 +1,6 @@
+project: tinymce
+kind: Added
+body: Editor option `content_id` that sets the id of the edited document.
+time: 2026-01-13T07:50:53.442934+01:00
+custom:
+    Issue: TINY-13379

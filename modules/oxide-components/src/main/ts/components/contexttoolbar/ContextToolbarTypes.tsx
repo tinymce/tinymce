@@ -4,6 +4,7 @@ export interface ContextToolbarProps {
   readonly children: HTMLAttributes<HTMLDivElement>['children'];
   readonly persistent?: boolean;
   readonly anchorRef?: RefObject<HTMLElement>;
+  readonly usePopover?: boolean;
 }
 
 export interface ContextToolbarContextValue {
@@ -16,11 +17,13 @@ export interface ContextToolbarContextValue {
   readonly anchorElement: HTMLElement | null;
   readonly getAnchorElement: () => HTMLElement | null;
   readonly persistent: boolean;
+  readonly usePopover: boolean;
 }
 
 export interface ToolbarProps {
   readonly children: ReactNode;
   readonly onMouseDown?: MouseEventHandler<HTMLDivElement>;
+  readonly onEscape?: () => void;
 }
 
 export interface TriggerProps {

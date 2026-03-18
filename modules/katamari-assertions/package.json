@@ -36,6 +36,13 @@
   "main": "./lib/main/ts/ephox/katamari-assertions/api/Main.js",
   "module": "./lib/main/ts/ephox/katamari-assertions/api/Main.js",
   "types": "./lib/main/ts/ephox/katamari-assertions/api/Main.d.ts",
+  "exports": {
+    ".": {
+      "tiny:source": "./src/main/ts/ephox/katamari-assertions/api/Main.ts",
+      "types": "./lib/main/ts/ephox/katamari-assertions/api/Main.d.ts",
+      "default": "./lib/main/ts/ephox/katamari-assertions/api/Main.js"
+    }
+  },
   "publishConfig": {
     "access": "public"
   }

@@ -7,7 +7,7 @@ def runBedrockTest(String name, String command, Boolean runAll, int retry = 0, i
   def bedrockCmd = command + (runAll ? " --ignore-lerna-changed=true" : "")
   echo "Running Bedrock cmd: ${bedrockCmd}"
   def testStatus = sh(script: bedrockCmd, returnStatus: true)
-  junit allowEmptyResults: true, testResults: 'scratch/TEST-*.xml'
+  junit allowEmptyResults: true, testResults: "scratch/TEST-${name}.xml"
 
   if (testStatus == 4) {
     unstable("Tests failed for ${name}")
@@ -78,131 +78,6 @@ def runBrowserTests(String name, String browser, String platform, String bucket,
   runBedrockTest(name, bedrockCommand, runAll)
 }
 
-def runTestPod(String cacheName, String name, String testname, String browser, String provider, String platform, String version, String bucket, String buckets, Boolean runAll) {
-  return {
-    stage("${name}") {
-      devPods.nodeConsumer(
-        nodeOpts: [
-          resourceRequestCpu: '2',
-          resourceRequestMemory: '6Gi',
-          resourceRequestEphemeralStorage: '16Gi',
-          resourceLimitCpu: '7',
-          resourceLimitMemory: '6Gi',
-          resourceLimitEphemeralStorage: '16Gi'
-        ],
-        tag: '22.20.0',
-        build: cacheName,
-        useContainers: ['node', 'aws-cli']
-      ) {
-        grunt('list-changed-browser')
-        bedrockRemoteTools.tinyWorkSishTunnel()
-        bedrockRemoteTools.withRemoteCreds(provider) {
-          int retry = 0
-          runRemoteTests(testname, browser, provider, platform, version, bucket, buckets, runAll, retry, 180)
-        }
-      }
-    }
-  }
-}
-
-def runPlaywrightPod(String cacheName, String name, Closure body) {
-
-  def containers = [
-    devPods.getContainerDefaultArgs([
-      name: 'node',
-      image: "public.ecr.aws/docker/library/node:22.20.0",
-      runAsGroup: '1000',
-      runAsUser: '1000',
-      resourceRequestEphemeralStorage: '16Gi',
-      resourceLimitEphemeralStorage: '16Gi'
-      ]) + devPods.hiRes(),
-    devPods.getContainerDefaultArgs([
-      name: 'aws-cli',
-      image: 'public.ecr.aws/aws-cli/aws-cli:latest',
-      runAsGroup: '1000',
-      runAsUser: '1000',
-      resourceRequestEphemeralStorage: '2Gi',
-      resourceLimitEphemeralStorage: '4Gi'
-      ]) + devPods.stdRes(),
-    devPods.getContainerDefaultArgs([ name: 'playwright', image: 'mcr.microsoft.com/playwright:v1.53.1-noble']) + devPods.hiRes()
-  ]
-
-  return {
-    stage("${name}") {
-      devPods.customConsumer(
-        containers: containers,
-        base: 'node',
-        build: cacheName
-      ) {
-        container('playwright') {
-          body()
-        }
-      }
-    }
-  }
-}
-
-def runSeleniumPod(String cacheName, String name, String browser, String version, Closure body) {
-  Map node = [
-          name: 'node',
-          image: "public.ecr.aws/docker/library/node:22.20.0",
-          command: 'sleep',
-          args: 'infinity',
-          resourceRequestCpu: '4',
-          resourceRequestMemory: '4Gi',
-          resourceRequestEphemeralStorage: '8Gi',
-          resourceLimitCpu: '7',
-          resourceLimitMemory: '4Gi',
-          resourceLimitEphemeralStorage: '8Gi',
-          runAsGroup: '1000',
-          runAsUser: '1000'
-        ]
-  Map selenium = [
-          name: "selenium",
-          image: tinyAws.getPullThroughCacheImage("selenium/standalone-${browser}", version),
-          livenessProbe: [
-            execArgs: "curl --fail --silent --output /dev/null http://localhost:4444/wd/hub/status",
-            initialDelaySeconds: 30,
-            periodSeconds: 5,
-            timeoutSeconds: 15,
-            failureThreshold: 6
-          ],
-          alwaysPullImage: true,
-          resourceRequestCpu: '1',
-          resourceRequestMemory: '500Mi',
-          resourceLimitCpu: '1',
-          resourceLimitMemory: '500Mi',
-          resourceRequestEphemeralStorage: '4Gi',
-          resourceLimitEphemeralStorage: '4Gi'
-        ]
-  Map aws = [
-          name: 'aws-cli',
-          image: 'public.ecr.aws/aws-cli/aws-cli:latest',
-          command: 'sleep',
-          args: 'infinity',
-          alwaysPullImage: true,
-          resourceRequestEphemeralStorage: '2Gi',
-          resourceLimitEphemeralStorage: '4Gi'
-        ] + devPods.stdRes()
-  return {
-    stage("${name}") {
-      devPods.customConsumer(
-        containers: [
-          node,
-          selenium,
-          aws
-        ],
-        base: 'node',
-        build: cacheName
-      ) {
-        container('node') {
-          body()
-        }
-      }
-    }
-  }
-}
-
 def gitMerge(String primaryBranch) {
   if (env.BRANCH_NAME != primaryBranch) {
     echo "Merging ${primaryBranch} into this branch to run tests"
@@ -221,167 +96,207 @@ def cacheName = "cache_${BUILD_TAG}"
 
 def testPrefix = "tinymce_${cleanBuildName(env.BRANCH_NAME)}-build${env.BUILD_NUMBER}"
 
+def nodeImg = devPods.getContainerDefaultArgs([
+  name: 'node',
+  image: "public.ecr.aws/docker/library/node:22.20.0",
+  alwaysPullImage: true,
+  runAsGroup: '1000',
+  runAsUser: '1000'
+]) + [
+  // we can probably make this leaner if we condition primary vs branch
+  // primary needs more io/mem/cpu to handle extra concurrent tests
+  resourceRequestCpu: '8',
+  resourceLimitCpu: '8',
+  resourceRequestMemory: '10Gi',
+  resourceLimitMemory: '10Gi'
+] + devPods.highStorage()
+
+def seleniumImg = [
+  name: "selenium",
+  image: tinyAws.getPullThroughCacheImage("selenium/standalone-chrome", '127.0'),
+  livenessProbe: [
+    execArgs: "curl --fail --silent --output /dev/null http://localhost:4444/wd/hub/status",
+    initialDelaySeconds: 30,
+    periodSeconds: 5,
+    timeoutSeconds: 15,
+    failureThreshold: 6
+  ]
+] + [
+  // lower resources than this and selenium has trouble staying up
+  // selenium cango down to 500m/500Mi but crashes if things in the pod start leaking
+  resourceRequestCpu: '600m',
+  resourceLimitCpu: '600m',
+  resourceRequestMemory: '600Mi',
+  resourceLimitMemory: '600Mi'
+] + devPods.lowStorage()
+
+def playwrightImg = [
+  name: 'playwright',
+  // Use the mirrored image when possible
+  // if there is no mirror only use mcr for testing and request a mirror
+  image: 'mcr.microsoft.com/playwright:v1.58.2-noble',
+//   image: '103651136441.dkr.ecr.us-east-2.amazonaws.com/mirror/playwright:v1.58.2-noble',
+  command: 'sleep',
+  args: 'infinity',
+  alwaysPullImage: true
+] + [
+  resourceRequestCpu: '1',
+  resourceLimitCpu: '2',
+  resourceRequestMemory: '2Gi',
+  resourceLimitMemory: '2Gi'
+] + devPods.lowStorage()
+
 timestamps { notifyStatusChange(
-  cleanupStep: { devPods.cleanUpPod(build: cacheName) },
   branches: ['main', 'release/7', 'release/8'],
   channel: '#tinymce-build-status',
   name: 'TinyMCE',
   mention: true
   ) {
-  devPods.nodeProducer(
-    nodeOpts: [
-      resourceRequestCpu: '2',
-      resourceRequestMemory: '4Gi',
-      resourceRequestEphemeralStorage: '16Gi',
-      resourceLimitCpu: '7.5',
-      resourceLimitMemory: '4Gi',
-      resourceLimitEphemeralStorage: '16Gi'
+  devPods.custom(
+    containers: [
+      nodeImg,
+      seleniumImg,
+      playwrightImg
     ],
-    tag: '22.20.0',
-    build: cacheName,
-    useLfs: true,
+    checkoutStep: {
+      tinyGit.addGitHubToKnownHosts()
+      checkout localBranch(scm, [ lfs() ])
+    }
   ) {
-    props = readProperties(file: 'build.properties')
-    String primaryBranch = props.primaryBranch
-    assert primaryBranch != null && primaryBranch != ""
+    container("node") {
 
-
-    stage('Deps') {
-      // cancel build if primary branch doesn't merge cleanly
-      gitMerge(primaryBranch)
-      yarnInstall()
-    }
-
-    stage('Build') {
-      // verify no errors in changelog merge
-      exec("yarn changie-merge")
-      withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
-        // type check and build TinyMCE
-        exec("yarn ci-all-seq")
-
-        // validate documentation generator
-        exec("yarn tinymce-grunt shell:moxiedoc")
-      }
-    }
-  }
-
-  // [ browser: 'chrome', provider: 'aws', buckets: 2 ],
-  // [ browser: 'edge', provider: 'aws', buckets: 2 ],
-  // [ browser: 'firefox', provider: 'aws', buckets: 2 ],
-
-  def winChrome = [ browser: 'chrome', provider: 'lambdatest', os: 'windows', buckets: 1 ]
-  def winFirefox = [ browser: 'firefox', provider: 'lambdatest', os: 'windows', buckets: 1 ]
-  def winEdge = [ browser: 'edge', provider: 'lambdatest', os: 'windows', buckets: 1 ]
-
-  def macChrome = [ browser: 'chrome', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ]
-  def macFirefox = [ browser: 'firefox', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ]
-  def macSafari = [ browser: 'safari', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ]
-
-  def seleniumFirefox = [ browser: 'firefox', provider: 'selenium', buckets: 1 ]
-  def seleniumChrome = [ browser: 'chrome', provider: 'selenium', version: '127.0', buckets: 1 ]
-  def seleniumEdge = [ browser: 'edge', provider: 'selenium', buckets: 1 ]
-
-  def branchBuildPlatforms = [
-    winChrome,
-    winFirefox,
-    macSafari,
-  ]
-
-  def primaryBuildPlatforms = branchBuildPlatforms + [
-    winEdge,
-    macChrome,
-    macFirefox
-  ];
-
-  def buildingPrimary = env.BRANCH_NAME == props.primaryBranch
-  def platforms = buildingPrimary ? primaryBuildPlatforms : branchBuildPlatforms
-
-  def processes = [:]
-  def runAllTests = buildingPrimary
-
-  for (int i = 0; i < platforms.size(); i++) {
-    def platform = platforms.get(i)
-    def buckets = platform.buckets ?: 1
-    for (int bucket = 1; bucket <= buckets; bucket ++) {
-      def suffix = buckets == 1 ? "" : "-" + bucket + "-" + buckets
-      def os = String.valueOf(platform.os).startsWith('mac') ? 'Mac' : 'Win'
-      def s_bucket = "${bucket}"
-      def s_buckets = "${buckets}"
-      switch(platform.provider) {
-        case ['aws', 'lambdatest']:
-          def browserVersion = platform.version ? "-${platform.version}" : ""
-          def name = "${os}-${platform.browser}${browserVersion}-${platform.provider}${suffix}"
-          def testName = "${env.BUILD_NUMBER}-${os}-${platform.browser}"
-          processes[name] = runTestPod(cacheName, name, "${testPrefix}_${testName}", platform.browser, platform.provider, platform.os, platform.version, s_bucket, s_buckets, runAllTests)
-        break;
-        case 'selenium':
-          def name = "selenium-${platform.browser}${suffix}";
-          def browserVersion = platform.version ?: 'latest'
-          processes[name] = runSeleniumPod(cacheName, name, platform.browser, browserVersion) {
-            runSeleniumTests(name, platform.browser, s_bucket, s_buckets, runAllTests)
-          }
-        break;
-        default:
-        error("Unknown or missing provider for test ${platform.browser}")
-        break;
-      }
-    }
-  }
-
-  processes['headless'] = runSeleniumPod(cacheName, 'headless-chrome', 'chrome', '127.0') {
-    grunt('list-changed-headless')
-    runHeadlessTests(runAllTests)
-  }
-
-  processes['playwright'] = runPlaywrightPod(cacheName, 'playwright-tests') {
-    exec('yarn -s --cwd modules/oxide-components test-ci')
-    junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results.xml'
-    def visualTestStatus = exec(script: 'yarn -s --cwd modules/oxide-components test-visual-ci', returnStatus: true)
-    if (visualTestStatus == 4) {
-      unstable("Visual tests failed")
-    } else if (visualTestStatus != 0) {
-      error("Unexpected error running visual tests")
-    }
-    junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results-visual.xml'
-    exec('find modules/oxide-components -name "*.png" -type f || echo "No PNG files found"')
-    archiveArtifacts artifacts: 'modules/oxide-components/test-results/**/*.png', allowEmptyArchive: true, fingerprint: true
-  }
-
-  stage('Run tests') {
-      echo "Running tests [runAll=${runAllTests}]"
-      parallel processes
-  }
-
-  devPods.nodeConsumer(
-    nodeOpts: [
-      resourceRequestCpu: '2',
-      resourceRequestMemory: '4Gi',
-      resourceRequestEphemeralStorage: '16Gi',
-      resourceLimitCpu: '7.5',
-      resourceLimitMemory: '4Gi',
-      resourceLimitEphemeralStorage: '16Gi'
-    ],
-    tag: '22.20.0',
-    build: cacheName,
-    environment: {
-      sh "tar -zxf ./file.tar.gz"
+      // Make yarn fallback to the npm registry otherwise we get publish errors
+      devPods.setDefaultRegistry()
+      // Setup git information
       tinyGit.addAuthorConfig()
       tinyGit.addGitHubToKnownHosts()
-    }
-  ) {
-    props = readProperties(file: 'build.properties')
-    String primaryBranch = props.primaryBranch
-    assert primaryBranch != null && primaryBranch != ""
 
-    stage('Deploy Storybook') {
-      if (env.BRANCH_NAME == primaryBranch) {
-        echo "Deploying Storybook"
-        tinyGit.withGitHubSSHCredentials {
-          exec('yarn -s --cwd modules/oxide-components deploy-storybook')
+      props = readProperties(file: 'build.properties')
+      String primaryBranch = props.primaryBranch
+      assert primaryBranch != null && primaryBranch != ""
+
+
+      stage('Deps') {
+        // cancel build if primary branch doesn't merge cleanly
+        gitMerge(primaryBranch)
+        yarnInstall()
+      }
+
+      stage('Build') {
+        // verify no errors in changelog merge
+        exec("yarn changie-merge")
+        withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
+          // type check and build TinyMCE
+          exec("yarn ci-all-seq")
+
+          // validate documentation generator
+          exec("yarn tinymce-grunt shell:moxiedoc")
         }
-      } else {
-        echo "Skipping Storybook deployment as the pipeline is not running on the primary branch"
       }
     }
-  }
-}}
+
+    def winChrome = [ browser: 'chrome', provider: 'aws', os: 'windows', buckets: 1 ]
+    def winFirefox = [ browser: 'firefox', provider: 'lambdatest', os: 'windows', buckets: 1 ]
+    def winEdge = [ browser: 'edge', provider: 'lambdatest', os: 'windows', buckets: 1 ]
+
+    def macChrome = [ browser: 'chrome', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ]
+    def macFirefox = [ browser: 'firefox', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ]
+    def macSafari = [ browser: 'safari', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ]
+
+    def branchBuildPlatforms = [
+      winChrome,
+      winFirefox,
+      macSafari,
+    ]
+
+    def primaryBuildPlatforms = branchBuildPlatforms + [
+      winEdge,
+      macChrome,
+      macFirefox
+    ];
+
+    def buildingPrimary = env.BRANCH_NAME == props.primaryBranch
+    def platforms = buildingPrimary ? primaryBuildPlatforms : branchBuildPlatforms
+
+    def processes = [:]
+    def runAllTests = buildingPrimary
+
+    def stagger = 0
+    for (int i = 0; i < platforms.size(); i++) {
+      def platform = platforms.get(i)
+      def buckets = platform.buckets ?: 1
+      for (int bucket = 1; bucket <= buckets; bucket ++) {
+        def suffix = buckets == 1 ? "" : "-" + bucket + "-" + buckets
+        def os = String.valueOf(platform.os).startsWith('mac') ? 'Mac' : 'Win'
+        def s_bucket = "${bucket}"
+        def s_buckets = "${buckets}"
+        def name = "${os}-${platform.browser}${platform.version ?: ''}-${platform.provider}${suffix}"
+        def delaySeconds = stagger * 10
+        stagger++
+        processes[name] = {
+          stage(name) {
+            container('node') {
+              sleep( time: delaySeconds, unit: 'SECONDS')
+              grunt('list-changed-browser')
+              bedrockRemoteTools.withRemoteCreds(platform.provider) {
+                runRemoteTests(name, platform.browser, platform.provider, platform.os, platform.version, s_bucket, s_buckets, runAllTests)
+              }
+            }
+          }
+        }
+      }
+    }
+
+    processes['headless'] = {
+      stage('headless') {
+        container('node') {
+          grunt('list-changed-headless')
+          runHeadlessTests(runAllTests)
+        }
+      }
+    }
+
+    processes['playwright'] = {
+      stage('playwright') {
+        container('playwright') {
+          exec('yarn -s --cwd modules/oxide-components test-ci')
+          junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results.xml'
+          def visualTestStatus
+          // Limit the number of workers allowed to avoid hanging IO
+          withEnv(["PW_WORKERS=1"]) {
+            visualTestStatus = exec(script: 'yarn -s --cwd modules/oxide-components test-visual-ci', returnStatus: true)
+          }
+          if (visualTestStatus == 4) {
+            unstable("Visual tests failed")
+          } else if (visualTestStatus != 0) {
+            error("Unexpected error running visual tests")
+          }
+          junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results-visual.xml'
+          exec('find modules/oxide-components -name "*.png" -type f || echo "No PNG files found"')
+          archiveArtifacts artifacts: 'modules/oxide-components/test-results/**/*.png', allowEmptyArchive: true, fingerprint: true
+        }
+      }
+    }
+
+    stage('Tests') {
+      container('node') {
+        bedrockRemoteTools.tinyWorkSishTunnel()
+      }
+      parallel processes
+    }
+
+    container('node') {
+
+      stage('Deploy Storybook') {
+        if (env.BRANCH_NAME == props.primaryBranch) {
+          echo "Deploying Storybook"
+          tinyGit.withGitHubSSHCredentials {
+            exec('yarn -s --cwd modules/oxide-components deploy-storybook')
+          }
+        } else {
+          echo "Skipping Storybook deployment as the pipeline is not running on the primary branch"
+        }
+      }
+    } // close container
+  } // close pod
+}} // close #notification and #timestamp

@@ -175,6 +175,18 @@ describe('browser.tinymce.core.html.StylesTest', () => {
       'border-width: 1px; border-color: rgb(1, 2, 3); border-style: dashed',
       'border: 1px dashed #010203;'
     );
+
+    // If we have more than one rgb-color do not compress ( not a valid css, for some reason )
+    assertStyles(
+      styles,
+      'border-width: 1px; border-color: rgb(1, 2, 3)  rgb(1, 3, 3)  rgb(1, 3, 2)  rgb(1, 2, 2); border-style: dashed',
+      'border-width: 1px; border-color: rgb(1, 2, 3)  rgb(1, 3, 3)  rgb(1, 3, 2)  rgb(1, 2, 2); border-style: dashed;'
+    );
+    assertStyles(
+      styles,
+      'border-width: 1px; border-color: #001001 #002001 #003001 #004001; border-style: dashed',
+      'border-width: 1px; border-color: #001001 #002001 #003001 #004001; border-style: dashed;'
+    );
   });
 
   it('Font weight', () => {

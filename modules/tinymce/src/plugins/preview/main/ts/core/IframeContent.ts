@@ -7,6 +7,8 @@ import Tools from 'tinymce/core/api/util/Tools';
 
 import * as Options from '../api/Options';
 
+import type { ContentCssResource } from './Types';
+
 const getComponentScriptsHtml = (editor: Editor) => {
   const urls = Arr.unique(Obj.values(editor.schema.getComponentUrls()));
 
@@ -16,7 +18,7 @@ const getComponentScriptsHtml = (editor: Editor) => {
   }).join('');
 };
 
-const getPreviewHtml = (editor: Editor): string => {
+const getPreviewHtml = (editor: Editor, contentCssResources: ContentCssResource[]): string => {
   let headHtml = '';
   const encode = editor.dom.encode;
   const contentStyle = Options.getContentStyle(editor) ?? '';
@@ -24,8 +26,13 @@ const getPreviewHtml = (editor: Editor): string => {
   headHtml += `<base href="${encode(editor.documentBaseURI.getURI())}">`;
 
   const cors = Options.shouldUseContentCssCors(editor) ? ' crossorigin="anonymous"' : '';
-  Tools.each(editor.contentCSS, (url) => {
-    headHtml += '<link type="text/css" rel="stylesheet" href="' + encode(editor.documentBaseURI.toAbsolute(url)) + '"' + cors + '>';
+
+  Tools.each(contentCssResources, (resource) => {
+    if (resource.type === 'bundled') {
+      headHtml += '<style type="text/css">' + resource.content + '</style>';
+    } else {
+      headHtml += '<link type="text/css" rel="stylesheet" href="' + encode(resource.url) + '"' + cors + '>';
+    }
   });
 
   if (contentStyle) {
@@ -40,7 +47,6 @@ const getPreviewHtml = (editor: Editor): string => {
 
   const directionality = editor.getBody().dir;
   const dirAttr = directionality ? ' dir="' + encode(directionality) + '"' : '';
-
   const previewHtml = (
     '<!DOCTYPE html>' +
     '<html>' +

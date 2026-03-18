@@ -33,5 +33,12 @@
   ],
   "main": "./lib/main/ts/ephox/katamari/api/Main.js",
   "module": "./lib/main/ts/ephox/katamari/api/Main.js",
-  "types": "./lib/main/ts/ephox/katamari/api/Main.d.ts"
+  "types": "./lib/main/ts/ephox/katamari/api/Main.d.ts",
+  "exports": {
+    ".": {
+      "tiny:source": "./src/main/ts/ephox/katamari/api/Main.ts",
+      "types": "./lib/main/ts/ephox/katamari/api/Main.d.ts",
+      "default": "./lib/main/ts/ephox/katamari/api/Main.js"
+    }
+  }
 }
