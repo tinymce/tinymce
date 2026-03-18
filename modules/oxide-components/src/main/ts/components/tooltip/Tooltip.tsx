@@ -110,31 +110,23 @@ const Content = forwardRef<HTMLDivElement, ContentProps>(({ text }, ref) => {
       }
     };
 
+    const hideContentPopover = () => {
+      if (Type.isNonNullable(contentRef.current)) {
+        contentRef.current.style.display = '';
+        contentRef.current.hidePopover();
+      }
+    };
+
     if (isOpen) {
-      const timeoutId = setTimeout(() => {
-        if (contentRef.current) {
-          showContentPopover();
-        }
-      }, delayForShow);
+      const timeoutId = setTimeout(showContentPopover, delayForShow);
       return () => {
-        if (timeoutId !== null) {
-          clearTimeout(timeoutId);
-        }
-      };
-    } else if (!isOpen && contentRef.current) {
-      const timeoutId = setTimeout(() => {
-        if (contentRef.current) {
-          contentRef.current.style.display = '';
-          contentRef.current.hidePopover();
-        }
-      }, delayForHide);
-      return () => {
-        if (timeoutId !== null) {
-          clearTimeout(timeoutId);
-        }
+        clearTimeout(timeoutId);
       };
     } else {
-      return Fun.noop;
+      const timeoutId = setTimeout(hideContentPopover, delayForHide);
+      return () => {
+        clearTimeout(timeoutId);
+      };
     }
   }, [ isOpen, contentRef, triggerRef, delayForShow, delayForHide ]);
 
