@@ -31,12 +31,13 @@ export default defineConfig({
       use: { ...devices['Desktop Safari'] },
     },
   ],
-  // Run your local dev server before starting the tests
+  // We can't run development storybook in Docker, because rollup uses native binaries
   webServer: process.env.CI
-    ? undefined
-    : {
-      command: 'yarn start',
+    ? {
+      command: 'yarn start --ci --loglevel debug',
+      stdout: 'pipe',
       url: BASE_URL,
       reuseExistingServer: true,
-    },
+    }
+    : undefined,
 });
