@@ -102,7 +102,7 @@ const Content = forwardRef<HTMLDivElement, ContentProps>(({ text }, ref) => {
 
   useLayoutEffect(() => {
     const showContentPopover = () => {
-      if (contentRef.current) {
+      if (Type.isNonNullable(contentRef.current)) {
         contentRef.current.style.display = 'inline-block';
 
         // @ts-expect-error - TODO: Remove this expect error once we've upgraded to React 19+
