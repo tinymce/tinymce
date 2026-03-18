@@ -1,0 +1,6 @@
+project: tinymce
+kind: Added
+body: Added optional property `showCondition: 'always' | 'overflow'` to tooltip trigger element.
+time: 2026-03-18T09:47:24.553233+01:00
+custom:
+    Issue: TINY-14072

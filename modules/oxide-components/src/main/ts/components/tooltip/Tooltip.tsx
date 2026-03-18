@@ -22,10 +22,25 @@ const defaultState: TooltipState = {
 
 const TooltipContext = createContext<TooltipState>(defaultState);
 
-interface TriggerInternalProps extends PropsWithChildren<HTMLAttributes<HTMLElement>> {}
+interface TriggerSpecificProps {
+  readonly showCondition?: 'always' | 'overflow'
+}
+interface TriggerInternalProps extends PropsWithChildren<HTMLAttributes<HTMLElement>>, TriggerSpecificProps { }
 
-const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, ...props }, ref) => {
+const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, showCondition, ...props }, ref) => {
   const { setIsOpen, triggerRef } = useContext(TooltipContext);
+
+  const trySetIsOpen = (isOpen: boolean) => {
+    if (isOpen && showCondition === 'overflow') {
+      const trigger = triggerRef.current;
+
+      if (trigger && (trigger.offsetHeight < trigger.scrollHeight || trigger.offsetWidth < trigger.scrollWidth)) {
+        setIsOpen(isOpen);
+      }
+    } else {
+      setIsOpen(isOpen);
+    }
+  }
 
   const count = Children.count(children);
   if (count === 0) {
@@ -62,35 +77,35 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
       if (!e.isDefaultPrevented()) {
         theChild.props.onMouseEnter?.(e);
         props.onMouseEnter?.(e);
-        setIsOpen(true);
+        trySetIsOpen(true);
       }
     },
     onMouseLeave: (e: React.MouseEvent<HTMLElement>) => {
       if (!e.isDefaultPrevented()) {
         theChild.props.onMouseLeave?.(e);
         props.onMouseLeave?.(e);
-        setIsOpen(false);
+        trySetIsOpen(false);
       }
     },
     onFocus: (e: React.FocusEvent<HTMLElement>) => {
       if (!e.isDefaultPrevented()) {
         theChild.props.onFocus?.(e);
         props.onFocus?.(e);
-        setIsOpen(true);
+        trySetIsOpen(true);
       }
     },
     onBlur: (e: React.FocusEvent<HTMLElement>) => {
       if (!e.isDefaultPrevented()) {
         theChild.props.onBlur?.(e);
         props.onBlur?.(e);
-        setIsOpen(false);
+        trySetIsOpen(false);
       }
     },
   });
 });
 
 const Trigger: React.ForwardRefExoticComponent<
-  PropsWithChildren & React.RefAttributes<HTMLElement>
+  PropsWithChildren & React.RefAttributes<HTMLElement> & TriggerSpecificProps
 > = TriggerImpl;
 
 interface ContentProps {
