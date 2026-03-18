@@ -185,4 +185,40 @@ describe('browser.DropdownTest', () => {
         .toHaveTextContent('Dropdown Content');
     });
   });
+
+  describe('Escape handling', () => {
+    it('TINY-13794: Should not let Escape event bubble from dropdown content to parent', async () => {
+      const parentKeyDown = vi.fn();
+      const { getByText } = render(
+        <div className={Bem.block('tox')} style={{ position: 'relative' }} onKeyDown={(e) => {
+          if (e.key === 'Escape') {
+            parentKeyDown();
+          }
+        }}>
+          <Dropdown.Root>
+            <Dropdown.Trigger>
+              <button>Trigger</button>
+            </Dropdown.Trigger>
+            <Dropdown.Content>
+              <button>Dropdown Content</button>
+            </Dropdown.Content>
+          </Dropdown.Root>
+        </div>,
+        { wrapper }
+      );
+
+      await userEvent.click(getByText('Trigger'));
+      await expect.poll(() => document.querySelector('[popover]:popover-open'))
+        .toHaveTextContent('Dropdown Content');
+
+      const dropdownContent = document.querySelector('[popover]:popover-open button');
+      expect(dropdownContent).not.toBeNull();
+      (dropdownContent as HTMLElement)?.focus();
+
+      await userEvent.keyboard('{Escape}');
+
+      expect(parentKeyDown).not.toHaveBeenCalled();
+      await expect.poll(() => document.querySelector('[popover]:popover-open')).toBeNull();
+    });
+  });
 });

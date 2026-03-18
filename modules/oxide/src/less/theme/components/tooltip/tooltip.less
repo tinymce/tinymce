@@ -23,6 +23,31 @@
     position: relative;
     width: max-content;
     z-index: @z-index-menu;
+
+    &.tox-tooltip--anchor {
+      display: none;
+      padding: var(--tox-private-pad-xs, @pad-xs) 0 0;
+      position: absolute;
+      position-try-order: most-height;
+      position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
+      height: fit-content;
+
+      &.tox-tooltip--up {
+        position-area: block-end;
+      }
+
+      &.tox-tooltip--down {
+        position-area: block-start;
+      }
+
+      &.tox-tooltip--left {
+        position-area: inline-start;
+      }
+
+      &.tox-tooltip--right {
+        position-area: inline-end;
+      }
+    }
   }
 
   .tox-tooltip__body {

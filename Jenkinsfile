@@ -134,8 +134,8 @@ def playwrightImg = [
   name: 'playwright',
   // Use the mirrored image when possible
   // if there is no mirror only use mcr for testing and request a mirror
-  // image: 'mcr.microsoft.com/playwright:v1.53.1-noble',
-  image: '103651136441.dkr.ecr.us-east-2.amazonaws.com/mirror/playwright:v1.53.1-noble',
+  image: 'mcr.microsoft.com/playwright:v1.58.2-noble',
+//   image: '103651136441.dkr.ecr.us-east-2.amazonaws.com/mirror/playwright:v1.58.2-noble',
   command: 'sleep',
   args: 'infinity',
   alwaysPullImage: true

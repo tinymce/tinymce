@@ -178,7 +178,7 @@ exports[`browser.MenuTest > Should be able to open submenus > 1. Before open sub
         <div
           class="tox-dropdown-content"
           popover="auto"
-          style="opacity: 0;"
+          style="inset-inline: 8px; position-area: span-block-end inline-end;"
         />
       </div>
     </div>
@@ -364,7 +364,7 @@ exports[`browser.MenuTest > Should be able to open submenus > 2. After opening s
         <div
           class="tox-dropdown-content"
           popover="auto"
-          style="opacity: 1;"
+          style="inset-inline: 8px; position-area: span-block-end inline-end;"
         >
           <div>
             <div
@@ -640,7 +640,7 @@ exports[`browser.MenuTest > Should be able to render using MenuRenderer > 1. Bef
         <div
           class="tox-dropdown-content"
           popover="auto"
-          style="opacity: 0;"
+          style="inset-inline: 8px; position-area: span-block-end inline-end;"
         />
       </div>
     </div>
@@ -819,7 +819,7 @@ exports[`browser.MenuTest > Should be able to render using MenuRenderer > 2. Aft
         <div
           class="tox-dropdown-content"
           popover="auto"
-          style="opacity: 1;"
+          style="inset-inline: 8px; position-area: span-block-end inline-end;"
         >
           <div>
             <div

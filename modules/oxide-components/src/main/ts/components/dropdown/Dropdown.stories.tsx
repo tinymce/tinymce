@@ -28,8 +28,14 @@ const meta = {
       options: [[ 'click' ], [ 'hover' ], [ 'click', 'hover' ]]
     }
   },
+  decorators: [
+    (Story) => (
+      <div style={{ height: '100vh', width: '100vw', display: 'grid', placeContent: 'center' }}>
+        <Story />
+      </div>
+    )
+  ],
   parameters: {
-    layout: 'centered',
     docs: {
       description: {
         component: `A dropdown component. Contains a button and an anchored container that can be used for creating menus.`
@@ -45,18 +51,16 @@ type Story = StoryObj<typeof meta>;
 
 const render = (args: Dropdown.DropdownProps): JSX.Element => {
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-      <Dropdown.Root side={args.side} align={args.align}>
-        <Dropdown.Trigger>
-          <Button variant='secondary'>
-            Click me to toggle dropdown
-          </Button>
-        </Dropdown.Trigger>
-        <Dropdown.Content>
-          <div style={{ width: '400px', height: '300px' }}></div>
-        </Dropdown.Content>
-      </Dropdown.Root>
-    </div>
+    <Dropdown.Root {...args}>
+      <Dropdown.Trigger>
+        <Button variant='secondary'>
+          Click to toggle
+        </Button>
+      </Dropdown.Trigger>
+      <Dropdown.Content>
+        <div contentEditable={true} style={{ width: '200px', height: '100px' }}>Hello I am the content</div>
+      </Dropdown.Content>
+    </Dropdown.Root>
   );
 };
 

@@ -1,6 +1,7 @@
 @tinymceai-border-width: 1px;
 @tinymceai-focus-border-width: 2px;
 @tinymceai-context-more-max-width: 320px;
+@tinymceai-response-status-icon-height: max(24px, calc(var(@font-size-sm, @font-size-sm) + 4px));
 
 .tox-ai when (@custom-properties-enabled = true) {
   --tox-private-background-secondary: hsl( from var(--tox-private-background-color) h s calc(l - 6));
@@ -11,8 +12,11 @@
 }
 
 .tox .tox-ai {
+  --tox-private-tinymceai-response-status-icon-height: max(24px, calc(var(--tox-private-font-size-sm) + 4px));
 
   .tox-expandable-box {
+    padding: var(--tox-private-pad-sm, @pad-sm) calc(var(--tox-private-pad-md, @pad-md) * 0.75);
+
     &:focus-visible:not(:disabled) {
        outline: 2px solid var(--tox-private-color-tint, @color-tint);
        outline-offset: var(--tox-private-tinymceai-border-width, @tinymceai-border-width);
@@ -24,6 +28,7 @@
   .tox-sidebar-content__header {
     border: var(--tox-private-tinymceai-focus-border-width, @tinymceai-focus-border-width) solid var(--tox-private-background-color, @background-color);
     padding: calc(var(--tox-private-pad-sm, @pad-sm) - var(--tox-private-tinymceai-focus-border-width, @tinymceai-focus-border-width)) calc(12px - var(--tox-private-tinymceai-focus-border-width, @tinymceai-focus-border-width));
+    border-bottom: 1px solid var(--tox-private-separator-color, @tinymce-separator-color);
 
     &:focus-visible:not(:disabled) {
        border: var(--tox-private-tinymceai-focus-border-width, @tinymceai-focus-border-width) solid var(--tox-private-color-tint, @color-tint);
@@ -102,7 +107,7 @@
 
   .tox-ai__user-prompt__text {
     background-color: var(--tox-private-background-secondary, darken(@background-color, 6%));
-    padding: var(--tox-private-pad-sm, @pad-sm) 12px;
+    padding: var(--tox-private-pad-sm, @pad-sm) calc(var(--tox-private-pad-md, @pad-md) * 0.75);
     border-radius: var(--tox-private-control-border-radius, @control-border-radius);
     max-width: 80%;
     align-self: flex-end;
@@ -164,8 +169,8 @@
     display: flex;
     color: var(--tox-private-text-color-muted,@text-color-muted);
     font-size: var(--tox-private-font-size-sm, @font-size-sm);
-    line-height: calc(var(--tox-private-font-size-sm, @font-size-sm) + 4px);
     gap: var(--tox-private-pad-xs, @pad-xs);
+    line-height: var(--tox-private-tinymceai-response-status-icon-height, @tinymceai-response-status-icon-height);
     padding-top: var(--tox-private-pad-sm, @pad-sm);
     & svg {
       fill: var(--tox-private-text-color-muted,@text-color-muted);
@@ -176,7 +181,7 @@
     border-radius: 999px;
     border: 1px solid var(--tox-private-neutral-20, darken(@background-color, 11%));
     background-color: var(--tox-private-background-color, @background-color);
-    height: 24px;
+    height: var(--tox-private-tinymceai-response-status-icon-height, @tinymceai-response-status-icon-height);
     flex: 0 0 24px;
     display: flex;
     align-items: center;
@@ -216,7 +221,7 @@
     flex-wrap: wrap;
 
     .tox-tag {
-      border: 1px solid var(--tox-private-border-color, @border-color);
+      border: 1px solid var(--tox-private-separator-color, @tinymce-separator-color);
       background-color: transparent;
       max-width: 132px;
       max-height: 24px;
@@ -269,7 +274,12 @@
   .tox-ai-error {
     border-radius: var(--tox-private-panel-border-radius, @panel-border-radius);
     border: 1px solid var(--tox-private-color-error, @color-error);
-    background: linear-gradient(0deg, rgba(from var(--tox-private-color-white, @color-white) r g b / 0.9) 0%,  rgba(from var(--tox-private-color-white, @color-white) r g b / 0.9) 100%), var(--tox-private-color-error, @color-error);
+    background: linear-gradient(
+        0deg,
+        rgba(from var(--tox-private-background-color, @background-color) r g b / 0.9) 0%,
+        rgba(from var(--tox-private-background-color, @background-color) r g b / 0.9) 100%
+      ),
+      var(--tox-private-color-error, @color-error);
     padding: var(--tox-private-pad-sm, @pad-sm);
     width: 100%;
     display: flex;
@@ -294,7 +304,7 @@
     flex-direction: column;
 
     border: var(--tox-private-tinymceai-focus-border-width, @tinymceai-focus-border-width) solid var(--tox-private-background-color, @background-color);
-    border-top: 1px solid var(--tox-private-neutral-20, darken(@background-color, 11%));
+    border-top: 1px solid var(--tox-private-separator-color, @tinymce-separator-color);
 
     &:focus-visible:not(:disabled) {
        border: var(--tox-private-tinymceai-focus-border-width, @tinymceai-focus-border-width) solid var(--tox-private-color-tint, @color-tint);
@@ -437,11 +447,6 @@
 
   .tox-ai__models-menu__item__description__ability__enabled {
     font-weight: var(--tox-private-font-weight-bold, @font-weight-bold);
-  }
-
-  .tox-tooltip {
-    display: none;
-    padding: var(--tox-private-pad-xs, @pad-xs) 0 0;
   }
 
   .tox-ai-chat-history-list {

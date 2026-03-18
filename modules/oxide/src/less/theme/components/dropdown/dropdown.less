@@ -2,9 +2,10 @@
   .tox-dropdown-content {
     // TODO: change fade to relative colors after #TINY-13317
     box-shadow: 0 0 2px 0 fade(@color-black, 20%), 0 4px 8px 0 fade(@color-black, 15%);
-    position: fixed;
+    position: absolute;
+    position-try-order: most-height;
+    position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
     overflow: auto;
-    display: '';
     height: fit-content;
     width: fit-content;
     border-radius: var(--tox-private-panel-border-radius, @panel-border-radius);
