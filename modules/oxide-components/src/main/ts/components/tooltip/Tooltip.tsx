@@ -112,8 +112,8 @@ const Content = forwardRef<HTMLDivElement, ContentProps>(({ text }, ref) => {
 
     const hideContentPopover = () => {
       if (Type.isNonNullable(contentRef.current)) {
-        contentRef.current.style.display = '';
         contentRef.current.hidePopover();
+        contentRef.current.style.display = '';
       }
     };
 
