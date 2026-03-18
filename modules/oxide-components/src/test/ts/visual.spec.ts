@@ -20,7 +20,7 @@ const visualTest = async (story: (typeof stories)[number], page: Page, workerInf
   await page.waitForSelector('#storybook-root', { state: 'attached' });
 
   // Wait for final body classes state to avoid a flake where the screenshot would be made while a spinner is shown see #TINY-13132
-  await page.waitForSelector('body[class="sb-main-centered sb-show-main"]');
+  await page.waitForSelector('body.sb-show-main');
 
   await page.waitForLoadState('networkidle');
 

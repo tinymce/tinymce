@@ -1,4 +1,4 @@
-ARG PLAYWRIGHT_VERSION=1.53.1-noble
+ARG PLAYWRIGHT_VERSION=1.58.2-noble
 
 # Test stage
 FROM mcr.microsoft.com/playwright:v${PLAYWRIGHT_VERSION} AS test

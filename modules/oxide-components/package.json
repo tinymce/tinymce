@@ -29,7 +29,7 @@
   "types": "lib/src/main/ts/main.d.ts",
   "scripts": {
     "dev": "vite",
-    "build": "yarn build-storybook && tsc -b && vite build",
+    "build": "npm run build-storybook && tsc -b && vite build",
     "lint": "eslint --max-warnings=0 src/**/*.ts?",
     "start": "storybook dev -p 6006",
     "build-storybook": "storybook build",
@@ -40,8 +40,8 @@
     "test-visual-local": "node ./visual-regression-test.mjs",
     "test-visual-local-update": "node ./visual-regression-test.mjs update",
     "test-ci": "vitest --watch=false --reporter=default --reporter=junit --outputFile=scratch/test-results.xml",
-    "test-browser-manual": "vitest --watch --project browser --browser.headless false",
-    "test-browser-headless": "vitest run --project browser",
+    "test-browser-manual": "vitest --watch --browser.headless false",
+    "test-browser-headless": "vitest --watch",
     "ci": "yarn lint && yarn --cwd ../../ lerna run build --scope @tinymce/oxide-components --include-dependencies && yarn test"
   },
   "peerDependencies": {
@@ -50,7 +50,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",
-    "@playwright/test": "1.53.1",
+    "@playwright/test": "1.58.2",
     "@storybook/addon-a11y": "10.2.3",
     "@storybook/addon-docs": "10.2.3",
     "@storybook/addon-onboarding": "10.2.3",
@@ -68,7 +68,7 @@
     "eslint-plugin-storybook": "10.2.3",
     "gh-pages": "^6.3.0",
     "globals": "^16.0.0",
-    "playwright": "1.53.1",
+    "playwright": "1.58.2",
     "postcss": "^8.4.39",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

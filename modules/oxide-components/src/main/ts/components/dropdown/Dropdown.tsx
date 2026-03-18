@@ -1,5 +1,5 @@
-import { Throttler, Type, Obj } from '@ephox/katamari';
-import { Children, cloneElement, forwardRef, isValidElement, useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type FC, type HTMLAttributes, type MouseEvent, type PropsWithChildren, type ReactElement, type KeyboardEvent } from 'react';
+import { Throttler, Type } from '@ephox/katamari';
+import { Children, cloneElement, forwardRef, isValidElement, useCallback, useEffect, useMemo, useRef, useState, type FC, type HTMLAttributes, type MouseEvent, type PropsWithChildren, type ReactElement, type KeyboardEvent } from 'react';
 
 import { Bem } from '../../main';
 
@@ -17,37 +17,9 @@ interface DropdownContentProps extends PropsWithChildren<HTMLAttributes<HTMLDivE
 const Content = forwardRef<HTMLDivElement, DropdownContentProps>(({ children, onOpenChange, ...props }, ref) => {
   const { triggerRef, side, align, gap, contentRef, triggerEvents, debouncedHideHoverablePopover, isOpen, setIsOpen } = useDropdown();
 
-  const [ positioningStyles, setPositioningStyles ] = useState<CSSProperties>({ opacity: '0' });
-
   const updateToggleState = useCallback((event: ToggleEvent) => {
     setIsOpen(event.newState === 'open');
   }, [ setIsOpen ]);
-
-  // this can be later replaced with CSS anchor positioning
-  const updatePosition = useCallback(() => {
-    // TODO: remove type casting after updating TypeScript. In the newest version addEventListener correctly produces ToggleEvent
-    if (Type.isNonNullable(triggerRef.current) && Type.isNonNullable(contentRef.current)) {
-      const documentRect = document.documentElement.getBoundingClientRect();
-      const anchorRect = triggerRef.current.getBoundingClientRect();
-      const anchoredContainerRect = contentRef.current.getBoundingClientRect();
-
-      // using document rect as a boundry, but maybe it should be the Editor area?
-      const newPositioningStyles = {
-        opacity: '1',
-        ...PositioningUtils.getPositionStyles({ anchorRect, anchoredContainerRect, side, align, gap, boundaryRect: documentRect })
-      };
-
-      setPositioningStyles((currentPositioningStyles) => {
-        // avoid react rerendering when the styles are the same as before
-        // casting to emty object to satisfy typescript
-        if ( !Obj.equal(newPositioningStyles, currentPositioningStyles as {})) {
-          return newPositioningStyles;
-        } else {
-          return currentPositioningStyles;
-        }
-      });
-    }
-  }, [ contentRef, triggerRef, align, side, gap ]);
 
   useEffect(() => {
     const element = contentRef.current;
@@ -75,33 +47,6 @@ const Content = forwardRef<HTMLDivElement, DropdownContentProps>(({ children, on
       element.removeEventListener('toggle', onToggle);
     };
   }, [ contentRef, triggerRef, updateToggleState, onOpenChange ]);
-
-  useEffect(() => {
-    if (isOpen) {
-      updatePosition();
-    } else {
-      // reset styles on close
-      setPositioningStyles({ opacity: '0' });
-    }
-  }, [ isOpen, updatePosition, children ]);
-
-  useEffect(() => {
-    const onResize = () => {
-      contentRef.current?.hidePopover();
-    };
-    const onOutsideScroll = (e: Event) => {
-      if (!(e.target instanceof Node) || !isInDropdownContent(contentRef, e.target)) {
-        contentRef.current?.hidePopover();
-      }
-    };
-    window.addEventListener('scroll', onOutsideScroll, true);
-    window.addEventListener('resize', onResize);
-
-    return () => {
-      window.removeEventListener('scroll', onOutsideScroll, true);
-      window.removeEventListener('resize', onResize);
-    };
-  }, [ updatePosition, triggerRef, contentRef ]);
 
   const onHoverTriggerProps = {
     onMouseLeave: (e: MouseEvent<HTMLDivElement>) => {
@@ -137,8 +82,9 @@ const Content = forwardRef<HTMLDivElement, DropdownContentProps>(({ children, on
       }
     }
   };
+  const insetProps = PositioningUtils.getInset(side, gap);
+  const area = PositioningUtils.getPositionArea(side, align);
   return <div
-    // @ts-expect-error - TODO: Remove this expect error once we've upgraded to React 19+
     popover='auto'
     className={Bem.block('tox-dropdown-content')}
     ref={(el: HTMLDivElement) => {
@@ -149,8 +95,12 @@ const Content = forwardRef<HTMLDivElement, DropdownContentProps>(({ children, on
         ref.current = el;
       }
     }}
-    style={{ ...positioningStyles }}
     { ...contentProps }
+    style={{
+      ...insetProps,
+      // @ts-expect-error - TODO: Remove this expect error once we've upgraded to React 19+
+      positionArea: area,
+    }}
   >
     {isOpen && children}
   </div>;
@@ -167,13 +117,23 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
   }
   child = child as ReactElement;
 
+  const showContentPopover = () => {
+    // @ts-expect-error - TODO: Remove this expect error once we've upgraded to React 19+
+    contentRef.current?.showPopover({
+      // specifying the source sets up an implicit `anchor` relationship
+      source: triggerRef.current
+    });
+  };
+
   const onHoverTriggerProps = {
     onMouseEnter: (e: MouseEvent<HTMLElement>) => {
       if (!e.isDefaultPrevented()) {
         child.props.onMouseEnter?.(e);
         props.onMouseEnter?.(e);
         debouncedHideHoverablePopover.cancel();
-        contentRef.current?.showPopover();
+        if (!isOpen) {
+          showContentPopover();
+        }
       }
     },
     onMouseLeave: (e: MouseEvent<HTMLElement>) => {
@@ -193,7 +153,7 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
         if (isOpen) {
           contentRef.current?.hidePopover();
         } else {
-          contentRef.current?.showPopover();
+          showContentPopover();
         }
       }
     }
@@ -202,8 +162,8 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
   const onArrowTriggerProps = {
     onKeyUp: (e: KeyboardEvent) => {
       child.props.onKeyUp?.(e);
-      if (e.key === 'ArrowRight') {
-        contentRef.current?.showPopover();
+      if (e.key === 'ArrowRight' && !isOpen) {
+        showContentPopover();
       }
     }
   };

@@ -99,10 +99,10 @@ Groups related buttons together for keyboard navigation. Buttons within a group 
 
 ## Positioning Anchoring Support
 
-- ✅ **Chrome 125+**
-- ✅ **Edge 125+**
-- ✅ **Safari 18+**
-- ❌ **Firefox** (not yet supported)
+- ✅ **Chrome 129+**
+- ✅ **Edge 129+**
+- ✅ **Safari 26+**
+- ✅ **Firefox 147+**
 
 ## Default Behavior
 
