@@ -100,7 +100,7 @@
     }
 
     &__body {
-      padding: 0 @card-section-padding 0 @card-section-padding;
+      padding: @card-section-padding @card-section-padding 0 @card-section-padding;
       color: @card-text-color;
       font-size: @font-size-md;
 
@@ -109,6 +109,10 @@
         padding: 0;
         gap: @card-section-gap;
       }
+    }
+
+    &--has-decision &__body {
+      padding: 0 @card-section-padding 0 @card-section-padding;
     }
 
     &__highlight {
