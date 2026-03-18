@@ -97,36 +97,36 @@ interface ContentProps {
   readonly text: string;
 }
 
+const showContentPopover = (content: HTMLElement, source: HTMLElement | null) => {
+  content.style.display = 'inline-block';
+
+  // @ts-expect-error - TODO: Remove this expect error once we've upgraded to React 19+
+  content.showPopover({ source });
+};
+
+const hideContentPopover = (content: HTMLElement) => {
+  content.hidePopover();
+  content.style.display = '';
+};
+
 const Content = forwardRef<HTMLDivElement, ContentProps>(({ text }, ref) => {
   const { isOpen, contentRef, triggerRef, delayForShow, delayForHide } = useContext(TooltipContext);
 
   useLayoutEffect(() => {
-    const showContentPopover = () => {
-      if (Type.isNonNullable(contentRef.current)) {
-        contentRef.current.style.display = 'inline-block';
-
-        // @ts-expect-error - TODO: Remove this expect error once we've upgraded to React 19+
-        contentRef.current.showPopover({ source: triggerRef.current });
+    if (Type.isNonNullable(contentRef.current)) {
+      const content = contentRef.current;
+      const trigger = triggerRef.current;
+      if (isOpen) {
+        const timeoutId = setTimeout(() => showContentPopover(content, trigger), delayForShow);
+        return () => {
+          clearTimeout(timeoutId);
+        };
+      } else {
+        const timeoutId = setTimeout(() => hideContentPopover(content), delayForHide);
+        return () => {
+          clearTimeout(timeoutId);
+        };
       }
-    };
-
-    const hideContentPopover = () => {
-      if (Type.isNonNullable(contentRef.current)) {
-        contentRef.current.hidePopover();
-        contentRef.current.style.display = '';
-      }
-    };
-
-    if (isOpen) {
-      const timeoutId = setTimeout(showContentPopover, delayForShow);
-      return () => {
-        clearTimeout(timeoutId);
-      };
-    } else {
-      const timeoutId = setTimeout(hideContentPopover, delayForHide);
-      return () => {
-        clearTimeout(timeoutId);
-      };
     }
   }, [ isOpen, contentRef, triggerRef, delayForShow, delayForHide ]);
 
@@ -140,7 +140,7 @@ const Content = forwardRef<HTMLDivElement, ContentProps>(({ text }, ref) => {
       }
     }}
     // @ts-expect-error We should remove this expect error once we've migrated to React 19 and can use the new popover API types
-    popover='hint'
+    popover='manual'
     className={Bem.block('tox-tooltip', { up: true, anchor: true })}
     >
       <div className={Bem.element('tox-tooltip', 'body')}>{text}</div>
