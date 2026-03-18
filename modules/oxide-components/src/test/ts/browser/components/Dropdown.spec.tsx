@@ -200,7 +200,7 @@ describe('browser.DropdownTest', () => {
               <button>Trigger</button>
             </Dropdown.Trigger>
             <Dropdown.Content>
-              <div>Dropdown Content</div>
+              <button>Dropdown Content</button>
             </Dropdown.Content>
           </Dropdown.Root>
         </div>,
@@ -211,7 +211,8 @@ describe('browser.DropdownTest', () => {
       await expect.poll(() => document.querySelector('[popover]:popover-open'))
         .toHaveTextContent('Dropdown Content');
 
-      const dropdownContent = document.querySelector('[popover]:popover-open');
+      const dropdownContent = document.querySelector('[popover]:popover-open button');
+      expect(dropdownContent).not.toBeNull();
       (dropdownContent as HTMLElement)?.focus();
 
       await userEvent.keyboard('{Escape}');
