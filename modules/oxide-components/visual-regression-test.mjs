@@ -6,9 +6,14 @@ const devServer = spawn('yarn', ['start', '--ci'], {
   stdio: 'inherit'
 });
 
-spawnSync('docker', ['build', '-t', 'oxide-components-test-visual', '.', '-f', 'Dockerfile.playwright-test'],
+const buildResult = spawnSync('docker', ['build', '-t', 'oxide-components-test-visual', '.', '-f', 'Dockerfile.playwright-test'],
   { stdio: 'inherit' }
 );
+
+if (buildResult.error ?? (buildResult.status ?? 1) !== 0) {
+  devServer.kill();
+  throw buildResult.error ?? new Error(`Failed to build Docker image, return code ${(buildResult.status ?? 1)}`);
+}
 
 const pwd = process.cwd();
 const parentDir = pwd + '/../../';
