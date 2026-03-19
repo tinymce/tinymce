@@ -791,7 +791,7 @@ describe('browser.components.CardTest', () => {
 
       const card = container.querySelector(Bem.blockSelector('tox-card'));
       expect(card?.className).toContain(Bem.block('tox-skeleton'));
-      expect(card?.className).not.toContain(Bem.blockSelector('tox-card', { selected: true }));
+      expect(card?.className).not.toContain(Bem.block('tox-card', { selected: true }));
     });
 
     it('TINY-14077: Should apply selected CSS class while card is not loading', async () => {
