@@ -3,6 +3,7 @@ import { forwardRef, useEffect, useId, useMemo, useRef, useState } from 'react';
 
 import * as Bem from '../../../utils/Bem';
 import { Icon } from '../../icon/Icon';
+import { useMenu } from '../internals/Context';
 import type { CommonMenuItemInstanceApi, MenuItemProps } from '../internals/Types';
 
 export const Item = forwardRef<HTMLDivElement, MenuItemProps>(({ enabled = true, onSetup, icon, shortcut, onAction, children }, ref) => {
@@ -35,6 +36,8 @@ export const Item = forwardRef<HTMLDivElement, MenuItemProps>(({ enabled = true,
     }
   }, [ onSetup, api ]);
 
+  const { setActiveItemId } = useMenu();
+
   const itemIcon = Type.isString(icon)
     ? <Icon icon={icon} />
     : icon;
@@ -46,7 +49,10 @@ export const Item = forwardRef<HTMLDivElement, MenuItemProps>(({ enabled = true,
       role='menuitem'
       aria-haspopup={false}
       aria-disabled={!state.enabled}
-      onFocus={() => setState({ ...state, focused: true })}
+      onFocus={() => {
+        setState({ ...state, focused: true });
+        setActiveItemId(id);
+      }}
       onPointerMove={(e) => {
         if (state.enabled) {
           e.currentTarget.focus();
