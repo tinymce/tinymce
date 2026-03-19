@@ -51,7 +51,7 @@ type Story = StoryObj<typeof meta>;
 
 const render = (args: Dropdown.DropdownProps): JSX.Element => {
   return (
-    <Dropdown.Root {...args}>
+    <Dropdown.Root gap={8} {...args}>
       <Dropdown.Trigger>
         <Button variant='secondary'>
           Click to toggle
