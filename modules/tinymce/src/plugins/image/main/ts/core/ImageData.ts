@@ -58,8 +58,11 @@ const getAttrib = (image: HTMLElement, name: string): string => {
   }
 };
 
+const getFigure = (image: HTMLElement): HTMLElement | null =>
+  DOM.getParent(image, 'figure');
+
 const hasCaption = (image: HTMLElement): boolean =>
-  image.parentNode !== null && image.parentNode.nodeName === 'FIGURE';
+  getFigure(image) !== null;
 
 const updateAttrib = (image: HTMLElement, name: string, value: string | null): void => {
   if (value === '' || value === null) {
@@ -69,19 +72,29 @@ const updateAttrib = (image: HTMLElement, name: string, value: string | null): v
   }
 };
 
+const getInlineContainer = (image: HTMLElement): HTMLElement => {
+  let container = image;
+  while (container.parentElement !== null && !DOM.isBlock(container.parentElement)) {
+    container = container.parentElement;
+  }
+  return container;
+};
+
 const wrapInFigure = (image: HTMLElement): void => {
   const figureElm = DOM.create('figure', { class: 'image' });
-  DOM.insertAfter(figureElm, image);
+  const imageElm = getInlineContainer(image);
+  DOM.insertAfter(figureElm, imageElm);
 
-  figureElm.appendChild(image);
+  figureElm.appendChild(imageElm);
   figureElm.appendChild(DOM.create('figcaption', { contentEditable: 'true' }, 'Caption'));
   figureElm.contentEditable = 'false';
 };
 
 const removeFigure = (image: HTMLElement): void => {
-  const figureElm = image.parentNode;
+  const figureElm = getFigure(image);
+  const imageElm = getInlineContainer(image);
   if (Type.isNonNullable(figureElm)) {
-    DOM.insertAfter(image, figureElm);
+    DOM.insertAfter(imageElm, figureElm);
     DOM.remove(figureElm);
   }
 };
