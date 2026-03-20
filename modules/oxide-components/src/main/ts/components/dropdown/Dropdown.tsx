@@ -14,7 +14,7 @@ interface DropdownContentProps extends PropsWithChildren<HTMLAttributes<HTMLDivE
   readonly onOpenChange?: (isOpen: boolean) => void;
 }
 
-const Content = forwardRef<HTMLDivElement, DropdownContentProps>(({ children, onOpenChange, ...props }, ref) => {
+const Content = forwardRef<HTMLDivElement, DropdownContentProps>(({ children, onOpenChange, className, ...props }, ref) => {
   const { triggerRef, side, align, gap, contentRef, triggerEvents, debouncedHideHoverablePopover, isOpen, setIsOpen } = useDropdown();
 
   const updateToggleState = useCallback((event: ToggleEvent) => {
@@ -86,7 +86,7 @@ const Content = forwardRef<HTMLDivElement, DropdownContentProps>(({ children, on
   const area = PositioningUtils.getPositionArea(side, align);
   return <div
     popover='auto'
-    className={Bem.block('tox-dropdown-content')}
+    className={`${Bem.block('tox-dropdown-content')}${Type.isNonNullable(className) ? ` ${className}` : ''}`}
     ref={(el: HTMLDivElement) => {
       contentRef.current = el;
       if (Type.isFunction(ref)) {
