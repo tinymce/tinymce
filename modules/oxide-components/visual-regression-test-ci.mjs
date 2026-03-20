@@ -1,34 +1,16 @@
-import { spawn, spawnSync } from 'child_process';
-import { setTimeout } from 'timers';
+import { spawnSync } from 'child_process';
 
-let devServer;
 let exitCode = 0;
 
 const cleanUp = () => {
-  if (devServer) {
-    devServer.kill('SIGTERM');
-  }
   process.exit(exitCode);
 };
 
 process.on('SIGINT', cleanUp);
 process.on('SIGTERM', cleanUp);
 
-const waitForServer = async () => {
-  await new Promise((resolve) => {
-    // FIXME: Readiness check instead of blind wait
-    setTimeout(() => {
-      resolve();
-    }, 5000);
-  });
-};
-
 const runTests = async () => {
   try {
-    devServer = spawn('yarn', ['start', '--ci'], { stdio: 'inherit' });
-    // FIXME: Tag server in case it fails early for better error handling
-    await waitForServer();
-
     const args = ['playwright', 'test'];
     const workers = Number(process.env.PW_WORKERS);
     if (Number.isInteger(workers) && workers > 0) {

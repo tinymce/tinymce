@@ -24,7 +24,6 @@ const dockerArgs = [
   '--name=oxide-components-test-visual',
   '--userns=host',
   '-e', "TEST_BASE_URL=http://host.docker.internal:6006",
-  '-e', 'CI=true',
   '-v', `${parentDir}:/tinymce`,
   '-v', `${pwd}/src/test/ts/visual.spec.ts-snapshots:/tinymce/modules/oxide-components/src/test/ts/visual.spec.ts-snapshots`,
   'oxide-components-test-visual'
