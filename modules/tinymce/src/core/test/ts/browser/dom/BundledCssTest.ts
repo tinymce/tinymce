@@ -226,7 +226,7 @@ describe('browser.tinymce.core.dom.BundledCssTest', () => {
                         assert.includeMembers(
                           iframeStyles,
                           [
-                            contentCss,
+                            `content/${contentCss}/content.css`,
                             `ui/${skin}/content.css`
                           ],
                           'iframe style tags'
