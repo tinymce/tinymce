@@ -278,11 +278,11 @@ const getStyleSheetLoader = (editor: Editor): StyleSheetLoader =>
   editor.inline ? editor.ui.styleSheetLoader : editor.dom.styleSheetLoader;
 
 const makeStylesheetLoadingPromises = (editor: Editor, css: string[], framedFonts: string[]): Promise<unknown>[] => {
-  const { pass: bundledCss, fail: normalCss } = Arr.partition(css, (name) => tinymce.Resource.has(ContentCss.toContentSkinResourceName(name)));
-  const bundledPromises = bundledCss.map((url) => {
-    const css = tinymce.Resource.get(ContentCss.toContentSkinResourceName(url));
+  const { pass: bundledCss, fail: normalCss } = Arr.partition(css, (key) => tinymce.Resource.has(key));
+  const bundledPromises = bundledCss.map((key) => {
+    const css = tinymce.Resource.get(key);
     if (Type.isString(css)) {
-      return Promise.resolve(getStyleSheetLoader(editor).loadRawCss(url, css));
+      return Promise.resolve(getStyleSheetLoader(editor).loadRawCss(key, css));
     }
     return Promise.resolve();
   });
