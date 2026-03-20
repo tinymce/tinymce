@@ -1,6 +1,6 @@
 import { after, afterEach, before } from '@ephox/bedrock-client';
-import { Arr, Fun, Optional } from '@ephox/katamari';
-import { Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
+import { Arr, Fun, Optional, Singleton, Type } from '@ephox/katamari';
+import { Insert, Remove, SugarBody, SugarElement, SugarHead, TextContent } from '@ephox/sugar';
 
 import type { Editor as EditorType } from '../../alien/EditorTypes';
 import * as Loader from '../../loader/Loader';
@@ -19,26 +19,68 @@ export interface SetupElement {
   readonly teardown: () => void;
 }
 
+export interface TinyHookOptions {
+  readonly focusOnInit?: boolean;
+  readonly fastAnimations?: boolean;
+}
+
+const normalizeOptions = (options: TinyHookOptions | boolean): TinyHookOptions => {
+  if (Type.isBoolean(options)) {
+    return { focusOnInit: options };
+  } else {
+    return options;
+  }
+};
+
 const hookNotRun = Fun.die('The setup hooks have not run yet');
+
+const setupFastAnimations = (setupElement: () => Optional<SetupElement>) => {
+  const styleState = Singleton.value<SugarElement<HTMLStyleElement>>();
+
+  return {
+    setup: () => {
+      const style = SugarElement.fromTag('style');
+
+      // TODO: This should probably be done with CSS custom properties once we have that in oxide
+      TextContent.set(style, 'body .tox .tox-sidebar--sliding-growing, body .tox .tox-sidebar--sliding-shrinking { transition-duration: 0.01s; }');
+
+      setupElement().fold(
+        () => Insert.append(SugarHead.head(), style),
+        ({ element }) => Insert.prepend(element, style)
+      );
+
+      styleState.set(style);
+    },
+    teardown: () => styleState.get().each(Remove.remove)
+  };
+};
 
 const setupHooks = <T extends EditorType = EditorType>(
   settings: Record<string, any>,
   setupModules: Array<() => void>,
-  focusOnInit: boolean,
+  hookOptions: TinyHookOptions,
   setupElement: () => Optional<SetupElement>
 ): Hook<T> => {
   let lazyEditor: () => T = hookNotRun;
   let teardownEditor: () => void = Fun.noop;
   let setup: Optional<SetupElement> = Optional.none();
   let hasFailure = false;
+  const { focusOnInit, fastAnimations } = hookOptions;
+
+  if (fastAnimations) {
+    const fastAnimationsHooks = setupFastAnimations(setupElement);
+
+    before(fastAnimationsHooks.setup);
+    after(fastAnimationsHooks.teardown);
+  }
 
   before(function (done) {
     // The default timeout is 2s, that isn't enough on slow connections
     this.timeout(10000);
     setup = setupElement();
     Loader.setup({
-      preInit: (tinymce, settings) => {
-        setupTinymceBaseUrl(tinymce, settings);
+      preInit: (tinymce, initSettings) => {
+        setupTinymceBaseUrl(tinymce, initSettings);
         Arr.each(setupModules, Fun.call);
       },
       run: (ed, success) => {
@@ -77,24 +119,41 @@ const setupHooks = <T extends EditorType = EditorType>(
   };
 };
 
-const bddSetup = <T extends EditorType = EditorType>(settings: Record<string, any>, setupModules: Array<() => void> = [], focusOnInit: boolean = false): Hook<T> => {
-  return setupHooks(settings, setupModules, focusOnInit, Optional.none);
+const bddSetup = <T extends EditorType = EditorType>(
+  settings: Record<string, any>,
+  setupModules: Array<() => void> = [],
+  hookOptions: TinyHookOptions | boolean = {}
+): Hook<T> => {
+  return setupHooks(settings, setupModules, normalizeOptions(hookOptions), Optional.none);
 };
 
-const bddSetupLight = <T extends EditorType = EditorType>(settings: Record<string, any>, setupModules: Array<() => void> = [], focusOnInit: boolean = false): Hook<T> => {
+const bddSetupLight = <T extends EditorType = EditorType>(
+  settings: Record<string, any>,
+  setupModules: Array<() => void> = [],
+  hookOptions: TinyHookOptions | boolean = {}
+): Hook<T> => {
   return setupHooks({
     toolbar: '',
     menubar: false,
     statusbar: false,
     ...settings
-  }, setupModules, focusOnInit, Optional.none);
+  }, setupModules, normalizeOptions(hookOptions), Optional.none);
 };
 
-const bddSetupFromElement = <T extends EditorType = EditorType>(settings: Record<string, any>, setupElement: () => SetupElement, setupModules: Array<() => void> = [], focusOnInit: boolean = false): Hook<T> => {
-  return setupHooks(settings, setupModules, focusOnInit, () => Optional.some(setupElement()));
+const bddSetupFromElement = <T extends EditorType = EditorType>(
+  settings: Record<string, any>,
+  setupElement: () => SetupElement,
+  setupModules: Array<() => void> = [],
+  hookOptions: TinyHookOptions | boolean = {}
+): Hook<T> => {
+  return setupHooks(settings, setupModules, normalizeOptions(hookOptions), () => Optional.some(setupElement()));
 };
 
-const bddSetupInShadowRoot = <T extends EditorType = EditorType>(settings: Record<string, any>, setupModules: Array<() => void> = [], focusOnInit: boolean = false): ShadowRootHook<T> => {
+const bddSetupInShadowRoot = <T extends EditorType = EditorType>(
+  settings: Record<string, any>,
+  setupModules: Array<() => void> = [],
+  hookOptions: TinyHookOptions | boolean = {}
+): ShadowRootHook<T> => {
   let lazyShadowRoot: () => SugarElement<ShadowRoot> = hookNotRun;
   let editorDiv: Optional<SugarElement<HTMLElement>>;
   let teardown: () => void = Fun.noop;
@@ -120,7 +179,7 @@ const bddSetupInShadowRoot = <T extends EditorType = EditorType>(settings: Recor
     };
   });
 
-  const hooks = setupHooks<T>(settings, setupModules, focusOnInit, () => editorDiv.map((element) => ({ element, teardown })));
+  const hooks = setupHooks<T>(settings, setupModules, normalizeOptions(hookOptions), () => editorDiv.map((element) => ({ element, teardown })));
 
   return {
     ...hooks,
