@@ -113,11 +113,7 @@ const loadUiContentCSS = (editor: Editor, isInline: boolean, skinUrl?: string): 
       if (isInline) {
         loadRawCss(editor, key, css, editor.ui.styleSheetLoader);
       } else {
-        // Need to wait until the iframe is in the DOM before trying to load
-        // the style into the iframe document
-        editor.on('PostRender', () => {
-          loadRawCss(editor, key, css, editor.dom.styleSheetLoader);
-        });
+        editor.contentCSS.push(key);
       }
       return Promise.resolve();
     case 'load-stylesheet':
