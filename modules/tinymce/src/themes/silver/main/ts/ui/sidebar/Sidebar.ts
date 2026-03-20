@@ -28,10 +28,11 @@ const setup = (editor: Editor): void => {
   // Setup each registered sidebar
   Arr.each(Obj.keys(sidebars), (name) => {
     const spec = sidebars[name];
+    const bridged: BridgeSidebar.Sidebar = StructureSchema.getOrDie(BridgeSidebar.createSidebar(spec));
     const isActive = () => Optionals.is(Optional.from(editor.queryCommandValue('ToggleSidebar')), name);
     editor.ui.registry.addToggleButton(name, {
-      icon: spec.icon,
-      tooltip: spec.tooltip,
+      ...(bridged.icon.map((icon) => ({ icon })).getOr({})),
+      ...(bridged.tooltip.map((tooltip) => ({ tooltip })).getOr({})),
       onAction: (buttonApi) => {
         editor.execCommand('ToggleSidebar', false, name);
         buttonApi.setActive(isActive());
@@ -44,7 +45,7 @@ const setup = (editor: Editor): void => {
           editor.off('ToggleSidebar', handleToggle);
         };
       },
-      context: 'any'
+      context: bridged.context
     });
   });
 };

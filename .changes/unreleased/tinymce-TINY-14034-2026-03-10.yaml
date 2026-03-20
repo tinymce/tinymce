@@ -1,0 +1,6 @@
+project: tinymce
+kind: Added
+body: New context property to sidebar registry spec.
+time: 2026-03-10T20:10:35.115801+01:00
+custom:
+    Issue: TINY-14034
