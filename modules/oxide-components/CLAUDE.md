@@ -77,7 +77,7 @@ See `TRANSITIONALCSS.md` for full migration guide.
 ### Dropdown
 `Dropdown.Root` > `Dropdown.Trigger` > element, `Dropdown.Content` > children
 
-- `Dropdown.Root` props: `side` ('top'|'bottom'|'left'|'right', default `'top'`), `align` ('start'|'center'|'end', default `'start'`), `gap` (px, default `1`), `triggerEvents` (default `['click']`)
+- `Dropdown.Root` props: `side` ('top'|'bottom'|'left'|'right', default `'bottom'`), `align` ('start'|'center'|'end', default `'start'`), `gap` (px, default `1`), `triggerEvents` (default `['click']`)
 - `Dropdown.Trigger` clones its single child element and injects click-to-toggle and ref
 - `Dropdown.Content` props include `onOpenChange?: (isOpen: boolean) => void`; renders children only when open (children mount/unmount each time)
 - Positioning uses CSS anchor positioning — no manual position calculation needed
