@@ -1,13 +1,17 @@
 #!groovy
 @Library('waluigi@release/7') _
 
+import groovy.transform.Field
+@Field String ciAccountId = "103651136441"
+@Field String ciRegistry = "${ciAccountId}.dkr.ecr.us-east-2.amazonaws.com"
+
 standardProperties()
 
 def runBedrockTest(String name, String command, Boolean runAll, int retry = 0, int timeout = 0) {
   def bedrockCmd = command + (runAll ? " --ignore-lerna-changed=true" : "")
   echo "Running Bedrock cmd: ${bedrockCmd}"
   def testStatus = sh(script: bedrockCmd, returnStatus: true)
-  junit allowEmptyResults: true, testResults: "scratch/TEST-${name}.xml"
+  junit allowEmptyResults: true, testResults: 'scratch/TEST-*.xml'
 
   if (testStatus == 4) {
     unstable("Tests failed for ${name}")
@@ -23,13 +27,13 @@ def runBedrockTest(String name, String command, Boolean runAll, int retry = 0, i
 }
 
 def runHeadlessTests(Boolean runAll) {
-  def bedrockCmd = "yarn grunt headless-auto --useSelenium=true"
+  def bedrockCmd = "bun grunt headless-auto --useSelenium=true"
   runBedrockTest('headless', bedrockCmd, runAll)
 }
 
 def runSeleniumTests(String name, String browser, String bucket, String buckets, Boolean runAll, int retry = 0, int timeout = 0) {
   def bedrockCommand =
-    "yarn browser-test" +
+    "bun browser-test" +
     " --chunk=2000" +
     " --bedrock-browser=" + browser +
     " --bucket=" + bucket +
@@ -44,7 +48,7 @@ def runRemoteTests(String name, String browser, String provider, String platform
   def platformName = platform != null ? " --platformName='${platform}'" : ""
   def browserVersion = version != null ? " --browserVersion=${version}" : ""
   def bedrockCommand =
-  "yarn browser-test" +
+  "bun browser-test" +
     " --bundler=rspack" +
     " --skipTypecheck" +
     " --chunk=2000" +
@@ -62,7 +66,7 @@ def runRemoteTests(String name, String browser, String provider, String platform
 
 def runBrowserTests(String name, String browser, String platform, String bucket, String buckets, Boolean runAll) {
   def bedrockCommand =
-    "yarn grunt browser-auto" +
+    "bun grunt browser-auto" +
       " --chunk=2000" +
       " --bedrock-os=" + platform +
       " --bedrock-browser=" + browser +
@@ -80,6 +84,108 @@ def runBrowserTests(String name, String browser, String platform, String bucket,
   runBedrockTest(name, bedrockCommand, runAll)
 }
 
+def runTestPod(String cacheName, String name, String testname, String browser, String provider, String platform, String version, String bucket, String buckets, Boolean runAll) {
+  return {
+    stage("${name}") {
+      devPods.customConsumer(
+        containers: [nodeLtsTest, awsCliContainer],
+        base: 'node',
+        build: cacheName
+      ) {
+        container('node') {
+          grunt('list-changed-browser')
+          bedrockRemoteTools.tinyWorkSishTunnel()
+          bedrockRemoteTools.withRemoteCreds(provider) {
+            int retry = 0
+            runRemoteTests(testname, browser, provider, platform, version, bucket, buckets, runAll, retry, 180)
+          }
+        }
+      }
+    }
+  }
+}
+
+def runPlaywrightPod(String cacheName, String name, Closure body) {
+  def nodeLtsPlaywright = devPods.getContainerDefaultArgs(nodeLts + [
+    resourceRequestEphemeralStorage: '16Gi',
+    resourceLimitEphemeralStorage: '16Gi'
+  ]) + devPods.hiRes()
+
+  def containers = [
+    nodeLtsPlaywright,
+    awsCliContainer,
+    devPods.getContainerDefaultArgs([ name: 'playwright', image: 'mcr.microsoft.com/playwright:v1.58.2-noble']) + devPods.hiRes()
+  ]
+
+  return {
+    stage("${name}") {
+      devPods.customConsumer(
+        containers: containers,
+        base: 'node',
+        build: cacheName
+      ) {
+        container('playwright') {
+          // TODO: Move bun into a custom playwright container image before merge?
+          // Installing a package manager at runtime adds ~30s, depends on external network,
+          // and is a supply chain risk. Bake into ECR image like nodeLts.
+          sh '''
+            set -e
+            if ! command -v bun &> /dev/null; then
+              echo "Installing bun..."
+              apt-get update -qq && apt-get install -y -qq unzip
+              curl -fsSL https://bun.sh/install | bash -s "bun-v1.3.11"
+              export PATH="$HOME/.bun/bin:$PATH"
+              bun --version || { echo "ERROR: Bun installation failed"; exit 1; }
+            else
+              echo "Bun already available: $(bun --version)"
+            fi
+          '''
+
+          body()
+        }
+      }
+    }
+  }
+}
+
+def runSeleniumPod(String cacheName, String name, String browser, String version, Closure body) {
+  Map selenium = [
+          name: "selenium",
+          image: tinyAws.getPullThroughCacheImage("selenium/standalone-${browser}", version),
+          livenessProbe: [
+            execArgs: "curl --fail --silent --output /dev/null http://localhost:4444/wd/hub/status",
+            initialDelaySeconds: 30,
+            periodSeconds: 5,
+            timeoutSeconds: 15,
+            failureThreshold: 6
+          ],
+          alwaysPullImage: true,
+          resourceRequestCpu: '1',
+          resourceRequestMemory: '500Mi',
+          resourceLimitCpu: '1',
+          resourceLimitMemory: '500Mi',
+          resourceRequestEphemeralStorage: '4Gi',
+          resourceLimitEphemeralStorage: '4Gi'
+        ]
+  return {
+    stage("${name}") {
+      devPods.customConsumer(
+        containers: [
+          nodeLtsSelenium,
+          selenium,
+          awsCliContainer
+        ],
+        base: 'node',
+        build: cacheName
+      ) {
+        container('node') {
+          body()
+        }
+      }
+    }
+  }
+}
+
 def gitMerge(String primaryBranch) {
   if (env.BRANCH_NAME != primaryBranch) {
     echo "Merging ${primaryBranch} into this branch to run tests"
@@ -94,13 +200,68 @@ def cleanBuildName(String name) {
 
 def props
 
-def cacheName = "cache_${BUILD_TAG}"
+// def cacheName = "cache_${BUILD_TAG}"
+def cacheName = "${env.JOB_NAME.split('/').last()}_${env.BUILD_NUMBER}"
 
 def testPrefix = "tinymce_${cleanBuildName(env.BRANCH_NAME)}-build${env.BUILD_NUMBER}"
 
+// Resource allocation patterns
+Map podResources = [
+  resourceRequestCpu: '2',
+  resourceLimitCpu: '7.5',
+  resourceRequestEphemeralStorage: '16Gi',
+  resourceLimitEphemeralStorage: '16Gi'
+]
+
+Map testResources = podResources + [
+  resourceRequestMemory: '6Gi',
+  resourceLimitMemory: '6Gi'
+]
+
+Map buildResources = podResources + [
+  resourceRequestMemory: '4Gi',
+  resourceLimitMemory: '4Gi'
+]
+
+Map seleniumNodeResources = [
+  resourceRequestCpu: '4',
+  resourceLimitCpu: '7',
+  resourceRequestMemory: '4Gi',
+  resourceLimitMemory: '4Gi',
+  resourceRequestEphemeralStorage: '8Gi',
+  resourceLimitEphemeralStorage: '8Gi'
+]
+
+// Container definitions
+@Field def nodeLts
+nodeLts = [
+  name: 'node',
+  image: "${ciRegistry}/build-containers/node-lts:lts",
+  runAsGroup: '1000',
+  runAsUser: '1000'
+]
+
+def nodeLtsBuild = devPods.getContainerDefaultArgs(nodeLts + buildResources)
+@Field def nodeLtsTest
+nodeLtsTest = devPods.getContainerDefaultArgs(nodeLts + testResources)
+@Field def nodeLtsSelenium
+nodeLtsSelenium = devPods.getContainerDefaultArgs(nodeLts + seleniumNodeResources + [command: 'sleep', args: 'infinity'])
+
+def awsCli = [
+  name: 'aws-cli',
+  image: 'public.ecr.aws/aws-cli/aws-cli:latest',
+  runAsGroup: '1000',
+  runAsUser: '1000',
+  resourceRequestEphemeralStorage: '2Gi',
+  resourceLimitEphemeralStorage: '4Gi'
+]
+@Field def awsCliContainer
+awsCliContainer = devPods.getContainerDefaultArgs(awsCli) + devPods.stdRes()
+
+// Single-pod container definitions (base pipeline structure)
 def nodeImg = devPods.getContainerDefaultArgs([
   name: 'node',
-  image: "public.ecr.aws/docker/library/node:22.20.0",
+  image: "${ciRegistry}/build-containers/node-lts:lts",
   alwaysPullImage: true,
   runAsGroup: '1000',
   runAsUser: '1000'
@@ -125,7 +286,7 @@ def seleniumImg = [
   ]
 ] + [
   // lower resources than this and selenium has trouble staying up
-  // selenium cango down to 500m/500Mi but crashes if things in the pod start leaking
+  // selenium can go down to 500m/500Mi but crashes if things in the pod start leaking
   resourceRequestCpu: '600m',
   resourceLimitCpu: '600m',
   resourceRequestMemory: '600Mi',
@@ -149,6 +310,7 @@ def playwrightImg = [
 ] + devPods.lowStorage()
 
 timestamps { notifyStatusChange(
+  cleanupStep: { devPods.cleanUpPod(build: cacheName) },
   branches: ['main', 'release/7', 'release/8'],
   channel: '#tinymce-build-status',
   name: 'TinyMCE',
@@ -175,8 +337,6 @@ timestamps { notifyStatusChange(
       ) {
       container("node") {
 
-        // Make yarn fallback to the npm registry otherwise we get publish errors
-        devPods.setDefaultRegistry()
         // Setup git information
         tinyGit.addAuthorConfig()
         tinyGit.addGitHubToKnownHosts()
@@ -187,12 +347,12 @@ timestamps { notifyStatusChange(
 
 
         stage('Deps') {
-          // 5 min: yarn install should never take this long; fail fast if it hangs
+          // 5 min: bun install should never take this long; fail fast if it hangs
           // actual avg ~1 min, max observed ~2 min
           timeout(time: 5, unit: 'MINUTES') {
             // cancel build if primary branch doesn't merge cleanly
             gitMerge(primaryBranch)
-            yarnInstall()
+            sh 'bun install'
           }
         }
 
@@ -200,13 +360,13 @@ timestamps { notifyStatusChange(
           // 10 min: full build + type-check; actual avg ~2 min, max observed ~7 min
           timeout(time: 10, unit: 'MINUTES') {
             // verify no errors in changelog merge
-            exec("yarn changie-merge")
+            exec("bun changie-merge")
             withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
               // type check and build TinyMCE
-              exec("yarn ci-all-seq")
+              exec("bun ci-all-seq")
 
               // validate documentation generator
-              exec("yarn tinymce-grunt shell:moxiedoc")
+              exec("bun tinymce-grunt shell:moxiedoc")
             }
           }
         }
@@ -286,12 +446,25 @@ timestamps { notifyStatusChange(
           container('playwright') {
             // 20 min: playwright unit + visual tests average ~8 min, max observed ~10m37s
             timeout(time: 20, unit: 'MINUTES') {
-              exec('yarn -s --cwd modules/oxide-components test-ci')
+              // Install bun in the playwright container (public image doesn't include it)
+              sh '''
+                set -e
+                if ! command -v bun &> /dev/null; then
+                  echo "Installing bun..."
+                  apt-get update -qq && apt-get install -y -qq unzip
+                  curl -fsSL https://bun.sh/install | bash -s "bun-v1.3.11"
+                  export PATH="$HOME/.bun/bin:$PATH"
+                  bun --version || { echo "ERROR: Bun installation failed"; exit 1; }
+                else
+                  echo "Bun already available: $(bun --version)"
+                fi
+              '''
+              sh 'export PATH="$HOME/.bun/bin:$PATH" && bun --silent --cwd modules/oxide-components test-ci'
               junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results.xml'
               def visualTestStatus
               // Limit the number of workers allowed to avoid hanging IO
               withEnv(["PW_WORKERS=1"]) {
-                visualTestStatus = exec(script: 'yarn -s --cwd modules/oxide-components test-visual-ci', returnStatus: true)
+                visualTestStatus = sh(script: 'export PATH="$HOME/.bun/bin:$PATH" && bun --silent --cwd modules/oxide-components test-visual-ci', returnStatus: true)
               }
               if (visualTestStatus == 4) {
                 unstable("Visual tests failed")
@@ -326,7 +499,7 @@ timestamps { notifyStatusChange(
           if (env.BRANCH_NAME == props.primaryBranch) {
             echo "Deploying Storybook"
             tinyGit.withGitHubSSHCredentials {
-              exec('yarn -s --cwd modules/oxide-components deploy-storybook')
+              exec('bun --silent --cwd modules/oxide-components deploy-storybook')
             }
           } else {
             echo "Skipping Storybook deployment as the pipeline is not running on the primary branch"

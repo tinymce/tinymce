@@ -44,7 +44,7 @@ export default defineConfig({
   // We can't run development storybook in Docker, because rollup uses native binaries
   webServer: process.env.CI
     ? {
-      command: 'yarn start --ci --loglevel debug',
+      command: 'bun start --ci --loglevel debug',
       stdout: 'pipe',
       url: BASE_URL,
       reuseExistingServer: true,

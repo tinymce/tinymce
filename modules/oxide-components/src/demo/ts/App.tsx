@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 
 const App: React.FC = () => {
   const [ count, setCount ] = useState(0);
-
   return (
     <>
       <h1>Vite + React</h1>
