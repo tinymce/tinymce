@@ -17,5 +17,5 @@ If you have a DOM element and need to find a specific contained text node and of
 # Tests
 `robin` uses [`bedrock`](https://www.npmjs.com/package/@ephox/bedrock) to run tests.
 ## Running Tests
-`$ yarn test-manual`
-`$ yarn test`
+`$ bun run test-manual`
+`$ bun run test`
