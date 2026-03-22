@@ -3,11 +3,9 @@
 
 [install]
 frozen-lockfile = true
-cache = true
-auto = true
+exact = true
 linker = "hoisted"
 
-
-# Runtime configuration - make bun handle PATH like yarn
 [run]
 shell = "system"
+bun = false
