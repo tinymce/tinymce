@@ -107,20 +107,19 @@ const loadShadowDomUiSkins = (editor: Editor, skinUrl: string): Promise<void> =>
 const loadUiContentCSS = (editor: Editor, isInline: boolean, skinUrl?: string): Promise<void> => {
   const filenameBase = isInline ? 'content.inline' : 'content';
   const decision = determineCSSDecision(editor, filenameBase, skinUrl);
+
+  if (!skinUrl) {
+    return Promise.resolve();
+  }
+
   switch (decision._kind) {
     case 'load-raw':
-      const { key, css } = decision;
-      if (isInline) {
-        loadRawCss(editor, key, css, editor.ui.styleSheetLoader);
-      } else {
-        editor.contentCSS.push(key);
-      }
+      const { key } = decision;
+      editor.contentCSS.push(key);
       return Promise.resolve();
     case 'load-stylesheet':
       const { url } = decision;
-      if (skinUrl) {
-        editor.contentCSS.push(url);
-      }
+      editor.contentCSS.push(url);
       return Promise.resolve();
     default:
       return Promise.resolve();
