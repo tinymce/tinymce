@@ -2,7 +2,7 @@
 # Replaces .yarnrc settings
 
 [install]
-frozen-lockfile = true
+frozenLockfile = true
 exact = true
 linker = "hoisted"
 
