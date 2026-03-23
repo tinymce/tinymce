@@ -152,6 +152,10 @@ timestamps { notifyStatusChange(
   name: 'TinyMCE',
   mention: true
   ) {
+  // 90 min absolute ceiling for the whole pipeline; ensures notifyStatusChange
+  // handles alerting even if a pod crash or unknown hang bypasses stage-level timeouts.
+  // Set above the sum of inner stage timeouts (deps 5 + build 10 + tests 40 = 55 min + overhead)
+  timeout(time: 90, unit: 'MINUTES') {
   devPods.custom(
     containers: [
       nodeImg,
@@ -177,8 +181,9 @@ timestamps { notifyStatusChange(
 
 
       stage('Deps') {
-        // 15 min: yarn install should never take this long; fail fast if it hangs
-        timeout(time: 15, unit: 'MINUTES') {
+        // 5 min: yarn install should never take this long; fail fast if it hangs
+        // actual avg ~1 min, max observed ~2 min
+        timeout(time: 5, unit: 'MINUTES') {
           // cancel build if primary branch doesn't merge cleanly
           gitMerge(primaryBranch)
           yarnInstall()
@@ -186,8 +191,8 @@ timestamps { notifyStatusChange(
       }
 
       stage('Build') {
-        // 30 min: full build + type-check; if it exceeds this something is badly wrong
-        timeout(time: 30, unit: 'MINUTES') {
+        // 10 min: full build + type-check; actual avg ~2 min, max observed ~7 min
+        timeout(time: 10, unit: 'MINUTES') {
           // verify no errors in changelog merge
           exec("yarn changie-merge")
           withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
@@ -242,9 +247,10 @@ timestamps { notifyStatusChange(
         processes[name] = {
           stage(name) {
             container('node') {
-              // 60 min activity-based: resets on any log output; catches silent network stalls
-              // (e.g. LambdaTest/AWS connection drops that produce no output indefinitely)
-              timeout(time: 60, unit: 'MINUTES', activity: true) {
+              // 35 min activity-based: resets on any log output; catches a single branch stalling
+              // silently while other branches are still active (absolute outer Tests timeout won't
+              // detect this). Must be set below the outer Tests timeout (40 min) to be reachable.
+              timeout(time: 35, unit: 'MINUTES', activity: true) {
                 sleep( time: delaySeconds, unit: 'SECONDS')
                 grunt('list-changed-browser')
                 bedrockRemoteTools.withRemoteCreds(platform.provider) {
@@ -260,8 +266,8 @@ timestamps { notifyStatusChange(
     processes['headless'] = {
       stage('headless') {
         container('node') {
-          // 60 min: headless Selenium tests should complete well within this
-          timeout(time: 60, unit: 'MINUTES') {
+          // 5 min: headless Selenium tests average ~1 min, max observed ~1m10s
+          timeout(time: 5, unit: 'MINUTES') {
             grunt('list-changed-headless')
             runHeadlessTests(runAllTests)
           }
@@ -272,8 +278,8 @@ timestamps { notifyStatusChange(
     processes['playwright'] = {
       stage('playwright') {
         container('playwright') {
-          // 60 min: playwright unit + visual tests should complete well within this
-          timeout(time: 60, unit: 'MINUTES') {
+          // 20 min: playwright unit + visual tests average ~8 min, max observed ~10m37s
+          timeout(time: 20, unit: 'MINUTES') {
             exec('yarn -s --cwd modules/oxide-components test-ci')
             junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results.xml'
             def visualTestStatus
@@ -295,8 +301,9 @@ timestamps { notifyStatusChange(
     }
 
     stage('Tests') {
-      // 90 min: absolute ceiling across all parallel branches (sish tunnel + all remote/headless/playwright)
-      timeout(time: 90, unit: 'MINUTES') {
+      // 40 min: ceiling across all parallel branches; branches run concurrently so this only needs
+      // to cover the slowest single branch. Max observed ~28 min (Mac-firefox/Win-edge); ~1.4x buffer.
+      timeout(time: 40, unit: 'MINUTES') {
         // TODO: consider wrapping in try/finally to publish scratch/TEST-*.xml as a safety net
         // for results written before a timeout fires. Held back due to potential double-reporting
         // since runBedrockTest already publishes junit per test.
@@ -321,4 +328,5 @@ timestamps { notifyStatusChange(
       }
     } // close container
   } // close pod
+  } // close outer timeout
 }} // close #notification and #timestamp
