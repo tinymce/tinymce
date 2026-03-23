@@ -42,7 +42,7 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
   return cloneElement(theChild, {
     ...props,
     style: {
-      ...props.style,
+      ...theChild.props.style,
       anchorName
     },
     ref: (el: HTMLDivElement | null) => {
