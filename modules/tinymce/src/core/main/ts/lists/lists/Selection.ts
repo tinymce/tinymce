@@ -5,6 +5,7 @@ import type Editor from '../../api/Editor';
 import type Schema from '../../api/html/Schema';
 import * as Options from '../../api/Options';
 import Tools from '../../api/util/Tools';
+import { isList, isListItem } from '../listmodel/Util';
 
 import * as NodeType from './NodeType';
 
@@ -62,10 +63,31 @@ const getClosestEditingHost = (editor: Editor, elm: Element): HTMLElement => {
 const isListHost = (schema: Schema, node: Node): boolean =>
   !NodeType.isListNode(node) && !NodeType.isListItemNode(node) && Arr.exists(listNames, (listName) => schema.isValidChild(node.nodeName, listName));
 
+const requireLiElementFirst = (parentBlocks: HTMLElement[]): boolean => {
+  for (let index = 0; index < parentBlocks.length; index++) {
+    const element = parentBlocks[index];
+    if (isListItem(SugarElement.fromDom(element))) {
+      return true;
+    }
+
+    if (NodeType.isTableCellNode(element)) {
+      return false;
+    }
+  }
+
+  return false;
+};
+
 const getClosestListHost = (editor: Editor, elm: Node, isCollapsed: boolean): HTMLElement => {
   const parentBlocks = editor.dom.getParents<HTMLElement>(elm, editor.dom.isBlock);
+  let foundListBlock = !requireLiElementFirst(parentBlocks);
   const isNotForcedRootBlock = (elm: HTMLElement) => elm.nodeName.toLowerCase() !== Options.getForcedRootBlock(editor);
-  const parentBlock = Arr.find(parentBlocks, (elm) => (!isCollapsed || isNotForcedRootBlock(elm)) && isListHost(editor.schema, elm));
+  const checkListRequirement = (element: HTMLElement) => {
+    foundListBlock = foundListBlock || isListItem(SugarElement.fromDom(element)) || isList(SugarElement.fromDom(element));
+
+    return foundListBlock;
+  };
+  const parentBlock = Arr.find(parentBlocks, (elm) => checkListRequirement(elm) && (!isCollapsed || isNotForcedRootBlock(elm)) && isListHost(editor.schema, elm));
 
   return parentBlock.getOr(editor.getBody());
 };
