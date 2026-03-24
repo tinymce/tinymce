@@ -12,7 +12,7 @@ export interface DropdownState {
   readonly debouncedHideHoverablePopover: Throttler.Throttler<[e: MouseEvent]>;
   readonly isOpen: boolean;
   readonly setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  readonly anchorName: string;
+  readonly popupAnchor: string;
 }
 
 const DropdownContext = createContext<DropdownState | null>(null);

@@ -15,7 +15,7 @@ interface DropdownContentProps extends PropsWithChildren<HTMLAttributes<HTMLDivE
 }
 
 const Content = forwardRef<HTMLDivElement, DropdownContentProps>(({ children, onOpenChange, className, ...props }, ref) => {
-  const { triggerRef, side, align, gap, contentRef, triggerEvents, debouncedHideHoverablePopover, isOpen, setIsOpen, anchorName } = useDropdown();
+  const { triggerRef, side, align, gap, contentRef, triggerEvents, debouncedHideHoverablePopover, isOpen, setIsOpen, popupAnchor } = useDropdown();
 
   const updateToggleState = useCallback((event: ToggleEvent) => {
     setIsOpen(event.newState === 'open');
@@ -100,7 +100,7 @@ const Content = forwardRef<HTMLDivElement, DropdownContentProps>(({ children, on
       ...insetProps,
       // @ts-expect-error - TODO: Remove this expect error once we've upgraded to React 19+
       positionArea: area,
-      positionAnchor: anchorName
+      positionAnchor: popupAnchor
     }}
   >
     {isOpen && children}
@@ -110,7 +110,7 @@ const Content = forwardRef<HTMLDivElement, DropdownContentProps>(({ children, on
 interface TriggerInternalProps extends PropsWithChildren<HTMLAttributes<HTMLElement>> {}
 
 const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, ...props }, ref) => {
-  const { triggerRef, contentRef, triggerEvents, debouncedHideHoverablePopover, isOpen, anchorName } = useDropdown();
+  const { triggerRef, contentRef, triggerEvents, debouncedHideHoverablePopover, isOpen, popupAnchor } = useDropdown();
 
   let child = Children.toArray(children)[0];
   if (!isValidElement(child)) {
@@ -169,7 +169,7 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
     ...props,
     style: {
       ...child.props.style,
-      anchorName
+      anchorName: popupAnchor
     },
     ref: (el: HTMLElement) => {
       triggerRef.current = el;
@@ -228,11 +228,11 @@ const Root: FC<DropdownProps> = ({ children, side = 'top', align = 'start', gap 
 
   // generate one ID per trigger/content combination, not every time
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const anchorName = useMemo(() => `--${Id.generate('dropdown')}`, [ triggerRef, contentRef ]);
+  const popupAnchor = useMemo(() => `--${Id.generate('dropdown')}`, [ triggerRef, contentRef ]);
 
   const contextValue = useMemo(() => {
-    return { triggerRef, contentRef, side, align, gap, triggerEvents, debouncedHideHoverablePopover, isOpen, setIsOpen, anchorName };
-  }, [ triggerRef, contentRef, side, align, gap, triggerEvents, debouncedHideHoverablePopover, isOpen, anchorName ]);
+    return { triggerRef, contentRef, side, align, gap, triggerEvents, debouncedHideHoverablePopover, isOpen, setIsOpen, popupAnchor };
+  }, [ triggerRef, contentRef, side, align, gap, triggerEvents, debouncedHideHoverablePopover, isOpen, popupAnchor ]);
 
   return <DropdownContext.Provider value={contextValue}>{children}</DropdownContext.Provider>;
 };
