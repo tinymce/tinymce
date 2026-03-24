@@ -33,10 +33,10 @@ const meta = {
       </div>
     )
   ],
-} satisfies Meta<{ text: string, oversizeContent: boolean, alwaysShow: boolean }>;
+} satisfies Meta<{ text: string; oversizeContent: boolean; alwaysShow: boolean }>;
 
 export default meta;
-type Story = StoryObj<{ text: string, oversizeContent: boolean, alwaysShow: boolean }>;
+type Story = StoryObj<{ text: string; oversizeContent: boolean; alwaysShow: boolean }>;
 
 export const StandardTooltip: Story = {
   args: {

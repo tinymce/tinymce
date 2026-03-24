@@ -1,6 +1,6 @@
 import { Fun, Type } from '@ephox/katamari';
 import { Bem } from 'oxide-components/main';
-import { Children, cloneElement, createContext, forwardRef, isValidElement, useCallback, useContext, useLayoutEffect, useMemo, useRef, useState, type FC, type HTMLAttributes, type PropsWithChildren, type ReactNode } from 'react';
+import { Children, cloneElement, createContext, forwardRef, isValidElement, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState, type FC, type HTMLAttributes, type PropsWithChildren, type ReactNode } from 'react';
 
 interface TooltipState {
   readonly isOpen: boolean;
@@ -23,24 +23,41 @@ const defaultState: TooltipState = {
 const TooltipContext = createContext<TooltipState>(defaultState);
 
 interface TriggerSpecificProps {
-  readonly showCondition?: 'always' | 'overflow'
+  readonly showCondition?: 'always' | 'overflow';
 }
 interface TriggerInternalProps extends PropsWithChildren<HTMLAttributes<HTMLElement>>, TriggerSpecificProps { }
 
 const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, showCondition, ...props }, ref) => {
   const { setIsOpen, triggerRef } = useContext(TooltipContext);
 
-  const trySetIsOpen = (isOpen: boolean) => {
-    if (isOpen && showCondition === 'overflow') {
+  const shouldRender = () => {
+    if (showCondition === 'overflow') {
       const trigger = triggerRef.current;
 
-      if (trigger && (trigger.offsetHeight < trigger.scrollHeight || trigger.offsetWidth < trigger.scrollWidth)) {
-        setIsOpen(isOpen);
-      }
-    } else {
-      setIsOpen(isOpen);
+      return !!(trigger && (trigger.offsetHeight < trigger.scrollHeight || trigger.offsetWidth < trigger.scrollWidth));
     }
-  }
+
+    return true;
+  };
+
+  const [ renderTooltip, renderTooltipSet ] = useState(true);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useLayoutEffect(() => {
+    renderTooltipSet(shouldRender());
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      renderTooltipSet(shouldRender());
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  });
 
   const count = Children.count(children);
   if (count === 0) {
@@ -52,56 +69,65 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, s
     return null;
   }
 
-  return cloneElement(theChild, {
-    ...props,
-    ref: (el: HTMLDivElement | null) => {
-      // Only forward non-null values to internal refs to preserve state during React's cleanup phase
-      if (el !== null) {
-        triggerRef.current = el;
-        // TODO: Remove this cast weirdness once we migrate to react 19
-        const childWithRef = theChild as React.ReactElement & { ref?: React.RefCallback<HTMLDivElement> | React.MutableRefObject<HTMLDivElement> };
-        if (Type.isFunction(childWithRef.ref)) {
-          childWithRef.ref(el);
-        } else if (Type.isNonNullable(childWithRef.ref) && !Type.isString(childWithRef.ref)) {
-          childWithRef.ref.current = el;
+  const refCallback = (el: HTMLDivElement | null) => {
+    // Only forward non-null values to internal refs to preserve state during React's cleanup phase
+    if (el !== null) {
+      triggerRef.current = el;
+      // TODO: Remove this cast weirdness once we migrate to react 19
+      const childWithRef = theChild as React.ReactElement & { ref?: React.RefCallback<HTMLDivElement> | React.MutableRefObject<HTMLDivElement> };
+      if (Type.isFunction(childWithRef.ref)) {
+        childWithRef.ref(el);
+      } else if (Type.isNonNullable(childWithRef.ref) && !Type.isString(childWithRef.ref)) {
+        childWithRef.ref.current = el;
+      }
+    }
+    // Always forward to the consumer's ref, including null for proper cleanup
+    if (Type.isFunction(ref)) {
+      ref(el);
+    } else if (Type.isNonNullable(ref)) {
+      ref.current = el;
+    }
+  };
+
+  if (renderTooltip) {
+    return cloneElement(theChild, {
+      ...props,
+      ref: refCallback,
+      onMouseEnter: (e: React.MouseEvent<HTMLElement>) => {
+        if (!e.isDefaultPrevented()) {
+          theChild.props.onMouseEnter?.(e);
+          props.onMouseEnter?.(e);
+          setIsOpen(true);
         }
-      }
-      // Always forward to the consumer's ref, including null for proper cleanup
-      if (Type.isFunction(ref)) {
-        ref(el);
-      } else if (Type.isNonNullable(ref)) {
-        ref.current = el;
-      }
-    },
-    onMouseEnter: (e: React.MouseEvent<HTMLElement>) => {
-      if (!e.isDefaultPrevented()) {
-        theChild.props.onMouseEnter?.(e);
-        props.onMouseEnter?.(e);
-        trySetIsOpen(true);
-      }
-    },
-    onMouseLeave: (e: React.MouseEvent<HTMLElement>) => {
-      if (!e.isDefaultPrevented()) {
-        theChild.props.onMouseLeave?.(e);
-        props.onMouseLeave?.(e);
-        trySetIsOpen(false);
-      }
-    },
-    onFocus: (e: React.FocusEvent<HTMLElement>) => {
-      if (!e.isDefaultPrevented()) {
-        theChild.props.onFocus?.(e);
-        props.onFocus?.(e);
-        trySetIsOpen(true);
-      }
-    },
-    onBlur: (e: React.FocusEvent<HTMLElement>) => {
-      if (!e.isDefaultPrevented()) {
-        theChild.props.onBlur?.(e);
-        props.onBlur?.(e);
-        trySetIsOpen(false);
-      }
-    },
-  });
+      },
+      onMouseLeave: (e: React.MouseEvent<HTMLElement>) => {
+        if (!e.isDefaultPrevented()) {
+          theChild.props.onMouseLeave?.(e);
+          props.onMouseLeave?.(e);
+          setIsOpen(false);
+        }
+      },
+      onFocus: (e: React.FocusEvent<HTMLElement>) => {
+        if (!e.isDefaultPrevented()) {
+          theChild.props.onFocus?.(e);
+          props.onFocus?.(e);
+          setIsOpen(true);
+        }
+      },
+      onBlur: (e: React.FocusEvent<HTMLElement>) => {
+        if (!e.isDefaultPrevented()) {
+          theChild.props.onBlur?.(e);
+          props.onBlur?.(e);
+          setIsOpen(false);
+        }
+      },
+    });
+  } else {
+    return cloneElement(theChild, {
+      ...props,
+      ref: refCallback,
+    });
+  }
 });
 
 const Trigger: React.ForwardRefExoticComponent<
