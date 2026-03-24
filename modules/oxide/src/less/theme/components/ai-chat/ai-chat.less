@@ -135,7 +135,9 @@
     }
 
     &--review {
-      background-color: var(--tox-private-background-secondary, darken(@background-color, 6%));
+      &:not(:has(.tox-sidebar-content__message-text)) {
+        background-color: var(--tox-private-background-secondary, darken(@background-color, 6%));
+      }
       border: none;
     }
   }
