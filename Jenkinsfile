@@ -152,151 +152,181 @@ timestamps { notifyStatusChange(
   name: 'TinyMCE',
   mention: true
   ) {
-  devPods.custom(
-    containers: [
-      nodeImg,
-      seleniumImg,
-      playwrightImg
-    ],
-    checkoutStep: {
-      tinyGit.addGitHubToKnownHosts()
-      checkout localBranch(scm, [ lfs() ])
-    }
-  ) {
-    container("node") {
-
-      // Make yarn fallback to the npm registry otherwise we get publish errors
-      devPods.setDefaultRegistry()
-      // Setup git information
-      tinyGit.addAuthorConfig()
-      tinyGit.addGitHubToKnownHosts()
-
-      props = readProperties(file: 'build.properties')
-      String primaryBranch = props.primaryBranch
-      assert primaryBranch != null && primaryBranch != ""
-
-
-      stage('Deps') {
-        // cancel build if primary branch doesn't merge cleanly
-        gitMerge(primaryBranch)
-        yarnInstall()
+  // 90 min absolute ceiling for the whole pipeline; ensures notifyStatusChange
+  // handles alerting even if a pod crash or unknown hang bypasses stage-level timeouts.
+  // Set above the sum of inner stage timeouts (deps 5 + build 10 + tests 40 = 55 min + overhead)
+  timeout(time: 90, unit: 'MINUTES') {
+    devPods.custom(
+      containers: [
+        nodeImg,
+        seleniumImg,
+        playwrightImg
+      ],
+      checkoutStep: {
+        tinyGit.addGitHubToKnownHosts()
+        checkout localBranch(scm, [ lfs() ])
       }
+    ) {
+      container("node") {
 
-      stage('Build') {
-        // verify no errors in changelog merge
-        exec("yarn changie-merge")
-        withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
-          // type check and build TinyMCE
-          exec("yarn ci-all-seq")
+        // Make yarn fallback to the npm registry otherwise we get publish errors
+        devPods.setDefaultRegistry()
+        // Setup git information
+        tinyGit.addAuthorConfig()
+        tinyGit.addGitHubToKnownHosts()
 
-          // validate documentation generator
-          exec("yarn tinymce-grunt shell:moxiedoc")
+        props = readProperties(file: 'build.properties')
+        String primaryBranch = props.primaryBranch
+        assert primaryBranch != null && primaryBranch != ""
+
+
+        stage('Deps') {
+          // 5 min: yarn install should never take this long; fail fast if it hangs
+          // actual avg ~1 min, max observed ~2 min
+          timeout(time: 5, unit: 'MINUTES') {
+            // cancel build if primary branch doesn't merge cleanly
+            gitMerge(primaryBranch)
+            yarnInstall()
+          }
+        }
+
+        stage('Build') {
+          // 10 min: full build + type-check; actual avg ~2 min, max observed ~7 min
+          timeout(time: 10, unit: 'MINUTES') {
+            // verify no errors in changelog merge
+            exec("yarn changie-merge")
+            withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
+              // type check and build TinyMCE
+              exec("yarn ci-all-seq")
+
+              // validate documentation generator
+              exec("yarn tinymce-grunt shell:moxiedoc")
+            }
+          }
         }
       }
-    }
 
-    def winChrome = [ browser: 'chrome', provider: 'aws', os: 'windows', buckets: 1 ]
-    def winFirefox = [ browser: 'firefox', provider: 'lambdatest', os: 'windows', buckets: 1 ]
-    def winEdge = [ browser: 'edge', provider: 'lambdatest', os: 'windows', buckets: 1 ]
+      def winChrome = [ browser: 'chrome', provider: 'aws', os: 'windows', buckets: 1 ]
+      def winFirefox = [ browser: 'firefox', provider: 'lambdatest', os: 'windows', buckets: 1 ]
+      def winEdge = [ browser: 'edge', provider: 'lambdatest', os: 'windows', buckets: 1 ]
 
-    def macChrome = [ browser: 'chrome', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ]
-    def macFirefox = [ browser: 'firefox', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ]
-    def macSafari = [ browser: 'safari', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ]
+      def macChrome = [ browser: 'chrome', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ]
+      def macFirefox = [ browser: 'firefox', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ]
+      def macSafari = [ browser: 'safari', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ]
 
-    def branchBuildPlatforms = [
-      winChrome,
-      winFirefox,
-      macSafari,
-    ]
+      def branchBuildPlatforms = [
+        winChrome,
+        winFirefox,
+        macSafari,
+      ]
 
-    def primaryBuildPlatforms = branchBuildPlatforms + [
-      winEdge,
-      macChrome,
-      macFirefox
-    ];
+      def primaryBuildPlatforms = branchBuildPlatforms + [
+        winEdge,
+        macChrome,
+        macFirefox
+      ];
 
-    def buildingPrimary = env.BRANCH_NAME == props.primaryBranch
-    def platforms = buildingPrimary ? primaryBuildPlatforms : branchBuildPlatforms
+      def buildingPrimary = env.BRANCH_NAME == props.primaryBranch
+      def platforms = buildingPrimary ? primaryBuildPlatforms : branchBuildPlatforms
 
-    def processes = [:]
-    def runAllTests = buildingPrimary
+      def processes = [:]
+      def runAllTests = buildingPrimary
 
-    def stagger = 0
-    for (int i = 0; i < platforms.size(); i++) {
-      def platform = platforms.get(i)
-      def buckets = platform.buckets ?: 1
-      for (int bucket = 1; bucket <= buckets; bucket ++) {
-        def suffix = buckets == 1 ? "" : "-" + bucket + "-" + buckets
-        def os = String.valueOf(platform.os).startsWith('mac') ? 'Mac' : 'Win'
-        def s_bucket = "${bucket}"
-        def s_buckets = "${buckets}"
-        def name = "${os}-${platform.browser}${platform.version ?: ''}-${platform.provider}${suffix}"
-        def delaySeconds = stagger * 10
-        stagger++
-        processes[name] = {
-          stage(name) {
-            container('node') {
-              sleep( time: delaySeconds, unit: 'SECONDS')
-              grunt('list-changed-browser')
-              bedrockRemoteTools.withRemoteCreds(platform.provider) {
-                runRemoteTests(name, platform.browser, platform.provider, platform.os, platform.version, s_bucket, s_buckets, runAllTests)
+      def stagger = 0
+      for (int i = 0; i < platforms.size(); i++) {
+        def platform = platforms.get(i)
+        def buckets = platform.buckets ?: 1
+        for (int bucket = 1; bucket <= buckets; bucket ++) {
+          def suffix = buckets == 1 ? "" : "-" + bucket + "-" + buckets
+          def os = String.valueOf(platform.os).startsWith('mac') ? 'Mac' : 'Win'
+          def s_bucket = "${bucket}"
+          def s_buckets = "${buckets}"
+          def name = "${os}-${platform.browser}${platform.version ?: ''}-${platform.provider}${suffix}"
+          def delaySeconds = stagger * 10
+          stagger++
+          processes[name] = {
+            stage(name) {
+              container('node') {
+                // 35 min activity-based: resets on any log output; catches a single branch stalling
+                // silently while other branches are still active (absolute outer Tests timeout won't
+                // detect this). Must be set below the outer Tests timeout (40 min) to be reachable.
+                timeout(time: 35, unit: 'MINUTES', activity: true) {
+                  sleep( time: delaySeconds, unit: 'SECONDS')
+                  grunt('list-changed-browser')
+                  bedrockRemoteTools.withRemoteCreds(platform.provider) {
+                    runRemoteTests(name, platform.browser, platform.provider, platform.os, platform.version, s_bucket, s_buckets, runAllTests)
+                  }
+                }
               }
             }
           }
         }
       }
-    }
 
-    processes['headless'] = {
-      stage('headless') {
-        container('node') {
-          grunt('list-changed-headless')
-          runHeadlessTests(runAllTests)
+      processes['headless'] = {
+        stage('headless') {
+          container('node') {
+            // 5 min: headless Selenium tests average ~1 min, max observed ~1m10s
+            timeout(time: 5, unit: 'MINUTES') {
+              grunt('list-changed-headless')
+              runHeadlessTests(runAllTests)
+            }
+          }
         }
       }
-    }
 
-    processes['playwright'] = {
-      stage('playwright') {
-        container('playwright') {
-          exec('yarn -s --cwd modules/oxide-components test-ci')
-          junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results.xml'
-          def visualTestStatus
-          // Limit the number of workers allowed to avoid hanging IO
-          withEnv(["PW_WORKERS=1"]) {
-            visualTestStatus = exec(script: 'yarn -s --cwd modules/oxide-components test-visual-ci', returnStatus: true)
+      processes['playwright'] = {
+        stage('playwright') {
+          container('playwright') {
+            // 20 min: playwright unit + visual tests average ~8 min, max observed ~10m37s
+            timeout(time: 20, unit: 'MINUTES') {
+              exec('yarn -s --cwd modules/oxide-components test-ci')
+              junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results.xml'
+              def visualTestStatus
+              // Limit the number of workers allowed to avoid hanging IO
+              withEnv(["PW_WORKERS=1"]) {
+                visualTestStatus = exec(script: 'yarn -s --cwd modules/oxide-components test-visual-ci', returnStatus: true)
+              }
+              if (visualTestStatus == 4) {
+                unstable("Visual tests failed")
+              } else if (visualTestStatus != 0) {
+                error("Unexpected error running visual tests")
+              }
+              junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results-visual.xml'
+              exec('find modules/oxide-components -name "*.png" -type f || echo "No PNG files found"')
+              archiveArtifacts artifacts: 'modules/oxide-components/test-results/**/*.png', allowEmptyArchive: true, fingerprint: true
+            }
           }
-          if (visualTestStatus == 4) {
-            unstable("Visual tests failed")
-          } else if (visualTestStatus != 0) {
-            error("Unexpected error running visual tests")
-          }
-          junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results-visual.xml'
-          exec('find modules/oxide-components -name "*.png" -type f || echo "No PNG files found"')
-          archiveArtifacts artifacts: 'modules/oxide-components/test-results/**/*.png', allowEmptyArchive: true, fingerprint: true
         }
       }
-    }
 
-    stage('Tests') {
+      stage('Tests') {
+        // 40 min: ceiling across all parallel branches; branches run concurrently so this only needs
+        // to cover the slowest single branch. Max observed ~28 min (Mac-firefox/Win-edge); ~1.4x buffer.
+        timeout(time: 40, unit: 'MINUTES') {
+          // TODO: consider wrapping in try/finally to publish scratch/TEST-*.xml as a safety net
+          // for results written before a timeout fires. Held back due to potential double-reporting
+          // since runBedrockTest already publishes junit per test.
+          container('node') {
+            bedrockRemoteTools.tinyWorkSishTunnel()
+          }
+          parallel processes
+        }
+      }
+
       container('node') {
-        bedrockRemoteTools.tinyWorkSishTunnel()
-      }
-      parallel processes
-    }
 
-    container('node') {
-
-      stage('Deploy Storybook') {
-        if (env.BRANCH_NAME == props.primaryBranch) {
-          echo "Deploying Storybook"
-          tinyGit.withGitHubSSHCredentials {
-            exec('yarn -s --cwd modules/oxide-components deploy-storybook')
+        stage('Deploy Storybook') {
+          if (env.BRANCH_NAME == props.primaryBranch) {
+            echo "Deploying Storybook"
+            tinyGit.withGitHubSSHCredentials {
+              exec('yarn -s --cwd modules/oxide-components deploy-storybook')
+            }
+          } else {
+            echo "Skipping Storybook deployment as the pipeline is not running on the primary branch"
           }
-        } else {
-          echo "Skipping Storybook deployment as the pipeline is not running on the primary branch"
         }
-      }
-    } // close container
-  } // close pod
+      } // close container
+    } // close pod
+  } // close outer timeout
 }} // close #notification and #timestamp
