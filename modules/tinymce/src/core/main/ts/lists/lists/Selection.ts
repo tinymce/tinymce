@@ -1,4 +1,4 @@
-import { Arr, type Optional, Type } from '@ephox/katamari';
+import { Arr, Optional, Type } from '@ephox/katamari';
 import { SugarElement, Traverse } from '@ephox/sugar';
 
 import type Editor from '../../api/Editor';
@@ -64,18 +64,19 @@ const isListHost = (schema: Schema, node: Node): boolean =>
   !NodeType.isListNode(node) && !NodeType.isListItemNode(node) && Arr.exists(listNames, (listName) => schema.isValidChild(node.nodeName, listName));
 
 const requireLiElementFirst = (parentBlocks: HTMLElement[]): boolean => {
-  for (let index = 0; index < parentBlocks.length; index++) {
-    const element = parentBlocks[index];
+  const result = Arr.findMap(parentBlocks, (element) => {
     if (isListItem(SugarElement.fromDom(element))) {
-      return true;
+      return Optional.some(true);
     }
 
     if (NodeType.isTableCellNode(element)) {
-      return false;
+      return Optional.some(false);
     }
-  }
 
-  return false;
+    return Optional.none();
+  });
+
+  return result.getOr(false);
 };
 
 const getClosestListHost = (editor: Editor, elm: Node, isCollapsed: boolean): HTMLElement => {
