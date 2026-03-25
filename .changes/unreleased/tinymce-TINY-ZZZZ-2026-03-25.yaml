@@ -1,0 +1,6 @@
+project: tinymce
+kind: Changed
+body: Heading block format keyboard shortcuts changed from access+1-6 to meta+alt+1-6 (Cmd+Option+1-6 on Mac, Ctrl+Alt+1-6 on Windows/Linux).
+time: 2026-03-25T00:00:00.000000+00:00
+custom:
+    Issue: TINY-ZZZZ
