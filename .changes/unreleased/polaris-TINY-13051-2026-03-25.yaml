@@ -1,0 +1,6 @@
+project: polaris
+kind: Added
+body: "`PathPattern` support to matching APIs."
+time: 2026-03-25T12:00:00+00:00
+custom:
+    Issue: TINY-13051

@@ -1,0 +1,6 @@
+project: alloy
+kind: Added
+body: Tooltips can now remain visible when hovered.
+time: 2026-03-25T12:00:00+00:00
+custom:
+    Issue: TINY-12053

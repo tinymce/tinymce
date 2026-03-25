@@ -1,0 +1,6 @@
+project: snooker
+kind: Fixed
+body: Table resize bar alignment in scrollable containers.
+time: 2026-03-25T12:00:00+00:00
+custom:
+    Issue: TINY-11215
