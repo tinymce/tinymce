@@ -8,7 +8,7 @@ const setup = (editor: Editor): void => {
 
   // BlockFormat shortcuts keys
   for (let i = 1; i <= 6; i++) {
-    editor.addShortcut('access+' + i, '', [ 'FormatBlock', false, 'h' + i ]);
+    editor.addShortcut('meta+alt+' + i, '', [ 'FormatBlock', false, 'h' + i ]);
   }
 
   editor.addShortcut('access+7', '', [ 'FormatBlock', false, 'p' ]);
