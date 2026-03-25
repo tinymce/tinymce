@@ -42,15 +42,7 @@ export const StandardTooltip: Story = {
   args: {
     text: 'Message',
     oversizeContent: false,
-    alwaysShow: false,
-  },
-};
-
-export const StandardTooltipWithoutTooltip: Story = {
-  args: {
-    text: 'Message',
-    oversizeContent: false,
-    alwaysShow: false,
+    alwaysShow: true,
   },
 };
 

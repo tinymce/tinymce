@@ -4,18 +4,22 @@ import { Children, cloneElement, createContext, forwardRef, isValidElement, useC
 
 interface TooltipState {
   readonly isOpen: boolean;
+  readonly renderComponents: boolean;
   readonly delayForShow: number;
   readonly delayForHide: number;
   readonly setIsOpen: (isOpen: boolean) => void;
+  readonly setRenderComponents: (isOpen: boolean) => void;
   readonly contentRef: React.MutableRefObject<HTMLDivElement | null>;
   readonly triggerRef: React.MutableRefObject<HTMLDivElement | null>;
 }
 
 const defaultState: TooltipState = {
   isOpen: false,
+  renderComponents: true,
   delayForShow: 300,
   delayForHide: 100,
   setIsOpen: Fun.noop,
+  setRenderComponents: Fun.noop,
   contentRef: { current: null },
   triggerRef: { current: null },
 };
@@ -28,7 +32,7 @@ interface TriggerSpecificProps {
 interface TriggerInternalProps extends PropsWithChildren<HTMLAttributes<HTMLElement>>, TriggerSpecificProps { }
 
 const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, showCondition, ...props }, ref) => {
-  const { setIsOpen, triggerRef } = useContext(TooltipContext);
+  const { renderComponents, setIsOpen, triggerRef, setRenderComponents } = useContext(TooltipContext);
 
   const shouldRender = () => {
     if (showCondition === 'overflow') {
@@ -40,16 +44,21 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, s
     return true;
   };
 
-  const [ renderTooltip, renderTooltipSet ] = useState(true);
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useLayoutEffect(() => {
-    renderTooltipSet(shouldRender());
+    const rerender = shouldRender();
+    if (renderComponents === rerender) {
+      return;
+    }
+    setRenderComponents(rerender);
   });
 
   useEffect(() => {
     const handleResize = () => {
-      renderTooltipSet(shouldRender());
+      const rerender = shouldRender();
+      if (renderComponents === rerender) {
+        return;
+      }
+      setRenderComponents(rerender);
     };
 
     window.addEventListener('resize', handleResize);
@@ -89,7 +98,7 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, s
     }
   };
 
-  if (renderTooltip) {
+  if (renderComponents) {
     return cloneElement(theChild, {
       ...props,
       ref: refCallback,
@@ -151,7 +160,7 @@ const hideContentPopover = (content: HTMLElement) => {
 };
 
 const Content = forwardRef<HTMLDivElement, ContentProps>(({ text }, ref) => {
-  const { isOpen, contentRef, triggerRef, delayForShow, delayForHide } = useContext(TooltipContext);
+  const { renderComponents, isOpen, contentRef, triggerRef, delayForShow, delayForHide } = useContext(TooltipContext);
 
   useLayoutEffect(() => {
     if (Type.isNonNullable(contentRef.current)) {
@@ -169,7 +178,11 @@ const Content = forwardRef<HTMLDivElement, ContentProps>(({ text }, ref) => {
         };
       }
     }
-  }, [ isOpen, contentRef, triggerRef, delayForShow, delayForHide ]);
+  }, [ renderComponents, isOpen, contentRef, triggerRef, delayForShow, delayForHide ]);
+
+  if (!renderComponents) {
+    return null;
+  }
 
   return (
     <div ref={(el: HTMLDivElement) => {
@@ -192,6 +205,7 @@ const Content = forwardRef<HTMLDivElement, ContentProps>(({ text }, ref) => {
 const Root: FC<PropsWithChildren> = ({ children }) => {
   const [ state, setState ] = useState({
     isOpen: false,
+    renderComponents: true,
     delayForShow: 300,
     delayForHide: 100,
   });
@@ -202,12 +216,17 @@ const Root: FC<PropsWithChildren> = ({ children }) => {
     setState((prevState) => ({ ...prevState, isOpen }));
   }, []);
 
+  const setRenderComponents = useCallback((renderComponents: boolean) => {
+    setState((prevState) => ({ ...prevState, renderComponents }));
+  }, []);
+
   const contextValue = useMemo(() => ({
     ...state,
     setIsOpen,
+    setRenderComponents,
     contentRef,
     triggerRef
-  }), [ state, setIsOpen ]);
+  }), [ state, setIsOpen, setRenderComponents ]);
 
   return <TooltipContext.Provider value={contextValue}>{children}</TooltipContext.Provider>;
 };
