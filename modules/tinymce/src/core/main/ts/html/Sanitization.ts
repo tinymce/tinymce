@@ -1,5 +1,5 @@
 import { Arr, Fun, Obj, Optional, Strings, Type } from '@ephox/katamari';
-import { Attribute, Html, NodeTypes, Remove, Replication, SugarElement } from '@ephox/sugar';
+import { Attribute, Html, NodeTypes, Remove, Replication, SugarElement, TextContent } from '@ephox/sugar';
 import createDompurify, { type Config, type DOMPurify, type UponSanitizeAttributeHookEvent, type UponSanitizeElementHookEvent } from 'dompurify';
 
 import type { DomParserSettings } from '../api/html/DomParser';
@@ -189,7 +189,7 @@ const restoreValidContent = (node: Node) => {
 
   if (ElementType.isScript(element)) {
     Optional.from(Attribute.get(element, 'data-mce-tmp')).each((content) => {
-      Html.set(element, content);
+      TextContent.set(element, content);
       Attribute.remove(element, 'data-mce-tmp');
     });
   }
