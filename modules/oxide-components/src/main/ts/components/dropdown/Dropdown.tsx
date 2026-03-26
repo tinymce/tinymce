@@ -1,4 +1,4 @@
-import { Throttler, Type } from '@ephox/katamari';
+import { Id, Throttler, Type } from '@ephox/katamari';
 import { Children, cloneElement, forwardRef, isValidElement, useCallback, useEffect, useMemo, useRef, useState, type FC, type HTMLAttributes, type MouseEvent, type PropsWithChildren, type ReactElement, type KeyboardEvent } from 'react';
 
 import { Bem } from '../../main';
@@ -14,8 +14,8 @@ interface DropdownContentProps extends PropsWithChildren<HTMLAttributes<HTMLDivE
   readonly onOpenChange?: (isOpen: boolean) => void;
 }
 
-const Content = forwardRef<HTMLDivElement, DropdownContentProps>(({ children, onOpenChange, ...props }, ref) => {
-  const { triggerRef, side, align, gap, contentRef, triggerEvents, debouncedHideHoverablePopover, isOpen, setIsOpen } = useDropdown();
+const Content = forwardRef<HTMLDivElement, DropdownContentProps>(({ children, onOpenChange, className, ...props }, ref) => {
+  const { triggerRef, side, align, gap, contentRef, triggerEvents, debouncedHideHoverablePopover, isOpen, setIsOpen, popupAnchor } = useDropdown();
 
   const updateToggleState = useCallback((event: ToggleEvent) => {
     setIsOpen(event.newState === 'open');
@@ -86,7 +86,7 @@ const Content = forwardRef<HTMLDivElement, DropdownContentProps>(({ children, on
   const area = PositioningUtils.getPositionArea(side, align);
   return <div
     popover='auto'
-    className={Bem.block('tox-dropdown-content')}
+    className={`${Bem.block('tox-dropdown-content')}${Type.isNonNullable(className) ? ` ${className}` : ''}`}
     ref={(el: HTMLDivElement) => {
       contentRef.current = el;
       if (Type.isFunction(ref)) {
@@ -100,6 +100,7 @@ const Content = forwardRef<HTMLDivElement, DropdownContentProps>(({ children, on
       ...insetProps,
       // @ts-expect-error - TODO: Remove this expect error once we've upgraded to React 19+
       positionArea: area,
+      positionAnchor: popupAnchor
     }}
   >
     {isOpen && children}
@@ -109,7 +110,7 @@ const Content = forwardRef<HTMLDivElement, DropdownContentProps>(({ children, on
 interface TriggerInternalProps extends PropsWithChildren<HTMLAttributes<HTMLElement>> {}
 
 const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, ...props }, ref) => {
-  const { triggerRef, contentRef, triggerEvents, debouncedHideHoverablePopover, isOpen } = useDropdown();
+  const { triggerRef, contentRef, triggerEvents, debouncedHideHoverablePopover, isOpen, popupAnchor } = useDropdown();
 
   let child = Children.toArray(children)[0];
   if (!isValidElement(child)) {
@@ -118,11 +119,7 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
   child = child as ReactElement;
 
   const showContentPopover = () => {
-    // @ts-expect-error - TODO: Remove this expect error once we've upgraded to React 19+
-    contentRef.current?.showPopover({
-      // specifying the source sets up an implicit `anchor` relationship
-      source: triggerRef.current
-    });
+    contentRef.current?.showPopover();
   };
 
   const onHoverTriggerProps = {
@@ -170,6 +167,10 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
 
   return cloneElement(child, {
     ...props,
+    style: {
+      ...child.props.style,
+      anchorName: popupAnchor
+    },
     ref: (el: HTMLElement) => {
       triggerRef.current = el;
       if (Type.isFunction(child.props.ref)) {
@@ -195,7 +196,8 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
     },
     ...triggerEvents.includes('click') && onClickTriggerProps,
     ...triggerEvents.includes('hover') && onHoverTriggerProps,
-    ...triggerEvents.includes('arrows') && onArrowTriggerProps
+    ...triggerEvents.includes('arrows') && onArrowTriggerProps,
+
   });
 });
 
@@ -224,9 +226,13 @@ const Root: FC<DropdownProps> = ({ children, side = 'top', align = 'start', gap 
     }
   }, 300), []);
 
+  // generate one ID per trigger/content combination, not every time
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const popupAnchor = useMemo(() => `--${Id.generate('dropdown')}`, [ triggerRef, contentRef ]);
+
   const contextValue = useMemo(() => {
-    return { triggerRef, contentRef, side, align, gap, triggerEvents, debouncedHideHoverablePopover, isOpen, setIsOpen };
-  }, [ triggerRef, contentRef, side, align, gap, triggerEvents, debouncedHideHoverablePopover, isOpen ]);
+    return { triggerRef, contentRef, side, align, gap, triggerEvents, debouncedHideHoverablePopover, isOpen, setIsOpen, popupAnchor };
+  }, [ triggerRef, contentRef, side, align, gap, triggerEvents, debouncedHideHoverablePopover, isOpen, popupAnchor ]);
 
   return <DropdownContext.Provider value={contextValue}>{children}</DropdownContext.Provider>;
 };

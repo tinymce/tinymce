@@ -35,7 +35,7 @@ const defaultToolbar = [
     name: 'history', items: [ 'undo', 'redo' ]
   },
   {
-    name: 'ai', items: [ 'aidialog', 'aishortcuts' ]
+    name: 'ai', items: [ 'tinymceai-chat', 'tinymceai-review', 'tinymceai-quickactions', 'aidialog', 'aishortcuts' ]
   },
   {
     name: 'styles', items: [ 'styles' ]

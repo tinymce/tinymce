@@ -1,0 +1,6 @@
+project: sugar
+kind: Fixed
+body: Updated `preventClicksOnLinksScript` to correctly handle anchor links.
+time: 2026-03-25T12:00:00+00:00
+custom:
+    Issue: TINY-11740
