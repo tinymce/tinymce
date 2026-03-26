@@ -14,9 +14,9 @@ set -euo pipefail
 #
 # SETUP:
 #   This script must be:
-#   1. Executable: chmod +x scripts/lerna-libs-version-hook.sh
+#   1. Executable: chmod +x bin/lerna-libs-version-hook.sh
 #   2. Configured in root package.json:
-#      "version": "./scripts/lerna-libs-version-hook.sh"
+#      "version": "./bin/lerna-libs-version-hook.sh"
 #
 # This hook:
 #   - Generates changelogs via changie for all public packages

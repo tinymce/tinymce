@@ -378,7 +378,7 @@ check_prerequisites() {
     fi
 
     # Verify lerna lifecycle hook is configured
-    hook_script="$PROJECT_ROOT/scripts/lerna-libs-version-hook.sh"
+    hook_script="$PROJECT_ROOT/bin/lerna-libs-version-hook.sh"
     if [[ ! -f "$hook_script" ]]; then
         print_error "Error: Lerna changelog hook not found: $hook_script"
         exit 1
@@ -395,7 +395,7 @@ check_prerequisites() {
     if ! grep -q '"version".*lerna-libs-version-hook.sh' "$package_json" 2>/dev/null; then
         print_error "Error: package.json is missing the version lifecycle script"
         print_warning "Add this to the scripts section of package.json:"
-        print_info '    "version": "./scripts/lerna-libs-version-hook.sh"'
+        print_info '    "version": "./bin/lerna-libs-version-hook.sh"'
         exit 1
     fi
 }
