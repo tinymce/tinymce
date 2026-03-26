@@ -1,6 +1,0 @@
-project: agar
-kind: Added
-body: APIs for simulating typing into input elements.
-time: 2026-03-25T12:00:00+00:00
-custom:
-    Issue: TINY-11986

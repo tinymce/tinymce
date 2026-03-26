@@ -1,6 +1,0 @@
-project: agar
-kind: Added
-body: Modern keyboard simulation helpers.
-time: 2026-03-25T12:00:00+00:00
-custom:
-    Issue: TINY-8724
