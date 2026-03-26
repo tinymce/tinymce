@@ -239,4 +239,16 @@ describe('browser.tinymce.core.delete.DeleteElementTest', () => {
     TinyAssertions.assertContent(editor, '<p>&nbsp;b</p>');
     TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
   });
+
+  it('TINY-14149: Delete when the body is selected', () => {
+    const editor: Editor = hook.editor();
+    editor.setContent('<table><tbody><tr><td>Test</td></tr></tbody></table><p></p><p>Content</p>');
+    const range = editor.getDoc().createRange();
+    range.setStart(editor.getBody(), 0);
+    range.setEnd(editor.getBody(), 1);
+    editor.selection.setRng(range);
+    deleteElementPath(editor, false, [ ]);
+    TinyAssertions.assertContent(editor, '<p>&nbsp;</p><p>Content</p>');
+    TinyAssertions.assertSelection(editor, [ 0 ], 0, [ 0 ], 0);
+  });
 });
