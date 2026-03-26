@@ -1,0 +1,6 @@
+project: darwin
+kind: Fixed
+body: Cursor movement to noneditable table cells unexpectedly jumping to the editor start.
+time: 2026-03-25T12:00:00+00:00
+custom:
+    Issue: TINY-10127

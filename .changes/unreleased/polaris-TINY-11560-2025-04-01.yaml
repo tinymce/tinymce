@@ -1,0 +1,6 @@
+project: polaris
+kind: Fixed
+body: Search.findmany() would sometimes produce overlapping areas
+time: 2025-04-01T07:44:48.91709+02:00
+custom:
+    Issue: TINY-11560

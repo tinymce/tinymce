@@ -1,0 +1,6 @@
+project: agar
+kind: Fixed
+body: Streamed-response abort handling and added pause controller support.
+time: 2026-03-25T12:00:00+00:00
+custom:
+    Issue: TINY-13219

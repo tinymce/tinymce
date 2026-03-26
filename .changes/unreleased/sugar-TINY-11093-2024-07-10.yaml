@@ -1,0 +1,6 @@
+project: sugar
+kind: Removed
+body: Fallback code which was only required on browsers that are no longer supported.
+time: 2024-07-10T17:19:53.587059+10:00
+custom:
+  Issue: TINY-11093

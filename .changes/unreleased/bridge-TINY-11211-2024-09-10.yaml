@@ -1,0 +1,6 @@
+project: bridge
+kind: Added
+body: New `contexts` that stores context configurations.
+time: 2024-09-10T12:48:06.276425+08:00
+custom:
+  Issue: TINY-11211

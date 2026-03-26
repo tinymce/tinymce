@@ -1,0 +1,7 @@
+project: alloy
+kind: Fixed
+body: Dialog title was not announced in macOS VoiceOver, dialogs now use `aria-label`
+ instead of `aria-labelledby` on macOS.
+time: 2024-04-02T21:45:37.708669+08:00
+custom:
+  Issue: TINY-10808

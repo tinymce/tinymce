@@ -1,0 +1,6 @@
+project: katamari
+kind: Improved
+body: Split `FunTest` tests into separate `it` blocks.
+time: 2024-11-08T10:42:44.705655+10:00
+custom:
+  Issue: TINY-7494
