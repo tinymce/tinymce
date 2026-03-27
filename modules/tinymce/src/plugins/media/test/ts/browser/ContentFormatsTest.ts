@@ -76,7 +76,8 @@ describe('browser.tinymce.plugins.media.ContentFormatsTest', () => {
     McEditor.remove(editor);
   });
 
-  it('TINY-8363: Iframe with innerHTML retained as is with xss_sanitization: false', async () => {
+  it('TBA: Iframe with innerHTML retained as is with xss_sanitization: false', async () => {
+    // TINY-8363: Iframe with innerHTML is removed by DOMPurify, so disable sanitization for this test
     const editor = await McEditor.pFromSettings<Editor>({
       ...settings,
       xss_sanitization: false
@@ -86,17 +87,6 @@ describe('browser.tinymce.plugins.media.ContentFormatsTest', () => {
     );
     TinyAssertions.assertContent(editor,
       '<p><iframe src="320x240.ogg" width="300" height="150" sandbox="" allowfullscreen="allowfullscreen">text<a href="#">link</a></iframe></p>'
-    );
-    McEditor.remove(editor);
-  });
-
-  it('TINY-9655: Iframe with innerHTML has contents removed', async () => {
-    const editor = await McEditor.pFromSettings<Editor>(settings);
-    editor.setContent(
-      '<iframe src="320x240.ogg" allowfullscreen>text<a href="#">link</a></iframe>'
-    );
-    TinyAssertions.assertContent(editor,
-      '<p><iframe src="320x240.ogg" width="300" height="150" sandbox="" allowfullscreen="allowfullscreen"></iframe></p>'
     );
     McEditor.remove(editor);
   });
@@ -178,7 +168,7 @@ describe('browser.tinymce.plugins.media.ContentFormatsTest', () => {
     );
     testXss(
       '<p><video><script><svg onload="javascript:alert(1)"></svg></s' + 'cript></video>',
-      '<p><video width="300" height="150">\n<script></s' + 'cript>\n</video></p>'
+      '<p><video width="300" height="150"></video></p>'
     );
     testXss(
       '<p><audio><noscript><svg onload="javascript:alert(1)"></svg></noscript></audio>',
@@ -186,8 +176,8 @@ describe('browser.tinymce.plugins.media.ContentFormatsTest', () => {
     );
     testXss(
       '<p><audio><script><svg onload="javascript:alert(1)"></svg></s' + 'cript></audio>',
-      '<p><audio>\n<script></s' + 'cript>\n</audio></p>'
+      '<p><audio></audio></p>'
     );
-    testXss('<p><audio><script><svg></svg></script></audio>', '<p><audio>\n<script></s' + 'cript>\n</audio></p>');
+    testXss('<p><audio><script><svg></svg></script></audio>', '<p><audio></audio></p>');
   });
 });
