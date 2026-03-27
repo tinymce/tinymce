@@ -4,7 +4,6 @@
 @tinymceai-response-status-icon-height: max(24px, calc(@font-size-sm + 4px));
 
 .tox-ai when (@custom-properties-enabled = true) {
-  --tox-private-background-secondary: hsl( from var(--tox-private-background-color) h s calc(l - 6));
   --tox-private-neutral-20: hsl( from var(--tox-private-background-color) h s calc(l - 11));
   --tox-private-tinymceai-border-width: 1px;
   --tox-private-tinymceai-focus-border-width: 2px;
@@ -101,7 +100,7 @@
   }
 
   .tox-ai__user-prompt__text {
-    background-color: var(--tox-private-background-secondary, darken(@background-color, 6%));
+    background-color: var(--tox-private-background-secondary, contrast(@background-color, darken(@background-color, 6%), lighten(@background-color, 7%)));
     padding: var(--tox-private-pad-sm, @pad-sm) calc(var(--tox-private-pad-md, @pad-md) * 0.75);
     border-radius: var(--tox-private-control-border-radius, @control-border-radius);
     max-width: 80%;
@@ -136,7 +135,7 @@
 
     &--review {
       &:not(:has(.tox-sidebar-content__message-text)) {
-        background-color: var(--tox-private-background-secondary, darken(@background-color, 6%));
+        background-color: var(--tox-private-background-secondary, contrast(@background-color, darken(@background-color, 6%), lighten(@background-color, 7%)));
       }
       border: none;
     }
@@ -475,13 +474,13 @@
     cursor: pointer;
 
     &.tox-ai-chat-history-list__item--active {
-      background-color: var(--tox-private-background-secondary, darken(@background-color, 6%));
+      background-color: var(--tox-private-background-secondary, contrast(@background-color, darken(@background-color, 6%), lighten(@background-color, 7%)));
     }
     &:focus, &:focus-visible {
-      background-color: var(--tox-private-background-secondary, darken(@background-color, 6%));
+      background-color: var(--tox-private-background-secondary, contrast(@background-color, darken(@background-color, 6%), lighten(@background-color, 7%)));
     }
     &.tox-ai-chat-history-list__item-edit-title {
-      background-color: var(--tox-private-background-secondary, darken(@background-color, 6%));
+      background-color: var(--tox-private-background-secondary, contrast(@background-color, darken(@background-color, 6%), lighten(@background-color, 7%)));
       flex-direction: column;
     }
   }
