@@ -1,4 +1,4 @@
-import { Fun, Obj, Strings, Type } from '@ephox/katamari';
+import { Fun, HashMap, HashSet, Obj, Strings, Type } from '@ephox/katamari';
 
 import type Editor from './Editor';
 import type { EditorOptions, NormalizedEditorOptions } from './OptionTypes';
@@ -13,8 +13,14 @@ interface ProcessorError {
   message: string;
 }
 
+type ProcessorResult<T> =
+  | ProcessorSuccess<T>
+  | ProcessorError;
+
 type SimpleProcessor = (value: unknown) => boolean;
-type Processor<T> = (value: unknown) => ProcessorSuccess<T> | ProcessorError;
+type Processor<T> = (value: unknown) => ProcessorResult<T>;
+
+type ListenerFn<T> = (newValue: T, oldValue: T) => void;
 
 export interface BuiltInOptionTypeMap {
   'string': string;
@@ -34,6 +40,7 @@ interface BaseOptionSpec {
   immutable?: boolean;
   deprecated?: boolean;
   docsUrl?: string;
+  observable?: false;
 }
 
 export interface BuiltInOptionSpec<K extends BuiltInOptionType> extends BaseOptionSpec {
@@ -149,6 +156,19 @@ export interface Options {
   isSet: (name: string) => boolean;
 
   /**
+   * Subscribe to value changes for a registered option.
+   * The listener is called with (newValue, oldValue) after each successful `set()` or `unset()`.
+   * Does not fire on initial subscription.
+   * Options registered with `observable: false` cannot be subscribed to.
+   *
+   * @method subscribe
+   * @param {String} name Name of a registered option.
+   * @param {Function} listener Callback receiving (newValue, oldValue) after each change.
+   * @return {Function} Unsubscribe function — call it to stop receiving notifications.
+   */
+  subscribe: <T>(name: string, listener: ListenerFn<T>) => () => void;
+
+  /**
    * Logs the initial raw editor options to the console.
    *
    * @method debug
@@ -185,9 +205,9 @@ const getBuiltInProcessor = <K extends BuiltInOptionType>(type: K): Processor<Bu
       case 'string[]':
         return stringListProcessor;
       case 'object[]':
-        return (val) => Type.isArrayOf(val, Type.isObject);
+        return (val: unknown) => Type.isArrayOf(val, Type.isObject);
       case 'regexp':
-        return (val) => Type.is(val, RegExp);
+        return (val: unknown) => Type.is(val, RegExp);
       default:
         return Fun.always;
     }
@@ -204,10 +224,10 @@ const getErrorMessage = (message: string, result: ProcessorError): string => {
   return message + additionalText;
 };
 
-const isValidResult = <T>(result: ProcessorSuccess<T> | ProcessorError): result is ProcessorSuccess<T> =>
+const isValidResult = <T>(result: ProcessorResult<T>): result is ProcessorSuccess<T> =>
   result.valid;
 
-const processValue = <T, U>(value: T, processor: SimpleProcessor | Processor<U>, message: string = ''): ProcessorSuccess<U> | ProcessorError => {
+const processValue = <T, U>(value: T, processor: SimpleProcessor | Processor<U>, message: string = ''): ProcessorResult<U> => {
   const result = processor(value);
   if (Type.isBoolean(result)) {
     // Note: Need to cast here as if a boolean is returned then we're guaranteed to be returning the same value
@@ -234,17 +254,30 @@ const processDefaultValue = <T, U>(name: string, defaultValue: T, processor: Pro
 const create = (editor: Editor, initialOptions: Record<string, unknown>, rawInitialOptions: Record<string, unknown> = initialOptions): Options => {
   const registry: Record<string, OptionSpec<any, any>> = {};
   const values: Record<string, any> = {};
+  const subscribers = new Map<string, Set<ListenerFn<any>>>();
 
-  const setValue = <T, U>(name: string, value: T, processor: SimpleProcessor | Processor<U>): boolean => {
+  const setValue = <T, U>(name: string, value: T, processor: SimpleProcessor | Processor<U>, opts: { notify: boolean }): boolean => {
     const result = processValue(value, processor);
     if (isValidResult(result)) {
+      const oldValue = get(name);
       values[name] = result.value;
+      if (opts.notify) {
+        notifySubscribers(name, result.value, oldValue);
+      }
       return true;
     } else {
       // eslint-disable-next-line no-console
       console.warn(getErrorMessage(`Invalid value passed for the ${name} option`, result));
       return false;
     }
+  };
+
+  const notifySubscribers = (name: string, newValue: unknown, oldValue: unknown): void => {
+    HashMap.get(subscribers, name).each((listeners) => {
+      HashSet.each(listeners, (listener) => {
+        listener(newValue, oldValue);
+      });
+    });
   };
 
   const register = (name: string, spec: BuiltInOptionSpec<any> | OptionSpec<any, any>) => {
@@ -262,7 +295,7 @@ const create = (editor: Editor, initialOptions: Record<string, unknown>, rawInit
 
     // Setup the initial values
     const initValue = Obj.get(values, name).orThunk(() => Obj.get(initialOptions, name));
-    initValue.each((value) => setValue(name, value, processor));
+    initValue.each((value) => setValue(name, value, processor, { notify: false }));
   };
 
   const isRegistered = (name: string) =>
@@ -278,28 +311,51 @@ const create = (editor: Editor, initialOptions: Record<string, unknown>, rawInit
       // eslint-disable-next-line no-console
       console.warn(`"${name}" is not a registered option. Ensure the option has been registered before setting a value.`);
       return false;
-    } else {
-      const spec = registry[name];
-      if (spec.immutable) {
-        // eslint-disable-next-line no-console
-        console.error(`"${name}" is an immutable option and cannot be updated`);
-        return false;
-      } else {
-        return setValue(name, value, spec.processor);
-      }
     }
+
+    const spec = registry[name];
+    if (spec.immutable) {
+      // eslint-disable-next-line no-console
+      console.error(`"${name}" is an immutable option and cannot be updated`);
+      return false;
+    }
+
+    return setValue(name, value, spec.processor, { notify: true });
   };
 
   const unset = (name: string) => {
     const registered = isRegistered(name);
     if (registered) {
+      const oldValue = get(name);
       delete values[name];
+      notifySubscribers(name, get(name), oldValue);
     }
     return registered;
   };
 
   const isSet = (name: string) =>
     Obj.has(values, name);
+
+  const subscribe = <T>(name: string, listener: ListenerFn<T>): () => void => {
+    if (!isRegistered(name)) {
+      // eslint-disable-next-line no-console
+      console.warn(`"${name}" is not a registered option. Ensure the option has been registered before subscribing.`);
+      return Fun.noop;
+    }
+    const spec = registry[name];
+    if (spec.observable === false) {
+      // eslint-disable-next-line no-console
+      console.warn(`"${name}" is not observable and cannot be subscribed to.`);
+      return Fun.noop;
+    }
+    if (!subscribers.has(name)) {
+      subscribers.set(name, new Set());
+    }
+    subscribers.get(name)?.add(listener);
+    return () => {
+      subscribers.get(name)?.delete(listener);
+    };
+  };
 
   const debug = () => {
     try {
@@ -332,6 +388,7 @@ const create = (editor: Editor, initialOptions: Record<string, unknown>, rawInit
     set,
     unset,
     isSet,
+    subscribe,
     debug,
   };
 };

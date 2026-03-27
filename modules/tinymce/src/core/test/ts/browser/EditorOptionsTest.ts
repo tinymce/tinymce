@@ -1,4 +1,4 @@
-import { beforeEach, describe, it } from '@ephox/bedrock-client';
+import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Fun, Type } from '@ephox/katamari';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -208,6 +208,109 @@ describe('browser.tinymce.core.EditorOptionsTest', () => {
     // A different processor should drop the old value and use the new default
     options.register('string', { processor: 'number', default: 5 });
     assert.equal(options.get('string'), 5);
+  });
+
+  context('subscribe', () => {
+    it('TINY-14042: should call listener with (newValue, oldValue) after a successful set()', () => {
+      const options = create({});
+      options.register('foo', { processor: 'string', default: 'initial' });
+
+      const calls: Array<[ string, string ]> = [];
+      options.subscribe<string>('foo', (newVal, oldVal) => calls.push([ newVal, oldVal ]));
+
+      options.set('foo', 'first');
+      options.set('foo', 'second');
+
+      assert.deepEqual(calls, [[ 'first', 'initial' ], [ 'second', 'first' ]]);
+    });
+
+    it('TINY-14042: should not call listener on failed set() (invalid value)', () => {
+      const options = create({});
+      options.register('foo', { processor: 'string' });
+
+      let called = false;
+      options.subscribe('foo', () => {
+        called = true;
+      });
+
+      options.set('foo', 123 as any);
+      assert.isFalse(called);
+    });
+
+    it('TINY-14042: should not call listener on set() for an immutable option', () => {
+      const options = create({});
+      options.register('foo', { processor: 'string', immutable: true, default: 'locked' });
+
+      let called = false;
+      options.subscribe('foo', () => {
+        called = true;
+      });
+
+      options.set('foo', 'new' as any);
+      assert.isFalse(called);
+    });
+
+    it('TINY-14042: should call listener on unset() with (newDefault, oldValue)', () => {
+      const options = create({});
+      options.register('foo', { processor: 'string', default: 'default' });
+      options.set('foo', 'custom');
+
+      const calls: Array<[ string | undefined, string | undefined ]> = [];
+      options.subscribe<string>('foo', (newVal, oldVal) => calls.push([ newVal, oldVal ]));
+
+      options.unset('foo');
+
+      assert.deepEqual(calls, [[ 'default', 'custom' ]]);
+    });
+
+    it('TINY-14042: should notify all listeners on the same option', () => {
+      const options = create({});
+      options.register('foo', { processor: 'number', default: 0 });
+
+      const aLog: number[] = [];
+      const bLog: number[] = [];
+      options.subscribe<number>('foo', (val) => aLog.push(val));
+      options.subscribe<number>('foo', (val) => bLog.push(val));
+
+      options.set('foo', 42);
+
+      assert.deepEqual(aLog, [ 42 ]);
+      assert.deepEqual(bLog, [ 42 ]);
+    });
+
+    it('TINY-14042: should stop notifying after unsubscribe', () => {
+      const options = create({});
+      options.register('foo', { processor: 'string', default: 'a' });
+
+      const calls: string[] = [];
+      const unsubscribe = options.subscribe<string>('foo', (val) => calls.push(val));
+
+      options.set('foo', 'b');
+      unsubscribe();
+      options.set('foo', 'c');
+
+      assert.deepEqual(calls, [ 'b' ]);
+    });
+
+    it('TINY-14042: observable: false — subscribe warns and returns a no-op; set() does not notify', () => {
+      const options = create({});
+      options.register('foo', { processor: 'string', observable: false, default: 'x' });
+
+      let called = false;
+      options.subscribe('foo', () => {
+        called = true;
+      });
+
+      options.set('foo', 'y');
+      assert.isFalse(called);
+    });
+
+    it('TINY-14042: should warn and return no-op when subscribing to an unregistered option', () => {
+      const options = create({});
+      const unsubscribe = options.subscribe('nonexistent', Fun.noop);
+      // unsubscribe should be callable without error
+      assert.doesNotThrow(() => unsubscribe());
+    });
   });
 
   it('TINY-8206: isSet should return true when set or an initial value exists', () => {
