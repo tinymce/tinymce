@@ -1,6 +1,0 @@
-project: katamari
-kind: Changed
-body: Translation helpers now normalize replacements using the ellipsis character.
-time: 2026-03-25T12:00:00+00:00
-custom:
-    Issue: TINY-12155

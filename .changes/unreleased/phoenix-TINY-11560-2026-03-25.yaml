@@ -1,6 +1,0 @@
-project: phoenix
-kind: Fixed
-body: No longer allows overlapping text regions when matching ranges.
-time: 2026-03-25T12:00:00+00:00
-custom:
-    Issue: TINY-11560

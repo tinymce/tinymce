@@ -1,6 +1,0 @@
-project: bridge
-kind: Added
-body: Focus support to view button APIs.
-time: 2026-03-25T12:00:00+00:00
-custom:
-    Issue: TINY-11122
