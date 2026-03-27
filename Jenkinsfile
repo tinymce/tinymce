@@ -45,6 +45,8 @@ def runRemoteTests(String name, String browser, String provider, String platform
   def browserVersion = version != null ? " --browserVersion=${version}" : ""
   def bedrockCommand =
   "yarn browser-test" +
+    " --bundler=rspack" +
+    " --skipTypecheck" +
     " --chunk=2000" +
     " --bedrock-browser=" + browser +
     " --remote=" + provider +
