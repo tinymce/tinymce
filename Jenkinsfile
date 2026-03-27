@@ -45,6 +45,8 @@ def runRemoteTests(String name, String browser, String provider, String platform
   def browserVersion = version != null ? " --browserVersion=${version}" : ""
   def bedrockCommand =
   "yarn browser-test" +
+    " --bundler=rspack" +
+    " --skipTypecheck" +
     " --chunk=2000" +
     " --bedrock-browser=" + browser +
     " --remote=" + provider +
@@ -61,8 +63,6 @@ def runRemoteTests(String name, String browser, String provider, String platform
 def runBrowserTests(String name, String browser, String platform, String bucket, String buckets, Boolean runAll) {
   def bedrockCommand =
     "yarn grunt browser-auto" +
-      " --bundler=rspack" +
-      " --skipTypecheck" +
       " --chunk=2000" +
       " --bedrock-os=" + platform +
       " --bedrock-browser=" + browser +
