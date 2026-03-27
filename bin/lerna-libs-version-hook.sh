@@ -14,9 +14,13 @@ set -euo pipefail
 #
 # SETUP:
 #   This script must be:
-#   1. Executable: chmod +x scripts/lerna-changie-hook.sh
+#   1. Executable: chmod +x bin/lerna-libs-version-hook.sh
 #   2. Configured in root package.json:
-#      "version": "./scripts/lerna-changie-hook.sh"
+#      "version": "./bin/lerna-libs-version-hook.sh"
+#
+# This hook:
+#   - Generates changelogs via changie for all public packages
+#   - Updates dependency ranges in private packages (via update-private-deps.sh)
 #
 # Lerna lifecycle order:
 # 1. Update all package.json files with new versions
@@ -140,6 +144,14 @@ echo -e "${BLUE}  → Merging all changelogs${NC}"
 
 if ! changie merge; then
     echo -e "${RED}Error: Failed to merge changelogs${NC}"
+    exit 1
+fi
+
+echo ""
+
+# Update dependency ranges in private packages to match new library versions
+if ! "$SCRIPT_DIR/update-private-deps.sh"; then
+    echo -e "${RED}Error: Failed to update private package dependency ranges${NC}"
     exit 1
 fi
 
