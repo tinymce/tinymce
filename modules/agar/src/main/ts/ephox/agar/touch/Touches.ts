@@ -1,3 +1,4 @@
+import { Type } from '@ephox/katamari';
 import { type SugarElement, SugarLocation, SugarNode, Traverse } from '@ephox/sugar';
 
 const point = (type: string, element: SugarElement<Node>, x: number, y: number): void => {
@@ -15,7 +16,7 @@ const point = (type: string, element: SugarElement<Node>, x: number, y: number):
   };
 
   // Adapted from https://stackoverflow.com/a/42447620/11275515
-  if (typeof TouchEvent === 'function' && typeof Touch === 'function') {
+  if (Type.isFunction(TouchEvent) && Type.isFunction(Touch)) {
     const touchAction = new Touch(touch);
     const ev: TouchEvent = new TouchEvent(type, {
       cancelable: true,
