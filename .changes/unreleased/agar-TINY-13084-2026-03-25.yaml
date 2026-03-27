@@ -1,6 +1,0 @@
-project: agar
-kind: Added
-body: Abort request support to HTTP mocking APIs.
-time: 2026-03-25T12:00:00+00:00
-custom:
-    Issue: TINY-13084

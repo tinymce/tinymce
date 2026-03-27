@@ -1,6 +1,0 @@
-project: mcagar
-kind: Added
-body: Modern keyboard simulation helpers used by mcagar test APIs.
-time: 2026-03-25T12:00:00+00:00
-custom:
-    Issue: TINY-8724

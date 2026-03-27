@@ -1,6 +1,0 @@
-project: sugar
-kind: Fixed
-body: Handling issues for video elements.
-time: 2026-03-25T12:00:00+00:00
-custom:
-    Issue: TINY-12183
