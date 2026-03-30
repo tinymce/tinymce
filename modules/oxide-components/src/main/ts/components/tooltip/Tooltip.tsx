@@ -27,10 +27,10 @@ const defaultState: TooltipState = {
 };
 
 const TooltipContext = createContext<TooltipState>(defaultState);
- 
+
 interface TriggerInternalProps extends PropsWithChildren<HTMLAttributes<HTMLElement>> { }
 
-const isOverflowing = (element: HTMLElement) => (element.offsetWidth < element.scrollWidth)
+const isOverflowing = (element: HTMLElement) => (element.offsetWidth < element.scrollWidth);
 
 const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, ...props }, ref) => {
   const { renderComponents, setIsOpen, showCondition, triggerRef, setRenderComponents } = useContext(TooltipContext);
@@ -222,9 +222,9 @@ const Root: FC<RootProps> = ({ children, showCondition }) => {
   }, []);
 
   const setRenderComponents = useCallback((renderComponents: boolean) => {
-    if(renderComponents) {
+    if (renderComponents) {
       setState((prevState) => ({ ...prevState, isOpen: false, renderComponents }));
-    }else {
+    } else {
       setState((prevState) => ({ ...prevState, renderComponents }));
     }
   }, []);
@@ -236,7 +236,7 @@ const Root: FC<RootProps> = ({ children, showCondition }) => {
     setRenderComponents,
     contentRef,
     triggerRef
-  }), [ state, setIsOpen, setRenderComponents ]);
+  }), [ state, setIsOpen, setRenderComponents, showCondition ]);
 
   return <TooltipContext.Provider value={contextValue}>{children}</TooltipContext.Provider>;
 };
