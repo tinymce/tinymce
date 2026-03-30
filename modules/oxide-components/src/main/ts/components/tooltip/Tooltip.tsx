@@ -11,6 +11,7 @@ interface TooltipState {
   readonly setRenderComponents: (isOpen: boolean) => void;
   readonly contentRef: React.MutableRefObject<HTMLDivElement | null>;
   readonly triggerRef: React.MutableRefObject<HTMLDivElement | null>;
+  readonly showCondition: 'always' | 'overflow';
 }
 
 const defaultState: TooltipState = {
@@ -19,20 +20,18 @@ const defaultState: TooltipState = {
   delayForShow: 300,
   delayForHide: 100,
   setIsOpen: Fun.noop,
+  showCondition: 'always',
   setRenderComponents: Fun.noop,
   contentRef: { current: null },
   triggerRef: { current: null },
 };
 
 const TooltipContext = createContext<TooltipState>(defaultState);
+ 
+interface TriggerInternalProps extends PropsWithChildren<HTMLAttributes<HTMLElement>> { }
 
-interface TriggerSpecificProps {
-  readonly showCondition?: 'always' | 'overflow';
-}
-interface TriggerInternalProps extends PropsWithChildren<HTMLAttributes<HTMLElement>>, TriggerSpecificProps { }
-
-const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, showCondition, ...props }, ref) => {
-  const { renderComponents, setIsOpen, triggerRef, setRenderComponents } = useContext(TooltipContext);
+const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, ...props }, ref) => {
+  const { renderComponents, setIsOpen, showCondition, triggerRef, setRenderComponents } = useContext(TooltipContext);
 
   const shouldRender = () => {
     if (showCondition === 'overflow') {
@@ -140,7 +139,7 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, s
 });
 
 const Trigger: React.ForwardRefExoticComponent<
-  PropsWithChildren & React.RefAttributes<HTMLElement> & TriggerSpecificProps
+  PropsWithChildren & React.RefAttributes<HTMLElement>
 > = TriggerImpl;
 
 interface ContentProps {
@@ -202,7 +201,11 @@ const Content = forwardRef<HTMLDivElement, ContentProps>(({ text }, ref) => {
   );
 });
 
-const Root: FC<PropsWithChildren> = ({ children }) => {
+interface RootProps extends PropsWithChildren {
+  readonly showCondition?: 'always' | 'overflow';
+}
+
+const Root: FC<RootProps> = ({ children, showCondition }) => {
   const [ state, setState ] = useState({
     isOpen: false,
     renderComponents: true,
@@ -223,6 +226,7 @@ const Root: FC<PropsWithChildren> = ({ children }) => {
   const contextValue = useMemo(() => ({
     ...state,
     setIsOpen,
+    showCondition: showCondition || 'always',
     setRenderComponents,
     contentRef,
     triggerRef
