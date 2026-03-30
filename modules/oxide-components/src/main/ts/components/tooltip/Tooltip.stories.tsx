@@ -16,7 +16,7 @@ const meta = {
   component: (props) =>
     <Tooltip.Root showCondition={props.alwaysShow ? 'always' : 'overflow'}>
       <Tooltip.Trigger>
-        <div title='hover' style={{ border: '1px solid #000', maxWidth: '200px', maxHeight: '200px', overflow: 'hidden' }}>{props.oversizeContent ? 'Hover Me, but Big'.repeat(50) : 'Hover Me'}</div>
+        <div title='hover' style={{ border: '1px solid #000', maxWidth: '200px', maxHeight: '200px', textOverflow: 'ellipsis' }}>{props.oversizeContent ? 'Hover Me, but Big'.repeat(50) : 'Hover Me'}</div>
       </Tooltip.Trigger>
       <Tooltip.Content text={props.text} />
     </Tooltip.Root>,

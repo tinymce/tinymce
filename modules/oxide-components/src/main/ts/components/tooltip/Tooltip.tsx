@@ -30,6 +30,8 @@ const TooltipContext = createContext<TooltipState>(defaultState);
  
 interface TriggerInternalProps extends PropsWithChildren<HTMLAttributes<HTMLElement>> { }
 
+const isOverflowing = (element: HTMLElement) => (element.offsetWidth < element.scrollWidth)
+
 const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, ...props }, ref) => {
   const { renderComponents, setIsOpen, showCondition, triggerRef, setRenderComponents } = useContext(TooltipContext);
 
@@ -37,7 +39,7 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
     if (showCondition === 'overflow') {
       const trigger = triggerRef.current;
 
-      return !!(trigger && (trigger.offsetHeight < trigger.scrollHeight || trigger.offsetWidth < trigger.scrollWidth));
+      return !!(trigger && isOverflowing(trigger));
     }
 
     return true;
