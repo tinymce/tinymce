@@ -222,7 +222,11 @@ const Root: FC<RootProps> = ({ children, showCondition }) => {
   }, []);
 
   const setRenderComponents = useCallback((renderComponents: boolean) => {
-    setState((prevState) => ({ ...prevState, renderComponents }));
+    if(renderComponents) {
+      setState((prevState) => ({ ...prevState, isOpen: false, renderComponents }));
+    }else {
+      setState((prevState) => ({ ...prevState, renderComponents }));
+    }
   }, []);
 
   const contextValue = useMemo(() => ({
