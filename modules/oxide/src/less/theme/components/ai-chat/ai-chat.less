@@ -510,6 +510,7 @@
   .tox-ai-chat-history-list__item-actions {
     display: flex;
     align-items: center;
+    min-width: calc(24px + (var(--tox-private-pad-xs, @pad-xs) + 1px)* 2); // width of icon + padding and border width, to avoid layout shift when actions appear on hover
   }
 
   .tox-ai-chat-history-list__item-content-title {
