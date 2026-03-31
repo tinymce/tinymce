@@ -1,4 +1,4 @@
-import { AddEventsBehaviour, type AlloyComponent, AlloyEvents, Dragging, Focusing, Keying, type SimpleSpec, SystemEvents, Tabstopping, Tooltipping } from '@ephox/alloy';
+import { AddEventsBehaviour, type AlloyComponent, AlloyEvents, ModernDragging, Dragging, Focusing, Keying, type SimpleSpec, SystemEvents, Tabstopping, Tooltipping } from '@ephox/alloy';
 import { Optional } from '@ephox/katamari';
 import { Attribute, SugarPosition } from '@ephox/sugar';
 
@@ -64,15 +64,30 @@ export const renderResizeHandler = (editor: Editor, providersBackstage: UiFactor
       'role': 'separator'
     },
     behaviours: [
-      Dragging.config({
-        mode: 'mouse',
-        repositionTarget: false,
-        onDrag: (comp, _target, delta) => {
+      ModernDragging.config({
+        onDrag: (comp, delta) => {
+          console.log('on drag');
           const newDimentions = Resize.resize(editor, delta, resizeType);
           setAriaValuetext(comp, newDimentions, resizeType);
         },
-        blockerClass: 'tox-blocker'
+        onDragStart: (comp) => {
+          console.log('drag start');
+          Tooltipping.setEnabled(comp, false);
+        },
+        onDragStop: (comp) => {
+          console.log('drag stop');
+          Tooltipping.setEnabled(comp, true);
+        },
       }),
+      // Dragging.config({
+      //   mode: 'mouse',
+      //   repositionTarget: false,
+      //   onDrag: (comp, _target, delta) => {
+      //     const newDimentions = Resize.resize(editor, delta, resizeType);
+      //     setAriaValuetext(comp, newDimentions, resizeType);
+      //   },
+      //   blockerClass: 'tox-blocker'
+      // }),
       Keying.config({
         mode: 'special',
         onLeft: (comp) => keyboardHandler(editor, comp, resizeType, -1, 0),

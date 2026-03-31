@@ -29,7 +29,8 @@ tinymce.init({
       success('https://www.google.com/logos/google.jpg');
     }, 5000);
   }),
-  height: 600
+  height: 600,
+  draggable_modal: true
 });
 
 export { };

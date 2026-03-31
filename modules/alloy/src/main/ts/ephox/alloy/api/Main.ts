@@ -51,6 +51,7 @@ import { Focusing } from './behaviour/Focusing';
 import { Highlighting } from './behaviour/Highlighting';
 import { Invalidating } from './behaviour/Invalidating';
 import { Keying, type KeyingConfigSpec } from './behaviour/Keying';
+import { ModernDragging } from './behaviour/ModernDragging';
 import { Pinching } from './behaviour/Pinching';
 import { Positioning } from './behaviour/Positioning';
 import { Receiving } from './behaviour/Receiving';
@@ -170,6 +171,7 @@ export {
   Disabling,
   Docking,
   Dragging,
+  ModernDragging,
   DragnDrop,
   Focusing,
   Highlighting,

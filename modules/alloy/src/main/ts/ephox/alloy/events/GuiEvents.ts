@@ -34,7 +34,10 @@ const setup = (container: SugarElement, rawSettings: GuiEventSettings): { unbind
     'mouseover',
     'mousemove',
     'mouseout',
-    'click'
+    'click',
+    'pointerdown',
+    'pointerup',
+    'pointermove'
   ];
 
   const tapEvent = TapEvent.monitor(settings);
@@ -56,7 +59,8 @@ const setup = (container: SugarElement, rawSettings: GuiEventSettings): { unbind
       'dragleave',
       'dragover',
       'drop',
-      'keyup'
+      'keyup',
+      'lostpointercapture'
     ]),
     (type) => DomEvent.bind(container, type, (event) => {
       tapEvent.fireIfReady(event, type).each((tapStopped) => {
