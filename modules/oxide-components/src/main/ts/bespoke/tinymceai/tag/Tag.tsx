@@ -48,7 +48,7 @@ export const Tag = forwardRef<HTMLDivElement | HTMLAnchorElement, TagProps>((pro
   const focusable = Type.isNullable(focusableProp) || closeable ? true : props.focusable;
   const sharedAttrs = {
     className: Bem.block('tox-tag'),
-    onKeyUp: (e: React.KeyboardEvent<HTMLDivElement | HTMLAnchorElement>) => {
+    onKeyDown: (e: React.KeyboardEvent<HTMLDivElement | HTMLAnchorElement>) => {
       if (closeable && [ 'Backspace', 'Delete' ].includes(e.key) && !disabled) {
         props.onClose();
       }
