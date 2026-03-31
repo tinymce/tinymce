@@ -778,5 +778,58 @@ describe('browser.components.CardTest', () => {
       expect(card?.className).not.toContain('tox-skeleton');
       expect(container.textContent).toContain('Content');
     });
+
+    it('TINY-14077: Should not apply selected CSS class while Card is loading', async () => {
+      const { container } = render(
+        <Card.CardList defaultFocusedIndex={1}>
+          <Card.Root loading={true} selected={true} index={0}>
+            <Card.Body>Content</Card.Body>
+          </Card.Root>
+        </Card.CardList>,
+        { wrapper }
+      );
+
+      const card = container.querySelector(Bem.blockSelector('tox-card'));
+      expect(card?.className).toContain(Bem.block('tox-skeleton'));
+      expect(card?.className).not.toContain(Bem.block('tox-card', { selected: true }));
+    });
+
+    it('TINY-14077: Should apply selected CSS class while card is not loading', async () => {
+      const { container } = render(
+        <Card.CardList defaultFocusedIndex={1}>
+          <Card.Root loading={false} selected={true} index={0}>
+            <Card.Body>Content</Card.Body>
+          </Card.Root>
+        </Card.CardList>,
+        { wrapper }
+      );
+
+      const card = container.querySelector(Bem.blockSelector('tox-card'));
+      expect(card?.className).toContain(Bem.block('tox-card', { selected: true }));
+    });
+
+    it('TINY-14077: Should not be able to programmatically focus Card while loading', async () => {
+      const { container } = render(
+        <Card.Root loading={true} index={0}>
+          <Card.Body>Content</Card.Body>
+        </Card.Root>,
+        { wrapper }
+      );
+      const card = container.querySelector<HTMLElement>(Bem.blockSelector('tox-card'));
+      card?.focus();
+      expect(document.activeElement).not.toBe(card);
+    });
+
+    it('TINY-14077: Should be able to programmatically focus Card while not loading', async () => {
+      const { container } = render(
+        <Card.Root loading={false} index={0}>
+          <Card.Body>Content</Card.Body>
+        </Card.Root>,
+        { wrapper }
+      );
+      const card = container.querySelector<HTMLElement>(Bem.blockSelector('tox-card'));
+      card?.focus();
+      expect(document.activeElement).toBe(card);
+    });
   });
 });

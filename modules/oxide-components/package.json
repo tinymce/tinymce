@@ -55,7 +55,7 @@
     "@storybook/addon-docs": "10.2.3",
     "@storybook/addon-onboarding": "10.2.3",
     "@storybook/react-vite": "10.2.3",
-    "@tinymce/oxide": "^3.0.0",
+    "@tinymce/oxide": "^4.0.0",
     "@types/node": "^22.15.19",
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.1",
@@ -89,7 +89,7 @@
     ]
   },
   "dependencies": {
-    "@ephox/katamari": "^10.0.0",
-    "@ephox/sugar": "^10.0.0"
+    "@ephox/katamari": "^11.0.0",
+    "@ephox/sugar": "^11.0.0"
   }
 }

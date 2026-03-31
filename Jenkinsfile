@@ -45,6 +45,8 @@ def runRemoteTests(String name, String browser, String provider, String platform
   def browserVersion = version != null ? " --browserVersion=${version}" : ""
   def bedrockCommand =
   "yarn browser-test" +
+    " --bundler=rspack" +
+    " --skipTypecheck" +
     " --chunk=2000" +
     " --bedrock-browser=" + browser +
     " --remote=" + provider +
@@ -156,17 +158,21 @@ timestamps { notifyStatusChange(
   // handles alerting even if a pod crash or unknown hang bypasses stage-level timeouts.
   // Set above the sum of inner stage timeouts (deps 5 + build 10 + tests 40 = 55 min + overhead)
   timeout(time: 90, unit: 'MINUTES') {
-    devPods.custom(
-      containers: [
-        nodeImg,
-        seleniumImg,
-        playwrightImg
-      ],
-      checkoutStep: {
-        tinyGit.addGitHubToKnownHosts()
-        checkout localBranch(scm, [ lfs() ])
-      }
-    ) {
+    // Retry on K8s pod scheduling failures; count: 2 = 1 original + 1 retry.
+    // On retry, Deps + Build re-run (~4 min overhead) before tests resume.
+    // handleNonKubernetes: true ensures the condition degrades gracefully on non-K8s agents.
+    retry(conditions: [agent(), kubernetesAgent(handleNonKubernetes: true)], count: 2) {
+      devPods.custom(
+        containers: [
+          nodeImg,
+          seleniumImg,
+          playwrightImg
+        ],
+        checkoutStep: {
+          tinyGit.addGitHubToKnownHosts()
+          checkout localBranch(scm, [ lfs() ])
+        }
+      ) {
       container("node") {
 
         // Make yarn fallback to the npm registry otherwise we get publish errors
@@ -328,5 +334,6 @@ timestamps { notifyStatusChange(
         }
       } // close container
     } // close pod
+    } // close retry
   } // close outer timeout
 }} // close #notification and #timestamp

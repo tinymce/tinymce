@@ -1,4 +1,4 @@
-import { Throttler, Type } from '@ephox/katamari';
+import { Id, Type } from '@ephox/katamari';
 import { Children, cloneElement, forwardRef, isValidElement, useCallback, useEffect, useMemo, useRef, useState, type FC, type HTMLAttributes, type MouseEvent, type PropsWithChildren, type ReactElement, type KeyboardEvent } from 'react';
 
 import { Bem } from '../../main';
@@ -6,16 +6,12 @@ import { Bem } from '../../main';
 import { DropdownContext, useDropdown } from './internals/Context';
 import * as PositioningUtils from './internals/PositioningUtils';
 
-const isInDropdownContent = (contentRef: React.MutableRefObject<HTMLDivElement | undefined>, node: Node): boolean => {
-  return contentRef.current?.contains(node) ?? false;
-};
-
 interface DropdownContentProps extends PropsWithChildren<HTMLAttributes<HTMLDivElement>> {
   readonly onOpenChange?: (isOpen: boolean) => void;
 }
 
-const Content = forwardRef<HTMLDivElement, DropdownContentProps>(({ children, onOpenChange, ...props }, ref) => {
-  const { triggerRef, side, align, gap, contentRef, triggerEvents, debouncedHideHoverablePopover, isOpen, setIsOpen } = useDropdown();
+const Content = forwardRef<HTMLDivElement, DropdownContentProps>(({ children, onOpenChange, className, ...props }, ref) => {
+  const { triggerRef, side, align, gap, contentRef, triggerEvents, isOpen, setIsOpen, popupAnchor } = useDropdown();
 
   const updateToggleState = useCallback((event: ToggleEvent) => {
     setIsOpen(event.newState === 'open');
@@ -48,17 +44,6 @@ const Content = forwardRef<HTMLDivElement, DropdownContentProps>(({ children, on
     };
   }, [ contentRef, triggerRef, updateToggleState, onOpenChange ]);
 
-  const onHoverTriggerProps = {
-    onMouseLeave: (e: MouseEvent<HTMLDivElement>) => {
-      props.onMouseLeave?.(e);
-      debouncedHideHoverablePopover.throttle(e);
-    },
-    onMouseEnter: (e: MouseEvent<HTMLDivElement>) => {
-      props.onMouseEnter?.(e);
-      debouncedHideHoverablePopover.cancel();
-    }
-  };
-
   const onArrowTriggerProps = {
     onKeyUp: (e: KeyboardEvent<HTMLDivElement>) => {
       props.onKeyUp?.(e);
@@ -71,7 +56,6 @@ const Content = forwardRef<HTMLDivElement, DropdownContentProps>(({ children, on
 
   const contentProps = {
     ...props,
-    ...triggerEvents.includes('hover') && onHoverTriggerProps,
     ...triggerEvents.includes('arrows') && onArrowTriggerProps,
     onKeyDown: (e: KeyboardEvent<HTMLDivElement>) => {
       props.onKeyDown?.(e);
@@ -86,7 +70,7 @@ const Content = forwardRef<HTMLDivElement, DropdownContentProps>(({ children, on
   const area = PositioningUtils.getPositionArea(side, align);
   return <div
     popover='auto'
-    className={Bem.block('tox-dropdown-content')}
+    className={`${Bem.block('tox-dropdown-content')}${Type.isNonNullable(className) ? ` ${className}` : ''}`}
     ref={(el: HTMLDivElement) => {
       contentRef.current = el;
       if (Type.isFunction(ref)) {
@@ -100,6 +84,7 @@ const Content = forwardRef<HTMLDivElement, DropdownContentProps>(({ children, on
       ...insetProps,
       // @ts-expect-error - TODO: Remove this expect error once we've upgraded to React 19+
       positionArea: area,
+      positionAnchor: popupAnchor
     }}
   >
     {isOpen && children}
@@ -109,7 +94,7 @@ const Content = forwardRef<HTMLDivElement, DropdownContentProps>(({ children, on
 interface TriggerInternalProps extends PropsWithChildren<HTMLAttributes<HTMLElement>> {}
 
 const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, ...props }, ref) => {
-  const { triggerRef, contentRef, triggerEvents, debouncedHideHoverablePopover, isOpen } = useDropdown();
+  const { triggerRef, contentRef, triggerEvents, isOpen, popupAnchor } = useDropdown();
 
   let child = Children.toArray(children)[0];
   if (!isValidElement(child)) {
@@ -118,11 +103,7 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
   child = child as ReactElement;
 
   const showContentPopover = () => {
-    // @ts-expect-error - TODO: Remove this expect error once we've upgraded to React 19+
-    contentRef.current?.showPopover({
-      // specifying the source sets up an implicit `anchor` relationship
-      source: triggerRef.current
-    });
+    contentRef.current?.showPopover();
   };
 
   const onHoverTriggerProps = {
@@ -130,17 +111,9 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
       if (!e.isDefaultPrevented()) {
         child.props.onMouseEnter?.(e);
         props.onMouseEnter?.(e);
-        debouncedHideHoverablePopover.cancel();
         if (!isOpen) {
           showContentPopover();
         }
-      }
-    },
-    onMouseLeave: (e: MouseEvent<HTMLElement>) => {
-      if (!e.isDefaultPrevented()) {
-        child.props.onMouseLeave?.(e);
-        props.onMouseLeave?.(e);
-        debouncedHideHoverablePopover.throttle(e);
       }
     }
   };
@@ -170,6 +143,10 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
 
   return cloneElement(child, {
     ...props,
+    style: {
+      ...child.props.style,
+      anchorName: popupAnchor
+    },
     ref: (el: HTMLElement) => {
       triggerRef.current = el;
       if (Type.isFunction(child.props.ref)) {
@@ -195,7 +172,8 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
     },
     ...triggerEvents.includes('click') && onClickTriggerProps,
     ...triggerEvents.includes('hover') && onHoverTriggerProps,
-    ...triggerEvents.includes('arrows') && onArrowTriggerProps
+    ...triggerEvents.includes('arrows') && onArrowTriggerProps,
+
   });
 });
 
@@ -216,17 +194,13 @@ const Root: FC<DropdownProps> = ({ children, side = 'top', align = 'start', gap 
   const contentRef = useRef<HTMLDivElement | undefined>();
   const [ isOpen, setIsOpen ] = useState(false);
 
-  // debounced hide popover function on mouse leave (used when trigger events include hover)
-  const debouncedHideHoverablePopover = useMemo(() => Throttler.last((e: MouseEvent) => {
-    // in the hover mode, the dropdown should close when the cursor is moved outside of the dropdown content, works for nested dropdowns
-    if (!(e.relatedTarget instanceof Node) || !isInDropdownContent(contentRef, e.relatedTarget)) {
-      contentRef.current?.hidePopover();
-    }
-  }, 300), []);
+  // generate one ID per trigger/content combination, not every time
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const popupAnchor = useMemo(() => `--${Id.generate('dropdown')}`, [ triggerRef, contentRef ]);
 
   const contextValue = useMemo(() => {
-    return { triggerRef, contentRef, side, align, gap, triggerEvents, debouncedHideHoverablePopover, isOpen, setIsOpen };
-  }, [ triggerRef, contentRef, side, align, gap, triggerEvents, debouncedHideHoverablePopover, isOpen ]);
+    return { triggerRef, contentRef, side, align, gap, triggerEvents, isOpen, setIsOpen, popupAnchor };
+  }, [ triggerRef, contentRef, side, align, gap, triggerEvents, isOpen, popupAnchor ]);
 
   return <DropdownContext.Provider value={contextValue}>{children}</DropdownContext.Provider>;
 };

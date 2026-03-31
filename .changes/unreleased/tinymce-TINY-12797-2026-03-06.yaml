@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Tables with unitless width or height attributes could not be resized correctly.
-time: 2026-03-06T08:37:14.822297+10:00
-custom:
-    Issue: TINY-12797
