@@ -142,10 +142,8 @@ const deleteElement = (
 ): void => {
   // Existing delete logic
   const afterDeletePos = findCaretPosOutsideElmAfterDelete(forward, editor.getBody(), elm.dom);
-
-  const isOutside = NodeType.matchNodeNames([ 'body', 'html' ])(elm.dom);
   const parentBlock = PredicateFind.ancestor(elm, Fun.curry(isBlock, editor), eqRawNode(editor.getBody()));
-  const normalizedAfterDeletePos = (isOutside ? Traverse.firstChild(elm) : Optional.from(elm)).bind((child) => deleteNormalized(child, afterDeletePos, editor.schema, isInlineElement(editor, elm)));
+  const normalizedAfterDeletePos = deleteNormalized(elm, afterDeletePos, editor.schema, isInlineElement(editor, elm));
 
   if (editor.dom.isEmpty(editor.getBody())) {
     editor.setContent('');
