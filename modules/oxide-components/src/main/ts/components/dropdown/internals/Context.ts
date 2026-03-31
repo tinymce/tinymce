@@ -10,6 +10,7 @@ export interface DropdownState {
   readonly triggerEvents: Array<'click' | 'hover' | 'arrows'>;
   readonly isOpen: boolean;
   readonly setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  readonly popupAnchor: string;
 }
 
 const DropdownContext = createContext<DropdownState | null>(null);

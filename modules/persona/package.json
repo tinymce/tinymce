@@ -27,7 +27,7 @@
     "LICENSE.txt"
   ],
   "devDependencies": {
-    "@ephox/katamari": "^10.0.0"
+    "@ephox/katamari": "^11.0.0"
   },
   "main": "./lib/main/ts/main.js",
   "module": "./lib/main/ts/main.js",

@@ -1,6 +1,8 @@
-import { Fun, Type } from '@ephox/katamari';
+import { Fun, Id, Type } from '@ephox/katamari';
 import { Bem } from 'oxide-components/main';
 import { Children, cloneElement, createContext, forwardRef, isValidElement, useCallback, useContext, useLayoutEffect, useMemo, useRef, useState, type FC, type HTMLAttributes, type PropsWithChildren, type ReactNode } from 'react';
+
+import { DropdownContext } from '../dropdown/internals/Context.ts';
 
 interface TooltipState {
   readonly isOpen: boolean;
@@ -9,6 +11,7 @@ interface TooltipState {
   readonly setIsOpen: (isOpen: boolean) => void;
   readonly contentRef: React.MutableRefObject<HTMLDivElement | null>;
   readonly triggerRef: React.MutableRefObject<HTMLDivElement | null>;
+  readonly popupAnchor: string;
 }
 
 const defaultState: TooltipState = {
@@ -18,6 +21,7 @@ const defaultState: TooltipState = {
   setIsOpen: Fun.noop,
   contentRef: { current: null },
   triggerRef: { current: null },
+  popupAnchor: '--tooltip-anchor' // this is wrong, but I don't have time to rewrite context today
 };
 
 const TooltipContext = createContext<TooltipState>(defaultState);
@@ -25,7 +29,7 @@ const TooltipContext = createContext<TooltipState>(defaultState);
 interface TriggerInternalProps extends PropsWithChildren<HTMLAttributes<HTMLElement>> {}
 
 const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, ...props }, ref) => {
-  const { setIsOpen, triggerRef } = useContext(TooltipContext);
+  const { setIsOpen, triggerRef, popupAnchor } = useContext(TooltipContext);
 
   const count = Children.count(children);
   if (count === 0) {
@@ -39,6 +43,10 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
 
   return cloneElement(theChild, {
     ...props,
+    style: {
+      ...theChild.props.style,
+      anchorName: popupAnchor
+    },
     ref: (el: HTMLDivElement | null) => {
       // Only forward non-null values to internal refs to preserve state during React's cleanup phase
       if (el !== null) {
@@ -72,20 +80,21 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
         setIsOpen(false);
       }
     },
-    onFocus: (e: React.FocusEvent<HTMLElement>) => {
-      if (!e.isDefaultPrevented()) {
-        theChild.props.onFocus?.(e);
-        props.onFocus?.(e);
-        setIsOpen(true);
-      }
-    },
-    onBlur: (e: React.FocusEvent<HTMLElement>) => {
-      if (!e.isDefaultPrevented()) {
-        theChild.props.onBlur?.(e);
-        props.onBlur?.(e);
-        setIsOpen(false);
-      }
-    },
+    // TODO: Disabled render on focus for now see #TINY-14178
+    // onFocus: (e: React.FocusEvent<HTMLElement>) => {
+    //   if (!e.isDefaultPrevented()) {
+    //     theChild.props.onFocus?.(e);
+    //     props.onFocus?.(e);
+    //     setIsOpen(true);
+    //   }
+    // },
+    // onBlur: (e: React.FocusEvent<HTMLElement>) => {
+    //   if (!e.isDefaultPrevented()) {
+    //     theChild.props.onBlur?.(e);
+    //     props.onBlur?.(e);
+    //     setIsOpen(false);
+    //   }
+    // },
   });
 });
 
@@ -97,11 +106,10 @@ interface ContentProps {
   readonly text: string;
 }
 
-const showContentPopover = (content: HTMLElement, source: HTMLElement | null) => {
+const showContentPopover = (content: HTMLElement) => {
   content.style.display = 'inline-block';
 
-  // @ts-expect-error - TODO: Remove this expect error once we've upgraded to React 19+
-  content.showPopover({ source });
+  content.showPopover();
 };
 
 const hideContentPopover = (content: HTMLElement) => {
@@ -110,14 +118,13 @@ const hideContentPopover = (content: HTMLElement) => {
 };
 
 const Content = forwardRef<HTMLDivElement, ContentProps>(({ text }, ref) => {
-  const { isOpen, contentRef, triggerRef, delayForShow, delayForHide } = useContext(TooltipContext);
+  const { isOpen, contentRef, delayForShow, delayForHide, popupAnchor } = useContext(TooltipContext);
 
   useLayoutEffect(() => {
     if (Type.isNonNullable(contentRef.current)) {
       const content = contentRef.current;
-      const trigger = triggerRef.current;
       if (isOpen) {
-        const timeoutId = setTimeout(() => showContentPopover(content, trigger), delayForShow);
+        const timeoutId = setTimeout(() => showContentPopover(content), delayForShow);
         return () => {
           clearTimeout(timeoutId);
         };
@@ -128,7 +135,7 @@ const Content = forwardRef<HTMLDivElement, ContentProps>(({ text }, ref) => {
         };
       }
     }
-  }, [ isOpen, contentRef, triggerRef, delayForShow, delayForHide ]);
+  }, [ isOpen, contentRef, delayForShow, delayForHide ]);
 
   return (
     <div ref={(el: HTMLDivElement) => {
@@ -139,9 +146,12 @@ const Content = forwardRef<HTMLDivElement, ContentProps>(({ text }, ref) => {
         ref.current = el;
       }
     }}
-    // @ts-expect-error We should remove this expect error once we've migrated to React 19 and can use the new popover API types
     popover='manual'
     className={Bem.block('tox-tooltip', { up: true, anchor: true })}
+    style={{
+      // @ts-expect-error We should remove this expect error once we've migrated to React 19 and can use the new popover API types
+      positionAnchor: popupAnchor
+    }}
     >
       <div className={Bem.element('tox-tooltip', 'body')}>{text}</div>
     </div>
@@ -161,12 +171,27 @@ const Root: FC<PropsWithChildren> = ({ children }) => {
     setState((prevState) => ({ ...prevState, isOpen }));
   }, []);
 
-  const contextValue = useMemo(() => ({
-    ...state,
-    setIsOpen,
-    contentRef,
-    triggerRef
-  }), [ state, setIsOpen ]);
+  const context = useContext(DropdownContext);
+  const popupAnchor = useMemo(() => {
+    if (context !== null) {
+      // if the tooltip is in a dropdown context, use the dropdown anchor that's already on the trigger instead of overwriting it
+      return context.popupAnchor;
+    } else {
+      return `--${Id.generate('tooltip')}`;
+    }
+  // generate one ID per trigger/content combination, not every time
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ context, triggerRef, contentRef ]);
+
+  const contextValue = useMemo(() => {
+    return ({
+      ...state,
+      setIsOpen,
+      contentRef,
+      triggerRef,
+      popupAnchor
+    });
+  }, [ state, setIsOpen, popupAnchor ]);
 
   return <TooltipContext.Provider value={contextValue}>{children}</TooltipContext.Provider>;
 };

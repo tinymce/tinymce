@@ -1,15 +1,15 @@
 {
   "name": "@ephox/alloy",
-  "version": "15.0.0",
+  "version": "16.0.0",
   "description": "Ui Framework",
   "dependencies": {
-    "@ephox/boulder": "^8.0.0",
-    "@ephox/katamari": "^10.0.0",
-    "@ephox/sand": "^7.0.0",
-    "@ephox/sugar": "^10.0.0"
+    "@ephox/boulder": "^9.0.0",
+    "@ephox/katamari": "^11.0.0",
+    "@ephox/sand": "^8.0.0",
+    "@ephox/sugar": "^11.0.0"
   },
   "devDependencies": {
-    "@ephox/agar": "^9.0.0"
+    "@ephox/agar": "^10.0.0"
   },
   "sideEffects": false,
   "files": [
