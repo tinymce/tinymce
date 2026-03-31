@@ -3,6 +3,6 @@ ARG PLAYWRIGHT_VERSION=1.58.2-noble
 # Test stage
 FROM mcr.microsoft.com/playwright:v${PLAYWRIGHT_VERSION} AS test
 
-WORKDIR /tinymce/modules/oxide-components
+WORKDIR /tinymce
 
-ENTRYPOINT [ "yarn", "playwright", "test" ]
+ENTRYPOINT [ "npm", "exec", "--workspace=@tinymce/oxide-components", "playwright", "test" ]
