@@ -1,35 +1,14 @@
-import { Fun, Id, Type } from '@ephox/katamari';
+import { Id, Type } from '@ephox/katamari';
+import { DropdownContext } from 'oxide-components/components/dropdown/internals/Context.ts';
 import { Bem } from 'oxide-components/main';
-import { Children, cloneElement, createContext, forwardRef, isValidElement, useCallback, useContext, useLayoutEffect, useMemo, useRef, useState, type FC, type HTMLAttributes, type PropsWithChildren, type ReactNode } from 'react';
+import { Children, cloneElement, forwardRef, isValidElement, useCallback, useLayoutEffect, useMemo, useRef, useState, type FC, type HTMLAttributes, type PropsWithChildren, type ReactNode, useContext } from 'react';
 
-import { DropdownContext } from '../dropdown/internals/Context.ts';
-
-interface TooltipState {
-  readonly isOpen: boolean;
-  readonly delayForShow: number;
-  readonly delayForHide: number;
-  readonly setIsOpen: (isOpen: boolean) => void;
-  readonly contentRef: React.MutableRefObject<HTMLDivElement | null>;
-  readonly triggerRef: React.MutableRefObject<HTMLDivElement | null>;
-  readonly popupAnchor: string;
-}
-
-const defaultState: TooltipState = {
-  isOpen: false,
-  delayForShow: 300,
-  delayForHide: 100,
-  setIsOpen: Fun.noop,
-  contentRef: { current: null },
-  triggerRef: { current: null },
-  popupAnchor: '--tooltip-anchor' // this is wrong, but I don't have time to rewrite context today
-};
-
-const TooltipContext = createContext<TooltipState>(defaultState);
+import { useTooltip, TooltipContext } from './internals/Context.tsx';
 
 interface TriggerInternalProps extends PropsWithChildren<HTMLAttributes<HTMLElement>> {}
 
 const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, ...props }, ref) => {
-  const { setIsOpen, triggerRef, popupAnchor } = useContext(TooltipContext);
+  const { setIsOpen, triggerRef, popupAnchor } = useTooltip();
 
   const count = Children.count(children);
   if (count === 0) {
@@ -118,7 +97,7 @@ const hideContentPopover = (content: HTMLElement) => {
 };
 
 const Content = forwardRef<HTMLDivElement, ContentProps>(({ text }, ref) => {
-  const { isOpen, contentRef, delayForShow, delayForHide, popupAnchor } = useContext(TooltipContext);
+  const { isOpen, contentRef, delayForShow, delayForHide, popupAnchor } = useTooltip();
 
   useLayoutEffect(() => {
     if (Type.isNonNullable(contentRef.current)) {
@@ -171,17 +150,17 @@ const Root: FC<PropsWithChildren> = ({ children }) => {
     setState((prevState) => ({ ...prevState, isOpen }));
   }, []);
 
-  const context = useContext(DropdownContext);
+  const dropdownContext = useContext(DropdownContext);
   const popupAnchor = useMemo(() => {
-    if (context !== null) {
+    if (dropdownContext !== null) {
       // if the tooltip is in a dropdown context, use the dropdown anchor that's already on the trigger instead of overwriting it
-      return context.popupAnchor;
+      return dropdownContext.popupAnchor;
     } else {
       return `--${Id.generate('tooltip')}`;
     }
   // generate one ID per trigger/content combination, not every time
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ context, triggerRef, contentRef ]);
+  }, [ dropdownContext, triggerRef, contentRef ]);
 
   const contextValue = useMemo(() => {
     return ({
