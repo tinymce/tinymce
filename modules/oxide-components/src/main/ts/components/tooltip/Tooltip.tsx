@@ -2,6 +2,10 @@ import { Fun, Type } from '@ephox/katamari';
 import { Bem } from 'oxide-components/main';
 import { Children, cloneElement, createContext, forwardRef, isValidElement, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState, type FC, type HTMLAttributes, type PropsWithChildren, type ReactNode } from 'react';
 
+interface RootProps extends PropsWithChildren {
+  readonly showCondition?: 'always' | 'overflow';
+}
+
 interface TooltipState {
   readonly isOpen: boolean;
   readonly renderComponents: boolean;
@@ -39,7 +43,7 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
     if (showCondition === 'overflow') {
       const trigger = triggerRef.current;
 
-      return !!(trigger && isOverflowing(trigger));
+      return Type.isNonNullable(trigger) && isOverflowing(trigger);
     }
 
     return true;
@@ -51,7 +55,7 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
       return;
     }
     setRenderComponents(rerender);
-  });
+  }, [renderComponents]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -67,7 +71,7 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  });
+  }, []);
 
   const count = Children.count(children);
   if (count === 0) {
@@ -202,10 +206,6 @@ const Content = forwardRef<HTMLDivElement, ContentProps>(({ text }, ref) => {
     </div>
   );
 });
-
-interface RootProps extends PropsWithChildren {
-  readonly showCondition?: 'always' | 'overflow';
-}
 
 const Root: FC<RootProps> = ({ children, showCondition }) => {
   const [ state, setState ] = useState({
