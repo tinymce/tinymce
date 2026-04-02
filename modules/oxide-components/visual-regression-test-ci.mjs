@@ -11,12 +11,12 @@ process.on('SIGTERM', cleanUp);
 
 const runTests = async () => {
   try {
-    const args = ['exec', 'playwright', 'test'];
+    const args = ['playwright', 'test'];
     const workers = Number(process.env.PW_WORKERS);
     if (Number.isInteger(workers) && workers > 0) {
       args.push(`--workers=${workers}`);
     }
-    const result = spawnSync('npm', args, { stdio: 'inherit' });
+    const result = spawnSync('yarn', args, { stdio: 'inherit' });
     if (result.error) {
       console.error('Failed to run Playwright', result.error);
       exitCode = 1;
