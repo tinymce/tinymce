@@ -10,12 +10,15 @@ const uniqueId = (prefix?: string): string => {
   return (prefix || 'blobid') + (count++);
 };
 
-const processDataUri = (dataUri: string, base64Only: boolean, generateBlobInfo: (base64: string, type: string) => Optional<BlobInfo>): Optional<BlobInfo> => {
+const withoutByteOrderMark = (str: string) =>
+  Strings.startsWith(str, '\uFEFF') ? str.slice(1) : str;
+
+export const processDataUri = (dataUri: string, base64Only: boolean, generateBlobInfo: (base64: string, type: string) => Optional<BlobInfo>): Optional<BlobInfo> => {
   return Conversions.parseDataUri(dataUri).bind(({ data, type, base64Encoded }) => {
     if (base64Only && !base64Encoded) {
       return Optional.none();
     } else {
-      const base64 = base64Encoded ? data : btoa(data);
+      const base64 = base64Encoded ? data : btoa(withoutByteOrderMark(data));
       return generateBlobInfo(base64, type);
     }
   });
