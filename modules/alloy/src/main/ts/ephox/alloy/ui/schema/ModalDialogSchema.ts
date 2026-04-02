@@ -18,6 +18,7 @@ const schema = Fun.constant([
   FieldSchema.defaulted('useTabstopAt', Fun.always),
   FieldSchema.defaulted('firstTabstop', 0),
   FieldSchema.defaulted('eventOrder', {}),
+  FieldSchema.defaultedStringEnum('role', 'dialog', [ 'dialog', 'alertdialog' ]),
   SketchBehaviours.field('modalBehaviours', [ Keying ]),
 
   Fields.onKeyboardHandler('onExecute'),

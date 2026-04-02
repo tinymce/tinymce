@@ -87,6 +87,7 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
   const confirmDialog = ConfirmDialog.setup(extras.backstages.dialog);
 
   const open = <T extends Dialog.DialogData>(config: Dialog.DialogSpec<T>, params: WindowParams | undefined, closeWindow: (dialogApi: Dialog.DialogInstanceApi<T>) => void): Dialog.DialogInstanceApi<T> => {
+    // TODO: here we're opening stuff
     if (!Type.isUndefined(params)) {
       if (params.inline === 'toolbar') {
         return openInlineDialog(config, extras.backstages.popup.shared.anchors.inlineDialog(), closeWindow, params);
@@ -375,10 +376,12 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
   };
 
   const confirm = (message: string, callback: (state: boolean) => void) => {
+    // TODO: here confirm
     confirmDialog.open(message, callback);
   };
 
   const alert = (message: string, callback: () => void) => {
+    // TODO: here alert
     alertDialog.open(message, callback);
   };
 
