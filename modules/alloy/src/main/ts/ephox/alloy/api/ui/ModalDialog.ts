@@ -120,7 +120,6 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
             // TINY-10808 - Workaround to address the dialog header not being announced on VoiceOver with aria-labelledby, ideally we should use the aria-labelledby
             const titleElm = AlloyParts.getPartOrDie(c, detail, 'title').element;
             const title = TextContent.get(titleElm);
-            // Avoid adding empty label for alert/confirm dialogs, which use untitled modal dialogs
             if (Type.isNonNullable(title) && title !== '') {
               if (browser.os.isMacOS()) {
                 Attribute.set(c.element, 'aria-label', title);
