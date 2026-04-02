@@ -1,9 +1,14 @@
 import { Id, Type } from '@ephox/katamari';
-import { DropdownContext } from 'oxide-components/components/dropdown/internals/Context.ts';
-import { Bem } from 'oxide-components/main';
-import { Children, cloneElement, forwardRef, isValidElement, useCallback, useLayoutEffect, useMemo, useRef, useState, type FC, type HTMLAttributes, type PropsWithChildren, type ReactNode, useContext } from 'react';
+import {
+  Children, cloneElement, forwardRef, isValidElement, useCallback,
+  useLayoutEffect, useMemo, useRef, useState, type FC, type HTMLAttributes,
+  type PropsWithChildren, type ReactNode, useContext
+} from 'react';
 
-import { useTooltip, TooltipContext } from './internals/Context.tsx';
+import * as Bem from '../../utils/Bem';
+import { DropdownContext } from '../dropdown/internals/Context';
+
+import { useTooltip, TooltipContext } from './internals/Context';
 
 interface TriggerInternalProps extends PropsWithChildren<HTMLAttributes<HTMLElement>> {}
 
