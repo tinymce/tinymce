@@ -1,14 +1,14 @@
 {
   "name": "@ephox/acid",
   "description": "Color library",
-  "version": "7.0.0",
+  "version": "8.0.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/tinymce/tinymce.git",
     "directory": "modules/acid"
   },
   "dependencies": {
-    "@ephox/katamari": "^10.0.0"
+    "@ephox/katamari": "^11.0.0"
   },
   "author": "Ephox Corporation DBA Tiny Technologies, Inc",
   "license": "GPL-2.0-or-later",

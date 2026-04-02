@@ -18,7 +18,7 @@
   "author": "Ephox Corporation DBA Tiny Technologies, Inc",
   "license": "GPL-2.0-or-later",
   "dependencies": {
-    "@ephox/katamari": "^10.0.0"
+    "@ephox/katamari": "^11.0.0"
   },
   "sideEffects": false,
   "files": [

@@ -80,20 +80,21 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
         setIsOpen(false);
       }
     },
-    onFocus: (e: React.FocusEvent<HTMLElement>) => {
-      if (!e.isDefaultPrevented()) {
-        theChild.props.onFocus?.(e);
-        props.onFocus?.(e);
-        setIsOpen(true);
-      }
-    },
-    onBlur: (e: React.FocusEvent<HTMLElement>) => {
-      if (!e.isDefaultPrevented()) {
-        theChild.props.onBlur?.(e);
-        props.onBlur?.(e);
-        setIsOpen(false);
-      }
-    },
+    // TODO: Disabled render on focus for now see #TINY-14178
+    // onFocus: (e: React.FocusEvent<HTMLElement>) => {
+    //   if (!e.isDefaultPrevented()) {
+    //     theChild.props.onFocus?.(e);
+    //     props.onFocus?.(e);
+    //     setIsOpen(true);
+    //   }
+    // },
+    // onBlur: (e: React.FocusEvent<HTMLElement>) => {
+    //   if (!e.isDefaultPrevented()) {
+    //     theChild.props.onBlur?.(e);
+    //     props.onBlur?.(e);
+    //     setIsOpen(false);
+    //   }
+    // },
   });
 });
 
