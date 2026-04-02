@@ -3,6 +3,11 @@
   // Root variables
   // Begin customization by changing these variables as most other variables are derivatives of these.
   --tox-private-background-color: light-dark(#fff, #222F3E);
+  --tox-private-background-secondary: light-dark(
+    hsl(from var(--tox-private-background-color) h s calc(l - 6)),
+    hsl(from var(--tox-private-background-color) h s calc(l + 7))
+  );
+
   --tox-private-base-value: 16px;
   --tox-private-color-black: #222f3e;
   --tox-private-color-tint: #006ce7;
