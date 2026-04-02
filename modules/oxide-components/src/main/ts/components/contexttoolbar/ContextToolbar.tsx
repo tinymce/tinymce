@@ -1,8 +1,21 @@
 import { Arr, Id, Optional, Type } from '@ephox/katamari';
-import { Class, Css, Focus, SelectorFilter, SelectorFind, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
+import {
+  Attribute,
+  Compare,
+  Css,
+  Focus,
+  PredicateFind,
+  SelectorFind,
+  Selectors,
+  SugarElement,
+  SugarNode,
+  Traverse
+} from '@ephox/sugar';
 import {
   createContext,
+  forwardRef,
   useContext,
+  useImperativeHandle,
   useRef,
   useState,
   useMemo,
@@ -14,7 +27,7 @@ import {
 
 import * as KeyboardNavigationHooks from '../../keynav/KeyboardNavigationHooks';
 
-import type { ContextToolbarContextValue, ContextToolbarProps, GroupProps, ToolbarProps, TriggerProps } from './ContextToolbarTypes';
+import type { ContextToolbarContextValue, ContextToolbarProps, GroupProps, ToolbarHandle, ToolbarProps, TriggerProps } from './ContextToolbarTypes';
 
 const ContextToolbarContext = createContext<ContextToolbarContextValue | null>(null);
 
@@ -27,6 +40,32 @@ const useContextToolbarContext = () => {
 };
 
 const defaultToolbarGap = '6px';
+const toolbarControlSelector = 'button, [role="button"], .tox-button';
+const enabledToolbarControlSelector = [
+  'button:not([disabled]):not([aria-disabled="true"])',
+  '[role="button"]:not([disabled]):not([aria-disabled="true"])',
+  '.tox-button:not([disabled]):not([aria-disabled="true"])'
+].join(', ');
+
+const isFocusableControl = (elem: SugarElement<Node>): elem is SugarElement<HTMLElement> => {
+  if (!SugarNode.isHTMLElement(elem)) {
+    return false;
+  }
+
+  if (!Selectors.is(elem, toolbarControlSelector)) {
+    return false;
+  }
+
+  return !Attribute.has(elem, 'disabled') && Attribute.get(elem, 'aria-disabled') !== 'true' && elem.dom.tabIndex >= 0;
+};
+
+const findFirstFocusable = (container: SugarElement<HTMLElement>): Optional<SugarElement<HTMLElement>> =>
+  PredicateFind.descendant(container, isFocusableControl);
+
+const focusFirstEnabledControl = (toolbar: HTMLElement) => {
+  const sugarToolbar = SugarElement.fromDom(toolbar);
+  findFirstFocusable(sugarToolbar).fold(() => Focus.focus(sugarToolbar), Focus.focus);
+};
 
 const Root: FC<ContextToolbarProps> = ({
   children,
@@ -136,11 +175,11 @@ const Trigger: FC<TriggerProps> = ({
   );
 };
 
-const Toolbar: FC<ToolbarProps> = ({
+const Toolbar = forwardRef<ToolbarHandle, ToolbarProps>(({
   children,
   onMouseDown,
   onEscape: passedOnEscape
-}) => {
+}, ref) => {
   const {
     isOpen,
     toolbarRef,
@@ -151,34 +190,31 @@ const Toolbar: FC<ToolbarProps> = ({
     usePopover
   } = useContextToolbarContext();
 
+  useImperativeHandle(ref, () => ({
+    focus: () => {
+      Optional.from(toolbarRef.current).each(focusFirstEnabledControl);
+    }
+  }), [ toolbarRef ]);
+
   useEffect(() => {
-    const element = toolbarRef.current;
-    if (Type.isNullable(element)) {
+    const toolbar = toolbarRef.current;
+    if (Type.isNullable(toolbar)) {
       return;
     }
     if (!isOpen) {
       if (usePopover) {
-        element.hidePopover();
+        toolbar.hidePopover();
       }
       return;
     }
 
     if (usePopover) {
-      element.showPopover();
+      toolbar.showPopover();
     }
     // Defer focus using queueMicrotask to ensure it runs after
     // the Popover API's internal focus management is complete
     window.queueMicrotask(() => {
-      const sugarElement = SugarElement.fromDom(element);
-      const firstGroup = SelectorFind.descendant(sugarElement, '.tox-toolbar__group');
-      const firstButton = firstGroup.bind((group) =>
-        SelectorFind.descendant(group, 'button, [role="button"]')
-      );
-
-      firstButton.fold(
-        () => element.focus(), // Falls back to container if no button found
-        (button) => Focus.focus(button as SugarElement<HTMLElement>) // Focus first button
-      );
+      focusFirstEnabledControl(toolbar);
     });
   }, [ usePopover, isOpen, toolbarRef ]);
 
@@ -203,15 +239,11 @@ const Toolbar: FC<ToolbarProps> = ({
 
   KeyboardNavigationHooks.useTabKeyNavigation({
     containerRef: toolbarRef,
-    selector: 'button, .tox-button',
+    selector: toolbarControlSelector,
     useTabstopAt: (elem) => {
-      // Only stop at the first button in each group
-      return Traverse.parent(elem)
-        .filter((parent) => Class.has(parent, 'tox-toolbar__group'))
-        .map((parent) => {
-          const buttons = SelectorFilter.descendants(parent, 'button, .tox-button');
-          return buttons.length > 0 && buttons[0].dom === elem.dom;
-        })
+      return SelectorFind.closest(elem, '.tox-toolbar__group')
+        .map((group) => PredicateFind.descendant(group, isFocusableControl)
+          .exists((firstInGroup) => Compare.eq(firstInGroup, elem)))
         .getOr(true);
     },
     cyclic: true
@@ -295,14 +327,14 @@ const Toolbar: FC<ToolbarProps> = ({
       </div>
     </div>
   );
-};
+});
 
 const Group: FC<GroupProps> = ({ children }) => {
   const groupRef = useRef<HTMLDivElement>(null);
 
   KeyboardNavigationHooks.useFlowKeyNavigation({
     containerRef: groupRef,
-    selector: 'button, .tox-button',
+    selector: enabledToolbarControlSelector,
     execute: (focused) => {
       focused.dom.click();
       return Optional.some(true);
