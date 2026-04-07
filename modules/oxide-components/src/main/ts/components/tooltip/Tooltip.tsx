@@ -49,7 +49,7 @@ const isOverflowing = (element: HTMLElement) => (element.offsetWidth < element.s
 const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, ...props }, ref) => {
   const { shouldRenderComponents, setIsOpen, showCondition, triggerRef, setRenderComponents, popupAnchor } = useContext(TooltipContext);
 
-  const shouldRender = () => {
+  const shouldRender = useCallback(() => {
     if (showCondition === 'overflow') {
       const trigger = triggerRef.current;
 
@@ -57,7 +57,7 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
     }
 
     return true;
-  };
+  }, [ triggerRef, showCondition ]);
 
   useLayoutEffect(() => {
     const shouldRerender = shouldRender();
@@ -65,7 +65,7 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
       return;
     }
     setRenderComponents(shouldRerender);
-  }, [shouldRenderComponents, showCondition, setRenderComponents]);
+  }, [ shouldRenderComponents, showCondition, shouldRender, setRenderComponents ]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -81,7 +81,7 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, [shouldRenderComponents, showCondition, setRenderComponents]);
+  }, [ shouldRenderComponents, showCondition, shouldRender, setRenderComponents ]);
 
   const count = Children.count(children);
   if (count === 0) {
@@ -265,7 +265,7 @@ const Root: FC<RootProps> = ({ children, showCondition }) => {
       setRenderComponents,
       popupAnchor
     });
-  }, [ state, setIsOpen, popupAnchor ]);
+  }, [ state, setIsOpen, popupAnchor, setRenderComponents, showCondition ]);
 
   return <TooltipContext.Provider value={contextValue}>{children}</TooltipContext.Provider>;
 };
