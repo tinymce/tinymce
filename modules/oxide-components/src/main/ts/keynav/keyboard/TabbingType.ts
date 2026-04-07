@@ -3,7 +3,8 @@ import { Compare, Height, SelectorFilter, SelectorFind, type SugarElement, Trave
 
 import * as ArrNavigation from '../navigation/ArrNavigation';
 
-import type { GeneralKeyingConfig } from './KeyingModeTypes';
+import * as FocusManagers from './FocusManagers';
+import { FocusInsideModes, type GeneralKeyingConfig } from './KeyingModeTypes';
 import * as KeyingType from './KeyingType';
 import * as KeyMatch from './KeyMatch';
 import * as KeyRules from './KeyRules';
@@ -119,7 +120,11 @@ const getKeyupRules = Fun.constant([
   KeyRules.rule(KeyMatch.inSet(Keys.TAB), goFromPseudoTabstop),
 ]);
 
-const create = (source: SugarElement<HTMLElement>, config: TabbingConfig): KeyingType.Handlers => {
+export interface TabbingHandlers extends KeyingType.Handlers {
+  readonly goBackwards: () => void;
+}
+
+const create = (source: SugarElement<HTMLElement>, config: TabbingConfig): TabbingHandlers => {
   const partialConfig: Required<TabbingConfig> = {
     execute: Fun.constant(Optional.none()),
     escape: Fun.constant(Optional.none()),
@@ -131,12 +136,27 @@ const create = (source: SugarElement<HTMLElement>, config: TabbingConfig): Keyin
     ...config
   };
 
+  const fullConfig: FullTabbingConfig = {
+    ...partialConfig,
+    focusManager: FocusManagers.dom(),
+    focusInside: FocusInsideModes.OnFocusMode
+  };
+
   const keyingHandlers = KeyingType.typical<FullTabbingConfig>(partialConfig, getKeydownRules, getKeyupRules, () => Optionals.someIf(partialConfig.focusIn, focusIn));
 
   return {
     keydown: (event: KeyboardEvent) => keyingHandlers.handleKeydown(source, event),
     keyup: (event: KeyboardEvent) => keyingHandlers.handleKeyup(source, event),
-    focus: (event: FocusEvent) => keyingHandlers.handleFocus(source, event)
+    focus: (event: FocusEvent) => keyingHandlers.handleFocus(source, event),
+    goBackwards: () => {
+      const navigate = fullConfig.cyclic ? ArrNavigation.cyclePrev : ArrNavigation.tryPrev;
+      const tabstops = SelectorFilter.descendants<HTMLElement>(source, fullConfig.selector);
+      findCurrent(source, fullConfig).each((tabstop) => {
+        Arr.findIndex(tabstops, Fun.curry(Compare.eq, tabstop)).each((stopIndex) => {
+          goFromTabstop(source, tabstops, stopIndex, fullConfig, navigate);
+        });
+      });
+    }
   };
 };
 

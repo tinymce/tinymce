@@ -1,12 +1,18 @@
 import { Fun, Id, Type } from '@ephox/katamari';
 import { Bem } from 'oxide-components/main';
-import { Children, cloneElement, createContext, forwardRef, isValidElement, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState, type FC, type HTMLAttributes, type PropsWithChildren, type ReactNode } from 'react';
+import {
+  Children, cloneElement, forwardRef, isValidElement, useCallback,
+  useLayoutEffect, useMemo, useRef, useState, type FC, type HTMLAttributes,
+  type PropsWithChildren, type ReactNode, useContext,
+  createContext,
+  useEffect
+} from 'react';
 
 interface RootProps extends PropsWithChildren {
   readonly showCondition?: 'always' | 'overflow';
 }
 
-import { DropdownContext } from '../dropdown/internals/Context.ts';
+import { DropdownContext } from '../dropdown/internals/Context';
 
 interface TooltipState {
   readonly isOpen: boolean;

@@ -10,7 +10,7 @@ interface DropdownContentProps extends PropsWithChildren<HTMLAttributes<HTMLDivE
   readonly onOpenChange?: (isOpen: boolean) => void;
 }
 
-const Content = forwardRef<HTMLDivElement, DropdownContentProps>(({ children, onOpenChange, className, ...props }, ref) => {
+const Content = forwardRef<HTMLDivElement, DropdownContentProps>(({ children, onOpenChange, style: propStyle, className: propClassName, ...props }, ref) => {
   const { triggerRef, side, align, gap, contentRef, triggerEvents, isOpen, setIsOpen, popupAnchor } = useDropdown();
 
   const updateToggleState = useCallback((event: ToggleEvent) => {
@@ -70,7 +70,7 @@ const Content = forwardRef<HTMLDivElement, DropdownContentProps>(({ children, on
   const area = PositioningUtils.getPositionArea(side, align);
   return <div
     popover='auto'
-    className={`${Bem.block('tox-dropdown-content')}${Type.isNonNullable(className) ? ` ${className}` : ''}`}
+    className={[ Bem.block('tox-dropdown-content'), propClassName ].join(' ')}
     ref={(el: HTMLDivElement) => {
       contentRef.current = el;
       if (Type.isFunction(ref)) {
@@ -81,6 +81,7 @@ const Content = forwardRef<HTMLDivElement, DropdownContentProps>(({ children, on
     }}
     { ...contentProps }
     style={{
+      ...propStyle,
       ...insetProps,
       // @ts-expect-error - TODO: Remove this expect error once we've upgraded to React 19+
       positionArea: area,
@@ -189,7 +190,7 @@ export interface DropdownProps extends PropsWithChildren {
   readonly triggerEvents?: Array<'click' | 'hover' | 'arrows'>;
 }
 
-const Root: FC<DropdownProps> = ({ children, side = 'top', align = 'start', gap = 8, triggerEvents = [ 'click' ] }) => {
+const Root: FC<DropdownProps> = ({ children, side = 'bottom', align = 'start', gap = 1, triggerEvents = [ 'click' ] }) => {
   const triggerRef = useRef<HTMLElement | undefined>();
   const contentRef = useRef<HTMLDivElement | undefined>();
   const [ isOpen, setIsOpen ] = useState(false);
