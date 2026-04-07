@@ -29,7 +29,7 @@ $ git clone https://github.com/tinymce/tinymce.git
 
 ### Install dependencies
 
-* `bun`
+* `bun i`
 
 ### Build TinyMCE
 
@@ -39,7 +39,7 @@ This will produce an editor build in `modules/tinymce/js`, with distribution zip
 
 ## Developing TinyMCE
 
-* `bun dev`
+* `bun run dev`
 
 This performs compilation steps which webpack requires but are usually once-off. It also runs `tsc` to make later commands faster (`tsc -b` enforces incremental compilation).
 
