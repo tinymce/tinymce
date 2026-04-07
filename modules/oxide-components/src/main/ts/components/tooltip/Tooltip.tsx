@@ -59,7 +59,7 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
       return;
     }
     setRenderComponents(rerender);
-  }, [renderComponents]);
+  }, [renderComponents, showCondition, setRenderComponents]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -75,7 +75,7 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, []);
+  }, [renderComponents, showCondition, setRenderComponents]);
 
   const count = Children.count(children);
   if (count === 0) {
