@@ -16,7 +16,7 @@ import { DropdownContext } from '../dropdown/internals/Context';
 
 interface TooltipState {
   readonly isOpen: boolean;
-  readonly renderComponents: boolean;
+  readonly shouldRenderComponents: boolean;
   readonly delayForShow: number;
   readonly delayForHide: number;
   readonly setIsOpen: (isOpen: boolean) => void;
@@ -29,7 +29,7 @@ interface TooltipState {
 
 const defaultState: TooltipState = {
   isOpen: false,
-  renderComponents: true,
+  shouldRenderComponents: true,
   delayForShow: 300,
   delayForHide: 100,
   setIsOpen: Fun.noop,
@@ -47,7 +47,7 @@ interface TriggerInternalProps extends PropsWithChildren<HTMLAttributes<HTMLElem
 const isOverflowing = (element: HTMLElement) => (element.offsetWidth < element.scrollWidth);
 
 const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, ...props }, ref) => {
-  const { renderComponents, setIsOpen, showCondition, triggerRef, setRenderComponents, popupAnchor } = useContext(TooltipContext);
+  const { shouldRenderComponents, setIsOpen, showCondition, triggerRef, setRenderComponents, popupAnchor } = useContext(TooltipContext);
 
   const shouldRender = () => {
     if (showCondition === 'overflow') {
@@ -60,20 +60,20 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
   };
 
   useLayoutEffect(() => {
-    const rerender = shouldRender();
-    if (renderComponents === rerender) {
+    const shouldRerender = shouldRender();
+    if (shouldRenderComponents === shouldRerender) {
       return;
     }
-    setRenderComponents(rerender);
-  }, [renderComponents, showCondition, setRenderComponents]);
+    setRenderComponents(shouldRerender);
+  }, [shouldRenderComponents, showCondition, setRenderComponents]);
 
   useEffect(() => {
     const handleResize = () => {
-      const rerender = shouldRender();
-      if (renderComponents === rerender) {
+      const shouldRerender = shouldRender();
+      if (shouldRenderComponents === shouldRerender) {
         return;
       }
-      setRenderComponents(rerender);
+      setRenderComponents(shouldRerender);
     };
 
     window.addEventListener('resize', handleResize);
@@ -81,7 +81,7 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, [renderComponents, showCondition, setRenderComponents]);
+  }, [shouldRenderComponents, showCondition, setRenderComponents]);
 
   const count = Children.count(children);
   if (count === 0) {
@@ -113,7 +113,7 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
     }
   };
 
-  if (renderComponents) {
+  if (shouldRenderComponents) {
     return cloneElement(theChild, {
       ...props,
       style: {
@@ -179,7 +179,7 @@ const hideContentPopover = (content: HTMLElement) => {
 };
 
 const Content = forwardRef<HTMLDivElement, ContentProps>(({ text }, ref) => {
-  const { renderComponents, isOpen, contentRef, triggerRef, delayForShow, delayForHide, popupAnchor } = useContext(TooltipContext);
+  const { shouldRenderComponents, isOpen, contentRef, triggerRef, delayForShow, delayForHide, popupAnchor } = useContext(TooltipContext);
 
   useLayoutEffect(() => {
     if (Type.isNonNullable(contentRef.current)) {
@@ -196,9 +196,9 @@ const Content = forwardRef<HTMLDivElement, ContentProps>(({ text }, ref) => {
         };
       }
     }
-  }, [ renderComponents, isOpen, contentRef, triggerRef, delayForShow, delayForHide ]);
+  }, [ shouldRenderComponents, isOpen, contentRef, triggerRef, delayForShow, delayForHide ]);
 
-  if (!renderComponents) {
+  if (!shouldRenderComponents) {
     return null;
   }
 
@@ -226,7 +226,7 @@ const Content = forwardRef<HTMLDivElement, ContentProps>(({ text }, ref) => {
 const Root: FC<RootProps> = ({ children, showCondition }) => {
   const [ state, setState ] = useState({
     isOpen: false,
-    renderComponents: true,
+    shouldRenderComponents: true,
     delayForShow: 300,
     delayForHide: 100,
   });
@@ -237,11 +237,11 @@ const Root: FC<RootProps> = ({ children, showCondition }) => {
     setState((prevState) => ({ ...prevState, isOpen }));
   }, []);
 
-  const setRenderComponents = useCallback((renderComponents: boolean) => {
-    if (renderComponents) {
-      setState((prevState) => ({ ...prevState, isOpen: false, renderComponents }));
+  const setRenderComponents = useCallback((shouldRenderComponents: boolean) => {
+    if (shouldRenderComponents) {
+      setState((prevState) => ({ ...prevState, isOpen: false, shouldRenderComponents }));
     } else {
-      setState((prevState) => ({ ...prevState, renderComponents }));
+      setState((prevState) => ({ ...prevState, shouldRenderComponents }));
     }
   }, []);
   const context = useContext(DropdownContext);
