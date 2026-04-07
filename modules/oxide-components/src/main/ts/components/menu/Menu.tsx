@@ -25,8 +25,7 @@ const Root = forwardRef<HTMLDivElement, PropsWithChildren<unknown>>(({ children 
   KeyboardNavigationHooks.useFlowKeyNavigation({
     containerRef: internalRef,
     selector: ENABLED_ITEM_SELECTOR,
-    allowHorizontal: false,
-    cycles: false
+    allowHorizontal: false
   });
 
   useEffect(() => {

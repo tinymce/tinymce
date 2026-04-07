@@ -40,9 +40,9 @@
     "test-visual-local": "node ./visual-regression-test.mjs",
     "test-visual-local-update": "node ./visual-regression-test.mjs update",
     "test-ci": "vitest --watch=false --reporter=default --reporter=junit --outputFile=scratch/test-results.xml",
-    "test-browser-manual": "vitest --watch --project browser --browser.headless false",
-    "test-browser-headless": "vitest run --project browser",
-    "ci": "bun lint && lerna run --stream build --scope @tinymce/oxide-components --include-dependencies && bun run test"
+    "test-browser-manual": "vitest --watch --browser.headless false",
+    "test-browser-headless": "vitest --watch",
+    "ci": "bun exec lerna -- run --scope @tinymce/oxide-components --include-dependencies build && npm-run-all -p lint test"
   },
   "peerDependencies": {
     "react": "^18.3.1",

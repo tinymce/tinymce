@@ -41,7 +41,8 @@ export default defineConfig({
       use: { ...devices['Desktop Safari'] },
     },
   ],
-  // We can't run development storybook in Docker, because rollup uses native binaries
+  // We can't run development storybook in Docker, because rollup uses native binaries.
+  // But we can in CI where we don't need Docker.
   webServer: process.env.CI
     ? {
       command: 'bun start --ci --loglevel debug',
