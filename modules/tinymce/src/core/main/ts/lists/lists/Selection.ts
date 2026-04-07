@@ -84,7 +84,9 @@ const getClosestListHost = (editor: Editor, elm: Node, isCollapsed: boolean): HT
   let foundListBlock = !requireLiElementFirst(parentBlocks);
   const isNotForcedRootBlock = (elm: HTMLElement) => elm.nodeName.toLowerCase() !== Options.getForcedRootBlock(editor);
   const checkListRequirement = (element: HTMLElement) => {
-    foundListBlock = foundListBlock || isListItem(SugarElement.fromDom(element)) || isList(SugarElement.fromDom(element));
+    if (isListItem(SugarElement.fromDom(element)) || isList(SugarElement.fromDom(element))) {
+      foundListBlock = true;
+    }
 
     return foundListBlock;
   };
