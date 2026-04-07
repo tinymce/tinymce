@@ -3,10 +3,6 @@ ARG PLAYWRIGHT_VERSION=1.58.2-noble
 # Test stage
 FROM mcr.microsoft.com/playwright:v${PLAYWRIGHT_VERSION} AS test
 
-RUN apt-get update -qq && apt-get install -y -qq unzip && \
-    curl -fsSL https://bun.sh/install | bash -s "bun-v1.3.11"
-ENV PATH="/root/.bun/bin:${PATH}"
-
 WORKDIR /tinymce
 
-ENTRYPOINT [ "bun", "--cwd", "modules/oxide-components", "playwright", "test" ]
+ENTRYPOINT [ "npm", "exec", "--workspace=@tinymce/oxide-components", "playwright", "test" ]
