@@ -237,7 +237,7 @@ describe('headless.tinymce.themes.silver.window.WindowManagerAlertTest', () => {
     await pTeardown();
   });
 
-  it('TINY-13812: Alert dialog should not have aria-label nor aria-labeledby attributes', async () => {
+  it('TINY-13812: Alert dialog should not have aria-label nor aria-labelledby attributes', async () => {
     createAlert('Alert dialog accessibility test', Fun.noop);
     await pWaitForDialog();
     const dialog = UiFinder.findIn<HTMLElement>(SugarBody.body(), '.tox-dialog').getOrDie();
@@ -247,7 +247,7 @@ describe('headless.tinymce.themes.silver.window.WindowManagerAlertTest', () => {
   });
 
   it('TINY-13812: Alert dialog should have aria-describedby correctly setup', async () => {
-    const alertDialogText = 'Confirm dialog accessibility test';
+    const alertDialogText = 'Alert dialog accessibility test';
     createAlert(alertDialogText, Fun.noop);
     await pWaitForDialog();
     const dialog = UiFinder.findIn<HTMLElement>(SugarBody.body(), '.tox-dialog').getOrDie();

@@ -248,7 +248,7 @@ describe('headless.tinymce.themes.silver.window.WindowManagerConfirmTest', () =>
     await pTeardown();
   });
 
-  it('TINY-13812: Confirm dialog should not have aria-label nor aria-labeledby attributes', async () => {
+  it('TINY-13812: Confirm dialog should not have aria-label nor aria-labelledby attributes', async () => {
     createConfirm('Confirm dialog accessibility test', Fun.noop);
     await pWaitForDialog();
     const dialog = UiFinder.findIn<HTMLElement>(SugarBody.body(), '.tox-dialog').getOrDie();
