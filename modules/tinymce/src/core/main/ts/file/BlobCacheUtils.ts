@@ -10,8 +10,7 @@ const uniqueId = (prefix?: string): string => {
   return (prefix || 'blobid') + (count++);
 };
 
-const withoutByteOrderMark = (str: string) =>
-  Strings.startsWith(str, '\uFEFF') ? str.slice(1) : str;
+const withoutByteOrderMark = (str: string): string => String.fromCharCode(...(new window.TextEncoder().encode(str)));
 
 export const processDataUri = (dataUri: string, base64Only: boolean, generateBlobInfo: (base64: string, type: string) => Optional<BlobInfo>): Optional<BlobInfo> => {
   return Conversions.parseDataUri(dataUri).bind(({ data, type, base64Encoded }) => {

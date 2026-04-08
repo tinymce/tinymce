@@ -8,4 +8,8 @@ describe('atomic.tinymce.core.file.BlobCacheUtilsTest', () => {
   it('TINY-13938: processDataUri should not throw error with URIs with Byte Order Mark (BOM)', () => {
     assert.doesNotThrow(() => processDataUri('data:image/svg+xml,%EF%BB%BF%3Csvg', false, Fun.constant(Optional.none())));
   });
+
+  it('TINY-13938: processDataUri should not throw error with URIs with not Latin1 characters', () => {
+    assert.doesNotThrow(() => processDataUri('data:image/svg+xml,%EF%BB%BF%3Csvg犬', false, Fun.constant(Optional.none())));
+  });
 });
