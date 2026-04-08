@@ -8,11 +8,12 @@ import * as SelectionUtils from '../selection/SelectionUtils';
 import * as DeleteElement from './DeleteElement';
 
 const deleteRange = (editor: Editor, forward: boolean): Optional<() => void> => {
-  const rng = RangeNormalizer.normalize(editor.selection.getRng());
+  const range = editor.selection.getRng();
+  const rng = RangeNormalizer.normalize(range);
 
   return SelectionUtils.isSelectionOverWholeHTMLElement(rng)
     ? Optional.some(() =>
-      DeleteElement.deleteElement(editor, forward, SugarElement.fromDom(editor.selection.getNode()))
+      DeleteElement.deleteElement(editor, forward, SugarElement.fromDom(range.startContainer.childNodes[range.startOffset]))
     )
     : Optional.none();
 };
