@@ -377,7 +377,7 @@ describe('browser.tinymce.core.delete.BlockBoundaryDeleteTest', () => {
     it('TINY-9230: Backspace between two editing hosts should be a noop', () => {
       const editor = hook.editor();
       editor.setContent('<div contenteditable="false"><div contenteditable="true">a</div></div><div contenteditable="false"><div contenteditable="true">b</div></div>');
-      TinySelections.setCursor(editor, [ 2, 0, 0 ], 0); // Start index off by one to compensate for fake caret paragraph
+      TinySelections.setCursor(editor, [ 1, 0, 0 ], 0); // Start index off by one to compensate for fake caret paragraph
       noopBackspace(editor);
     });
   });
