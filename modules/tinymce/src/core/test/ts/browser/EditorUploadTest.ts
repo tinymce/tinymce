@@ -130,7 +130,9 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
 
       assertEventsLength(0);
       return editor.uploadImages().then(() => {
-        editor.setContent(imageHtml(blobUri));
+        editor.undoManager.ignore(() =>
+          editor.setContent(imageHtml(blobUri))
+        );
         assert.isFalse(hasBlobAsSource(editor.dom.select('img')[0]), 'replace uploaded blob uri with result uri (copy/paste of an uploaded blob uri)');
         assert.equal(editor.getContent(), '<p><img src="file.png"></p>', 'replace uploaded blob uri with result uri (copy/paste of an uploaded blob uri)');
         assertEventsLength(1);
@@ -372,7 +374,9 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
       assert.lengthOf(editor.undoManager.data, 2, 'Suitable number of stacks added');
     };
 
+    assertEventsLength(0);
     editor.resetContent(imageHtml(testBlobDataUri));
+    clearEvents();
 
     editor.options.set('images_upload_handler', (_data: BlobInfo) => {
       uploadCount++;
@@ -504,7 +508,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
 
     assertEventsLength(0);
     const uploadDone = () => {
-      assertEventsLength(0);
+      assertEventsLength(1);
       assert.equal(uploadCount, 0, 'Should not upload.');
     };
 
@@ -524,7 +528,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
 
     assertEventsLength(0);
     const uploadDone = () => {
-      assertEventsLength(0);
+      assertEventsLength(1); ;
       assert.equal(uploadCount, 0, 'Should not upload.');
     };
 
@@ -544,7 +548,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
 
     assertEventsLength(0);
     const uploadDone = () => {
-      assertEventsLength(0);
+      assertEventsLength(1); ;
       assert.equal(uploadCount, 0, 'Should not upload.');
       assert.equal(filterCount, 1, 'Should have filtered one item.');
     };

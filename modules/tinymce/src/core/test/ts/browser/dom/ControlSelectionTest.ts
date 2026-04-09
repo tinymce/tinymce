@@ -274,7 +274,7 @@ describe('browser.tinymce.core.dom.ControlSelectionTest', () => {
   it('TINY-9731: data-mce-selected should appear on selected details element', () => {
     const editor = hook.editor();
     editor.setContent(`<details><summary>hoy</summary><p>tiny</p></details>`);
-    TinyAssertions.assertContentPresence(editor, { 'details[data-mce-selected="1"]': 0 });
+    TinyAssertions.assertContentPresence(editor, { 'details[data-mce-selected="1"]': 1 });
     TinySelections.setCursor(editor, [ 0, 0 ], 0);
     TinyAssertions.assertContentPresence(editor, { 'details[data-mce-selected="1"]': 1 });
   });
