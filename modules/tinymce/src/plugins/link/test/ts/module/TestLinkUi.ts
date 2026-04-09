@@ -22,7 +22,7 @@ const pOpenLinkDialog = async (editor: Editor): Promise<void> => {
 };
 
 const clickOnConfirmDialog = (editor: Editor, state: boolean): void => {
-  TinyUiActions.clickOnUi(editor, '[role="dialog"].tox-confirm-dialog button:contains("' + (state ? 'Yes' : 'No') + '")');
+  TinyUiActions.clickOnUi(editor, '[role="alertdialog"].tox-confirm-dialog button:contains("' + (state ? 'Yes' : 'No') + '")');
 };
 
 const getInput = (labelText: string) =>

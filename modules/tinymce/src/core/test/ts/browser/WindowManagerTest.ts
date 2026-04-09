@@ -105,8 +105,8 @@ describe('browser.tinymce.core.WindowManagerTest', () => {
 
     Mouse.trueClickOn(SugarBody.body(), triggerButtonSelector);
     await TinyUiActions.pWaitForPopup(editor, '.tox-confirm-dialog');
-    await FocusTools.pTryOnSelector('Focus should be inside confirmation dialog', SugarDocument.getDocument(), '[role="dialog"].tox-confirm-dialog button:contains("Yes")');
-    TinyUiActions.clickOnUi(editor, '[role="dialog"].tox-confirm-dialog button:contains("Yes")');
+    await FocusTools.pTryOnSelector('Focus should be inside confirmation dialog', SugarDocument.getDocument(), '[role="alertdialog"].tox-confirm-dialog button:contains("Yes")');
+    TinyUiActions.clickOnUi(editor, '[role="alertdialog"].tox-confirm-dialog button:contains("Yes")');
 
     await FocusTools.pTryOnSelector('Focus should be restored to the trigger button', SugarDocument.getDocument(), triggerButtonSelector);
     TinyUiActions.closeDialogByTitle(editor, 'Dialog 1');
@@ -120,8 +120,8 @@ describe('browser.tinymce.core.WindowManagerTest', () => {
 
     Mouse.trueClickOn(SugarBody.body(), triggerButtonSelector);
     await TinyUiActions.pWaitForPopup(editor, '.tox-alert-dialog');
-    await FocusTools.pTryOnSelector('Focus should be inside alert dialog', SugarDocument.getDocument(), '[role="dialog"].tox-alert-dialog button:contains("OK")');
-    TinyUiActions.clickOnUi(editor, '[role="dialog"].tox-alert-dialog button:contains("OK")');
+    await FocusTools.pTryOnSelector('Focus should be inside alert dialog', SugarDocument.getDocument(), '[role="alertdialog"].tox-alert-dialog button:contains("OK")');
+    TinyUiActions.clickOnUi(editor, '[role="alertdialog"].tox-alert-dialog button:contains("OK")');
 
     await FocusTools.pTryOnSelector('Focus should be restored to the trigger button', SugarDocument.getDocument(), triggerButtonSelector);
     TinyUiActions.closeDialogByTitle(editor, 'Dialog 1');

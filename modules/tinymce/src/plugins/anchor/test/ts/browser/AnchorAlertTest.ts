@@ -15,7 +15,7 @@ describe('browser.tinymce.plugins.anchor.AnchorAlertTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin ]);
   const dialogSelector = 'div[role="dialog"].tox-dialog';
-  const alertDialogSelector = 'div[role="dialog"].tox-dialog.tox-alert-dialog';
+  const alertDialogSelector = 'div[role="alertdialog"].tox-dialog.tox-alert-dialog';
 
   it('TINY-2788: Add anchor with invalid id, check alert appears', async () => {
     const editor = hook.editor();
