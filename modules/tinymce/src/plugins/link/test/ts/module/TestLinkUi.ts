@@ -63,7 +63,7 @@ const pWaitForDialogClose = (): Promise<void> => Waiter.pTryUntil(
 
 const pWaitForConfirmClose = (): Promise<void> => Waiter.pTryUntil(
   'Waiting for confirm dialog to go away',
-  () => UiFinder.notExists(SugarBody.body(), '[role="dialog"].tox-confirm-dialog')
+  () => UiFinder.notExists(SugarBody.body(), '[role="alertdialog"].tox-confirm-dialog')
 );
 
 const pClickSave = async (editor: Editor): Promise<void> => {
