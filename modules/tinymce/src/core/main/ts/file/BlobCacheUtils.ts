@@ -1,4 +1,4 @@
-import { Optional, Strings, Type } from '@ephox/katamari';
+import { Arr, Optional, Strings, Type } from '@ephox/katamari';
 
 import type { BlobCache, BlobInfo } from '../api/file/BlobCache';
 
@@ -10,14 +10,17 @@ const uniqueId = (prefix?: string): string => {
   return (prefix || 'blobid') + (count++);
 };
 
-const withoutByteOrderMark = (str: string): string => String.fromCharCode(...(new window.TextEncoder().encode(str)));
+const encodeToUtf8 = (str: string): string =>
+  Arr.foldl(new window.TextEncoder().encode(str), (acc, charCode) =>
+    acc + String.fromCharCode(charCode)
+  , '');
 
 export const processDataUri = (dataUri: string, base64Only: boolean, generateBlobInfo: (base64: string, type: string) => Optional<BlobInfo>): Optional<BlobInfo> => {
   return Conversions.parseDataUri(dataUri).bind(({ data, type, base64Encoded }) => {
     if (base64Only && !base64Encoded) {
       return Optional.none();
     } else {
-      const base64 = base64Encoded ? data : btoa(withoutByteOrderMark(data));
+      const base64 = base64Encoded ? data : btoa(encodeToUtf8(data));
       return generateBlobInfo(base64, type);
     }
   });
