@@ -40,31 +40,35 @@ const useContextToolbarContext = () => {
 };
 
 const defaultToolbarGap = '6px';
-const toolbarControlSelector = 'button, [role="button"], .tox-button';
-const enabledToolbarControlSelector = [
-  'button:not([disabled]):not([aria-disabled="true"])',
-  '[role="button"]:not([disabled]):not([aria-disabled="true"])',
-  '.tox-button:not([disabled]):not([aria-disabled="true"])'
-].join(', ');
+const toolbarControlSelectors = [ 'button', '[role="button"]', '.tox-button' ];
+const toolbarControlSelector = toolbarControlSelectors.join(', ');
+const enabledToolbarControlSelector =
+  Arr.map(toolbarControlSelectors,
+    (selector) => `${selector}:not([disabled]):not([aria-disabled="true"])`).join(', ');
 
-const isFocusableControl = (elem: SugarElement<Node>): elem is SugarElement<HTMLElement> => {
-  if (!SugarNode.isHTMLElement(elem)) {
-    return false;
-  }
+const isEnabledAndTabbable = (elem: SugarElement<HTMLElement>): boolean =>
+  !Attribute.has(elem, 'disabled')
+  && Attribute.get(elem, 'aria-disabled') !== 'true'
+  && elem.dom.tabIndex >= 0;
 
-  if (!Selectors.is(elem, toolbarControlSelector)) {
-    return false;
-  }
+const focusablePredicate = (selector: string) => (elem: SugarElement<Node>): elem is SugarElement<HTMLElement> =>
+  SugarNode.isHTMLElement(elem)
+  && Selectors.is(elem, selector)
+  && isEnabledAndTabbable(elem);
 
-  return !Attribute.has(elem, 'disabled') && Attribute.get(elem, 'aria-disabled') !== 'true' && elem.dom.tabIndex >= 0;
-};
+const isFocusableControl = focusablePredicate(toolbarControlSelector);
 
-const findFirstFocusable = (container: SugarElement<HTMLElement>): Optional<SugarElement<HTMLElement>> =>
-  PredicateFind.descendant(container, isFocusableControl);
+const isFirstFocusableInClosestAncestor = (
+  elem: SugarElement<HTMLElement>,
+  ancestorSelector: string
+): boolean =>
+  SelectorFind.closest(elem, ancestorSelector).map((ancestor) =>
+    PredicateFind.descendant(ancestor, isFocusableControl).exists((firstMatch) => Compare.eq(firstMatch, elem))
+  ).getOr(true);
 
 const focusFirstEnabledControl = (toolbar: HTMLElement) => {
   const sugarToolbar = SugarElement.fromDom(toolbar);
-  findFirstFocusable(sugarToolbar).fold(() => Focus.focus(sugarToolbar), Focus.focus);
+  PredicateFind.descendant(sugarToolbar, isFocusableControl).fold(() => Focus.focus(sugarToolbar), Focus.focus);
 };
 
 const Root: FC<ContextToolbarProps> = ({
@@ -240,12 +244,7 @@ const Toolbar = forwardRef<ToolbarHandle, ToolbarProps>(({
   KeyboardNavigationHooks.useTabKeyNavigation({
     containerRef: toolbarRef,
     selector: toolbarControlSelector,
-    useTabstopAt: (elem) => {
-      return SelectorFind.closest(elem, '.tox-toolbar__group')
-        .map((group) => PredicateFind.descendant(group, isFocusableControl)
-          .exists((firstInGroup) => Compare.eq(firstInGroup, elem)))
-        .getOr(true);
-    },
+    useTabstopAt: (elem) => isFirstFocusableInClosestAncestor(elem, '.tox-toolbar__group'),
     cyclic: true
   });
 

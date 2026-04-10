@@ -553,6 +553,37 @@ describe('browser.components.ContextToolbar', () => {
     await expect.element(button1).toHaveFocus();
   });
 
+  it('TINY-14242: Should focus toolbar container when no enabled controls exist', async () => {
+    const { getByTestId, container } = render(
+      <Fragment>
+        <div className='tox' style={{ position: 'relative' }}>
+          <ContextToolbar.Root>
+            <ContextToolbar.Trigger>
+              <div data-testid={triggerTestId}>Click Me</div>
+            </ContextToolbar.Trigger>
+            <ContextToolbar.Toolbar>
+              <ContextToolbar.Group>
+                <button data-testid='button1' disabled>Button 1</button>
+                <button data-testid='button2' disabled>Button 2</button>
+              </ContextToolbar.Group>
+              <ContextToolbar.Group>
+                <button data-testid='button3' disabled>Button 3</button>
+              </ContextToolbar.Group>
+            </ContextToolbar.Toolbar>
+          </ContextToolbar.Root>
+        </div>
+      </Fragment>,
+      { wrapper: Wrapper }
+    );
+
+    const trigger = getByTestId(triggerTestId);
+    await trigger.click();
+
+    const toolbar = container.querySelector('.tox-context-toolbar');
+    expect(toolbar).toBeTruthy();
+    expect(toolbar).toHaveFocus();
+  });
+
   it('TINY-14242: Should tab to the first non-disabled control in each group', async () => {
     const { getByTestId } = render(
       <Fragment>
