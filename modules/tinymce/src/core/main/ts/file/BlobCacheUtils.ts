@@ -10,7 +10,7 @@ const uniqueId = (prefix?: string): string => {
   return (prefix || 'blobid') + (count++);
 };
 
-const encodeToUtf8 = (str: string): string =>
+const utf8Encode = (str: string): string =>
   Arr.foldl(new window.TextEncoder().encode(str), (acc, charCode) =>
     acc + String.fromCharCode(charCode)
   , '');
@@ -20,7 +20,7 @@ export const processDataUri = (dataUri: string, base64Only: boolean, generateBlo
     if (base64Only && !base64Encoded) {
       return Optional.none();
     } else {
-      const base64 = base64Encoded ? data : btoa(encodeToUtf8(data));
+      const base64 = base64Encoded ? data : btoa(utf8Encode(data));
       return generateBlobInfo(base64, type);
     }
   });
