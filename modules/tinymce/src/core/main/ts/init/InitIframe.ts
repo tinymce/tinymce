@@ -37,9 +37,7 @@ const createIframeElement = (id: string, title: TranslatedString, customAttrs: {
 };
 
 const getIframeHtml = (editor: Editor) => {
-  const contentLanguage = Options.getContentLanguage(editor);
-  const langAttr = contentLanguage ? `lang="${contentLanguage}"` : '';
-  let iframeHTML = Options.getDocType(editor) + `<html ${langAttr}><head>`;
+  let iframeHTML = Options.getDocType(editor) + '<html><head>';
 
   // We only need to override paths if we have to
   // IE has a bug where it remove site absolute urls to relative ones if this is specified

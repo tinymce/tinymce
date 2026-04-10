@@ -420,11 +420,12 @@ const contentBodyLoaded = (editor: Editor): void => {
     editor.contentWindow = window;
     editor.bodyElement = targetElm;
     editor.contentAreaContainer = targetElm;
+  }
 
-    const contentLanguage = Options.getContentLanguage(editor);
-    if (contentLanguage) {
-      DOM.setAttrib(targetElm, 'lang', contentLanguage);
-    }
+  const contentLanguage = Options.getContentLanguage(editor);
+  if (contentLanguage) {
+    const langTarget = editor.inline ? targetElm : doc.documentElement;
+    DOM.setAttrib(langTarget, 'lang', contentLanguage);
   }
 
   // It will not steal focus while setting contentEditable
