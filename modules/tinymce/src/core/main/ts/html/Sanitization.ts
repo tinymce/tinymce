@@ -57,8 +57,8 @@ const processNode = (node: Node, settings: DomParserSettings, schema: Schema, sc
   const element = SugarElement.fromDom(node) as SugarElement<Element>;
 
   if (settings.sanitize) {
-    // TINY-9655: Preserve the content of script tags if they are valid elements in the schema
-    const shouldKeepContent = ElementType.isScript(element) && schema.isValid('script');
+    // TINY-9655: Preserve the content of script and style tags if they are valid elements in the schema
+    const shouldKeepContent = (ElementType.isScript(element) && schema.isValid('script')) || (ElementType.isStyle(element) && schema.isValid('style'));
     if (shouldKeepContent) {
       Optional.from(TextContent.get(element)).each((content) => Attribute.set(element, 'data-mce-tmp', content));
     }
@@ -187,7 +187,7 @@ const restoreValidContent = (node: Node) => {
   // Construct the sugar element wrapper
   const element = SugarElement.fromDom(node) as SugarElement<Element>;
 
-  if (ElementType.isScript(element)) {
+  if (ElementType.isScript(element) || ElementType.isStyle(element)) {
     Attribute.getOpt(element, 'data-mce-tmp').each((content) => {
       TextContent.set(element, content);
       Attribute.remove(element, 'data-mce-tmp');
