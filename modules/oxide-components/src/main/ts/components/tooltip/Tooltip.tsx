@@ -13,41 +13,14 @@ interface RootProps extends PropsWithChildren {
 }
 
 import { DropdownContext } from '../dropdown/internals/Context';
-
-interface TooltipState {
-  readonly isOpen: boolean;
-  readonly shouldRenderComponents: boolean;
-  readonly delayForShow: number;
-  readonly delayForHide: number;
-  readonly setIsOpen: (isOpen: boolean) => void;
-  readonly setRenderComponents: (isOpen: boolean) => void;
-  readonly contentRef: React.MutableRefObject<HTMLDivElement | null>;
-  readonly triggerRef: React.MutableRefObject<HTMLDivElement | null>;
-  readonly showCondition: 'always' | 'overflow';
-  readonly popupAnchor: string;
-}
-
-const defaultState: TooltipState = {
-  isOpen: false,
-  shouldRenderComponents: true,
-  delayForShow: 300,
-  delayForHide: 100,
-  setIsOpen: Fun.noop,
-  showCondition: 'always',
-  setRenderComponents: Fun.noop,
-  contentRef: { current: null },
-  triggerRef: { current: null },
-  popupAnchor: '--tooltip-anchor' // this is wrong, but I don't have time to rewrite context today
-};
-
-const TooltipContext = createContext<TooltipState>(defaultState);
+import { useTooltip, TooltipContext } from './internals/Context';
 
 interface TriggerInternalProps extends PropsWithChildren<HTMLAttributes<HTMLElement>> { }
 
 const isOverflowing = (element: HTMLElement) => (element.offsetWidth < element.scrollWidth);
 
 const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, ...props }, ref) => {
-  const { shouldRenderComponents, setIsOpen, showCondition, triggerRef, setRenderComponents, popupAnchor } = useContext(TooltipContext);
+  const { shouldRenderComponents, setIsOpen, showCondition, triggerRef, setRenderComponents, popupAnchor } = useTooltip();
 
   const shouldRender = useCallback(() => {
     if (showCondition === 'overflow') {
@@ -179,7 +152,7 @@ const hideContentPopover = (content: HTMLElement) => {
 };
 
 const Content = forwardRef<HTMLDivElement, ContentProps>(({ text }, ref) => {
-  const { shouldRenderComponents, isOpen, contentRef, triggerRef, delayForShow, delayForHide, popupAnchor } = useContext(TooltipContext);
+  const { shouldRenderComponents, isOpen, contentRef, triggerRef, delayForShow, delayForHide, popupAnchor } = useTooltip();
 
   useLayoutEffect(() => {
     if (Type.isNonNullable(contentRef.current)) {
