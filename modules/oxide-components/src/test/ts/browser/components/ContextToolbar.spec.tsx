@@ -68,6 +68,7 @@ describe('browser.components.ContextToolbar', () => {
   it('TINY-13071: Should close toolbar on click outside when persistent={false}', async () => {
     const { getByTestId } = render(
       <Fragment>
+        <div data-testid="outside" style={{ height: 40, width: 40 }}>outside</div>
         <div className='tox' style={{ position: 'relative' }}>
           <ContextToolbar.Root persistent={false}>
             <ContextToolbar.Trigger>
@@ -92,8 +93,7 @@ describe('browser.components.ContextToolbar', () => {
     await expect.element(toolbar).toBeVisible();
 
     // Click outside
-    await page.elementLocator(document.body).click({ position: { x: 0, y: 0 }});
-
+    await getByTestId('outside').click();
     await expect.element(toolbar).not.toBeVisible();
   });
 
@@ -320,6 +320,12 @@ describe('browser.components.ContextToolbar', () => {
 
     await userEvent.keyboard('{Tab}');
     await expect.element(button1).toHaveFocus();
+
+    await userEvent.keyboard('{Shift>}{Tab}{/Shift}');
+    await expect.element(button3).toHaveFocus();
+
+    await userEvent.keyboard('{Shift>}{Tab}{/Shift}');
+    await expect.element(button1).toHaveFocus();
   });
 
   it('TINY-13066: Should navigate within group with arrow keys', async () => {
@@ -488,5 +494,230 @@ describe('browser.components.ContextToolbar', () => {
     // Verify clicking anchor doesn't close toolbar (visibility controlled externally via conditional rendering)
     await anchor.click();
     await expect.element(button).toBeVisible();
+  });
+
+  it('TINY-14242: Should focus the first non-disabled control when opening the toolbar', async () => {
+    const { getByTestId } = render(
+      <Fragment>
+        <div className='tox' style={{ position: 'relative' }}>
+          <ContextToolbar.Root>
+            <ContextToolbar.Trigger>
+              <div data-testid={triggerTestId}>Click Me</div>
+            </ContextToolbar.Trigger>
+            <ContextToolbar.Toolbar>
+              <ContextToolbar.Group>
+                <button data-testid='button1' disabled>Button 1</button>
+                <button data-testid='button2'>Button 2</button>
+              </ContextToolbar.Group>
+            </ContextToolbar.Toolbar>
+          </ContextToolbar.Root>
+        </div>
+      </Fragment>,
+      { wrapper: Wrapper }
+    );
+
+    const trigger = getByTestId(triggerTestId);
+    await trigger.click();
+
+    const button1 = getByTestId('button2');
+    await expect.element(button1).toHaveFocus();
+  });
+
+  it('TINY-14242: Should focus the first non-disabled control across groups on open', async () => {
+    const { getByTestId } = render(
+      <Fragment>
+        <div className='tox' style={{ position: 'relative' }}>
+          <ContextToolbar.Root>
+            <ContextToolbar.Trigger>
+              <div data-testid={triggerTestId}>Click Me</div>
+            </ContextToolbar.Trigger>
+            <ContextToolbar.Toolbar>
+              <ContextToolbar.Group>
+                <button data-testid='button1' disabled>Button 1</button>
+                <button data-testid='button2' disabled>Button 2</button>
+              </ContextToolbar.Group>
+              <ContextToolbar.Group>
+                <button data-testid='button3'>Button 3</button>
+              </ContextToolbar.Group>
+            </ContextToolbar.Toolbar>
+          </ContextToolbar.Root>
+        </div>
+      </Fragment>,
+      { wrapper: Wrapper }
+    );
+
+    const trigger = getByTestId(triggerTestId);
+    await trigger.click();
+
+    const button1 = getByTestId('button3');
+    await expect.element(button1).toHaveFocus();
+  });
+
+  it('TINY-14242: Should focus toolbar container when no enabled controls exist', async () => {
+    const { getByTestId, container } = render(
+      <Fragment>
+        <div className='tox' style={{ position: 'relative' }}>
+          <ContextToolbar.Root>
+            <ContextToolbar.Trigger>
+              <div data-testid={triggerTestId}>Click Me</div>
+            </ContextToolbar.Trigger>
+            <ContextToolbar.Toolbar>
+              <ContextToolbar.Group>
+                <button data-testid='button1' disabled>Button 1</button>
+                <button data-testid='button2' disabled>Button 2</button>
+              </ContextToolbar.Group>
+              <ContextToolbar.Group>
+                <button data-testid='button3' disabled>Button 3</button>
+              </ContextToolbar.Group>
+            </ContextToolbar.Toolbar>
+          </ContextToolbar.Root>
+        </div>
+      </Fragment>,
+      { wrapper: Wrapper }
+    );
+
+    const trigger = getByTestId(triggerTestId);
+    await trigger.click();
+
+    const toolbar = container.querySelector('.tox-context-toolbar');
+    expect(toolbar).toBeTruthy();
+    expect(toolbar).toHaveFocus();
+  });
+
+  it('TINY-14242: Should tab to the first non-disabled control in each group', async () => {
+    const { getByTestId } = render(
+      <Fragment>
+        <div className='tox' style={{ position: 'relative' }}>
+          <ContextToolbar.Root>
+            <ContextToolbar.Trigger>
+              <div data-testid={triggerTestId}>Click Me</div>
+            </ContextToolbar.Trigger>
+            <ContextToolbar.Toolbar>
+              <ContextToolbar.Group>
+                <button data-testid='button1' disabled>Button 1</button>
+                <button data-testid='button2'>Button 2</button>
+              </ContextToolbar.Group>
+              <ContextToolbar.Group>
+                <button data-testid='button3' disabled>Button 3</button>
+                <button data-testid='button4'>Button 4</button>
+              </ContextToolbar.Group>
+            </ContextToolbar.Toolbar>
+          </ContextToolbar.Root>
+        </div>
+      </Fragment>,
+      { wrapper: Wrapper }
+    );
+
+    const trigger = getByTestId(triggerTestId);
+    await trigger.click();
+
+    const button1 = getByTestId('button2');
+    await expect.element(button1).toHaveFocus();
+
+    await userEvent.keyboard('{Tab}');
+    const button3 = getByTestId('button4');
+    await expect.element(button3).toHaveFocus();
+
+    await userEvent.keyboard('{Tab}');
+    await expect.element(button1).toHaveFocus();
+
+    await userEvent.keyboard('{Shift>}{Tab}{/Shift}');
+    await expect.element(button3).toHaveFocus();
+
+    await userEvent.keyboard('{Shift>}{Tab}{/Shift}');
+    await expect.element(button1).toHaveFocus();
+  });
+
+  it('TINY-14242: Should cycle with arrow keys and skip disabled controls in a group', async () => {
+    const { getByTestId } = render(
+      <Fragment>
+        <div className='tox' style={{ position: 'relative' }}>
+          <ContextToolbar.Root>
+            <ContextToolbar.Trigger>
+              <div data-testid={triggerTestId}>Click Me</div>
+            </ContextToolbar.Trigger>
+            <ContextToolbar.Toolbar>
+              <ContextToolbar.Group>
+                <button data-testid='button1'>Button 1</button>
+                <button data-testid='button2'>Button 2</button>
+                <button data-testid='button3' disabled>Button 3</button>
+              </ContextToolbar.Group>
+            </ContextToolbar.Toolbar>
+          </ContextToolbar.Root>
+        </div>
+      </Fragment>,
+      { wrapper: Wrapper }
+    );
+
+    const trigger = getByTestId(triggerTestId);
+    await trigger.click();
+
+    const button1 = getByTestId('button1');
+    const button2 = getByTestId('button2');
+
+    await userEvent.keyboard('{Tab}');
+    await expect.element(button1).toHaveFocus();
+
+    await userEvent.keyboard('{ArrowRight}');
+    await expect.element(button2).toHaveFocus();
+
+    await userEvent.keyboard('{ArrowRight}');
+    await expect.element(button1).toHaveFocus();
+
+    await userEvent.keyboard('{ArrowLeft}');
+    await expect.element(button2).toHaveFocus();
+  });
+
+  it('TINY-14242: Should skip groups with no enabled controls when tabbing', async () => {
+    const { getByTestId } = render(
+      <Fragment>
+        <div className='tox' style={{ position: 'relative' }}>
+          <ContextToolbar.Root>
+            <ContextToolbar.Trigger>
+              <div data-testid={triggerTestId}>Click Me</div>
+            </ContextToolbar.Trigger>
+            <ContextToolbar.Toolbar>
+              <ContextToolbar.Group>
+                <button data-testid='button1'>Button 1</button>
+                <button data-testid='button2'>Button 2</button>
+              </ContextToolbar.Group>
+              <ContextToolbar.Group>
+                <button data-testid='button3' disabled>Button 3</button>
+                <button data-testid='button4' disabled>Button 4</button>
+              </ContextToolbar.Group>
+              <ContextToolbar.Group>
+                <button data-testid='button5' disabled>Button 5</button>
+                <button data-testid='button6' disabled>Button 6</button>
+              </ContextToolbar.Group>
+              <ContextToolbar.Group>
+                <button data-testid='button7'>Button 7</button>
+                <button data-testid='button8'>Button 8</button>
+              </ContextToolbar.Group>
+            </ContextToolbar.Toolbar>
+          </ContextToolbar.Root>
+        </div>
+      </Fragment>,
+      { wrapper: Wrapper }
+    );
+
+    const trigger = getByTestId(triggerTestId);
+    await trigger.click();
+
+    const button1 = getByTestId('button1');
+    const button7 = getByTestId('button7');
+
+    await expect.element(button1).toHaveFocus();
+
+    await userEvent.keyboard('{Tab}');
+    await expect.element(button7).toHaveFocus();
+
+    await userEvent.keyboard('{Tab}');
+    await expect.element(button1).toHaveFocus();
+
+    await userEvent.keyboard('{Shift>}{Tab}{/Shift}');
+    await expect.element(button7).toHaveFocus();
+
+    await userEvent.keyboard('{Shift>}{Tab}{/Shift}');
+    await expect.element(button1).toHaveFocus();
   });
 });
