@@ -18,14 +18,20 @@ describe('browser.tinymce.core.html.SanitizationTest', () => {
     };
 
     it('Sanitize iframe HTML', () => testHtmlSanitizer({
-      input: '<iframe src="x"><script>alert(1)</script></iframe><iframe src="javascript:alert(1)"></iframe>',
-      expected: '<iframe src="x"></iframe><iframe></iframe>',
+      input: '<iframe src="x"><script>alert(1)</script></iframe>'
+        + '<iframe src="javascript:alert(1)"></iframe>'
+        + '<iframe src="x"><p>Some invalid content</p></iframe>',
+      expected: '<iframe src="x"></iframe>'
+        + '<iframe></iframe>'
+        + '<iframe src="x"></iframe>',
       mimeType: 'text/html'
     }));
 
     it('Disabled sanitization of iframe HTML', () => testHtmlSanitizer({
-      input: '<iframe src="x"><script>alert(1)</script></iframe><iframe src="javascript:alert(1)"></iframe>',
-      expected: '<iframe src="x"><script>alert(1)</script></iframe><iframe></iframe>',
+      input: '<iframe src="x"><script>alert(1)</script></iframe>'
+        + '<iframe src="javascript:alert(1)"></iframe>',
+      expected: '<iframe src="x"><script>alert(1)</script></iframe>'
+        + '<iframe></iframe>',
       mimeType: 'text/html',
       sanitize: false
     }));

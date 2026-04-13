@@ -1,5 +1,5 @@
 import { Arr, Fun, Obj, Optional, Strings, Type } from '@ephox/katamari';
-import { Attribute, Html, NodeTypes, Remove, Replication, SugarElement, TextContent } from '@ephox/sugar';
+import { Attribute, NodeTypes, Remove, Replication, SugarElement, TextContent } from '@ephox/sugar';
 import createDompurify, { type Config, type DOMPurify, type UponSanitizeAttributeHookEvent, type UponSanitizeElementHookEvent } from 'dompurify';
 
 import type { DomParserSettings } from '../api/html/DomParser';
@@ -66,7 +66,7 @@ const processNode = (node: Node, settings: DomParserSettings, schema: Schema, sc
     // TINY-9655: Clear innerHTML of script and iframe tags to prevent DOMPurify from removing them entirely
     const shouldClearContent = ElementType.isIframe(element) && schema.isValid('iframe');
     if (shouldKeepContent || shouldClearContent) {
-      Html.set(element, '');
+      Remove.empty(element);
     }
   }
 
@@ -188,7 +188,7 @@ const restoreValidContent = (node: Node) => {
   const element = SugarElement.fromDom(node) as SugarElement<Element>;
 
   if (ElementType.isScript(element)) {
-    Optional.from(Attribute.get(element, 'data-mce-tmp')).each((content) => {
+    Attribute.getOpt(element, 'data-mce-tmp').each((content) => {
       TextContent.set(element, content);
       Attribute.remove(element, 'data-mce-tmp');
     });
