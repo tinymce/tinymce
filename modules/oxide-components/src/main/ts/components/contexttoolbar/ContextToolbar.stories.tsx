@@ -469,3 +469,67 @@ export const ScrollAnchored: Story = {
     );
   },
 };
+
+export const DisabledControls: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Demonstrates keyboard navigation with disabled controls. On open, focus moves to the first enabled control. Tab moves between groups using the first enabled control in each group and skips groups with no enabled controls. Arrow keys move within the current group.',
+      },
+    },
+  },
+  render: () => {
+    const anchorRef = useRef<HTMLDivElement>(null);
+    const [ showToolbar, setShowToolbar ] = useState(true);
+
+    return (
+      <div className='tox' style={{ position: 'relative' }}>
+        <div
+          ref={anchorRef}
+          style={{
+            backgroundColor: 'lightcoral',
+            padding: '10px',
+            cursor: 'pointer',
+            display: 'inline-block'
+          }}
+        >
+          Anchor element
+        </div>
+
+        <button onClick={() => setShowToolbar(!showToolbar)} style={{ marginLeft: '10px' }}>
+          {showToolbar ? 'Hide' : 'Show'} Toolbar
+        </button>
+
+        {showToolbar && (
+          <ContextToolbar.Root
+            anchorRef={anchorRef}
+            persistent={true}
+          >
+            <ContextToolbar.Toolbar>
+              <ContextToolbar.Group>
+                <Button>Accept A</Button>
+                <Button>Accept B</Button>
+                <Button disabled>Reject (Disabled)</Button>
+              </ContextToolbar.Group>
+              <ContextToolbar.Group>
+                <Button disabled>Group 2 Action (Disabled)</Button>
+              </ContextToolbar.Group>
+              <ContextToolbar.Group>
+                <Button disabled>Group 3 Action (Disabled)</Button>
+              </ContextToolbar.Group>
+
+              <ContextToolbar.Group>
+                <Button>Final Group A</Button>
+                <Button>Final Group B</Button>
+                <Button>Final Group C</Button>
+                <Button>Final Group D</Button>
+                <Button>Final Group E</Button>
+              </ContextToolbar.Group>
+            </ContextToolbar.Toolbar>
+          </ContextToolbar.Root>
+        )}
+      </div>
+    );
+  },
+};
