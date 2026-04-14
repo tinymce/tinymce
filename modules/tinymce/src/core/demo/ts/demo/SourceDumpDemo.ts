@@ -16,6 +16,7 @@ export default (): void => {
       'searchreplace', 'wordcount', 'visualblocks', 'visualchars', 'code', 'fullscreen', 'insertdatetime', 'media', 'nonbreaking',
       'save', 'table', 'directionality', 'emoticons', 'importcss', 'codesample', 'help'
     ],
+    sandbox_iframes: false,
     add_unload_trigger: false,
     autosave_ask_before_unload: false,
     toolbar: 'fontsize fontfamily insertfile undo redo | styles | bold italic | alignleft aligncenter alignright alignjustify | ' +

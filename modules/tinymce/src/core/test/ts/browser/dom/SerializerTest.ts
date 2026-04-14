@@ -356,9 +356,8 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
     assert.equal(ser.serialize(getTestElement()).replace(/\r/g, ''), '<s' + 'cript type="mylanguage"></s' + 'cript>');
   });
 
-  it('Script with tags inside a comment with element_format: xhtml and sanitize: false', () => {
-    // TINY-8363: Disable sanitization to avoid DOMPurify false positive affecting expected output
-    const ser = DomSerializer({ fix_list_elements: true, element_format: 'xhtml', sanitize: false });
+  it('Script with tags inside a comment with element_format: xhtml and sanitize: true', () => {
+    const ser = DomSerializer({ fix_list_elements: true, element_format: 'xhtml' });
     ser.setRules('script[type|language|src]');
 
     setTestHtml('<s' + 'cript>// <img src="test"><a href="#"></a></s' + 'cript>');
@@ -368,9 +367,8 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
     );
   });
 
-  it('Script with tags inside a comment with sanitize: false', () => {
-    // TINY-8363: Disable sanitization to avoid DOMPurify false positive affecting expected output
-    const ser = DomSerializer({ fix_list_elements: true, sanitize: false });
+  it('Script with tags inside a comment with sanitize: true', () => {
+    const ser = DomSerializer({ fix_list_elements: true });
     ser.setRules('script[type|language|src]');
 
     setTestHtml('<s' + 'cript>// <img src="test"><a href="#"></a></s' + 'cript>');
@@ -435,7 +433,7 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
   });
 
   it('Script with a HTML comment and less than with element_format: xhtml', () => {
-    const ser = DomSerializer({ fix_list_elements: true, element_format: 'xhtml', sanitize: false });
+    const ser = DomSerializer({ fix_list_elements: true, element_format: 'xhtml' });
     ser.setRules('script[type|language|src]');
 
     setTestHtml('<script><!-- 1 < 2; // --></s' + 'cript>');
@@ -443,7 +441,7 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
   });
 
   it('Script with a HTML comment and less than', () => {
-    const ser = DomSerializer({ fix_list_elements: true, sanitize: false });
+    const ser = DomSerializer({ fix_list_elements: true });
     ser.setRules('script[type|language|src]');
 
     setTestHtml('<script><!-- 1 < 2; // --></s' + 'cript>');
@@ -451,7 +449,7 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
   });
 
   it('Script with white space in beginning, comment and less than with element_format: xhtml', () => {
-    const ser = DomSerializer({ fix_list_elements: true, element_format: 'xhtml', sanitize: false });
+    const ser = DomSerializer({ fix_list_elements: true, element_format: 'xhtml' });
     ser.setRules('script[type|language|src]');
 
     setTestHtml('<script>\n\n<!-- 1 < 2;\n\n--></s' + 'cript>');
@@ -459,7 +457,7 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
   });
 
   it('Script with white space in beginning, comment and less than', () => {
-    const ser = DomSerializer({ fix_list_elements: true, sanitize: false });
+    const ser = DomSerializer({ fix_list_elements: true });
     ser.setRules('script[type|language|src]');
 
     setTestHtml('<script>\n\n<!-- 1 < 2;\n\n--></s' + 'cript>');
@@ -467,7 +465,7 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
   });
 
   it('Script with comments and cdata with element_format: xhtml', () => {
-    const ser = DomSerializer({ fix_list_elements: true, element_format: 'xhtml', sanitize: false });
+    const ser = DomSerializer({ fix_list_elements: true, element_format: 'xhtml' });
     ser.setRules('script[type|language|src]');
 
     setTestHtml('<script>// <![CDATA[1 < 2; // ]]></s' + 'cript>');
@@ -475,7 +473,7 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
   });
 
   it('Script with comments and cdata', () => {
-    const ser = DomSerializer({ fix_list_elements: true, sanitize: false });
+    const ser = DomSerializer({ fix_list_elements: true });
     ser.setRules('script[type|language|src]');
 
     setTestHtml('<script>// <![CDATA[1 < 2; // ]]></s' + 'cript>');
@@ -483,7 +481,7 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
   });
 
   it('Script with cdata with element_format: xhtml', () => {
-    const ser = DomSerializer({ fix_list_elements: true, element_format: 'xhtml', sanitize: false });
+    const ser = DomSerializer({ fix_list_elements: true, element_format: 'xhtml' });
     ser.setRules('script[type|language|src]');
 
     setTestHtml('<script><![CDATA[1 < 2; ]]></s' + 'cript>');
@@ -491,7 +489,7 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
   });
 
   it('Script with cdata', () => {
-    const ser = DomSerializer({ fix_list_elements: true, sanitize: false });
+    const ser = DomSerializer({ fix_list_elements: true });
     ser.setRules('script[type|language|src]');
 
     setTestHtml('<script><![CDATA[1 < 2; ]]></s' + 'cript>');
@@ -499,7 +497,7 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
   });
 
   it('Script whitespace in beginning/end and cdata with element_format: xhtml', () => {
-    const ser = DomSerializer({ fix_list_elements: true, element_format: 'xhtml', sanitize: false });
+    const ser = DomSerializer({ fix_list_elements: true, element_format: 'xhtml' });
     ser.setRules('script[type|language|src]');
 
     setTestHtml('<script>\n\n<![CDATA[\n\n1 < 2;\n\n]]>\n\n</s' + 'cript>');
@@ -507,7 +505,7 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
   });
 
   it('Script whitespace in beginning/end and cdata', () => {
-    const ser = DomSerializer({ fix_list_elements: true, sanitize: false });
+    const ser = DomSerializer({ fix_list_elements: true });
     ser.setRules('script[type|language|src]');
 
     setTestHtml('<script>\n\n<![CDATA[\n\n1 < 2;\n\n]]>\n\n</s' + 'cript>');
@@ -531,7 +529,7 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
   });
 
   it('Script with HTML comment, comment and CDATA with element_format: xhtml', () => {
-    const ser = DomSerializer({ fix_list_elements: true, element_format: 'xhtml', sanitize: false });
+    const ser = DomSerializer({ fix_list_elements: true, element_format: 'xhtml' });
     ser.setRules('script[type|language|src]');
 
     setTestHtml('<script><!--// <![CDATA[var hi = "hello";// ]]>--></s' + 'cript>');
@@ -539,7 +537,7 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
   });
 
   it('Script with HTML comment, comment and CDATA', () => {
-    const ser = DomSerializer({ fix_list_elements: true, sanitize: false });
+    const ser = DomSerializer({ fix_list_elements: true });
     ser.setRules('script[type|language|src]');
 
     setTestHtml('<script><!--// <![CDATA[var hi = "hello";// ]]>--></s' + 'cript>');
@@ -547,7 +545,7 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
   });
 
   it('Script with block comment around cdata with element_format: xhtml', () => {
-    const ser = DomSerializer({ fix_list_elements: true, element_format: 'xhtml', sanitize: false });
+    const ser = DomSerializer({ fix_list_elements: true, element_format: 'xhtml' });
     ser.setRules('script[type|language|src]');
 
     setTestHtml('<script>/* <![CDATA[ */\nvar hi = "hello";\n/* ]]> */</s' + 'cript>');
@@ -555,7 +553,7 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
   });
 
   it('Script with block comment around cdata', () => {
-    const ser = DomSerializer({ fix_list_elements: true, sanitize: false });
+    const ser = DomSerializer({ fix_list_elements: true });
     ser.setRules('script[type|language|src]');
 
     setTestHtml('<script>/* <![CDATA[ */\nvar hi = "hello";\n/* ]]> */</s' + 'cript>');
@@ -563,7 +561,7 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
   });
 
   it('Script with html comment and block comment around cdata with element_format: xhtml', () => {
-    const ser = DomSerializer({ fix_list_elements: true, element_format: 'xhtml', sanitize: false });
+    const ser = DomSerializer({ fix_list_elements: true, element_format: 'xhtml' });
     ser.setRules('script[type|language|src]');
 
     setTestHtml('<script><!-- /* <![CDATA[ */\nvar hi = "hello";\n/* ]]>*/--></s' + 'cript>');
@@ -571,7 +569,7 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
   });
 
   it('Script with html comment and block comment around cdata', () => {
-    const ser = DomSerializer({ fix_list_elements: true, sanitize: false });
+    const ser = DomSerializer({ fix_list_elements: true });
     ser.setRules('script[type|language|src]');
 
     setTestHtml('<script><!-- /* <![CDATA[ */\nvar hi = "hello";\n/* ]]>*/--></s' + 'cript>');
@@ -579,7 +577,7 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
   });
 
   it('Script with line comment and html comment with element_format: xhtml', () => {
-    const ser = DomSerializer({ fix_list_elements: true, element_format: 'xhtml', sanitize: false });
+    const ser = DomSerializer({ fix_list_elements: true, element_format: 'xhtml' });
     ser.setRules('script[type|language|src]');
 
     setTestHtml('<script>// <!--\nvar hi = "hello";\n// --></s' + 'cript>');
@@ -587,7 +585,7 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
   });
 
   it('Script with line comment and html comment', () => {
-    const ser = DomSerializer({ fix_list_elements: true, sanitize: false });
+    const ser = DomSerializer({ fix_list_elements: true });
     ser.setRules('script[type|language|src]');
 
     setTestHtml('<script>// <!--\nvar hi = "hello";\n// --></s' + 'cript>');
@@ -595,7 +593,7 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
   });
 
   it('Script with block comment around html comment with element_format: xhtml', () => {
-    const ser = DomSerializer({ fix_list_elements: true, element_format: 'xhtml', sanitize: false });
+    const ser = DomSerializer({ fix_list_elements: true, element_format: 'xhtml' });
     ser.setRules('script[type|language|src]');
 
     setTestHtml('<script>/* <!-- */\nvar hi = "hello";\n/*-->*/</s' + 'cript>');
@@ -603,7 +601,7 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
   });
 
   it('Script with block comment around html comment', () => {
-    const ser = DomSerializer({ fix_list_elements: true, sanitize: false });
+    const ser = DomSerializer({ fix_list_elements: true });
     ser.setRules('script[type|language|src]');
 
     setTestHtml('<script>/* <!-- */\nvar hi = "hello";\n/*-->*/</s' + 'cript>');
@@ -642,7 +640,7 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
   });
 
   it('Style with cdata with element_format: xhtml', () => {
-    const ser = DomSerializer({ fix_list_elements: true, valid_children: '+body[style]', element_format: 'xhtml', sanitize: false });
+    const ser = DomSerializer({ fix_list_elements: true, valid_children: '+body[style]', element_format: 'xhtml' });
     ser.setRules('style');
 
     setTestHtml('<style>\r\n<![CDATA[\r\n   body { background:#fff }]]></style>');
@@ -650,7 +648,7 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
   });
 
   it('Style with cdata', () => {
-    const ser = DomSerializer({ fix_list_elements: true, valid_children: '+body[style]', sanitize: false });
+    const ser = DomSerializer({ fix_list_elements: true, valid_children: '+body[style]' });
     ser.setRules('style');
 
     setTestHtml('<style>\r\n<![CDATA[\r\n   body { background:#fff }]]></style>');
@@ -658,7 +656,7 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
   });
 
   it('CDATA', () => {
-    const ser = DomSerializer({ fix_list_elements: true, preserve_cdata: true, sanitize: false });
+    const ser = DomSerializer({ fix_list_elements: true, preserve_cdata: true, allow_html_in_comments: true });
     ser.setRules('span');
 
     setTestHtml('123<!--[CDATA[<test>]]-->abc');
@@ -923,4 +921,3 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
       'Should remove br');
   });
 });
-
