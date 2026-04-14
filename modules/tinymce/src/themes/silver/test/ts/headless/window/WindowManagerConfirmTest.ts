@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, FocusTools, Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { before, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
-import { SelectorFind, SugarBody, SugarDocument } from '@ephox/sugar';
+import { Attribute, SelectorFind, SugarBody, SugarDocument, TextContent } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import type { WindowManagerImpl } from 'tinymce/core/api/WindowManager';
@@ -9,8 +9,7 @@ import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 
 import * as TestExtras from '../../module/TestExtras';
 
-// TODO TINY-10480: Investigate flaky tests
-describe.skip('headless.tinymce.themes.silver.window.WindowManagerConfirmTest', () => {
+describe('headless.tinymce.themes.silver.window.WindowManagerConfirmTest', () => {
   const extrasHook = TestExtras.bddSetup();
   let windowManager: WindowManagerImpl;
   before(() => {
@@ -34,7 +33,8 @@ describe.skip('headless.tinymce.themes.silver.window.WindowManagerConfirmTest', 
     () => UiFinder.exists(SugarBody.body(), '.tox-dialog__body')
   );
 
-  it('Check the basic structure of the confirm dialog', async () => {
+  // TODO TINY-10480: Investigate flaky tests
+  it.skip('Check the basic structure of the confirm dialog', async () => {
     createConfirm('The confirm dialog loads with the basic structure', Fun.noop);
     await pWaitForDialog();
     const sink = extrasHook.access().getDialogSink();
@@ -139,7 +139,8 @@ describe.skip('headless.tinymce.themes.silver.window.WindowManagerConfirmTest', 
     await pTeardown();
   });
 
-  it('Should display a HTML error message', async () => {
+  // TODO TINY-10480: Investigate flaky tests
+  it.skip('Should display a HTML error message', async () => {
     const label = 'should display this <strong>message</strong>';
     createConfirm(label, Fun.noop);
     const dialogBody = SelectorFind.descendant(SugarDocument.getDocument(), '.tox-dialog__body').getOrDie('Cannot find dialog body element');
@@ -162,7 +163,8 @@ describe.skip('headless.tinymce.themes.silver.window.WindowManagerConfirmTest', 
     await pTeardown();
   });
 
-  it('The callback should fire when close is invoked', async () => {
+  // TODO TINY-10480: Investigate flaky tests
+  it.skip('The callback should fire when close is invoked', async () => {
     let calls = 0;
     const testCallback = () => {
       calls++;
@@ -177,13 +179,15 @@ describe.skip('headless.tinymce.themes.silver.window.WindowManagerConfirmTest', 
     assert.equal(calls, 1, 'Clicking on close should call the callback fn once');
   });
 
-  it('Should focus on the yes button initially', async () => {
+  // TODO TINY-10480: Investigate flaky tests
+  it.skip('Should focus on the yes button initially', async () => {
     createConfirm('initial focus should be on the yes button', Fun.noop);
     await FocusTools.pTryOnSelector('When the confirm dialog loads, focus should be on the yes button', SugarDocument.getDocument(), 'button:contains(Yes)');
     await pTeardown();
   });
 
-  it('Should focus the first button when the dialog is clicked', async () => {
+  // TODO TINY-10480: Investigate flaky tests
+  it.skip('Should focus the first button when the dialog is clicked', async () => {
     createConfirm('Click should focus the yes button', Fun.noop);
     await FocusTools.pTryOnSelector('When the confirm dialog loads, focus should be on the yes button', SugarDocument.getDocument(), 'button:contains(Yes)');
     Mouse.trueClickOn(SugarDocument.getDocument(), '.tox-dialog');
@@ -191,13 +195,15 @@ describe.skip('headless.tinymce.themes.silver.window.WindowManagerConfirmTest', 
     await pTeardown();
   });
 
-  it('Check that clicking close in the dialog makes the dialog go away', () => {
+  // TODO TINY-10480: Investigate flaky tests
+  it.skip('Check that clicking close in the dialog makes the dialog go away', () => {
     createConfirm('Showing an confirm', Fun.noop);
     Mouse.clickOn(SugarBody.body(), '.tox-button:contains("Yes")');
     UiFinder.notExists(SugarBody.body(), '[role="dialog"]');
   });
 
-  it('TINY-3548: sanitize message', async () => {
+  // TODO TINY-10480: Investigate flaky tests
+  it.skip('TINY-3548: sanitize message', async () => {
     createConfirm('<a href="javascript:alert(1)">invalid link</a><script>alert(1)</script><a href="http://tiny.cloud">valid link</a>', Fun.noop);
     const dialogBody = SelectorFind.descendant(SugarDocument.getDocument(), '.tox-dialog__body').getOrDie('Cannot find dialog body element');
     Assertions.assertStructure('A basic alert dialog should have these components',
@@ -231,6 +237,38 @@ describe.skip('headless.tinymce.themes.silver.window.WindowManagerConfirmTest', 
       })),
       dialogBody
     );
+    await pTeardown();
+  });
+
+  it('TINY-13812: Confirm dialog should have alertdialog role', async () => {
+    createConfirm('Confirm dialog accessibility test', Fun.noop);
+    await pWaitForDialog();
+    const dialog = UiFinder.findIn<HTMLElement>(SugarBody.body(), '.tox-dialog').getOrDie();
+    assert.equal(Attribute.get(dialog, 'role'), 'alertdialog', 'Confirm dialog should have role="alertdialog"');
+    await pTeardown();
+  });
+
+  it('TINY-13812: Confirm dialog should not have aria-label nor aria-labelledby attributes', async () => {
+    createConfirm('Confirm dialog accessibility test', Fun.noop);
+    await pWaitForDialog();
+    const dialog = UiFinder.findIn<HTMLElement>(SugarBody.body(), '.tox-dialog').getOrDie();
+    assert.isFalse(Attribute.has(dialog, 'aria-label'), 'Confirm dialog should not have aria-label attribute');
+    assert.isFalse(Attribute.has(dialog, 'aria-labelledby'), 'Confirm dialog should not have aria-labelledby attribute');
+    await pTeardown();
+  });
+
+  it('TINY-13812: Confirm dialog should have aria-describedby correctly setup', async () => {
+    const confirmDialogText = 'Confirm dialog accessibility test';
+    createConfirm(confirmDialogText, Fun.noop);
+    await pWaitForDialog();
+    const dialog = UiFinder.findIn<HTMLElement>(SugarBody.body(), '.tox-dialog').getOrDie();
+
+    assert.isTrue(Attribute.has(dialog, 'aria-describedby'), 'Confirm dialog should have aria-describedby attribute');
+
+    const describedById = Attribute.get(dialog, 'aria-describedby');
+    const description = UiFinder.findIn<HTMLElement>(SugarBody.body(), '#' + describedById).getOrDie();
+    assert.equal(TextContent.get(description), confirmDialogText, 'aria-describedby should reference the dialog body');
+
     await pTeardown();
   });
 });
