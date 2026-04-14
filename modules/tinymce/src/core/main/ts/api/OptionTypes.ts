@@ -92,6 +92,7 @@ interface BaseEditorOptions {
   content_css_cors?: boolean;
   content_security_policy?: string;
   content_style?: string;
+  content_language?: string;
   content_langs?: ContentLanguage[];
   contextmenu?: string | string[] | false;
   contextmenu_never_use_native?: boolean;
