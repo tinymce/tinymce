@@ -422,6 +422,12 @@ const contentBodyLoaded = (editor: Editor): void => {
     editor.contentAreaContainer = targetElm;
   }
 
+  const contentLanguage = Options.getContentLanguage(editor);
+  if (contentLanguage) {
+    const langTarget = editor.inline ? targetElm : doc.documentElement;
+    DOM.setAttrib(langTarget, 'lang', contentLanguage);
+  }
+
   // It will not steal focus while setting contentEditable
   const body = editor.getBody();
   // disabled isn't valid on all body elements, so need to cast here
