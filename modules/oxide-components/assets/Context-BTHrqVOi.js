@@ -1,0 +1,1 @@
+import{r as t}from"./iframe-Dp9s-o-3.js";const n=t.createContext(null),r=()=>{const o=t.useContext(n);if(o===null)throw new Error("Dropdown compound components must be rendered within the Dropdown component");return o};export{n as D,r as u};
