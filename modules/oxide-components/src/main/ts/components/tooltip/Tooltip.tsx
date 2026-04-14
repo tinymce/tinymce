@@ -4,17 +4,16 @@ import {
   Children, cloneElement, forwardRef, isValidElement, useCallback,
   useLayoutEffect, useMemo, useRef, useState, type FC, type HTMLAttributes,
   type PropsWithChildren, type ReactNode, useContext,
-  createContext,
   useEffect
 } from 'react';
+
+import { DropdownContext } from '../dropdown/internals/Context';
+
+import { useTooltip, TooltipContext } from './internals/Context';
 
 interface RootProps extends PropsWithChildren {
   readonly showCondition?: 'always' | 'overflow';
 }
-
-import { DropdownContext } from '../dropdown/internals/Context';
-import { useTooltip, TooltipContext } from './internals/Context';
-
 interface TriggerInternalProps extends PropsWithChildren<HTMLAttributes<HTMLElement>> { }
 
 const isOverflowing = (element: HTMLElement) => (element.offsetWidth < element.scrollWidth);
