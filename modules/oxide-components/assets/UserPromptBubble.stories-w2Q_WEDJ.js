@@ -1,5 +1,0 @@
-import{j as t,c as s}from"./iframe-Dn_cGSdW.js";import{e as a}from"./Bem-BAJJXTy-.js";import"./preload-helper-PPVm8Dsz.js";import"./Optional-BMqOXurB.js";import"./Strings-DatO8Mn0.js";import"./Fun-DfA6N4bS.js";import"./Obj-4mkygeuk.js";const o=({prompt:e})=>t.jsx("div",{tabIndex:-1,className:a("tox-ai","user-prompt__text"),children:e});try{o.displayName="UserPromptBubble",o.__docgenInfo={description:"",displayName:"UserPromptBubble",props:{prompt:{defaultValue:null,description:"",name:"prompt",required:!0,type:{name:"string"}}}}}catch{}const u={decorators:[e=>t.jsx("div",{className:s(["tox-ai"]),children:t.jsx(e,{})})],title:"bespoke/tinymceai/UserPromptBubble",component:o,parameters:{layout:"centered"},tags:["autodocs"]},r={args:{prompt:"Value"}};r.parameters={...r.parameters,docs:{...r.parameters?.docs,source:{originalSource:`{
-  args: {
-    prompt: 'Value'
-  }
-}`,...r.parameters?.docs?.source}}};const b=["SimpleUserPromptBubble"];export{r as SimpleUserPromptBubble,b as __namedExportsOrder,u as default};

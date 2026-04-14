@@ -1,1 +1,0 @@
-import{r as t}from"./iframe-Dn_cGSdW.js";const n=t.createContext(null),r=()=>{const o=t.useContext(n);if(o===null)throw new Error("Dropdown compound components must be rendered within the Dropdown component");return o};export{n as D,r as u};
