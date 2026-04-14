@@ -1,4 +1,4 @@
-import { Fun, Id, Type } from '@ephox/katamari';
+import { Id, Type } from '@ephox/katamari';
 import { Bem } from 'oxide-components/main';
 import {
   Children, cloneElement, forwardRef, isValidElement, useCallback,
