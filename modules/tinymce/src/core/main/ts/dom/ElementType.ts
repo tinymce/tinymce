@@ -25,6 +25,9 @@ const lazyLookup = <T extends Node = HTMLElement>(items: string[]) => {
 // WARNING: don't add anything to this file, the intention is to move these checks into the Schema
 const isTable = (node: SugarElement<Node>): node is SugarElement<HTMLTableElement> => SugarNode.name(node) === 'table';
 const isBr = (node: SugarElement<Node>): node is SugarElement<HTMLBRElement> => SugarNode.isElement(node) && SugarNode.name(node) === 'br';
+const isScript = (node: SugarElement<Node>): node is SugarElement<HTMLScriptElement> => SugarNode.isElement(node) && SugarNode.name(node) === 'script';
+const isStyle = (node: SugarElement<Node>): node is SugarElement<HTMLStyleElement> => SugarNode.isElement(node) && SugarNode.name(node) === 'style';
+const isIframe = (node: SugarElement<Node>): node is SugarElement<HTMLIFrameElement> => SugarNode.isElement(node) && SugarNode.name(node) === 'iframe';
 const isTextBlock = lazyLookup(textBlocks);
 const isList = lazyLookup(lists);
 const isListItem = lazyLookup(listItems);
@@ -40,5 +43,8 @@ export {
   isTableSection,
   isTableCell,
   isBr,
+  isScript,
+  isStyle,
+  isIframe,
   isWsPreserveElement
 };
