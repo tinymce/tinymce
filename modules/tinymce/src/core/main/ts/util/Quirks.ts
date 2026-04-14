@@ -141,28 +141,26 @@ const Quirks = (editor: Editor): Quirks => {
    */
   const documentElementEditingFocus = () => {
     if (!editor.inline) {
-      // Needs to be both down/up due to weird rendering bug on Chrome Windows
-      dom.bind(editor.getDoc(), 'mousedown mouseup', (e) => {
-        let rng;
 
+      editor.on('mousedown mouseup', (e) => {
         if (e.target === editor.getDoc().documentElement) {
-          rng = selection.getRng();
-          // TINY-12245: this is needed to avoid the scroll back to the top when the content is scrolled, there is no selection and the user is clicking on a non selectable editor element
-          // example content scrolled by browser search and user click on the horizontal scroll bar
-          if (editor.getDoc().getSelection()?.anchorNode !== null) {
-            editor.getBody().focus();
+          const rng = selection.getRng();
+          if (CaretContainer.isCaretContainer(rng.startContainer)) {
+            return;
           }
 
+          // Edge case for mousedown, drag select and mousedown again within selection on Chrome Windows to render caret
+          // Clamp position to document coordinates, capped at viewport bounds, so caretRangeFromPoint
+          // always hits content even when the editor is scrolled horizontally.
+          const x = Math.min(e.pageX, e.view.innerWidth - 1);
+
+          // Prevent the browser's default caret placement which fires after all JS handlers
+          // and uses raw clientX/clientY (ignoring scroll offset), overwriting our corrected position.
           if (e.type === 'mousedown') {
-            if (CaretContainer.isCaretContainer(rng.startContainer)) {
-              return;
-            }
-
-            // Edge case for mousedown, drag select and mousedown again within selection on Chrome Windows to render caret
-            selection.placeCaretAt(e.clientX, e.clientY);
-          } else {
-            selection.setRng(rng);
+            e.preventDefault();
           }
+          console.log('Placing caret at', `x: ${x}, y: ${e.pageY}`);
+          selection.placeCaretAt(x, e.pageY);
         }
       });
     }

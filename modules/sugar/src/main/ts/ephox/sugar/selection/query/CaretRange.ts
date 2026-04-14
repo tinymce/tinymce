@@ -30,6 +30,9 @@ const caretRangeFromPoint = (doc: VendorDocument, x: number, y: number): Optiona
   Optional.from(doc.caretRangeFromPoint?.(x, y));
 
 const availableSearch = (doc: VendorDocument, x: number, y: number): Optional<Range> => {
+  caretPositionFromPoint(doc as Document, x, y).each((pos) => console.log('position: ', pos));
+  caretRangeFromPoint(doc, x, y).each((rng) => console.log('range: ', rng));
+
   if (doc.caretPositionFromPoint) {
     return caretPositionFromPoint(doc as Document, x, y);  // defined standard, firefox only
   } else if (doc.caretRangeFromPoint) {
