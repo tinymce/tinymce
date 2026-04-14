@@ -19,6 +19,8 @@ const RIGHT: ReadonlyArray<Key> = [{ code: 'ArrowRight', key: 'ArrowRight', whic
 const DOWN: ReadonlyArray<Key> = [{ code: 'ArrowDown', key: 'ArrowDown', which: 40 }];
 const SPACE: ReadonlyArray<Key> = [{ code: 'Space', key: ' ', which: 32 }];
 const ESCAPE: ReadonlyArray<Key> = [{ code: 'Escape', key: 'Escape', which: 27 }];
+const BACKSPACE: ReadonlyArray<Key> = [{ code: 'Backspace', key: 'Backspace', which: 8 }];
+const DELETE: ReadonlyArray<Key> = [{ code: 'Delete', key: 'Delete', which: 46 }];
 
 export {
   TAB,
@@ -30,5 +32,7 @@ export {
   RIGHT,
   DOWN,
   SPACE,
-  ESCAPE
+  ESCAPE,
+  BACKSPACE,
+  DELETE
 };

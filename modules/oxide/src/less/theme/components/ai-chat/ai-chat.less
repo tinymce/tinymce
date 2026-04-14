@@ -1,19 +1,17 @@
 @tinymceai-border-width: 1px;
 @tinymceai-focus-border-width: 2px;
 @tinymceai-context-more-max-width: 320px;
-@tinymceai-response-status-icon-height: max(24px, calc(var(@font-size-sm, @font-size-sm) + 4px));
+@tinymceai-response-status-icon-height: max(24px, calc(@font-size-sm + 4px));
 
 .tox-ai when (@custom-properties-enabled = true) {
-  --tox-private-background-secondary: hsl( from var(--tox-private-background-color) h s calc(l - 6));
   --tox-private-neutral-20: hsl( from var(--tox-private-background-color) h s calc(l - 11));
   --tox-private-tinymceai-border-width: 1px;
   --tox-private-tinymceai-focus-border-width: 2px;
   --tox-private-tinymceai-context-more-max-width: 320px;
+  --tox-private-tinymceai-response-status-icon-height: max(24px, calc(var(--tox-private-font-size-sm) + 4px));
 }
 
 .tox .tox-ai {
-  --tox-private-tinymceai-response-status-icon-height: max(24px, calc(var(--tox-private-font-size-sm) + 4px));
-
   .tox-expandable-box {
     padding: var(--tox-private-pad-sm, @pad-sm) calc(var(--tox-private-pad-md, @pad-md) * 0.75);
 
@@ -38,13 +36,9 @@
 
   .tox-sidebar-content__loader {
     align-items: center;
-    background-color: hsl(from var(--tox-private-color-black, @color-black) h s l / 10%);
     display: flex;
     height: 100%;
     justify-content: center;
-    left: 0;
-    position: absolute;
-    top: 0;
     width: 100%;
     z-index: @z-index-loading;
   }
@@ -106,7 +100,7 @@
   }
 
   .tox-ai__user-prompt__text {
-    background-color: var(--tox-private-background-secondary, darken(@background-color, 6%));
+    background-color: var(--tox-private-background-secondary, contrast(@background-color, darken(@background-color, 6%), lighten(@background-color, 7%)));
     padding: var(--tox-private-pad-sm, @pad-sm) calc(var(--tox-private-pad-md, @pad-md) * 0.75);
     border-radius: var(--tox-private-control-border-radius, @control-border-radius);
     max-width: 80%;
@@ -140,7 +134,9 @@
     }
 
     &--review {
-      background-color: var(--tox-private-background-secondary, darken(@background-color, 6%));
+      &:not(:has(.tox-sidebar-content__message-text)) {
+        background-color: var(--tox-private-background-secondary, contrast(@background-color, darken(@background-color, 6%), lighten(@background-color, 7%)));
+      }
       border: none;
     }
   }
@@ -371,37 +367,12 @@
   }
 
   .tox-ai__models-menu {
-    display: flex;
-    flex-direction: column;
-    padding: var(--tox-private-pad-xs, @pad-xs);
-    align-items: center;
-    border-radius: 0;
-    border: 0;
-    background: var(--tox-private-background-color, @background-color);
-    box-shadow: 0 0 40px 1px rgba(from var(--tox-private-color-black, @color-black) r g b / 0.15), 0 16px 16px -10px rgba(from var(--tox-private-color-black, @color-black) r g b / 0.15);
     max-width: 350px;
-    gap: 0;
-  }
 
-  .tox-ai__models-menu__item {
-    display: flex;
-    padding: calc(var(--tox-private-pad-md, @pad-md) * 0.75);
-    align-items: flex-start;
-    gap: var(--tox-private-pad-sm, @pad-sm);
-    align-self: stretch;
-    cursor: pointer;
-
-    .tox-ai__models-menu__item__checkmark {
-      margin-left: auto;
-      svg {
-        fill: transparent;
-      }
-    }
-
-    &.tox-ai__models-menu__item--selected .tox-ai__models-menu__item__checkmark {
-      svg {
-        fill: currentColor;
-      }
+    .tox-menu {
+      max-height: inherit;
+      overflow: auto;
+      padding: var(--tox-private-pad-xs, @pad-xs);
     }
   }
 
@@ -478,13 +449,13 @@
     cursor: pointer;
 
     &.tox-ai-chat-history-list__item--active {
-      background-color: var(--tox-private-background-secondary, darken(@background-color, 6%));
+      background-color: var(--tox-private-background-secondary, contrast(@background-color, darken(@background-color, 6%), lighten(@background-color, 7%)));
     }
     &:focus, &:focus-visible {
-      background-color: var(--tox-private-background-secondary, darken(@background-color, 6%));
+      background-color: var(--tox-private-background-secondary, contrast(@background-color, darken(@background-color, 6%), lighten(@background-color, 7%)));
     }
     &.tox-ai-chat-history-list__item-edit-title {
-      background-color: var(--tox-private-background-secondary, darken(@background-color, 6%));
+      background-color: var(--tox-private-background-secondary, contrast(@background-color, darken(@background-color, 6%), lighten(@background-color, 7%)));
       flex-direction: column;
     }
   }
@@ -505,11 +476,13 @@
     display: flex;
     flex-direction: column;
     margin-right: auto;
+    overflow: hidden;
   }
 
   .tox-ai-chat-history-list__item-actions {
     display: flex;
     align-items: center;
+    min-width: calc(24px + (var(--tox-private-pad-xs, @pad-xs) + 1px)* 2); // width of icon + padding and border width, to avoid layout shift when actions appear on hover
   }
 
   .tox-ai-chat-history-list__item-content-title {
@@ -517,6 +490,8 @@
     font-size: var(--tox-private-font-size-base, @font-size-base);
     font-weight: var(--tox-private-font-weight-bold, @font-weight-bold);
     line-height: var(--tox-private-font-size-lg, @font-size-lg);
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .tox-ai-chat-history-list__item-content-date {

@@ -1,6 +1,6 @@
 import { Fun } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
-import { useEffect, type RefObject } from 'react';
+import { useCallback, useEffect, useRef, type RefObject } from 'react';
 
 import * as EscapingType from './keyboard/escaping/EscapingType';
 import * as ExecutingType from './keyboard/execution/ExecutionType';
@@ -28,17 +28,28 @@ const bindEvents = (container: HTMLElement, handlers: KeyingType.Handlers) => {
 
 export interface TabKeyingProps extends BaseProps, TabbingType.TabbingConfig { }
 
-export const useTabKeyNavigation = (props: TabKeyingProps): void => {
+export interface TabKeyNavigationApi {
+  readonly goBackwards: () => void;
+}
+
+export const useTabKeyNavigation = (props: TabKeyingProps): TabKeyNavigationApi => {
+  const goBackwardsRef = useRef<() => void>(Fun.noop);
+
   useEffect(() => {
     const { containerRef } = props;
 
     if (containerRef.current) {
       const handlers = TabbingType.create(SugarElement.fromDom(containerRef.current), props);
+      goBackwardsRef.current = handlers.goBackwards;
       return bindEvents(containerRef.current, handlers);
     } else {
+      goBackwardsRef.current = Fun.noop;
       return Fun.noop;
     }
   }, [ props ]);
+
+  const goBackwardsCallback = useCallback(() => goBackwardsRef.current(), []);
+  return { goBackwards: goBackwardsCallback };
 };
 
 export interface FlowKeyingProps extends BaseProps, FlowType.FlowConfig { }

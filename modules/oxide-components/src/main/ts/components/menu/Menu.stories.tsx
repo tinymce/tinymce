@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import { Fun, Id } from '@ephox/katamari';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Dropdown, Icon, IconButton, UniverseProvider } from 'oxide-components/main';
+import { Dropdown, Icon, IconButton, Tooltip, UniverseProvider } from 'oxide-components/main';
 
 import type { ToggleMenuItemInstanceApi } from './internals/Types';
 import * as Menu from './Menu';
@@ -192,6 +192,42 @@ export const MenuInADropdown: Story = {
         <Dropdown.Content>
           {menu}
         </Dropdown.Content>
+      </Dropdown.Root>
+    </>);
+  }
+};
+
+export const MenuInADropdownWithTooltip: Story = {
+  args: {},
+  decorators: [
+    (Story: React.ComponentType): JSX.Element => (
+      <UniverseProvider resources={mockUniverse}>
+        <Story />
+      </UniverseProvider>
+    )
+  ],
+  parameters: {
+    docs: {
+      story: {
+        inline: false,
+        iframeHeight: 700
+      }
+    }
+  },
+  render: (): JSX.Element => {
+    return (<>
+      <Dropdown.Root>
+        <Tooltip.Root>
+          <Dropdown.Trigger>
+            <Tooltip.Trigger>
+              <IconButton variant={'secondary'} icon={'item'}></IconButton>
+            </Tooltip.Trigger>
+          </Dropdown.Trigger>
+          <Dropdown.Content>
+            {menu}
+          </Dropdown.Content>
+          <Tooltip.Content text={'if you can read this, you\'re too close'} />
+        </Tooltip.Root>
       </Dropdown.Root>
     </>);
   }

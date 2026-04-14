@@ -26,6 +26,10 @@ export interface ToolbarProps {
   readonly onEscape?: () => void;
 }
 
+export interface ToolbarHandle {
+  readonly focus: () => void;
+}
+
 export interface TriggerProps {
   readonly children: ReactNode;
   readonly onClick?: MouseEventHandler<HTMLDivElement>;

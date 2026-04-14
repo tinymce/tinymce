@@ -5,7 +5,7 @@ import * as MenuRenderer from 'oxide-components/components/menu/MenuRenderer';
 import { UniverseProvider } from 'oxide-components/contexts/UniverseContext/UniverseProvider';
 import * as Bem from 'oxide-components/utils/Bem';
 import { describe, expect, it, vi } from 'vitest';
-import { userEvent, type Locator } from 'vitest/browser';
+import { type Locator, userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 
 const iconResolver = (icon: string): string => {
@@ -47,15 +47,23 @@ const pAssertActiveElementText = async (text: string) => {
 };
 
 // Reset positioning styles before matching the snapshot.
-// Postioning styles are calculated to a different value depending on the enviroment.
-// They are deterministic for one eviroment but differ between local machine and CI
+// Anchor names are unique for each component instance.
 const resetPostioningStyles = (fragment: DocumentFragment): DocumentFragment => {
   fragment.querySelectorAll('.tox-dropdown-content').forEach((dropdownContent) => {
-    (dropdownContent as HTMLElement).style.maxWidth = '';
-    (dropdownContent as HTMLElement).style.minWidth = '';
-    (dropdownContent as HTMLElement).style.maxHeight = '';
-    (dropdownContent as HTMLElement).style.top = '';
-    (dropdownContent as HTMLElement).style.left = '';
+    const styles = (dropdownContent as HTMLElement).style;
+    // @ts-expect-error - TODO: Remove this expect error once we've upgraded to React 19+
+    if (styles.positionAnchor) {
+      // @ts-expect-error - TODO: Remove this expect error once we've upgraded to React 19+
+      styles.positionAnchor = '--test-anchor';
+    }
+  });
+  fragment.querySelectorAll('[role="menuitem"]').forEach((menuItem) => {
+    const styles = (menuItem as HTMLElement).style;
+    // @ts-expect-error - TODO: Remove this expect error once we've upgraded to React 19+
+    if (styles.anchorName) {
+      // @ts-expect-error - TODO: Remove this expect error once we've upgraded to React 19+
+      styles.anchorName = '--test-anchor';
+    }
   });
   return fragment;
 };
@@ -116,12 +124,11 @@ describe('browser.MenuTest', () => {
     const { asFragment, getByText } = render(<TestComponent />, { wrapper });
 
     await waitForElementText(getByText, 'Menu item 1');
-    expect(asFragment()).toMatchSnapshot('1. Before open submenu');
+    expect(resetPostioningStyles(asFragment())).toMatchSnapshot('1. Before open submenu');
 
     await userEvent.hover(getByText('Submenu'));
     await waitForElementText(getByText, 'Nested menu item 1');
-    const fragment = resetPostioningStyles(asFragment());
-    expect(fragment).toMatchSnapshot('2. After opening submenu');
+    expect(resetPostioningStyles(asFragment())).toMatchSnapshot('2. After opening submenu');
   });
 
   it('Should be able to render using MenuRenderer', async () => {
@@ -174,12 +181,12 @@ describe('browser.MenuTest', () => {
     const { asFragment, getByText } = render(<TestComponent />, { wrapper });
 
     await waitForElementText(getByText, 'Menu item 1');
-    expect(asFragment()).toMatchSnapshot('1. Before open submenu');
+
+    expect(resetPostioningStyles(asFragment())).toMatchSnapshot('1. Before open submenu');
 
     await userEvent.hover(getByText('Submenu'));
     await waitForElementText(getByText, 'Nested menu item 1');
-    const fragment = resetPostioningStyles(asFragment());
-    expect(fragment).toMatchSnapshot('2. After opening submenu');
+    expect(resetPostioningStyles(asFragment())).toMatchSnapshot('2. After opening submenu');
   });
 
   describe('Keyboard Navigation', () => {
@@ -237,5 +244,46 @@ describe('browser.MenuTest', () => {
       await userEvent.keyboard('{ArrowDown}');
       await pAssertActiveElementText('Item 3');
     });
+  });
+
+  it('TINY-14193: should cycle between items on arrow down', async () => {
+    const TestComponent = () => {
+      return (
+        <UniverseProvider resources={mockUniverse}>
+          <Menu.Root>
+            <Menu.Item onAction={vi.fn()}>Item 1</Menu.Item>
+            <Menu.Item onAction={vi.fn()}>Item 2</Menu.Item>
+          </Menu.Root>
+        </UniverseProvider>
+      );
+    };
+    const { getByText } = render(<TestComponent />, { wrapper });
+    await waitForElementText(getByText, 'Item 1');
+    await pAssertActiveElementText('Item 1');
+
+    await userEvent.keyboard('{ArrowDown}');
+    await pAssertActiveElementText('Item 2');
+
+    await userEvent.keyboard('{ArrowDown}');
+    await pAssertActiveElementText('Item 1');
+  });
+
+  it('TINY-14193: should cycle between items on arrow up', async () => {
+    const TestComponent = () => {
+      return (
+        <UniverseProvider resources={mockUniverse}>
+          <Menu.Root>
+            <Menu.Item onAction={vi.fn()}>Item 1</Menu.Item>
+            <Menu.Item onAction={vi.fn()}>Item 2</Menu.Item>
+          </Menu.Root>
+        </UniverseProvider>
+      );
+    };
+    const { getByText } = render(<TestComponent />, { wrapper });
+    await waitForElementText(getByText, 'Item 1');
+    await pAssertActiveElementText('Item 1');
+
+    await userEvent.keyboard('{ArrowUp}');
+    await pAssertActiveElementText('Item 2');
   });
 });

@@ -28,14 +28,27 @@
       }
 
       .tox-ai__review-description {
-        padding-bottom: var(--tox-private-pad-sm, @pad-sm);
+        padding-bottom: calc(var(--tox-private-pad-sm, @pad-sm) + var(--tox-private-pad-xs, @pad-xs));
         font-size: var(--tox-private-font-size-sm, @font-size-sm);
+      }
+
+      .tox-ai__review-choose-container {
+        padding-bottom: 12px;
+      }
+
+      .tox-ai__review-custom-input {
+        margin-bottom: 12px;
+      }
+
+      .tox-ai__review-custom-actions {
+        display: flex;
+        gap: 8px;
       }
 
       .tox-ai__review-input-container {
         margin-bottom: 12px;
 
-        .tox-ai__review-input-button {
+        button.tox-ai__review-input-button {
           width: 100%;
           background-color: var(--tox-private-background-color, @background-color);
           display: flex;
@@ -44,6 +57,10 @@
           border: 1px solid @border-color;
           border-radius: @control-border-radius;
           box-sizing: border-box;
+        }
+
+        .tox-ai__review-dropdown-content {
+          width: anchor-size(width);
         }
       }
     }

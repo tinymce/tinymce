@@ -126,7 +126,7 @@ module.exports = function (grunt) {
   };
 
   const remoteTestingOpts = ['name', 'username', 'accesskey', 'sishDomain', 'devicefarmArn', 'devicefarmRegion', 'platformName', 'browserVersion', 'useSelenium'];
-  const generalBedrockOpts = ['retries', 'remote', 'stopOnFailure', 'delayExit'];
+  const generalBedrockOpts = ['retries', 'remote', 'stopOnFailure', 'delayExit', 'skipTypecheck', 'bundler'];
   const opts = bedrockOpts(grunt, [...remoteTestingOpts, ...generalBedrockOpts]);
   const gruntConfig = {
     shell: {

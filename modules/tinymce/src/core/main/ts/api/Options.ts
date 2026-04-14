@@ -312,6 +312,10 @@ const register = (editor: Editor): void => {
     processor: 'string'
   });
 
+  registerOption('content_language', {
+    processor: 'string'
+  });
+
   registerOption('content_css_cors', {
     processor: 'boolean',
     default: false
@@ -1032,6 +1036,7 @@ const shouldIndentUseMargin = option('indent_use_margin');
 const getIndentation = option('indentation');
 const getContentCss = option('content_css');
 const getContentStyle = option('content_style');
+const getContentLanguage = option('content_language');
 const getFontCss = option('font_css');
 const getDirectionality = option('directionality');
 const getInlineBoundarySelector = option('inline_boundaries_selector');
@@ -1157,6 +1162,7 @@ export {
   getIndentation,
   getContentCss,
   getContentStyle,
+  getContentLanguage,
   getDirectionality,
   getInlineBoundarySelector,
   getObjectResizing,

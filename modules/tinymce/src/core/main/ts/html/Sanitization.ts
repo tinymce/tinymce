@@ -1,5 +1,5 @@
 import { Arr, Fun, Obj, Optional, Strings, Type } from '@ephox/katamari';
-import { Attribute, Html, NodeTypes, Remove, Replication, SugarElement } from '@ephox/sugar';
+import { Attribute, NodeTypes, Remove, Replication, SugarElement, TextContent } from '@ephox/sugar';
 import createDompurify, { type Config, type DOMPurify, type UponSanitizeAttributeHookEvent, type UponSanitizeElementHookEvent } from 'dompurify';
 
 import type { DomParserSettings } from '../api/html/DomParser';
@@ -57,16 +57,16 @@ const processNode = (node: Node, settings: DomParserSettings, schema: Schema, sc
   const element = SugarElement.fromDom(node) as SugarElement<Element>;
 
   if (settings.sanitize) {
-    // TINY-9655: Preserve the content of script tags if they are valid elements in the schema
-    const shouldKeepContent = ElementType.isScript(element) && schema.isValid('script');
+    // TINY-9655: Preserve the content of script and style tags if they are valid elements in the schema
+    const shouldKeepContent = (ElementType.isScript(element) && schema.isValid('script')) || (ElementType.isStyle(element) && schema.isValid('style'));
     if (shouldKeepContent) {
-      Attribute.set(element, 'data-mce-tmp', Html.get(element));
+      Optional.from(TextContent.get(element)).each((content) => Attribute.set(element, 'data-mce-tmp', content));
     }
 
     // TINY-9655: Clear innerHTML of script and iframe tags to prevent DOMPurify from removing them entirely
     const shouldClearContent = ElementType.isIframe(element) && schema.isValid('iframe');
     if (shouldKeepContent || shouldClearContent) {
-      Html.set(element, '');
+      Remove.empty(element);
     }
   }
 
@@ -187,9 +187,9 @@ const restoreValidContent = (node: Node) => {
   // Construct the sugar element wrapper
   const element = SugarElement.fromDom(node) as SugarElement<Element>;
 
-  if (ElementType.isScript(element)) {
-    Optional.from(Attribute.get(element, 'data-mce-tmp')).each((content) => {
-      Html.set(element, content);
+  if (ElementType.isScript(element) || ElementType.isStyle(element)) {
+    Attribute.getOpt(element, 'data-mce-tmp').each((content) => {
+      TextContent.set(element, content);
       Attribute.remove(element, 'data-mce-tmp');
     });
   }
