@@ -34,7 +34,11 @@ const setup = (container: SugarElement, rawSettings: GuiEventSettings): { unbind
     'mouseover',
     'mousemove',
     'mouseout',
-    'click'
+    'click',
+    'pointerdown',
+    'pointermove',
+    'pointerup',
+    'lostpointercapture'
   ];
 
   const tapEvent = TapEvent.monitor(settings);
