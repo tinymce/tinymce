@@ -289,15 +289,25 @@ timestamps { notifyStatusChange(
           container('playwright') {
             // 20 min: playwright unit + visual tests average ~8 min, max observed ~10m37s
             timeout(time: 20, unit: 'MINUTES') {
-              // bun install (hoisted linker) produces an npm-compatible node_modules,
-              // so we can run the scripts with the playwright image's existing npm
-              // instead of installing bun in the container.
-              sh 'npm run --prefix modules/oxide-components --silent test-ci'
+              // Install bun in the playwright container (public image doesn't include it)
+              sh '''
+                set -e
+                if ! command -v bun &> /dev/null; then
+                  echo "Installing bun..."
+                  apt-get update -qq && apt-get install -y -qq unzip
+                  curl -fsSL https://bun.sh/install | bash -s "bun-v1.3.11"
+                  export PATH="$HOME/.bun/bin:$PATH"
+                  bun --version || { echo "ERROR: Bun installation failed"; exit 1; }
+                else
+                  echo "Bun already available: $(bun --version)"
+                fi
+              '''
+              sh 'export PATH="$HOME/.bun/bin:$PATH" && bun --silent --cwd modules/oxide-components test-ci'
               junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results.xml'
               def visualTestStatus
               // Limit the number of workers allowed to avoid hanging IO
               withEnv(["PW_WORKERS=1"]) {
-                visualTestStatus = sh(script: 'npm run --prefix modules/oxide-components --silent test-visual-ci', returnStatus: true)
+                visualTestStatus = sh(script: 'export PATH="$HOME/.bun/bin:$PATH" && bun --silent --cwd modules/oxide-components test-visual-ci', returnStatus: true)
               }
               if (visualTestStatus == 4) {
                 unstable("Visual tests failed")
