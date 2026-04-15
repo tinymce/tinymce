@@ -34,6 +34,10 @@ const dragleave = constant('dragleave' as const);
 const dragenter = constant('dragenter' as const);
 const drop = constant('drop' as const);
 const drag = constant('drag' as const);
+const pointerdown = constant('pointerdown' as const);
+const pointermove = constant('pointermove' as const);
+const pointerup = constant('pointerup' as const);
+const lostpointercapture = constant('lostpointercapture' as const);
 
 export {
   contextmenu,
@@ -73,5 +77,10 @@ export {
   dragleave,
   dragenter,
   drop,
-  drag
+  drag,
+
+  pointerdown,
+  pointermove,
+  pointerup,
+  lostpointercapture
 };

@@ -1,4 +1,4 @@
-import type { FieldProcessor } from '@ephox/boulder';
+import { FieldSchema, type FieldProcessor } from '@ephox/boulder';
 import { Fun, Singleton } from '@ephox/katamari';
 import type { EventArgs } from '@ephox/sugar';
 
@@ -67,6 +67,7 @@ const events = <E>(dragConfig: TouchDraggingConfig<E>, dragState: DraggingState,
 
 const schema: FieldProcessor[] = [
   ...DraggingSchema.schema,
+  FieldSchema.required('blockerClass'),
   Fields.output('dragger', {
     handlers: DragUtils.handlers(events)
   })

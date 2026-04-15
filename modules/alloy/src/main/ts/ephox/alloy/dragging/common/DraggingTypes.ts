@@ -9,6 +9,7 @@ import type * as AlloyEvents from '../../api/events/AlloyEvents';
 import type { BehaviourState } from '../../behaviour/common/BehaviourState';
 import type { MouseDraggingConfigSpec } from '../mouse/MouseDraggingTypes';
 import type { MouseOrTouchDraggingConfigSpec } from '../mouseortouch/MouseOrTouchDraggingTypes';
+import type { PointerDraggingConfigSpec } from '../pointer/PointerDraggingTypes';
 import type { TouchDraggingConfigSpec } from '../touch/TouchDraggingTypes';
 
 export interface DraggingBehaviour<E> extends Behaviour.AlloyBehaviour<DraggingConfigSpec<E>, DraggingConfig<E>, DraggingState> {
@@ -22,8 +23,9 @@ export interface DraggingBehaviour<E> extends Behaviour.AlloyBehaviour<DraggingC
  *  - mouse: Will allow dragging when using mouse events only
  *  - touch: Will allow dragging when using touch events only
  *  - mouseOrTouch: Will allow dragging with both mouse and touch events
+ *  - pointer: Will allow dragging using pointer events with Pointer Capture API (no blocker overlay)
  */
-export type DraggingMode = 'touch' | 'mouse' | 'mouseOrTouch';
+export type DraggingMode = 'touch' | 'mouse' | 'mouseOrTouch' | 'pointer';
 export type SensorCoords = (x: number, y: number) => CoordAdt;
 export type OutputCoords = (x: Optional<number>, y: Optional<number>) => CoordAdt;
 
@@ -72,6 +74,7 @@ export interface SnapsConfigSpec<E> {
 export interface DraggingConfig<E> {
   readonly getTarget: (comp: SugarElement<HTMLElement>) => SugarElement<HTMLElement>;
   readonly snaps: Optional<SnapsConfig<E>>;
+  readonly onDragStart: (comp: AlloyComponent, target: SugarElement<HTMLElement>) => void;
   readonly onDrop: (comp: AlloyComponent, target: SugarElement<HTMLElement>) => void;
   readonly repositionTarget: boolean;
   readonly onDrag: (comp: AlloyComponent, target: SugarElement<HTMLElement>, delta: SugarPosition) => void;
@@ -84,16 +87,16 @@ export interface DraggingConfig<E> {
 
 export interface CommonDraggingConfigSpec<E> {
   readonly useFixed?: () => boolean;
+  readonly onDragStart?: (comp: AlloyComponent, target: SugarElement<HTMLElement>) => void;
   readonly onDrop?: (comp: AlloyComponent, target: SugarElement<HTMLElement>) => void;
   readonly repositionTarget?: boolean;
   readonly onDrag?: (comp: AlloyComponent, target: SugarElement<HTMLElement>, delta: SugarPosition) => void;
   readonly getTarget?: (elem: SugarElement<HTMLElement>) => SugarElement<HTMLElement>;
   readonly getBounds?: () => Bounds;
   readonly snaps?: SnapsConfigSpec<E>;
-  readonly blockerClass: string;
 }
 
-export type DraggingConfigSpec<E> = MouseDraggingConfigSpec<E> | TouchDraggingConfigSpec<E> | MouseOrTouchDraggingConfigSpec<E>;
+export type DraggingConfigSpec<E> = MouseDraggingConfigSpec<E> | TouchDraggingConfigSpec<E> | MouseOrTouchDraggingConfigSpec<E> | PointerDraggingConfigSpec<E>;
 
 export interface DragModeDeltas<E extends Event, T> {
   readonly getData: (event: EventArgs<E>) => Optional<T>;
