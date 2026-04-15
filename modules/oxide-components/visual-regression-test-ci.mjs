@@ -16,7 +16,7 @@ const runTests = async () => {
     if (Number.isInteger(workers) && workers > 0) {
       args.push(`--workers=${workers}`);
     }
-    const result = spawnSync('bun', args, { stdio: 'inherit' });
+    const result = spawnSync('npx', [ '--no', ...args ], { stdio: 'inherit' });
     if (result.error) {
       console.error('Failed to run Playwright', result.error);
       exitCode = 1;
