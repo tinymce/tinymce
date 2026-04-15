@@ -98,8 +98,7 @@ def cleanBuildName(String name) {
 
 def props
 
-// def cacheName = "cache_${BUILD_TAG}"
-def cacheName = "${env.JOB_NAME.split('/').last()}_${env.BUILD_NUMBER}"
+def cacheName = "cache_${BUILD_TAG}"
 
 def testPrefix = "tinymce_${cleanBuildName(env.BRANCH_NAME)}-build${env.BUILD_NUMBER}"
 
