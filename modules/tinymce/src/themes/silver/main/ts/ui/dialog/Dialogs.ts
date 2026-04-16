@@ -123,6 +123,7 @@ export interface DialogSpec {
   dialogEvents: AlloyEvents.AlloyEventKeyAndHandler<any>[];
   eventOrder: Record<string, string[]>;
   firstTabstop?: number;
+  role?: 'dialog' | 'alertdialog';
 }
 
 const renderDialog = (spec: DialogSpec): SketchSpec => {
@@ -133,6 +134,7 @@ const renderDialog = (spec: DialogSpec): SketchSpec => {
 
   return ModalDialog.sketch(
     {
+      role: spec.role,
       lazySink: spec.lazySink,
       onEscape: (comp) => {
         spec.onEscape(comp);
