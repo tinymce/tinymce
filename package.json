@@ -28,7 +28,7 @@
     "ci-all-seq": "npm-run-all -p eslint ci-seq -s tinymce-rollup",
     "local-ci": "run-s -s ci-all test",
     "test": "run-s headless-test browser-test",
-    "build": "npm-run-all -p oxide-icons-ci oxide-ci oxide-components-ci -s tinymce-grunt",
+    "build": "npm-run-all oxide-ci -p oxide-icons-ci oxide-components-ci -s tinymce-grunt",
     "prepublishOnly": "run-s oxide-icons-ci",
     "browser-test": "grunt browser-auto",
     "browser-test-manual": "grunt browser-manual",
