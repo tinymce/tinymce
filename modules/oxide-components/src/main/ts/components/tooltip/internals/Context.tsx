@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react';
 
-export interface TooltipState {
+export interface TooltipContext {
   readonly isOpen: boolean;
   readonly shouldRenderComponents: boolean;
   readonly delayForShow: number;
@@ -13,9 +13,9 @@ export interface TooltipState {
   readonly popupAnchor: string;
 }
 
-export const TooltipContext = createContext<TooltipState | null>(null);
+export const TooltipContext = createContext<TooltipContext | null>(null);
 
-export const useTooltip = (): TooltipState => {
+export const useTooltip = (): TooltipContext => {
   const context = useContext(TooltipContext);
   if (context === null) {
     throw new Error('Tooltip compound components must be rendered within the Tooltip component');
