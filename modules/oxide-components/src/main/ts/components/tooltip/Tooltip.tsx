@@ -151,7 +151,11 @@ const hideContentPopover = (content: HTMLElement) => {
 };
 
 const Content = forwardRef<HTMLDivElement, ContentProps>(({ text }, ref) => {
-  const { shouldRenderComponents, isOpen, contentRef, triggerRef, delayForShow, delayForHide, popupAnchor } = useTooltip();
+  const { shouldRenderComponents, setRenderComponents, isOpen, contentRef, triggerRef, delayForShow, delayForHide, popupAnchor } = useTooltip();
+
+  useEffect(() => {
+    setRenderComponents(true);
+  }, [ text, setRenderComponents ]);
 
   useLayoutEffect(() => {
     if (Type.isNonNullable(contentRef.current)) {
