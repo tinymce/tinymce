@@ -721,6 +721,58 @@ describe('browser.tinymce.core.lists.ApplyTest', () => {
     TinyAssertions.assertRawContent(editor, '<ul><li>a</li></ul><ul><li>b</li></ul><ul><li>c</li></ul>');
   });
 
+  it('TINY-14070: Placing the cursor in a list should allow to remove an item from the list.', () => {
+    const editor = hook.editor();
+    editor.setContent(
+      '<ul>' +
+      '<li><div><span>Text 1</span></div></li>' +
+      '<li><div><span>Text 2</span></div></li>' +
+      '<li><div><span>Text 3</span></div></li>' +
+      '<li><div><span>Text 4</span></div></li>' +
+      '</ul>'
+    );
+
+    TinySelections.setCursor(editor, [ 0, 1, 0, 0, 0 ], 0);
+
+    editor.execCommand('InsertUnorderedList');
+    TinyAssertions.assertRawContent(editor,
+      '<ul>' +
+      '<li><div><span>Text 1</span></div></li>' +
+      '</ul>' +
+      '<div><span>Text 2</span></div>' +
+      '<ul>' +
+      '<li><div><span>Text 3</span></div></li>' +
+      '<li><div><span>Text 4</span></div></li>' +
+      '</ul>'
+    );
+  });
+
+  it('TINY-14070: Making a selection in a list should allow to remove the selected items.', () => {
+    const editor = hook.editor();
+    editor.setContent(
+      '<ul>' +
+      '<li><div><span>Text 1</span></div></li>' +
+      '<li><div><span>Text 2</span></div></li>' +
+      '<li><div><span>Text 3</span></div></li>' +
+      '<li><div><span>Text 4</span></div></li>' +
+      '</ul>'
+    );
+
+    TinySelections.setSelection(editor, [ 0, 1, 0, 0, 0 ], 0, [ 0, 2, 0, 0, 0 ], 0);
+
+    editor.execCommand('InsertUnorderedList');
+    TinyAssertions.assertRawContent(editor,
+      '<ul>' +
+      '<li><div><span>Text 1</span></div></li>' +
+      '</ul>' +
+      '<div><span>Text 2</span></div>' +
+      '<div><span>Text 3</span></div>' +
+      '<ul>' +
+      '<li><div><span>Text 4</span></div></li>' +
+      '</ul>'
+    );
+  });
+
   it('TBA: Apply unordered list on children on a fully selected ordered list', () => {
     const editor = hook.editor();
     editor.setContent(

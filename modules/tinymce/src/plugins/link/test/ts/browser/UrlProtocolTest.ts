@@ -28,7 +28,7 @@ describe('browser.tinymce.plugins.link.UrlProtocolTest', () => {
       target: ''
     });
     await TestLinkUi.pClickSave(editor);
-    await TinyUiActions.pWaitForDialog(editor, '[role="dialog"].tox-confirm-dialog');
+    await TinyUiActions.pWaitForDialog(editor, '[role="alertdialog"].tox-confirm-dialog');
     await TestLinkUi.pClickConfirmYes(editor);
     await TestLinkUi.pAssertContentPresence(editor, { [`a[href="${expectedProtocol}${url}"]:contains("Something")`]: 1 });
   };
@@ -46,7 +46,7 @@ describe('browser.tinymce.plugins.link.UrlProtocolTest', () => {
       target: ''
     });
     await TestLinkUi.pClickSave(editor);
-    UiFinder.notExists(SugarBody.body(), '[role="dialog"]');
+    UiFinder.notExists(SugarBody.body(), '[role="alertdialog"]');
     await TestLinkUi.pAssertContentPresence(editor, { [`a[href="${url}"]:contains("Something")`]: 1 });
   };
 

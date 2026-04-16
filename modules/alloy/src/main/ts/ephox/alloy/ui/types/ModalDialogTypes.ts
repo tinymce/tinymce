@@ -16,6 +16,7 @@ export interface ModalDialogDetail extends CompositeSketchDetail {
   components: AlloySpec[ ];
   modalBehaviours: SketchBehaviours;
   eventOrder: Record<string, string[]>;
+  role: 'dialog' | 'alertdialog';
 
   onExecute: (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Optional<boolean>;
   onEscape: (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Optional<boolean>;
@@ -33,6 +34,7 @@ export interface ModalDialogSpec extends CompositeSketchSpec {
   components?: AlloySpec[];
   modalBehaviours?: AlloyBehaviourRecord;
   eventOrder?: Record<string, string[]>;
+  role?: 'dialog' | 'alertdialog';
 
   lazySink?: LazySink;
   useTabstopAt?: (comp: SugarElement<HTMLElement>) => boolean;
