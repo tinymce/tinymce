@@ -93,7 +93,9 @@ export const renderTabPanel = (spec: TabPanelSpec, dialogData: Dialog.DialogData
   });
 
   // Assign fixed height or variable height to the tabs
-  const tabMode = DialogTabHeight.smartMode(allTabs);
+  const tabMode = spec.dynamicHeight
+    ? DialogTabHeight.smartMode(allTabs)
+    : DialogTabHeight.naiveMode(allTabs);
 
   return AlloyTabSection.sketch({
     dom: {
