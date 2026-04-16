@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Iframe elements with children would incorrectly be removed by DomPurify.
-time: 2026-03-05T10:42:35.788475+10:00
-custom:
-    Issue: TINY-9655

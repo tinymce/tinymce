@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Certain selections would delete the editor body, causing issues.
-time: 2026-03-27T10:03:13.329787+01:00
-custom:
-    Issue: TINY-14149
