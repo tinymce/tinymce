@@ -3,9 +3,9 @@
 @removed-background-color: fade(@color-error, 20%);
 
 @selected-outline-color: @color-tint;
-@selected-box-shadow: 0 -2px 0 0 @selected-outline-color inset, 0 -2px 0 0 @selected-outline-color;
+@selected-box-shadow: 0 2px 0 0 @selected-outline-color, 0 -2px 0 0 @selected-outline-color;
 
-.diff-content(
+.diff-content( 
   @pluginName,
   @added-bg,
   @modified-bg,
@@ -17,41 +17,66 @@
   .tox-@{pluginName}__annotation--added,
   .tox-@{pluginName}__annotation--modified,
   .tox-@{pluginName}__annotation--removed {
+    padding-block: calc((1lh - 1.1em) / 2);
     text-decoration: none;
+    background-repeat: no-repeat;
+    text-decoration-thickness: max(1px, .07em); 
   }
 
   .tox-@{pluginName}__annotation--added__highlight {
-    background-color: @added-bg;
-    box-shadow: 0 -2px 0 0 @color-success inset;
+    background-position: bottom;
+    background-image: linear-gradient(@added-bg calc(100% - 2px), @color-success calc(100% - 2px));
   }
 
   .tox-@{pluginName}__annotation--added__selected {
-    background-color: @added-bg;
-    box-shadow: @selected-box-shadow;
-    text-decoration: none;
+    background-position: center;
+    background-size: 100% calc(1lh + 3px);
+    background-image: linear-gradient(@selected-outline-color 3px, @added-bg 3px, @added-bg calc(100% - 3px), @selected-outline-color calc(100% - 3px));
   }
 
   .tox-@{pluginName}__annotation--modified__highlight {
-    background-color: @modified-bg;
-    text-decoration: underline;
+    background-position: bottom;
+    background-image: linear-gradient(@modified-bg calc(100% - 2px), @color-tint calc(100% - 2px));
   }
 
   .tox-@{pluginName}__annotation--modified__selected {
-    background-color: @modified-bg;
-    box-shadow: @selected-box-shadow;
-    text-decoration: none;
+    background-position: center;
+    background-size: 100% calc(1lh + 3px);
+    background-image: linear-gradient(@selected-outline-color 3px, @modified-bg 3px, @modified-bg calc(100% - 3px), @selected-outline-color calc(100% - 3px));
   }
 
   .tox-@{pluginName}__annotation--removed__highlight {
-    background-color: @removed-bg;
     text-decoration: line-through;
-    box-shadow: 0 -2px 0 0 @color-error inset;
+    background-position: bottom;
+    background-image: linear-gradient(@removed-bg calc(100% - 2px), @color-error calc(100% - 2px));
   }
 
   .tox-@{pluginName}__annotation--removed__selected {
-    background-color: @removed-bg;
-    box-shadow: @selected-box-shadow;
     text-decoration: line-through;
+    background-position: center;
+    background-size: 100% calc(1lh + 3px);
+    background-image: linear-gradient(@selected-outline-color 3px, @removed-bg 3px, @removed-bg calc(100% - 3px), @selected-outline-color calc(100% - 3px));
+  }
+
+  // Block elements should not have background size of 1lh, so selection is based on box-shadow
+  div, p, ul, ol, li, table, section, header, footer, h1, h2, h3, h4, h5, h6, figure, hr {
+    &.tox-@{pluginName}__annotation--added__selected {
+      background-image: none;
+      background-color: @added-bg;
+      box-shadow: @selected-box-shadow;
+    }
+
+    &.tox-@{pluginName}__annotation--modified__selected {
+      background-image: none;
+      background-color: @modified-bg;
+      box-shadow: @selected-box-shadow;
+    }
+
+    &.tox-@{pluginName}__annotation--removed__selected {
+      background-image: none;
+      background-color: @removed-bg;
+      box-shadow: @selected-box-shadow;
+    }
   }
 
   .tox-@{pluginName}__annotation--added.tox-@{pluginName}__annotation--added__hidden,
@@ -76,38 +101,45 @@
     &.tox-@{pluginName}__annotation--added__highlight {
       outline: 0.25em solid @added-bg;
       padding: 0.25em;
+      background-image: none;
     }
 
     &.tox-@{pluginName}__annotation--added__selected {
       border: 0.25em solid @added-bg;
       outline: 0.125em solid @selected-outline-color;
       padding: 0em;
+      background-image: none;
     }
 
     &.tox-@{pluginName}__annotation--modified__highlight {
       outline: 0.25em solid @modified-bg;
       padding: 0.25em;
+      background-image: none;
     }
 
     &.tox-@{pluginName}__annotation--modified__selected {
       border: 0.25em solid @modified-bg;
       outline: 0.125em solid @selected-outline-color;
       padding: 0em;
+      background-image: none;
     }
 
     &.tox-@{pluginName}__annotation--removed__highlight {
       outline: 0.25em solid @removed-bg;
       padding: 0.25em;
+      background-image: none;
     }
 
     &.tox-@{pluginName}__annotation--removed__selected {
       border: 0.25em solid @removed-bg;
       outline: 0.125em solid @selected-outline-color;
       padding: 0em;
+      background-image: none;
     }
   }
 
   div.tox-@{pluginName}__annotation:has(> hr) {
+    background-size: auto;
     padding: 0.25em;
   }
 
@@ -126,6 +158,7 @@
       // Taken from the content pagebreak styles
       border: 1px dashed #aaa;
       box-shadow: none;
+      background-image: none;
     }
 
     &.tox-@{pluginName}__annotation--added__highlight,
