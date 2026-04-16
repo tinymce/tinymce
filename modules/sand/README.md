@@ -158,4 +158,4 @@ https://developer.mozilla.org/en/docs/XMLSerializer
 
 # Running Tests
 
-$ yarn test
+`$ bun run test`
