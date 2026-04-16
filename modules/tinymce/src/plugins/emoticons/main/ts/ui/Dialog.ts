@@ -1,4 +1,4 @@
-import { Arr, Cell, Throttler } from '@ephox/katamari';
+import { Arr, Cell, Optional, Throttler } from '@ephox/katamari';
 
 import type Editor from 'tinymce/core/api/Editor';
 import type { Dialog } from 'tinymce/core/api/ui/Ui';
@@ -18,7 +18,7 @@ const open = (editor: Editor, database: EmojiDatabase): void => {
 
   const initialState: DialogData = {
     pattern: '',
-    results: emojisFrom(database.listAll(), '')
+    results: emojisFrom(database.listAll(), '', Optional.none())
   };
 
   const currentTab = Cell(ALL_CATEGORY);
@@ -27,7 +27,7 @@ const open = (editor: Editor, database: EmojiDatabase): void => {
     const dialogData = dialogApi.getData();
     const category = currentTab.get();
     const candidates = database.listCategory(category);
-    const results = emojisFrom(candidates, dialogData[patternName]);
+    const results = emojisFrom(candidates, dialogData[patternName], Optional.none());
     dialogApi.setData({
       results
     });

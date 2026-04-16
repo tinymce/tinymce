@@ -1,4 +1,4 @@
-import { Arr, Strings } from '@ephox/katamari';
+import { Arr, type Optional, Strings } from '@ephox/katamari';
 
 import type { EmojiEntry } from './EmojiDatabase';
 
@@ -6,7 +6,7 @@ const emojiMatches = (emoji: EmojiEntry, lowerCasePattern: string): boolean =>
   Strings.contains(emoji.title.toLowerCase(), lowerCasePattern) ||
   Arr.exists(emoji.keywords, (k) => Strings.contains(k.toLowerCase(), lowerCasePattern));
 
-const emojisFrom = (list: EmojiEntry[], pattern: string): Array<{ value: string; icon: string; text: string }> => {
+const emojisFrom = (list: EmojiEntry[], pattern: string, maxResults: Optional<number>): Array<{ value: string; icon: string; text: string }> => {
   const matches = [];
   const lowerCasePattern = pattern.toLowerCase();
   for (let i = 0; i < list.length; i++) {
@@ -17,6 +17,9 @@ const emojisFrom = (list: EmojiEntry[], pattern: string): Array<{ value: string;
         text: list[i].title,
         icon: list[i].char
       });
+      if (maxResults.exists((max) => matches.length >= max)) {
+        break;
+      }
     }
   }
   return matches;
