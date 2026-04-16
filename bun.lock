@@ -4,9 +4,6 @@
   "workspaces": {
     "": {
       "name": "tinymce-monorepo",
-      "dependencies": {
-        "grunt-legacy-util": "2.0.2",
-      },
       "devDependencies": {
         "@ephox/bedrock-client": "^16.0.0",
         "@ephox/bedrock-server": "^16.2.0",
@@ -35,6 +32,7 @@
         "grunt-contrib-cssmin": "^5.0.0",
         "grunt-contrib-symlink": "^1.0.0",
         "grunt-contrib-watch": "^1.1.0",
+        "grunt-legacy-util": "2.0.2",
         "grunt-nuget-pack": "^1.0.1",
         "grunt-shell": "^4.0.0",
         "grunt-stylelint": "^0.20.1",
