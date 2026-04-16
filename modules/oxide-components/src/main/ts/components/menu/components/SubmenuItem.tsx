@@ -1,37 +1,21 @@
-import { Fun, Optional, Optionals, Type } from '@ephox/katamari';
-import { Compare, SelectorFind, SugarElement } from '@ephox/sugar';
-import { forwardRef, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
+import { Fun, Type } from '@ephox/katamari';
+import { forwardRef, useEffect, useId, useMemo, useRef, useState } from 'react';
 
 import * as Bem from '../../../utils/Bem';
 import * as Dropdown from '../../dropdown/Dropdown';
 import { Icon } from '../../icon/Icon';
+import { useMenu } from '../internals/Context';
 import type { CommonMenuItemInstanceApi, SubmenuProps } from '../internals/Types';
-
-const isSiblingMenuItemInSameGroup = (relatedTarget: Element | null, currentTarget: Element): boolean => {
-  const groupSelector = Bem.elementSelector('tox-collection', 'group');
-  const getGroup = (el: Element) => SelectorFind.closest(SugarElement.fromDom(el), groupSelector);
-
-  return Optional.from(relatedTarget).exists((target) =>
-    Optionals.equals(getGroup(currentTarget), getGroup(target), Compare.eq)
-  );
-};
-
-const isMenuItemOutsideContainer = (relatedTarget: Element | null, container: Element): boolean => {
-  return Optional.from(relatedTarget).exists((target) => {
-    const targetElement = SugarElement.fromDom(target);
-    return !Compare.contains(SugarElement.fromDom(container), targetElement);
-  });
-};
 
 export const SubmenuItem = forwardRef<HTMLDivElement, SubmenuProps>(({ enabled = true, icon, onSetup, children, submenusSide = 'right', submenuContent }, ref) => {
   const [ state, setState ] = useState({
     enabled,
     focused: false,
-    isSubmenuOpen: false,
-    focusMovedToOtherMenuItem: false,
+    isActive: false,
   });
   const id = useId();
   const stateRef = useRef(state);
+  const { activeItemId, setActiveItemId } = useMenu();
 
   useEffect(() => {
     stateRef.current = state;
@@ -64,16 +48,17 @@ export const SubmenuItem = forwardRef<HTMLDivElement, SubmenuProps>(({ enabled =
     }
   }, [ state.enabled ]);
 
+  useEffect(() => {
+    const isActive = activeItemId === id;
+    setState((prev) => ({ ...prev, isActive }));
+    if (!isActive && submenuContentRef.current?.matches(':popover-open')) {
+      submenuContentRef.current.hidePopover();
+    }
+  }, [ activeItemId, id ]);
+
   const itemIcon = Type.isString(icon)
     ? <Icon icon={icon} />
     : icon;
-
-  const handleOpenChange = useCallback((isOpen: boolean) => {
-    setState((prev) => ({
-      ...prev,
-      isSubmenuOpen: isOpen
-    }));
-  }, []);
 
   return (
     <Dropdown.Root
@@ -90,22 +75,18 @@ export const SubmenuItem = forwardRef<HTMLDivElement, SubmenuProps>(({ enabled =
           role='menuitem'
           aria-haspopup={'true'}
           aria-disabled={!state.enabled}
-          onFocus={() => setState((prev) => ({ ...prev, focused: true, focusMovedToOtherMenuItem: false }))}
+          onFocus={() => {
+            setState((prev) => ({ ...prev, focused: true }));
+            setActiveItemId(id);
+          }}
           onPointerMove={(e) => {
             if (state.enabled) {
               e.currentTarget.focus();
             }
           }}
-          onBlur={(e) => {
-            const relatedTarget = e.relatedTarget;
-            setState((prev) => ({
-              ...prev,
-              focused: false,
-              focusMovedToOtherMenuItem: isSiblingMenuItemInSameGroup(relatedTarget, e.target)
-            }));
-          }}
+          onBlur={() => setState((prev) => ({ ...prev, focused: false }))}
           className={Bem.element('tox-collection', 'item', {
-            'active': state.focused || (state.isSubmenuOpen && !state.focusMovedToOtherMenuItem),
+            'active': state.focused || state.isActive,
             'state-disabled': !state.enabled,
           })}
         >
@@ -116,17 +97,8 @@ export const SubmenuItem = forwardRef<HTMLDivElement, SubmenuProps>(({ enabled =
           </div>
         </div>
       </Dropdown.Trigger>
-      <Dropdown.Content ref={submenuContentRef} onOpenChange={handleOpenChange}>
-        <div
-          onBlur={(e) => {
-            const relatedTarget = e.relatedTarget;
-            if (isMenuItemOutsideContainer(relatedTarget, e.target)) {
-              setState((prev) => ({ ...prev, focusMovedToOtherMenuItem: true }));
-            }
-          }}
-        >
-          {submenuContent}
-        </div>
+      <Dropdown.Content ref={submenuContentRef}>
+        {submenuContent}
       </Dropdown.Content>
     </Dropdown.Root>
   );

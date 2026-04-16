@@ -28,8 +28,21 @@
       }
 
       .tox-ai__review-description {
-        padding-bottom: var(--tox-private-pad-sm, @pad-sm);
+        padding-bottom: calc(var(--tox-private-pad-sm, @pad-sm) + var(--tox-private-pad-xs, @pad-xs));
         font-size: var(--tox-private-font-size-sm, @font-size-sm);
+      }
+
+      .tox-ai__review-choose-container {
+        padding-bottom: 12px;
+      }
+
+      .tox-ai__review-custom-input {
+        margin-bottom: 12px;
+      }
+
+      .tox-ai__review-custom-actions {
+        display: flex;
+        gap: 8px;
       }
 
       .tox-ai__review-input-container {

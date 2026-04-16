@@ -7,7 +7,7 @@
 @tinymceai-removed-background-color: @removed-background-color;
 
 @tinymceai-selected-outline-color: @selected-outline-color;
-@tinymceai-selected-box-shadow: 0 -2px 0 0 @tinymceai-selected-outline-color inset, 0 -2px 0 0 @tinymceai-selected-outline-color;
+@tinymceai-selected-box-shadow: 0 2px 0 0 @tinymceai-selected-outline-color, 0 -2px 0 0 @tinymceai-selected-outline-color;
 
 @tinymceai-dim-overlay-color: fade(@color-black, 20%);
 
@@ -36,7 +36,8 @@
   cursor: pointer;
 }
 
-div[tinymceai-data-pending-diff="true"], span[tinymceai-data-pending-diff="true"] {
+div[tinymceai-data-pending-diff="true"],
+span[tinymceai-data-pending-diff="true"] {
   position: relative;
   z-index: 1;
   background: @color-white;
@@ -50,40 +51,70 @@ div[tinymceai-data-pending-diff="true"], span[tinymceai-data-pending-diff="true"
 .tox-tinymceai__preview-body--show-preview {
   .tox-tinymceai__annotation--added.tox-tinymceai__annotation--preview-highlight,
   .tox-tinymceai__annotation--modified.tox-tinymceai__annotation--preview-highlight {
-    border-bottom: 3px solid @color-tint;
     cursor: pointer;
+    background-position: bottom;
+    background-image: linear-gradient(
+      transparent calc(100% - 3px),
+      @color-tint calc(100% - 3px)
+    );
   }
 
-  .tox-tinymceai__annotation--added__selected,
-  .tox-tinymceai__annotation--modified__selected {
-    background-color: fade(@color-tint, 20%);
-    border-top: 3px solid @color-tint;
-    border-bottom: 3px solid @color-tint;
-    box-shadow: none;
-    text-decoration: none;
+  .tox-tinymceai__annotation--added.tox-tinymceai__annotation--added__selected,
+  .tox-tinymceai__annotation--modified.tox-tinymceai__annotation--modified__selected {
+    background-position: center;
+    background-size: 100% calc(1lh + 3px);
+    background-image: linear-gradient(
+      @color-tint 3px,
+      fade(@color-tint, 20%) 3px,
+      fade(@color-tint, 20%) calc(100% - 3px),
+      @color-tint calc(100% - 3px)
+    );
   }
 
   // TEMP: Show deleted content when its review card is selected.
   // Makes deletions visible and scrollable in preview mode.
   // TODO: Replace with a proper visual marker that doesn't reveal full deleted content.
   .tox-tinymceai__annotation--removed.tox-tinymceai__annotation--removed__selected {
-    display: inline;
-    background-color: fade(@color-error, 20%);
-    border-top: 3px solid @color-error;
-    border-bottom: 3px solid @color-error;
-    box-shadow: none;
+    display: revert;
     text-decoration: line-through;
+    background-position: center;
+    background-size: 100% calc(1lh + 3px);
+    background-image: linear-gradient(
+      @color-error 3px,
+      fade(@color-error, 20%) 3px,
+      fade(@color-error, 20%) calc(100% - 3px),
+      @color-error calc(100% - 3px)
+    );
+  }
+
+  // Block elements should not have background size of 1lh, so selection is based on box-shadow
+  div, p, ul, ol, li, table, section, header, footer, h1, h2, h3, h4, h5, h6, figure, hr {
+    &.tox-tinymceai__annotation--added.tox-tinymceai__annotation--added__selected,
+    &.tox-tinymceai__annotation--modified.tox-tinymceai__annotation--modified__selected {
+      background-image: none;
+      background-color: fade(@color-tint, 20%);
+      box-shadow: @tinymceai-selected-box-shadow;
+    }
+
+    // TODO: Replace with a proper visual marker that doesn't reveal full deleted content.
+    &.tox-tinymceai__annotation--removed.tox-tinymceai__annotation--removed__selected {
+      background-image: none;
+      background-color: fade(@color-error, 20%);
+      box-shadow: @tinymceai-selected-box-shadow;
+    }
   }
 
   img, video, iframe {
     &.tox-tinymceai__annotation--added.tox-tinymceai__annotation--preview-highlight,
     &.tox-tinymceai__annotation--modified.tox-tinymceai__annotation--preview-highlight {
+      background-image: none;
       outline: 0.25em solid fade(@color-tint, 20%);
       padding: 0.25em;
     }
 
     &.tox-tinymceai__annotation--added__selected,
     &.tox-tinymceai__annotation--modified__selected {
+      background-image: none;
       border: 0.25em solid fade(@color-tint, 20%);
       outline: 0.125em solid @color-tint;
       padding: 0;
@@ -91,6 +122,7 @@ div[tinymceai-data-pending-diff="true"], span[tinymceai-data-pending-diff="true"
 
     &.tox-tinymceai__annotation--removed.tox-tinymceai__annotation--removed__selected {
       display: inline;
+      background-image: none;
       border: 0.25em solid fade(@color-error, 20%);
       outline: 0.125em solid @color-error;
       padding: 0;

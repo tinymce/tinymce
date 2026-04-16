@@ -299,4 +299,40 @@ describe('browser.SubmenuItemTest', () => {
       expect(getByText('Nested Item').query()).toBeNull();
     }
   });
+
+  it('Should keep submenu open while item is active and close when moving to sibling', async () => {
+    const TestComponent = () => {
+      return (
+        <UniverseProvider resources={mockUniverse}>
+          <Menu.Root>
+            <Menu.SubmenuItem
+              submenuContent={
+                <Menu.Root>
+                  <Menu.Item onAction={vi.fn()}>Nested Item</Menu.Item>
+                </Menu.Root>
+              }
+            >
+              Submenu
+            </Menu.SubmenuItem>
+            <Menu.Item onAction={vi.fn()}>Sibling Item</Menu.Item>
+          </Menu.Root>
+        </UniverseProvider>
+      );
+    };
+
+    const { getByText } = render(<TestComponent />, { wrapper });
+    await waitForElementText(getByText, 'Submenu');
+
+    await userEvent.hover(getByText('Submenu'));
+    await waitForElementText(getByText, 'Nested Item');
+    expect(getByText('Nested Item').element()).toBeVisible();
+
+    await userEvent.hover(document.body);
+
+    // Poll to ensure submenu remains visible after debounce timers
+    await expect.poll(() => getByText('Nested Item').element(), { timeout: 450 }).toBeVisible();
+
+    await userEvent.hover(getByText('Sibling Item'));
+    await expect.poll(() => getByText('Nested Item').query()).toBeNull();
+  });
 });

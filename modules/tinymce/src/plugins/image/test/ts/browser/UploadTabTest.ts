@@ -219,7 +219,7 @@ describe('browser.tinymce.plugins.image.UploadTabTest', () => {
     await TinyUiActions.pWaitForDialog(editor);
     TinyUiActions.clickOnUi(editor, '.tox-tab:contains("Upload")');
     await pTriggerUpload(editor);
-    await TinyUiActions.pWaitForDialog(editor, '[role="dialog"] p:contains("This is an upload error")');
+    await TinyUiActions.pWaitForDialog(editor, '[role="alertdialog"] p:contains("This is an upload error")');
     TinyUiActions.clickOnUi(editor, 'button:contains("OK")');
     await FocusTools.pTryOnSelector('After closing the error alert the focus should be on the browse files button', SugarDocument.getDocument(), 'button:contains("Browse for an image")');
     closeDialog(editor);

@@ -101,7 +101,7 @@ const Root: FC<CardRootProps> = ({
   }, [ listContext, index ]);
 
   const cardClassName = Bem.block('tox-card', {
-    'selected': isFocused || selected,
+    'selected': !loading && (isFocused || selected),
     'has-decision': hasDecision
   })
     + (loading ? ' tox-skeleton' : '')
@@ -124,7 +124,7 @@ const Root: FC<CardRootProps> = ({
       onClick={loading ? undefined : handleClick}
       onKeyDown={loading ? undefined : handleKeyDown}
       onFocus={loading ? undefined : handleFocus}
-      tabIndex={-1}
+      tabIndex={loading ? undefined : -1}
       role="option"
       aria-label={ariaLabel ?? `Card ${(index ?? 0) + 1}`}
       aria-selected={isSelected}

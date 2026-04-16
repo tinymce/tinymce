@@ -23,7 +23,7 @@ const meta = {
       control: 'number',
     },
     triggerEvents: {
-      description: 'Defines trigger element behavior. On default opens a dropdown on click but can be changed to open on hover and close on mouse leave.',
+      description: 'Defines trigger element behavior. By default opens a dropdown on click. Hover opens on mouse enter only (does not close on mouse leave). Arrows opens on arrow key press.',
       value: [ 'click' ],
       options: [[ 'click' ], [ 'hover' ], [ 'click', 'hover' ]]
     }
@@ -51,7 +51,7 @@ type Story = StoryObj<typeof meta>;
 
 const render = (args: Dropdown.DropdownProps): JSX.Element => {
   return (
-    <Dropdown.Root {...args}>
+    <Dropdown.Root gap={8} {...args}>
       <Dropdown.Trigger>
         <Button variant='secondary'>
           Click to toggle

@@ -2,20 +2,6 @@
 // Accordion
 //
 
-.tox when (@custom-properties-enabled = true) {
-  .tox-accordion {
-    --tox-private-accordion-item-background-color: light-dark(
-      hsl(from var(--tox-private-background-color) h s calc(l - 3)),
-      hsl(from var(--tox-private-background-color) h s calc(l + 3)));
-    --tox-private-accordion-header-hover-background-color: light-dark(
-      hsl(from var(--tox-private-accordion-item-background-color, @accordion-item-background-color) h s calc(l - 5)),
-      hsl(from var(--tox-private-accordion-item-background-color, @accordion-item-background-color) h s calc(l + 5)));
-  }
-}
-
-@accordion-item-background-color: darken(@background-color, 3%);
-@accordion-header-hover-background-color: darken(@accordion-item-background-color, 5%);
-
 .tox {
   .tox-accordion {
     display: flex;
@@ -30,10 +16,10 @@
     position: relative;
 
     &.tox-accordion__item--expanded {
-      background-color: var(--tox-private-accordion-item-background-color, @accordion-item-background-color);
+      background-color: var(--tox-private-background-secondary, contrast(@background-color, darken(@background-color, 6%), lighten(@background-color, 7%)));
 
       .tox-accordion__content--expanded .tox-accordion__content-inner {
-        padding-top: var(--tox-private-pad-xs, @pad-xs);
+        padding-top: 0;
       }
     }
 
@@ -106,7 +92,7 @@
     }
 
     &:hover:not(.tox-accordion__header--disabled) {
-      background-color: var(--tox-private-accordion-header-hover-background-color, @accordion-header-hover-background-color);
+      background-color: var(--tox-private-background-secondary, contrast(@background-color, darken(@background-color, 6%), lighten(@background-color, 7%)));
     }
 
     &:focus:not(.tox-accordion__header--disabled) {
@@ -126,10 +112,6 @@
     &.tox-accordion__header--icon-end {
       padding-right: calc(var(--tox-private-pad-sm, @pad-sm) + var(--tox-private-pad-xs, @pad-xs));
     }
-  }
-
-  .tox-accordion__content--expanded .tox-accordion__content-inner {
-    padding-top: calc(var(--tox-private-pad-sm, @pad-sm) + 1px);
   }
 
   .tox-accordion__header-icon {

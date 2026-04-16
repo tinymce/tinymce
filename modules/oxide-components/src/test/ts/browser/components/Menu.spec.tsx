@@ -245,4 +245,45 @@ describe('browser.MenuTest', () => {
       await pAssertActiveElementText('Item 3');
     });
   });
+
+  it('TINY-14193: should cycle between items on arrow down', async () => {
+    const TestComponent = () => {
+      return (
+        <UniverseProvider resources={mockUniverse}>
+          <Menu.Root>
+            <Menu.Item onAction={vi.fn()}>Item 1</Menu.Item>
+            <Menu.Item onAction={vi.fn()}>Item 2</Menu.Item>
+          </Menu.Root>
+        </UniverseProvider>
+      );
+    };
+    const { getByText } = render(<TestComponent />, { wrapper });
+    await waitForElementText(getByText, 'Item 1');
+    await pAssertActiveElementText('Item 1');
+
+    await userEvent.keyboard('{ArrowDown}');
+    await pAssertActiveElementText('Item 2');
+
+    await userEvent.keyboard('{ArrowDown}');
+    await pAssertActiveElementText('Item 1');
+  });
+
+  it('TINY-14193: should cycle between items on arrow up', async () => {
+    const TestComponent = () => {
+      return (
+        <UniverseProvider resources={mockUniverse}>
+          <Menu.Root>
+            <Menu.Item onAction={vi.fn()}>Item 1</Menu.Item>
+            <Menu.Item onAction={vi.fn()}>Item 2</Menu.Item>
+          </Menu.Root>
+        </UniverseProvider>
+      );
+    };
+    const { getByText } = render(<TestComponent />, { wrapper });
+    await waitForElementText(getByText, 'Item 1');
+    await pAssertActiveElementText('Item 1');
+
+    await userEvent.keyboard('{ArrowUp}');
+    await pAssertActiveElementText('Item 2');
+  });
 });
