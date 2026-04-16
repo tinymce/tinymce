@@ -32,6 +32,7 @@
         "grunt-contrib-cssmin": "^5.0.0",
         "grunt-contrib-symlink": "^1.0.0",
         "grunt-contrib-watch": "^1.1.0",
+        "grunt-legacy-util": "2.0.2",
         "grunt-nuget-pack": "^1.0.1",
         "grunt-shell": "^4.0.0",
         "grunt-stylelint": "^0.20.1",
@@ -350,7 +351,7 @@
     },
     "modules/tinymce": {
       "name": "tinymce",
-      "version": "8.5.0",
+      "version": "8.6.0",
       "dependencies": {
         "@ephox/acid": "^8.0.0",
         "@ephox/agar": "^10.0.0",
@@ -2015,6 +2016,8 @@
 
     "exit-hook": ["exit-hook@4.0.0", "", {}, "sha512-Fqs7ChZm72y40wKjOFXBKg7nJZvQJmewP5/7LtePDdnah/+FH9Hp5sgMujSCMPXlxOAW2//1jrW9pnsY7o20vQ=="],
 
+    "exit-x": ["exit-x@0.2.2", "", {}, "sha512-+I6B/IkJc1o/2tiURyz/ivu/O0nKNEArIUB5O7zBrlDVJr22SCLH3xTeEry428LvFhRzIA1g8izguxJ/gbNcVQ=="],
+
     "expand-tilde": ["expand-tilde@2.0.2", "", { "dependencies": { "homedir-polyfill": "^1.0.1" } }, "sha512-A5EmesHW6rfnZ9ysHQjPdJRni0SRar0tjtG5MNtm9n5TUvsYU8oozprtRD4AqHxcZWWlVuAmQo2nWKfN9oyjTw=="],
 
     "expect": ["expect@29.7.0", "", { "dependencies": { "@jest/expect-utils": "^29.7.0", "jest-get-type": "^29.6.3", "jest-matcher-utils": "^29.7.0", "jest-message-util": "^29.7.0", "jest-util": "^29.7.0" } }, "sha512-2Zks0hf1VLFYI1kbh0I5jP3KHHyCHpkfyHBzsSXRFgl/Bg9mWYfMW8oD+PdMPlEwy5HNsR9JutYy6pMeOh61nw=="],
@@ -2227,7 +2230,7 @@
 
     "grunt-legacy-log-utils": ["grunt-legacy-log-utils@2.1.0", "", { "dependencies": { "chalk": "~4.1.0", "lodash": "~4.17.19" } }, "sha512-lwquaPXJtKQk0rUM1IQAop5noEpwFqOXasVoedLeNzaibf/OPWjKYvvdqnEHNmU+0T0CaReAXIbGo747ZD+Aaw=="],
 
-    "grunt-legacy-util": ["grunt-legacy-util@2.0.1", "", { "dependencies": { "async": "~3.2.0", "exit": "~0.1.2", "getobject": "~1.0.0", "hooker": "~0.2.3", "lodash": "~4.17.21", "underscore.string": "~3.3.5", "which": "~2.0.2" } }, "sha512-2bQiD4fzXqX8rhNdXkAywCadeqiPiay0oQny77wA2F3WF4grPJXCvAcyoWUJV+po/b15glGkxuSiQCK299UC2w=="],
+    "grunt-legacy-util": ["grunt-legacy-util@2.0.2", "", { "dependencies": { "async": "~3.2.0", "exit-x": "~0.2.2", "getobject": "~1.0.0", "hooker": "~0.2.3", "lodash": "^4.18.0", "underscore.string": "~3.3.5", "which": "~2.0.2" } }, "sha512-0xoDILyR4BVJel5uJwnhjdWN9evOQ8A0uXbQUIJ0hgVthIA6kloXHSoqATQPj6BRrHrHkcQtCeGVb0ixFoHyEQ=="],
 
     "grunt-nuget-pack": ["grunt-nuget-pack@1.0.1", "", { "dependencies": { "moxie-zip": "~0.0.3", "xml-writer": "~1.7.0" } }, "sha512-BC8d6kbJZv4r8WprBHYzn0ZOHCMDs4p5I2kavh1tta2L5FRgTos2T5IgVowBgfAob5MTSclqALQkudmiXEPnRw=="],
 
@@ -4003,6 +4006,8 @@
 
     "got/get-stream": ["get-stream@6.0.1", "", {}, "sha512-ts6Wi+2j3jQjqi70w5AlN8DFnkSwC+MqmxEzdEALB2qXZYV3X/b1CTfgPLGJNMeAWxdPfU8FO1ms3NUfaHCPYg=="],
 
+    "grunt/grunt-legacy-util": ["grunt-legacy-util@2.0.1", "", { "dependencies": { "async": "~3.2.0", "exit": "~0.1.2", "getobject": "~1.0.0", "hooker": "~0.2.3", "lodash": "~4.17.21", "underscore.string": "~3.3.5", "which": "~2.0.2" } }, "sha512-2bQiD4fzXqX8rhNdXkAywCadeqiPiay0oQny77wA2F3WF4grPJXCvAcyoWUJV+po/b15glGkxuSiQCK299UC2w=="],
+
     "grunt/js-yaml": ["js-yaml@3.14.1", "", { "dependencies": { "argparse": "^1.0.7", "esprima": "^4.0.0" }, "bin": { "js-yaml": "bin/js-yaml.js" } }, "sha512-okMH7OXXJ7YrN9Ok3/SXrnu4iX9yOk+25nqX4imS2npuvTYDmo/QEZoqwZkYaIDk3jVvBOTOIEgEhaLOynBS9g=="],
 
     "grunt-cli/interpret": ["interpret@1.1.0", "", {}, "sha512-CLM8SNMDu7C5psFCn6Wg/tgpj/bKAg7hc2gWqcuR9OD5Ft9PhBpIu8PLicPeis+xDd6YX2ncI8MCA64I9tftIA=="],
@@ -4018,6 +4023,8 @@
     "grunt-contrib-watch/async": ["async@2.6.4", "", { "dependencies": { "lodash": "^4.17.14" } }, "sha512-mzo5dfJYwAn29PeiJ0zvwTo04zj8HDJj0Mn8TD7sno7q12prdbnasKJHhkm2c1LgrhlJ0teaea8860oxi51mGA=="],
 
     "grunt-legacy-log-utils/chalk": ["chalk@4.1.2", "", { "dependencies": { "ansi-styles": "^4.1.0", "supports-color": "^7.1.0" } }, "sha512-oKnbhFyRIXpUuez8iBMmyEa4nbj4IOQyuhc/wy9kY7/WVPcwIO9VA668Pu8RkO7+0G76SLROeyw9CpQ061i4mA=="],
+
+    "grunt-legacy-util/lodash": ["lodash@4.18.1", "", {}, "sha512-dMInicTPVE8d1e5otfwmmjlxkZoUpiVLwyeTdUsi/Caj/gfzzblBcCE5sRHV/AsjuCmxWrte2TNGSYuCeCq+0Q=="],
 
     "grunt-shell/chalk": ["chalk@3.0.0", "", { "dependencies": { "ansi-styles": "^4.1.0", "supports-color": "^7.1.0" } }, "sha512-4D3B6Wf41KOYRFdszmDqMCGq5VV/uMAB273JILmO+3jAlh8X4qDtdtgCR3fxtbLEMzSx22QdhnDcJvu2u1fVwg=="],
 
