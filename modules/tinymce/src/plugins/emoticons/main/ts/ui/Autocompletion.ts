@@ -1,5 +1,3 @@
-import { Optional } from '@ephox/katamari';
-
 import type Editor from 'tinymce/core/api/Editor';
 
 import type { EmojiDatabase } from '../core/EmojiDatabase';
@@ -10,7 +8,7 @@ const init = (editor: Editor, database: EmojiDatabase): void => {
     trigger: ':',
     columns: 'auto',
     minChars: 2,
-    fetch: (pattern, maxResults) => database.waitForLoad().then(() => {
+    fetch: (pattern) => database.waitForLoad().then(() => {
       const candidates = database.listAll();
       return emojisFrom(candidates, pattern);
     }),
