@@ -42,7 +42,7 @@
     "test-ci": "vitest --watch=false --reporter=default --reporter=junit --outputFile=scratch/test-results.xml",
     "test-browser-manual": "vitest --watch --browser.headless false",
     "test-browser-headless": "vitest --watch",
-    "ci": "lerna run --scope @tinymce/oxide-components --include-dependencies build && npm-run-all -p lint test"
+    "ci": "npm exec --prefix ../../ lerna -- run --scope @tinymce/oxide-components --include-dependencies build && npm-run-all -p lint test"
   },
   "peerDependencies": {
     "react": "^18.3.1",
