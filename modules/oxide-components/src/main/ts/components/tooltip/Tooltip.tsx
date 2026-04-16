@@ -1,4 +1,5 @@
 import { Id, Type } from '@ephox/katamari';
+import { PredicateExists, SugarElement, SugarNode } from '@ephox/sugar';
 import { Bem } from 'oxide-components/main';
 import {
   Children, cloneElement, forwardRef, isValidElement, useCallback,
@@ -14,22 +15,34 @@ import { useTooltip, TooltipContext } from './internals/Context';
 interface RootProps extends PropsWithChildren {
   readonly showCondition?: 'always' | 'overflow';
 }
-interface TriggerInternalProps extends PropsWithChildren<HTMLAttributes<HTMLElement>> { }
 
-const isOverflowing = (element: HTMLElement) => (element.offsetWidth < element.scrollWidth);
+interface TriggerProps {
+  readonly checkChildren?: boolean;
+}
 
-const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, ...props }, ref) => {
+interface TriggerInternalProps extends PropsWithChildren<HTMLAttributes<HTMLElement>>, TriggerProps { }
+
+// Certain elements have an overflow of 1 even when not overflowing. Ignore those.
+const isOverflowing = (element: HTMLElement) => (element.offsetWidth + 1 < element.scrollWidth);
+
+const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ checkChildren, children, ...props }, ref) => {
   const { shouldRenderComponents, setIsOpen, showCondition, triggerRef, setRenderComponents, popupAnchor } = useTooltip();
 
   const shouldRender = useCallback(() => {
     if (showCondition === 'overflow') {
       const trigger = triggerRef.current;
 
-      return Type.isNonNullable(trigger) && isOverflowing(trigger);
+      if (Type.isNonNullable(trigger)) {
+        if (checkChildren) {
+          return isOverflowing(trigger) || PredicateExists.child(SugarElement.fromDom(trigger), (child) => SugarNode.isHTMLElement(child) && isOverflowing(child.dom));
+        } else {
+          return isOverflowing(trigger);
+        }
+      }
     }
 
     return true;
-  }, [ triggerRef, showCondition ]);
+  }, [ triggerRef, showCondition, checkChildren ]);
 
   useLayoutEffect(() => {
     const shouldRerender = shouldRender();
@@ -132,7 +145,7 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
 });
 
 const Trigger: React.ForwardRefExoticComponent<
-  PropsWithChildren & React.RefAttributes<HTMLElement>
+  PropsWithChildren & React.RefAttributes<HTMLElement> & TriggerProps
 > = TriggerImpl;
 
 interface ContentProps {
