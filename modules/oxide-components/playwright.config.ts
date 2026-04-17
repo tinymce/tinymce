@@ -45,7 +45,7 @@ export default defineConfig({
   // But we can in CI where we don't need Docker.
   webServer: process.env.CI
     ? {
-      command: 'yarn start --ci --loglevel debug',
+      command: 'npm start -- --ci --loglevel debug',
       stdout: 'pipe',
       url: BASE_URL,
       reuseExistingServer: true,

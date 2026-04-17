@@ -1,0 +1,11 @@
+# Bun configuration file
+# Replaces .yarnrc settings
+
+[install]
+frozenLockfile = true
+exact = true
+linker = "hoisted"
+
+[run]
+shell = "system"
+bun = false

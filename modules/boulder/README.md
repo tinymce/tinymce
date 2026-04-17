@@ -18,7 +18,7 @@ The API exposed by boulder will be constantly changing, but it should always be 
 
 `boulder` uses [`bedrock`](https://www.npmjs.com/package/@ephox/bedrock) to run tests. The tests are run through the `test` script in the project. Specifically,
 
-`$ yarn test`
+`$ bun run test`
 
 
 ## Boulder APIs

@@ -19,7 +19,7 @@ console.log(`Relative to project root: ${relativeToRoot}`);
 
 // This script is used to run visual regression tests in a Docker container.
 
-const devServer = spawn('yarn', ['start', '--ci'], {
+const devServer = spawn('bun', ['start', '--ci'], {
   stdio: 'inherit'
 });
 

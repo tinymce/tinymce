@@ -29,8 +29,8 @@
   "types": "lib/src/main/ts/main.d.ts",
   "scripts": {
     "dev": "vite",
-    "build": "npm run build-storybook && tsc -b && vite build",
-    "lint": "eslint --max-warnings=0 src/**/*.ts?",
+    "build": "bun build-storybook && tsc -b && vite build",
+    "lint": "eslint --max-warnings=0 'src/**/*.ts' 'src/**/*.tsx'",
     "start": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "deploy-storybook": "gh-pages -d ./storybook-static --nojekyll --dest modules/oxide-components",
@@ -78,15 +78,6 @@
     "vite": "^7.3.1",
     "vitest": "^4.0.18",
     "vitest-browser-react": "^1.0.1"
-  },
-  "workspaces": {
-    "nohoist": [
-      "**/storybook",
-      "**/@storybook/**",
-      "**vite**",
-      "**/@vitejs/**",
-      "**/@vitest/**"
-    ]
   },
   "dependencies": {
     "@ephox/katamari": "^11.0.0",
