@@ -14,9 +14,9 @@ const mockUniverse = {
 const meta = {
   title: 'components/Tooltip',
   component: (props) =>
-    <Tooltip.Root>
+    <Tooltip.Root showCondition={props.alwaysShow ? 'always' : 'overflow'}>
       <Tooltip.Trigger>
-        <div title='hover' style={{ border: '1px solid #000' }}>Hover Me</div>
+        <div title='hover' style={{ border: '1px solid #000', maxWidth: '200px', maxHeight: '200px', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{props.oversizeContent ? 'Hover Me, but Big'.repeat(50) : 'Hover Me'}</div>
       </Tooltip.Trigger>
       <Tooltip.Content text={props.text} />
     </Tooltip.Root>,
@@ -33,13 +33,23 @@ const meta = {
       </div>
     )
   ],
-} satisfies Meta<{ text: string }>;
+} satisfies Meta<{ text: string; oversizeContent: boolean; alwaysShow: boolean }>;
 
 export default meta;
-type Story = StoryObj<{ text: string }>;
+type Story = StoryObj<{ text: string; oversizeContent: boolean; alwaysShow: boolean }>;
 
 export const StandardTooltip: Story = {
   args: {
-    text: 'Message'
+    text: 'Message',
+    oversizeContent: false,
+    alwaysShow: true,
+  },
+};
+
+export const OverflowingTooltip: Story = {
+  args: {
+    text: 'Message',
+    oversizeContent: true,
+    alwaysShow: false,
   },
 };
