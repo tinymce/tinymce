@@ -1,6 +1,6 @@
 project: tinymce
 kind: Improved
-body: Removed cap on emoticons dialog 'All' tab and optimised rendering performance.
+body: Removed 300 item limit on the emoticons dialog 'All' tab by optimising render performance.
 time: 2026-04-16T14:52:59.482815+10:00
 custom:
     Issue: TINY-7552

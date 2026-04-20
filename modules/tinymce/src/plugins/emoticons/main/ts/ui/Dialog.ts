@@ -53,7 +53,7 @@ const open = (editor: Editor, database: EmojiDatabase): void => {
   const getInitialState = (): Dialog.DialogSpec<DialogData> => {
     const body: Dialog.TabPanelSpec = {
       type: 'tabpanel',
-      dynamicHeight: false,
+      dynamicHeight: true,
       // All tabs have the same fields.
       tabs: Arr.map(database.listCategories(), (cat) => ({
         title: cat,

@@ -39,7 +39,7 @@ export const tabFields = [
 export const tabPanelFields = [
   ComponentSchema.type,
   FieldSchema.requiredArrayOfObj('tabs', tabFields),
-  FieldSchema.defaultedBoolean('dynamicHeight', true)
+  FieldSchema.defaultedBoolean('dynamicHeight', false)
 ];
 
 export const tabPanelSchema = StructureSchema.objOf(tabPanelFields);
