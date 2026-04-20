@@ -10,7 +10,7 @@ import { markers as getMenuMarkers } from './MenuParts';
 export const deriveMenuMovement = (columns: number | 'auto', presets: Toolbar.PresetTypes): MenuTypes.MenuMovementSpec => {
   const menuMarkers = getMenuMarkers(presets);
   if (columns === 1) {
-    return { mode: 'menu', moveOnTab: true } as MenuTypes.MenuNormalMovementSpec;
+    return { mode: 'menu', moveOnTab: false } as MenuTypes.MenuNormalMovementSpec;
   } else if (columns === 'auto') {
     return {
       mode: 'grid',

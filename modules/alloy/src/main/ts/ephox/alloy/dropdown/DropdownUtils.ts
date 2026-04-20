@@ -5,6 +5,7 @@ import * as ComponentStructure from '../alien/ComponentStructure';
 import { Composing } from '../api/behaviour/Composing';
 import { Coupling } from '../api/behaviour/Coupling';
 import { Focusing } from '../api/behaviour/Focusing';
+import { Keying } from '../api/behaviour/Keying';
 import { Positioning } from '../api/behaviour/Positioning';
 import { Receiving } from '../api/behaviour/Receiving';
 import { Representing } from '../api/behaviour/Representing';
@@ -13,8 +14,10 @@ import type { LazySink } from '../api/component/CommonTypes';
 import type { AlloyComponent } from '../api/component/ComponentApi';
 import { SketchBehaviours } from '../api/component/SketchBehaviours';
 import type { AlloySpec, SketchSpec } from '../api/component/SpecTypes';
+import * as AlloyTriggers from '../api/events/AlloyTriggers';
 import { type TieredData, tieredMenu as TieredMenu } from '../api/ui/TieredMenu';
 import * as AriaControls from '../aria/AriaControls';
+import type { NativeSimulatedEvent } from '../events/SimulatedEvent';
 import * as InternalSink from '../parts/InternalSink';
 import type { HotspotAnchorSpec } from '../positioning/mode/Anchoring';
 import * as Tagger from '../registry/Tagger';
@@ -247,6 +250,16 @@ const makeSandbox = (
 
   const lazySink = getSink(hotspot, detail);
 
+  // When Tab or Shift+Tab bubbles up from inside an open menu, close the menu,
+  // refocus the trigger, and re-emit the keydown so the trigger's parent
+  // (toolbar, menubar, etc.) handles it via its own Keying config.
+  const onTabOutOfMenu = (sandbox: AlloyComponent, se: NativeSimulatedEvent<KeyboardEvent>): Optional<boolean> => {
+    Focusing.focus(hotspot);
+    AlloyTriggers.emitWith(hotspot, 'keydown', { raw: se.event.raw });
+    Sandboxing.close(sandbox);
+    return Optional.some(true);
+  };
+
   return {
     dom: {
       tag: 'div',
@@ -259,6 +272,11 @@ const makeSandbox = (
     behaviours: SketchBehaviours.augment(
       detail.sandboxBehaviours,
       [
+        Keying.config({
+          mode: 'special',
+          onTab: onTabOutOfMenu,
+          onShiftTab: onTabOutOfMenu
+        }),
         Representing.config({
           store: {
             mode: 'memory',
