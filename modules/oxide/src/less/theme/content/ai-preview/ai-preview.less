@@ -61,14 +61,9 @@ span[tinymceai-data-pending-diff="true"] {
 
   .tox-tinymceai__annotation--added.tox-tinymceai__annotation--added__selected,
   .tox-tinymceai__annotation--modified.tox-tinymceai__annotation--modified__selected {
-    background-position: center;
-    background-size: 100% calc(1lh + 3px);
-    background-image: linear-gradient(
-      @color-tint 3px,
-      fade(@color-tint, 20%) 3px,
-      fade(@color-tint, 20%) calc(100% - 3px),
-      @color-tint calc(100% - 3px)
-    );
+    background-image: none;
+    background-color: fade(@color-tint, 20%);
+    box-shadow: @tinymceai-selected-box-shadow;
   }
 
   // TEMP: Show deleted content when its review card is selected.
@@ -77,30 +72,39 @@ span[tinymceai-data-pending-diff="true"] {
   .tox-tinymceai__annotation--removed.tox-tinymceai__annotation--removed__selected {
     display: revert;
     text-decoration: line-through;
-    background-position: center;
-    background-size: 100% calc(1lh + 3px);
-    background-image: linear-gradient(
-      @color-error 3px,
-      fade(@color-error, 20%) 3px,
-      fade(@color-error, 20%) calc(100% - 3px),
-      @color-error calc(100% - 3px)
-    );
+    background-image: none;
+    background-color: fade(@color-error, 20%);
+    box-shadow: @tinymceai-selected-box-shadow;
   }
 
-  // Block elements should not have background size of 1lh, so selection is based on box-shadow
-  div, p, ul, ol, li, table, section, header, footer, h1, h2, h3, h4, h5, h6, figure, hr {
+  // ins/del elements only contain text and inline formatting, so they can safely use
+  // the 1lh background-image approach for tighter inline selection styling
+  ins, del {
     &.tox-tinymceai__annotation--added.tox-tinymceai__annotation--added__selected,
     &.tox-tinymceai__annotation--modified.tox-tinymceai__annotation--modified__selected {
-      background-image: none;
-      background-color: fade(@color-tint, 20%);
-      box-shadow: @tinymceai-selected-box-shadow;
+      background-color: transparent;
+      box-shadow: none;
+      background-position: center;
+      background-size: 100% calc(1lh + 3px);
+      background-image: linear-gradient(
+        @color-tint 3px,
+        fade(@color-tint, 20%) 3px,
+        fade(@color-tint, 20%) calc(100% - 3px),
+        @color-tint calc(100% - 3px)
+      );
     }
 
-    // TODO: Replace with a proper visual marker that doesn't reveal full deleted content.
     &.tox-tinymceai__annotation--removed.tox-tinymceai__annotation--removed__selected {
-      background-image: none;
-      background-color: fade(@color-error, 20%);
-      box-shadow: @tinymceai-selected-box-shadow;
+      background-color: transparent;
+      box-shadow: none;
+      background-position: center;
+      background-size: 100% calc(1lh + 3px);
+      background-image: linear-gradient(
+        @color-error 3px,
+        fade(@color-error, 20%) 3px,
+        fade(@color-error, 20%) calc(100% - 3px),
+        @color-error calc(100% - 3px)
+      );
     }
   }
 
