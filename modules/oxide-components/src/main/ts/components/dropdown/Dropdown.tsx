@@ -1,5 +1,5 @@
 import { Id, Type } from '@ephox/katamari';
-import { Children, cloneElement, forwardRef, isValidElement, useCallback, useEffect, useMemo, useRef, useState, type FC, type HTMLAttributes, type MouseEvent, type PropsWithChildren, type ReactElement, type KeyboardEvent } from 'react';
+import { Children, cloneElement, forwardRef, isValidElement, useCallback, useMemo, useRef, useState, type FC, type HTMLAttributes, type MouseEvent, type PropsWithChildren, type ReactElement, type KeyboardEvent, useLayoutEffect } from 'react';
 
 import { Bem } from '../../main';
 
@@ -17,7 +17,7 @@ const Content = forwardRef<HTMLDivElement, DropdownContentProps>(({ children, on
     setIsOpen(event.newState === 'open');
   }, [ setIsOpen ]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const element = contentRef.current;
     if (Type.isNullable(element)) {
       return;
