@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: CSS property names and color values in the style attribute were being lowercased when parsed.
+time: 2026-04-20T18:48:03.608483+10:00
+custom:
+    Issue: TINY-11524
