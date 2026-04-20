@@ -239,13 +239,15 @@ const Styles = (settings: StylesSettings = {}, schema?: Schema): Styles => {
         let matches: RegExpExecArray | null;
         while ((matches = styleRegExp.exec(css))) {
           styleRegExp.lastIndex = matches.index + matches[0].length;
-          let name = matches[1].replace(trimRightRegExp, '').toLowerCase();
+          let name = matches[1].replace(trimRightRegExp, '');
           let value = matches[2].replace(trimRightRegExp, '');
 
           if (name && value) {
             // Decode escaped sequences like \65 -> e
             name = decodeHexSequences(name);
             value = decodeHexSequences(value);
+            // Canonical lowercase form for internal comparisons only; storage keeps user case
+            const lowerName = name.toLowerCase();
 
             // Skip properties with double quotes and sequences like \" \' in their names
             // See 'mXSS Attacks: Attacking well-secured Web-Applications by using innerHTML Mutations'
@@ -255,15 +257,13 @@ const Styles = (settings: StylesSettings = {}, schema?: Schema): Styles => {
             }
 
             // Don't allow behavior name or expression/comments within the values
-            if (!settings.allow_script_urls && (name === 'behavior' || /expression\s*\(|\/\*|\*\//.test(value))) {
+            if (!settings.allow_script_urls && (lowerName === 'behavior' || /expression\s*\(|\/\*|\*\//.test(value))) {
               continue;
             }
 
             // Opera will produce 700 instead of bold in their style values
-            if (name === 'font-weight' && value === '700') {
+            if (lowerName === 'font-weight' && value === '700') {
               value = 'bold';
-            } else if (name === 'color' || name === 'background-color') { // Lowercase colors like RED
-              value = value.toLowerCase();
             }
 
             // Convert RGB colors to HEX
