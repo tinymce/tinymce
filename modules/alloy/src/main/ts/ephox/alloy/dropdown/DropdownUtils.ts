@@ -5,7 +5,6 @@ import * as ComponentStructure from '../alien/ComponentStructure';
 import { Composing } from '../api/behaviour/Composing';
 import { Coupling } from '../api/behaviour/Coupling';
 import { Focusing } from '../api/behaviour/Focusing';
-import { Keying } from '../api/behaviour/Keying';
 import { Positioning } from '../api/behaviour/Positioning';
 import { Receiving } from '../api/behaviour/Receiving';
 import { Representing } from '../api/behaviour/Representing';
@@ -69,6 +68,16 @@ const openF = (
 
   const getLazySink = getSink(component, detail);
 
+  // When Tab or Shift+Tab bubbles up from inside an open menu, close the menu,
+  // refocus the trigger, and re-emit the keydown so the trigger's parent
+  // (toolbar, menubar, etc.) handles it via its own Keying config.
+  const onTabOutOfMenu = (_tmenu: AlloyComponent, se: NativeSimulatedEvent<KeyboardEvent>): Optional<boolean> => {
+    Focusing.focus(component);
+    AlloyTriggers.emitWith(component, 'keydown', { raw: se.event.raw });
+    Sandboxing.close(sandbox);
+    return Optional.some(true);
+  };
+
   // TODO: Make this potentially a single menu also
   return futureData.map((tdata) => tdata.bind((data) => {
     const primaryMenu = data.menus[data.primary];
@@ -121,17 +130,8 @@ const openF = (
         return Optional.some(true);
       },
 
-      onTab: () => {
-        Sandboxing.close(sandbox);
-        // Let browser handle focus
-        return Optional.none();
-      },
-
-      onShiftTab: () => {
-        Sandboxing.close(sandbox);
-        // Let browser handle focus
-        return Optional.none();
-      }
+      onTab: onTabOutOfMenu,
+      onShiftTab: onTabOutOfMenu
     }));
   }));
 };
@@ -262,16 +262,6 @@ const makeSandbox = (
 
   const lazySink = getSink(hotspot, detail);
 
-  // When Tab or Shift+Tab bubbles up from inside an open menu, close the menu,
-  // refocus the trigger, and re-emit the keydown so the trigger's parent
-  // (toolbar, menubar, etc.) handles it via its own Keying config.
-  const onTabOutOfMenu = (sandbox: AlloyComponent, se: NativeSimulatedEvent<KeyboardEvent>): Optional<boolean> => {
-    Focusing.focus(hotspot);
-    AlloyTriggers.emitWith(hotspot, 'keydown', { raw: se.event.raw });
-    Sandboxing.close(sandbox);
-    return Optional.some(true);
-  };
-
   return {
     dom: {
       tag: 'div',
@@ -284,11 +274,6 @@ const makeSandbox = (
     behaviours: SketchBehaviours.augment(
       detail.sandboxBehaviours,
       [
-        Keying.config({
-          mode: 'special',
-          onTab: onTabOutOfMenu,
-          onShiftTab: onTabOutOfMenu
-        }),
         Representing.config({
           store: {
             mode: 'memory',
