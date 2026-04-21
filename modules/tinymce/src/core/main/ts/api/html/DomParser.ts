@@ -97,55 +97,45 @@ interface DomParser {
 
 type WalkerCallback = (node: AstNode) => void;
 
-const transferChildren = (
-  parent: AstNode,
-  nativeParent: Node,
+// Walk the native DOM once to handle cases that have no direct DOM equivalent:
+//   - namespace element roots (svg, math): store sanitized innerHTML in the AstNode
+//     value override and clear the DOM children so walkTree treats them as leaves.
+//   - template elements: inline the template's innerHTML as a raw text child.
+//   - text nodes inside special elements (script, style): mark raw=true so the
+//     Serializer skips HTML-escaping.
+//   - comment decoding when allow_html_in_comments is enabled.
+const setupDomForParsing = (
+  parent: Node,
+  parentName: string,
   specialElements: SchemaRegExpMap,
   nsSanitizer: (el: Element) => void,
   decodeComments: boolean
-) => {
-  const parentName = parent.name;
-  // Exclude the special elements where the content is RCDATA as their content needs to be parsed instead of being left as plain text
-  // See: https://html.spec.whatwg.org/multipage/parsing.html#parsing-html-fragments
+): void => {
   const isSpecial = parentName in specialElements && parentName !== 'title' && parentName !== 'textarea' && parentName !== 'noscript';
 
-  const childNodes = nativeParent.childNodes;
-  for (let ni = 0, nl = childNodes.length; ni < nl; ni++) {
-    const nativeChild = childNodes[ni];
-    const child = new AstNode(nativeChild.nodeName.toLowerCase(), nativeChild.nodeType);
-
-    if (NodeType.isElement(nativeChild)) {
-      const attributes = nativeChild.attributes;
-      for (let ai = 0, al = attributes.length; ai < al; ai++) {
-        const attr = attributes[ai];
-        child.attr(attr.name, attr.value);
+  for (let child = parent.firstChild; child; child = child.nextSibling) {
+    if (NodeType.isElement(child)) {
+      const childName = child.nodeName.toLowerCase();
+      if (Namespace.isNonHtmlElementRootName(childName)) {
+        nsSanitizer(child);
+        // Store innerHTML in the AstNode wrapper and clear DOM children so the
+        // tree walker treats the node as a leaf (mirrors old transferChildren).
+        const wrapper = AstNode.fromDom(child);
+        wrapper.value = child.innerHTML;
+        child.innerHTML = '';
+      } else if (NodeType.isTemplate(child)) {
+        const textChild = AstNode.create('#text');
+        textChild.value = child.innerHTML;
+        textChild.raw = true;
+        AstNode.fromDom(child).append(textChild);
+      } else {
+        setupDomForParsing(child, childName, specialElements, nsSanitizer, decodeComments);
       }
-
-      if (Namespace.isNonHtmlElementRootName(child.name)) {
-        nsSanitizer(nativeChild);
-        child.value = nativeChild.innerHTML;
-      }
-    } else if (NodeType.isText(nativeChild)) {
-      child.value = nativeChild.data;
-      if (isSpecial) {
-        child.raw = true;
-      }
-    } else if (NodeType.isComment(nativeChild)) {
-      child.value = decodeComments ? KeepHtmlComments.decodeData(nativeChild.data) : nativeChild.data;
-    } else if (NodeType.isCData(nativeChild) || NodeType.isPi(nativeChild)) {
-      child.value = nativeChild.data;
+    } else if (NodeType.isText(child) && isSpecial) {
+      AstNode.fromDom(child).raw = true;
+    } else if (NodeType.isComment(child) && decodeComments) {
+      child.data = KeepHtmlComments.decodeData(child.data);
     }
-
-    if (NodeType.isTemplate(nativeChild)) {
-      const content = AstNode.create('#text');
-      content.value = nativeChild.innerHTML;
-      content.raw = true;
-      child.append(content);
-    } else if (!Namespace.isNonHtmlElementRootName(child.name)) {
-      transferChildren(child, nativeChild, specialElements, nsSanitizer, decodeComments);
-    }
-
-    parent.append(child);
   }
 };
 
@@ -494,7 +484,8 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
 
     TransparentElements.updateChildren(schema, element);
 
-    // Run raw DOM filters before AST conversion so their mutations are captured in the tree
+    // Run raw DOM filters before the tree is wrapped in AstNodes so mutations
+    // are visible when the wrapper tree is later traversed.
     if (rawFilters.length > 0) {
       const rawMatches: Element[][] = rawFilters.map(() => []);
       const walkNative = (parent: Node): void => {
@@ -518,13 +509,29 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
       }
     }
 
-    // Create the AST representation
-    const rootNode = new AstNode(rootName, 11);
-    transferChildren(rootNode, element, schema.getSpecialElements(), sanitizer.sanitizeNamespaceElement, defaultedSettings.sanitize && defaultedSettings.allow_html_in_comments);
+    // Move parsed children into a DocumentFragment.  This serves two purposes:
+    //   1. The fragment (nodeType 11) is the natural type-11 root that the rest
+    //      of the pipeline and the Serializer already expect.
+    //   2. Emptying `element` allows the parser's document to be garbage-collected
+    //      (mirrors the old element.innerHTML = '' fix for TINY-9186).
+    const fragment = element.ownerDocument.createDocumentFragment();
+    while (element.firstChild) {
+      fragment.appendChild(element.firstChild);
+    }
 
-    // This next line is needed to fix a memory leak in chrome and firefox.
-    // For more information see TINY-9186
-    element.innerHTML = '';
+    // Wrap the fragment; _nameOverride gives it the logical name ('body', etc.)
+    // so schema and root-block logic that check rootNode.name keep working.
+    const rootNode = new AstNode(fragment, rootName);
+
+    // One-pass DOM walk to handle cases with no direct DOM equivalent:
+    // namespace roots, templates, special-element raw text, comment decoding.
+    setupDomForParsing(
+      fragment,
+      rootName,
+      schema.getSpecialElements(),
+      sanitizer.sanitizeNamespaceElement,
+      defaultedSettings.sanitize && defaultedSettings.allow_html_in_comments
+    );
 
     // Set up whitespace fixes
     const [ whitespacePre, whitespacePost ] = whitespaceCleaner(rootNode, schema, defaultedSettings, args);

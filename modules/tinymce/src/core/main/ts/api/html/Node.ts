@@ -6,7 +6,18 @@ import type { SchemaMap } from './Schema';
 
 export type Attributes = Array<{ name: string; value: string }> & { map: Record<string, string> };
 
-const typeLookup: Record<string, number> = {
+// DOM nodeType → AstNode name for non-element nodes
+const typeToName: Record<number, string> = {
+  3: '#text',
+  8: '#comment',
+  4: '#cdata',
+  7: '#pi',
+  10: '#doctype',
+  11: '#document-fragment'
+};
+
+// name → DOM nodeType used when constructing new nodes
+const nameToType: Record<string, number> = {
   '#text': 3,
   '#comment': 8,
   '#cdata': 4,
@@ -15,28 +26,45 @@ const typeLookup: Record<string, number> = {
   '#document-fragment': 11
 };
 
-// Walks the tree left/right
+// Module-level WeakMap so wrapper identity is stable: same DOM node → same AstNode object
+const wrapperCache = new WeakMap<Node, AstNode>();
+
+const fromDom = (node: Node): AstNode => {
+  let w = wrapperCache.get(node);
+  if (!w) {
+    w = new AstNode(node);
+  }
+  return w;
+};
+
+const buildAttrs = (el: Element): Attributes => {
+  const attrs = [] as unknown as Attributes;
+  (attrs as any).map = {};
+  const domAttrs = el.attributes;
+  for (let i = 0, l = domAttrs.length; i < l; i++) {
+    const a = domAttrs[i];
+    attrs.push({ name: a.name, value: a.value });
+    attrs.map[a.name] = a.value;
+  }
+  return attrs;
+};
+
+// depth-first pre-order walk: returns the next node to visit after `node` within `root`
 const walk = (node: AstNode, root: AstNode | null, prev?: boolean): AstNode | null | undefined => {
   const startName = prev ? 'lastChild' : 'firstChild';
   const siblingName = prev ? 'prev' : 'next';
 
-  // Walk into nodes if it has a start
   if (node[startName]) {
     return node[startName];
   }
 
-  // Return the sibling if it has one
   if (node !== root) {
     let sibling = node[siblingName];
-
     if (sibling) {
       return sibling;
     }
-
-    // Walk up the parents to look for siblings
     for (let parent = node.parent; parent && parent !== root; parent = parent.parent) {
       sibling = parent[siblingName];
-
       if (sibling) {
         return sibling;
       }
@@ -48,22 +76,16 @@ const walk = (node: AstNode, root: AstNode | null, prev?: boolean): AstNode | nu
 
 const isEmptyTextNode = (node: AstNode) => {
   const text = node.value ?? '';
-
-  // Non whitespace content
   if (!isWhitespaceText(text)) {
     return false;
   }
-
-  // Parent is not a span and only spaces or is a span but has styles
   const parentNode = node.parent;
   if (parentNode && (parentNode.name !== 'span' || parentNode.attr('style')) && /^[ ]+$/.test(text)) {
     return false;
   }
-
   return true;
 };
 
-// Check if node contains data-bookmark attribute, name attribute, id attribute or is a named anchor
 const isNonEmptyElement = (node: AstNode) => {
   const isNamedAnchor = node.name === 'a' && !node.attr('href') && node.attr('id');
   return (node.attr('name') || (node.attr('id') && !node.firstChild) || node.attr('data-mce-bookmark') || isNamedAnchor);
@@ -71,436 +93,304 @@ const isNonEmptyElement = (node: AstNode) => {
 
 export interface AstNodeConstructor {
   readonly prototype: AstNode;
-
   new (name: string, type: number): AstNode;
-
   create(name: string, attrs?: Record<string, string>): AstNode;
 }
 
 /**
- * This class is a minimalistic implementation of a DOM like node used by the DomParser class.
+ * This class is a thin wrapper around a native DOM Node. Tree navigation
+ * (firstChild, lastChild, next, prev, parent) reads directly from the DOM,
+ * and all mutations (append, insert, wrap, unwrap, remove, replace) call
+ * native DOM methods. Attributes are lazily built from the element's
+ * attribute list and cached until the next mutation.
  *
  * @class tinymce.html.Node
  * @version 3.4
- * @example
- * const node = new tinymce.html.Node('strong', 1);
- * someRoot.append(node);
  */
-
 class AstNode {
-  /**
-   * Creates a node of a specific type.
-   *
-   * @static
-   * @method create
-   * @param {String} name Name of the node type to create for example "b" or "#text".
-   * @param {Object} attrs Name/value collection of attributes that will be applied to elements.
-   */
-  public static create(name: string, attrs?: Record<string, string>): AstNode {
-    // Create node
-    const node = new AstNode(name, typeLookup[name] || 1);
+  // The native DOM node this wrapper covers
+  public readonly dom: Node;
 
-    // Add attributes if needed
+  // Lazy cache of the element attribute array+map; null means rebuild on next access
+  private _attrsCache: Attributes | null = null;
+
+  // Override name for DocumentFragment roots (e.g. 'body')
+  private _nameOverride?: string;
+
+  // Value override for nodes whose content has no direct DOM equivalent:
+  //   - namespace element roots (math, svg) — stores sanitized innerHTML
+  //   - element nodes where value was set explicitly (template content)
+  private _value?: string;
+
+  // Raw text flag: when true the Serializer writes text without HTML-escaping.
+  // Used for text content inside script/style and for template innerHTML.
+  // There is no DOM equivalent so it is stored on the wrapper.
+  public raw?: boolean;
+
+  // Type override: set by legacy code that converts node types (e.g. bogus element → comment).
+  // Overrides dom.nodeType for type reads.
+  private _typeOverride?: number;
+
+  public static create(name: string, attrs?: Record<string, string>): AstNode {
+    const node = new AstNode(name, nameToType[name] ?? 1);
     if (attrs) {
       Obj.each(attrs, (value, attrName) => {
         node.attr(attrName, value);
       });
     }
-
     return node;
   }
 
-  public name: string;
-  public type: number;
-  public attributes?: Attributes;
-  public value?: string;
-  public parent?: AstNode | null;
-  public firstChild?: AstNode | null;
-  public lastChild?: AstNode | null;
-  public next?: AstNode | null;
-  public prev?: AstNode | null;
-  public raw?: boolean;
-
-  /**
-   * Constructs a new Node instance.
-   *
-   * @constructor
-   * @method Node
-   * @param {String} name Name of the node type.
-   * @param {Number} type Numeric type representing the node.
-   */
-  public constructor(name: string, type: number) {
-    this.name = name;
-    this.type = type;
-
-    if (type === 1) {
-      this.attributes = [] as unknown as Attributes;
-      (this.attributes as any).map = {}; // Should be considered internal
-    }
+  // Wrap an existing native DOM node, reusing any already-cached wrapper
+  public static fromDom(node: Node): AstNode {
+    return fromDom(node);
   }
 
   /**
-   * Replaces the current node with the specified one.
+   * Constructs a new AstNode.
    *
-   * @method replace
-   * @param {tinymce.html.Node} node Node to replace the current node with.
-   * @return {tinymce.html.Node} The old node that got replaced.
-   * @example
-   * someNode.replace(someNewNode);
+   * Two forms are accepted:
+   *   new AstNode(name: string, type: number)  — creates a fresh DOM node
+   *   new AstNode(dom: Node, nameOverride?: string) — wraps an existing DOM node
    */
+  public constructor(nameOrNode: string | Node, typeOrNameOverride?: number | string) {
+    if (typeof nameOrNode === 'string') {
+      const name = nameOrNode;
+      const type = typeof typeOrNameOverride === 'number' ? typeOrNameOverride : (nameToType[name] ?? 1);
+
+      switch (type) {
+        case 3: this.dom = document.createTextNode(''); break;
+        case 8: this.dom = document.createComment(''); break;
+        case 11: this.dom = document.createDocumentFragment();
+          if (name !== '#document-fragment') {
+            this._nameOverride = name;
+          }
+          break;
+        default: this.dom = document.createElement(name); break;
+      }
+    } else {
+      this.dom = nameOrNode;
+      if (typeof typeOrNameOverride === 'string') {
+        this._nameOverride = typeOrNameOverride;
+      }
+    }
+    wrapperCache.set(this.dom, this);
+  }
+
+  public get name(): string {
+    if (this._nameOverride !== undefined) {
+      return this._nameOverride;
+    }
+    const n = this.dom.nodeType;
+    if (n === 1) {
+      return (this.dom as Element).tagName.toLowerCase();
+    }
+    return typeToName[n] ?? this.dom.nodeName.toLowerCase();
+  }
+
+  public set name(v: string) {
+    this._nameOverride = v;
+  }
+
+  public get type(): number {
+    return this._typeOverride ?? this.dom.nodeType;
+  }
+
+  public set type(v: number) {
+    this._typeOverride = v;
+  }
+
+  public get value(): string | undefined {
+    if (this._value !== undefined) {
+      return this._value;
+    }
+    const n = this.dom.nodeType;
+    if (n === 3 || n === 8 || n === 4 || n === 7) {
+      return (this.dom as CharacterData).data;
+    }
+    return undefined;
+  }
+
+  public set value(v: string | undefined) {
+    if (this.dom.nodeType === 1) {
+      // Elements have no native value; store it in _value.
+      // Used for namespace element roots (math, svg) and template content.
+      this._value = v;
+    } else {
+      const n = this.dom.nodeType;
+      if (n === 3 || n === 8 || n === 4 || n === 7) {
+        (this.dom as CharacterData).data = v ?? '';
+      }
+    }
+  }
+
+  public get parent(): AstNode | null | undefined {
+    const p = this.dom.parentNode;
+    return p != null ? fromDom(p) : null;
+  }
+
+  public get firstChild(): AstNode | null | undefined {
+    const c = this.dom.firstChild;
+    return c != null ? fromDom(c) : null;
+  }
+
+  public get lastChild(): AstNode | null | undefined {
+    const c = this.dom.lastChild;
+    return c != null ? fromDom(c) : null;
+  }
+
+  public get next(): AstNode | null | undefined {
+    const s = this.dom.nextSibling;
+    return s != null ? fromDom(s) : null;
+  }
+
+  public get prev(): AstNode | null | undefined {
+    const s = this.dom.previousSibling;
+    return s != null ? fromDom(s) : null;
+  }
+
+  // Lazily builds the attribute array+map from the underlying Element.
+  // Invalidated (set to null) whenever attr() is called with a write value.
+  public get attributes(): Attributes | undefined {
+    if (this.dom.nodeType !== 1) {
+      return undefined;
+    }
+    if (!this._attrsCache) {
+      this._attrsCache = buildAttrs(this.dom as Element);
+    }
+    return this._attrsCache;
+  }
+
   public replace(node: AstNode): AstNode {
-    const self = this;
-
-    if (node.parent) {
-      node.remove();
+    if (node.dom.parentNode) {
+      node.dom.parentNode.removeChild(node.dom);
     }
-
-    self.insert(node, self);
-    self.remove();
-
-    return self;
+    this.insert(node, this);
+    this.remove();
+    return this;
   }
 
-  /**
-   * Gets/sets or removes an attribute by name.
-   *
-   * @method attr
-   * @param {String} name Attribute name to set or get.
-   * @param {String} value Optional value to set.
-   * @return {String/tinymce.html.Node} String or undefined on a get operation or the current node on a set operation.
-   * @example
-   * someNode.attr('name', 'value'); // Sets an attribute
-   * console.log(someNode.attr('name')); // Gets an attribute
-   * someNode.attr('name', null); // Removes an attribute
-   */
   public attr(name: string, value: string | null | undefined): AstNode | undefined;
   public attr(name: Record<string, string | null | undefined> | undefined): AstNode | undefined;
   public attr(name: string): string | undefined;
   public attr(name?: string | Record<string, string | null | undefined>, value?: string | null): string | AstNode | undefined {
-    const self = this;
-
     if (!Type.isString(name)) {
       if (Type.isNonNullable(name)) {
-        Obj.each(name, (value, key) => {
-          self.attr(key, value);
+        Obj.each(name, (v, k) => {
+          this.attr(k, v);
         });
       }
-
-      return self;
+      return this;
     }
 
-    const attrs = self.attributes;
-    if (attrs) {
-      if (value !== undefined) {
-        // Remove attribute
-        if (value === null) {
-          if (name in attrs.map) {
-            delete attrs.map[name];
+    if (this.dom.nodeType !== 1) {
+      return value !== undefined ? this : undefined;
+    }
 
-            let i = attrs.length;
-            while (i--) {
-              if (attrs[i].name === name) {
-                attrs.splice(i, 1);
-                return self;
-              }
-            }
-          }
+    const el = this.dom as Element;
 
-          return self;
-        }
-
-        // Set attribute
-        if (name in attrs.map) {
-          // Set attribute
-          let i = attrs.length;
-          while (i--) {
-            if (attrs[i].name === name) {
-              attrs[i].value = value;
-              break;
-            }
-          }
-        } else {
-          attrs.push({ name, value });
-        }
-
-        attrs.map[name] = value;
-
-        return self;
+    if (value !== undefined) {
+      this._attrsCache = null;
+      if (value === null) {
+        el.removeAttribute(name);
+      } else {
+        el.setAttribute(name, value);
       }
-
-      return attrs.map[name];
+      return this;
     }
 
-    return undefined;
+    return el.getAttribute(name) ?? undefined;
   }
 
-  /**
-   * Does a shallow clones the node into a new node. It will also exclude id attributes since
-   * there should only be one id per document.
-   *
-   * @method clone
-   * @return {tinymce.html.Node} New copy of the original node.
-   * @example
-   * const clonedNode = node.clone();
-   */
   public clone(): AstNode {
-    const self = this;
-    const clone = new AstNode(self.name, self.type);
-    const selfAttrs = self.attributes;
-
-    // Clone element attributes
-    if (selfAttrs) {
-      const cloneAttrs = [] as unknown as Attributes;
-      (cloneAttrs as any).map = {};
-
-      for (let i = 0, l = selfAttrs.length; i < l; i++) {
-        const selfAttr = selfAttrs[i];
-
-        // Clone everything except id
-        if (selfAttr.name !== 'id') {
-          cloneAttrs[cloneAttrs.length] = { name: selfAttr.name, value: selfAttr.value };
-          cloneAttrs.map[selfAttr.name] = selfAttr.value;
-        }
-      }
-
-      clone.attributes = cloneAttrs;
+    const cloned = this.dom.cloneNode(false) as Node;
+    if (cloned.nodeType === 1) {
+      (cloned as Element).removeAttribute('id');
     }
-
-    clone.value = self.value;
-
-    return clone;
+    return new AstNode(cloned);
   }
 
-  /**
-   * Wraps the node in in another node.
-   *
-   * @method wrap
-   * @example
-   * node.wrap(wrapperNode);
-   */
   public wrap(wrapper: AstNode): AstNode {
-    const self = this;
-
-    if (self.parent) {
-      self.parent.insert(wrapper, self);
-      wrapper.append(self);
-    }
-
-    return self;
-  }
-
-  /**
-   * Unwraps the node in other words it removes the node but keeps the children.
-   *
-   * @method unwrap
-   * @example
-   * node.unwrap();
-   */
-  public unwrap(): void {
-    const self = this;
-
-    for (let node = self.firstChild; node;) {
-      const next = node.next;
-      self.insert(node, self, true);
-      node = next;
-    }
-
-    self.remove();
-  }
-
-  /**
-   * Removes the node from it's parent.
-   *
-   * @method remove
-   * @return {tinymce.html.Node} Current node that got removed.
-   * @example
-   * node.remove();
-   */
-  public remove(): AstNode {
-    const self = this, parent = self.parent, next = self.next, prev = self.prev;
-
+    const parent = this.dom.parentNode;
     if (parent) {
-      if (parent.firstChild === self) {
-        parent.firstChild = next;
-
-        if (next) {
-          next.prev = null;
-        }
-      } else if (prev) {
-        prev.next = next;
-      }
-
-      if (parent.lastChild === self) {
-        parent.lastChild = prev;
-
-        if (prev) {
-          prev.next = null;
-        }
-      } else if (next) {
-        next.prev = prev;
-      }
-
-      self.parent = self.next = self.prev = null;
+      parent.insertBefore(wrapper.dom, this.dom);
+      wrapper.dom.appendChild(this.dom);
     }
-
-    return self;
+    return this;
   }
 
-  /**
-   * Appends a new node as a child of the current node.
-   *
-   * @method append
-   * @param {tinymce.html.Node} node Node to append as a child of the current one.
-   * @return {tinymce.html.Node} The node that got appended.
-   * @example
-   * node.append(someNode);
-   */
+  public unwrap(): void {
+    const parent = this.dom.parentNode;
+    if (parent) {
+      let child = this.dom.firstChild;
+      while (child) {
+        const next = child.nextSibling;
+        parent.insertBefore(child, this.dom);
+        child = next;
+      }
+      parent.removeChild(this.dom);
+    }
+  }
+
+  public remove(): AstNode {
+    const parent = this.dom.parentNode;
+    if (parent) {
+      parent.removeChild(this.dom);
+    }
+    return this;
+  }
+
   public append(node: AstNode): AstNode {
-    const self = this;
-
-    if (node.parent) {
-      node.remove();
+    if (node.dom.parentNode) {
+      node.dom.parentNode.removeChild(node.dom);
     }
-
-    const last = self.lastChild;
-    if (last) {
-      last.next = node;
-      node.prev = last;
-      self.lastChild = node;
-    } else {
-      self.lastChild = self.firstChild = node;
-    }
-
-    node.parent = self;
-
+    this.dom.appendChild(node.dom);
     return node;
   }
 
-  /**
-   * Inserts a node at a specific position as a child of this node.
-   *
-   * @method insert
-   * @param {tinymce.html.Node} node Node to insert as a child of this node.
-   * @param {tinymce.html.Node} refNode Reference node to set node before/after.
-   * @param {Boolean} before Optional state to insert the node before the reference node.
-   * @return {tinymce.html.Node} The node that got inserted.
-   * @example
-   * parentNode.insert(newChildNode, oldChildNode);
-   */
   public insert(node: AstNode, refNode: AstNode, before?: boolean): AstNode {
-
-    if (node.parent) {
-      node.remove();
+    if (node.dom.parentNode) {
+      node.dom.parentNode.removeChild(node.dom);
     }
-
-    const parent = refNode.parent || this;
-
+    const parent = refNode.dom.parentNode ?? this.dom;
     if (before) {
-      if (refNode === parent.firstChild) {
-        parent.firstChild = node;
-      } else if (refNode.prev) {
-        refNode.prev.next = node;
-      }
-
-      node.prev = refNode.prev;
-      node.next = refNode;
-      refNode.prev = node;
+      parent.insertBefore(node.dom, refNode.dom);
     } else {
-      if (refNode === parent.lastChild) {
-        parent.lastChild = node;
-      } else if (refNode.next) {
-        refNode.next.prev = node;
+      const nextSibling = refNode.dom.nextSibling;
+      if (nextSibling) {
+        parent.insertBefore(node.dom, nextSibling);
+      } else {
+        parent.appendChild(node.dom);
       }
-
-      node.next = refNode.next;
-      node.prev = refNode;
-      refNode.next = node;
     }
-
-    node.parent = parent;
-
     return node;
   }
 
-  /**
-   * Get all descendants by name.
-   *
-   * @method getAll
-   * @param {String} name Name of the descendant nodes to collect.
-   * @return {Array} Array with descendant nodes matching the specified name.
-   */
   public getAll(name: string): AstNode[] {
-    const self = this;
     const collection: AstNode[] = [];
-
-    for (let node = self.firstChild; node; node = walk(node, self)) {
+    for (let node: AstNode | null | undefined = this.firstChild; node; node = walk(node, this)) {
       if (node.name === name) {
         collection.push(node);
       }
     }
-
     return collection;
   }
 
-  /**
-   * Get all children of this node.
-   *
-   * @method children
-   * @return {Array} Array containing child nodes.
-   */
   public children(): AstNode[] {
-    const self = this;
     const collection: AstNode[] = [];
-
-    for (let node = self.firstChild; node; node = node.next) {
+    for (let node = this.firstChild; node; node = node.next) {
       collection.push(node);
     }
-
     return collection;
   }
 
-  /**
-   * Removes all children of the current node.
-   *
-   * @method empty
-   * @return {tinymce.html.Node} The current node that got cleared.
-   */
   public empty(): AstNode {
-    const self = this;
-
-    // Remove all children
-    if (self.firstChild) {
-      const nodes = [];
-
-      // Collect the children
-      for (let node: AstNode | null | undefined = self.firstChild; node; node = walk(node, self)) {
-        nodes.push(node);
-      }
-
-      // Remove the children
-      let i = nodes.length;
-      while (i--) {
-        const node = nodes[i];
-        node.parent = node.firstChild = node.lastChild = node.next = node.prev = null;
-      }
+    while (this.dom.lastChild) {
+      this.dom.removeChild(this.dom.lastChild);
     }
-
-    self.firstChild = self.lastChild = null;
-
-    return self;
+    return this;
   }
 
-  /**
-   * Returns true/false if the node is to be considered empty or not.
-   *
-   * @method isEmpty
-   * @param {Object} elements Name/value object with elements that are automatically treated as non empty elements.
-   * @param {Object} whitespace Name/value object with elements that are automatically treated whitespace preservables.
-   * @param {Function} predicate Optional predicate that gets called after the other rules determine that the node is empty. Should return true if the node is a content node.
-   * @return {Boolean} true/false if the node is empty or not.
-   * @example
-   * node.isEmpty({ img: true });
-   */
   public isEmpty(elements: SchemaMap, whitespace: SchemaMap = {}, predicate?: (node: AstNode) => boolean): boolean {
     const self = this;
     let node = self.firstChild;
@@ -512,37 +402,29 @@ class AstNode {
     if (node) {
       do {
         if (node.type === 1) {
-          // Ignore bogus elements
           if (node.attr('data-mce-bogus')) {
             continue;
           }
-
-          // Keep empty elements like <img />
           if (elements[node.name]) {
             return false;
           }
-
           if (isNonEmptyElement(node)) {
             return false;
           }
         }
 
-        // Keep comments
         if (node.type === 8) {
           return false;
         }
 
-        // Keep non whitespace text nodes
         if (node.type === 3 && !isEmptyTextNode(node)) {
           return false;
         }
 
-        // Keep whitespace preserve elements
         if (node.type === 3 && node.parent && whitespace[node.parent.name] && isWhitespaceText(node.value ?? '')) {
           return false;
         }
 
-        // Predicate tells that the node is contents
         if (predicate && predicate(node)) {
           return false;
         }
@@ -552,13 +434,6 @@ class AstNode {
     return true;
   }
 
-  /**
-   * Walks to the next or previous node and returns that node or null if it wasn't found.
-   *
-   * @method walk
-   * @param {Boolean} prev Optional previous node state defaults to false.
-   * @return {tinymce.html.Node} Node that is next to or previous of the current node.
-   */
   public walk(prev?: boolean): AstNode | null | undefined {
     return walk(this, null, prev);
   }
