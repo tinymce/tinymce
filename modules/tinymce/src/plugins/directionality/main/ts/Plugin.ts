@@ -7,5 +7,9 @@ export default (): void => {
   PluginManager.add('directionality', (editor) => {
     Commands.register(editor);
     Buttons.register(editor);
+
+    return {
+      getMetadata: () => ({ name: 'Directionality', type: 'opensource' as const })
+    };
   });
 };

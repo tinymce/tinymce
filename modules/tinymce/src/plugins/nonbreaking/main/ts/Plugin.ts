@@ -18,5 +18,9 @@ export default (): void => {
     Commands.register(editor);
     Buttons.register(editor);
     Keyboard.setup(editor);
+
+    return {
+      getMetadata: () => ({ name: 'Nonbreaking', type: 'opensource' as const })
+    };
   });
 };

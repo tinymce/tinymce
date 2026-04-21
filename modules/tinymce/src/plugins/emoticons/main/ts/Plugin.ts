@@ -28,7 +28,8 @@ export default (): void => {
     Filters.setup(editor);
 
     return {
-      getAllEmojis: () => database.waitForLoad().then(() => database.listAll())
+      getAllEmojis: () => database.waitForLoad().then(() => database.listAll()),
+      getMetadata: () => ({ name: 'Emoticons', type: 'opensource' as const })
     };
   });
 };

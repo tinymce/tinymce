@@ -19,6 +19,9 @@ export default (): void => {
     Keyboard.setup(editor, toggleState);
     Bindings.setup(editor, toggleState);
 
-    return Api.get(toggleState);
+    return {
+      ...Api.get(toggleState),
+      getMetadata: () => ({ name: 'Visual Characters', type: 'opensource' as const })
+    };
   });
 };

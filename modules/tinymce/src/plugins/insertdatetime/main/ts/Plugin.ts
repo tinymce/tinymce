@@ -9,5 +9,9 @@ export default (): void => {
     Options.register(editor);
     Commands.register(editor);
     Buttons.register(editor);
+
+    return {
+      getMetadata: () => ({ name: 'Insert Date/Time', type: 'opensource' as const })
+    };
   });
 };

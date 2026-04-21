@@ -7,5 +7,9 @@ export default (): void => {
   PluginManager.add('autolink', (editor) => {
     Options.register(editor);
     Keys.setup(editor);
+
+    return {
+      getMetadata: () => ({ name: 'Autolink', type: 'opensource' as const })
+    };
   });
 };

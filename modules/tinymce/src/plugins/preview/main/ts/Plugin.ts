@@ -21,5 +21,9 @@ export default (): void => {
 
     Commands.register(editor, getContentCssResources);
     Buttons.register(editor);
+
+    return {
+      getMetadata: () => ({ name: 'Preview', type: 'opensource' as const })
+    };
   });
 };

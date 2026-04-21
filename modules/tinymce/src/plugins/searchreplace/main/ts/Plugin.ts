@@ -21,6 +21,9 @@ export default (): void => {
     Commands.register(editor, currentSearchState);
     Buttons.register(editor, currentSearchState);
 
-    return Api.get(editor, currentSearchState);
+    return {
+      ...Api.get(editor, currentSearchState),
+      getMetadata: () => ({ name: 'Search and Replace', type: 'opensource' as const })
+    };
   });
 };

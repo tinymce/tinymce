@@ -16,6 +16,9 @@ export default (): void => {
 
     Autocompletion.init(editor, charMap[0]);
 
-    return Api.get(editor);
+    return {
+      ...Api.get(editor),
+      getMetadata: () => ({ name: 'Character Map', type: 'opensource' as const })
+    };
   });
 };
