@@ -12,6 +12,9 @@ export default (delay: number = 300): void => {
     Commands.register(editor, api);
     Buttons.register(editor);
     Wordcounter.setup(editor, api, delay);
-    return api;
+    return {
+      ...api,
+      getMetadata: () => ({ name: 'Word Count', type: 'opensource' as const })
+    };
   });
 };

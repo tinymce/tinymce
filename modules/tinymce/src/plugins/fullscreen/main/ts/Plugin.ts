@@ -14,7 +14,10 @@ export default (): void => {
     const fullscreenState = Cell<FullScreenInfo | null>(null);
 
     if (editor.inline) {
-      return Api.get(fullscreenState);
+      return {
+        ...Api.get(fullscreenState),
+        getMetadata: () => ({ name: 'Full Screen', type: 'opensource' as const })
+      };
     }
 
     Options.register(editor);
@@ -24,6 +27,9 @@ export default (): void => {
 
     editor.addShortcut('Meta+Shift+F', '', 'mceFullScreen');
 
-    return Api.get(fullscreenState);
+    return {
+      ...Api.get(fullscreenState),
+      getMetadata: () => ({ name: 'Full Screen', type: 'opensource' as const })
+    };
   });
 };

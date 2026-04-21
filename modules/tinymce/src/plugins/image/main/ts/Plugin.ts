@@ -11,5 +11,9 @@ export default (): void => {
     FilterContent.setup(editor);
     Buttons.register(editor);
     Commands.register(editor);
+
+    return {
+      getMetadata: () => ({ name: 'Image', type: 'opensource' as const })
+    };
   });
 };

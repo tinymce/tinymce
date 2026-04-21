@@ -7,7 +7,7 @@ import { getSelectionTargets } from './selection/SelectionTargets';
 import * as Buttons from './ui/Buttons';
 import * as MenuItems from './ui/MenuItems';
 
-const Plugin = (editor: Editor): void => {
+const Plugin = (editor: Editor) => {
   const selectionTargets = getSelectionTargets(editor);
 
   Options.register(editor);
@@ -16,6 +16,10 @@ const Plugin = (editor: Editor): void => {
   MenuItems.addMenuItems(editor, selectionTargets);
   Buttons.addButtons(editor, selectionTargets);
   Buttons.addToolbars(editor);
+
+  return {
+    getMetadata: () => ({ name: 'Table', type: 'opensource' as const })
+  };
 };
 
 export default (): void => {

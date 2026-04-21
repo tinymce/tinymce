@@ -8,6 +8,8 @@ export default (): void => {
     Commands.register(editor);
     Buttons.register(editor);
 
-    return {};
+    return {
+      getMetadata: () => ({ name: 'Code', type: 'opensource' as const })
+    };
   });
 };

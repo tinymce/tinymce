@@ -14,5 +14,9 @@ export default (): void => {
     InsertToolbars.addToEditor(editor);
 
     SelectionToolbars.addToEditor(editor);
+
+    return {
+      getMetadata: () => ({ name: 'Quick Toolbars', type: 'opensource' as const })
+    };
   });
 };
