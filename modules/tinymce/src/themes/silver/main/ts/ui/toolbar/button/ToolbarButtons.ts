@@ -472,7 +472,20 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
           }
         }
       }
-    }
+    },
+    sandboxBehaviours: Behaviour.derive([
+      Keying.config({
+        mode: 'special',
+        onTab: (comp, _se) => {
+          AlloyDropdown.close(comp);
+          return Optional.none();
+        },
+        onShiftTab: (comp, _se) => {
+          AlloyDropdown.close(comp);
+          return Optional.none();
+        }
+      })
+    ])
   });
 
   const structure = renderCommonStructure(
