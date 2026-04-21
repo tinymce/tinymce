@@ -119,6 +119,18 @@ const openF = (
         Focusing.focus(component);
         Sandboxing.close(sandbox);
         return Optional.some(true);
+      },
+
+      onTab: () => {
+        Sandboxing.close(sandbox);
+        // Let browser handle focus
+        return Optional.none();
+      },
+
+      onShiftTab: () => {
+        Sandboxing.close(sandbox);
+        // Let browser handle focus
+        return Optional.none();
       }
     }));
   }));

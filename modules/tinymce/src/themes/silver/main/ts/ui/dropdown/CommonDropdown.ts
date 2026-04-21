@@ -245,14 +245,6 @@ const renderCommonDropdown = <T>(
           mode: 'special',
           onLeft: onLeftOrRightInMenu,
           onRight: onLeftOrRightInMenu,
-          onTab: (comp, se) => {
-            AlloyDropdown.close(comp);
-            return Optional.none();
-          },
-          onShiftTab: (comp, se) => {
-            AlloyDropdown.close(comp);
-            return Optional.none();
-          }
         }),
 
         AddEventsBehaviour.config('dropdown-sandbox-events', [

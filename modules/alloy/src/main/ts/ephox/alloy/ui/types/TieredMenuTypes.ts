@@ -30,6 +30,8 @@ export interface TieredMenuDetail extends SingleSketchDetail {
   };
 
   onEscape: (comp: AlloyComponent, item: AlloyComponent) => Optional<boolean>;
+  onTab: (comp: AlloyComponent) => Optional<boolean>;
+  onShiftTab: (comp: AlloyComponent) => Optional<boolean>;
   onExecute: (comp: AlloyComponent, item: AlloyComponent) => Optional<boolean>;
   onOpenMenu: (comp: AlloyComponent, menu: AlloyComponent) => void;
   onOpenSubmenu: (comp: AlloyComponent, item: AlloyComponent, activeMenu: AlloyComponent, triggeringPath: string[]) => void;
