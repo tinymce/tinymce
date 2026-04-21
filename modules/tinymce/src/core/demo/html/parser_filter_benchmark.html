@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Parser Filter Benchmark</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 900px; margin: 40px auto; padding: 0 20px; color: #222; }
+    h1 { font-size: 1.4rem; margin-bottom: 4px; }
+    h2.section { font-size: 1rem; margin: 24px 0 6px; border-bottom: 2px solid #ddd; padding-bottom: 4px; }
+    p.desc { margin: 4px 0 12px; color: #555; font-size: 0.88rem; }
+    .config { display: flex; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; align-items: flex-end; }
+    .config label { display: flex; flex-direction: column; gap: 3px; font-size: 0.82rem; color: #444; }
+    .config input { width: 80px; padding: 4px 6px; border: 1px solid #ccc; border-radius: 3px; font-size: 0.9rem; }
+    button { padding: 8px 20px; font-size: 0.9rem; cursor: pointer; background: #0078d4; color: white;
+             border: none; border-radius: 4px; }
+    button:disabled { opacity: 0.4; cursor: default; }
+    #status { font-size: 0.85rem; color: #666; margin: 8px 0; min-height: 18px; }
+    table { border-collapse: collapse; width: 100%; margin-top: 8px; font-size: 0.87rem; }
+    th { background: #f0f0f0; border: 1px solid #ccc; padding: 7px 10px; text-align: left; white-space: nowrap; }
+    td { border: 1px solid #ddd; padding: 6px 10px; }
+    tr.winner td { background: #d4f4dd; }
+    tr.winner td:first-child { font-weight: 600; }
+    .badge { display: inline-block; font-size: 0.68rem; padding: 1px 5px; border-radius: 3px;
+             background: #ffe58f; color: #7a4f00; vertical-align: middle; margin-left: 4px; }
+    .badge.ok { background: #b7eb8f; color: #135200; }
+    .badge.na { background: #eee; color: #999; }
+    .note { font-size: 0.78rem; color: #999; margin-top: 6px; line-height: 1.5; }
+    .mutation-list { font-size: 0.82rem; color: #444; margin: 4px 0 10px; padding-left: 18px; }
+    .mutation-list li { margin-bottom: 2px; }
+    .mutation-list code { background: #f5f5f5; padding: 0 3px; border-radius: 2px; }
+  </style>
+</head>
+<body>
+
+<h1>Parser Filter Benchmark</h1>
+<p class="desc">
+  Compares <code>addNodeFilter</code> (AST-based) and <code>addRawNodeFilter</code> (single DOM walk +
+  <code>element.matches()</code>) across two mutation scenarios.
+  Rebuild TinyMCE to enable the <code>addRawNodeFilter</code> tests.
+</p>
+
+<div class="config">
+  <label>Attr scenario: filters<input id="cfg-filters" type="number" value="20" min="1" max="50"></label>
+  <label>Nodes per type<input id="cfg-nodes" type="number" value="300" min="10" max="2000"></label>
+  <label>Structural scenario: sections<input id="cfg-sections" type="number" value="500" min="10" max="5000"></label>
+  <label>Iterations<input id="cfg-iter" type="number" value="80" min="5" max="500"></label>
+  <button id="run-btn" onclick="runBenchmark()">Run Benchmark</button>
+</div>
+<div id="status"></div>
+<div id="output"></div>
+
+<script src="../../../../js/tinymce/tinymce.js"></script>
+<script>
+const ATTR_TAGS = [
+  'p', 'strong', 'em', 'span', 'a', 'div', 'h3',
+  'li', 'code', 'blockquote', 'pre', 'b', 'i', 'u', 'small',
+  'mark', 'sub', 'sup', 'cite', 'abbr', 'dfn', 'kbd', 'samp',
+  'var', 'time', 'data', 'q', 'ins', 'del', 'bdi', 'bdo',
+  's', 'label', 'output', 'figcaption', 'figure', 'address', 'legend', 'summary'
+];
+
+function getConfig() {
+  return {
+    numAttrFilters: Math.min(parseInt(document.getElementById('cfg-filters').value) || 20, ATTR_TAGS.length),
+    nodesPerType:   parseInt(document.getElementById('cfg-nodes').value) || 300,
+    numSections:    parseInt(document.getElementById('cfg-sections').value) || 500,
+    iterations:     parseInt(document.getElementById('cfg-iter').value) || 80,
+  };
+}
+
+// ─── HTML builders ────────────────────────────────────────────────────────────
+
+function buildAttrHtml(tags, nodesPerType) {
+  const parts = [];
+  for (const tag of tags) {
+    for (let i = 0; i < nodesPerType; i++) {
+      if (tag === 'a')       parts.push(`<a href="#">link ${i}</a>`);
+      else if (tag === 'li') parts.push(`<ul><li>item ${i}</li></ul>`);
+      else                   parts.push(`<${tag}>text ${i}</${tag}>`);
+    }
+  }
+  return parts.join('');
+}
+
+// Document-like HTML with all six structural target elements per section,
+// plus non-target noise (div, p, span) to simulate realistic matching.
+function buildStructuralHtml(count) {
+  const parts = [];
+  for (let i = 0; i < count; i++) {
+    parts.push(
+      `<div class="section">` +
+        `<h2>Section heading ${i}</h2>` +
+        `<p>Text with <em>emphasized content ${i}</em> and <strong>important notice ${i}</strong>.</p>` +
+        `<p>Also <b>legacy bold ${i}</b>, <i>legacy italic ${i}</i>,` +
+        ` and <mark>highlighted term ${i}</mark> in context.</p>` +
+        `<p><span>Unrelated span ${i}</span> and plain text.</p>` +
+      `</div>`
+    );
+  }
+  return parts.join('');
+}
+
+// ─── harness ─────────────────────────────────────────────────────────────────
+
+function measure(fn, iters) {
+  fn(); // warmup
+  const t0 = performance.now();
+  for (let i = 0; i < iters; i++) fn();
+  return performance.now() - t0;
+}
+
+// ─── SCENARIO A: attribute mutations ─────────────────────────────────────────
+
+function attrTest_NodeFilter(html, tags, iters) {
+  const parser = tinymce.html.DomParser({ validate: false });
+  let count = 0;
+  for (const tag of tags) {
+    parser.addNodeFilter(tag, (nodes) => {
+      count += nodes.length;
+      for (const node of nodes) node.attr('data-processed', '1');
+    });
+  }
+  count = 0; parser.parse(html); const nodesPerRun = count; count = 0;
+  return { ms: measure(() => parser.parse(html), iters), nodesPerRun };
+}
+
+function attrTest_RawNodeFilter(html, tags, iters) {
+  const parser = tinymce.html.DomParser({ validate: false });
+  if (typeof parser.addRawNodeFilter !== 'function') return null;
+  let count = 0;
+  for (const tag of tags) {
+    parser.addRawNodeFilter(tag, (nodes) => {
+      count += nodes.length;
+      for (const node of nodes) node.setAttribute('data-processed', '1');
+    });
+  }
+  count = 0; parser.parse(html); const nodesPerRun = count; count = 0;
+  return { ms: measure(() => parser.parse(html), iters), nodesPerRun };
+}
+
+// ─── SCENARIO B: structural mutations ─────────────────────────────────────────
+//
+//   em     → WRAP in <span class="wrapped">
+//   b      → UNWRAP (hoist children, remove tag)
+//   i      → REPLACE TAG with <em>, preserving children
+//   h2     → INSERT SIBLING <br> immediately after
+//   mark   → REMOVE from tree
+//   strong → APPEND CHILD text node " [verified]"
+
+function structTest_NodeFilter(html, iters) {
+  const AstNode = tinymce.html.Node;
+  const parser  = tinymce.html.DomParser({ validate: false });
+  let count = 0;
+
+  parser.addNodeFilter('em', (nodes) => {
+    count += nodes.length;
+    for (const node of nodes) {
+      const wrapper = new AstNode('span', 1);
+      wrapper.attr('class', 'wrapped');
+      node.wrap(wrapper);
+    }
+  });
+
+  parser.addNodeFilter('b', (nodes) => {
+    count += nodes.length;
+    for (const node of nodes) node.unwrap();
+  });
+
+  parser.addNodeFilter('i', (nodes) => {
+    count += nodes.length;
+    for (const node of nodes) {
+      const em = new AstNode('em', 1);
+      for (let child = node.firstChild; child;) {
+        const next = child.next;
+        em.append(child);
+        child = next;
+      }
+      node.replace(em);
+    }
+  });
+
+  parser.addNodeFilter('h2', (nodes) => {
+    count += nodes.length;
+    for (const node of nodes) {
+      if (node.parent) {
+        const br = new AstNode('br', 1);
+        node.parent.insert(br, node);
+      }
+    }
+  });
+
+  parser.addNodeFilter('mark', (nodes) => {
+    count += nodes.length;
+    for (const node of nodes) node.remove();
+  });
+
+  parser.addNodeFilter('strong', (nodes) => {
+    count += nodes.length;
+    for (const node of nodes) {
+      const text = new AstNode('#text', 3);
+      text.value = ' [verified]';
+      node.append(text);
+    }
+  });
+
+  count = 0; parser.parse(html); const nodesPerRun = count; count = 0;
+  return { ms: measure(() => parser.parse(html), iters), nodesPerRun };
+}
+
+function structTest_RawNodeFilter(html, iters) {
+  const parser = tinymce.html.DomParser({ validate: false });
+  if (typeof parser.addRawNodeFilter !== 'function') return null;
+  let count = 0;
+
+  parser.addRawNodeFilter('em', (nodes) => {
+    count += nodes.length;
+    for (const el of nodes) {
+      const span = document.createElement('span');
+      span.className = 'wrapped';
+      el.parentNode.insertBefore(span, el);
+      span.appendChild(el);
+    }
+  });
+
+  parser.addRawNodeFilter('b', (nodes) => {
+    count += nodes.length;
+    for (const el of nodes) el.replaceWith(...Array.from(el.childNodes));
+  });
+
+  parser.addRawNodeFilter('i', (nodes) => {
+    count += nodes.length;
+    for (const el of nodes) {
+      const em = document.createElement('em');
+      while (el.firstChild) em.appendChild(el.firstChild);
+      el.replaceWith(em);
+    }
+  });
+
+  parser.addRawNodeFilter('h2', (nodes) => {
+    count += nodes.length;
+    for (const el of nodes) el.after(document.createElement('br'));
+  });
+
+  parser.addRawNodeFilter('mark', (nodes) => {
+    count += nodes.length;
+    for (const el of nodes) el.remove();
+  });
+
+  parser.addRawNodeFilter('strong', (nodes) => {
+    count += nodes.length;
+    for (const el of nodes) el.appendChild(document.createTextNode(' [verified]'));
+  });
+
+  count = 0; parser.parse(html); const nodesPerRun = count; count = 0;
+  return { ms: measure(() => parser.parse(html), iters), nodesPerRun };
+}
+
+// ─── render ──────────────────────────────────────────────────────────────────
+
+function renderTable(rows, iters) {
+  const validMs = rows.filter(r => r.ms != null).map(r => r.ms);
+  const minMs = validMs.length ? Math.min(...validMs) : Infinity;
+
+  let html = `<table><tr>
+    <th>Approach</th><th>Total (ms)</th><th>Per parse (ms)</th><th>Nodes/parse</th><th>vs fastest</th>
+  </tr>`;
+  for (const r of rows) {
+    const isWinner = r.ms != null && r.ms === minMs;
+    const cls   = isWinner ? ' class="winner"' : '';
+    const total = r.ms != null ? r.ms.toFixed(1) : '—';
+    const per   = r.ms != null ? (r.ms / iters).toFixed(2) : '—';
+    const nodes = r.nodes != null ? r.nodes.toLocaleString() : '—';
+    const ratio = r.ms == null ? '—' : isWinner ? '1× ✓' : `${(r.ms / minMs).toFixed(2)}×`;
+    const badge = r.badge ? `<span class="badge ${r.badgeCls || ''}">${r.badge}</span>` : '';
+    html += `<tr${cls}><td>${r.name}${badge}</td><td>${total}</td><td>${per}</td><td>${nodes}</td><td>${ratio}</td></tr>`;
+  }
+  return html + '</table>';
+}
+
+// ─── main ─────────────────────────────────────────────────────────────────────
+
+async function runBenchmark() {
+  const btn    = document.getElementById('run-btn');
+  const status = document.getElementById('status');
+  const output = document.getElementById('output');
+  btn.disabled = true;
+  output.innerHTML = '';
+
+  const { numAttrFilters, nodesPerType, numSections, iterations } = getConfig();
+  const attrTags   = ATTR_TAGS.slice(0, numAttrFilters);
+  const attrHtml   = buildAttrHtml(attrTags, nodesPerType);
+  const structHtml = buildStructuralHtml(numSections);
+
+  const tick = (msg) => {
+    status.textContent = msg;
+    return new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+  };
+
+  await tick('Scenario A 1/2 — addNodeFilter (attr)…');
+  const a1 = attrTest_NodeFilter(attrHtml, attrTags, iterations);
+
+  await tick('Scenario A 2/2 — addRawNodeFilter (attr)…');
+  const a2 = attrTest_RawNodeFilter(attrHtml, attrTags, iterations);
+
+  await tick('Scenario B 1/2 — addNodeFilter (structural)…');
+  const b1 = structTest_NodeFilter(structHtml, iterations);
+
+  await tick('Scenario B 2/2 — addRawNodeFilter (structural)…');
+  const b2 = structTest_RawNodeFilter(structHtml, iterations);
+
+  const makeRows = (r1, r2) => [
+    { name: '<code>addNodeFilter</code>',    ms: r1.ms,  nodes: r1.nodesPerRun, badge: 'AST' },
+    { name: '<code>addRawNodeFilter</code>', ms: r2?.ms, nodes: r2?.nodesPerRun,
+      badge: r2 ? 'DOM' : 'needs rebuild', badgeCls: r2 ? 'ok' : 'na' },
+  ];
+
+  output.innerHTML = `
+    <h2 class="section">Scenario A — Attribute mutations</h2>
+    <p class="desc">
+      ${numAttrFilters} filters × ${nodesPerType} nodes = ${(numAttrFilters * nodesPerType).toLocaleString()} elements.
+      Each matched node gets <code>data-processed="1"</code>. Tests overhead at high filter count.
+    </p>
+    ${renderTable(makeRows(a1, a2), iterations)}
+
+    <h2 class="section">Scenario B — Structural mutations</h2>
+    <p class="desc">
+      ${numSections} sections × 6 element types = ${(numSections * 6).toLocaleString()} mutations.
+      Document-like HTML with div/p/span noise.
+    </p>
+    <ul class="mutation-list">
+      <li><code>em</code> → <strong>wrap</strong> in <code>&lt;span class="wrapped"&gt;</code></li>
+      <li><code>b</code> → <strong>unwrap</strong> (hoist children, remove tag)</li>
+      <li><code>i</code> → <strong>replace tag</strong> with <code>&lt;em&gt;</code>, preserving children</li>
+      <li><code>h2</code> → <strong>insert sibling</strong> <code>&lt;br&gt;</code> immediately after</li>
+      <li><code>mark</code> → <strong>remove</strong> from tree</li>
+      <li><code>strong</code> → <strong>append child</strong> text node <code>" [verified]"</code></li>
+    </ul>
+    ${renderTable(makeRows(b1, b2), iterations)}
+    <p class="note">
+      AST mutations use <code>node.wrap()</code>, <code>node.unwrap()</code>, <code>node.replace()</code>,
+      <code>node.parent.insert()</code>, <code>node.remove()</code>, <code>node.append()</code>.<br>
+      DOM mutations use <code>insertBefore</code>, <code>replaceWith</code>, <code>after</code>,
+      <code>remove</code>, <code>appendChild</code>. Filters registered once; only <code>parse()</code> is timed.
+    </p>
+  `;
+
+  await tick('Done.');
+  btn.disabled = false;
+}
+</script>
+</body>
+</html>

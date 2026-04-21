@@ -50,6 +50,7 @@ export interface ParserArgs {
 }
 
 export type ParserFilterCallback = (nodes: AstNode[], name: string, args: ParserArgs) => void;
+export type RawNodeFilterCallback = (nodes: Element[]) => void;
 
 export interface ParserFilter extends FilterRegistry.Filter<ParserFilterCallback> {}
 
@@ -90,6 +91,7 @@ interface DomParser {
   addNodeFilter: (name: string, callback: ParserFilterCallback) => void;
   getNodeFilters: () => ParserFilter[];
   removeNodeFilter: (name: string, callback?: ParserFilterCallback) => void;
+  addRawNodeFilter: (selector: string, callback: RawNodeFilterCallback) => void;
   parse: (html: string, args?: ParserArgs) => AstNode;
 }
 
@@ -298,6 +300,7 @@ const xhtmlAttribte = ' xmlns="http://www.w3.org/1999/xhtml"';
 const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomParser => {
   const nodeFilterRegistry = FilterRegistry.create<ParserFilterCallback>();
   const attributeFilterRegistry = FilterRegistry.create<ParserFilterCallback>();
+  const rawFilters: Array<{ selector: string; callback: RawNodeFilterCallback }> = [];
 
   // Apply setting defaults
   const defaultedSettings = {
@@ -402,6 +405,10 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
    */
   const removeAttributeFilter = attributeFilterRegistry.removeFilter;
 
+  const addRawNodeFilter = (selector: string, callback: RawNodeFilterCallback): void => {
+    rawFilters.push({ selector, callback });
+  };
+
   const findInvalidChildren = (node: AstNode, invalidChildren: AstNode[]): void => {
     if (InvalidNodes.isInvalid(schema, node)) {
       invalidChildren.push(node);
@@ -487,6 +494,30 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
 
     TransparentElements.updateChildren(schema, element);
 
+    // Run raw DOM filters before AST conversion so their mutations are captured in the tree
+    if (rawFilters.length > 0) {
+      const rawMatches: Element[][] = rawFilters.map(() => []);
+      const walkNative = (parent: Node): void => {
+        for (let child = parent.firstChild; child; child = child.nextSibling) {
+          if (child.nodeType === 1) {
+            const el = child as Element;
+            for (let i = 0, il = rawFilters.length; i < il; i++) {
+              if (el.matches(rawFilters[i].selector)) {
+                rawMatches[i].push(el);
+              }
+            }
+            walkNative(child);
+          }
+        }
+      };
+      walkNative(element);
+      for (let i = 0, il = rawFilters.length; i < il; i++) {
+        if (rawMatches[i].length > 0) {
+          rawFilters[i].callback(rawMatches[i]);
+        }
+      }
+    }
+
     // Create the AST representation
     const rootNode = new AstNode(rootName, 11);
     transferChildren(rootNode, element, schema.getSpecialElements(), sanitizer.sanitizeNamespaceElement, defaultedSettings.sanitize && defaultedSettings.allow_html_in_comments);
@@ -543,6 +574,7 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
     addNodeFilter,
     getNodeFilters,
     removeNodeFilter,
+    addRawNodeFilter,
     parse
   };
 
