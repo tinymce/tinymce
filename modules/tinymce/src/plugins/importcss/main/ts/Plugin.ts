@@ -8,6 +8,9 @@ export default (): void => {
   PluginManager.add('importcss', (editor) => {
     Options.register(editor);
     ImportCss.setup(editor);
-    return Api.get(editor);
+    return {
+      ...Api.get(editor),
+      getMetadata: () => ({ name: 'Import CSS', type: 'opensource' as const })
+    };
   });
 };

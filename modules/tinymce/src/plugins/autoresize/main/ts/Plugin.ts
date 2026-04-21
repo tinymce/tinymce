@@ -30,5 +30,9 @@ export default (): void => {
       Commands.register(editor, oldSize);
       Resize.setup(editor, oldSize);
     }
+
+    return {
+      getMetadata: () => ({ name: 'Autoresize', type: 'opensource' as const })
+    };
   });
 };

@@ -14,5 +14,9 @@ export default (): void => {
       // eslint-disable-next-line no-console
       console.error('Please use the Lists plugin together with the List Styles plugin.');
     }
+
+    return {
+      getMetadata: () => ({ name: 'List Styles', type: 'opensource' as const })
+    };
   });
 };

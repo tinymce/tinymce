@@ -16,6 +16,9 @@ export default (): void => {
     ResolveName.setup(editor);
     FilterContent.setup(editor);
     Selection.setup(editor);
-    return Api.get(editor);
+    return {
+      ...Api.get(editor),
+      getMetadata: () => ({ name: 'Media', type: 'opensource' as const })
+    };
   });
 };

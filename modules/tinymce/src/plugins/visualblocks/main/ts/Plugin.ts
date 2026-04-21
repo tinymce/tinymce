@@ -15,5 +15,9 @@ export default (): void => {
     Commands.register(editor, pluginUrl, enabledState);
     Buttons.register(editor, enabledState);
     Bindings.setup(editor, pluginUrl, enabledState);
+
+    return {
+      getMetadata: () => ({ name: 'Visual Blocks', type: 'opensource' as const })
+    };
   });
 };

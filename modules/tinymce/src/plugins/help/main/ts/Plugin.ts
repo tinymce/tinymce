@@ -25,6 +25,9 @@ export default (): void => {
     editor.shortcuts.add('Alt+0', 'Open help dialog', 'mceHelp');
     KeyboardNavTabI18n.initI18nLoad(editor, pluginUrl);
 
-    return api;
+    return {
+      ...api,
+      getMetadata: () => ({ name: 'Help', type: 'opensource' as const })
+    };
   });
 };

@@ -11,5 +11,9 @@ export default (): void => {
     Commands.register(editor);
     Controls.setup(editor);
     Keyboard.setup(editor);
+
+    return {
+      getMetadata: () => ({ name: 'Link', type: 'opensource' as const })
+    };
   });
 };

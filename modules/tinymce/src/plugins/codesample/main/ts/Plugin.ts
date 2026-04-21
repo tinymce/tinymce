@@ -19,5 +19,9 @@ export default (): void => {
         Dialog.open(editor);
       }
     });
+
+    return {
+      getMetadata: () => ({ name: 'Code Sample', type: 'opensource' as const })
+    };
   });
 };

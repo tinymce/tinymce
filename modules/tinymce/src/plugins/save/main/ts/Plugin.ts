@@ -9,5 +9,9 @@ export default (): void => {
     Options.register(editor);
     Buttons.register(editor);
     Commands.register(editor);
+
+    return {
+      getMetadata: () => ({ name: 'Save', type: 'opensource' as const })
+    };
   });
 };

@@ -13,5 +13,9 @@ export default (): void => {
     Buttons.register(editor);
     FilterContent.setup(editor);
     ResolveName.setup(editor);
+
+    return {
+      getMetadata: () => ({ name: 'Page Break', type: 'opensource' as const })
+    };
   });
 };

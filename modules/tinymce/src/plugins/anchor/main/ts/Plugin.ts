@@ -16,5 +16,9 @@ export default (): void => {
     editor.on('PreInit', () => {
       Formats.registerFormats(editor);
     });
+
+    return {
+      getMetadata: () => ({ name: 'Anchor', type: 'opensource' as const })
+    };
   });
 };

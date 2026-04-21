@@ -1,5 +1,4 @@
 import { after, before, describe, it } from '@ephox/bedrock-client';
-import { Fun } from '@ephox/katamari';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import { tinymce } from 'tinymce/core/api/Tinymce';
@@ -11,7 +10,9 @@ import { selectors } from '../module/Selectors';
 
 describe('browser.tinymce.plugins.help.IgnoreForcedPluginsTest', () => {
   before(() => {
-    tinymce.PluginManager.add('onboarding', Fun.noop);
+    tinymce.PluginManager.add('onboarding', () => ({
+      getMetadata: () => ({ name: 'Onboarding', type: 'premium' as const, hidden: true })
+    }));
   });
 
   after(() => {

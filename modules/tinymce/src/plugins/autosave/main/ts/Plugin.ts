@@ -25,6 +25,9 @@ export default (): void => {
       }
     });
 
-    return Api.get(editor);
+    return {
+      ...Api.get(editor),
+      getMetadata: () => ({ name: 'Autosave', type: 'opensource' as const })
+    };
   });
 };

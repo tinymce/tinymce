@@ -13,5 +13,9 @@ export default (): void => {
     Keyboard.setup(editor);
     FilterContent.setup(editor);
     Quirks.setup(editor);
+
+    return {
+      getMetadata: () => ({ name: 'Accordion', type: 'opensource' as const })
+    };
   });
 };

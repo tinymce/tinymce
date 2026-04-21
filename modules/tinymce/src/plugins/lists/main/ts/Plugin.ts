@@ -11,6 +11,9 @@ export default (): void => {
     Buttons.register(editor);
     MenuItems.register(editor);
 
-    return Api.get(editor);
+    return {
+      ...Api.get(editor),
+      getMetadata: () => ({ name: 'Lists', type: 'opensource' as const })
+    };
   });
 };
