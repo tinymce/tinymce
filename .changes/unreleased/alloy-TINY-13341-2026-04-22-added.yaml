@@ -1,0 +1,6 @@
+project: alloy
+kind: Added
+body: New `onTab` and `onShiftTab` optional handlers on `TieredMenuSpec`.
+time: 2026-04-22T18:11:44.119248+10:00
+custom:
+    Issue: TINY-13341
