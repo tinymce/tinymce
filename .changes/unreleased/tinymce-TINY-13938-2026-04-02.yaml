@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: URIs with non-Latin1 characters were returning an error.
-time: 2026-04-02T15:49:00.30440708+02:00
-custom:
-    Issue: TINY-13938

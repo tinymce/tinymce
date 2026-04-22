@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Alert and confirm dialogs were not announced properly by some screen readers.
-time: 2026-04-03T07:55:18.805268+02:00
-custom:
-    Issue: TINY-13812

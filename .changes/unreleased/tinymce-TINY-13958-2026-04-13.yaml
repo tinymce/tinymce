@@ -1,6 +1,0 @@
-project: tinymce
-kind: Improved
-body: Improved visual styling of inline diff highlights in Suggested Edits and TinyMCE AI plugin.
-time: 2026-04-13T15:25:57.905329+02:00
-custom:
-    Issue: TINY-13958
