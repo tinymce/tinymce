@@ -66,6 +66,12 @@ const remove = (editor: Editor): void => {
     }
 
     Events.fireDetach(editor);
+
+    if (editor._ariaAnnouncer) {
+      editor._ariaAnnouncer.release();
+      editor._ariaAnnouncer = null;
+    }
+
     DOM.remove(editor.getContainer());
 
     safeDestroy(_selectionOverrides);
