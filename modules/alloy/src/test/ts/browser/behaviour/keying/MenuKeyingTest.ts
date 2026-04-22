@@ -76,13 +76,13 @@ UnitTest.asynctest('MenuKeyingTest', (success, failure) => {
         Keyboard.sKeydown(doc, Keys.down(), { })
       ], [ ]),
 
-      FocusTools.sTryOnSelector('Focus should now be on beta', doc, '.gamma'),
+      FocusTools.sTryOnSelector('Focus should now be on gamma', doc, '.gamma'),
 
       checkStore('pressing up', [
         Keyboard.sKeydown(doc, Keys.up(), { })
       ], [ ]),
 
-      FocusTools.sTryOnSelector('Focus should now be on alpha', doc, '.beta'),
+      FocusTools.sTryOnSelector('Focus should now be on beta', doc, '.beta'),
 
       checkStore('pressing up', [
         Keyboard.sKeydown(doc, Keys.up(), { })
