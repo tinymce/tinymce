@@ -37,7 +37,6 @@ UnitTest.asynctest('MenuKeyingTest', (success, failure) => {
             selector: '.test-item',
             // onRight: store.adderH('detected.right'),
             // onLeft:  store.adderH('detected.left'),
-            moveOnTab: true
           })
         ]),
         components: [
@@ -67,19 +66,20 @@ UnitTest.asynctest('MenuKeyingTest', (success, failure) => {
 
       FocusTools.sTryOnSelector('Focus should still be on alpha', doc, '.alpha'),
 
-      checkStore('pressing tab', [
-        Keyboard.sKeydown(doc, Keys.tab(), { })
+      checkStore('pressing down', [
+        Keyboard.sKeydown(doc, Keys.down(), { })
       ], [ ]),
+
       FocusTools.sTryOnSelector('Focus should now be on beta', doc, '.beta'),
 
-      checkStore('pressing tab', [
-        Keyboard.sKeydown(doc, Keys.tab(), { })
+      checkStore('pressing down', [
+        Keyboard.sKeydown(doc, Keys.down(), { })
       ], [ ]),
 
       FocusTools.sTryOnSelector('Focus should now be on gamma', doc, '.gamma'),
 
-      checkStore('pressing tab', [
-        Keyboard.sKeydown(doc, Keys.tab(), { shift: true })
+      checkStore('pressing up', [
+        Keyboard.sKeydown(doc, Keys.up(), { })
       ], [ ]),
 
       FocusTools.sTryOnSelector('Focus should now be on beta', doc, '.beta'),

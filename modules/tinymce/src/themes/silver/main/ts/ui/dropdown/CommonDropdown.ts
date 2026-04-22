@@ -244,7 +244,7 @@ const renderCommonDropdown = <T>(
         Keying.config({
           mode: 'special',
           onLeft: onLeftOrRightInMenu,
-          onRight: onLeftOrRightInMenu
+          onRight: onLeftOrRightInMenu,
         }),
 
         AddEventsBehaviour.config('dropdown-sandbox-events', [

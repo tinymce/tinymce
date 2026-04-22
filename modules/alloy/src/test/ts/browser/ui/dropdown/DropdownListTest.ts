@@ -202,12 +202,6 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
       NavigationUtils.sequence(doc, Keys.left(), {}, [
         focusables.alpha, focusables.alpha
       ]),
-      NavigationUtils.sequence(doc, Keys.tab(), {}, [
-        focusables.beta, focusables.gamma, focusables.delta, focusables.alpha
-      ]),
-      NavigationUtils.sequence(doc, Keys.tab(), { shift: true }, [
-        focusables.delta, focusables.gamma, focusables.beta, focusables.alpha
-      ]),
 
       Keyboard.sKeydown(doc, Keys.down(), {}),
       store.sAssertEq('nothing has been executed', [ ]),

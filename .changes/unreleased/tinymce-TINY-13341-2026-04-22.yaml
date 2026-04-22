@@ -1,0 +1,6 @@
+project: tinymce
+kind: Improved
+body: 'Pressing Tab or Shift+Tab now closes open dropdown menus and moves focus to next or previous focusable element.'
+time: 2026-04-22T17:46:10.361888+10:00
+custom:
+    Issue: TINY-13341

@@ -1,0 +1,6 @@
+project: alloy
+kind: Changed
+body: Tab behaviour inside an open dropdown menu now closes the menu instead of cycling through menu items.
+time: 2026-04-22T10:00:01+10:00
+custom:
+    Issue: TINY-13341
