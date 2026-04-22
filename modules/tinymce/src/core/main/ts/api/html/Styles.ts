@@ -246,7 +246,7 @@ const Styles = (settings: StylesSettings = {}, schema?: Schema): Styles => {
             // Decode escaped sequences like \65 -> e
             name = decodeHexSequences(name);
             value = decodeHexSequences(value);
-            // Canonical lowercase form for internal comparisons only; storage keeps user case
+            // Lowercase form for internal comparisons and storage; custom properties keep user case
             const lowerName = name.toLowerCase();
 
             // Skip properties with double quotes and sequences like \" \' in their names
@@ -275,7 +275,7 @@ const Styles = (settings: StylesSettings = {}, schema?: Schema): Styles => {
 
             // Convert URLs and force them into url('value') format
             value = value.replace(urlOrStrRegExp, processUrl);
-            styles[name] = isEncoded ? decode(value, true) : value;
+            styles[name.startsWith('--') ? name : lowerName] = isEncoded ? decode(value, true) : value;
           }
         }
         // Compress the styles to reduce it's size for example IE will expand styles

@@ -21,10 +21,9 @@ describe('browser.tinymce.core.html.StylesTest', () => {
   it('Basic parsing/serializing', () => {
     const styles = Styles();
 
-    assertStyles(styles, 'FONT-SIZE:10px', 'FONT-SIZE: 10px;');
-    assertStyles(styles, 'FONT-SIZE:10px;COLOR:red', 'FONT-SIZE: 10px; COLOR: red;');
-    assertStyles(styles, 'FONT-SIZE  :  10px  ;   COLOR  :  red   ', 'FONT-SIZE: 10px; COLOR: red;');
-    assertStyles(styles, 'font-size:10px', 'font-size: 10px;');
+    assertStyles(styles, 'FONT-SIZE:10px', 'font-size: 10px;');
+    assertStyles(styles, 'FONT-SIZE:10px;COLOR:red', 'font-size: 10px; color: red;');
+    assertStyles(styles, 'FONT-SIZE  :  10px  ;   COLOR  :  red   ', 'font-size: 10px; color: red;');
     assertStyles(styles, 'key:"value"', `key: 'value';`);
     assertStyles(styles, `key:"value1" 'value2'`, `key: 'value1' 'value2';`);
     assertStyles(styles, `key:"val\\"ue1" 'val\\'ue2'`, `key: 'val"ue1' 'val\\'ue2';`);
@@ -48,11 +47,11 @@ describe('browser.tinymce.core.html.StylesTest', () => {
     assertStyles(styles, '  color:   RGB  (  1  ,  2  ,  3  )  ', 'color: #010203;');
     assertStyles(styles,
       '   FONT-SIZE  :  10px  ;   COLOR  :  RGB  (  1  ,  2  ,  3  )   ',
-      'FONT-SIZE: 10px; COLOR: #010203;'
+      'font-size: 10px; color: #010203;'
     );
     assertStyles(styles,
       '   FONT-SIZE  :  10px  ;   COLOR  :  RED   ',
-      'FONT-SIZE: 10px; COLOR: RED;'
+      'font-size: 10px; color: RED;'
     );
     assertStyles(
       styles,
@@ -76,21 +75,21 @@ describe('browser.tinymce.core.html.StylesTest', () => {
     assertStyles(styles, 'background-color: Blue;', 'background-color: Blue;');
   });
 
-  it('TINY-11524: CSS property names retain user case', () => {
+  it('TINY-11524: custom property (--*) names retain user case; standard names are lowercased', () => {
     const styles = Styles();
 
-    assertStyles(styles, 'Margin-Top: 20px;', 'Margin-Top: 20px;');
-    assertStyles(styles, 'Padding-Top: 20px;', 'Padding-Top: 20px;');
-    assertStyles(styles, 'Border-Top: 1px solid red;', 'Border-Top: 1px solid red;');
-    assertStyles(styles, 'FONT-FAMILY: Arial;', 'FONT-FAMILY: Arial;');
-    assertStyles(styles, 'Background-Image: url(a.png);', `Background-Image: url('a.png');`);
+    assertStyles(styles, '--MyVar: 10px;', '--MyVar: 10px;');
+    assertStyles(styles, '--my-color: red;', '--my-color: red;');
+    assertStyles(styles, '--FooBar: 1; --baz: 2;', '--FooBar: 1; --baz: 2;');
+    assertStyles(styles, 'Margin-Top: 20px;', 'margin-top: 20px;');
+    assertStyles(styles, 'FONT-FAMILY: Arial;', 'font-family: Arial;');
   });
 
   it('TINY-11524: font-weight 700 substitution fires on mixed-case name', () => {
     const styles = Styles();
 
-    assertStyles(styles, 'Font-Weight: 700', 'Font-Weight: bold;');
-    assertStyles(styles, 'FONT-WEIGHT: 700', 'FONT-WEIGHT: bold;');
+    assertStyles(styles, 'Font-Weight: 700', 'font-weight: bold;');
+    assertStyles(styles, 'FONT-WEIGHT: 700', 'font-weight: bold;');
     assertStyles(styles, 'font-weight: 700', 'font-weight: bold;');
   });
 
@@ -102,7 +101,7 @@ describe('browser.tinymce.core.html.StylesTest', () => {
     assertStyles(styles, 'bEhAvIoR: url(test.htc)', '');
   });
 
-  it('TINY-11524: compression still fires when all longhands are lowercase', () => {
+  it('TINY-11524: compression fires regardless of input case', () => {
     const styles = Styles();
 
     assertStyles(
@@ -112,23 +111,8 @@ describe('browser.tinymce.core.html.StylesTest', () => {
     );
     assertStyles(
       styles,
-      'margin-top: 1px; margin-right: 2px; margin-bottom: 3px; margin-left: 4px',
-      'margin: 1px 2px 3px 4px;'
-    );
-  });
-
-  it('TINY-11524: compression skips when any longhand is mixed-case', () => {
-    const styles = Styles();
-
-    assertStyles(
-      styles,
-      'Padding-Top: 1px; padding-right: 1px; padding-bottom: 1px; padding-left: 1px',
-      'Padding-Top: 1px; padding-right: 1px; padding-bottom: 1px; padding-left: 1px;'
-    );
-    assertStyles(
-      styles,
       'Margin-Top: 1px; Margin-Right: 2px; Margin-Bottom: 3px; Margin-Left: 4px',
-      'Margin-Top: 1px; Margin-Right: 2px; Margin-Bottom: 3px; Margin-Left: 4px;'
+      'margin: 1px 2px 3px 4px;'
     );
   });
 
