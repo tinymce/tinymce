@@ -38,12 +38,12 @@ describe('browser.tinymce.core.html.StylesTest', () => {
     );
   });
 
-  it('Colors force hex and lowercase', () => {
+  it('RGB colors convert to lowercase hex; other color values retain case', () => {
     const styles = Styles();
 
     assertStyles(styles, 'color: rgb(1,2,3)', 'color: #010203;');
     assertStyles(styles, 'color: RGB(1,2,3)', 'color: #010203;');
-    assertStyles(styles, 'color: #FF0000', 'color: #ff0000;');
+    assertStyles(styles, 'color: #FF0000', 'color: #FF0000;');
     assertStyles(styles, '  color:   RGB  (  1  ,  2  ,  3  )  ', 'color: #010203;');
     assertStyles(styles,
       '   FONT-SIZE  :  10px  ;   COLOR  :  RGB  (  1  ,  2  ,  3  )   ',
@@ -51,7 +51,7 @@ describe('browser.tinymce.core.html.StylesTest', () => {
     );
     assertStyles(styles,
       '   FONT-SIZE  :  10px  ;   COLOR  :  RED   ',
-      'font-size: 10px; color: red;'
+      'font-size: 10px; color: RED;'
     );
     assertStyles(
       styles,
@@ -59,6 +59,60 @@ describe('browser.tinymce.core.html.StylesTest', () => {
       'border: 1px solid rgb(255, 0, 0);'
       // TODO: color in border style should be in HEX format once https://ephocks.atlassian.net/browse/TINY-8917 is fixed.
       // 'border: 1px solid #ff0000;' // Should expect this
+    );
+  });
+
+  it('TINY-11524: color and background-color values retain user case', () => {
+    const styles = Styles();
+
+    assertStyles(styles, 'color: {{FooBar}};', 'color: {{FooBar}};');
+    assertStyles(styles, 'background-color: ${bgColor};', 'background-color: ${bgColor};');
+    assertStyles(styles, 'color: var(--MyColor);', 'color: var(--MyColor);');
+    assertStyles(styles, 'background-color: var(--BgColor);', 'background-color: var(--BgColor);');
+    assertStyles(styles, 'color: #AABBCC;', 'color: #AABBCC;');
+    assertStyles(styles, 'background-color: #AaBbCc;', 'background-color: #AaBbCc;');
+    assertStyles(styles, 'color: RED;', 'color: RED;');
+    assertStyles(styles, 'background-color: Blue;', 'background-color: Blue;');
+  });
+
+  it('TINY-11524: custom property (--*) names retain user case; standard names are lowercased', () => {
+    const styles = Styles();
+
+    assertStyles(styles, '--MyVar: 10px;', '--MyVar: 10px;');
+    assertStyles(styles, '--my-color: red;', '--my-color: red;');
+    assertStyles(styles, '--FooBar: 1; --baz: 2;', '--FooBar: 1; --baz: 2;');
+    assertStyles(styles, 'Margin-Top: 20px;', 'margin-top: 20px;');
+    assertStyles(styles, 'FONT-FAMILY: Arial;', 'font-family: Arial;');
+  });
+
+  it('TINY-11524: font-weight 700 substitution fires on mixed-case name', () => {
+    const styles = Styles();
+
+    assertStyles(styles, 'Font-Weight: 700', 'font-weight: bold;');
+    assertStyles(styles, 'FONT-WEIGHT: 700', 'font-weight: bold;');
+    assertStyles(styles, 'font-weight: 700', 'font-weight: bold;');
+  });
+
+  it('TINY-11524: behavior XSS guard blocks mixed-case name', () => {
+    const styles = Styles();
+
+    assertStyles(styles, 'Behavior: url(test.htc)', '');
+    assertStyles(styles, 'BEHAVIOR: url(test.htc)', '');
+    assertStyles(styles, 'bEhAvIoR: url(test.htc)', '');
+  });
+
+  it('TINY-11524: compression fires regardless of input case', () => {
+    const styles = Styles();
+
+    assertStyles(
+      styles,
+      'padding-top: 1px; padding-right: 1px; padding-bottom: 1px; padding-left: 1px',
+      'padding: 1px;'
+    );
+    assertStyles(
+      styles,
+      'Margin-Top: 1px; Margin-Right: 2px; Margin-Bottom: 3px; Margin-Left: 4px',
+      'margin: 1px 2px 3px 4px;'
     );
   });
 
