@@ -246,8 +246,10 @@ const Styles = (settings: StylesSettings = {}, schema?: Schema): Styles => {
             // Decode escaped sequences like \65 -> e
             name = decodeHexSequences(name);
             value = decodeHexSequences(value);
-            // Lowercase form for internal comparisons and storage; custom properties keep user case
-            const lowerName = name.toLowerCase();
+            // Custom properties (--*) keep user case; standard names normalize to lowercase
+            if (!name.startsWith('--')) {
+              name = name.toLowerCase();
+            }
 
             // Skip properties with double quotes and sequences like \" \' in their names
             // See 'mXSS Attacks: Attacking well-secured Web-Applications by using innerHTML Mutations'
@@ -257,12 +259,12 @@ const Styles = (settings: StylesSettings = {}, schema?: Schema): Styles => {
             }
 
             // Don't allow behavior name or expression/comments within the values
-            if (!settings.allow_script_urls && (lowerName === 'behavior' || /expression\s*\(|\/\*|\*\//.test(value))) {
+            if (!settings.allow_script_urls && (name === 'behavior' || /expression\s*\(|\/\*|\*\//.test(value))) {
               continue;
             }
 
             // Opera will produce 700 instead of bold in their style values
-            if (lowerName === 'font-weight' && value === '700') {
+            if (name === 'font-weight' && value === '700') {
               value = 'bold';
             }
 
@@ -275,7 +277,7 @@ const Styles = (settings: StylesSettings = {}, schema?: Schema): Styles => {
 
             // Convert URLs and force them into url('value') format
             value = value.replace(urlOrStrRegExp, processUrl);
-            styles[name.startsWith('--') ? name : lowerName] = isEncoded ? decode(value, true) : value;
+            styles[name] = isEncoded ? decode(value, true) : value;
           }
         }
         // Compress the styles to reduce it's size for example IE will expand styles
