@@ -16,8 +16,7 @@ import * as KeyingTypes from './KeyingTypes';
 
 const schema = [
   FieldSchema.required('selector'),
-  FieldSchema.defaulted('execute', KeyingTypes.defaultExecute),
-  FieldSchema.defaulted('moveOnTab', false)
+  FieldSchema.defaulted('execute', KeyingTypes.defaultExecute)
 ];
 
 const execute: KeyRuleHandler<MenuConfig, Stateless> = (component, simulatedEvent, menuConfig) => menuConfig.focusManager.get(component).bind((focused) => menuConfig.execute(component, simulatedEvent, focused));

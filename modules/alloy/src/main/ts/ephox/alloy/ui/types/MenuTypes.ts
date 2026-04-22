@@ -28,7 +28,6 @@ export interface MenuMatrixMovementSpec {
 
 export interface MenuNormalMovementSpec {
   mode: 'menu';
-  moveOnTab?: boolean;
 }
 
 export type MenuMovementSpec = MenuGridMovementSpec | MenuMatrixMovementSpec | MenuNormalMovementSpec;
@@ -53,7 +52,6 @@ export interface MenuMatrixMovement {
 export interface MenuNormalMovement {
   mode: 'menu';
   config: (detail: MenuDetail, movement: MenuMovement) => MenuConfigSpec;
-  moveOnTab: boolean;
 }
 
 export type MenuMovement = MenuGridMovement | MenuMatrixMovement | MenuNormalMovement;
