@@ -20,6 +20,7 @@ import * as VisualAids from '../view/VisualAids';
 import AddOnManager from './AddOnManager';
 import type Annotator from './Annotator';
 import * as Commands from './commands/Commands';
+import AriaAnnouncer from './dom/AriaAnnouncer';
 import DOMUtils from './dom/DOMUtils';
 import type { EventUtilsCallback } from './dom/EventUtils';
 import ScriptLoader from './dom/ScriptLoader';
@@ -1134,6 +1135,22 @@ class Editor implements EditorObservable {
    */
   public hasEditableRoot(): boolean {
     return EditableRoot.hasEditableRoot(this);
+  }
+
+  /**
+   * Announces a message to screen readers via the page-wide aria-live region, without shifting focus.
+   * Delegates to {@link tinymce.dom.AriaAnnouncer#announce}.
+   *
+   * @method announce
+   * @param {String} message The message to announce to screen readers.
+   * @param {Object} options Optional settings.
+   * @param {Boolean} options.assertive If true, uses aria-live="assertive" (role="alert") instead of polite.
+   * @example
+   * tinymce.activeEditor.announce('Bold on');
+   * tinymce.activeEditor.announce('Error occurred', { assertive: true });
+   */
+  public announce(message: string, options?: { assertive?: boolean }): void {
+    AriaAnnouncer.announce(message, options);
   }
 
   /**
