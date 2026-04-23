@@ -21,7 +21,7 @@ const render = (args: ConfirmationProps): JSX.Element => {
   const [ show, setShow ] = useState(false);
   return <div style={{ width: '480px' }}>
     <button style={{ cursor: 'pointer' }} onClick={() => setShow(!show)}>show</button>
-    {show && <Confirmation {...args} onConfirm={() => args.onConfirm().finally(() => setShow(false))} />}
+    {show && <Confirmation {...args} onConfirm={() => args.onConfirm().finally(() => setShow(false))} onCancel={() => args.onCancel().finally(() => setShow(false))} />}
   </div>;
 };
 
@@ -79,7 +79,8 @@ export const ConfirmationDialog: Story = {
       setTimeout(() => {
         return resolve();
       }, 2_000);
-    })
+    }),
+    onCancel: () => Promise.resolve()
   }
 };
 
@@ -92,6 +93,7 @@ export const ConfirmationDialogWithError: Story = {
       setTimeout(() => {
         return reject();
       }, 2_000);
-    })
+    }),
+    onCancel: () => Promise.resolve()
   }
 };

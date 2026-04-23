@@ -8,7 +8,9 @@ export interface ConfirmationProps {
   readonly title: string;
   readonly text: string;
   readonly buttonName: string;
+  readonly cancelBtnName?: string;
   readonly onConfirm: () => Promise<void>;
+  readonly onCancel: () => Promise<void>;
 }
 
 const Loading = () => <div style={{ margin: 'auto' }} >
@@ -19,7 +21,9 @@ export const Confirmation = forwardRef<HTMLDivElement, ConfirmationProps>(({
   title,
   text,
   buttonName,
-  onConfirm
+  cancelBtnName = 'Cancel',
+  onConfirm,
+  onCancel
 }) => {
   const [ confirming, setConfirming ] = useState(false);
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -38,8 +42,11 @@ export const Confirmation = forwardRef<HTMLDivElement, ConfirmationProps>(({
     });
   };
 
-  const onCancel = () => {
-    dialogRef.current?.close();
+  const onCancelHandler = () => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    onCancel().finally(() => {
+      dialogRef.current?.close();
+    });
   };
 
   return <dialog ref={dialogRef} style={{ margin: 'auto' }}>
@@ -64,9 +71,9 @@ export const Confirmation = forwardRef<HTMLDivElement, ConfirmationProps>(({
                 >{buttonName}</Button>
                 <Button
                   variant='secondary'
-                  onClick={onCancel}
-                  aria-label={'Cancel'}
-                >{'Cancel'}</Button>
+                  onClick={onCancelHandler}
+                  aria-label={cancelBtnName}
+                >{cancelBtnName}</Button>
               </div>
             </div>
           </div>
