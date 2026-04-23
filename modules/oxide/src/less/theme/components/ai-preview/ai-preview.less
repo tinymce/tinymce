@@ -19,7 +19,8 @@
       min-height: 0;
 
       .tox-ai__iframe {
-        background-color: @edit-area-iframe-background-color;
+        // if the background color of the iframe is transparent, we need to set it to white to prevent the editor content visually showing through the preview
+        background-color: if((alpha(@edit-area-iframe-background-color) > 0), @edit-area-iframe-background-color, @color-white);
         border: @edit-area-border;
         width: 100%;
         height: 100%;
