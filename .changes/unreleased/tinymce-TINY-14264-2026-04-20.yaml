@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Focused links in dark mode was having the same text color as the background.
+time: 2026-04-20T15:32:58.739366+02:00
+custom:
+    Issue: TINY-14264
