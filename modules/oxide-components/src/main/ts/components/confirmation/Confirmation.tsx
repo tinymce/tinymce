@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useRef, useState, type MouseEventHandler } from 'react';
+import { useEffect, useRef, useState, type FC, type MouseEventHandler } from 'react';
 
 import { Spinner } from '../../bespoke/tinymceai/spinner/Spinner';
 import * as Bem from '../../utils/Bem';
@@ -17,7 +17,7 @@ const Loading = () => <div style={{ margin: 'auto' }} >
   <Spinner type="circle" />
 </div>;
 
-export const Confirmation = forwardRef<HTMLDivElement, ConfirmationProps>(({
+export const Confirmation: FC<ConfirmationProps> = (({
   title,
   text,
   buttonName,
