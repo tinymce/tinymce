@@ -6,6 +6,7 @@ import { Alert } from './components/alert/Alert';
 import { AutoResizingTextarea } from './components/autoresizingtextarea/AutoResizingTextarea';
 import { Button } from './components/button/Button';
 import * as Card from './components/card/Card';
+import { Confirmation, type ConfirmationProps } from './components/confirmation/Confirmation';
 import * as ContextToolbar from './components/contexttoolbar/ContextToolbar';
 import * as Draggable from './components/draggable/Draggable';
 import * as Dropdown from './components/dropdown/Dropdown';
@@ -34,6 +35,7 @@ export {
   Bem,
   Button,
   Card,
+  Confirmation,
   ContentUiBem,
   ContextToolbar,
   Draggable,
@@ -57,4 +59,4 @@ export {
   UserPromptBubble
 };
 
-export type { UniverseResources };
+export type { ConfirmationProps, UniverseResources };
