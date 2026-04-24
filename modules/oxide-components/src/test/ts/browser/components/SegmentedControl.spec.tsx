@@ -92,8 +92,8 @@ describe('browser.components.SegmentedControl', () => {
 
     await expect.poll(() => previewOption.getAttribute('aria-checked')).toBe('true');
     await expect.poll(() => diffOption.getAttribute('aria-checked')).toBe('false');
-    await expect.poll(() => diffOption.getAttribute('tabindex')).toBe('0');
-    await expect.poll(() => previewOption.getAttribute('tabindex')).toBe('-1');
+    await expect.poll(() => diffOption.getAttribute('tabindex')).toBe('-1');
+    await expect.poll(() => previewOption.getAttribute('tabindex')).toBe('0');
   });
 
   it('TINY-13937: Should keep first option in tab order when non-first option is selected', async () => {
@@ -110,8 +110,8 @@ describe('browser.components.SegmentedControl', () => {
 
     expect(diffOption.getAttribute('aria-checked')).toBe('false');
     expect(previewOption.getAttribute('aria-checked')).toBe('true');
-    expect(diffOption.getAttribute('tabindex')).toBe('0');
-    expect(previewOption.getAttribute('tabindex')).toBe('-1');
+    expect(diffOption.getAttribute('tabindex')).toBe('-1');
+    expect(previewOption.getAttribute('tabindex')).toBe('0');
   });
 
   it('TINY-13470: Should work with three or more options', async () => {
