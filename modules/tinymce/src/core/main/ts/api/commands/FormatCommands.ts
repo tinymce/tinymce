@@ -6,10 +6,18 @@ import type { FormatVars } from '../../fmt/FormatTypes';
 import type Editor from '../Editor';
 import type { ContentLanguage } from '../OptionTypes';
 
+const announceFormatToggle = (editor: Editor, name: string, value?: FormatVars): void => {
+  const state = editor.formatter.match(name, value);
+  const displayName = name.charAt(0).toUpperCase() + name.slice(1);
+  const msg = state ? editor.translate([ '{0} on', editor.translate(displayName) ]) : editor.translate([ '{0} off', editor.translate(displayName) ]);
+  editor.announce(msg);
+};
+
 const registerExecCommands = (editor: Editor): void => {
   const toggleFormat = (name: string, value?: FormatVars) => {
     editor.formatter.toggle(name, value);
     editor.nodeChanged();
+    announceFormatToggle(editor, name, value);
   };
 
   editor.editorCommands.addCommands({
