@@ -1,5 +1,6 @@
 import { Arr, Fun, Type, Id } from '@ephox/katamari';
 
+import type { AriaAnnouncer } from '../aria/AriaAnnouncer';
 import * as EditorContent from '../content/EditorContent';
 import * as Deprecations from '../Deprecations';
 import * as NodeType from '../dom/NodeType';
@@ -260,6 +261,7 @@ class Editor implements EditorObservable {
   public _selectionOverrides!: SelectionOverrides;
   public _skinLoaded: boolean = false;
   public _editableRoot: boolean = true;
+  public _ariaAnnouncer: AriaAnnouncer | null = null;
 
   // EditorObservable patches
   public bindPendingEventDelegates!: EditorObservable['bindPendingEventDelegates'];
@@ -1134,6 +1136,23 @@ class Editor implements EditorObservable {
    */
   public hasEditableRoot(): boolean {
     return EditableRoot.hasEditableRoot(this);
+  }
+
+  /**
+   * Announces a message to screen readers via an aria-live region, without shifting focus.
+   *
+   * @method announce
+   * @param {String} message The message to announce to screen readers.
+   * @param {Object} options Optional settings.
+   * @param {Boolean} options.assertive If true, uses aria-live="assertive" (role="alert") instead of polite.
+   * @example
+   * tinymce.activeEditor.announce('Bold on');
+   * tinymce.activeEditor.announce('Error occurred', { assertive: true });
+   */
+  public announce(message: string, options?: { assertive?: boolean }): void {
+    if (this._ariaAnnouncer) {
+      this._ariaAnnouncer.announce(message, options);
+    }
   }
 
   /**

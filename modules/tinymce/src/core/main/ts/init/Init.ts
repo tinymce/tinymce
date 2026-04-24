@@ -14,6 +14,7 @@ import type { EditorUiApi } from '../api/ui/Ui';
 import type { EditorEvent } from '../api/util/EventDispatcher';
 import Tools from '../api/util/Tools';
 import VK from '../api/util/VK';
+import * as AriaAnnouncer from '../aria/AriaAnnouncer';
 import * as ErrorReporter from '../ErrorReporter';
 import LicenseKeyManagerLoader from '../licensekey/LicenseKeyManager';
 import * as Disabled from '../mode/Disabled';
@@ -214,6 +215,9 @@ const init = async (editor: Editor): Promise<void> => {
   augmentEditorUiApi(editor, Optional.from(renderInfo.api).getOr({}));
   editor.editorContainer = renderInfo.editorContainer as HTMLElement;
   appendContentCssFromSettings(editor);
+
+  // Create the aria announcer for screen reader announcements
+  editor._ariaAnnouncer = AriaAnnouncer.setup();
 
   if (editor.inline) {
     InitContentBody.contentBodyLoaded(editor);
