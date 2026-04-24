@@ -24,7 +24,7 @@ UnitTest.asynctest('MouseTest', (success, failure) => {
   let repository = [];
 
   // TODO: Free handlers.
-  const handlers = Arr.bind([ 'mousedown', 'mouseup', 'mouseover', 'click', 'focus', 'contextmenu' ], (evt) =>
+  const handlers = Arr.bind([ 'mousedown', 'mouseup', 'mouseover', 'click', 'focus', 'contextmenu', 'mouseenter', 'mouseleave' ], (evt) =>
     [
       DomEvent.bind(container, evt, () => {
         repository.push('container.' + evt);
@@ -104,6 +104,18 @@ UnitTest.asynctest('MouseTest', (success, failure) => {
       'sHoverOn (container > input)',
       [ 'input.mouseover', 'container.mouseover' ],
       Mouse.sHoverOn(container, 'input')
+    ),
+
+    runStep(
+      'mouseEnter (container > input)',
+      [ 'input.mouseenter' ],
+      Step.sync(() => Mouse.mouseEnter(input))
+    ),
+
+    runStep(
+      'mouseLeave (container > input)',
+      [ 'input.mouseleave' ],
+      Step.sync(() => Mouse.mouseLeave(input))
     ),
 
     runStep(

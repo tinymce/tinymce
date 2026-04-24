@@ -14,6 +14,8 @@ const mouseDown = (element: SugarElement<Node>, settings: Clicks.Settings = { })
 const mouseUp = (element: SugarElement<Node>, settings: Clicks.Settings = { }): void => Clicks.mouseUp(settings)(element);
 const mouseMove = (element: SugarElement<Node>, settings: Clicks.Settings = { }): void => Clicks.mouseMove(settings)(element);
 const mouseOut = (element: SugarElement<Node>, settings: Clicks.Settings = { }): void => Clicks.mouseOut(settings)(element);
+const mouseEnter = (element: SugarElement<Node>, settings: Clicks.Settings = { }): void => Clicks.mouseEnter(settings)(element);
+const mouseLeave = (element: SugarElement<Node>, settings: Clicks.Settings = { }): void => Clicks.mouseLeave(settings)(element);
 const mouseMoveTo = (element: SugarElement<Node>, dx: number, dy: number, settings: Omit<Clicks.Settings, 'dx' | 'dy'> = { }): void =>
   Clicks.mouseMove({ ...settings, dx, dy })(element);
 const mouseUpTo = (element: SugarElement<Node>, dx: number, dy: number, settings: Omit<Clicks.Settings, 'dx' | 'dy'> = { }): void =>
@@ -183,6 +185,8 @@ export {
   mouseMove,
   mouseMoveTo,
   mouseOut,
+  mouseEnter,
+  mouseLeave,
 
   clickOn,
   clickByLabel,
