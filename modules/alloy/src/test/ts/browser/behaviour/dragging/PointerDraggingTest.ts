@@ -1,15 +1,14 @@
 import { Waiter, Pointer } from '@ephox/agar';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
-import { Optional } from '@ephox/katamari';
-import { Css, Scroll, SugarPosition } from '@ephox/sugar';
+import { Css, Scroll } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import * as Boxes from 'ephox/alloy/alien/Boxes';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Dragging } from 'ephox/alloy/api/behaviour/Dragging';
+import type { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Memento from 'ephox/alloy/api/component/Memento';
-import * as DragCoord from 'ephox/alloy/api/data/DragCoord';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
@@ -71,6 +70,12 @@ describe('PointerDraggingTest', () => {
       return { left, top };
     });
 
+  const assertPosition = async (label: string, box: AlloyComponent, expected: { left: string; top: string }) => {
+    const pos = await waitForPosition(box);
+    assert.equal(pos.left, expected.left, `${label} (left)`);
+    assert.equal(pos.top, expected.top, `${label} (top)`);
+  };
+
   const getElementToDrag = async (left = '50px', top = '100px') => {
     const component = gui.component();
     const box = subject.get(component);
@@ -94,22 +99,15 @@ describe('PointerDraggingTest', () => {
       Pointer.pointerDown(box.element);
       store.assertEq('setPointerCapture should be called', [ 'setPointerCapture' ]);
 
-      Pointer.pointerMoveTo(box.element, 100, 200);
-      Pointer.pointerMoveTo(box.element, 120, 200);
+      Pointer.pointerMoveBy(box.element, 0, 0);
+      Pointer.pointerMoveBy(box.element, 20, 0);
+      await assertPosition('Position should move by [20, 0]', box, { left: '70px', top: '100px' });
 
-      // by 20px
-      const pos1 = await waitForPosition(box);
+      Pointer.pointerMoveBy(box.element, 20, 0);
+      await assertPosition('Position should move by [20, 0]', box, { left: '90px', top: '100px' });
 
-      // by 20px
-      Pointer.pointerMoveTo(box.element, 140, 200);
-      const pos2 = await waitForPosition(box);
-
-      // by 20px
-      Pointer.pointerMoveTo(box.element, 160, 200);
-      const pos3 = await waitForPosition(box);
-
-      assert.notEqual(pos1.left, pos2.left, 'Position should change between move 1 and 2');
-      assert.notEqual(pos2.left, pos3.left, 'Position should change between move 2 and 3');
+      Pointer.pointerMoveBy(box.element, 20, 50);
+      await assertPosition('Position should move by [20, 50]', box, { left: '110px', top: '150px' });
 
       Pointer.pointerUp(box.element);
     });
