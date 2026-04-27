@@ -1,7 +1,7 @@
-import { Mouse, UiFinder, Waiter, Pointer } from '@ephox/agar';
-import { describe, it } from '@ephox/bedrock-client';
+import { Waiter, Pointer } from '@ephox/agar';
+import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
-import { Css, Scroll, type SugarElement, SugarPosition } from '@ephox/sugar';
+import { Css, Scroll, SugarPosition } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import * as Boxes from 'ephox/alloy/alien/Boxes';
@@ -22,23 +22,24 @@ describe('PointerDraggingTest', () => {
           'width': '100px',
           'height': '100px',
           'background-color': 'green',
-          'border': '1px solid green'
+          'border': '1px solid green',
+          'position': 'fixed'
         }
       },
       containerBehaviours: Behaviour.derive([
         Dragging.config({
           mode: 'pointer',
-          snaps: {
-            getSnapPoints: () => [
-              Dragging.snap({
-                sensor: DragCoord.fixed(300, 10),
-                range: SugarPosition(1000, 30),
-                output: DragCoord.fixed(Optional.none<number>(), Optional.some(10))
-              })
-            ],
-            leftAttr: 'data-snap-left',
-            topAttr: 'data-snap-top'
-          },
+          // snaps: {
+          //   getSnapPoints: () => [
+          //     Dragging.snap({
+          //       sensor: DragCoord.fixed(300, 10),
+          //       range: SugarPosition(1000, 30),
+          //       output: DragCoord.fixed(Optional.none<number>(), Optional.some(10))
+          //     })
+          //   ],
+          //   leftAttr: 'data-snap-left',
+          //   topAttr: 'data-snap-top'
+          // },
           getBounds: () => {
             const scroll = Scroll.get();
             return Boxes.bounds(scroll.left, scroll.top, 500, 500);
@@ -62,6 +63,7 @@ describe('PointerDraggingTest', () => {
     })
   ));
 
+  // TOOO: does it have to be async?
   const waitForPosition = (box: ReturnType<typeof subject.get>) =>
     Waiter.pTryUntil('Waiting for position data', () => {
       const left = Css.getRaw(box.element, 'left').getOrDie('No left position');
@@ -69,38 +71,50 @@ describe('PointerDraggingTest', () => {
       return { left, top };
     });
 
-  const startDrag = async (left = '50px', top = '100px') => {
+  const getElementToDrag = async (left = '50px', top = '100px') => {
     const component = gui.component();
     const box = subject.get(component);
-
     Css.setAll(box.element, { left, top });
-    Pointer.pointerDown(box.element);
-    // const blocker = await UiFinder.pWaitFor('Waiting for blocker', gui.gui().element, '.test-blocker');
-
     return { box };
   };
 
-  const endDrag = (element: SugarElement<Element>) => {
-    Pointer.pointerUp(element);
-  };
+  beforeEach(() => {
+    const store = gui.store();
+    store.clear();
+  });
 
-  it('should move the element when dragged', async () => {
-    const { box } = await startDrag();
+  it('TINY-14241: should move the element when dragged', async () => {
+    const { box } = await getElementToDrag();
+    const store = gui.store();
 
-    Pointer.pointerMoveTo(box.element, 100, 200);
-    Pointer.pointerMoveTo(box.element, 120, 200);
-    const pos1 = await waitForPosition(box);
+    await Pointer.pWithMockPointerCapture(box.element, {
+      setPointerCapture: store.adder('setPointerCapture'),
+      releasePointerCapture: store.adder('releasePointerCapture')
+    }, async () => {
+      Pointer.pointerDown(box.element);
+      store.assertEq('setPointerCapture should be called', [ 'setPointerCapture' ]);
 
-    Pointer.pointerMoveTo(box.element, 140, 200);
-    const pos2 = await waitForPosition(box);
+      Pointer.pointerMoveTo(box.element, 100, 200);
+      Pointer.pointerMoveTo(box.element, 120, 200);
 
-    Pointer.pointerMoveTo(box.element, 160, 200);
-    const pos3 = await waitForPosition(box);
+      // by 20px
+      const pos1 = await waitForPosition(box);
 
-    assert.notEqual(pos1.left, pos2.left, 'Position should change between move 1 and 2');
-    assert.notEqual(pos2.left, pos3.left, 'Position should change between move 2 and 3');
+      // by 20px
+      Pointer.pointerMoveTo(box.element, 140, 200);
+      const pos2 = await waitForPosition(box);
 
-    endDrag(box.element);
+      // by 20px
+      Pointer.pointerMoveTo(box.element, 160, 200);
+      const pos3 = await waitForPosition(box);
+
+      assert.notEqual(pos1.left, pos2.left, 'Position should change between move 1 and 2');
+      assert.notEqual(pos2.left, pos3.left, 'Position should change between move 2 and 3');
+
+      Pointer.pointerUp(box.element);
+    });
+
+    store.assertEq('setPointerCapture and releasePointerCapture should be called', [ 'setPointerCapture', 'releasePointerCapture' ]);
   });
 
   // it('should clamp to left and right bounds', async () => {

@@ -23,6 +23,7 @@ const move = <E, ET extends Event>(component: AlloyComponent, dragConfig: Draggi
   const delta = dragState.update(dragMode, event);
   const dragStartData = dragState.getStartData().getOrThunk(() => calcStartData(dragConfig, component));
   delta.each((dlt) => {
+    console.log('move me by', dlt);
     DragMovement.dragBy(component, dragConfig, dragStartData, dlt);
   });
 };
