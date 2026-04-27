@@ -92,26 +92,26 @@ describe('browser.agar.PointerTest', () => {
     Assert.eq('clientY should include dy offset', true, receivedEvent !== undefined);
   });
 
-  it('pointerMoveTo fires pointermove with dx/dy offsets', () => {
+  it('pointerMoveBy fires pointermove with dx/dy offsets', () => {
     let receivedEvent: PointerEvent | undefined;
     const handler = DomEvent.bind(input, 'pointermove', (evt) => {
       receivedEvent = evt.raw as PointerEvent;
     });
 
-    Pointer.pointerMoveTo(input, 15, 25);
+    Pointer.pointerMoveBy(input, 15, 25);
     handler.unbind();
 
     Assert.eq('pointermove should bubble', [ 'input.pointermove', 'container.pointermove' ], repository);
     Assert.eq('event should have been received', true, receivedEvent !== undefined);
   });
 
-  it('pointerMoveTo passes additional settings to the event', () => {
+  it('pointerMoveBy passes additional settings to the event', () => {
     let receivedEvent: PointerEvent | undefined;
     const handler = DomEvent.bind(input, 'pointermove', (evt) => {
       receivedEvent = evt.raw as PointerEvent;
     });
 
-    Pointer.pointerMoveTo(input, 10, 20, { shiftKey: true, button: 1 });
+    Pointer.pointerMoveBy(input, 10, 20, { shiftKey: true, button: 1 });
     handler.unbind();
 
     Assert.eq('shiftKey should be true', true, receivedEvent?.shiftKey);
