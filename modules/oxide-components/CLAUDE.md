@@ -12,21 +12,21 @@ Part of the TinyMCE monorepo at `/modules/oxide-components`.
 
 ```bash
 # Development
-yarn start            # Storybook dev server (port 6006)
+bun run start            # Storybook dev server (port 6006)
 
 # Build
-yarn build            # Full production build (Storybook + library)
+bun run build            # Full production build (Storybook + library)
 
 # Linting
-yarn lint             # ESLint (zero warnings enforced)
+bun run lint             # ESLint (zero warnings enforced)
 
 # Testing
-yarn test-watch                  # All tests in watch mode
-yarn test-browser-headless       # Browser tests (headless)
-yarn test-browser-manual         # Browser tests (visible browser)
-yarn test-visual-local           # Visual regression tests
-yarn test-visual-local-update    # Update visual regression baselines
-yarn test-ci                     # CI test suite with JUnit output
+bun run test-watch                  # All tests in watch mode
+bun run test-browser-headless       # Browser tests (headless)
+bun run test-browser-manual         # Browser tests (visible browser)
+bun run test-visual-local           # Visual regression tests
+bun run test-visual-local-update    # Update visual regression baselines
+bun run test-ci                     # CI test suite with JUnit output
 ```
 
 ## Test Structure
