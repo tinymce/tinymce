@@ -1,3 +1,4 @@
+import { Fun } from '@ephox/katamari';
 import type { SugarElement } from '@ephox/sugar';
 
 import * as Pointers from '../pointer/Pointers';
@@ -8,6 +9,32 @@ const pointerMove = (element: SugarElement<Node>, settings: Pointers.Settings = 
 const pointerMoveTo = (element: SugarElement<Node>, dx: number, dy: number, settings: Omit<Pointers.Settings, 'dx' | 'dy'> = { }): void =>
   Pointers.pointerMove({ ...settings, dx, dy })(element);
 
+interface MockPointerCaptureOptions {
+  setPointerCapture?: (pointerId: number) => void;
+  releasePointerCapture?: (pointerId: number) => void;
+}
+
+const pWithMockPointerCapture = async <T>(
+  element: SugarElement<Element>,
+  options: MockPointerCaptureOptions,
+  callback: () => Promise<T>
+): Promise<T> => {
+  // eslint-disable-next-line @typescript-eslint/unbound-method
+  const originalSetPointerCapture = element.dom.setPointerCapture;
+  // eslint-disable-next-line @typescript-eslint/unbound-method
+  const originalReleasePointerCapture = element.dom.releasePointerCapture;
+
+  element.dom.setPointerCapture = options.setPointerCapture ?? Fun.noop;
+  element.dom.releasePointerCapture = options.releasePointerCapture ?? Fun.noop;
+
+  try {
+    return await callback();
+  } finally {
+    element.dom.setPointerCapture = originalSetPointerCapture;
+    element.dom.releasePointerCapture = originalReleasePointerCapture;
+  }
+};
+
 const event = Pointers.event;
 
 export {
@@ -15,5 +42,6 @@ export {
   pointerUp,
   pointerMove,
   pointerMoveTo,
+  pWithMockPointerCapture,
   event
 };
