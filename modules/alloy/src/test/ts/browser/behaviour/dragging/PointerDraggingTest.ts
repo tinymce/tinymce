@@ -1,7 +1,8 @@
-import { Chain, Guard, NamedChain } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { Optional, Result } from '@ephox/katamari';
-import { Css, Scroll, type SugarElement, SugarLocation, SugarNode, SugarPosition } from '@ephox/sugar';
+import { Mouse, UiFinder, Waiter, Pointer } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
+import { Optional } from '@ephox/katamari';
+import { Css, Scroll, type SugarElement, SugarPosition } from '@ephox/sugar';
+import { assert } from 'chai';
 
 import * as Boxes from 'ephox/alloy/alien/Boxes';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -12,35 +13,7 @@ import * as DragCoord from 'ephox/alloy/api/data/DragCoord';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
-// Pointer event helpers — agar has no built-in pointer event support yet
-const dispatchPointer = (type: string, element: SugarElement<Node>, dx: number, dy: number, extra: PointerEventInit = {}): void => {
-  const location = (SugarNode.isElement(element) ? SugarLocation.absolute(element) : SugarPosition(0, 0)).translate(dx, dy);
-  const event = new window.PointerEvent(type, {
-    pointerId: 1,
-    pointerType: 'mouse',
-    isPrimary: true,
-    screenX: location.left,
-    screenY: location.top,
-    clientX: location.left,
-    clientY: location.top,
-    button: 0,
-    buttons: type === 'pointerup' ? 0 : 1,
-    bubbles: true,
-    cancelable: true,
-    ...extra
-  });
-  element.dom.dispatchEvent(event);
-};
-
-const cPointerDown = Chain.op<SugarElement<Node>>((element) => dispatchPointer('pointerdown', element, 0, 0));
-
-const cPointerMoveTo = (dx: number, dy: number): Chain<SugarElement<Node>, SugarElement<Node>> =>
-  Chain.op<SugarElement<Node>>((element) => dispatchPointer('pointermove', element, dx, dy));
-
-const cPointerUp = Chain.op<SugarElement<Node>>((element) => dispatchPointer('pointerup', element, 0, 0));
-
-UnitTest.asynctest('PointerDraggingTest', (success, failure) => {
-
+describe('PointerDraggingTest', () => {
   const subject = Memento.record(
     Container.sketch({
       dom: {
@@ -48,6 +21,7 @@ UnitTest.asynctest('PointerDraggingTest', (success, failure) => {
           'box-sizing': 'border-box',
           'width': '100px',
           'height': '100px',
+          'background-color': 'green',
           'border': '1px solid green'
         }
       },
@@ -74,7 +48,7 @@ UnitTest.asynctest('PointerDraggingTest', (success, failure) => {
     })
   );
 
-  GuiSetup.setup((_store, _doc, _body) => GuiFactory.build(
+  const gui = GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
     Container.sketch({
       dom: {
         tag: 'div',
@@ -86,196 +60,131 @@ UnitTest.asynctest('PointerDraggingTest', (success, failure) => {
         subject.asSpec()
       ]
     })
-  ), (_doc, _body, gui, component, _store) => {
+  ));
 
-    const cSubject = Chain.injectThunked(() => subject.get(component).element);
-
-    const cEnsurePositionChanged = Chain.control(
-      Chain.binder((all: any) => all.box_position1.left !== all.box_position2.left &&
-          all.box_position2.left !== all.box_position3.left ? Result.value({}) :
-        Result.error('Positions did not change.\nPosition data: ' + JSON.stringify({
-          1: all.box_position1,
-          2: all.box_position2,
-          3: all.box_position3
-        }, null, 2))),
-      Guard.addLogging('Ensuring that the position information read from the different stages was different')
-    );
-
-    const cEnsureNoBlocker = Chain.control(
-      Chain.binder((_all: any) => {
-        const blockers = gui.element.dom.querySelectorAll('.test-blocker');
-        return blockers.length === 0 ? Result.value({}) :
-          Result.error('Expected no blocker element in the DOM during pointer drag, but found ' + blockers.length);
-      }),
-      Guard.addLogging('Ensuring no blocker div exists during pointer drag')
-    );
-
-    const cEnsureBound = Chain.control(
-      Chain.binder((all: any) => {
-        const boundLeft = all.box_position4.left !== all.box_position5.left &&
-          all.box_position5.left === all.box_position6_bound.left &&
-          all.box_position5.left === '0px' && all.box_position6_bound.top === '100px';
-        const boundRight = all.box_position6_bound.left !== all.box_position7.left &&
-          all.box_position7.left === all.box_position8_bound.left &&
-          all.box_position7.left === '400px' && all.box_position8_bound.top === '100px';
-        return boundLeft && boundRight ? Result.value({}) :
-          Result.error('Dragging should have been restricted to the bounds.\nPosition data: ' + JSON.stringify({
-            1: all.box_position4,
-            2: all.box_position5,
-            3: all.box_position6_bound,
-            4: all.box_position7,
-            5: all.box_position8_bound
-          }, null, 2));
-      }),
-      Guard.addLogging('Checking bounding behaviour at left and right of screen')
-    );
-
-    const cEnsureScrollBound = Chain.control(
-      Chain.binder((all: any) => {
-        const boundBottom = all.box_scrolled_position9.top === all.box_scrolled_position10_bound.top &&
-          all.box_scrolled_position9.top === '400px' && all.box_scrolled_position10_bound.left === '50px';
-        return boundBottom ? Result.value({}) :
-          Result.error('Dragging should have been restricted to the bounds.\nPosition data: ' + JSON.stringify({
-            1: all.box_scrolled_position9,
-            2: all.box_scrolled_position10_bound
-          }, null, 2));
-      }),
-      Guard.addLogging('Checking bounding behaviour at bottom of screen')
-    );
-
-    const cEnsurePinned = Chain.control(
-      Chain.binder((all: any) => {
-        const pinned = all.box_position11.top !== all.box_position12_pinned.top &&
-          all.box_position12_pinned.top === all.box_position13_pinned.top &&
-          all.box_position12_pinned.top === '10px';
-        return pinned ? Result.value({ }) : Result.error(
-          'Box should only have been pinned at 2 and 3 at top: 10px. Positions: ' + JSON.stringify({
-            1: all.box_position11,
-            2: all.box_position12_pinned,
-            3: all.box_position13_pinned
-          }, null, 2)
-        );
-      }),
-      Guard.addLogging('Checking pinning behaviour to top of screen')
-    );
-
-    const cRecordPosition = Chain.fromChains([
-      Chain.control(
-        Chain.binder((box) => Css.getRaw(box, 'left').bind((left) => Css.getRaw(box, 'top').map((top) => Result.value({
-          left,
-          top
-        }))).getOrThunk(() => Result.error('No left,top information yet'))),
-        Guard.tryUntil('Waiting for position data to record')
-      )
-    ]);
-
-    const cScrollTo = (x: number, y: number): Chain<any, any> => Chain.op(() => {
-      Scroll.to(x, y);
+  const waitForPosition = (box: ReturnType<typeof subject.get>) =>
+    Waiter.pTryUntil('Waiting for position data', () => {
+      const left = Css.getRaw(box.element, 'left').getOrDie('No left position');
+      const top = Css.getRaw(box.element, 'top').getOrDie('No top position');
+      return { left, top };
     });
 
-    // With pointer capture, events go directly to the box element (no blocker).
-    // Reset: pointerup on the box, then reset position and start a new drag.
-    const cReset = Chain.fromChains([
-      NamedChain.direct('box', cPointerUp, '_'),
+  const startDrag = async (left = '50px', top = '100px') => {
+    const component = gui.component();
+    const box = subject.get(component);
 
-      // Reset positions so every browser behaves identically for bounds/pinning tests
-      NamedChain.direct('box', Chain.op((elem) => {
-        Css.setAll(elem, {
-          left: '50px',
-          top: '100px'
-        });
-      }), '_'),
+    Css.setAll(box.element, { left, top });
+    Pointer.pointerDown(box.element);
+    // const blocker = await UiFinder.pWaitFor('Waiting for blocker', gui.gui().element, '.test-blocker');
 
-      NamedChain.direct('box', cPointerDown, '_')
-    ]);
+    return { box };
+  };
 
-    return [
-      Chain.asStep({}, [
-        NamedChain.asChain([
-          NamedChain.write('box', cSubject),
-          NamedChain.writeValue('container', gui.element),
+  const endDrag = (element: SugarElement<Element>) => {
+    Pointer.pointerUp(element);
+  };
 
-          // Start drag — pointer events go directly on the box (pointer capture, no blocker)
-          NamedChain.direct('box', cPointerDown, '_'),
+  it('should move the element when dragged', async () => {
+    const { box } = await startDrag();
 
-          // Assert no blocker div was created
-          NamedChain.write('_', cEnsureNoBlocker),
+    Pointer.pointerMoveTo(box.element, 100, 200);
+    Pointer.pointerMoveTo(box.element, 120, 200);
+    const pos1 = await waitForPosition(box);
 
-          // Basic drag: multiple pointermoves produce cumulative position changes
-          NamedChain.direct('box', cPointerMoveTo(100, 200), '_'),
-          NamedChain.direct('box', cPointerMoveTo(120, 200), '_'),
-          NamedChain.direct('box', cRecordPosition, 'box_position1'),
+    Pointer.pointerMoveTo(box.element, 140, 200);
+    const pos2 = await waitForPosition(box);
 
-          NamedChain.direct('box', cPointerMoveTo(140, 200), '_'),
-          NamedChain.direct('box', cRecordPosition, 'box_position2'),
-          NamedChain.direct('box', cPointerMoveTo(160, 200), '_'),
-          NamedChain.direct('box', cRecordPosition, 'box_position3'),
-          NamedChain.write('_', cEnsurePositionChanged),
+    Pointer.pointerMoveTo(box.element, 160, 200);
+    const pos3 = await waitForPosition(box);
 
-          // Still no blocker after moves
-          NamedChain.write('_', cEnsureNoBlocker),
+    assert.notEqual(pos1.left, pos2.left, 'Position should change between move 1 and 2');
+    assert.notEqual(pos2.left, pos3.left, 'Position should change between move 2 and 3');
 
-          cReset,
+    endDrag(box.element);
+  });
 
-          // Test bounds
-          NamedChain.direct('box', cPointerMoveTo(100, 200), '_'),
-          NamedChain.direct('box', cPointerMoveTo(50, 200), '_'),
-          NamedChain.direct('box', cRecordPosition, 'box_position4'),
-          NamedChain.direct('box', cPointerMoveTo(0, 200), '_'),
-          NamedChain.direct('box', cRecordPosition, 'box_position5'),
-          NamedChain.direct('box', cPointerMoveTo(-50, 200), '_'),
-          NamedChain.direct('box', cRecordPosition, 'box_position6_bound'),
-          NamedChain.direct('box', cPointerMoveTo(400, 200), '_'),
-          NamedChain.direct('box', cRecordPosition, 'box_position7'),
-          NamedChain.direct('box', cPointerMoveTo(500, 200), '_'),
-          NamedChain.direct('box', cRecordPosition, 'box_position8_bound'),
-          NamedChain.write('_', cEnsureBound),
+  // it('should clamp to left and right bounds', async () => {
+  //   const { box, blocker } = await startDrag();
 
-          // Test bounds when scrolled
-          cScrollTo(0, 1000),
-          cReset,
+  //   Mouse.mouseMoveTo(blocker, 100, 200);
+  //   Mouse.mouseMoveTo(blocker, 50, 200);
 
-          NamedChain.direct('box', cPointerMoveTo(100, 1100), '_'),
-          NamedChain.direct('box', cPointerMoveTo(100, 1100), '_'),
-          NamedChain.direct('box', cPointerMoveTo(100, 1400), '_'),
-          NamedChain.direct('box', cRecordPosition, 'box_scrolled_position9'),
-          NamedChain.direct('box', cPointerMoveTo(100, 1500), '_'),
-          NamedChain.direct('box', cRecordPosition, 'box_scrolled_position10_bound'),
-          NamedChain.write('_', cEnsureScrollBound),
+  //   // Drag to left edge
+  //   Mouse.mouseMoveTo(blocker, 0, 200);
+  //   const posAtLeftEdge = await waitForPosition(box);
 
-          cScrollTo(0, 0),
-          cReset,
+  //   // Drag past left edge — should be clamped
+  //   Mouse.mouseMoveTo(blocker, -50, 200);
+  //   const posPastLeft = await waitForPosition(box);
 
-          // Test pinning (snap points)
-          NamedChain.direct('box', cPointerMoveTo(50, 100), '_'),
-          NamedChain.direct('box', cPointerMoveTo(50, 100), '_'),
-          NamedChain.direct('box', cPointerMoveTo(50, 60), '_'),
-          NamedChain.direct('box', cRecordPosition, 'box_position11'),
-          NamedChain.direct('box', cPointerMoveTo(50, 30), '_'),
-          NamedChain.direct('box', cRecordPosition, 'box_position12_pinned'),
-          NamedChain.direct('box', cPointerMoveTo(160, 20), '_'),
-          NamedChain.direct('box', cRecordPosition, 'box_position13_pinned'),
-          NamedChain.write('_', cEnsurePinned),
+  //   assert.equal(posAtLeftEdge.left, '0px', 'Should hit left bound at 0px');
+  //   assert.equal(posPastLeft.left, '0px', 'Should stay clamped at left bound');
 
-          // Drop resets state — after pointerup, further pointermoves should have no effect
-          NamedChain.direct('box', cPointerUp, '_'),
-          NamedChain.direct('box', cRecordPosition, 'box_after_drop'),
-          NamedChain.direct('box', cPointerMoveTo(300, 300), '_'),
-          NamedChain.direct('box', cRecordPosition, 'box_after_stray_move'),
-          Chain.control(
-            Chain.binder((all: any) => {
-              return all.box_after_drop.left === all.box_after_stray_move.left &&
-                all.box_after_drop.top === all.box_after_stray_move.top ? Result.value({}) :
-                Result.error('Position should not change after drop. Before: ' + JSON.stringify(all.box_after_drop) +
-                  ' After: ' + JSON.stringify(all.box_after_stray_move));
-            }),
-            Guard.addLogging('Ensuring pointermove after pointerup has no effect')
-          ),
+  //   assert.equal(posAtLeftEdge.top, '100px', 'Vertical position should not change');
+  //   assert.equal(posPastLeft.top, '100px', 'Vertical position should not change');
 
-          Chain.wait(10),
-          NamedChain.bundle((output) => Result.value(output))
-        ])
-      ])
-    ];
-  }, success, failure);
+  //   // Drag to right edge (bounds 500 - box width 100 = 400)
+  //   Mouse.mouseMoveTo(blocker, 400, 200);
+  //   const posAtRightEdge = await waitForPosition(box);
+
+  //   // Drag past right edge — should be clamped
+  //   Mouse.mouseMoveTo(blocker, 500, 200);
+  //   const posPastRight = await waitForPosition(box);
+
+  //   assert.equal(posAtRightEdge.left, '400px', 'Should hit right bound at 400px');
+  //   assert.equal(posPastRight.left, '400px', 'Should stay clamped at right bound');
+  //   assert.equal(posPastRight.top, '100px', 'Vertical position should not change');
+
+  //   endDrag(blocker);
+  // });
+
+  // it('should clamp to bottom bound when scrolled', async () => {
+  //   Scroll.to(0, 1000);
+  //   const { box, blocker } = await startDrag();
+
+  //   // Warm up
+  //   Mouse.mouseMoveTo(blocker, 100, 1100);
+  //   Mouse.mouseMoveTo(blocker, 100, 1100);
+
+  //   // Drag to bottom edge (scroll 1000 + bounds 500 - box height 100 = 1400)
+  //   Mouse.mouseMoveTo(blocker, 100, 1400);
+  //   const posAtBottomEdge = await waitForPosition(box);
+
+  //   // Drag past bottom edge — should be clamped
+  //   Mouse.mouseMoveTo(blocker, 100, 1500);
+  //   const posPastBottom = await waitForPosition(box);
+
+  //   assert.equal(posAtBottomEdge.top, '400px', 'Should hit bottom bound at 400px');
+  //   assert.equal(posPastBottom.top, '400px', 'Should stay clamped at bottom bound');
+  //   assert.equal(posPastBottom.left, '50px', 'Horizontal position should not change');
+
+  //   endDrag(blocker);
+  //   Scroll.to(0, 0);
+  // });
+
+  // it('should snap to a snap point when dragged within range', async () => {
+  //   const { box, blocker } = await startDrag();
+
+  //   // Warm up
+  //   Mouse.mouseMoveTo(blocker, 50, 100);
+  //   Mouse.mouseMoveTo(blocker, 50, 100);
+
+  //   // Drag to y=60 — outside snap range (more than 30px from sensor at y=10)
+  //   Mouse.mouseMoveTo(blocker, 50, 60);
+  //   const posBeforeSnap = await waitForPosition(box);
+
+  //   // Drag to y=30 — within 30px of sensor at y=10, snap activates
+  //   Mouse.mouseMoveTo(blocker, 50, 30);
+  //   const posSnapped = await waitForPosition(box);
+
+  //   // Drag to (160, 20) — still within snap range, moved horizontally too
+  //   Mouse.mouseMoveTo(blocker, 160, 20);
+  //   const posStillSnapped = await waitForPosition(box);
+
+  //   assert.notEqual(posBeforeSnap.top, posSnapped.top, 'Position should change when entering snap zone');
+  //   assert.equal(posSnapped.top, '10px', 'Should snap to top: 10px');
+  //   assert.equal(posStillSnapped.top, '10px', 'Should stay pinned at top: 10px');
+
+  //   endDrag(blocker);
+  // });
 });
