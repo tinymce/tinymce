@@ -9,3 +9,5 @@ export interface BundledContentCss {
 }
 
 export type ContentCssResource = LinkContentCss | BundledContentCss;
+
+export type CrossOriginResolver = (url: string) => 'anonymous' | 'use-credentials' | undefined;
