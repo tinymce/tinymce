@@ -3,6 +3,7 @@ import { Link } from '@ephox/sugar';
 
 import ScriptLoader from 'tinymce/core/api/dom/ScriptLoader';
 import type Editor from 'tinymce/core/api/Editor';
+import type { EditorOptions } from 'tinymce/core/api/OptionTypes';
 import Tools from 'tinymce/core/api/util/Tools';
 
 import * as Options from '../api/Options';
@@ -18,6 +19,15 @@ const getComponentScriptsHtml = (editor: Editor) => {
   }).join('');
 };
 
+const getEffectiveCrossOrigin = (editor: Editor): EditorOptions['crossorigin'] => {
+  const crossOrigin = Options.getCrossOrigin(editor);
+  if (!Options.shouldUseContentCssCors(editor)) {
+    return crossOrigin;
+  }
+  return (url, resourceType) =>
+    resourceType === 'stylesheet' ? 'anonymous' : crossOrigin(url, resourceType);
+};
+
 const getPreviewHtml = (editor: Editor, contentCssResources: ContentCssResource[]): string => {
   let headHtml = '';
   const encode = editor.dom.encode;
@@ -25,12 +35,14 @@ const getPreviewHtml = (editor: Editor, contentCssResources: ContentCssResource[
 
   headHtml += `<base href="${encode(editor.documentBaseURI.getURI())}">`;
 
-  const cors = Options.shouldUseContentCssCors(editor) ? ' crossorigin="anonymous"' : '';
+  const crossOrigin = getEffectiveCrossOrigin(editor);
 
   Tools.each(contentCssResources, (resource) => {
     if (resource.type === 'bundled') {
       headHtml += '<style type="text/css">' + resource.content + '</style>';
     } else {
+      const corsValue = crossOrigin(resource.url, 'stylesheet');
+      const cors = corsValue ? ' crossorigin="' + encode(corsValue) + '"' : '';
       headHtml += '<link type="text/css" rel="stylesheet" href="' + encode(resource.url) + '"' + cors + '>';
     }
   });
