@@ -1,8 +1,22 @@
+import { SugarElement, Visibility } from '@ephox/sugar';
+
 import type { Height } from './AutoResizingTextareaTypes';
 
 interface ComputeMaxRowsProps {
   readonly maxHeight: Height;
   readonly singleRowHeight: number;
+}
+
+interface ComputeMinRowsProps {
+  readonly minHeight: Height;
+  readonly singleRowHeight: number;
+}
+
+interface ComputeNewRowsProps {
+  readonly minRows: number;
+  readonly maxRows: number;
+  readonly singleRowHeight: number;
+  readonly textarea: HTMLTextAreaElement;
 }
 
 const computeSingleRowHeight = (textarea: HTMLTextAreaElement): number => {
@@ -13,7 +27,7 @@ const computeSingleRowHeight = (textarea: HTMLTextAreaElement): number => {
   const res = textarea.scrollHeight;
   textarea.rows = originalRows;
   textarea.value = originalValue;
-  return res;
+  return Math.max(res, 1);
 };
 
 const computeMaxRows = ({ maxHeight, singleRowHeight }: ComputeMaxRowsProps): number => {
@@ -25,10 +39,6 @@ const computeMaxRows = ({ maxHeight, singleRowHeight }: ComputeMaxRowsProps): nu
   return Math.max(maxRows, 1);
 };
 
-interface ComputeMinRowsProps {
-  readonly minHeight: Height;
-  readonly singleRowHeight: number;
-}
 const computeMinRows = ({ minHeight, singleRowHeight }: ComputeMinRowsProps): number => {
   if (minHeight.unit === 'rows') {
     return Math.max(minHeight.value, 1);
@@ -38,14 +48,10 @@ const computeMinRows = ({ minHeight, singleRowHeight }: ComputeMinRowsProps): nu
   return Math.max(minRows, 1);
 };
 
-interface ComputeNewRowsProps {
-  readonly minRows: number;
-  readonly maxRows: number;
-  readonly singleRowHeight: number;
-  readonly textarea: HTMLTextAreaElement;
-}
-
 const resizeTextarea = ({ minRows, maxRows, singleRowHeight, textarea }: ComputeNewRowsProps): void => {
+  if (!Visibility.isVisible(SugarElement.fromDom(textarea))) {
+    return;
+  }
   textarea.rows = minRows;
 
   const { scrollHeight } = textarea;
