@@ -18,7 +18,7 @@ const getComponentScriptsHtml = (editor: Editor) => {
   }).join('');
 };
 
-const getEffectiveCrossOrigin = (editor: Editor): CrossOriginResolver => {
+const getStyleSheetCrossOrigin = (editor: Editor): CrossOriginResolver => {
   if (Options.shouldUseContentCssCors(editor)) {
     return Fun.constant('anonymous');
   }
@@ -33,13 +33,13 @@ const getPreviewHtml = (editor: Editor, contentCssResources: ContentCssResource[
 
   headHtml += `<base href="${encode(editor.documentBaseURI.getURI())}">`;
 
-  const crossOrigin = getEffectiveCrossOrigin(editor);
+  const styleSheetCrossOrigin = getStyleSheetCrossOrigin(editor);
 
   Tools.each(contentCssResources, (resource) => {
     if (resource.type === 'bundled') {
       headHtml += '<style type="text/css">' + resource.content + '</style>';
     } else {
-      const corsValue = crossOrigin(resource.url);
+      const corsValue = styleSheetCrossOrigin(resource.url);
       const cors = corsValue ? ' crossorigin="' + encode(corsValue) + '"' : '';
       headHtml += '<link type="text/css" rel="stylesheet" href="' + encode(resource.url) + '"' + cors + '>';
     }
