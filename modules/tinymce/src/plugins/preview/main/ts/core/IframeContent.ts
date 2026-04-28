@@ -3,11 +3,12 @@ import { Link } from '@ephox/sugar';
 
 import ScriptLoader from 'tinymce/core/api/dom/ScriptLoader';
 import type Editor from 'tinymce/core/api/Editor';
+import type { CrossOrigin } from 'tinymce/core/api/OptionTypes';
 import Tools from 'tinymce/core/api/util/Tools';
 
 import * as Options from '../api/Options';
 
-import type { ContentCssResource, CrossOriginResolver } from './Types';
+import type { ContentCssResource } from './Types';
 
 const getComponentScriptsHtml = (editor: Editor) => {
   const urls = Arr.unique(Obj.values(editor.schema.getComponentUrls()));
@@ -18,7 +19,7 @@ const getComponentScriptsHtml = (editor: Editor) => {
   }).join('');
 };
 
-const getStyleSheetCrossOrigin = (editor: Editor): CrossOriginResolver => {
+const getStyleSheetCrossOrigin = (editor: Editor): (url: string) => ReturnType<CrossOrigin> => {
   if (Options.shouldUseContentCssCors(editor)) {
     return Fun.constant('anonymous');
   }
