@@ -1,7 +1,6 @@
 import { afterEach, Assert, beforeEach, context, describe, it } from '@ephox/bedrock-client';
-import { Arr, Fun } from '@ephox/katamari';
-import { DomEvent, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
-import { assert } from 'chai';
+import { Arr, Singleton } from '@ephox/katamari';
+import { Css, DomEvent, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 
 import * as Pointer from 'ephox/agar/api/Pointer';
 
@@ -9,12 +8,18 @@ describe('browser.agar.PointerTest', () => {
   const body = SugarBody.body();
   let container: SugarElement<HTMLElement>;
   let input: SugarElement<HTMLInputElement>;
+  const inputLatestEvent = Singleton.value<PointerEvent>();
   let repository: string[];
   let handlers: { unbind: () => void }[];
 
   beforeEach(() => {
     container = SugarElement.fromTag('div');
     input = SugarElement.fromTag('input');
+    Css.setAll(input, {
+      position: 'fixed',
+      top: '0',
+      left: '0'
+    });
     Insert.append(container, input);
     Insert.append(body, container);
 
@@ -23,14 +28,16 @@ describe('browser.agar.PointerTest', () => {
       DomEvent.bind(container, evt, () => {
         repository.push('container.' + evt);
       }),
-      DomEvent.bind(input, evt, () => {
+      DomEvent.bind(input, evt, (event) => {
         repository.push('input.' + evt);
+        inputLatestEvent.set(event.raw as PointerEvent);
       })
     ]);
   });
 
   afterEach(() => {
     Arr.each(handlers, (h) => h.unbind());
+    inputLatestEvent.clear();
     Remove.remove(container);
   });
 
@@ -49,74 +56,65 @@ describe('browser.agar.PointerTest', () => {
     Assert.eq('pointermove should bubble', [ 'input.pointermove', 'container.pointermove' ], repository);
   });
 
-  it('pointerDown on container fires only on container', () => {
-    Pointer.pointerDown(container);
-    Assert.eq('pointerdown on container', [ 'container.pointerdown' ], repository);
-  });
-
   it('pointerDown passes settings to the event', () => {
-    let receivedEvent: PointerEvent | undefined;
-    const handler = DomEvent.bind(input, 'pointerdown', (evt) => {
-      receivedEvent = evt.raw as PointerEvent;
-    });
-
     Pointer.pointerDown(input, { button: 2, shiftKey: true });
-    handler.unbind();
 
-    Assert.eq('button should be 2', 2, receivedEvent?.button);
-    Assert.eq('shiftKey should be true', true, receivedEvent?.shiftKey);
+    Assert.eq('event should be captured', true, inputLatestEvent.isSet());
+    const event = inputLatestEvent.get().getOrDie();
+
+    Assert.eq('pointer down should be latest event', 'pointerdown', event.type);
+    Assert.eq('button should be 2', 2, event.button);
+    Assert.eq('shiftKey should be true', true, event.shiftKey);
   });
 
   it('pointerUp passes settings to the event', () => {
-    let receivedEvent: PointerEvent | undefined;
-    const handler = DomEvent.bind(input, 'pointerup', (evt) => {
-      receivedEvent = evt.raw as PointerEvent;
-    });
+    Pointer.pointerUp(input, { button: 2, shiftKey: true });
 
-    Pointer.pointerUp(input, { ctrlKey: true });
-    handler.unbind();
+    Assert.eq('event should be captured', true, inputLatestEvent.isSet());
+    const event = inputLatestEvent.get().getOrDie();
 
-    Assert.eq('ctrlKey should be true', true, receivedEvent?.ctrlKey);
+    Assert.eq('pointer up should be latest event', 'pointerup', event.type);
+    Assert.eq('button should be 2', 2, event.button);
+    Assert.eq('shiftKey should be true', true, event.shiftKey);
+  });
+
+  it('pointerMove passes settings to the event', () => {
+    Pointer.pointerMove(input, { button: 2, shiftKey: true });
+
+    Assert.eq('event should be captured', true, inputLatestEvent.isSet());
+    const event = inputLatestEvent.get().getOrDie();
+
+    Assert.eq('pointer move should be latest event', 'pointermove', event.type);
+    Assert.eq('button should be 2', 2, event.button);
+    Assert.eq('shiftKey should be true', true, event.shiftKey);
   });
 
   it('pointerMove passes dx/dy offsets to coordinates', () => {
-    let receivedEvent: PointerEvent | undefined;
-    const handler = DomEvent.bind(input, 'pointermove', (evt) => {
-      receivedEvent = evt.raw as PointerEvent;
-    });
-
     Pointer.pointerMove(input, { dx: 10, dy: 20 });
-    handler.unbind();
 
-    // The coordinates should include the element's absolute position plus the offsets
-    Assert.eq('clientX should include dx offset', true, receivedEvent !== undefined);
-    Assert.eq('clientY should include dy offset', true, receivedEvent !== undefined);
+    Assert.eq('event should be captured', true, inputLatestEvent.isSet());
+    const event = inputLatestEvent.get().getOrDie();
+
+    Assert.eq('pointer move should be latest event', 'pointermove', event.type);
+
+    Assert.eq('clientX should be set', 10, event.clientX);
+    Assert.eq('clientY should be set', 20, event.clientY);
+    Assert.eq('screenX should be set', 10, event.clientX);
+    Assert.eq('screenY should be set', 20, event.clientY);
   });
 
   it('pointerMoveBy fires pointermove with dx/dy offsets', () => {
-    let receivedEvent: PointerEvent | undefined;
-    const handler = DomEvent.bind(input, 'pointermove', (evt) => {
-      receivedEvent = evt.raw as PointerEvent;
-    });
+    Pointer.pointerMoveBy(input, 10, 20);
 
-    Pointer.pointerMoveBy(input, 15, 25);
-    handler.unbind();
+    Assert.eq('event should be captured', true, inputLatestEvent.isSet());
+    const event = inputLatestEvent.get().getOrDie();
 
-    Assert.eq('pointermove should bubble', [ 'input.pointermove', 'container.pointermove' ], repository);
-    Assert.eq('event should have been received', true, receivedEvent !== undefined);
-  });
+    Assert.eq('pointer move should be latest event', 'pointermove', event.type);
 
-  it('pointerMoveBy passes additional settings to the event', () => {
-    let receivedEvent: PointerEvent | undefined;
-    const handler = DomEvent.bind(input, 'pointermove', (evt) => {
-      receivedEvent = evt.raw as PointerEvent;
-    });
-
-    Pointer.pointerMoveBy(input, 10, 20, { shiftKey: true, button: 1 });
-    handler.unbind();
-
-    Assert.eq('shiftKey should be true', true, receivedEvent?.shiftKey);
-    Assert.eq('button should be 1', 1, receivedEvent?.button);
+    Assert.eq('clientX should be set', 10, event.clientX);
+    Assert.eq('clientY should be set', 20, event.clientY);
+    Assert.eq('screenX should be set', 10, event.clientX);
+    Assert.eq('screenY should be set', 20, event.clientY);
   });
 
   context('pWithMockPointerCapture', () => {

@@ -1,9 +1,6 @@
 import { Fun } from '@ephox/katamari';
 import { type SugarElement, SugarLocation, SugarNode, SugarPosition } from '@ephox/sugar';
 
-// TODO: The most important part in simulating these is what fields to setup and how.
-// This has ben ai generated, so it has to be verified manually before mering the pr
-
 // Settings for pointer events
 interface Settings {
   // used to tweak the location before firing the event
@@ -26,7 +23,6 @@ interface Settings {
   pressure?: number;
   tiltX?: number;
   tiltY?: number;
-  pointerType?: string;
   isPrimary?: boolean;
 }
 
