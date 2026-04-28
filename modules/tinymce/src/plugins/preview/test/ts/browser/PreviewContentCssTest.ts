@@ -4,6 +4,7 @@ import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import type Editor from 'tinymce/core/api/Editor';
+import type { CrossOrigin } from 'tinymce/core/api/OptionTypes';
 import * as IframeContent from 'tinymce/plugins/preview/core/IframeContent';
 import type { ContentCssResource } from 'tinymce/plugins/preview/core/Types';
 import Plugin from 'tinymce/plugins/preview/Plugin';
@@ -47,11 +48,13 @@ describe('browser.tinymce.plugins.preview.PreviewContentCssTest', () => {
     assertIframeHtmlContains(editor, contentCssResources, `<style type="text/css">${css}</style>`);
   });
 
-  Arr.each([
-    { value: 'anonymous' as const, expectedAttr: ' crossorigin="anonymous"' },
-    { value: 'use-credentials' as const, expectedAttr: ' crossorigin="use-credentials"' },
+  const crossOriginCases: Array<{ value: ReturnType<CrossOrigin>; expectedAttr: string }> = [
+    { value: 'anonymous', expectedAttr: ' crossorigin="anonymous"' },
+    { value: 'use-credentials', expectedAttr: ' crossorigin="use-credentials"' },
     { value: undefined, expectedAttr: '' }
-  ], ({ value, expectedAttr }) => {
+  ];
+
+  Arr.each(crossOriginCases, ({ value, expectedAttr }) => {
     it(`TINY-13171: crossorigin function returning ${value ?? 'undefined'} produces "${expectedAttr}"`, () => {
       const editor = hook.editor();
       const contentCssUrl = editor.documentBaseURI.toAbsolute('/project/tinymce/js/tinymce/skins/content/default/content.css');
