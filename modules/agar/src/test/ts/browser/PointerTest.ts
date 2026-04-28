@@ -99,8 +99,8 @@ describe('browser.agar.PointerTest', () => {
 
     Assert.eq('clientX should be set', 10, event.clientX);
     Assert.eq('clientY should be set', 20, event.clientY);
-    Assert.eq('screenX should be set', 10, event.clientX);
-    Assert.eq('screenY should be set', 20, event.clientY);
+    Assert.eq('screenX should be set', 10, event.screenX);
+    Assert.eq('screenY should be set', 20, event.screenY);
   });
 
   it('pointerMoveBy fires pointermove with dx/dy offsets', () => {
@@ -113,8 +113,8 @@ describe('browser.agar.PointerTest', () => {
 
     Assert.eq('clientX should be set', 10, event.clientX);
     Assert.eq('clientY should be set', 20, event.clientY);
-    Assert.eq('screenX should be set', 10, event.clientX);
-    Assert.eq('screenY should be set', 20, event.clientY);
+    Assert.eq('screenX should be set', 10, event.screenX);
+    Assert.eq('screenY should be set', 20, event.screenY);
   });
 
   context('pWithMockPointerCapture', () => {
