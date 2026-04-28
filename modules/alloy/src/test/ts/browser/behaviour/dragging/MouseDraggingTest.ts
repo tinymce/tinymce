@@ -79,7 +79,6 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
         const boundLeft = all.box_position4.left !== all.box_position5.left &&
           all.box_position5.left === all.box_position6_bound.left &&
           all.box_position5.left === '0px' && all.box_position6_bound.top === '100px';
-
         const boundRight = all.box_position6_bound.left !== all.box_position7.left &&
           all.box_position7.left === all.box_position8_bound.left &&
           all.box_position7.left === '400px' && all.box_position8_bound.top === '100px';
