@@ -1,11 +1,12 @@
-import { afterEach, Assert, beforeEach, describe, it } from '@ephox/bedrock-client';
+import { afterEach, Assert, beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
-import { DomEvent, Insert, Remove, SugarElement } from '@ephox/sugar';
+import { DomEvent, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
+import { assert } from 'chai';
 
 import * as Pointer from 'ephox/agar/api/Pointer';
 
 describe('browser.agar.PointerTest', () => {
-  const body = SugarElement.fromDom(document.body);
+  const body = SugarBody.body();
   let container: SugarElement<HTMLElement>;
   let input: SugarElement<HTMLInputElement>;
   let repository: string[];
@@ -118,67 +119,65 @@ describe('browser.agar.PointerTest', () => {
     Assert.eq('button should be 1', 1, receivedEvent?.button);
   });
 
-  it('pWithMockPointerCapture substitutes setPointerCapture and releasePointerCapture', async () => {
-    const setCalls: number[] = [];
-    const releaseCalls: number[] = [];
+  context('pWithMockPointerCapture', () => {
+    it('pWithMockPointerCapture substitutes setPointerCapture and releasePointerCapture', async () => {
+      const events: string[] = [];
 
-    await Pointer.pWithMockPointerCapture(input, {
-      setPointerCapture: (id) => setCalls.push(id),
-      releasePointerCapture: (id) => releaseCalls.push(id)
-    }, async () => {
-      input.dom.setPointerCapture(1);
-      input.dom.releasePointerCapture(1);
-    });
-
-    Assert.eq('setPointerCapture called with pointerId 1', [ 1 ], setCalls);
-    Assert.eq('releasePointerCapture called with pointerId 1', [ 1 ], releaseCalls);
-  });
-
-  it('pWithMockPointerCapture restores originals after callback', async () => {
-    // eslint-disable-next-line @typescript-eslint/unbound-method
-    const originalSet = input.dom.setPointerCapture;
-    // eslint-disable-next-line @typescript-eslint/unbound-method
-    const originalRelease = input.dom.releasePointerCapture;
-
-    await Pointer.pWithMockPointerCapture(input, {
-      setPointerCapture: Fun.noop,
-      releasePointerCapture: Fun.noop
-    }, async () => {
-      Assert.eq('setPointerCapture should be replaced', true, input.dom.setPointerCapture !== originalSet);
-      Assert.eq('releasePointerCapture should be replaced', true, input.dom.releasePointerCapture !== originalRelease);
-    });
-
-    Assert.eq('setPointerCapture should be restored', originalSet, input.dom.setPointerCapture);
-    Assert.eq('releasePointerCapture should be restored', originalRelease, input.dom.releasePointerCapture);
-  });
-
-  it('pWithMockPointerCapture restores originals even if callback throws', async () => {
-    // eslint-disable-next-line @typescript-eslint/unbound-method
-    const originalSet = input.dom.setPointerCapture;
-
-    try {
       await Pointer.pWithMockPointerCapture(input, {
-        setPointerCapture: Fun.noop
+        setPointerCapture: (id) => events.push(`setPointerCapture(${id})`),
+        releasePointerCapture: (id) => events.push(`releasePointerCapture(${id})`)
       }, async () => {
-        throw new Error('test error');
+        input.dom.setPointerCapture(1);
+        input.dom.releasePointerCapture(1);
       });
-    } catch {
-      // expected
-    }
 
-    Assert.eq('setPointerCapture should be restored after error', originalSet, input.dom.setPointerCapture);
-  });
-
-  it('pWithMockPointerCapture defaults to noop when stubs not provided', async () => {
-    await Pointer.pWithMockPointerCapture(input, {}, async () => {
-      // Should not throw even though no stubs were provided
-      input.dom.setPointerCapture(1);
-      input.dom.releasePointerCapture(1);
+      Assert.eq('setPointerCapture and releasePointerCapture should be replaced', [ 'setPointerCapture(1)', 'releasePointerCapture(1)' ], events);
     });
-  });
 
-  it('pWithMockPointerCapture returns the callback result', async () => {
-    const result = await Pointer.pWithMockPointerCapture(input, {}, async () => 42);
-    Assert.eq('should return callback result', 42, result);
+    it('pWithMockPointerCapture restores originals after callback', async () => {
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      const originalSet = input.dom.setPointerCapture;
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      const originalRelease = input.dom.releasePointerCapture;
+
+      await Pointer.pWithMockPointerCapture(input, {}, async () => {
+        Assert.eq('setPointerCapture should be replaced', true, input.dom.setPointerCapture !== originalSet);
+        Assert.eq('releasePointerCapture should be replaced', true, input.dom.releasePointerCapture !== originalRelease);
+      });
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      Assert.eq('setPointerCapture should be restored', originalSet, input.dom.setPointerCapture);
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      Assert.eq('releasePointerCapture should be restored', originalRelease, input.dom.releasePointerCapture);
+    });
+
+    it('pWithMockPointerCapture restores originals even if callback throws', async () => {
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      const originalSet = input.dom.setPointerCapture;
+
+      try {
+        await Pointer.pWithMockPointerCapture(input, {}, async () => {
+          throw new Error('test error');
+        });
+      } catch {
+        // expected
+      }
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      Assert.eq('setPointerCapture should be restored after error', originalSet, input.dom.setPointerCapture);
+    });
+
+    it('pWithMockPointerCapture defaults to noop when stubs not provided', async () => {
+      await Pointer.pWithMockPointerCapture(input, {}, async () => {
+        input.dom.setPointerCapture(1);
+        input.dom.releasePointerCapture(1);
+      });
+    });
+
+    // TODO: add support for non promise returning functions
+    it('pWithMockPointerCapture returns the callback result', async () => {
+      const result = await Pointer.pWithMockPointerCapture(input, {}, async () => 40 + 2);
+      Assert.eq('should return callback result', 42, result);
+    });
   });
 });
