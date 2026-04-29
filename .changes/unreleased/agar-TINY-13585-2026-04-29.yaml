@@ -1,0 +1,6 @@
+project: agar
+kind: Added
+body: Added new `Pointer` API.
+time: 2026-04-29T08:49:38.406668+02:00
+custom:
+    Issue: TINY-13585
