@@ -146,9 +146,12 @@ describe('PointerDraggingTest', () => {
 
     it('TINY-14241: should clamp to bounds when scrolled', async () => {
       Scroll.to(0, 1000);
-      const { box } = await getElementToDrag();
-      await pAssertClampToBounds(box);
-      Scroll.to(0, 0);
+      try {
+        const { box } = await getElementToDrag();
+        await pAssertClampToBounds(box);
+      } finally {
+        Scroll.to(0, 0);
+      }
     });
   });
 
