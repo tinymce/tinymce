@@ -138,7 +138,7 @@ describe('browser.agar.PointerTest', () => {
       // eslint-disable-next-line @typescript-eslint/unbound-method
       const originalRelease = input.dom.releasePointerCapture;
 
-      await Pointer.pWithMockPointerCapture(input, {}, async () => {
+      await Pointer.pWithMockPointerCapture(input, {}, () => {
         Assert.eq('setPointerCapture should be replaced', true, input.dom.setPointerCapture !== originalSet);
         Assert.eq('releasePointerCapture should be replaced', true, input.dom.releasePointerCapture !== originalRelease);
       });
@@ -154,7 +154,7 @@ describe('browser.agar.PointerTest', () => {
       const originalSet = input.dom.setPointerCapture;
 
       try {
-        await Pointer.pWithMockPointerCapture(input, {}, async () => {
+        await Pointer.pWithMockPointerCapture(input, {}, () => {
           throw new Error('test error');
         });
       } catch {
@@ -166,15 +166,14 @@ describe('browser.agar.PointerTest', () => {
     });
 
     it('pWithMockPointerCapture defaults to noop when stubs not provided', async () => {
-      await Pointer.pWithMockPointerCapture(input, {}, async () => {
+      await Pointer.pWithMockPointerCapture(input, {}, () => {
         input.dom.setPointerCapture(1);
         input.dom.releasePointerCapture(1);
       });
     });
 
-    // TODO: add support for non promise returning functions
     it('pWithMockPointerCapture returns the callback result', async () => {
-      const result = await Pointer.pWithMockPointerCapture(input, {}, async () => 40 + 2);
+      const result = await Pointer.pWithMockPointerCapture(input, {}, () => 40 + 2);
       Assert.eq('should return callback result', 42, result);
     });
   });

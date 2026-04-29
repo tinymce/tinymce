@@ -17,7 +17,7 @@ interface MockPointerCaptureOptions {
 const pWithMockPointerCapture = async <T>(
   element: SugarElement<Element>,
   options: MockPointerCaptureOptions,
-  callback: () => Promise<T>
+  callback: () => T
 ): Promise<T> => {
   // eslint-disable-next-line @typescript-eslint/unbound-method
   const originalSetPointerCapture = element.dom.setPointerCapture;
