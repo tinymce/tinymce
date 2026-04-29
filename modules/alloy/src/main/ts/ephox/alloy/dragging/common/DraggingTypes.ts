@@ -1,4 +1,4 @@
-import { Optional } from '@ephox/katamari';
+import type { Optional } from '@ephox/katamari';
 import type { EventArgs, SugarElement, SugarPosition } from '@ephox/sugar';
 
 import type { Bounds } from '../../alien/Boxes';
