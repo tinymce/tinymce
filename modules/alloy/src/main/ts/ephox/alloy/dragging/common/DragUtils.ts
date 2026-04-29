@@ -39,9 +39,13 @@ const stop = <E>(component: AlloyComponent, blocker: Optional<AlloyComponent>, d
 
 const handlers = <C extends DraggingConfig<E>, A extends EventFormat, E>(events: EventsFunc<C, A, E>) => (dragConfig: C, dragState: DraggingState): AlloyEvents.AlloyEventRecord => {
   const updateStartState = (comp: AlloyComponent) => {
+    const isBeingDragged = dragState.getStartData().isSome();
     dragState.setStartData(calcStartData(dragConfig, comp));
-    const target = dragConfig.getTarget(comp.element);
-    dragConfig.onDragStart(comp, target);
+
+    if (!isBeingDragged) {
+      const target = dragConfig.getTarget(comp.element);
+      dragConfig.onDragStart(comp, target);
+    }
   };
 
   return AlloyEvents.derive([
