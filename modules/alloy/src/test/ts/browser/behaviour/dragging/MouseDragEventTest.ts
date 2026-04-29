@@ -160,6 +160,7 @@ describe('MouseDragEventTest (BDD)', () => {
       Mouse.mouseMoveTo(blocker, 120, 200);
       store.assertEq('onDragStart then onDrag', [ 'onDragStart', 'onDrag(20, 0)' ]);
 
+      scrollEventBroadcasted.set(false);
       // Simulate a window scroll during drag — should NOT fire onDragStart again
       window.scrollTo(0, 100);
       await Waiter.pTryUntilPredicate('Wait for scroll event to be handled', () => scrollEventBroadcasted.get());
