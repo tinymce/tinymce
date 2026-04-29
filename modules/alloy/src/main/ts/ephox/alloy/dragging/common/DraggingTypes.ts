@@ -1,4 +1,4 @@
-import type { Optional } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import type { EventArgs, SugarElement, SugarPosition } from '@ephox/sugar';
 
 import type { Bounds } from '../../alien/Boxes';
@@ -114,6 +114,8 @@ export interface BaseDraggingState<T> extends BehaviourState {
   readonly setStartData: (data: DragStartData) => void;
   readonly getStartData: () => Optional<DragStartData>;
   readonly reset: () => void;
+  readonly setActivePointerId: (pointerId: number) => void;
+  readonly getActivePointerId: () => Optional<number>;
 }
 
 export interface DraggingState extends BaseDraggingState<SugarPosition> { }

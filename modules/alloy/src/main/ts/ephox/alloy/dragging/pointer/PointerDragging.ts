@@ -1,5 +1,5 @@
 import type { FieldProcessor } from '@ephox/boulder';
-import { Optional } from '@ephox/katamari';
+import { Optional, Optionals } from '@ephox/katamari';
 import type { EventArgs } from '@ephox/sugar';
 
 import type { AlloyComponent } from '../../api/component/ComponentApi';
@@ -22,23 +22,32 @@ const events = <E>(dragConfig: PointerDraggingConfig<E>, dragState: DraggingStat
       if (!isLeftClick(raw)) {
         return;
       }
-      simulatedEvent.stop();
-
-      component.element.dom.setPointerCapture(raw.pointerId);
-      updateStartState(component);
+      if (dragState.getStartData().isNone()) {
+        simulatedEvent.stop();
+        component.element.dom.setPointerCapture(raw.pointerId);
+        dragState.setActivePointerId(raw.pointerId);
+        updateStartState(component);
+      }
     }),
 
     AlloyEvents.run<EventArgs<PointerEvent>>(NativeEvents.pointermove(), (component, simulatedEvent) => {
-      dragState.getStartData().each(() => {
-        DragUtils.move(component, dragConfig, dragState, PointerData, simulatedEvent.event);
+      const pointerId = simulatedEvent.event.raw.pointerId;
+
+      Optionals.lift2(dragState.getStartData(), dragState.getActivePointerId(), (_startData, activePointerId) => {
+        if (pointerId === activePointerId) {
+          DragUtils.move(component, dragConfig, dragState, PointerData, simulatedEvent.event);
+        }
       });
     }),
 
     AlloyEvents.run<EventArgs<PointerEvent>>(NativeEvents.pointerup(), (component, simulatedEvent) => {
-      dragState.getStartData().each(() => {
-        const raw = simulatedEvent.event.raw;
-        component.element.dom.releasePointerCapture(raw.pointerId);
-        DragUtils.stop(component, Optional.none(), dragConfig, dragState);
+      const pointerId = simulatedEvent.event.raw.pointerId;
+
+      Optionals.lift2(dragState.getStartData(), dragState.getActivePointerId(), (_startData, activePointerId) => {
+        if (pointerId === activePointerId) {
+          component.element.dom.releasePointerCapture(pointerId);
+          DragUtils.stop(component, Optional.none(), dragConfig, dragState);
+        }
       });
     }),
 

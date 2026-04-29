@@ -15,10 +15,14 @@ const init = <T>(): BaseDraggingState<T> => {
   // Dragging requires calculating the bounds, so we store that data initially
   // to reduce the amount of computation each mouse movement
   let startData = Optional.none<DragStartData>();
+  // In multitouch environment pointerId property is used do distinguish pointerg eg. different fingers on touchscreen
+  // This property is only used in branches relying on pointer events
+  let activePointerId = Optional.none<number>();
 
   const reset = (): void => {
     previous = Optional.none();
     startData = Optional.none();
+    activePointerId = Optional.none();
   };
 
   // Return position delta between previous position and nu position,
@@ -40,6 +44,12 @@ const init = <T>(): BaseDraggingState<T> => {
 
   const getStartData = (): Optional<DragStartData> => startData;
 
+  const setActivePointerId = (id: number) => {
+    activePointerId = Optional.some(id);
+  };
+
+  const getActivePointerId = () => activePointerId;
+
   const readState = Fun.constant({ });
 
   return nuState({
@@ -47,7 +57,9 @@ const init = <T>(): BaseDraggingState<T> => {
     reset,
     update,
     getStartData,
-    setStartData
+    setStartData,
+    setActivePointerId,
+    getActivePointerId
   });
 };
 
