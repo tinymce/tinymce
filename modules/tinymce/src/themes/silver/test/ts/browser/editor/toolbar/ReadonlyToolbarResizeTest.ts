@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions, Mouse, type StructAssert, UiFinder, Waiter } from '@ephox/agar';
+import { ApproxStructure, Assertions, Pointer, type StructAssert, UiFinder, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Css, SugarBody } from '@ephox/sugar';
 import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
@@ -9,7 +9,7 @@ import ListsPlugin from 'tinymce/plugins/lists/Plugin';
 import { ToolbarMode } from 'tinymce/themes/silver/api/Options';
 
 import { pOpenMore } from '../../../module/MenuUtils';
-import { resizeToPos } from '../../../module/UiUtils';
+import { resizeBy as utilsResizeBy } from '../../../module/UiUtils';
 
 describe('browser.tinymce.themes.silver.editor.toolbar.ReadonlyToolbarResizeTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
@@ -24,10 +24,12 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ReadonlyToolbarResizeTest
     resize: 'both'
   }, [ AdvListPlugin, ListsPlugin ]);
 
-  const resizeTo = (sx: number, sy: number, dx: number, dy: number) => {
+  const resizeBy = async (vector: [ number, number ]) => {
     const resizeHandle = UiFinder.findIn(SugarBody.body(), '.tox-statusbar__resize-handle').getOrDie();
-    Mouse.mouseDown(resizeHandle);
-    resizeToPos(sx, sy, dx, dy);
+    await Pointer.pWithMockPointerCapture(resizeHandle, {}, () => {
+      Pointer.pointerDown(resizeHandle);
+      utilsResizeBy(resizeHandle, vector);
+    });
   };
 
   const pAssertToolbarButtonState = (label: string, disabled: boolean, f: ApproxStructure.Builder<StructAssert[]>) =>
@@ -107,7 +109,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ReadonlyToolbarResizeTest
       s.theRest()
     ]);
 
-    resizeTo(300, 400, 550, 400);
+    await resizeBy([ 250, 0 ]); // Grow the editor from 300x400 to 550x400
 
     await pAssertToolbarButtonState('Assert the toolbar buttons are disabled after resizing the editor', false, (s, str, arr) => [
       disabledButtonStruct(s, str, arr, 'bold'),
@@ -149,7 +151,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ReadonlyToolbarResizeTest
       s.theRest()
     ]);
 
-    resizeTo(400, 400, 500, 400);
+    await resizeBy([ 100, 0 ]); // Grow the editor from 400x400 to 500x400
 
     await pAssertToolbarButtonState('Assert the toolbar buttons are enabled and now include subscript', false, (s, str, arr) => [
       enabledButtonStruct(s, str, arr, 'bold'),

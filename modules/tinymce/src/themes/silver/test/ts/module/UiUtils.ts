@@ -1,4 +1,4 @@
-import { Mouse, UiFinder, Waiter } from '@ephox/agar';
+import { Pointer, UiFinder, Waiter } from '@ephox/agar';
 import { Arr } from '@ephox/katamari';
 import { Scroll, SugarBody, type SugarElement } from '@ephox/sugar';
 import { TinyDom } from '@ephox/wrap-mcagar';
@@ -19,22 +19,18 @@ const extractOnlyOne = (container: SugarElement<Node>, selector: string): SugarE
   }
 };
 
-const resizeToPos = (sx: number, sy: number, dx: number, dy: number, delta: number = 10): void => {
+const resizeBy = (resizeHandle: SugarElement<Element>, vector: [ number, number ], delta: number = 10): void => {
   // Simulate moving the mouse, by making a number of movements
-  const numMoves = sy === dy ? Math.abs(dx - sx) / delta : Math.abs(dy - sy) / delta;
+  const numMoves = vector[1] === 0 ? Math.abs(vector[0]) / delta : Math.abs(vector[1]) / delta;
+
   // Determine the deltas based on the number of moves to make
-  const deltaX = (dx - sx) / numMoves;
-  const deltaY = (dy - sy) / numMoves;
-  // Move and release the mouse
-  const blocker = UiFinder.findIn(SugarBody.body(), '.tox-blocker').getOrDie();
-  Mouse.mouseMoveTo(blocker, sx, sy);
-  Arr.range(numMoves, (count) => {
-    const nx = sx + count * deltaX;
-    const ny = sy + count * deltaY;
-    return Mouse.mouseMoveTo(blocker, nx, ny);
+  const deltaX = vector[0] / numMoves;
+  const deltaY = vector[1] / numMoves;
+  Pointer.pointerMoveBy(resizeHandle, 0, 0);
+  Arr.range(numMoves, () => {
+    Pointer.pointerMoveBy(resizeHandle, deltaX, deltaY);
   });
-  Mouse.mouseMoveTo(blocker, dx, dy);
-  Mouse.mouseUp(blocker);
+  Pointer.pointerUp(resizeHandle);
 };
 
 const scrollRelativeEditor = (editor: Editor, relative: 'top' | 'bottom' = 'top', deltaY: number): void => {
@@ -49,7 +45,7 @@ const pWaitForEditorToRender = (): Promise<void> =>
 export {
   countNumber,
   extractOnlyOne,
-  resizeToPos,
+  resizeBy,
   scrollRelativeEditor,
   pWaitForEditorToRender
 };

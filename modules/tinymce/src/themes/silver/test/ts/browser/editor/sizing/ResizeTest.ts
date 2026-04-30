@@ -1,4 +1,4 @@
-import { FocusTools, Keys, Mouse, UiFinder, Waiter } from '@ephox/agar';
+import { FocusTools, Keys, Pointer, UiFinder, Waiter } from '@ephox/agar';
 import { before, beforeEach, describe, it } from '@ephox/bedrock-client';
 import { Css, SugarBody, SugarElement } from '@ephox/sugar';
 import { TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
@@ -6,7 +6,7 @@ import { assert } from 'chai';
 
 import type Editor from 'tinymce/core/api/Editor';
 
-import { resizeToPos } from '../../../module/UiUtils';
+import { resizeBy } from '../../../module/UiUtils';
 
 describe('browser.tinymce.themes.silver.editor.sizing.ResizeTTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
@@ -43,40 +43,42 @@ describe('browser.tinymce.themes.silver.editor.sizing.ResizeTTest', () => {
     });
   });
 
-  it('Test resize with max/min sizing', () => {
+  it('Test resize with max/min sizing', async () => {
     const editor = hook.editor();
     const container = TinyDom.container(editor);
     const resizeHandle = UiFinder.findIn(SugarBody.body(), '.tox-statusbar__resize-handle').getOrDie();
 
-    // Shrink to 300px
-    Mouse.mouseDown(resizeHandle);
-    resizeToPos(400, 400, 300, 300);
-    assertEditorSize(container, 300, 300);
+    await Pointer.pWithMockPointerCapture(resizeHandle, {}, () => {
+      // Shrink to 300px
+      Pointer.pointerDown(resizeHandle);
+      resizeBy(resizeHandle, [ -100, -100 ]);
+      assertEditorSize(container, 300, 300);
 
-    // Enlarge to 450px
-    Mouse.mouseDown(resizeHandle);
-    resizeToPos(300, 300, 450, 450);
-    assertEditorSize(container, 450, 450);
+      // Enlarge to 450px
+      Pointer.pointerDown(resizeHandle);
+      resizeBy(resizeHandle, [ 150, 150 ]);
+      assertEditorSize(container, 450, 450);
 
-    // Try to shrink to below min height
-    Mouse.mouseDown(resizeHandle);
-    resizeToPos(450, 450, 450, 250);
-    assertEditorSize(container, 450, 300);
+      // Try to shrink to below min height
+      Pointer.pointerDown(resizeHandle);
+      resizeBy(resizeHandle, [ 0, -200 ]);
+      assertEditorSize(container, 450, 300);
 
-    // Try to enlarge to above max height
-    Mouse.mouseDown(resizeHandle);
-    resizeToPos(450, 300, 450, 550);
-    assertEditorSize(container, 450, 500);
+      // Try to enlarge to above max height
+      Pointer.pointerDown(resizeHandle);
+      resizeBy(resizeHandle, [ 0, 250 ]);
+      assertEditorSize(container, 450, 500);
 
-    // Try to shrink to below min width
-    Mouse.mouseDown(resizeHandle);
-    resizeToPos(450, 500, 250, 500);
-    assertEditorSize(container, 300, 500);
+      // Try to shrink to below min width
+      Pointer.pointerDown(resizeHandle);
+      resizeBy(resizeHandle, [ -200, 0 ]);
+      assertEditorSize(container, 300, 500);
 
-    // Try to enlarge to above max width
-    Mouse.mouseDown(resizeHandle);
-    resizeToPos(300, 500, 550, 500);
-    assertEditorSize(container, 500, 500);
+      // Try to enlarge to above max width
+      Pointer.pointerDown(resizeHandle);
+      resizeBy(resizeHandle, [ 250, 0 ]);
+      assertEditorSize(container, 500, 500);
+    });
   });
 
   it('TINY-4823: can be resized via the keyboard', () => {
@@ -123,8 +125,10 @@ describe('browser.tinymce.themes.silver.editor.sizing.ResizeTTest', () => {
       );
     });
 
-    Mouse.mouseDown(resizeHandle);
-    resizeToPos(container.offsetWidth, container.offsetHeight, 300, 300);
+    await Pointer.pWithMockPointerCapture(resizeHandle, {}, () => {
+      Pointer.pointerDown(resizeHandle);
+      resizeBy(resizeHandle, [ -100, -100 ]);
+    });
 
     assertEditorSize(SugarElement.fromDom(container), 300, 300);
     assert.equal(
