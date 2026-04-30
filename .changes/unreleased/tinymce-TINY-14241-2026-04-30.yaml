@@ -1,0 +1,6 @@
+project: tinymce
+kind: Improved
+body: The editor resize handle now uses pointer events, removing the need for a blocker element during resizing.
+time: 2026-04-30T11:54:42.549178+02:00
+custom:
+    Issue: TINY-14241
