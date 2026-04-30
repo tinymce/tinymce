@@ -3,7 +3,7 @@
 //
 
 @spinner-color: @text-color-muted;
-@spinner-size: @base-value / 2;
+@spinner-size: (@base-value / 2);
 
 .tox {
   .tox-spinner {
@@ -36,13 +36,13 @@
 
 .tox:not([dir=rtl]) {
   .tox-spinner > div:not(:first-child) {
-    margin-left: @spinner-size / 2;
+    margin-left: (@spinner-size / 2);
   }
 }
 
 // RTL
 .tox[dir=rtl] {
   .tox-spinner > div:not(:first-child) {
-    margin-right: @spinner-size / 2;
+    margin-right: (@spinner-size / 2);
   }
 }

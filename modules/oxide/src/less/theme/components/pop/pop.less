@@ -31,7 +31,7 @@
     // Make the arrow transition in as the bubble arrow appears
     &::before,
     &::after {
-      transition: all @pop-transition-time, visibility 0s, opacity @pop-transition-time / 2 ease @pop-transition-time / 2;
+      transition: all @pop-transition-time, visibility 0s, opacity (@pop-transition-time / 2) ease (@pop-transition-time / 2);
     }
   }
 
@@ -80,7 +80,7 @@
   .tox-pop.tox-pop--inset::before,
   .tox-pop.tox-pop--inset::after {
     opacity: 0;
-    transition: all 0s @pop-transition-time, visibility 0s, opacity @pop-transition-time / 2 ease;
+    transition: all 0s @pop-transition-time, visibility 0s, opacity (@pop-transition-time / 2) ease;
   }
 
   // Default (bottom) pointing arrow

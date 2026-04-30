@@ -15,7 +15,7 @@ module.exports = function (grunt) {
     const done = this.async();
     const opts = {
       relativeUrls: true,
-      math: 'always',
+      math: 'parens-division',
       plugins: [ presetEnv ],
       paths: ['./src/less/skins'] // Define the path(s) where LESS should look for files
     };
