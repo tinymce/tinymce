@@ -15,8 +15,10 @@ const init = <T>(): BaseDraggingState<T> => {
   // Dragging requires calculating the bounds, so we store that data initially
   // to reduce the amount of computation each mouse movement
   let startData = Optional.none<DragStartData>();
-  // In multitouch environment pointerId property is used do distinguish pointerg eg. different fingers on touchscreen
-  // This property is only used in branches relying on pointer events
+
+  // In a multitouch environment, `pointerId` is used to distinguish pointers
+  // (e.g. different fingers on a touchscreen).
+  // This property is only used by pointer-event branches.
   let activePointerId = Optional.none<number>();
 
   const reset = (): void => {

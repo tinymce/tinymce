@@ -136,6 +136,7 @@ describe('MouseDragEventTest (BDD)', () => {
     let onWindowScroll: EventUnbinder | undefined;
 
     before(() => {
+      window.scrollTo(0, 0);
       scrollEventBroadcasted.set(false);
       onWindowScroll = DomEvent.bind(SugarElement.fromDom(window), 'scroll', (evt) => {
         gui.gui().broadcastEvent(SystemEvents.windowScroll(), evt);
