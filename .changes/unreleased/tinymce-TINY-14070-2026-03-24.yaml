@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Certain combinations of divs inside of lists would cause issues turning off lists.
-time: 2026-03-24T09:38:13.077024+01:00
-custom:
-    Issue: TINY-14070

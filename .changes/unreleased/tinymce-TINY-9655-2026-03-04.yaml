@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Script elements would incorrectly be removed by DomPurify when considered valid in the schema.
-time: 2026-03-04T16:01:13.43032+10:00
-custom:
-    Issue: TINY-9655

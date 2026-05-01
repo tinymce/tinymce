@@ -9,12 +9,14 @@ const option: {
 
 const getContentStyle = option('content_style');
 const shouldUseContentCssCors = option('content_css_cors');
+const getCrossOrigin = option('crossorigin');
 const getBodyClass = option('body_class');
 const getBodyId = option('body_id');
 
 export {
   getContentStyle,
   shouldUseContentCssCors,
+  getCrossOrigin,
   getBodyClass,
   getBodyId
 };

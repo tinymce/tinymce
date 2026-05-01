@@ -38,6 +38,7 @@ const dockerArgs = [
   '--rm',
   '--name=oxide-components-test-visual',
   '--userns=host',
+  '--add-host=host.docker.internal:host-gateway',
   '-e', "TEST_BASE_URL=http://host.docker.internal:6006",
   '-v', `${projectRoot}:/tinymce`,
   '-v', `${pwd}/src/test/ts/visual.spec.ts-snapshots:/tinymce/${relativeToRoot}/src/test/ts/visual.spec.ts-snapshots`,
