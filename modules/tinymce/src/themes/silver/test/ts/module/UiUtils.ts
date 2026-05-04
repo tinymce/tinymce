@@ -19,18 +19,24 @@ const extractOnlyOne = (container: SugarElement<Node>, selector: string): SugarE
   }
 };
 
-const resizeBy = (resizeHandle: SugarElement<Element>, vector: [ number, number ], delta: number = 10): void => {
+const resizeEditorBy = async (vector: [ number, number ], delta = 10): Promise<void> => {
   // Simulate moving the mouse, by making a number of movements
   const numMoves = vector[1] === 0 ? Math.abs(vector[0]) / delta : Math.abs(vector[1]) / delta;
 
   // Determine the deltas based on the number of moves to make
   const deltaX = vector[0] / numMoves;
   const deltaY = vector[1] / numMoves;
-  Pointer.pointerMoveBy(resizeHandle, 0, 0);
-  Arr.range(numMoves, () => {
-    Pointer.pointerMoveBy(resizeHandle, deltaX, deltaY);
+
+  const resizeHandle = UiFinder.findIn(SugarBody.body(), '.tox-statusbar__resize-handle').getOrDie();
+
+  await Pointer.pWithMockPointerCapture(resizeHandle, {}, () => {
+    Pointer.pointerDown(resizeHandle);
+    Pointer.pointerMoveBy(resizeHandle, 0, 0);
+    Arr.range(numMoves, () => {
+      Pointer.pointerMoveBy(resizeHandle, deltaX, deltaY);
+    });
+    Pointer.pointerUp(resizeHandle);
   });
-  Pointer.pointerUp(resizeHandle);
 };
 
 const scrollRelativeEditor = (editor: Editor, relative: 'top' | 'bottom' = 'top', deltaY: number): void => {
@@ -45,7 +51,7 @@ const pWaitForEditorToRender = (): Promise<void> =>
 export {
   countNumber,
   extractOnlyOne,
-  resizeBy,
+  resizeEditorBy,
   scrollRelativeEditor,
   pWaitForEditorToRender
 };

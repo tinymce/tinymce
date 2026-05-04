@@ -1,4 +1,4 @@
-import { Pointer, UiFinder, Waiter } from '@ephox/agar';
+import { UiFinder, Waiter } from '@ephox/agar';
 import { Boxes } from '@ephox/alloy';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
@@ -11,7 +11,7 @@ import type { Dialog } from 'tinymce/core/api/ui/Ui';
 
 import * as DialogUtils from '../../module/DialogUtils';
 import * as PageScroll from '../../module/PageScroll';
-import { resizeBy, scrollRelativeEditor } from '../../module/UiUtils';
+import { resizeEditorBy, scrollRelativeEditor } from '../../module/UiUtils';
 
 // TODO TINY-10480: Investigate flaky tests
 describe.skip('browser.tinymce.themes.silver.window.SilverInlineDialogPositionTest', () => {
@@ -66,30 +66,20 @@ describe.skip('browser.tinymce.themes.silver.window.SilverInlineDialogPositionTe
 
         it('Test position when resizing', async () => {
           const editor = hook.editor();
-          const resizeHandle = UiFinder.findIn(SugarBody.body(), '.tox-statusbar__resize-handle').getOrDie();
           const dialog = openDialog(editor);
           await pAssertPos(dialog, 'absolute', 158, -306);
 
           // Shrink the editor from 650x400 to 500x300
-          await Pointer.pWithMockPointerCapture(resizeHandle, {}, () => {
-            Pointer.pointerDown(resizeHandle);
-            resizeBy(resizeHandle, [ -150, -100 ]);
-          });
+          await resizeEditorBy([ -150, -100 ]);
           await pAssertPos(dialog, 'absolute', 5, -166); // Toolbar wraps so y diff is 100 + toolbar height
 
           // Enlarge the editor from 500x300 to 750x500
-          await Pointer.pWithMockPointerCapture(resizeHandle, {}, () => {
-            Pointer.pointerDown(resizeHandle);
-            resizeBy(resizeHandle, [ 250, 200 ]);
-          });
+          await resizeEditorBy([ 250, 200 ]);
           await pAssertPos(dialog, 'absolute', 258, -406);
 
           // Resize back to the original size
           // From 750x500 to 650x400
-          await Pointer.pWithMockPointerCapture(resizeHandle, {}, () => {
-            Pointer.pointerDown(resizeHandle);
-            resizeBy(resizeHandle, [ -100, -100 ]);
-          });
+          await resizeEditorBy([ -100, -100 ]);
           await pAssertPos(dialog, 'absolute', 158, -306);
 
           DialogUtils.close(editor);
@@ -210,17 +200,13 @@ describe.skip('browser.tinymce.themes.silver.window.SilverInlineDialogPositionTe
 
         it('Test position when resizing', async () => {
           const editor = hook.editor();
-          const resizeHandle = UiFinder.findIn(SugarBody.body(), '.tox-statusbar__resize-handle').getOrDie();
 
           scrollRelativeEditor(editor, 'top', -100);
           const dialog = openDialog(editor);
           await pAssertPos(dialog, 'absolute', 108, -1387);
 
           // Shrink the editor from 600x400 to 600x300
-          await Pointer.pWithMockPointerCapture(resizeHandle, {}, () => {
-            Pointer.pointerDown(resizeHandle);
-            resizeBy(resizeHandle, [ 0, -100 ]);
-          });
+          await resizeEditorBy([ 0, -100 ]);
           await pAssertPos(dialog, 'absolute', 108, -1287);
 
           DialogUtils.close(editor);
