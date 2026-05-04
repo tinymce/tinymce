@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions, FocusTools, Keys, Pointer, UiFinder, Waiter } from '@ephox/agar';
+import { ApproxStructure, Assertions, FocusTools, Keys, UiFinder, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun, Strings } from '@ephox/katamari';
 import { Css, Focus, Height, Remove, Scroll, SugarBody, SugarDocument, SugarElement, SugarLocation, Traverse, Width } from '@ephox/sugar';
