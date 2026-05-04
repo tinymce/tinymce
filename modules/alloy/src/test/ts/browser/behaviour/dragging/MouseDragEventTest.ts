@@ -1,4 +1,4 @@
-import { Assertions, Chain, Mouse, NamedChain, type TestStore as TestStoreType, UiFinder } from '@ephox/agar';
+import { Assertions, Chain, Mouse, NamedChain, type TestStore, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Result } from '@ephox/katamari';
 import { Css, type SugarElement } from '@ephox/sugar';
@@ -15,7 +15,7 @@ interface StoreMouseDragEventTest {
 }
 
 UnitTest.asynctest('MouseDragEventTest', (success, failure) => {
-  GuiSetup.setup((store: TestStoreType<StoreMouseDragEventTest>, _doc, _body) => GuiFactory.build(
+  GuiSetup.setup((store: TestStore<StoreMouseDragEventTest>, _doc, _body) => GuiFactory.build(
     Container.sketch({
       dom: {
         styles: {
