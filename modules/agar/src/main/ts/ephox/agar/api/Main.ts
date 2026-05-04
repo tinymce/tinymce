@@ -26,6 +26,7 @@ import { Monitor } from './Monitor';
 import * as Mouse from './Mouse';
 import { NamedChain } from './NamedChain';
 import { Pipeline } from './Pipeline';
+import * as Pointer from './Pointer';
 import * as PropertySteps from './PropertySteps';
 import * as RealClipboard from './RealClipboard';
 import { type KeyPressAdt, RealKeys } from './RealKeys';
@@ -70,6 +71,7 @@ export {
   Logger,
   Monitor,
   Mouse,
+  Pointer,
   NamedChain,
   Pipeline,
   PropertySteps,
