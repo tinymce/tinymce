@@ -37,20 +37,6 @@ const meta: Meta<ConfirmationProps> = {
   ],
   parameters: {
     layout: 'centered',
-    docs: {
-      description: {
-        component: `
-The Alert component displays warning/error feedback with optional action and remove controls.
-
-## Props
-- \`message\`: string content shown in the alert body
-- \`severity\`: \`error\` | \`warning\`
-- \`actions\`: optional slot for one or more action buttons/components
-- \`removable\`: optional close affordance (requires \`onRemove\`)
-- \`closeAriaLabel\`: optional accessible label for the close button (defaults to \`Close\`)
-        `
-      }
-    }
   },
   tags: [ 'autodocs' ],
   args: {
