@@ -3,13 +3,14 @@ import { Arr, Singleton } from '@ephox/katamari';
 import { Css, DomEvent, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 
 import * as Pointer from 'ephox/agar/api/Pointer';
+import { TestStore } from 'ephox/agar/api/TestStore';
 
 describe('browser.agar.PointerTest', () => {
   const body = SugarBody.body();
   let container: SugarElement<HTMLElement>;
   let input: SugarElement<HTMLInputElement>;
   const inputLatestEvent = Singleton.value<PointerEvent>();
-  let repository: string[];
+  const store = TestStore<string>();
   let handlers: { unbind: () => void }[];
 
   beforeEach(() => {
@@ -23,13 +24,13 @@ describe('browser.agar.PointerTest', () => {
     Insert.append(container, input);
     Insert.append(body, container);
 
-    repository = [];
+    store.clear();
     handlers = Arr.bind([ 'pointerdown', 'pointerup', 'pointermove' ], (evt) => [
       DomEvent.bind(container, evt, () => {
-        repository.push('container.' + evt);
+        store.add('container.' + evt);
       }),
       DomEvent.bind(input, evt, (event) => {
-        repository.push('input.' + evt);
+        store.add('input.' + evt);
         inputLatestEvent.set(event.raw as PointerEvent);
       })
     ]);
@@ -43,17 +44,17 @@ describe('browser.agar.PointerTest', () => {
 
   it('pointerDown fires pointerdown on element', () => {
     Pointer.pointerDown(input);
-    Assert.eq('pointerdown should bubble', [ 'input.pointerdown', 'container.pointerdown' ], repository);
+    store.assertEq('pointerdown should bubble', [ 'input.pointerdown', 'container.pointerdown' ]);
   });
 
   it('pointerUp fires pointerup on element', () => {
     Pointer.pointerUp(input);
-    Assert.eq('pointerup should bubble', [ 'input.pointerup', 'container.pointerup' ], repository);
+    store.assertEq('pointerup should bubble', [ 'input.pointerup', 'container.pointerup' ]);
   });
 
   it('pointerMove fires pointermove on element', () => {
     Pointer.pointerMove(input);
-    Assert.eq('pointermove should bubble', [ 'input.pointermove', 'container.pointermove' ], repository);
+    store.assertEq('pointermove should bubble', [ 'input.pointermove', 'container.pointermove' ]);
   });
 
   it('pointerDown passes settings to the event', () => {

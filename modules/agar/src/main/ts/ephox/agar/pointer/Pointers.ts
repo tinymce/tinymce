@@ -1,7 +1,6 @@
 import { Fun } from '@ephox/katamari';
 import { type SugarElement, SugarLocation, SugarNode, SugarPosition } from '@ephox/sugar';
 
-// Settings for pointer events
 interface Settings {
   // used to tweak the location before firing the event
   dx?: number;
@@ -31,7 +30,8 @@ type EventType = 'pointerdown' | 'pointerup' | 'pointermove';
 
 // Fire an event
 const event = (type: EventType, { dx, dy, ...settings }: Settings) => (element: SugarElement<Node>): void => {
-  const location = (SugarNode.isElement(element) ? SugarLocation.absolute(element) : SugarPosition(0, 0)).translate(dx || 0, dy || 0);
+  const basePosition = SugarNode.isElement(element) ? SugarLocation.absolute(element) : SugarPosition(0, 0);
+  const location = basePosition.translate(dx ?? 0, dy ?? 0);
   const event = new window.PointerEvent(type, {
     screenX: location.left,
     screenY: location.top,

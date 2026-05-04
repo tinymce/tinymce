@@ -10,8 +10,8 @@ const pointerMoveBy = (element: SugarElement<Node>, dx: number, dy: number, sett
   Pointers.pointerMove({ ...settings, dx, dy })(element);
 
 interface MockPointerCaptureOptions {
-  setPointerCapture?: (pointerId: number) => void;
-  releasePointerCapture?: (pointerId: number) => void;
+  readonly setPointerCapture?: (pointerId: number) => void;
+  readonly releasePointerCapture?: (pointerId: number) => void;
 }
 
 const pWithMockPointerCapture = async <T>(
