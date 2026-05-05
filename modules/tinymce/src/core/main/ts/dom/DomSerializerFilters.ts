@@ -129,11 +129,6 @@ const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: D
         node.name = '#cdata';
         node.type = 4;
         node.value = dom.decode(value.replace(/^\[CDATA\[|\]\]$/g, ''));
-      } else if (value?.indexOf('mce:protected ') === 0) {
-        node.name = '#text';
-        node.type = 3;
-        node.raw = true;
-        node.value = unescape(value).substr(14);
       }
     }
   });

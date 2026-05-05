@@ -26,6 +26,7 @@ import * as NodeType from '../dom/NodeType';
 import * as TouchEvents from '../events/TouchEvents';
 import * as ForceBlocks from '../ForceBlocks';
 import * as NonEditableFilter from '../html/NonEditableFilter';
+import * as ProtectedFilter from '../html/ProtectedFilter';
 import * as KeyboardOverrides from '../keyboard/KeyboardOverrides';
 import * as Disabled from '../mode/Disabled';
 import { NodeChange } from '../NodeChange';
@@ -40,7 +41,6 @@ import Quirks from '../util/Quirks';
 import * as ContentCss from './ContentCss';
 import * as LicenseKeyValidation from './LicenseKeyValidation';
 
-declare const escape: any;
 declare let tinymce: TinyMCE;
 
 const DOM = DOMUtils.DOM;
@@ -362,13 +362,7 @@ const preInit = (editor: Editor) => {
 
   const protect = Options.getProtect(editor);
   if (protect) {
-    editor.on('BeforeSetContent', (e) => {
-      Tools.each(protect, (pattern) => {
-        e.content = e.content.replace(pattern, (str) => {
-          return '<!--mce:protected ' + escape(str) + '-->';
-        });
-      });
-    });
+    ProtectedFilter.registerProtectedHtmlFilters(editor, protect);
   }
 
   editor.on('SetContent', () => {

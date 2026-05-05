@@ -9,8 +9,6 @@ import * as Zwsp from 'tinymce/core/text/Zwsp';
 
 import * as ViewBlock from '../../module/test/ViewBlock';
 
-declare const escape: any;
-
 describe('browser.tinymce.core.dom.SerializerTest', () => {
   const DOM = DOMUtils.DOM;
   const viewBlock = ViewBlock.bddSetup();
@@ -655,21 +653,6 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
     assert.equal(ser.serialize(getTestElement()), '<pre>  </pre>');
   });
 
-  it('Protected blocks', () => {
-    const ser = DomSerializer({ fix_list_elements: true });
-
-    ser.setRules('noscript[test]');
-
-    setTestHtml('<!--mce:protected ' + escape('<noscript test="test"><br></noscript>') + '-->');
-    assert.equal(ser.serialize(getTestElement()), '<noscript test="test"><br></noscript>');
-
-    setTestHtml('<!--mce:protected ' + escape('<noscript><br></noscript>') + '-->');
-    assert.equal(ser.serialize(getTestElement()), '<noscript><br></noscript>');
-
-    setTestHtml('<!--mce:protected ' + escape('<noscript><!-- text --><br></noscript>') + '-->');
-    assert.equal(ser.serialize(getTestElement()), '<noscript><!-- text --><br></noscript>');
-  });
-
   it('CDATA', () => {
     const ser = DomSerializer({ fix_list_elements: true, preserve_cdata: true });
     ser.setRules('span');
@@ -936,4 +919,3 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
       'Should remove br');
   });
 });
-
