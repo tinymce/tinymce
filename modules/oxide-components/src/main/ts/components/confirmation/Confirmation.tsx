@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type FC, type MouseEventHandler } from 'react';
+import { useState, type FC, type MouseEventHandler } from 'react';
 
 import { Spinner } from '../../bespoke/tinymceai/spinner/Spinner';
 import * as Bem from '../../utils/Bem';
@@ -13,10 +13,6 @@ export interface ConfirmationProps {
   readonly onCancel: () => Promise<void>;
 }
 
-const Loading = () => <div style={{ margin: 'auto' }} >
-  <Spinner type="circle" />
-</div>;
-
 export const Confirmation: FC<ConfirmationProps> = (({
   title,
   text,
@@ -26,10 +22,6 @@ export const Confirmation: FC<ConfirmationProps> = (({
   onCancel
 }) => {
   const [ confirming, setConfirming ] = useState(false);
-  const dialogRef = useRef<HTMLDialogElement>(null);
-  useEffect(() => {
-    dialogRef.current?.showModal();
-  }, []);
 
   const onClick: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.stopPropagation();
@@ -38,47 +30,41 @@ export const Confirmation: FC<ConfirmationProps> = (({
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     onConfirm().finally(() => {
       setConfirming(false);
-      dialogRef.current?.close();
     });
   };
 
   const onCancelHandler = () => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    onCancel().finally(() => {
-      dialogRef.current?.close();
-    });
+    onCancel();
   };
 
-  return <dialog ref={dialogRef} style={{ margin: 'auto' }}>
-    <div className={Bem.block('tox-dialog-wrap')}>
-      {confirming ? <Loading /> :
-        <div className={Bem.element('tox-dialog-wrap', 'backdrop')}>
-          <div className={Bem.block('tox-dialog')}>
-            <div className={Bem.element('tox-dialog', 'header')}>
-              <h1 className={Bem.element('tox-dialog', 'title')}>{title}</h1>
-            </div>
-            <div className={Bem.element('tox-dialog', 'body')}>
-              <div className={Bem.element('tox-dialog', 'body-content')}>
-                {text}
-              </div>
-            </div>
-            <div className={Bem.element('tox-dialog', 'footer')}>
-              <div className={Bem.element('tox-dialog', 'footer-end')}>
-                <Button
-                  variant='primary'
-                  onClick={onClick}
-                  aria-label={buttonName}
-                >{buttonName}</Button>
-                <Button
-                  variant='secondary'
-                  onClick={onCancelHandler}
-                  aria-label={cancelBtnName}
-                >{cancelBtnName}</Button>
-              </div>
-            </div>
+  return <div className={Bem.block('tox-dialog-wrap')}>
+    <div style={{ display: 'flex' }} className={Bem.element('tox-dialog-wrap', 'backdrop')}>
+      <div style={{ margin: 'auto' }} className={Bem.block('tox-dialog')}>
+        <div className={Bem.element('tox-dialog', 'header')}>
+          <h1 className={Bem.element('tox-dialog', 'title')}>{title}</h1>
+        </div>
+        <div className={Bem.element('tox-dialog', 'body')}>
+          <div className={Bem.element('tox-dialog', 'body-content')}>
+            {text}
           </div>
         </div>
-      }
+        <div className={Bem.element('tox-dialog', 'footer')}>
+          <div className={Bem.element('tox-dialog', 'footer-end')}>
+            <Button
+              variant='secondary'
+              disabled={confirming}
+              onClick={onClick}
+              aria-label={buttonName}
+            >{confirming ? <Spinner type="circle" /> : buttonName}</Button>
+            <Button
+              variant='secondary'
+              onClick={onCancelHandler}
+              aria-label={cancelBtnName}
+            >{cancelBtnName}</Button>
+          </div>
+        </div>
+      </div>
     </div>
-  </dialog>;
+  </div>;
 });
