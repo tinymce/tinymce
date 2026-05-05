@@ -1,0 +1,6 @@
+project: tinymce
+kind: Security
+body: Fixed stored XSS vulnerability through `data-mce-` prefixed `src`, `href`, `style` attributes.
+time: 2026-04-29T11:07:42.702682+02:00
+custom:
+    Issue: TINY-14333
