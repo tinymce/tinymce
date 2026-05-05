@@ -143,6 +143,12 @@ const mkSerializerSettings = (editor: Editor): DomSerializerSettings => {
 const createParser = (editor: Editor): DomParser => {
   const parser = DomParser(mkParserSettings(editor), editor.schema);
 
+  parser.addAttributeFilter('data-mce-src,data-mce-href,data-mce-style', (nodes, name) => {
+    for (let i = 0; i < nodes.length; i++) {
+      nodes[i].attr(name, null);
+    }
+  });
+
   // Convert src and href into data-mce-src, data-mce-href and data-mce-style
   parser.addAttributeFilter('src,href,style,tabindex', (nodes, name) => {
     const dom = editor.dom;
