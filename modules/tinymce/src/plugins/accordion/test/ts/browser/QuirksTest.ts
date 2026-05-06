@@ -2,9 +2,10 @@ import { describe, it } from '@ephox/bedrock-client';
 import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
-import type Editor from 'tinymce/core/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/accordion/Plugin';
 
+import { Arr } from '@ephox/katamari';
 import * as AccordionUtils from '../module/AccordionUtils';
 
 describe('browser.tinymce.plugins.accordion.QuirksTest', () => {
@@ -30,5 +31,49 @@ describe('browser.tinymce.plugins.accordion.QuirksTest', () => {
     const event = { target: editor.dom.select('summary')[0] } as unknown as MouseEvent;
     editor.dispatch('click', event );
     TinyAssertions.assertCursor(editor, [ 1, 0 ], 0);
+  });
+
+  const testClickOnRightSideOfLI = (editor: Editor, content: string) => {
+    editor.setContent(content);
+
+    const li = editor.dom.select('li')[0];
+    const textNode = li.firstChild as Text;
+    const rng = editor.getDoc().createRange();
+    rng.setStart(textNode, 0);
+    rng.setEnd(textNode, textNode.data.length);
+    const rect = rng.getClientRects()[0];
+
+    const mouseEvent = {
+      target: li as EventTarget,
+      clientX: rect.right + 100,
+      clientY: rect.top + rect.height / 2
+    } as MouseEvent
+    editor.dispatch('mousedown', mouseEvent);
+    editor.dispatch('click', mouseEvent);
+    editor.dispatch('mouseup', mouseEvent);
+
+    TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], textNode.length);
+  }
+
+  const cases = [
+    '<ol><li>abc<div>def</div></li></ol>',
+    '<ul><li>abc<div>def</div></li></ul>',
+    '<ol><li>abc<ul><li>def</li></ul></li></ol>',
+    '<ul><li>abc<ul><li>def</li></ul></li></ul>',
+    '<ol><li><span>abc</span><div>def</div></li></ol>',
+    '<ul><li><span>abc</span><div>def</div></li></ul>',
+    '<ol><li><span>abc</span><ul><li>def</li></ul></li></ol>',
+    '<ul><li><span>abc</span><ul><li>def</li></ul></li></ul>',
+    '<ol><li>abc<span style="display: block;">def</span></li></ol>',
+    '<ul><li>abc<span style="display: block;">def</span></li></ul>',
+    '<ol><li><span>abc</span><span style="display: block;">def</span></li></ol>',
+    '<ul><li><span>abc</span><span style="display: block;">def</span></li></ul>',
+  ]
+
+  Arr.each(cases, (content) => {
+    it(`TINY-13886: clicking on the right of the first element (which must be an inline element) of li that also have a block element inside should place the caret at the end of the first element (${content})`, () => {
+      const editor = hook.editor();
+      testClickOnRightSideOfLI(editor, content);
+    });
   });
 });

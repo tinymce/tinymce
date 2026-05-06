@@ -1,5 +1,5 @@
-import { Fun, Optional, Optionals, Type } from '@ephox/katamari';
-import { SugarElement, SugarNode, Traverse } from '@ephox/sugar';
+import { Arr, Fun, Optional, Optionals, Type } from '@ephox/katamari';
+import { Css, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
 import type Editor from '../api/Editor';
 import Env from '../api/Env';
@@ -10,6 +10,8 @@ import Tools from '../api/util/Tools';
 import VK from '../api/util/VK';
 import * as CaretContainer from '../caret/CaretContainer';
 import * as SymulateDelete from '../delete/SymulateDelete';
+import { getClientRects, type NodeClientRect } from '../dom/Dimensions';
+import { isListItem } from '../dom/ElementType';
 import * as Empty from '../dom/Empty';
 import * as Rtc from '../Rtc';
 
@@ -707,6 +709,32 @@ const Quirks = (editor: Editor): Quirks => {
     });
   };
 
+  /**
+   * In Chrome in a `LI` that contains a block element and where the first child is an inline element
+   * clicking on the right side of the first child the carret goes at the start of the element instead that in the end of it
+   * issue: https://issues.chromium.org/issues/40767343
+  **/
+  const hasBlockChildren = (target: SugarElement<any>): boolean =>
+    Arr.exists(Traverse.children(target), (child) => SugarNode.isElement(child) ? Css.get(child, 'display') === 'block' : false);
+
+  const clickAfterEl = (clientX: number, clientY: number, rect: NodeClientRect): boolean =>
+    clientX >= rect.right && clientY >= rect.top && clientY <= rect.bottom;
+
+  const fixInLISelection = () => {
+    editor.on('mousedown', (e) => {
+      const target = SugarElement.fromDom(e.target);
+      if (isListItem(target) && hasBlockChildren(target)) {
+        const firstChildOpt = Traverse.firstChild(target);
+        firstChildOpt.each((firstChild) => {
+          if (clickAfterEl(e.clientX, e.clientY, getClientRects([ firstChild.dom ])[0])) {
+            editor.selection.setCursorLocation(firstChild.dom, firstChild.dom.nodeValue?.length ?? 0);
+            e.preventDefault();
+          }
+        });
+      }
+    });
+  };
+
   // No-op since Mozilla seems to have fixed the caret repaint issues
   const refreshContentEditable = Fun.noop;
 
@@ -746,6 +774,7 @@ const Quirks = (editor: Editor): Quirks => {
     // All browsers
     removeBlockQuoteOnBackSpace();
     emptyEditorWhenDeleting();
+    fixInLISelection();
 
     // Windows phone will return a range like [body, 0] on mousedown so
     // it will always normalize to the wrong location
