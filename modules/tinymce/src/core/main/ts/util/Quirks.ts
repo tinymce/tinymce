@@ -726,7 +726,7 @@ const Quirks = (editor: Editor): Quirks => {
       if (isListItem(target) && hasBlockChildren(target)) {
         const firstChildOpt = Traverse.firstChild(target);
         firstChildOpt.each((firstChild) => {
-          if (clickAfterEl(e.clientX, e.clientY, getClientRects([ firstChild.dom ])[0])) {
+          if (Arr.get(getClientRects([ firstChild.dom ]), 0).exists((rect) => clickAfterEl(e.clientX, e.clientY, rect))) {
             editor.selection.setCursorLocation(firstChild.dom, firstChild.dom.nodeValue?.length ?? 0);
             e.preventDefault();
           }
