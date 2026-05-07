@@ -195,7 +195,7 @@ timestamps { notifyStatusChange(
           timeout(time: 5, unit: 'MINUTES') {
             // cancel build if primary branch doesn't merge cleanly
             gitMerge(primaryBranch)
-            sh 'bun install'
+            bunInstall()
           }
         }
 
