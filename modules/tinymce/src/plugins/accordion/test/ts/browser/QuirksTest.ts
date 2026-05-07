@@ -6,6 +6,7 @@ import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/accordion/Plugin';
 
+import { PredicateFind, SugarElement, SugarNode } from '@ephox/sugar';
 import * as AccordionUtils from '../module/AccordionUtils';
 
 describe('browser.tinymce.plugins.accordion.QuirksTest', () => {
@@ -37,7 +38,8 @@ describe('browser.tinymce.plugins.accordion.QuirksTest', () => {
     editor.setContent(content);
 
     const li = editor.dom.select('li')[0];
-    const textNode = li.firstChild as Text;
+    const firstChild = SugarElement.fromDom(li.firstChild as Node);
+    const textNode = SugarNode.isText(firstChild) ? firstChild.dom : PredicateFind.descendant(firstChild, SugarNode.isText).getOrDie().dom;
     const rng = editor.getDoc().createRange();
     rng.setStart(textNode, 0);
     rng.setEnd(textNode, textNode.data.length);
@@ -52,7 +54,7 @@ describe('browser.tinymce.plugins.accordion.QuirksTest', () => {
     editor.dispatch('click', mouseEvent);
     editor.dispatch('mouseup', mouseEvent);
 
-    TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], textNode.length);
+    TinyAssertions.assertCursor(editor, SugarNode.isText(firstChild) ? [ 0, 0, 0 ] : [ 0, 0, 0, 0 ], textNode.length);
   };
 
   const cases = [
@@ -60,14 +62,14 @@ describe('browser.tinymce.plugins.accordion.QuirksTest', () => {
     '<ul><li>abc<div>def</div></li></ul>',
     '<ol><li>abc<ul><li>def</li></ul></li></ol>',
     '<ul><li>abc<ul><li>def</li></ul></li></ul>',
-    '<ol><li><span>abc</span><div>def</div></li></ol>',
-    '<ul><li><span>abc</span><div>def</div></li></ul>',
-    '<ol><li><span>abc</span><ul><li>def</li></ul></li></ol>',
-    '<ul><li><span>abc</span><ul><li>def</li></ul></li></ul>',
+    '<ol><li><span style="border: 2px solid red;">abc</span><div>def</div></li></ol>',
+    '<ul><li><span style="border: 2px solid red;">abc</span><div>def</div></li></ul>',
+    '<ol><li><span style="border: 2px solid red;">abc</span><ul><li>def</li></ul></li></ol>',
+    '<ul><li><span style="border: 2px solid red;">abc</span><ul><li>def</li></ul></li></ul>',
     '<ol><li>abc<span style="display: block;">def</span></li></ol>',
     '<ul><li>abc<span style="display: block;">def</span></li></ul>',
-    '<ol><li><span>abc</span><span style="display: block;">def</span></li></ol>',
-    '<ul><li><span>abc</span><span style="display: block;">def</span></li></ul>',
+    '<ol><li><span style="border: 2px solid red;">abc</span><span style="display: block;">def</span></li></ol>',
+    '<ul><li><span style="border: 2px solid red;">abc</span><span style="display: block;">def</span></li></ul>',
   ];
 
   Arr.each(cases, (content) => {

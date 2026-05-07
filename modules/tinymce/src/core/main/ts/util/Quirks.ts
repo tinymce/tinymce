@@ -1,5 +1,5 @@
 import { Arr, Fun, Optional, Optionals, Type } from '@ephox/katamari';
-import { Css, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
+import { Css, PredicateFind, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
 import type Editor from '../api/Editor';
 import Env from '../api/Env';
@@ -727,7 +727,9 @@ const Quirks = (editor: Editor): Quirks => {
         const firstChildOpt = Traverse.firstChild(target);
         firstChildOpt.each((firstChild) => {
           if (Arr.get(getClientRects([ firstChild.dom ]), 0).exists((rect) => clickAfterEl(e.clientX, e.clientY, rect))) {
-            editor.selection.setCursorLocation(firstChild.dom, firstChild.dom.nodeValue?.length ?? 0);
+            const firstChildText = (SugarNode.isText(firstChild) ? firstChild : PredicateFind.descendant(firstChild, SugarNode.isText).getOr(firstChild)).dom;
+
+            editor.selection.setCursorLocation(firstChildText, firstChildText.nodeValue?.length ?? 0);
             e.preventDefault();
           }
         });
