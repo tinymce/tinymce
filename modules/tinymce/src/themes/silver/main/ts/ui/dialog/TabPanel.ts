@@ -93,7 +93,9 @@ export const renderTabPanel = (spec: TabPanelSpec, dialogData: Dialog.DialogData
   });
 
   // Assign fixed height or variable height to the tabs
-  const tabMode = DialogTabHeight.smartMode(allTabs);
+  const tabMode = spec.dynamicHeight
+    ? DialogTabHeight.naiveMode(allTabs) // Height is determined by the content of the tab, which may cause layout shifts when switching tabs.
+    : DialogTabHeight.smartMode(allTabs); // Height is determined by the tallest tab, which prevents layout shifts but may cause excessive whitespace in shorter tabs.
 
   return AlloyTabSection.sketch({
     dom: {
