@@ -1,11 +1,11 @@
 import { describe, it } from '@ephox/bedrock-client';
+import { Arr } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/accordion/Plugin';
 
-import { Arr } from '@ephox/katamari';
 import * as AccordionUtils from '../module/AccordionUtils';
 
 describe('browser.tinymce.plugins.accordion.QuirksTest', () => {
