@@ -2,7 +2,7 @@ import { describe, it } from '@ephox/bedrock-client';
 import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/accordion/Plugin';
 
 import { Arr } from '@ephox/katamari';
@@ -47,13 +47,13 @@ describe('browser.tinymce.plugins.accordion.QuirksTest', () => {
       target: li as EventTarget,
       clientX: rect.right + 100,
       clientY: rect.top + rect.height / 2
-    } as MouseEvent
+    } as MouseEvent;
     editor.dispatch('mousedown', mouseEvent);
     editor.dispatch('click', mouseEvent);
     editor.dispatch('mouseup', mouseEvent);
 
     TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], textNode.length);
-  }
+  };
 
   const cases = [
     '<ol><li>abc<div>def</div></li></ol>',
@@ -68,7 +68,7 @@ describe('browser.tinymce.plugins.accordion.QuirksTest', () => {
     '<ul><li>abc<span style="display: block;">def</span></li></ul>',
     '<ol><li><span>abc</span><span style="display: block;">def</span></li></ol>',
     '<ul><li><span>abc</span><span style="display: block;">def</span></li></ul>',
-  ]
+  ];
 
   Arr.each(cases, (content) => {
     it(`TINY-13886: clicking on the right of the first element (which must be an inline element) of li that also have a block element inside should place the caret at the end of the first element (${content})`, () => {
