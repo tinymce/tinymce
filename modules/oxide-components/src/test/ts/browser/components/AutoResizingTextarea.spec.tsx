@@ -1,6 +1,6 @@
 import { AutoResizingTextarea } from 'oxide-components/components/autoresizingtextarea/AutoResizingTextarea';
 import type { Height } from 'oxide-components/components/autoresizingtextarea/AutoResizingTextareaTypes';
-import { classes } from 'oxide-components/utils/Styles';
+import { Bem } from 'oxide-components/main';
 import { useState } from 'react';
 import { describe, expect, it } from 'vitest';
 import { userEvent } from 'vitest/browser';
@@ -15,7 +15,7 @@ describe('browser.components.AutoResizingTextareaTest', () => {
 
         wrapper: ({ children }) => {
           return (
-            <div className={classes([ 'tox' ])}>
+            <div className={Bem.block('tox')}>
               <div style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -68,7 +68,7 @@ describe('browser.components.AutoResizingTextareaTest', () => {
 
         wrapper: ({ children }) => {
           return (
-            <div className={classes([ 'tox' ])}>
+            <div className={Bem.block('tox')}>
               <div style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -136,7 +136,7 @@ describe('browser.components.AutoResizingTextareaTest', () => {
       {
         wrapper: ({ children }) => {
           return (
-            <div className={classes([ 'tox' ])}>
+            <div className={Bem.block('tox')}>
               <div style={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -208,7 +208,7 @@ describe('browser.components.AutoResizingTextareaTest', () => {
       {
         wrapper: ({ children }) => {
           return (
-            <div className={classes([ 'tox' ])}>
+            <div className={Bem.block('tox')}>
               <div style={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -235,5 +235,58 @@ describe('browser.components.AutoResizingTextareaTest', () => {
     await expect.element(textareaLocator, {
       message: 'Textarea rows should be initially resolved to 1'
     }).toHaveAttribute('rows', `${1}`);
+  });
+
+  it('TINY-14318: Should size to 1 row when typed in a textarea that was initially mounted hidden', async () => {
+
+    const lineOfText = 'Hello';
+
+    const TestComponent = () => {
+      const [ hidden, setHidden ] = useState(true);
+      const [ value, setValue ] = useState('');
+      return (
+        <>
+          <button data-testid="toggle" onClick={() => setHidden(false)}>show</button>
+          <div style={{ display: hidden ? 'none' : 'block' }}>
+            <AutoResizingTextarea value={value} onChange={setValue} data-testid="textarea" />
+          </div>
+        </>
+      );
+    };
+
+    const { getByTestId } = render(
+      <TestComponent />,
+      {
+        wrapper: ({ children }) => {
+          return (
+            <div className={Bem.block('tox')}>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '10px'
+              }}>
+                <div style={{
+                  width: '120px'
+                }}>
+                  {children}
+                </div>
+              </div>
+            </div>
+          );
+        },
+      });
+
+    await userEvent.click(getByTestId('toggle'));
+
+    const textareaLocator = getByTestId('textarea');
+    await expect.element(textareaLocator, {
+      message: 'Textarea rows should be 1 once revealed'
+    }).toHaveAttribute('rows', '1');
+
+    await userEvent.type(textareaLocator, lineOfText);
+    await expect.element(textareaLocator, {
+      message: 'Textarea rows should stay at 1 after typing one short line'
+    }).toHaveAttribute('rows', '1');
   });
 });
