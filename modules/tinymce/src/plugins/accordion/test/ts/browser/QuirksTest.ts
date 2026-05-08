@@ -83,7 +83,7 @@ describe('browser.tinymce.plugins.accordion.QuirksTest', () => {
   ];
 
   Arr.each(cases, ({ content, path, offset }, i) => {
-    it(`TINY-13886: clicking on the right of the first element (which must be an inline element) of li that also have a block element inside should place the caret at the end of the first element (${i}, ${content})`, () => {
+    (browser.isFirefox() ? it.skip : it)(`TINY-13886: clicking on the right of the first element (which must be an inline element) of li that also have a block element inside should place the caret at the end of the first element (${i}, ${content})`, () => {
       const editor = hook.editor();
       testClickOnRightSideOfLI(editor, { content, path, offset });
     });

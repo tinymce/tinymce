@@ -807,7 +807,6 @@ const Quirks = (editor: Editor): Quirks => {
     // All browsers
     removeBlockQuoteOnBackSpace();
     emptyEditorWhenDeleting();
-    fixInLISelection();
 
     // Windows phone will return a range like [body, 0] on mousedown so
     // it will always normalize to the wrong location
@@ -817,6 +816,7 @@ const Quirks = (editor: Editor): Quirks => {
 
     // WebKit
     if (isWebKit) {
+      fixInLISelection();
       documentElementEditingFocus();
       selectControlElements();
       setDefaultBlockType();
