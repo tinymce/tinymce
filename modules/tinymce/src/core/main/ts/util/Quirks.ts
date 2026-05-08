@@ -1,4 +1,4 @@
-import { Arr, Fun, Optional, Optionals, Type } from '@ephox/katamari';
+import { Arr, Fun, Optional, Optionals, Strings, Type } from '@ephox/katamari';
 import { Css, PredicateFind, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
 import type Editor from '../api/Editor';
@@ -709,26 +709,57 @@ const Quirks = (editor: Editor): Quirks => {
     });
   };
 
+  const hasBlockChildren = (target: SugarElement<any>): boolean =>
+    Arr.exists(Traverse.children(target), (child) => SugarNode.isElement(child) ? Css.get(child, 'display') === 'block' : false);
+
+  const firstBlockChild = (target: SugarElement<any>) =>
+    Arr.find(Traverse.children(target), (child) => SugarNode.isElement(child) ? Css.get(child, 'display') === 'block' : false);
+
+  /**
+   * this is needed to manage the difference between
+   * ```
+   * <li>a<div>b</div></li>
+   * ```
+   * and
+   * ```
+   * <li>a
+   * <div>b</div></li>
+   * ```
+   * since if the indentation of the HTML has a new line it creates a fake child in the `li` that is an empty text
+  **/
+  const isValidSibling = (el: SugarElement<Node>): boolean => {
+    if (SugarNode.isText(el)) {
+      return el.dom.nodeValue !== null && Strings.isNotEmpty(el.dom.nodeValue.trim());
+    }
+    return true;
+  };
+
+  const clickAfterEl = (clientX: number, clientY: number, rect: NodeClientRect): boolean =>
+    clientX >= rect.right && clientY >= rect.top && clientY <= rect.bottom;
+
   /**
    * In Chrome in a `LI` that contains a block element and where the first child is an inline element
    * clicking on the right side of the first child the carret goes at the start of the element instead that in the end of it
    * issue: https://issues.chromium.org/issues/40767343
   **/
-  const hasBlockChildren = (target: SugarElement<any>): boolean =>
-    Arr.exists(Traverse.children(target), (child) => SugarNode.isElement(child) ? Css.get(child, 'display') === 'block' : false);
-
-  const clickAfterEl = (clientX: number, clientY: number, rect: NodeClientRect): boolean =>
-    clientX >= rect.right && clientY >= rect.top && clientY <= rect.bottom;
 
   const fixInLISelection = () => {
     editor.on('mousedown', (e) => {
       const target = SugarElement.fromDom(e.target);
       if (isListItem(target) && hasBlockChildren(target)) {
-        const firstChildOpt = Traverse.firstChild(target);
-        firstChildOpt.each((firstChild) => {
-          if (Arr.get(getClientRects([ firstChild.dom ]), 0).exists((rect) => clickAfterEl(e.clientX, e.clientY, rect))) {
-            const firstChildText = (SugarNode.isText(firstChild) ? firstChild : PredicateFind.descendant(firstChild, SugarNode.isText).getOr(firstChild)).dom;
+        const lastInlineBeforeBlockOpt = firstBlockChild(target).bind((block) => {
+          const prevSibling = Traverse.prevSibling(block);
+          return prevSibling.exists(isValidSibling)
+            ? prevSibling
+            : prevSibling.bind((el) => Traverse.prevSibling(el).or(prevSibling));
+        });
 
+        lastInlineBeforeBlockOpt.each((lastInlineBeforeBlock) => {
+          if (Arr.get(getClientRects([ lastInlineBeforeBlock.dom ]), 0).exists((rect) => clickAfterEl(e.clientX, e.clientY, rect))) {
+            const firstChildText = (
+              SugarNode.isText(lastInlineBeforeBlock)
+                ? lastInlineBeforeBlock
+                : PredicateFind.descendant(lastInlineBeforeBlock, SugarNode.isText).getOr(lastInlineBeforeBlock)).dom;
             editor.selection.setCursorLocation(firstChildText, firstChildText.nodeValue?.length ?? 0);
             e.preventDefault();
           }
