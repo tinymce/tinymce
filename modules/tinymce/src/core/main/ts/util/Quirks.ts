@@ -709,10 +709,10 @@ const Quirks = (editor: Editor): Quirks => {
     });
   };
 
-  const hasBlockChildren = (target: SugarElement<any>): boolean =>
+  const hasBlockChildren = (target: SugarElement<Node>): boolean =>
     Arr.exists(Traverse.children(target), (child) => SugarNode.isElement(child) ? Css.get(child, 'display') === 'block' : false);
 
-  const firstBlockChild = (target: SugarElement<any>) =>
+  const firstBlockChild = (target: SugarElement<Node>) =>
     Arr.find(Traverse.children(target), (child) => SugarNode.isElement(child) ? Css.get(child, 'display') === 'block' : false);
 
   /**
