@@ -38,4 +38,12 @@ export interface TriggerProps {
 
 export interface GroupProps {
   readonly children: ReactNode;
+  /**
+   * Whether the group's arrow-key flow navigation responds to vertical arrows.
+   * Defaults to `true`. Set to `false` when the host has its own ArrowUp/ArrowDown
+   * semantics (e.g. navigating between items above/below the toolbar), so those
+   * keys reach the host handler instead of being consumed for focus movement
+   * between buttons within the group.
+   */
+  readonly allowVertical?: boolean;
 }

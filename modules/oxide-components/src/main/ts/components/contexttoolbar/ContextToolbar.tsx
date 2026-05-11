@@ -328,12 +328,13 @@ const Toolbar = forwardRef<ToolbarHandle, ToolbarProps>(({
   );
 });
 
-const Group: FC<GroupProps> = ({ children }) => {
+const Group: FC<GroupProps> = ({ children, allowVertical = true }) => {
   const groupRef = useRef<HTMLDivElement>(null);
 
   KeyboardNavigationHooks.useFlowKeyNavigation({
     containerRef: groupRef,
     selector: enabledToolbarControlSelector,
+    allowVertical,
     execute: (focused) => {
       focused.dom.click();
       return Optional.some(true);
