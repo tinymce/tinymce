@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: The content of bogus was always hidden in print, even when it shouldn't be.
+time: 2026-05-11T13:06:17.044648272+02:00
+custom:
+    Issue: TINY-14296
