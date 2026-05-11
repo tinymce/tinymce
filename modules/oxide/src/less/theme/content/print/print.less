@@ -1,9 +1,12 @@
 @media print {
   .mce-content-body {
     .mce-placeholder,
-    [data-mce-bogus=all],
-    [data-mce-bogus] {
+    [data-mce-bogus=all] {
       display: none !important;
+    }
+
+    [data-mce-bogus] {
+      display: contents !important;
     }
 
     .mce-visual-caret {
