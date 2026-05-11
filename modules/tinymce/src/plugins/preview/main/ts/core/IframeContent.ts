@@ -1,8 +1,9 @@
-import { Arr, Obj } from '@ephox/katamari';
+import { Arr, Fun, Obj } from '@ephox/katamari';
 import { Link } from '@ephox/sugar';
 
 import ScriptLoader from 'tinymce/core/api/dom/ScriptLoader';
 import type Editor from 'tinymce/core/api/Editor';
+import type { CrossOrigin } from 'tinymce/core/api/OptionTypes';
 import Tools from 'tinymce/core/api/util/Tools';
 
 import * as Options from '../api/Options';
@@ -18,6 +19,14 @@ const getComponentScriptsHtml = (editor: Editor) => {
   }).join('');
 };
 
+const getStyleSheetCrossOrigin = (editor: Editor): (url: string) => ReturnType<CrossOrigin> => {
+  if (Options.shouldUseContentCssCors(editor)) {
+    return Fun.constant('anonymous');
+  }
+  const crossOrigin = Options.getCrossOrigin(editor);
+  return (url) => crossOrigin(url, 'stylesheet');
+};
+
 const getPreviewHtml = (editor: Editor, contentCssResources: ContentCssResource[]): string => {
   let headHtml = '';
   const encode = editor.dom.encode;
@@ -25,12 +34,14 @@ const getPreviewHtml = (editor: Editor, contentCssResources: ContentCssResource[
 
   headHtml += `<base href="${encode(editor.documentBaseURI.getURI())}">`;
 
-  const cors = Options.shouldUseContentCssCors(editor) ? ' crossorigin="anonymous"' : '';
+  const styleSheetCrossOrigin = getStyleSheetCrossOrigin(editor);
 
   Tools.each(contentCssResources, (resource) => {
     if (resource.type === 'bundled') {
       headHtml += '<style type="text/css">' + resource.content + '</style>';
     } else {
+      const corsValue = styleSheetCrossOrigin(resource.url);
+      const cors = corsValue ? ' crossorigin="' + encode(corsValue) + '"' : '';
       headHtml += '<link type="text/css" rel="stylesheet" href="' + encode(resource.url) + '"' + cors + '>';
     }
   });

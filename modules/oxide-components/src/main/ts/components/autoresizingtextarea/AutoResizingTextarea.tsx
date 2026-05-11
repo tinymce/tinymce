@@ -1,4 +1,5 @@
-import { Type } from '@ephox/katamari';
+import { Cell, Singleton, Type } from '@ephox/katamari';
+import { SugarElement, Visibility } from '@ephox/sugar';
 import { forwardRef, useLayoutEffect, useMemo, useRef, useState, type MutableRefObject } from 'react';
 
 import * as Bem from '../../utils/Bem';
@@ -36,15 +37,42 @@ export const AutoResizingTextarea = forwardRef<HTMLTextAreaElement, AutoResizing
 }, ref) => {
   const textareaRef: MutableRefObject<HTMLTextAreaElement | null> = useRef(null);
 
-  // Here we use the useState hook instead of useMemo, because computing the singleRowHeight
-  // requires the textareaRef.current to be available, but useMemo is computed before the render,
-  //  so we set it to 1 initially and update it in the useLayoutEffect
+  // Initial value of 1 is a placeholder; the real value is measured once the textarea
+  // actually has layout (it may mount inside a `display: none` ancestor — e.g. a collapsed
+  // accordion — where `scrollHeight` reads 0). A ResizeObserver re-measures when layout returns.
   const [ singleRowHeight, setSingleRowHeight ] = useState(1);
 
   useLayoutEffect(() => {
-    if (textareaRef.current) {
-      setSingleRowHeight(computeSingleRowHeight(textareaRef.current));
+    const textarea = textareaRef.current;
+    if (Type.isNullable(textarea)) {
+      return;
     }
+
+    const measured = Cell(false);
+    const observer = Singleton.value<InstanceType<typeof window.ResizeObserver>>();
+
+    const tryCompute = () => {
+      if (measured.get() || !Visibility.isVisible(SugarElement.fromDom(textarea))) {
+        return;
+      }
+      const value = computeSingleRowHeight(textarea);
+      if (value > 1) {
+        measured.set(true);
+        setSingleRowHeight(value);
+        // Once measured, we're done — stop observing so subsequent `rows`
+        // mutations from `resizeTextarea` don't re-fire this callback (which
+        // would surface as a `ResizeObserver loop` warning).
+        observer.on((obs) => obs.disconnect());
+        observer.clear();
+      }
+    };
+
+    tryCompute();
+    if (!measured.get()) {
+      observer.set(new window.ResizeObserver(tryCompute));
+      observer.on((obs) => obs.observe(textarea));
+    }
+    return () => observer.on((obs) => obs.disconnect());
   }, []);
 
   // The minRows and maxRows only need to be computed once per component instance, so they are in the useMemo hook

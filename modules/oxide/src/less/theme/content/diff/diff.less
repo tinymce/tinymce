@@ -29,9 +29,9 @@
   }
 
   .tox-@{pluginName}__annotation--added__selected {
-    background-position: center;
-    background-size: 100% calc(1lh + 3px);
-    background-image: linear-gradient(@selected-outline-color 3px, @added-bg 3px, @added-bg calc(100% - 3px), @selected-outline-color calc(100% - 3px));
+    background-image: none;
+    background-color: @added-bg;
+    box-shadow: @selected-box-shadow;
   }
 
   .tox-@{pluginName}__annotation--modified__highlight {
@@ -40,9 +40,9 @@
   }
 
   .tox-@{pluginName}__annotation--modified__selected {
-    background-position: center;
-    background-size: 100% calc(1lh + 3px);
-    background-image: linear-gradient(@selected-outline-color 3px, @modified-bg 3px, @modified-bg calc(100% - 3px), @selected-outline-color calc(100% - 3px));
+    background-image: none;
+    background-color: @modified-bg;
+    box-shadow: @selected-box-shadow;
   }
 
   .tox-@{pluginName}__annotation--removed__highlight {
@@ -53,29 +53,36 @@
 
   .tox-@{pluginName}__annotation--removed__selected {
     text-decoration: line-through;
-    background-position: center;
-    background-size: 100% calc(1lh + 3px);
-    background-image: linear-gradient(@selected-outline-color 3px, @removed-bg 3px, @removed-bg calc(100% - 3px), @selected-outline-color calc(100% - 3px));
+    background-image: none;
+    background-color: @removed-bg;
+    box-shadow: @selected-box-shadow;
   }
 
-  // Block elements should not have background size of 1lh, so selection is based on box-shadow
-  div, p, ul, ol, li, table, section, header, footer, h1, h2, h3, h4, h5, h6, figure, hr {
+  // ins/del elements only contain text and inline formatting, so they can safely use
+  // the 1lh background-image approach for better inline selection styling
+  ins, del {
     &.tox-@{pluginName}__annotation--added__selected {
-      background-image: none;
-      background-color: @added-bg;
-      box-shadow: @selected-box-shadow;
+      background-color: transparent;
+      box-shadow: none;
+      background-position: center;
+      background-size: 100% calc(1lh + 3px);
+      background-image: linear-gradient(@selected-outline-color 3px, @added-bg 3px, @added-bg calc(100% - 3px), @selected-outline-color calc(100% - 3px));
     }
 
     &.tox-@{pluginName}__annotation--modified__selected {
-      background-image: none;
-      background-color: @modified-bg;
-      box-shadow: @selected-box-shadow;
+      background-color: transparent;
+      box-shadow: none;
+      background-position: center;
+      background-size: 100% calc(1lh + 3px);
+      background-image: linear-gradient(@selected-outline-color 3px, @modified-bg 3px, @modified-bg calc(100% - 3px), @selected-outline-color calc(100% - 3px));
     }
 
     &.tox-@{pluginName}__annotation--removed__selected {
-      background-image: none;
-      background-color: @removed-bg;
-      box-shadow: @selected-box-shadow;
+      background-color: transparent;
+      box-shadow: none;
+      background-position: center;
+      background-size: 100% calc(1lh + 3px);
+      background-image: linear-gradient(@selected-outline-color 3px, @removed-bg 3px, @removed-bg calc(100% - 3px), @selected-outline-color calc(100% - 3px));
     }
   }
 

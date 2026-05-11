@@ -1,0 +1,6 @@
+project: bridge
+kind: Added
+body: New `dynamicHeight` optional boolean property to TabPanel components.
+time: 2026-04-16T14:50:45.588981+10:00
+custom:
+    Issue: TINY-7552

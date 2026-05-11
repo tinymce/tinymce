@@ -11,6 +11,17 @@ export default defineConfig({
         test: {
           name: 'atomic',
           environment: 'node',
+          server: {
+            deps: {
+              // @ephox/dispute ships "type": "module" with extensionless relative imports,
+              // which Node's strict ESM loader rejects. Inlining routes @ephox packages
+              // through Vite's resolver, which tolerates the missing extension. The whole
+              // chain (sugar → katamari → dispute) must be inlined: if a parent stays
+              // externalized, Node loads it directly and its `import '@ephox/dispute'`
+              // never reaches Vite.
+              inline: [ '@ephox' ]
+            }
+          },
           alias: [
             {
               find: 'oxide-components',

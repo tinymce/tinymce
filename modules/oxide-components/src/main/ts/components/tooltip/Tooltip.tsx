@@ -16,16 +16,12 @@ interface RootProps extends PropsWithChildren {
   readonly showCondition?: 'always' | 'overflow';
 }
 
-interface TriggerProps {
-  readonly checkChildren?: boolean;
-}
-
-interface TriggerInternalProps extends PropsWithChildren<HTMLAttributes<HTMLElement>>, TriggerProps { }
+interface TriggerInternalProps extends PropsWithChildren<HTMLAttributes<HTMLElement>> { }
 
 // Certain elements have an overflow of 1 even when not overflowing. Ignore those.
 const isOverflowing = (element: HTMLElement) => (element.offsetWidth + 1 < element.scrollWidth);
 
-const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ checkChildren, children, ...props }, ref) => {
+const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, ...props }, ref) => {
   const { shouldRenderComponents, setIsOpen, showCondition, triggerRef, setRenderComponents, popupAnchor } = useTooltip();
 
   const shouldRender = useCallback(() => {
@@ -33,16 +29,12 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ checkChildr
       const trigger = triggerRef.current;
 
       if (Type.isNonNullable(trigger)) {
-        if (checkChildren) {
-          return isOverflowing(trigger) || PredicateExists.child(SugarElement.fromDom(trigger), (child) => SugarNode.isHTMLElement(child) && isOverflowing(child.dom));
-        } else {
-          return isOverflowing(trigger);
-        }
+        return isOverflowing(trigger) || PredicateExists.child(SugarElement.fromDom(trigger), (child) => SugarNode.isHTMLElement(child) && isOverflowing(child.dom));
       }
     }
 
     return true;
-  }, [ triggerRef, showCondition, checkChildren ]);
+  }, [ triggerRef, showCondition ]);
 
   useLayoutEffect(() => {
     const shouldRerender = shouldRender();
@@ -145,7 +137,7 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ checkChildr
 });
 
 const Trigger: React.ForwardRefExoticComponent<
-  PropsWithChildren & React.RefAttributes<HTMLElement> & TriggerProps
+  PropsWithChildren & React.RefAttributes<HTMLElement>
 > = TriggerImpl;
 
 interface ContentProps {

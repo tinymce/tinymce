@@ -1,5 +1,21 @@
 import { Id, Type } from '@ephox/katamari';
-import { Children, cloneElement, forwardRef, isValidElement, useCallback, useEffect, useMemo, useRef, useState, type FC, type HTMLAttributes, type MouseEvent, type PropsWithChildren, type ReactElement, type KeyboardEvent } from 'react';
+import {
+  Children,
+  cloneElement,
+  forwardRef,
+  isValidElement,
+  useCallback,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  type FC,
+  type HTMLAttributes,
+  type KeyboardEvent,
+  type MouseEvent,
+  type PropsWithChildren,
+  type ReactElement
+} from 'react';
 
 import { Bem } from '../../main';
 
@@ -17,7 +33,7 @@ const Content = forwardRef<HTMLDivElement, DropdownContentProps>(({ children, on
     setIsOpen(event.newState === 'open');
   }, [ setIsOpen ]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const element = contentRef.current;
     if (Type.isNullable(element)) {
       return;
@@ -174,7 +190,6 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
     ...triggerEvents.includes('click') && onClickTriggerProps,
     ...triggerEvents.includes('hover') && onHoverTriggerProps,
     ...triggerEvents.includes('arrows') && onArrowTriggerProps,
-
   });
 });
 
@@ -207,7 +222,7 @@ const Root: FC<DropdownProps> = ({ children, side = 'bottom', align = 'start', g
 };
 
 export {
-  Root,
   Content,
+  Root,
   Trigger
 };

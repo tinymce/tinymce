@@ -1,0 +1,6 @@
+project: tinymce
+kind: Changed
+body: Changed LESS math mode from always to parens-division.
+time: 2026-04-30T12:29:05.185705+02:00
+custom:
+    Issue: TINY-13317

@@ -26,6 +26,7 @@
     display: flex;
     flex-direction: column;
     gap: @card-section-gap;
+    padding: @card-section-padding;
     cursor: pointer;
     transition: box-shadow 0.15s ease-in-out, border 0.15s ease-in-out;
     border: @card-selected-border-width solid transparent;
@@ -79,7 +80,6 @@
     }
 
     &__header {
-      padding: @card-section-padding;
       padding-bottom: 0;
       color: @card-text-color;
       font-size: @font-size-md;
@@ -100,7 +100,6 @@
     }
 
     &__body {
-      padding: @card-section-padding @card-section-padding 0 @card-section-padding;
       color: @card-text-color;
       font-size: @font-size-md;
 
@@ -109,10 +108,6 @@
         padding: 0;
         gap: @card-section-gap;
       }
-    }
-
-    &--has-decision &__body {
-      padding: 0 @card-section-padding 0 @card-section-padding;
     }
 
     &__highlight {
@@ -135,7 +130,6 @@
     &__actions {
       display: flex;
       gap: @card-button-gap;
-      padding: 0 @card-section-padding @card-section-padding;
 
       &--space-between {
         justify-content: space-between;

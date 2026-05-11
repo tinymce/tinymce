@@ -1,0 +1,6 @@
+project: agar
+kind: Added
+body: Added `mouseEnter` and `mouseLeave` to the `Mouse` API.
+time: 2026-04-28T08:43:24.354477+02:00
+custom:
+    Issue: TINY-13585
