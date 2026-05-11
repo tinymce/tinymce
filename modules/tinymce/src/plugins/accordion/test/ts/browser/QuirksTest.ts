@@ -90,6 +90,7 @@ describe('browser.tinymce.plugins.accordion.QuirksTest', () => {
     { content: '<ol><li><span style="border: 2px solid red;">&nbsp;</span><span style="display: block;">def</span></li></ol>', path: [ 0, 0 ], offset: 1 },
     { content: '<ol><li><span style="border: 2px solid red;">&nbsp;</span>\n<span style="display: block;">def</span></li></ol>', path: [ 0, 0 ], offset: 1 },
     { content: '<ol><li>abc<img src="some-fake-url"><div>def</div></li></ol>', path: [ 0, 0 ], offset: 2 },
+    { content: '<ol><li>abc<img src="some-fake-url">\n<div>def</div></li></ol>', path: [ 0, 0 ], offset: 2 },
   ];
 
   Arr.each(cases, ({ content, path, offset }, i) => {
