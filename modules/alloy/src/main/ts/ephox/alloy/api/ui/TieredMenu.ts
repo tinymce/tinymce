@@ -39,6 +39,8 @@ const tieredMenu: TieredMenuSketcher = single<TieredMenuSpecType, TieredMenuDeta
   configFields: [
     Fields.onStrictKeyboardHandler('onExecute'),
     Fields.onStrictKeyboardHandler('onEscape'),
+    Fields.onKeyboardHandler('onTab'),
+    Fields.onKeyboardHandler('onShiftTab'),
 
     Fields.onStrictHandler('onOpenMenu'),
     Fields.onStrictHandler('onOpenSubmenu'),

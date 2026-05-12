@@ -46,10 +46,9 @@ const configureMatrix = (detail: MenuDetail, movementInfo: MenuMatrixMovement): 
   focusManager: detail.focusManager
 });
 
-const configureMenu = (detail: MenuDetail, movementInfo: MenuNormalMovement): MenuConfigSpec => ({
+const configureMenu = (detail: MenuDetail, _movementInfo: MenuNormalMovement): MenuConfigSpec => ({
   mode: 'menu',
   selector: '.' + detail.markers.item,
-  moveOnTab: movementInfo.moveOnTab,
   focusManager: detail.focusManager
 });
 
@@ -95,12 +94,7 @@ const schema = Fun.constant([
   SketchBehaviourField('menuBehaviours', [ Highlighting, Representing, Composing, Keying ]),
 
   FieldSchema.defaultedOf('movement', {
-    // When you don't specify movement for a Menu, this is what you get
-    // a "menu" type of movement that moves on tab. If you want finer-grained
-    // control, like disabling moveOnTab, then you need to specify
-    // your entire movement configuration when creating your MenuSpec.
-    mode: 'menu',
-    moveOnTab: true
+    mode: 'menu'
   }, StructureSchema.choose(
     'mode',
     {
@@ -114,7 +108,6 @@ const schema = Fun.constant([
         FieldSchema.defaulted('previousSelector', Optional.none),
       ],
       menu: [
-        FieldSchema.defaulted('moveOnTab', true),
         Fields.output('config', configureMenu)
       ]
     }

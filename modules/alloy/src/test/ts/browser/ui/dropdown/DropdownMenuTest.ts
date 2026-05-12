@@ -398,9 +398,9 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
       ),
 
       // Now, let's play with the inline widget
-      Keyboard.sKeydown(doc, Keys.tab(), { }),
+      Keyboard.sKeydown(doc, Keys.down(), { }),
       sTestMenus(
-        'After pressing <tab> from about',
+        'After pressing <down> from about',
         [ ],
         focusables.widget,
         [ focusables.toolsMenu ], [ ], [

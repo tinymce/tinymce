@@ -456,6 +456,8 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
           onRight: keyOnItem(onRight),
           onLeft: keyOnItem(onLeft),
           onEscape: keyOnItem(onEscape),
+          onTab: detail.onTab,
+          onShiftTab: detail.onShiftTab,
           focusIn: (container, _keyInfo) => {
             layeredState.getPrimary().each((primary) => {
               AlloyTriggers.dispatch(container, primary.element, SystemEvents.focusItem());

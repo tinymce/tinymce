@@ -178,13 +178,11 @@ export interface MenuConfigSpec extends GeneralKeyingConfigSpec {
   mode: 'menu';
   selector: string;
   execute?: (comp: AlloyComponent, se: NativeSimulatedEvent, focused: SugarElement<HTMLElement>) => Optional<boolean>;
-  moveOnTab?: boolean;
 }
 
 export interface MenuConfig extends GeneralKeyingConfig {
   selector: string;
   execute: (comp: AlloyComponent, se: NativeSimulatedEvent, focused: SugarElement<HTMLElement>) => Optional<boolean>;
-  moveOnTab: boolean;
 }
 
 export interface SpecialConfigSpec extends GeneralKeyingConfigSpec {

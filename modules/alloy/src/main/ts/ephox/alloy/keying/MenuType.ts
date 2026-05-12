@@ -16,8 +16,7 @@ import * as KeyingTypes from './KeyingTypes';
 
 const schema = [
   FieldSchema.required('selector'),
-  FieldSchema.defaulted('execute', KeyingTypes.defaultExecute),
-  FieldSchema.defaulted('moveOnTab', false)
+  FieldSchema.defaulted('execute', KeyingTypes.defaultExecute)
 ];
 
 const execute: KeyRuleHandler<MenuConfig, Stateless> = (component, simulatedEvent, menuConfig) => menuConfig.focusManager.get(component).bind((focused) => menuConfig.execute(component, simulatedEvent, focused));
@@ -33,15 +32,9 @@ const moveUp: DomMovement.ElementMover<MenuConfig, Stateless> = (element, focuse
 
 const moveDown: DomMovement.ElementMover<MenuConfig, Stateless> = (element, focused, info) => DomNavigation.horizontal(element, info.selector, focused, +1);
 
-const fireShiftTab: KeyRuleHandler<MenuConfig, Stateless> = (component, simulatedEvent, menuConfig, menuState) => menuConfig.moveOnTab ? DomMovement.move(moveUp)(component, simulatedEvent, menuConfig, menuState) : Optional.none();
-
-const fireTab: KeyRuleHandler<MenuConfig, Stateless> = (component, simulatedEvent, menuConfig, menuState) => menuConfig.moveOnTab ? DomMovement.move(moveDown)(component, simulatedEvent, menuConfig, menuState) : Optional.none();
-
 const getKeydownRules = Fun.constant([
   KeyRules.rule(KeyMatch.inSet(Keys.UP), DomMovement.move(moveUp)),
   KeyRules.rule(KeyMatch.inSet(Keys.DOWN), DomMovement.move(moveDown)),
-  KeyRules.rule(KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.TAB) ]), fireShiftTab),
-  KeyRules.rule(KeyMatch.and([ KeyMatch.isNotShift, KeyMatch.inSet(Keys.TAB) ]), fireTab),
   KeyRules.rule(KeyMatch.inSet(Keys.ENTER), execute),
   KeyRules.rule(KeyMatch.inSet(Keys.SPACE), execute)
 ]);

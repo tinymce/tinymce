@@ -1,0 +1,6 @@
+project: alloy
+kind: Removed
+body: Removed the `moveOnTab` option from `MenuSpec`.
+time: 2026-04-22T10:00:02+10:00
+custom:
+    Issue: TINY-13341

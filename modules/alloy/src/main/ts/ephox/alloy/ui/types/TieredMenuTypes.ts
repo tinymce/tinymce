@@ -5,6 +5,7 @@ import type { AlloyComponent } from '../../api/component/ComponentApi';
 import type { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import type { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import type { SingleSketch, SingleSketchDetail, SingleSketchSpec } from '../../api/ui/Sketcher';
+import type { KeyHandlerApi } from '../../keying/KeyingModeTypes';
 import type { LayeredItemTrigger } from '../../menu/layered/LayeredState';
 
 import type { ItemDataTuple } from './ItemTypes';
@@ -30,6 +31,8 @@ export interface TieredMenuDetail extends SingleSketchDetail {
   };
 
   onEscape: (comp: AlloyComponent, item: AlloyComponent) => Optional<boolean>;
+  onTab: KeyHandlerApi;
+  onShiftTab: KeyHandlerApi;
   onExecute: (comp: AlloyComponent, item: AlloyComponent) => Optional<boolean>;
   onOpenMenu: (comp: AlloyComponent, menu: AlloyComponent) => void;
   onOpenSubmenu: (comp: AlloyComponent, item: AlloyComponent, activeMenu: AlloyComponent, triggeringPath: string[]) => void;
@@ -55,6 +58,8 @@ export interface TieredMenuSpec extends SingleSketchSpec {
 
   onEscape: (comp: AlloyComponent, item: AlloyComponent) => Optional<boolean>;
   onExecute: (comp: AlloyComponent, item: AlloyComponent) => Optional<boolean>;
+  onTab?: KeyHandlerApi;
+  onShiftTab?: KeyHandlerApi;
   onOpenMenu: (comp: AlloyComponent, menu: AlloyComponent) => void;
   onOpenSubmenu: (comp: AlloyComponent, item: AlloyComponent, activeMenu: AlloyComponent, triggeringPath: string[]) => void;
   onCollapseMenu?: (comp: AlloyComponent, item: AlloyComponent, activeMenu: AlloyComponent) => void;
