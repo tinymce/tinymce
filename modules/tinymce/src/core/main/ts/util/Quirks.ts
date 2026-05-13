@@ -709,9 +709,6 @@ const Quirks = (editor: Editor): Quirks => {
     });
   };
 
-  const hasBlockChildren = (target: SugarElement<Node>): boolean =>
-    Arr.exists(Traverse.children(target), (child) => SugarNode.isElement(child) ? Css.get(child, 'display') === 'block' : false);
-
   const firstBlockChild = (target: SugarElement<Node>) =>
     Arr.find(Traverse.children(target), (child) => SugarNode.isElement(child) ? Css.get(child, 'display') === 'block' : false);
 
@@ -746,15 +743,13 @@ const Quirks = (editor: Editor): Quirks => {
   const fixInLISelection = () => {
     editor.on('mousedown', (e) => {
       const target = SugarElement.fromDom(e.target);
-      if (isListItem(target) && hasBlockChildren(target)) {
-        const lastInlineBeforeBlockOpt = firstBlockChild(target).bind((block) => {
+      if (isListItem(target)) {
+        firstBlockChild(target).bind((block) => {
           const prevSibling = Traverse.prevSibling(block);
           return prevSibling.exists(isValidSibling)
             ? prevSibling
             : prevSibling.bind((el) => Traverse.prevSibling(el).or(prevSibling));
-        });
-
-        lastInlineBeforeBlockOpt.each((lastInlineBeforeBlock) => {
+        }).each((lastInlineBeforeBlock) => {
           if (Arr.get(getClientRects([ lastInlineBeforeBlock.dom ]), 0).exists((rect) => clickAfterEl(e.clientX, e.clientY, rect))) {
             const rng = editor.dom.createRng();
             rng.setStartAfter(lastInlineBeforeBlock.dom);
