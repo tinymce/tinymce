@@ -334,5 +334,9 @@ describe('browser.SubmenuItemTest', () => {
 
     await userEvent.hover(getByText('Sibling Item'));
     await expect.poll(() => getByText('Nested Item').query()).toBeNull();
+    // Regression: closing the submenu must not steal focus back to the trigger.
+    // Focus should remain on the sibling menuitem after the auto-close.
+    const siblingMenuItem = getByText('Sibling Item').element().closest('[role="menuitem"]');
+    await expect.poll(() => document.activeElement).toBe(siblingMenuItem);
   });
 });

@@ -1,21 +1,21 @@
 import { Fun, Type } from '@ephox/katamari';
-import { forwardRef, useEffect, useId, useMemo, useRef, useState } from 'react';
+import { forwardRef, useCallback, useEffect, useId, useMemo, useRef, useState, type FocusEvent } from 'react';
 
 import * as Bem from '../../../utils/Bem';
 import * as Dropdown from '../../dropdown/Dropdown';
 import { Icon } from '../../icon/Icon';
-import { useMenu } from '../internals/Context';
 import type { CommonMenuItemInstanceApi, SubmenuProps } from '../internals/Types';
 
 export const SubmenuItem = forwardRef<HTMLDivElement, SubmenuProps>(({ enabled = true, icon, onSetup, children, submenusSide = 'right', submenuContent }, ref) => {
   const [ state, setState ] = useState({
     enabled,
     focused: false,
-    isActive: false,
   });
+  const [ submenuOpen, setSubmenuOpen ] = useState(false);
   const id = useId();
   const stateRef = useRef(state);
-  const { activeItemId, setActiveItemId } = useMenu();
+  const triggerRef = useRef<HTMLDivElement | null>(null);
+  const submenuContentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     stateRef.current = state;
@@ -40,21 +40,31 @@ export const SubmenuItem = forwardRef<HTMLDivElement, SubmenuProps>(({ enabled =
     return Fun.noop;
   }, [ onSetup, api ]);
 
-  const submenuContentRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     if (!state.enabled) {
       submenuContentRef.current?.hidePopover();
     }
   }, [ state.enabled ]);
 
-  useEffect(() => {
-    const isActive = activeItemId === id;
-    setState((prev) => ({ ...prev, isActive }));
-    if (!isActive && submenuContentRef.current?.matches(':popover-open')) {
-      submenuContentRef.current.hidePopover();
+  // Close the submenu when focus moves outside both the trigger and the submenu content.
+  // Attached to both because they are siblings — neither's onBlur bubbles to the other.
+  const handleZoneBlur = useCallback((e: FocusEvent<HTMLElement>) => {
+    const relatedTarget = e.relatedTarget;
+    const insideTrigger = Type.isNonNullable(relatedTarget) && (triggerRef.current?.contains(relatedTarget) ?? false);
+    const insideContent = Type.isNonNullable(relatedTarget) && (submenuContentRef.current?.contains(relatedTarget) ?? false);
+    if (!insideTrigger && !insideContent) {
+      submenuContentRef.current?.hidePopover();
     }
-  }, [ activeItemId, id ]);
+  }, []);
+
+  const setTriggerRef = useCallback((el: HTMLDivElement | null) => {
+    triggerRef.current = el;
+    if (Type.isFunction(ref)) {
+      ref(el);
+    } else if (Type.isNonNullable(ref)) {
+      ref.current = el;
+    }
+  }, [ ref ]);
 
   const itemIcon = Type.isString(icon)
     ? <Icon icon={icon} />
@@ -69,24 +79,24 @@ export const SubmenuItem = forwardRef<HTMLDivElement, SubmenuProps>(({ enabled =
       <Dropdown.Trigger>
         <div
           id={id}
-          ref={ref}
+          ref={setTriggerRef}
           style={{ boxSizing: 'border-box', width: '100%' }}
           tabIndex={-1}
           role='menuitem'
           aria-haspopup={'true'}
           aria-disabled={!state.enabled}
-          onFocus={() => {
-            setState((prev) => ({ ...prev, focused: true }));
-            setActiveItemId(id);
-          }}
+          onFocus={() => setState((prev) => ({ ...prev, focused: true }))}
           onPointerMove={(e) => {
             if (state.enabled) {
               e.currentTarget.focus();
             }
           }}
-          onBlur={() => setState((prev) => ({ ...prev, focused: false }))}
+          onBlur={(e) => {
+            setState((prev) => ({ ...prev, focused: false }));
+            handleZoneBlur(e);
+          }}
           className={Bem.element('tox-collection', 'item', {
-            'active': state.focused || state.isActive,
+            'active': state.focused || submenuOpen,
             'state-disabled': !state.enabled,
           })}
         >
@@ -97,7 +107,11 @@ export const SubmenuItem = forwardRef<HTMLDivElement, SubmenuProps>(({ enabled =
           </div>
         </div>
       </Dropdown.Trigger>
-      <Dropdown.Content ref={submenuContentRef}>
+      <Dropdown.Content
+        ref={submenuContentRef}
+        onOpenChange={setSubmenuOpen}
+        onBlur={handleZoneBlur}
+      >
         {submenuContent}
       </Dropdown.Content>
     </Dropdown.Root>
