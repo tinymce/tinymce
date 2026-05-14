@@ -1,5 +1,5 @@
 import { Arr, Fun, Optional, Optionals, Type } from '@ephox/katamari';
-import { Css, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
+import { Css, PredicateFind, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
 import type Editor from '../api/Editor';
 import Env from '../api/Env';
@@ -726,7 +726,7 @@ const Quirks = (editor: Editor): Quirks => {
     getClientRects([ el.dom ]).length > 0;
 
   const firstBlockChildOrNewLine = (target: SugarElement<Node>) =>
-    Arr.find(Traverse.children(target), (child) => SugarNode.isTag('br')(child) || SugarNode.isElement(child) && Css.get(child, 'display') === 'block');
+    PredicateFind.child(target, (child) => SugarNode.isTag('br')(child) || SugarNode.isElement(child) && Css.get(child, 'display') === 'block');
 
   const clickAfterEl = (clientX: number, clientY: number, rect: NodeClientRect): boolean =>
     clientX >= rect.right && clientY >= rect.top && clientY <= rect.bottom;
