@@ -115,13 +115,6 @@ const Option = forwardRef<HTMLSpanElement, SegmentedControlOptionProps>((
   const isActive = selectedValue === optionValue;
   const isDisabled = groupDisabled || optionDisabled;
 
-  const getTabIndex = (): number => {
-    if (isDisabled) {
-      return -1;
-    }
-    return isActive ? 0 : -1;
-  };
-
   const handleClick = () => {
     if (!isDisabled && !isActive) {
       onChange(optionValue);
@@ -135,7 +128,7 @@ const Option = forwardRef<HTMLSpanElement, SegmentedControlOptionProps>((
       role="radio"
       aria-checked={isActive}
       aria-disabled={isDisabled ? 'true' : 'false'}
-      tabIndex={getTabIndex()}
+      tabIndex={-1}
       data-value={optionValue}
       onClick={handleClick}
     >
