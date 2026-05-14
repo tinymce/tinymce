@@ -1,35 +1,38 @@
 import { UiFinder, Waiter } from '@ephox/agar';
 import { afterEach, describe, it } from '@ephox/bedrock-client';
-import { SugarBody, type SugarElement } from '@ephox/sugar';
-import { TinyHooks } from '@ephox/wrap-mcagar';
+import { Remove, SelectorFind, SugarBody, type SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import AriaAnnouncer, { announcerContainerId } from 'tinymce/core/api/dom/AriaAnnouncer';
-import type Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.AriaAnnouncerTest', () => {
-  const hook = TinyHooks.bddSetupLight<Editor>({
-    base_url: '/project/tinymce/js/tinymce'
-  }, []);
-
   const containerSelector = `#${announcerContainerId}`;
 
   const pGetContainer = (): Promise<SugarElement<HTMLElement>> =>
     UiFinder.pWaitFor<HTMLElement>('aria announcer container should exist on the body', SugarBody.body(), containerSelector);
 
-  afterEach(async () => {
-    await Waiter.pTryUntil(
-      'Announcer container should be cleaned up between tests',
-      () => UiFinder.notExists(SugarBody.body(), containerSelector),
-      100,
-      3000
-    );
+  const pPoliteMessage = (container: SugarElement<HTMLElement>, text: string): Promise<void> =>
+    Waiter.pTryUntil(`polite region should contain a message "${text}"`, () => {
+      const politeRegions = UiFinder.findAllIn<HTMLElement>(container, 'div[aria-live="polite"]');
+      assert.isAtLeast(politeRegions.length, 1, 'polite region not present');
+      const messageDivs = UiFinder.findAllIn<HTMLElement>(politeRegions[0], 'div');
+      const found = messageDivs.some((m) => m.dom.textContent === text);
+      assert.isTrue(found, `message "${text}" not present in polite region`);
+    });
+
+  const pAssertiveText = (container: SugarElement<HTMLElement>, text: string): Promise<void> =>
+    Waiter.pTryUntil(`assertive region should contain "${text}"`, () => {
+      const matches = UiFinder.findAllIn<HTMLElement>(container, 'div[aria-live="assertive"]')
+        .filter((r) => r.dom.textContent === text);
+      assert.isAtLeast(matches.length, 1, `text "${text}" not present in any assertive region`);
+    });
+
+  afterEach(() => {
+    SelectorFind.descendant(SugarBody.body(), containerSelector).each(Remove.remove);
   });
 
   it('Container is created lazily on first announce with offscreen styles', async () => {
-    const editor = hook.editor();
-
-    editor.announce('Setup');
+    AriaAnnouncer.announce('Setup');
     const container = (await pGetContainer()).dom;
 
     assert.equal(container.style.position, 'absolute');
@@ -37,81 +40,74 @@ describe('browser.tinymce.core.AriaAnnouncerTest', () => {
     assert.equal(container.style.overflow, 'hidden');
   });
 
-  it('Announce creates a polite token with correct attributes', async () => {
-    const editor = hook.editor();
-
-    editor.announce('Bold on');
+  it('Container starts with one persistent polite region and no assertive region', async () => {
+    AriaAnnouncer.announce('Setup');
     const container = await pGetContainer();
 
-    const token = (await UiFinder.pWaitFor<HTMLElement>('polite token should exist', container, 'span[aria-live="polite"][aria-label="Bold on"]')).dom;
-    assert.equal(token.getAttribute('aria-atomic'), 'true');
-    assert.equal(token.getAttribute('role'), 'presentation');
-    assert.equal(token.textContent, 'Bold on');
+    const polite = UiFinder.findAllIn<HTMLElement>(container, 'div[aria-live="polite"]');
+    const assertive = UiFinder.findAllIn<HTMLElement>(container, 'div[aria-live="assertive"]');
+    assert.lengthOf(polite, 1, 'should have one polite region');
+    assert.lengthOf(assertive, 0, 'no assertive region should exist until an assertive announce');
+    assert.equal(polite[0].dom.getAttribute('aria-atomic'), 'false');
+    assert.equal(polite[0].dom.getAttribute('aria-relevant'), 'additions');
   });
 
-  it('Assertive announce creates an assertive token with correct attributes', async () => {
-    const editor = hook.editor();
-
-    editor.announce('Error occurred', { assertive: true });
+  it('Polite announce appends a message div as a child of the polite region', async () => {
+    AriaAnnouncer.announce('Bold on');
     const container = await pGetContainer();
 
-    const token = (await UiFinder.pWaitFor<HTMLElement>('assertive token should exist', container, 'span[aria-live="assertive"]')).dom;
-    assert.equal(token.getAttribute('aria-atomic'), 'true');
-    assert.equal(token.getAttribute('role'), 'alert');
-    assert.equal(token.textContent, 'Error occurred');
+    await pPoliteMessage(container, 'Bold on');
   });
 
-  it('Token is removed after timeout', async () => {
-    const editor = hook.editor();
-
-    editor.announce('Italic on');
+  it('Subsequent polite announces append additional message divs and keep prior ones', async () => {
+    AriaAnnouncer.announce('First');
     const container = await pGetContainer();
-    const tokenSelector = 'span[aria-label="Italic on"]';
+    await pPoliteMessage(container, 'First');
 
-    await UiFinder.pWaitFor('token "Italic on" should exist immediately', container, tokenSelector);
+    AriaAnnouncer.announce('Second');
+    await pPoliteMessage(container, 'Second');
 
-    await Waiter.pTryUntil(
-      'Token should be removed after timeout',
-      () => UiFinder.notExists(container, tokenSelector),
-      100,
-      2000
-    );
+    const polite = UiFinder.findAllIn<HTMLElement>(container, 'div[aria-live="polite"]');
+    assert.lengthOf(polite, 1, 'still only one polite region');
+    const messageDivs = UiFinder.findAllIn<HTMLElement>(polite[0], 'div');
+    const texts = messageDivs.map((m) => m.dom.textContent);
+    assert.deepEqual(texts, [ 'First', 'Second' ], 'both messages should be present in order');
   });
 
-  it('Container is removed once all tokens have been cleaned up', async () => {
-    const editor = hook.editor();
-
-    editor.announce('Cleanup');
-    await pGetContainer();
-
-    await Waiter.pTryUntil(
-      'Container should be removed once all tokens have been cleaned up',
-      () => UiFinder.notExists(SugarBody.body(), containerSelector),
-      100,
-      3000
-    );
-  });
-
-  it('Rapid calls create separate tokens for each message', async () => {
-    const editor = hook.editor();
-
-    editor.announce('First');
-    editor.announce('Second');
-    editor.announce('Third');
+  it('Assertive announce creates a single assertive region with correct attributes', async () => {
+    AriaAnnouncer.announce('Error occurred', { assertive: true });
     const container = await pGetContainer();
 
-    await UiFinder.pWaitFor('all three tokens should be present', container, 'span[aria-label="Third"]');
-    const tokens = UiFinder.findAllIn<HTMLElement>(container, 'span[aria-live="polite"]');
-    const labels = tokens.map((t) => t.dom.getAttribute('aria-label'));
-    assert.include(labels, 'First');
-    assert.include(labels, 'Second');
-    assert.include(labels, 'Third');
+    await pAssertiveText(container, 'Error occurred');
+    const assertive = UiFinder.findAllIn<HTMLElement>(container, 'div[aria-live="assertive"]');
+    assert.lengthOf(assertive, 1, 'exactly one assertive region after a single announce');
+    assert.equal(assertive[0].dom.getAttribute('aria-atomic'), 'true');
+    assert.equal(assertive[0].dom.getAttribute('role'), 'alert');
   });
 
-  it('Announcer is accessible via the tinymce.dom.AriaAnnouncer', async () => {
-    AriaAnnouncer.announce('Global announce');
+  it('A new assertive announce removes the prior assertive region from the DOM', async () => {
+    AriaAnnouncer.announce('Error A', { assertive: true });
     const container = await pGetContainer();
+    await pAssertiveText(container, 'Error A');
+    const priorRegion = UiFinder.findAllIn<HTMLElement>(container, 'div[aria-live="assertive"]')[0];
 
-    await UiFinder.pWaitFor('token should be created via the global singleton', container, 'span[aria-label="Global announce"]');
+    AriaAnnouncer.announce('Error B', { assertive: true });
+    await pAssertiveText(container, 'Error B');
+
+    assert.isFalse(priorRegion.dom.isConnected, 'prior assertive region should be removed from the DOM');
+    const assertive = UiFinder.findAllIn<HTMLElement>(container, 'div[aria-live="assertive"]');
+    assert.lengthOf(assertive, 1, 'exactly one assertive region remains after the second announce');
+    assert.equal(assertive[0].dom.textContent, 'Error B');
+  });
+
+  it('Assertive announce does not affect polite messages already in the region', async () => {
+    AriaAnnouncer.announce('Polite message');
+    const container = await pGetContainer();
+    await pPoliteMessage(container, 'Polite message');
+
+    AriaAnnouncer.announce('Urgent', { assertive: true });
+    await pAssertiveText(container, 'Urgent');
+
+    await pPoliteMessage(container, 'Polite message');
   });
 });
