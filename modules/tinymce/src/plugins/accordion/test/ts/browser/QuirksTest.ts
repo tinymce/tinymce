@@ -70,6 +70,7 @@ describe('browser.tinymce.plugins.accordion.QuirksTest', () => {
   const cases = [
     { content: '<ol><li>abc<div>def</div></li></ol>', path: [ 0, 0 ], offset: 1 },
     { content: '<ol><li>abc\n<div>def</div></li></ol>', path: [ 0, 0 ], offset: 1 },
+    { content: '<ul><li>abc<br><div>def</div></li></ul>', path: [ 0, 0, 0 ], offset: 3 },
     { content: '<ul><li>abc<div>def</div></li></ul>', path: [ 0, 0 ], offset: 1 },
     { content: '<ul><li>abc\n<div>def</div></li></ul>', path: [ 0, 0 ], offset: 1 },
     { content: '<ol><li>abc<ul><li>def</li></ul></li></ol>', path: [ 0, 0 ], offset: 1 },

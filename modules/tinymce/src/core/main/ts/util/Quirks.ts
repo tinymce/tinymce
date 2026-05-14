@@ -1,4 +1,4 @@
-import { Arr, Fun, Optional, Optionals, Strings, Type } from '@ephox/katamari';
+import { Arr, Fun, Optional, Optionals, Type } from '@ephox/katamari';
 import { Css, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
 import type Editor from '../api/Editor';
@@ -709,9 +709,6 @@ const Quirks = (editor: Editor): Quirks => {
     });
   };
 
-  const firstBlockChild = (target: SugarElement<Node>) =>
-    Arr.find(Traverse.children(target), (child) => SugarNode.isElement(child) ? Css.get(child, 'display') === 'block' : false);
-
   /**
    * this is needed to manage the difference between
    * ```
@@ -723,13 +720,13 @@ const Quirks = (editor: Editor): Quirks => {
    * <div>b</div></li>
    * ```
    * since if the indentation of the HTML has a new line it creates a fake child in the `li` that is an empty text
+   * it's check it trying to get the rects and if it can't it means that it's the false unwanted new line
   **/
-  const isValidSibling = (el: SugarElement<Node>): boolean => {
-    if (SugarNode.isText(el)) {
-      return el.dom.nodeValue !== null && Strings.isNotEmpty(el.dom.nodeValue.trim());
-    }
-    return true;
-  };
+  const isValidSibling = (el: SugarElement<Node>): boolean =>
+    getClientRects([ el.dom ]).length > 0;
+
+  const firstBlockChildOrNewLine = (target: SugarElement<Node>) =>
+    Arr.find(Traverse.children(target), (child) => SugarNode.isTag('br')(child) || SugarNode.isElement(child) && Css.get(child, 'display') === 'block');
 
   const clickAfterEl = (clientX: number, clientY: number, rect: NodeClientRect): boolean =>
     clientX >= rect.right && clientY >= rect.top && clientY <= rect.bottom;
@@ -744,12 +741,9 @@ const Quirks = (editor: Editor): Quirks => {
     editor.on('mousedown', (e) => {
       const target = SugarElement.fromDom(e.target);
       if (isListItem(target)) {
-        firstBlockChild(target).bind((block) => {
-          const prevSibling = Traverse.prevSibling(block);
-          return prevSibling.exists(isValidSibling)
-            ? prevSibling
-            : prevSibling.bind((el) => Traverse.prevSibling(el).or(prevSibling));
-        }).each((lastInlineBeforeBlock) => {
+        firstBlockChildOrNewLine(target).map(Traverse.prevSiblings).bind((prevSiblings) =>
+          Arr.findLastIndex(prevSiblings, isValidSibling).bind((lastI) => Arr.get(prevSiblings, lastI))
+        ).each((lastInlineBeforeBlock) => {
           if (Arr.get(getClientRects([ lastInlineBeforeBlock.dom ]), 0).exists((rect) => clickAfterEl(e.clientX, e.clientY, rect))) {
             const rng = editor.dom.createRng();
             rng.setStartAfter(lastInlineBeforeBlock.dom);
