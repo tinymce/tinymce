@@ -1,6 +1,7 @@
+import { Keys } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { PlatformDetection } from '@ephox/sand';
-import { TinyAssertions, TinyContentActions, TinyHooks } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import type Editor from 'tinymce/core/api/Editor';
 
@@ -37,5 +38,45 @@ describe('browser.tinymce.core.undo.UndoKeyboardShortcutTest', () => {
     TinyAssertions.assertContent(editor, '<p>abc</p>');
     redoKeystroke(editor);
     TinyAssertions.assertContent(editor, '');
+  });
+
+  const undoKeystrokeRealistic = (editor: Editor) => {
+    const isMac = platform.os.isMacOS();
+    const modKeyCode = isMac ? Keys.cmdMac() : Keys.control();
+    const modifier = isMac ? { metaKey: true } : { ctrl: true };
+
+    TinyContentActions.keydown(editor, modKeyCode, modifier);
+    TinyContentActions.keydown(editor, 'Z'.charCodeAt(0), modifier);
+    TinyContentActions.keyup(editor, 'Z'.charCodeAt(0), modifier);
+    TinyContentActions.keyup(editor, modKeyCode, {});
+  };
+
+  const simulateRealDeleteViaKeyboard = (editor: Editor) => {
+    TinyContentActions.keydown(editor, Keys.delete());
+    // The browser would now delete "bc" itself. Reproduce that DOM mutation:
+    (editor.getBody().firstChild as HTMLElement).textContent = 'a';
+    TinySelections.setCursor(editor, [ 0, 0 ], 1);
+    TinyContentActions.keyup(editor, Keys.delete());
+  };
+
+  it('TINY-14255: undo shortcut should have the same selection has the undo button after a partial delection', () => {
+    const editor = hook.editor();
+    editor.resetContent('<p>abc</p>');
+    TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 3);
+
+    simulateRealDeleteViaKeyboard(editor);
+    TinyAssertions.assertContent(editor, '<p>a</p>');
+    undoKeystrokeRealistic(editor);
+    TinyAssertions.assertContent(editor, '<p>abc</p>');
+    TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 3);
+
+    editor.resetContent('<p>abc</p>');
+    TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 3);
+
+    simulateRealDeleteViaKeyboard(editor);
+    TinyAssertions.assertContent(editor, '<p>a</p>');
+    editor.execCommand('Undo');
+    TinyAssertions.assertContent(editor, '<p>abc</p>');
+    TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 3);
   });
 });
