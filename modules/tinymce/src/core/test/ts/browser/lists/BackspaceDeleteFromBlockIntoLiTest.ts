@@ -285,4 +285,50 @@ describe('browser.tinymce.core.lists.BackspaceDeleteFromBlockIntoLiTest', () => 
     editor.off('beforeinput', beforeInputHandler);
     editor.off('input', inputHandler);
   });
+
+  it('TINY-13292: backspace after br in list item should remove the br, not the list item', () => {
+    const editor = hook.editor();
+    editor.setContent(
+      '<ul>' +
+        '<li>a</li>' +
+        '<li>b</li>' +
+        '<li><br><br data-mce-bogus="1"></li>' +
+      '</ul>',
+      { format: 'raw' }
+    );
+    TinySelections.setCursor(editor, [ 0, 2 ], 1);
+    TinyContentActions.keystroke(editor, Keys.backspace());
+    TinyAssertions.assertContent(editor,
+      '<ul>' +
+        '<li>a</li>' +
+        '<li>b</li>' +
+        '<li>&nbsp;</li>' +
+      '</ul>'
+    );
+  });
+
+  it('TINY-13292: backspace after br in nested list item should remove the br, not the list item', () => {
+    const editor = hook.editor();
+    editor.setContent(
+      '<ul>' +
+        '<li>a' +
+          '<ul>' +
+            '<li><br><br data-mce-bogus="1"></li>' +
+          '</ul>' +
+        '</li>' +
+      '</ul>',
+      { format: 'raw' }
+    );
+    TinySelections.setCursor(editor, [ 0, 0, 1, 0 ], 1);
+    TinyContentActions.keystroke(editor, Keys.backspace());
+    TinyAssertions.assertContent(editor,
+      '<ul>' +
+        '<li>a' +
+          '<ul>' +
+            '<li>&nbsp;</li>' +
+          '</ul>' +
+        '</li>' +
+      '</ul>'
+    );
+  });
 });
