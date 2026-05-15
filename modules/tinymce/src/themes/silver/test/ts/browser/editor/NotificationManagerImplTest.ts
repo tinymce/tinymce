@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions, FocusTools, Keys, Mouse, UiFinder, Waiter } from '@ephox/agar';
+import { ApproxStructure, Assertions, FocusTools, Keys, UiFinder, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun, Strings } from '@ephox/katamari';
 import { Css, Focus, Height, Remove, Scroll, SugarBody, SugarDocument, SugarElement, SugarLocation, Traverse, Width } from '@ephox/sugar';
@@ -9,7 +9,7 @@ import type Editor from 'tinymce/core/api/Editor';
 import type { NotificationApi } from 'tinymce/core/api/NotificationManager';
 
 import * as PageScroll from '../../module/PageScroll';
-import { resizeToPos } from '../../module/UiUtils';
+import { resizeEditorBy } from '../../module/UiUtils';
 
 describe('browser.tinymce.themes.silver.editor.NotificationManagerImplTest', () => {
   const openNotification = (editor: Editor, type: 'info' | 'warning' | 'error' | 'success', text: string, progressBar = false) =>
@@ -351,9 +351,7 @@ describe('browser.tinymce.themes.silver.editor.NotificationManagerImplTest', () 
       assertPosition('Warning notification', nWarn, 0, 52);
 
       // Shrink the editor to 300px
-      const resizeHandle = UiFinder.findIn(SugarBody.body(), '.tox-statusbar__resize-handle').getOrDie();
-      Mouse.mouseDown(resizeHandle);
-      resizeToPos(600, 400, 600, 300);
+      await resizeEditorBy([ 0, -100 ]);
 
       // Add a wait to allow the resize event to be processed and notifications to be rerendered
       await Waiter.pTryUntil('Check items are positioned so that they are stacked', () => {
@@ -559,14 +557,14 @@ describe('browser.tinymce.themes.silver.editor.NotificationManagerImplTest', () 
 
       it('TINY-10894: Should resize the notification width to the smaller editor size on editor resize', async () => {
         const editor = hook.editor();
-        const resizeHandle = UiFinder.findIn(SugarBody.body(), '.tox-statusbar__resize-handle').getOrDie();
         const nError = openNotification(editor, 'error', longMessage);
 
         const beforeResizeWidth = nError.getEl().clientWidth;
         assert.approximately(beforeResizeWidth, 600, 10, 'Should be roughly the width of the editor');
 
-        Mouse.mouseDown(resizeHandle);
-        resizeToPos(600, 400, 300, 300);
+        // Shrink the editor from 600x400 to 300x300
+        await resizeEditorBy([ -300, -100 ]);
+
         await Waiter.pTryUntil('Waited for notification width to change', () => {
           assert.isBelow(nError.getEl().clientWidth, beforeResizeWidth, 'Should be less than the previous width');
         });
@@ -583,14 +581,14 @@ describe('browser.tinymce.themes.silver.editor.NotificationManagerImplTest', () 
 
       it('TINY-10894: Should resize the notification width to the smaller editor size on editor resize', async () => {
         const editor = hook.editor();
-        const resizeHandle = UiFinder.findIn(SugarBody.body(), '.tox-statusbar__resize-handle').getOrDie();
         const nError = openNotification(editor, 'error', longMessage);
 
         const beforeResizeWidth = nError.getEl().clientWidth;
         assert.approximately(beforeResizeWidth, 600, 10, 'Should be roughly the width of the editor');
 
-        Mouse.mouseDown(resizeHandle);
-        resizeToPos(600, 400, 800, 300);
+        // Grow the editor from 600x400 to 800x300
+        await resizeEditorBy([ 200, -100 ]);
+
         await Waiter.pTryUntil('Waited for notification width to change', () => {
           assert.isAbove(nError.getEl().clientWidth, beforeResizeWidth, 'Should be greater than the previous width');
         });

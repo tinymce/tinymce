@@ -1,4 +1,4 @@
-import { Fun, Optional } from '@ephox/katamari';
+import { Fun, type Optional, Singleton } from '@ephox/katamari';
 import type { EventArgs } from '@ephox/sugar';
 
 import { nuState } from '../../behaviour/common/BehaviourState';
@@ -11,22 +11,28 @@ const init = <T>(): BaseDraggingState<T> => {
   // Dragging operates on the difference between the previous user
   // interaction and the next user interaction. Therefore, we store
   // the previous interaction so that we can compare it.
-  let previous = Optional.none<T>();
+  const previous = Singleton.value<T>();
   // Dragging requires calculating the bounds, so we store that data initially
   // to reduce the amount of computation each mouse movement
-  let startData = Optional.none<DragStartData>();
+  const startData = Singleton.value<DragStartData>();
+
+  // In a multitouch environment, `pointerId` is used to distinguish pointers
+  // (e.g. different fingers on a touchscreen).
+  // This property is only used by pointer-event branches.
+  const activePointerId = Singleton.value<number>();
 
   const reset = (): void => {
-    previous = Optional.none();
-    startData = Optional.none();
+    previous.clear();
+    startData.clear();
+    activePointerId.clear();
   };
 
   // Return position delta between previous position and nu position,
   // or None if this is the first. Set the previous position to nu.
   const calculateDelta = <E extends Event>(mode: DragModeDeltas<E, T>, nu: T): Optional<T> => {
-    const result = previous.map((old) => mode.getDelta(old, nu));
+    const result = previous.get().map((old) => mode.getDelta(old, nu));
 
-    previous = Optional.some(nu);
+    previous.set(nu);
     return result;
   };
 
@@ -35,10 +41,16 @@ const init = <T>(): BaseDraggingState<T> => {
     mode.getData(dragEvent).bind((nuData) => calculateDelta(mode, nuData));
 
   const setStartData = (data: DragStartData) => {
-    startData = Optional.some(data);
+    startData.set(data);
   };
 
-  const getStartData = (): Optional<DragStartData> => startData;
+  const getStartData = (): Optional<DragStartData> => startData.get();
+
+  const setActivePointerId = (id: number) => {
+    activePointerId.set(id);
+  };
+
+  const getActivePointerId = () => activePointerId.get();
 
   const readState = Fun.constant({ });
 
@@ -47,7 +59,9 @@ const init = <T>(): BaseDraggingState<T> => {
     reset,
     update,
     getStartData,
-    setStartData
+    setStartData,
+    setActivePointerId,
+    getActivePointerId
   });
 };
 

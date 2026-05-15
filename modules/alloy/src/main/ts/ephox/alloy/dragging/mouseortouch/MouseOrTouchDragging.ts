@@ -1,4 +1,4 @@
-import type { FieldProcessor } from '@ephox/boulder';
+import { FieldSchema, type FieldProcessor } from '@ephox/boulder';
 import type { EventArgs } from '@ephox/sugar';
 
 import type { AlloyComponent } from '../../api/component/ComponentApi';
@@ -19,6 +19,7 @@ const events = <E>(dragConfig: MouseOrTouchDraggingConfig<E>, dragState: Draggin
 
 const schema: FieldProcessor[] = [
   ...DraggingSchema.schema,
+  FieldSchema.required('blockerClass'),
   Fields.output('dragger', {
     handlers: DragUtils.handlers(events)
   })

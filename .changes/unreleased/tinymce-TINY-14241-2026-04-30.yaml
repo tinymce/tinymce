@@ -1,0 +1,6 @@
+project: tinymce
+kind: Improved
+body: The editor resize handle now uses browser pointer events for more reliable behaviour across different integration environments.
+time: 2026-04-30T11:54:42.549178+02:00
+custom:
+    Issue: TINY-14241

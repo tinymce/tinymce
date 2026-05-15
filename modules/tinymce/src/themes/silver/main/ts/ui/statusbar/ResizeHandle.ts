@@ -65,13 +65,19 @@ export const renderResizeHandler = (editor: Editor, providersBackstage: UiFactor
     },
     behaviours: [
       Dragging.config({
-        mode: 'mouse',
+        mode: 'pointer',
         repositionTarget: false,
+        onDragStart: (comp) => {
+          Tooltipping.immediateOpenClose(comp, false);
+          Tooltipping.setEnabled(comp, false);
+        },
         onDrag: (comp, _target, delta) => {
           const newDimentions = Resize.resize(editor, delta, resizeType);
           setAriaValuetext(comp, newDimentions, resizeType);
         },
-        blockerClass: 'tox-blocker'
+        onDrop: (comp) => {
+          Tooltipping.setEnabled(comp, true);
+        },
       }),
       Keying.config({
         mode: 'special',
