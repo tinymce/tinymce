@@ -1,16 +1,16 @@
-import { Id, Type } from '@ephox/katamari';
+import { Arr, Id, Type } from '@ephox/katamari';
 import { PredicateExists, SugarElement, SugarNode } from '@ephox/sugar';
 import { Bem } from 'oxide-components/main';
 import {
   Children, cloneElement, forwardRef, isValidElement, useCallback,
+  useContext,
   useLayoutEffect, useMemo, useRef, useState, type FC, type HTMLAttributes,
-  type PropsWithChildren, type ReactNode, useContext,
-  useEffect
+  type PropsWithChildren, type ReactNode
 } from 'react';
 
 import { DropdownContext } from '../dropdown/internals/Context';
 
-import { useTooltip, TooltipContext } from './internals/Context';
+import { TooltipContext, useTooltip } from './internals/Context';
 
 interface RootProps extends PropsWithChildren {
   readonly showCondition?: 'always' | 'overflow';
@@ -18,47 +18,56 @@ interface RootProps extends PropsWithChildren {
 
 interface TriggerInternalProps extends PropsWithChildren<HTMLAttributes<HTMLElement>> { }
 
-// Certain elements have an overflow of 1 even when not overflowing. Ignore those.
+// Certain elements have an offsetWidth that is 1px larger than scrollWidth even
+// when content fits. Treat that case as non-overflowing.
 const isOverflowing = (element: HTMLElement) => (element.offsetWidth + 1 < element.scrollWidth);
 
+const isOverflowingDeep = (root: HTMLElement) =>
+  isOverflowing(root) || PredicateExists.child(SugarElement.fromDom(root),
+    (child) => SugarNode.isHTMLElement(child) && isOverflowing(child.dom));
+
 const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, ...props }, ref) => {
-  const { shouldRenderComponents, setIsOpen, showCondition, triggerRef, setRenderComponents, popupAnchor } = useTooltip();
-
-  const shouldRender = useCallback(() => {
-    if (showCondition === 'overflow') {
-      const trigger = triggerRef.current;
-
-      if (Type.isNonNullable(trigger)) {
-        return isOverflowing(trigger) || PredicateExists.child(SugarElement.fromDom(trigger), (child) => SugarNode.isHTMLElement(child) && isOverflowing(child.dom));
-      }
-    }
-
-    return true;
-  }, [ triggerRef, showCondition ]);
+  const { setIsOpen, showCondition, triggerRef, setCanShow, popupAnchor } = useTooltip();
 
   useLayoutEffect(() => {
-    const shouldRerender = shouldRender();
-    if (shouldRenderComponents === shouldRerender) {
+    if (showCondition === 'always') {
+      setCanShow(true);
       return;
     }
-    setRenderComponents(shouldRerender);
-  }, [ shouldRenderComponents, showCondition, shouldRender, setRenderComponents ]);
 
-  useEffect(() => {
-    const handleResize = () => {
-      const shouldRerender = shouldRender();
-      if (shouldRenderComponents === shouldRerender) {
-        return;
-      }
-      setRenderComponents(shouldRerender);
+    const trigger = triggerRef.current;
+    if (Type.isNullable(trigger)) {
+      return;
+    }
+
+    const recomputeCanShow = () => setCanShow(isOverflowingDeep(trigger));
+
+    let observedChildren: Element[] = [];
+    const resizeObserver = new window.ResizeObserver(recomputeCanShow);
+    resizeObserver.observe(trigger);
+
+    // Children of the trigger can resize without resizing the trigger itself
+    // (e.g. when the trigger has overflow: hidden). Observe each child too, and
+    // resync whenever the child set changes so newly-added children are tracked.
+    const observeChildren = () => {
+      Arr.each(observedChildren, (child) => resizeObserver.unobserve(child));
+      observedChildren = Array.from(trigger.children);
+      Arr.each(observedChildren, (child) => resizeObserver.observe(child));
     };
+    observeChildren();
+    recomputeCanShow();
 
-    window.addEventListener('resize', handleResize);
+    const mutationObserver = new window.MutationObserver(() => {
+      observeChildren();
+      recomputeCanShow();
+    });
+    mutationObserver.observe(trigger, { childList: true, subtree: true, characterData: true });
 
     return () => {
-      window.removeEventListener('resize', handleResize);
+      resizeObserver.disconnect();
+      mutationObserver.disconnect();
     };
-  }, [ shouldRenderComponents, showCondition, shouldRender, setRenderComponents ]);
+  }, [ showCondition, triggerRef, setCanShow ]);
 
   const count = Children.count(children);
   if (count === 0) {
@@ -90,50 +99,43 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
     }
   };
 
-  if (shouldRenderComponents) {
-    return cloneElement(theChild, {
-      ...props,
-      style: {
-        ...theChild.props.style,
-        anchorName: popupAnchor
-      },
-      ref: refCallback,
-      onMouseEnter: (e: React.MouseEvent<HTMLElement>) => {
-        if (!e.isDefaultPrevented()) {
-          theChild.props.onMouseEnter?.(e);
-          props.onMouseEnter?.(e);
-          setIsOpen(true);
-        }
-      },
-      onMouseLeave: (e: React.MouseEvent<HTMLElement>) => {
-        if (!e.isDefaultPrevented()) {
-          theChild.props.onMouseLeave?.(e);
-          props.onMouseLeave?.(e);
-          setIsOpen(false);
-        }
-      },
-      // TODO: Disabled render on focus for now see #TINY-14178
-      // onFocus: (e: React.FocusEvent<HTMLElement>) => {
-      //   if (!e.isDefaultPrevented()) {
-      //     theChild.props.onFocus?.(e);
-      //     props.onFocus?.(e);
-      //     setIsOpen(true);
-      //   }
-      // },
-      // onBlur: (e: React.FocusEvent<HTMLElement>) => {
-      //   if (!e.isDefaultPrevented()) {
-      //     theChild.props.onBlur?.(e);
-      //     props.onBlur?.(e);
-      //     setIsOpen(false);
-      //   }
-      // },
-    });
-  } else {
-    return cloneElement(theChild, {
-      ...props,
-      ref: refCallback,
-    });
-  }
+  return cloneElement(theChild, {
+    ...props,
+    style: {
+      ...theChild.props.style,
+      anchorName: popupAnchor
+    },
+    ref: refCallback,
+    onMouseEnter: (e: React.MouseEvent<HTMLElement>) => {
+      theChild.props.onMouseEnter?.(e);
+      props.onMouseEnter?.(e);
+      if (!e.isDefaultPrevented()) {
+        setIsOpen(true);
+      }
+    },
+    onMouseLeave: (e: React.MouseEvent<HTMLElement>) => {
+      theChild.props.onMouseLeave?.(e);
+      props.onMouseLeave?.(e);
+      if (!e.isDefaultPrevented()) {
+        setIsOpen(false);
+      }
+    },
+    // TODO: Disabled render on focus for now see #TINY-14178
+    // onFocus: (e: React.FocusEvent<HTMLElement>) => {
+    //   if (!e.isDefaultPrevented()) {
+    //     theChild.props.onFocus?.(e);
+    //     props.onFocus?.(e);
+    //     setIsOpen(true);
+    //   }
+    // },
+    // onBlur: (e: React.FocusEvent<HTMLElement>) => {
+    //   if (!e.isDefaultPrevented()) {
+    //     theChild.props.onBlur?.(e);
+    //     props.onBlur?.(e);
+    //     setIsOpen(false);
+    //   }
+    // },
+  });
 });
 
 const Trigger: React.ForwardRefExoticComponent<
@@ -156,13 +158,12 @@ const hideContentPopover = (content: HTMLElement) => {
 };
 
 const Content = forwardRef<HTMLDivElement, ContentProps>(({ text }, ref) => {
-  const { shouldRenderComponents, setRenderComponents, isOpen, contentRef, triggerRef, delayForShow, delayForHide, popupAnchor } = useTooltip();
-
-  useEffect(() => {
-    setRenderComponents(true);
-  }, [ text, setRenderComponents ]);
+  const { canShow, isOpen, contentRef, delayForShow, delayForHide, popupAnchor } = useTooltip();
 
   useLayoutEffect(() => {
+    if (!canShow) {
+      return;
+    }
     if (Type.isNonNullable(contentRef.current)) {
       const content = contentRef.current;
       if (isOpen) {
@@ -177,9 +178,9 @@ const Content = forwardRef<HTMLDivElement, ContentProps>(({ text }, ref) => {
         };
       }
     }
-  }, [ shouldRenderComponents, isOpen, contentRef, triggerRef, delayForShow, delayForHide ]);
+  }, [ canShow, isOpen, contentRef, delayForShow, delayForHide ]);
 
-  if (!shouldRenderComponents) {
+  if (!canShow) {
     return null;
   }
 
@@ -204,10 +205,10 @@ const Content = forwardRef<HTMLDivElement, ContentProps>(({ text }, ref) => {
   );
 });
 
-const Root: FC<RootProps> = ({ children, showCondition }) => {
+const Root: FC<RootProps> = ({ children, showCondition = 'always' }) => {
   const [ state, setState ] = useState({
     isOpen: false,
-    shouldRenderComponents: true,
+    canShow: showCondition === 'always',
     delayForShow: 300,
     delayForHide: 100,
   });
@@ -218,35 +219,42 @@ const Root: FC<RootProps> = ({ children, showCondition }) => {
     setState((prevState) => ({ ...prevState, isOpen }));
   }, []);
 
-  const setRenderComponents = useCallback((shouldRenderComponents: boolean) => {
-    if (shouldRenderComponents) {
-      setState((prevState) => ({ ...prevState, isOpen: false, shouldRenderComponents }));
-    } else {
-      setState((prevState) => ({ ...prevState, shouldRenderComponents }));
-    }
+  const setCanShow = useCallback((canShow: boolean) => {
+    setState((prevState) => {
+      if (prevState.canShow === canShow) {
+        return prevState;
+      }
+      // When transitioning to "cannot show", also clear isOpen so that a later
+      // transition back to canShow=true does not pick up stale open state.
+      return canShow
+        ? { ...prevState, canShow }
+        : { ...prevState, canShow, isOpen: false };
+    });
   }, []);
-  const context = useContext(DropdownContext);
+
+  const dropdownContext = useContext(DropdownContext);
   const popupAnchor = useMemo(() => {
-    if (context !== null) {
+    if (Type.isNonNullable(dropdownContext)) {
       // if the tooltip is in a dropdown context, use the dropdown anchor that's already on the trigger instead of overwriting it
-      return context.popupAnchor;
+      return dropdownContext.popupAnchor;
     } else {
       return `--${Id.generate('tooltip')}`;
     }
   // generate one ID per trigger/content combination, not every time
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ context, triggerRef, contentRef ]);
+  }, [ dropdownContext, triggerRef, contentRef ]);
+
   const contextValue = useMemo(() => {
     return ({
       ...state,
       setIsOpen,
+      setCanShow,
       contentRef,
       triggerRef,
-      showCondition: showCondition || 'always',
-      setRenderComponents,
+      showCondition,
       popupAnchor
     });
-  }, [ state, setIsOpen, popupAnchor, setRenderComponents, showCondition ]);
+  }, [ state, setIsOpen, setCanShow, popupAnchor, showCondition ]);
 
   return <TooltipContext.Provider value={contextValue}>{children}</TooltipContext.Provider>;
 };
