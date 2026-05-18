@@ -16,5 +16,5 @@ export const Keys = {
   pageUp: Fun.constant(33),
   pageDown: Fun.constant(34),
   control: Fun.constant(17),
-  cmdMac: Fun.constant(91)
+  meta: Fun.constant(91)
 };

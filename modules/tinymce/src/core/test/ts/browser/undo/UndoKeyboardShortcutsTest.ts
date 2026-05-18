@@ -42,7 +42,7 @@ describe('browser.tinymce.core.undo.UndoKeyboardShortcutTest', () => {
 
   const undoKeystrokeRealistic = (editor: Editor) => {
     const isMac = platform.os.isMacOS();
-    const modKeyCode = isMac ? Keys.cmdMac() : Keys.control();
+    const modKeyCode = isMac ? Keys.meta() : Keys.control();
     const modifier = isMac ? { metaKey: true } : { ctrl: true };
 
     TinyContentActions.keydown(editor, modKeyCode, modifier);
