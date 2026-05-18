@@ -30,8 +30,7 @@ const generate = (prefix: string): string => {
  * In accordance with RFC 4122 (https://datatracker.ietf.org/doc/html/rfc4122)
  */
 const uuidV4 = (): `${string}-${string}-${string}-${string}-${string}` => {
-
-  if (window.isSecureContext) {
+  if (window.isSecureContext && typeof window.crypto.randomUUID === 'function') {
     return window.crypto.randomUUID();
   } else {
     return IdUtils.uuidV4String();
