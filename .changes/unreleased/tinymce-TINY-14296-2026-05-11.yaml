@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Some annotated text was hidden when printed even though it should have been visible.
+time: 2026-05-11T13:06:17.044648272+02:00
+custom:
+    Issue: TINY-14296
