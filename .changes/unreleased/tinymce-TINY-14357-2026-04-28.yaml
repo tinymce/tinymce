@@ -1,6 +1,0 @@
-project: tinymce
-kind: Security
-body: Fixed media plugin `data-mce-object` injection leading to stored XSS.
-time: 2026-04-28T14:13:22.407181+02:00
-custom:
-    Issue: TINY-14357
