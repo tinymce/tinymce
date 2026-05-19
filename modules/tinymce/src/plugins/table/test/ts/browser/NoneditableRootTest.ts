@@ -90,9 +90,11 @@ describe('browser.tinymce.plugins.table.NoneditableRootTest', () => {
       TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
         const disabledSelector = ariaDisabled ? '[aria-disabled="true"]' : ':disabled';
         const enabledSelector = ariaDisabled ? '[aria-disabled="false"]' : ':not(:disabled)';
-        editor.setContent(
-          '<div><table><tbody><tr><td>Noneditable content</td></tr></tbody></table></div>' +
+        editor.undoManager.ignore(() =>
+          editor.setContent(
+            '<div><table><tbody><tr><td>Noneditable content</td></tr></tbody></table></div>' +
           '<div contenteditable="true"><table><tbody><tr><td>Editable content</td></tr></tbody></table></div>'
+          )
         );
         TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0, 0 ], 2);
         UiFinder.exists(SugarBody.body(), `[aria-label="${title}"]${disabledSelector}`);
@@ -132,7 +134,9 @@ describe('browser.tinymce.plugins.table.NoneditableRootTest', () => {
       TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
         const title = 'Split cell';
         const table = '<table><tbody><tr><td colspan="2">A</td></tr><tr><td>A</td><td>B</td></tr></tbody></table></div>';
-        editor.setContent(`<div>${table}</div><div contenteditable="true">${table}</div>`);
+        editor.undoManager.ignore(() =>
+          editor.setContent(`<div>${table}</div><div contenteditable="true">${table}</div>`)
+        );
         TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0, 0 ], 1);
         UiFinder.exists(SugarBody.body(), `[aria-label="${title}"][aria-disabled="true"]`);
         TinySelections.setSelection(editor, [ 1, 0, 0, 0, 0, 0 ], 0, [ 1, 0, 0, 0, 0, 0 ], 1);
@@ -144,9 +148,11 @@ describe('browser.tinymce.plugins.table.NoneditableRootTest', () => {
   context('Noneditable root menuitems', () => {
     const testDisableMenuitemOnNoneditable = (menuitem: string) => async () => {
       await TinyState.withNoneditableRootEditorAsync(hook.editor(), async (editor) => {
-        editor.setContent(
-          '<div><table><tbody><tr><td>Noneditable content</td></tr></tbody></table></div>' +
-          '<div contenteditable="true"><table><tbody><tr><td>Editable content</td></tr></tbody></table></div>'
+        editor.undoManager.ignore(() =>
+          editor.setContent(
+            '<div><table><tbody><tr><td>Noneditable content</td></tr></tbody></table></div>' +
+            '<div contenteditable="true"><table><tbody><tr><td>Editable content</td></tr></tbody></table></div>'
+          )
         );
         TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0, 0 ], 2);
         TinyUiActions.clickOnMenu(editor, 'button:contains("Table")');
