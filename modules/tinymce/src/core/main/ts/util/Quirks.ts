@@ -11,6 +11,7 @@ import VK from '../api/util/VK';
 import * as CaretContainer from '../caret/CaretContainer';
 import * as SymulateDelete from '../delete/SymulateDelete';
 import { getClientRects, type NodeClientRect } from '../dom/Dimensions';
+import * as ElementType from '../dom/ElementType';
 import { isListItem } from '../dom/ElementType';
 import * as Empty from '../dom/Empty';
 import * as Rtc from '../Rtc';
@@ -726,7 +727,7 @@ const Quirks = (editor: Editor): Quirks => {
     getClientRects([ el.dom ]).length > 0;
 
   const firstBlockChildOrNewLine = (target: SugarElement<Node>) =>
-    PredicateFind.child(target, (child) => SugarNode.isTag('br')(child) || SugarNode.isElement(child) && Css.get(child, 'display') === 'block');
+    PredicateFind.child(target, (child) => ElementType.isBr(child) || SugarNode.isElement(child) && Css.get(child, 'display') === 'block');
 
   const clickAfterEl = (clientX: number, clientY: number, rect: NodeClientRect): boolean =>
     clientX >= rect.right && clientY >= rect.top && clientY <= rect.bottom;
