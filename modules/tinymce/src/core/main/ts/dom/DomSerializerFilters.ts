@@ -8,8 +8,6 @@ import * as Zwsp from '../text/Zwsp';
 import type { DomSerializerSettings } from './DomSerializerImpl';
 import * as RemoveTrailingBr from './RemoveTrailingBr';
 
-declare const unescape: any;
-
 const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: DOMUtils): void => {
   // Convert tabindex back to elements when serializing contents
   htmlParser.addAttributeFilter('data-mce-tabindex', (nodes, name) => {
