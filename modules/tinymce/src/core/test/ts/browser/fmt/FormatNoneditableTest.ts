@@ -809,6 +809,14 @@ describe('browser.tinymce.core.fmt.FormatNoneditableTest', () => {
         editor.formatter.apply('wrapper');
         TinyAssertions.assertContent(editor, `<p class="wrapper"><span class="mce-preview-object mce-object-iframe" contenteditable="false" data-mce-object="iframe"><iframe src="https://www.youtube.com/embed/test"></iframe></span></p>`);
       });
+
+      it('TINY-13333: should change parent block tag when ce=false inline element is selected', () => {
+        const editor = hook.editor();
+        editor.setContent(`<p>a<span contenteditable="false">CEF</span>b</p>`);
+        TinySelections.select(editor, 'span[contenteditable="false"]', []);
+        editor.formatter.apply('h1');
+        TinyAssertions.assertContent(editor, `<h1>a<span contenteditable="false">CEF</span>b</h1>`);
+      });
     });
   });
 });

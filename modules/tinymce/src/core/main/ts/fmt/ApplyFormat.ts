@@ -299,6 +299,9 @@ const applyFormatAction = (ed: Editor, name: string, vars?: FormatVars, node?: N
         const wrapperElementName = format.block;
         if (parentBlock.nodeName.toLowerCase() === wrapperElementName.toLowerCase()) {
           ApplyElementFormat.setElementFormat(ed, parentBlock, format, vars, node);
+        } else if (!FormatUtils.isWrappingBlockFormat(format)) {
+          const elm = dom.rename(parentBlock, wrapperElementName);
+          ApplyElementFormat.setElementFormat(ed, elm, format, vars, node);
         }
       }
     }
