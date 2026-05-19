@@ -1,4 +1,5 @@
 import { context, describe, it } from '@ephox/bedrock-client';
+import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
 
 import type Editor from 'tinymce/core/api/Editor';
@@ -45,13 +46,14 @@ describe('browser.tinymce.core.content.EditorContentProtectOptionTest', () => {
   });
 
   context('Raw comment injection', () => {
+    const platform = PlatformDetection.detect();
     const testInnerContent = (testCase: { innerContent: string; expected: string }) => {
       const editor = hook.editor();
 
-      editor.setContent(`<!--mce:protected ${escape(testCase.innerContent)}-->`);
+      editor.setContent(`<!--mce:protected ${encodeURIComponent(testCase.innerContent)}-->`);
       TinyAssertions.assertContent(editor, testCase.expected);
 
-      editor.setContent(`<!--mce:protected ${escape(testCase.innerContent)}-->`, { format: 'raw' });
+      editor.setContent(`<!--mce:protected ${encodeURIComponent(testCase.innerContent)}-->`, { format: 'raw' });
       TinyAssertions.assertContent(editor, testCase.expected);
     };
 
@@ -72,7 +74,7 @@ describe('browser.tinymce.core.content.EditorContentProtectOptionTest', () => {
 
     it('TINY-14353: Valid content', () => testInnerContent({
       innerContent: '<if>',
-      expected: '<if>'
+      expected: platform.browser.isFirefox() ? '<p>&nbsp;</p><if>' : '<if>'
     }));
   });
 });
