@@ -22,6 +22,9 @@
   
   .tox-sidebar {
     --tox-private-sidebar-width: 300px;
+    &:has(.tox-sidebar-content--wide) {
+      --tox-private-sidebar-width: 440px;
+    }
     background-color: var(--tox-private-sidebar-background-color, @sidebar-background-color);
     display: flex;
     flex-direction: row;
@@ -69,6 +72,12 @@
   .tox-sidebar__pane {
     display: flex;
     width: 100%;
+
+    // desktop
+    @container editor (width > 1024px) {
+      // 5 px is resize handle width
+      width: calc(100% - 5px);
+    } 
   }
 
   .tox-sidebar--sliding-closed {

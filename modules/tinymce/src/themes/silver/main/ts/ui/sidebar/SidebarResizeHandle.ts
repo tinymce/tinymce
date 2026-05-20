@@ -34,13 +34,12 @@ export const makeSidebarResizeHandler = (sidebarOpt: Optional<AlloyComponent>): 
       },
       behaviours: Behaviour.derive([
         Dragging.config({
-          mode: 'mouse',
+          mode: 'pointer',
           repositionTarget: false,
           onDrag: (comp, _target, delta) => {
             const newDimentions = SidebarResize.resize(sidebar, delta);
             setAriaValuetext(comp, newDimentions);
-          },
-          blockerClass: 'tox-blocker'
+          }
         }),
         Keying.config({
           mode: 'special',

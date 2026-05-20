@@ -96,6 +96,7 @@ const makePanels = (parts: SlotContainerTypes.SlotContainerParts, panelConfigs: 
 };
 
 const makeSidebar = (panelConfigs: SidebarConfig, sidebar: AlloyComponent): SimpleSpec => {
+  console.log('Making sidebar!');
   const resizeHandle = makeSidebarResizeHandler(Optional.from(sidebar)).getOrUndefined();
 
   return SlotContainer.sketch((parts) => ({
