@@ -1,6 +1,6 @@
 project: tinymce
 kind: Fixed
-body: Block-level formatting now works on parent blocks when a contenteditable="false" inline element (such as an iframe) is selected.
+body: Block-level formatting did not work on parent blocks when a contenteditable="false" inline element (such as an iframe) was selected.
 time: 2026-05-19T09:35:09.378088+10:00
 custom:
     Issue: TINY-13333
