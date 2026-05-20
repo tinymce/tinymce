@@ -14,7 +14,10 @@
     // min-width: 300px;
     // max-width: 300px;
     // width: 300px;
-    // border-left: 1px solid var(--tox-private-separator-color, @tinymce-separator-color);
+    // tablet
+    @container editor (width > 800px) and (width <= 1024px) {
+      border-left: 1px solid var(--tox-private-separator-color, @tinymce-separator-color);
+    }
 
     // &--wide {
     //   min-width: 440px;
@@ -22,6 +25,7 @@
     //   width: 440px;
     // }
     width: 100%;
+    box-sizing: border-box;
   }
 
   .tox-sidebar-content__header {

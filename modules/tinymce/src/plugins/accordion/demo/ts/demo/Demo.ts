@@ -61,10 +61,12 @@ tinymce.init({
   menu: { insert: { title: 'Insert', items: 'table | image | accordion' }},
   details_initial_state: 'inherited',
   details_serialize_state: 'inherited',
+  resize: 'both',
   setup: (editor) => {
     console.log('editor', editor);
     makeFakeCommentsSidebar(editor);
-  }
+  },
+  sidebar_show: 'fakecomments'
 });
 
 export {};
