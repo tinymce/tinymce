@@ -36,6 +36,8 @@
   .tox-sidebar__pane-container {
     display: flex;
     flex-direction: row-reverse;
+    // On tablet this should be ignored and set to 300 forcefully
+    // On mobile we have to do it totally different
     width: var(--tox-private-sidebar-width);
 
     .tox-sidebar__resize-handle {

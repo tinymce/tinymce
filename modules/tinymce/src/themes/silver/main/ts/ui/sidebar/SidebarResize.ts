@@ -1,8 +1,11 @@
 import type { AlloyComponent } from '@ephox/alloy';
 import { Optional } from '@ephox/katamari';
-import { Css, type SugarElement, type SugarPosition, Width } from '@ephox/sugar';
+import { Attribute, Css, type SugarElement, type SugarPosition, Width } from '@ephox/sugar';
 
 import * as Utils from '../sizing/Utils';
+
+const RESIZE_MIN = 300;
+const RESIZE_MAX = 750;
 
 export interface HorizontalDimensions {
   readonly width: number;
@@ -20,8 +23,8 @@ export const getDimensions = (deltas: SugarPosition, originalDimentions: Horizon
     width:
       Utils.calcCappedSize(
         originalDimentions.width - deltas.left,
-        Optional.from(100),
-        Optional.from(1000) // should be width of the content?
+        Optional.from(RESIZE_MIN),
+        Optional.from(RESIZE_MAX) // should be width of the content?
       )
   };
 
