@@ -119,6 +119,11 @@ export const registerEvents = (editor: Editor, undoManager: UndoManager, locks: 
       isFirstTypedCharacter.set(true);
       return;
     }
+
+    const hasMetaOrCtrlModifier = Env.os.isMacOS() ? e.metaKey : e.ctrlKey && !e.altKey;
+    if (hasMetaOrCtrlModifier && (e.key === 'Backspace' || e.key === 'Delete')) {
+      undoManager.beforeChange();
+    }
   });
 
   editor.on('mousedown', (e) => {

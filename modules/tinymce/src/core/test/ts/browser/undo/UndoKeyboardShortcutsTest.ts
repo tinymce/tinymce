@@ -79,4 +79,58 @@ describe('browser.tinymce.core.undo.UndoKeyboardShortcutTest', () => {
     TinyAssertions.assertContent(editor, '<p>abc</p>');
     TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 3);
   });
+
+  const simulateRealBackspaceViaKeyboardWithCtrl = (editor: Editor) => {
+    TinyContentActions.keydown(editor, Keys.backspace(), { ctrl: true, ctrlKey: true });
+    // The browser would now delete "def" itself. Reproduce that DOM mutation:
+    (editor.getBody().firstChild as HTMLElement).textContent = 'abc ';
+    TinySelections.setCursor(editor, [ 0, 0 ], 'abc '.length);
+    TinyContentActions.keyup(editor, Keys.backspace(), { ctrl: true, ctrlKey: true });
+  };
+
+  const simulateRealDeleteViaKeyboardWithCtrl = (editor: Editor) => {
+    TinyContentActions.keydown(editor, Keys.delete(), { ctrl: true, ctrlKey: true });
+    // The browser would now delete "def" itself. Reproduce that DOM mutation:
+    (editor.getBody().firstChild as HTMLElement).textContent = 'abc ';
+    TinySelections.setCursor(editor, [ 0, 0 ], 'abc '.length);
+    TinyContentActions.keyup(editor, Keys.delete(), { ctrl: true, ctrlKey: true });
+  };
+
+  // this is refered to the case in `TINY-8910`
+  it('TINY-14255: undo after ctrl+backspace/delete should put the caret in the correct position', async () => {
+    // backspace
+    const editor = hook.editor();
+    editor.resetContent('<p>abc def</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 'abc def'.length);
+    simulateRealBackspaceViaKeyboardWithCtrl(editor);
+    TinyAssertions.assertContent(editor, '<p>abc </p>', { format: 'html' });
+    editor.execCommand('Undo');
+    TinyAssertions.assertContent(editor, '<p>abc def</p>');
+    TinyAssertions.assertCursor(editor, [ 0, 0 ], 'abc def'.length);
+
+    editor.resetContent('<p>abc def</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 'abc def'.length);
+    simulateRealBackspaceViaKeyboardWithCtrl(editor);
+    TinyAssertions.assertContent(editor, '<p>abc </p>', { format: 'html' });
+    undoKeystrokeRealistic(editor);
+    TinyAssertions.assertContent(editor, '<p>abc def</p>');
+    TinyAssertions.assertCursor(editor, [ 0, 0 ], 'abc def'.length);
+
+    // delete
+    editor.resetContent('<p>abc def</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 'abc '.length);
+    simulateRealDeleteViaKeyboardWithCtrl(editor);
+    TinyAssertions.assertContent(editor, '<p>abc </p>', { format: 'html' });
+    editor.execCommand('Undo');
+    TinyAssertions.assertContent(editor, '<p>abc def</p>');
+    TinyAssertions.assertCursor(editor, [ 0, 0 ], 'abc '.length);
+
+    editor.resetContent('<p>abc def</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 'abc '.length);
+    simulateRealDeleteViaKeyboardWithCtrl(editor);
+    TinyAssertions.assertContent(editor, '<p>abc </p>', { format: 'html' });
+    undoKeystrokeRealistic(editor);
+    TinyAssertions.assertContent(editor, '<p>abc def</p>');
+    TinyAssertions.assertCursor(editor, [ 0, 0 ], 'abc '.length);
+  });
 });
