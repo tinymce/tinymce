@@ -107,7 +107,7 @@ describe('browser.tinymce.core.undo.UndoKeyboardShortcutTest', () => {
     editor.resetContent('<p>abc def</p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 'abc def'.length);
     simulateRealBackspaceViaKeyboardWithCtrl(editor);
-    TinyAssertions.assertContent(editor, '<p>abc </p>', { format: 'html' });
+    TinyAssertions.assertContent(editor, 'abc ', { format: 'text' });
     editor.execCommand('Undo');
     TinyAssertions.assertContent(editor, '<p>abc def</p>');
     TinyAssertions.assertCursor(editor, [ 0, 0 ], 'abc def'.length);
@@ -115,7 +115,7 @@ describe('browser.tinymce.core.undo.UndoKeyboardShortcutTest', () => {
     editor.resetContent('<p>abc def</p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 'abc def'.length);
     simulateRealBackspaceViaKeyboardWithCtrl(editor);
-    TinyAssertions.assertContent(editor, '<p>abc </p>', { format: 'html' });
+    TinyAssertions.assertContent(editor, 'abc ', { format: 'text' });
     undoKeystrokeRealistic(editor);
     TinyAssertions.assertContent(editor, '<p>abc def</p>');
     TinyAssertions.assertCursor(editor, [ 0, 0 ], 'abc def'.length);
@@ -124,7 +124,7 @@ describe('browser.tinymce.core.undo.UndoKeyboardShortcutTest', () => {
     editor.resetContent('<p>abc def</p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 'abc '.length);
     simulateRealDeleteViaKeyboardWithCtrl(editor);
-    TinyAssertions.assertContent(editor, '<p>abc </p>', { format: 'html' });
+    TinyAssertions.assertContent(editor, 'abc ', { format: 'text' });
     editor.execCommand('Undo');
     TinyAssertions.assertContent(editor, '<p>abc def</p>');
     TinyAssertions.assertCursor(editor, [ 0, 0 ], 'abc '.length);
@@ -132,7 +132,7 @@ describe('browser.tinymce.core.undo.UndoKeyboardShortcutTest', () => {
     editor.resetContent('<p>abc def</p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 'abc '.length);
     simulateRealDeleteViaKeyboardWithCtrl(editor);
-    TinyAssertions.assertContent(editor, '<p>abc </p>', { format: 'html' });
+    TinyAssertions.assertContent(editor, 'abc ', { format: 'text' });
     undoKeystrokeRealistic(editor);
     TinyAssertions.assertContent(editor, '<p>abc def</p>');
     TinyAssertions.assertCursor(editor, [ 0, 0 ], 'abc '.length);
