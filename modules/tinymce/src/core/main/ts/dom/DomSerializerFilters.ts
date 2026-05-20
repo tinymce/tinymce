@@ -8,8 +8,6 @@ import * as Zwsp from '../text/Zwsp';
 import type { DomSerializerSettings } from './DomSerializerImpl';
 import * as RemoveTrailingBr from './RemoveTrailingBr';
 
-declare const unescape: any;
-
 const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: DOMUtils): void => {
   // Convert tabindex back to elements when serializing contents
   htmlParser.addAttributeFilter('data-mce-tabindex', (nodes, name) => {
@@ -119,7 +117,7 @@ const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: D
     }
   });
 
-  // Convert comments to cdata and handle protected comments
+  // Convert comments to cdata
   htmlParser.addNodeFilter('#comment', (nodes) => {
     let i = nodes.length;
     while (i--) {
@@ -130,11 +128,6 @@ const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: D
         node.name = '#cdata';
         node.type = 4;
         node.value = dom.decode(value.replace(/^\[CDATA\[|\]\]$/g, ''));
-      } else if (value?.indexOf('mce:protected ') === 0) {
-        node.name = '#text';
-        node.type = 3;
-        node.raw = true;
-        node.value = unescape(value).substr(14);
       }
     }
   });

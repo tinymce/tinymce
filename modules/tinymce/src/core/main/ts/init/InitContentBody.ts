@@ -26,6 +26,7 @@ import * as NodeType from '../dom/NodeType';
 import * as TouchEvents from '../events/TouchEvents';
 import * as ForceBlocks from '../ForceBlocks';
 import * as NonEditableFilter from '../html/NonEditableFilter';
+import * as ProtectedFilter from '../html/ProtectedFilter';
 import * as KeyboardOverrides from '../keyboard/KeyboardOverrides';
 import * as Lists from '../lists/Lists';
 import * as Disabled from '../mode/Disabled';
@@ -41,7 +42,6 @@ import Quirks from '../util/Quirks';
 
 import * as InitComponents from './InitComponents';
 
-declare const escape: any;
 declare let tinymce: TinyMCE;
 
 const DOM = DOMUtils.DOM;
@@ -142,6 +142,12 @@ const mkSerializerSettings = (editor: Editor): DomSerializerSettings => {
 
 const createParser = (editor: Editor): DomParser => {
   const parser = DomParser(mkParserSettings(editor), editor.schema);
+
+  parser.addAttributeFilter('data-mce-src,data-mce-href,data-mce-style', (nodes, name) => {
+    for (let i = 0; i < nodes.length; i++) {
+      nodes[i].attr(name, null);
+    }
+  });
 
   // Convert src and href into data-mce-src, data-mce-href and data-mce-style
   parser.addAttributeFilter('src,href,style,tabindex', (nodes, name) => {
@@ -363,13 +369,7 @@ const preInit = (editor: Editor) => {
 
   const protect = Options.getProtect(editor);
   if (protect) {
-    editor.on('BeforeSetContent', (e) => {
-      Tools.each(protect, (pattern) => {
-        e.content = e.content.replace(pattern, (str) => {
-          return '<!--mce:protected ' + escape(str) + '-->';
-        });
-      });
-    });
+    ProtectedFilter.registerProtectedHtmlFilters(editor, protect);
   }
 
   editor.on('SetContent', () => {
