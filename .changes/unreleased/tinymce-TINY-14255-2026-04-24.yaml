@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Using the undo keyboard shortcut did not restore editor selection correctly.
+time: 2026-04-24T09:14:17.578652+02:00
+custom:
+    Issue: TINY-14255

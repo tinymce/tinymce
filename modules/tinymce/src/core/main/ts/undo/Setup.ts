@@ -119,11 +119,6 @@ export const registerEvents = (editor: Editor, undoManager: UndoManager, locks: 
       isFirstTypedCharacter.set(true);
       return;
     }
-
-    const hasOnlyMetaOrCtrlModifier = Env.os.isMacOS() ? e.metaKey : e.ctrlKey && !e.altKey;
-    if (hasOnlyMetaOrCtrlModifier) {
-      undoManager.beforeChange();
-    }
   });
 
   editor.on('mousedown', (e) => {
