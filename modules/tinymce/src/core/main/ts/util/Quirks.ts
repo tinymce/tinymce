@@ -34,6 +34,7 @@ const Quirks = (editor: Editor): Quirks => {
   const browser = Env.browser;
   const isGecko = browser.isFirefox();
   const isWebKit = browser.isChromium() || browser.isSafari();
+  const isSafari = browser.isSafari();
   const isiOS = Env.deviceType.isiPhone() || Env.deviceType.isiPad();
   const isMac = Env.os.isMacOS() || Env.os.isiOS();
 
@@ -805,7 +806,6 @@ const Quirks = (editor: Editor): Quirks => {
 
     // WebKit
     if (isWebKit) {
-      fixInLISelection();
       documentElementEditingFocus();
       selectControlElements();
       setDefaultBlockType();
@@ -813,6 +813,9 @@ const Quirks = (editor: Editor): Quirks => {
       disableBackspaceIntoATable();
       removeAppleInterchangeBrs();
 
+      if (!isSafari) {
+        fixInLISelection();
+      }
       // touchClickEvent();
 
       // iOS
