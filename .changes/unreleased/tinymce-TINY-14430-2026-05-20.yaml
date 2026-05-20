@@ -1,0 +1,6 @@
+project: tinymce
+kind: Security
+body: Updated DOMPurify version to 3.4.5.
+time: 2026-05-20T14:27:43.801017+02:00
+custom:
+    Issue: TINY-14430
