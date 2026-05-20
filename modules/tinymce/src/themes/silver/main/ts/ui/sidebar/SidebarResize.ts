@@ -5,7 +5,7 @@ import { Attribute, Css, type SugarElement, type SugarPosition, Width } from '@e
 import * as Utils from '../sizing/Utils';
 
 const RESIZE_MIN = 300;
-const RESIZE_MAX = 750;
+const RESIZE_MAX = 480;
 
 export interface HorizontalDimensions {
   readonly width: number;
