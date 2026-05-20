@@ -3,7 +3,6 @@ import { forwardRef, useEffect, useId, useMemo, useRef, useState } from 'react';
 
 import * as Bem from '../../../utils/Bem';
 import { Icon } from '../../icon/Icon';
-import { useMenu } from '../internals/Context';
 import type { ToggleMenuItemInstanceApi, ToggleMenuItemProps } from '../internals/Types';
 
 export const ToggleItem = forwardRef<HTMLDivElement, ToggleMenuItemProps>(({ enabled = true, onSetup, icon, active = false, shortcut, onAction, children }, ref) => {
@@ -42,8 +41,6 @@ export const ToggleItem = forwardRef<HTMLDivElement, ToggleMenuItemProps>(({ ena
     return Fun.noop;
   }, [ onSetup, api ]);
 
-  const { setActiveItemId } = useMenu();
-
   const itemIcon = Type.isString(icon)
     ? <Icon icon={icon} />
     : icon;
@@ -56,10 +53,7 @@ export const ToggleItem = forwardRef<HTMLDivElement, ToggleMenuItemProps>(({ ena
       aria-haspopup={false}
       aria-disabled={!state.enabled}
       aria-checked={state.active}
-      onFocus={() => {
-        setState({ ...state, focused: true });
-        setActiveItemId(id);
-      }}
+      onFocus={() => setState({ ...state, focused: true })}
       onPointerMove={(e) => {
         if (state.enabled) {
           e.currentTarget.focus();
