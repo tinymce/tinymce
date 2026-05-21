@@ -236,7 +236,7 @@ const backspaceDeleteIntoListCaret = (editor: Editor, isForward: boolean): boole
     const nextCaretContainer = findNextCaretContainer(editor, rng, isForward, root);
     const otherLi = dom.getParent(nextCaretContainer, 'LI', root);
 
-    if (nextCaretContainer && otherLi) {
+    if (nextCaretContainer && otherLi && (isForward || !dom.isChildOf(nextCaretContainer, block))) {
       const findValidElement = (element: SugarElement<Node>) => Arr.contains([ 'td', 'th', 'caption' ], SugarNode.name(element));
       const findRoot = (node: SugarElement<Node>) => node.dom === root;
       const otherLiCell = PredicateFind.closest(SugarElement.fromDom(otherLi), findValidElement, findRoot);

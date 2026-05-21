@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Deleting a newline within a list item would delete the list item.
+time: 2026-05-15T10:14:50.676617+10:00
+custom:
+    Issue: TINY-13292
