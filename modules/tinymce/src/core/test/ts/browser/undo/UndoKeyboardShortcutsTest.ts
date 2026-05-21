@@ -82,22 +82,26 @@ describe('browser.tinymce.core.undo.UndoKeyboardShortcutTest', () => {
 
   const simulateRealBackspaceViaKeyboardWithCtrl = (editor: Editor) => {
     const isMac = platform.os.isMacOS();
+    const modKeyCode = isMac ? Keys.meta() : Keys.control();
     const modifier = isMac ? { meta: true, metaKey: true } : { ctrl: true, ctrlKey: true };
     TinyContentActions.keydown(editor, Keys.backspace(), modifier);
     // The browser would now delete "def" itself. Reproduce that DOM mutation:
     (editor.getBody().firstChild as HTMLElement).textContent = 'abc ';
     TinySelections.setCursor(editor, [ 0, 0 ], 'abc '.length);
     TinyContentActions.keyup(editor, Keys.backspace(), modifier);
+    TinyContentActions.keyup(editor, modKeyCode, {});
   };
 
   const simulateRealDeleteViaKeyboardWithCtrl = (editor: Editor) => {
     const isMac = platform.os.isMacOS();
+    const modKeyCode = isMac ? Keys.meta() : Keys.control();
     const modifier = isMac ? { meta: true, metaKey: true } : { ctrl: true, ctrlKey: true };
     TinyContentActions.keydown(editor, Keys.delete(), modifier);
     // The browser would now delete "def" itself. Reproduce that DOM mutation:
     (editor.getBody().firstChild as HTMLElement).textContent = 'abc ';
     TinySelections.setCursor(editor, [ 0, 0 ], 'abc '.length);
     TinyContentActions.keyup(editor, Keys.delete(), modifier);
+    TinyContentActions.keyup(editor, modKeyCode, {});
   };
 
   // this is refered to the case in `TINY-8910`
