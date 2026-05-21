@@ -38,17 +38,10 @@ const makeFakeCommentsSidebar = (ed: Editor) => {
                       <div class="tox-comment__body"><div>then <span><span class="mymention" style="color: #1b1; background-color: #eee;" data-mention-id="johnsmith">@John Smith</span></span> should be hoverable</div></div></div></div><button type="button" tabindex="-1" class="tox-button tox-button--secondary" style="width: 100%;">Add commentâ€¦</button></div>
                     </div>
                   </div>`;
-      console.log(container);
       api.element().appendChild(container);
       return () => {
         api.element().removeChild(container);
       };
-    },
-    onShow: (_api) => {
-      console.log('onShow ' + 'fakecomments');
-    },
-    onHide: (_api) => {
-      console.log('onHide ' + 'fakecomments');
     }
   });
 };
@@ -63,7 +56,6 @@ tinymce.init({
   details_serialize_state: 'inherited',
   resize: 'both',
   setup: (editor) => {
-    console.log('editor', editor);
     makeFakeCommentsSidebar(editor);
   },
   sidebar_show: 'fakecomments'
