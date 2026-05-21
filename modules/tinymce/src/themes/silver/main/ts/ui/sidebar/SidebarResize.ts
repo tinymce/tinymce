@@ -1,6 +1,6 @@
 import type { AlloyComponent } from '@ephox/alloy';
 import { Optional } from '@ephox/katamari';
-import { Attribute, Css, type SugarElement, type SugarPosition, Width } from '@ephox/sugar';
+import { Css, type SugarElement, type SugarPosition, Width } from '@ephox/sugar';
 
 import * as Utils from '../sizing/Utils';
 
