@@ -6,7 +6,7 @@ import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import type Editor from 'tinymce/core/api/Editor';
 
-describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarLinePosition test', () => {
+describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarLinePositionTest', () => {
   const rightSelector = '.tox-pop.tox-pop--left:not(.tox-pop--inset):not(.tox-pop--transition)';
   const leftSelector = '.tox-pop.tox-pop--right:not(.tox-pop--inset):not(.tox-pop--transition)';
 
