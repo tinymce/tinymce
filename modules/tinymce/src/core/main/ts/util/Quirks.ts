@@ -9,6 +9,8 @@ import type { EditorEvent } from '../api/util/EventDispatcher';
 import Tools from '../api/util/Tools';
 import VK from '../api/util/VK';
 import * as CaretContainer from '../caret/CaretContainer';
+import * as CaretFinder from '../caret/CaretFinder';
+import { CaretPosition } from '../caret/CaretPosition';
 import * as SymulateDelete from '../delete/SymulateDelete';
 import { getClientRects, type NodeClientRect } from '../dom/Dimensions';
 import * as ElementType from '../dom/ElementType';
@@ -743,16 +745,19 @@ const Quirks = (editor: Editor): Quirks => {
     editor.on('mousedown', (e) => {
       const target = SugarElement.fromDom(e.target);
       if (isListItem(target)) {
-        firstBlockChildOrNewLine(target).map(Traverse.prevSiblings).bind((prevSiblings) =>
+        firstBlockChildOrNewLine(target).each((firstBlock) => {
+          const prevSiblings = Traverse.prevSiblings(firstBlock);
+
           Arr.findLastIndex(prevSiblings, isValidSibling).bind((lastI) => Arr.get(prevSiblings, lastI))
-        ).each((lastInlineBeforeBlock) => {
-          if (Arr.get(getClientRects([ lastInlineBeforeBlock.dom ]), 0).exists((rect) => clickAfterEl(e.clientX, e.clientY, rect))) {
-            const rng = editor.dom.createRng();
-            rng.setStartAfter(lastInlineBeforeBlock.dom);
-            rng.collapse(true);
-            editor.selection.setRng(rng);
-            e.preventDefault();
-          }
+            .each((lastInlineBeforeBlock) => {
+              if (Arr.get(getClientRects([ lastInlineBeforeBlock.dom ]), 0).exists((rect) => clickAfterEl(e.clientX, e.clientY, rect))) {
+                CaretFinder.prevPosition(target.dom, CaretPosition(firstBlock.dom, 0)).each((pos) => {
+                  e.preventDefault();
+                  editor.focus();
+                  editor.selection.setRng(pos.toRange());
+                });
+              }
+            });
         });
       }
     });
