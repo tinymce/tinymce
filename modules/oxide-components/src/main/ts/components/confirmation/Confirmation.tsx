@@ -1,4 +1,4 @@
-import { useState, type FC, type MouseEventHandler } from 'react';
+import { useCallback, useState, type FC, type MouseEventHandler } from 'react';
 
 import { Spinner } from '../../bespoke/tinymceai/spinner/Spinner';
 import * as Bem from '../../utils/Bem';
@@ -8,7 +8,7 @@ export interface ConfirmationProps {
   readonly title: string;
   readonly text: string;
   readonly buttonName: string;
-  readonly cancelBtnName?: string;
+  readonly cancelBtnName: string;
   readonly onConfirm: () => Promise<void>;
   readonly onCancel: () => Promise<void>;
 }
@@ -23,7 +23,7 @@ export const Confirmation: FC<ConfirmationProps> = (({
 }) => {
   const [ confirming, setConfirming ] = useState(false);
 
-  const onClick: MouseEventHandler<HTMLButtonElement> = (e) => {
+  const onClick: MouseEventHandler<HTMLButtonElement> = useCallback((e) => {
     e.stopPropagation();
     e.preventDefault();
     setConfirming(true);
@@ -31,12 +31,7 @@ export const Confirmation: FC<ConfirmationProps> = (({
     onConfirm().finally(() => {
       setConfirming(false);
     });
-  };
-
-  const onCancelHandler = () => {
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    onCancel();
-  };
+  }, [ onConfirm ]);
 
   return <div className={Bem.block('tox-dialog-wrap')}>
     <div style={{ display: 'flex' }} className={Bem.element('tox-dialog-wrap', 'backdrop')}>
@@ -59,7 +54,10 @@ export const Confirmation: FC<ConfirmationProps> = (({
             >{confirming ? <Spinner type="circle" /> : buttonName}</Button>
             <Button
               variant='secondary'
-              onClick={onCancelHandler}
+              onClick={() => {
+                // eslint-disable-next-line @typescript-eslint/no-floating-promises
+                onCancel();
+              }}
               aria-label={cancelBtnName}
             >{cancelBtnName}</Button>
           </div>
