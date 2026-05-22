@@ -39,6 +39,7 @@
   .tox-sidebar__pane-container {
     display: flex;
     flex-direction: row-reverse;
+    position: relative;
 
     // phone
     @container editor (width <= 800px) {
@@ -59,9 +60,37 @@
 
     .tox-sidebar__resize-handle {
       cursor: ew-resize;
-      width: 5px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 8px;
       height: 100%;
-      background-color: #e3e3e3;
+      background-color: transparent;
+      z-index: 1;
+
+      // The visible 1px line. Widening on hover gives a clearer affordance
+      // without shifting layout, since the parent flex track stays fixed.
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 1px;
+        height: 100%;
+        background-color: #e3e3e3;
+        transition: width .15s ease, background-color .15s ease;
+      }
+
+      &:active::before,
+      &:focus-visible::before {
+        width: 3px;
+        background-color: #b3b3b3;
+      }
+
+      &:hover::before {
+        width: 3px;
+        background-color: @color-tint;
+      }
 
       @container editor (width <= 1024px) {
         display: none;
@@ -72,12 +101,6 @@
   .tox-sidebar__pane {
     display: flex;
     width: 100%;
-
-    // desktop
-    @container editor (width > 1024px) {
-      // 5 px is resize handle width
-      width: calc(100% - 5px);
-    } 
   }
 
   .tox-sidebar--sliding-closed {
