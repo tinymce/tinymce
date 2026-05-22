@@ -7,6 +7,7 @@ import { AutoResizingTextarea } from './components/autoresizingtextarea/AutoResi
 import { Button } from './components/button/Button';
 import * as Card from './components/card/Card';
 import { Confirmation, type ConfirmationProps } from './components/confirmation/Confirmation';
+import { useConfirmation } from './components/confirmation/internals/ConfirmationHook';
 import * as ContextToolbar from './components/contexttoolbar/ContextToolbar';
 import * as Draggable from './components/draggable/Draggable';
 import * as Dropdown from './components/dropdown/Dropdown';
@@ -36,6 +37,7 @@ export {
   Button,
   Card,
   Confirmation,
+  useConfirmation,
   ContentUiBem,
   ContextToolbar,
   Draggable,

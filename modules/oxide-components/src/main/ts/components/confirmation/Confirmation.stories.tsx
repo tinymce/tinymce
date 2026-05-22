@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { UniverseProvider } from '../../main';
 
 import { Confirmation, type ConfirmationProps } from './Confirmation';
+import { useConfirmation } from './internals/ConfirmationHook';
 
 const allIcons = getAllIcons();
 const icons: Record<string, string> = {
@@ -18,10 +19,14 @@ const mockUniverse = {
 };
 
 const render = (args: ConfirmationProps): JSX.Element => {
-  const [ show, setShow ] = useState(false);
+  const [ container, setContainer ] = useState<HTMLDivElement | null>(null);
+  const confirmationHook = useConfirmation(container);
+
   return <div style={{ width: '480px' }}>
-    <button style={{ cursor: 'pointer' }} onClick={() => setShow(!show)}>show</button>
-    {show && <Confirmation {...args} onConfirm={() => args.onConfirm().finally(() => setShow(false))} onCancel={() => args.onCancel().finally(() => setShow(false))} />}
+    <div ref={setContainer}></div>
+    <button style={{ cursor: 'pointer' }} onClick={() =>
+      confirmationHook(args.text, args.onConfirm)
+    }>show</button>
   </div>;
 };
 
