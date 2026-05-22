@@ -17,7 +17,7 @@ export const Confirmation: FC<ConfirmationProps> = (({
   title,
   text,
   buttonName,
-  cancelBtnName = 'Cancel',
+  cancelBtnName,
   onConfirm,
   onCancel
 }) => {
