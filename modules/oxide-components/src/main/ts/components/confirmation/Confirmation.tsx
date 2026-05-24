@@ -35,7 +35,7 @@ export const Confirmation: FC<ConfirmationProps> = (({
 
   return <div className={Bem.block('tox-dialog-wrap')}>
     <div style={{ display: 'flex' }} className={Bem.element('tox-dialog-wrap', 'backdrop')}>
-      <div style={{ margin: 'auto' }} className={Bem.block('tox-dialog')}>
+      <dialog style={{ margin: 'auto' }} className={Bem.block('tox-dialog')}>
         <div className={Bem.element('tox-dialog', 'header')}>
           <h1 className={Bem.element('tox-dialog', 'title')}>{title}</h1>
         </div>
@@ -62,7 +62,7 @@ export const Confirmation: FC<ConfirmationProps> = (({
             >{cancelBtnName}</Button>
           </div>
         </div>
-      </div>
+      </dialog>
     </div>
   </div>;
 });
