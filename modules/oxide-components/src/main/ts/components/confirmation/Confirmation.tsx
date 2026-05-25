@@ -54,6 +54,7 @@ export const Confirmation: FC<ConfirmationProps> = (({
             >{confirming ? <Spinner type="circle" /> : buttonName}</Button>
             <Button
               variant='secondary'
+              disabled={confirming}
               onClick={() => {
                 // eslint-disable-next-line @typescript-eslint/no-floating-promises
                 onCancel();
