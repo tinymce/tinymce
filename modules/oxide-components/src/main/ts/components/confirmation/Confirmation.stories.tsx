@@ -5,7 +5,6 @@ import { useState } from 'react';
 
 import { UniverseProvider } from '../../main';
 
-import { Confirmation, type ConfirmationProps } from './Confirmation';
 import { useConfirmation } from './internals/ConfirmationHook';
 
 const allIcons = getAllIcons();
@@ -18,7 +17,7 @@ const mockUniverse = {
     Obj.get(icons, name).getOrDie('Failed to get icon')
 };
 
-const render = (args: ConfirmationProps): JSX.Element => {
+const render = (args: { text: string; onConfirm: () => Promise<void> }): JSX.Element => {
   const [ container, setContainer ] = useState<HTMLDivElement | null>(null);
   const confirmationHook = useConfirmation(container);
 
@@ -30,9 +29,8 @@ const render = (args: ConfirmationProps): JSX.Element => {
   </div>;
 };
 
-const meta: Meta<ConfirmationProps> = {
+const meta: Meta<{ text: string; onConfirm: () => Promise<void> }> = {
   title: 'components/Confirmation',
-  component: Confirmation,
   decorators: [
     (Story: () => JSX.Element): JSX.Element => (
       <UniverseProvider resources={mockUniverse}>
@@ -45,9 +43,7 @@ const meta: Meta<ConfirmationProps> = {
   },
   tags: [ 'autodocs' ],
   args: {
-    title: 'confirmation title',
     text: 'do you want to confirm it?',
-    buttonName: 'yes',
     onConfirm: () => new Promise((resolve) => {
       setTimeout(() => {
         // setShow(false);
@@ -59,32 +55,26 @@ const meta: Meta<ConfirmationProps> = {
 };
 
 export default meta;
-type Story = StoryObj<ConfirmationProps>;
+type Story = StoryObj<{ text: string; onConfirm: () => Promise<void> }>;
 
 export const ConfirmationDialog: Story = {
   args: {
-    title: 'confirmation title',
     text: 'do you want to confirm it?',
-    buttonName: 'yes',
     onConfirm: () => new Promise((resolve) => {
       setTimeout(() => {
         return resolve();
       }, 2_000);
-    }),
-    onCancel: () => Promise.resolve()
+    })
   }
 };
 
 export const ConfirmationDialogWithError: Story = {
   args: {
-    title: 'confirmation title',
     text: 'do you want to confirm it?',
-    buttonName: 'yes',
     onConfirm: () => new Promise((_resolve, reject) => {
       setTimeout(() => {
         return reject();
       }, 2_000);
-    }),
-    onCancel: () => Promise.resolve()
+    })
   }
 };
