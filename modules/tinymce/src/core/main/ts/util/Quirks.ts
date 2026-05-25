@@ -716,12 +716,11 @@ const Quirks = (editor: Editor): Quirks => {
   /**
    * this is needed to manage the difference between
    * ```
-   * <li>a<div>b</div></li>
+   * <li><span class="fake">a</span><div>b</div></li>
    * ```
    * and
    * ```
-   * <li>a
-   * <div>b</div></li>
+   * <li><span class="fake">a</span> <div>b</div></li>
    * ```
    * since if the indentation of the HTML has a new line it creates a fake child in the `li` that is an empty text
    * it's check it trying to get the rects and if it can't it means that it's the false unwanted new line
