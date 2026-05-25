@@ -17,6 +17,8 @@ export const useConfirmation = (container: HTMLElement | null): (text: string, o
       const r = createRoot(container);
       setRoot(r);
       return () => r.unmount();
+    } else {
+      setRoot(null);
     }
   }, [ container ]);
 
@@ -25,13 +27,13 @@ export const useConfirmation = (container: HTMLElement | null): (text: string, o
       root.render(
         request
           ? <Confirmation
-            title=''
             text={request.text}
             buttonName='Yes'
             cancelBtnName='No'
             onConfirm={() => request.onConfirm().finally(() => setRequest(null))}
             onCancel={() => {
-              setRequest(null); return Promise.resolve();
+              setRequest(null);
+              return Promise.resolve();
             }}
           />
           : null

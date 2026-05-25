@@ -5,7 +5,6 @@ import * as Bem from '../../utils/Bem';
 import { Button } from '../button/Button';
 
 export interface ConfirmationProps {
-  readonly title: string;
   readonly text: string;
   readonly buttonName: string;
   readonly cancelBtnName: string;
@@ -14,7 +13,6 @@ export interface ConfirmationProps {
 }
 
 export const Confirmation: FC<ConfirmationProps> = (({
-  title,
   text,
   buttonName,
   cancelBtnName,
@@ -38,9 +36,6 @@ export const Confirmation: FC<ConfirmationProps> = (({
   return <div className={Bem.block('tox-dialog-wrap')}>
     <div style={{ display: 'flex' }} className={Bem.element('tox-dialog-wrap', 'backdrop')}>
       <dialog style={{ margin: 'auto' }} className={Bem.block('tox-dialog')}>
-        <div className={Bem.element('tox-dialog', 'header')}>
-          <h1 className={Bem.element('tox-dialog', 'title')}>{title}</h1>
-        </div>
         <div className={Bem.element('tox-dialog', 'body')}>
           <div className={Bem.element('tox-dialog', 'body-content')}>
             {text}
