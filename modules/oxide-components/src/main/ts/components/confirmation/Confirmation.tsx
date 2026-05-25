@@ -27,10 +27,12 @@ export const Confirmation: FC<ConfirmationProps> = (({
     e.stopPropagation();
     e.preventDefault();
     setConfirming(true);
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    onConfirm().finally(() => {
-      setConfirming(false);
-    });
+    void onConfirm()
+      // eslint-disable-next-line no-console
+      .catch(console.error)
+      .finally(() => {
+        setConfirming(false);
+      });
   }, [ onConfirm ]);
 
   return <div className={Bem.block('tox-dialog-wrap')}>
@@ -56,8 +58,8 @@ export const Confirmation: FC<ConfirmationProps> = (({
               variant='secondary'
               disabled={confirming}
               onClick={() => {
-                // eslint-disable-next-line @typescript-eslint/no-floating-promises
-                onCancel();
+                // eslint-disable-next-line no-console
+                void onCancel().catch(console.error);
               }}
               aria-label={cancelBtnName}
             >{cancelBtnName}</Button>
