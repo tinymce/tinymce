@@ -1,5 +1,5 @@
-import { Fun, Optional, Optionals, Type } from '@ephox/katamari';
-import { SugarElement, SugarNode, Traverse } from '@ephox/sugar';
+import { Arr, Fun, Optional, Optionals, Type } from '@ephox/katamari';
+import { Css, PredicateFind, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
 import type Editor from '../api/Editor';
 import Env from '../api/Env';
@@ -9,7 +9,12 @@ import type { EditorEvent } from '../api/util/EventDispatcher';
 import Tools from '../api/util/Tools';
 import VK from '../api/util/VK';
 import * as CaretContainer from '../caret/CaretContainer';
+import * as CaretFinder from '../caret/CaretFinder';
+import { CaretPosition } from '../caret/CaretPosition';
 import * as SymulateDelete from '../delete/SymulateDelete';
+import { getClientRects, type NodeClientRect } from '../dom/Dimensions';
+import * as ElementType from '../dom/ElementType';
+import { isListItem } from '../dom/ElementType';
 import * as Empty from '../dom/Empty';
 import * as Rtc from '../Rtc';
 
@@ -31,6 +36,7 @@ const Quirks = (editor: Editor): Quirks => {
   const browser = Env.browser;
   const isGecko = browser.isFirefox();
   const isWebKit = browser.isChromium() || browser.isSafari();
+  const isSafari = browser.isSafari();
   const isiOS = Env.deviceType.isiPhone() || Env.deviceType.isiPad();
   const isMac = Env.os.isMacOS() || Env.os.isiOS();
 
@@ -707,6 +713,55 @@ const Quirks = (editor: Editor): Quirks => {
     });
   };
 
+  /**
+   * this is needed to manage the difference between
+   * ```
+   * <li><span class="fake">a</span><div>b</div></li>
+   * ```
+   * and
+   * ```
+   * <li><span class="fake">a</span> <div>b</div></li>
+   * ```
+   * since if the indentation of the HTML has a new line it creates a fake child in the `li` that is an empty text
+   * it's check it trying to get the rects and if it can't it means that it's the false unwanted new line
+  **/
+  const isValidSibling = (el: SugarElement<Node>): boolean =>
+    getClientRects([ el.dom ]).length > 0;
+
+  const firstBlockChildOrNewLine = (target: SugarElement<Node>) =>
+    PredicateFind.child(target, (child) => ElementType.isBr(child) || SugarNode.isElement(child) && Css.get(child, 'display') === 'block');
+
+  const clickAfterEl = (clientX: number, clientY: number, rect: NodeClientRect): boolean =>
+    clientX >= rect.right && clientY >= rect.top && clientY <= rect.bottom;
+
+  /**
+   * In Chrome in a `LI` that contains a block element and where the first child is an inline element
+   * clicking on the right side of the first child the carret goes at the start of the element instead that in the end of it
+   * issue: https://issues.chromium.org/issues/40767343
+  **/
+
+  const fixInLISelection = () => {
+    editor.on('mousedown', (e) => {
+      const target = SugarElement.fromDom(e.target);
+      if (isListItem(target)) {
+        firstBlockChildOrNewLine(target).each((firstBlock) => {
+          const prevSiblings = Traverse.prevSiblings(firstBlock);
+
+          Arr.findLastIndex(prevSiblings, isValidSibling).bind((lastI) => Arr.get(prevSiblings, lastI))
+            .each((lastInlineBeforeBlock) => {
+              if (Arr.get(getClientRects([ lastInlineBeforeBlock.dom ]), 0).exists((rect) => clickAfterEl(e.clientX, e.clientY, rect))) {
+                CaretFinder.prevPosition(target.dom, CaretPosition(firstBlock.dom, 0)).each((pos) => {
+                  e.preventDefault();
+                  editor.focus();
+                  editor.selection.setRng(pos.toRange());
+                });
+              }
+            });
+        });
+      }
+    });
+  };
+
   // No-op since Mozilla seems to have fixed the caret repaint issues
   const refreshContentEditable = Fun.noop;
 
@@ -762,6 +817,9 @@ const Quirks = (editor: Editor): Quirks => {
       disableBackspaceIntoATable();
       removeAppleInterchangeBrs();
 
+      if (!isSafari) {
+        fixInLISelection();
+      }
       // touchClickEvent();
 
       // iOS

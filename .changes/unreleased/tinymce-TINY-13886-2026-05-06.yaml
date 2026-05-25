@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Worked around a Chromium bug where clicking on the right of an `li` could fail.
+time: 2026-05-06T16:09:35.514247048+02:00
+custom:
+    Issue: TINY-13886
