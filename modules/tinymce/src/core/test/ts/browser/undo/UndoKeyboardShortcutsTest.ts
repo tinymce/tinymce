@@ -81,27 +81,15 @@ describe('browser.tinymce.core.undo.UndoKeyboardShortcutTest', () => {
     TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 3);
   });
 
-  const simulateRealBackspaceViaKeyboardWithCtrl = (editor: Editor) => {
+  const simulateRealOneWordDeletionViaKeyboard = (editor: Editor, key: number) => {
     const isMac = platform.os.isMacOS();
     const modKeyCode = isMac ? Keys.alt() : Keys.control();
     const modifier = isMac ? { alt: true, altKey: true } : { ctrl: true, ctrlKey: true };
-    TinyContentActions.keydown(editor, Keys.backspace(), modifier);
+    TinyContentActions.keydown(editor, key, modifier);
     // The browser would now delete "def" itself. Reproduce that DOM mutation:
     (editor.getBody().firstChild as HTMLElement).textContent = 'abc ';
     TinySelections.setCursor(editor, [ 0, 0 ], 'abc '.length);
-    TinyContentActions.keyup(editor, Keys.backspace(), modifier);
-    TinyContentActions.keyup(editor, modKeyCode, {});
-  };
-
-  const simulateRealDeleteViaKeyboardWithCtrl = (editor: Editor) => {
-    const isMac = platform.os.isMacOS();
-    const modKeyCode = isMac ? Keys.alt() : Keys.control();
-    const modifier = isMac ? { alt: true, altKey: true } : { ctrl: true, ctrlKey: true };
-    TinyContentActions.keydown(editor, Keys.delete(), modifier);
-    // The browser would now delete "def" itself. Reproduce that DOM mutation:
-    (editor.getBody().firstChild as HTMLElement).textContent = 'abc ';
-    TinySelections.setCursor(editor, [ 0, 0 ], 'abc '.length);
-    TinyContentActions.keyup(editor, Keys.delete(), modifier);
+    TinyContentActions.keyup(editor, key, modifier);
     TinyContentActions.keyup(editor, modKeyCode, {});
   };
 
@@ -111,7 +99,7 @@ describe('browser.tinymce.core.undo.UndoKeyboardShortcutTest', () => {
     // backspace
     editor.resetContent('<p>abc 001</p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 'abc 001'.length);
-    simulateRealBackspaceViaKeyboardWithCtrl(editor);
+    simulateRealOneWordDeletionViaKeyboard(editor, Keys.backspace());
     TinyAssertions.assertContent(editor, 'abc ', { format: 'text' });
     editor.execCommand('Undo');
     TinyAssertions.assertContent(editor, '<p>abc 001</p>');
@@ -119,7 +107,7 @@ describe('browser.tinymce.core.undo.UndoKeyboardShortcutTest', () => {
 
     editor.resetContent('<p>abc 002</p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 'abc 002'.length);
-    simulateRealBackspaceViaKeyboardWithCtrl(editor);
+    simulateRealOneWordDeletionViaKeyboard(editor, Keys.backspace());
     TinyAssertions.assertContent(editor, 'abc ', { format: 'text' });
     undoKeystrokeRealistic(editor);
     TinyAssertions.assertContent(editor, '<p>abc 002</p>');
@@ -131,7 +119,7 @@ describe('browser.tinymce.core.undo.UndoKeyboardShortcutTest', () => {
     // delete
     editor.resetContent('<p>abc 003</p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 'abc '.length);
-    simulateRealDeleteViaKeyboardWithCtrl(editor);
+    simulateRealOneWordDeletionViaKeyboard(editor, Keys.delete());
     TinyAssertions.assertContent(editor, 'abc ', { format: 'text' });
     editor.execCommand('Undo');
     TinyAssertions.assertContent(editor, '<p>abc 003</p>');
@@ -139,7 +127,7 @@ describe('browser.tinymce.core.undo.UndoKeyboardShortcutTest', () => {
 
     editor.resetContent('<p>abc 004</p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 'abc '.length);
-    simulateRealDeleteViaKeyboardWithCtrl(editor);
+    simulateRealOneWordDeletionViaKeyboard(editor, Keys.delete());
     TinyAssertions.assertContent(editor, 'abc ', { format: 'text' });
     undoKeystrokeRealistic(editor);
     TinyAssertions.assertContent(editor, '<p>abc 004</p>');
