@@ -16,5 +16,6 @@ export const Keys = {
   pageUp: Fun.constant(33),
   pageDown: Fun.constant(34),
   control: Fun.constant(17),
-  meta: Fun.constant(91)
+  // Firefox Mac returns 224 for the keycode for meta
+  meta: (isFirefoxMac: boolean = false): number => isFirefoxMac ? 224 : 91
 };
