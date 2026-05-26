@@ -109,6 +109,7 @@ const keys: KeyInfo[] = [
   { keyCode: 89, code: 'KeyY', key: 'Y', data: 'Y', shiftKey: true },
   { keyCode: 90, code: 'KeyZ', key: 'z', data: 'z' },
   { keyCode: 90, code: 'KeyZ', key: 'Z', data: 'Z', shiftKey: true },
+  { keyCode: 91, code: 'Meta', key: 'Meta' },
   // Firefox Mac returns 224 for the keycode for meta
   { keyCode: isFirefox && isMac ? 224 : 91, code: 'MetaLeft', key: 'Meta' },
   { keyCode: 92, code: 'MetaRight', key: 'Meta' },
