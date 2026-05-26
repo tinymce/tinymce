@@ -83,8 +83,8 @@ describe('browser.tinymce.core.undo.UndoKeyboardShortcutTest', () => {
 
   const simulateRealBackspaceViaKeyboardWithCtrl = (editor: Editor) => {
     const isMac = platform.os.isMacOS();
-    const modKeyCode = isMac ? Keys.meta(isFirefox) : Keys.control();
-    const modifier = isMac ? { meta: true, metaKey: true } : { ctrl: true, ctrlKey: true };
+    const modKeyCode = isMac ? Keys.alt() : Keys.control();
+    const modifier = isMac ? { alt: true, altKey: true } : { ctrl: true, ctrlKey: true };
     TinyContentActions.keydown(editor, Keys.backspace(), modifier);
     // The browser would now delete "def" itself. Reproduce that DOM mutation:
     (editor.getBody().firstChild as HTMLElement).textContent = 'abc ';
@@ -95,8 +95,8 @@ describe('browser.tinymce.core.undo.UndoKeyboardShortcutTest', () => {
 
   const simulateRealDeleteViaKeyboardWithCtrl = (editor: Editor) => {
     const isMac = platform.os.isMacOS();
-    const modKeyCode = isMac ? Keys.meta(isFirefox) : Keys.control();
-    const modifier = isMac ? { meta: true, metaKey: true } : { ctrl: true, ctrlKey: true };
+    const modKeyCode = isMac ? Keys.alt() : Keys.control();
+    const modifier = isMac ? { alt: true, altKey: true } : { ctrl: true, ctrlKey: true };
     TinyContentActions.keydown(editor, Keys.delete(), modifier);
     // The browser would now delete "def" itself. Reproduce that DOM mutation:
     (editor.getBody().firstChild as HTMLElement).textContent = 'abc ';
@@ -106,9 +106,9 @@ describe('browser.tinymce.core.undo.UndoKeyboardShortcutTest', () => {
   };
 
   // this is refered to the case in `TINY-8910`
-  it('TINY-14255: undo after ctrl+backspace/delete should put the caret in the correct position', async () => {
-    // backspace
+  it('TINY-14255: undo after ctrl+backspace should put the caret in the correct position', () => {
     const editor = hook.editor();
+    // backspace
     editor.resetContent('<p>abc 001</p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 'abc 001'.length);
     simulateRealBackspaceViaKeyboardWithCtrl(editor);
@@ -124,7 +124,10 @@ describe('browser.tinymce.core.undo.UndoKeyboardShortcutTest', () => {
     undoKeystrokeRealistic(editor);
     TinyAssertions.assertContent(editor, '<p>abc 002</p>');
     TinyAssertions.assertCursor(editor, [ 0, 0 ], 'abc 002'.length);
+  });
 
+  it('TINY-14255: undo after ctrl+delete should put the caret in the correct position', () => {
+    const editor = hook.editor();
     // delete
     editor.resetContent('<p>abc 003</p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 'abc '.length);
