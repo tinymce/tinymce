@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Context toolbar with position 'line' was not repositioning to the opposite side when overflowing the viewport.
+time: 2026-05-18T16:16:12.869449+02:00
+custom:
+    Issue: TINY-14376

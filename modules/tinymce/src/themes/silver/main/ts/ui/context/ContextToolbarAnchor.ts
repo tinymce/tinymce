@@ -125,8 +125,8 @@ const getAnchorLayout = (editor: Editor, position: InlineContent.ContextPosition
     return {
       bubble: Bubble.nu(bubbleSize, 0, bubbleAlignments),
       layouts: {
-        onLtr: () => [ Layout.east ],
-        onRtl: () => [ Layout.west ]
+        onLtr: () => [ Layout.east, Layout.west ],
+        onRtl: () => [ Layout.west, Layout.east ]
       },
       overrides: anchorOverrides
     };
