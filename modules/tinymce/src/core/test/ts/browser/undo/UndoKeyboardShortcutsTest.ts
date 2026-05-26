@@ -85,6 +85,7 @@ describe('browser.tinymce.core.undo.UndoKeyboardShortcutTest', () => {
     const isMac = platform.os.isMacOS();
     const modKeyCode = isMac ? Keys.alt() : Keys.control();
     const modifier = isMac ? { alt: true, altKey: true } : { ctrl: true, ctrlKey: true };
+    TinyContentActions.keydown(editor, modKeyCode, modifier);
     TinyContentActions.keydown(editor, key, modifier);
     // The browser would now delete "def" itself. Reproduce that DOM mutation:
     (editor.getBody().firstChild as HTMLElement).textContent = 'abc ';
