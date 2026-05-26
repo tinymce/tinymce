@@ -295,7 +295,7 @@ const applyFormatAction = (ed: Editor, name: string, vars?: FormatVars, node?: N
     applyNodeStyle(formatList, node);
     if (FormatUtils.isBlockFormat(format) && !dom.isBlock(targetNode)) {
       const parentBlock = dom.getParent(targetNode, dom.isBlock);
-      if (Type.isNonNullable(parentBlock) && dom.isEditable(parentBlock)) {
+      if (dom.isEditable(parentBlock)) {
         const wrapperElementName = format.block;
         if (parentBlock.nodeName.toLowerCase() === wrapperElementName.toLowerCase()) {
           ApplyElementFormat.setElementFormat(ed, parentBlock, format, vars, node);

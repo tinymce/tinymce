@@ -201,7 +201,7 @@ interface DOMUtils {
   dispatch: (target: Node | Window, name: string, evt?: {}) => EventUtils;
   getContentEditable: (node: Node) => string | null;
   getContentEditableParent: (node: Node) => string | null;
-  isEditable: (node: Node | null | undefined) => boolean;
+  isEditable: (node: Node | null | undefined) => node is HTMLElement;
   destroy: () => void;
   isChildOf: (node: Node, parent: Node) => boolean;
   dumpRng: (r: Range) => string;
@@ -1069,7 +1069,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     return state;
   };
 
-  const isEditable = (node: Node | null | undefined) => {
+  const isEditable = (node: Node | null | undefined): node is HTMLElement => {
     if (Type.isNonNullable(node)) {
       const scope = NodeType.isElement(node) ? node : node.parentElement;
       return Type.isNonNullable(scope) && NodeType.isHTMLElement(scope) && ContentEditable.isEditable(SugarElement.fromDom(scope));
