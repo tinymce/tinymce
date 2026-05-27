@@ -215,6 +215,11 @@ const register = (editor: Editor): void => {
     processor: 'object'
   });
 
+  registerOption('fixed_context_toolbar', {
+    processor: 'string',
+    default: ''
+  });
+
   registerOption('ui_mode', {
     processor: 'string',
     default: 'combined'
@@ -316,6 +321,7 @@ const getToolbarGroups = option('toolbar_groups');
 const getToolbarLocation = option('toolbar_location');
 const fixedContainerSelector = option('fixed_toolbar_container');
 const fixedToolbarContainerTarget = option('fixed_toolbar_container_target');
+const fixedContextToolbarSelector = option('fixed_context_toolbar');
 const isToolbarPersist = option('toolbar_persist');
 const getStickyToolbarOffset = option('toolbar_sticky_offset');
 const getMenubar = option('menubar');
@@ -419,6 +425,14 @@ const fixedContainerTarget = (editor: Editor): Optional<SugarElement> => {
 const useFixedContainer = (editor: Editor): boolean =>
   editor.inline && fixedContainerTarget(editor).isSome();
 
+const fixedContextToolbarTarget = (editor: Editor): Optional<SugarElement<HTMLElement>> => {
+  const selector = fixedContextToolbarSelector(editor) ?? '';
+  if (selector.length > 0) {
+    return SelectorFind.descendant<HTMLElement>(SugarBody.body(), selector);
+  }
+  return Optional.none();
+};
+
 const getUiContainer = (editor: Editor): SugarElement<HTMLElement | ShadowRoot> => {
   const fixedContainer = fixedContainerTarget(editor);
   return fixedContainer.getOrThunk(() =>
@@ -469,6 +483,7 @@ export {
   getMultipleToolbarsOption,
   getUiContainer,
   useFixedContainer,
+  fixedContextToolbarTarget,
   isSplitUiMode,
   getToolbarMode,
   isDraggableModal,

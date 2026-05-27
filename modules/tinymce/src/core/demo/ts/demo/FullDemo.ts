@@ -114,12 +114,66 @@ export default (): void => {
       makeSidebar(ed, 'sidebar1', 'green', 200);
       makeSidebar(ed, 'sidebar2', 'green', 200);
       makeCodeView(ed);
+
+      const container = document.getElementById('tiny-fixed-context-toolbar');
+
+      ed.on('ContextToolbarPosition', (e) => {
+        console.log('ContextToolbarPosition', e);
+        if (container) {
+          container.style.left = e.x + 'px';
+          container.style.top = e.y + 'px';
+        }
+      });
+
+      ed.on('ContextToolbarOpen', () => {
+        if (container) {
+          container.style.display = '';
+        }
+      });
+
+      ed.on('ContextToolbarClose', () => {
+        if (container) {
+          container.style.display = 'none';
+        }
+      });
+
+      const handle = document.getElementById('tiny-fixed-context-toolbar-handle');
+      if (container && handle) {
+        let dragOffsetX = 0;
+        let dragOffsetY = 0;
+        let dragging = false;
+
+        const onMouseMove = (ev: MouseEvent) => {
+          if (!dragging) {
+            return;
+          }
+          container.style.left = (ev.clientX - dragOffsetX) + 'px';
+          container.style.top = (ev.clientY - dragOffsetY) + 'px';
+        };
+
+        const onMouseUp = () => {
+          dragging = false;
+          document.removeEventListener('mousemove', onMouseMove);
+          document.removeEventListener('mouseup', onMouseUp);
+        };
+
+        handle.addEventListener('mousedown', (ev) => {
+          const rect = container.getBoundingClientRect();
+          dragOffsetX = ev.clientX - rect.left;
+          dragOffsetY = ev.clientY - rect.top;
+          dragging = true;
+          document.addEventListener('mousemove', onMouseMove);
+          document.addEventListener('mouseup', onMouseUp);
+          ev.preventDefault();
+        });
+      }
     },
     plugins: [
       'autosave', 'advlist', 'autolink', 'link', 'image', 'lists', 'charmap', 'preview', 'anchor', 'pagebreak',
       'searchreplace', 'wordcount', 'visualblocks', 'visualchars', 'code', 'fullscreen', 'insertdatetime', 'media', 'nonbreaking',
-      'save', 'table', 'directionality', 'emoticons', 'importcss', 'codesample', 'help', 'accordion'
+      'save', 'table', 'directionality', 'emoticons', 'importcss', 'codesample', 'help', 'accordion', 'quickbars'
     ],
+    fixed_context_toolbar: '#tiny-fixed-context-toolbar',
     // rtl_ui: true,
     add_unload_trigger: false,
     autosave_ask_before_unload: false,

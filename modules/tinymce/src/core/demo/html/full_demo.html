@@ -4,11 +4,20 @@
 <head>
   <title>TinyMCE full featured Demo Page</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    #tiny-fixed-context-toolbar .tox-pop::before,
+    #tiny-fixed-context-toolbar .tox-pop::after {
+      display: none;
+    }
+  </style>
 </head>
 
 <body>
   <main>
     <h1>Tinymce full featured Page</h1>
+    <div id="tiny-fixed-context-toolbar" class="tox" style="position: fixed; z-index: 100000; border: 10px solid blue; padding: 8px; min-height: 40px; display: none;">
+      <div id="tiny-fixed-context-toolbar-handle" style="position: absolute; top: -10px; left: -10px; width: 16px; height: 16px; background: red; cursor: move;"></div>
+    </div>
     <div id="ephox-ui">
       <textarea>
         <p>

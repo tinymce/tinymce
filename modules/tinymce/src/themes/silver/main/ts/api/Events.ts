@@ -75,8 +75,16 @@ const fireContextToolbarClose = (editor: Editor): void => {
   editor.dispatch('ContextToolbarClose');
 };
 
+const fireContextToolbarOpen = (editor: Editor): void => {
+  editor.dispatch('ContextToolbarOpen');
+};
+
 const fireContextFormSlideBack = (editor: Editor): void => {
   editor.dispatch('ContextFormSlideBack');
+};
+
+const fireContextToolbarPosition = (editor: Editor, data: { x: number; y: number; width: number; height: number }): void => {
+  editor.dispatch('ContextToolbarPosition', data);
 };
 
 export {
@@ -98,5 +106,7 @@ export {
   fireToggleSidebar,
   fireToggleView,
   fireContextToolbarClose,
-  fireContextFormSlideBack
+  fireContextToolbarOpen,
+  fireContextFormSlideBack,
+  fireContextToolbarPosition
 };

@@ -4,7 +4,7 @@ import {
 import { InlineContent, type Toolbar } from '@ephox/bridge';
 import { Arr, Fun, Id, Merger, Obj, Optional, Optionals, Singleton, Throttler, Thunk } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Class, Compare, Css, Focus, type SugarElement } from '@ephox/sugar';
+import { Class, Compare, Css, Focus, Insert, type SugarElement, Traverse } from '@ephox/sugar';
 
 import type Editor from 'tinymce/core/api/Editor';
 import type { DisabledStateChangeEvent } from 'tinymce/core/api/EventTypes';
@@ -13,7 +13,7 @@ import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import VK from 'tinymce/core/api/util/VK';
 
 import * as Events from '../../api/Events';
-import { getToolbarMode, ToolbarMode } from '../../api/Options';
+import { fixedContextToolbarTarget, getToolbarMode, ToolbarMode } from '../../api/Options';
 import type { UiFactoryBackstage, UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { renderToolbar } from '../toolbar/CommonToolbar';
 import { identifyButtons } from '../toolbar/Integration';
@@ -80,6 +80,31 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
 
   const contextbar = GuiFactory.build(contextToolbarResult.sketch);
 
+  const positioningStyles = [ 'position', 'left', 'top', 'right', 'bottom', 'transform', 'max-width' ];
+
+  const stripPositioningStyles = (elem: SugarElement<HTMLElement>) => {
+    Arr.each(positioningStyles, (prop) => Css.remove(elem, prop));
+  };
+
+  const applyFixedContainerLayout = () => {
+    fixedContextToolbarTarget(editor).each((container) => {
+      const elem = contextbar.element as SugarElement<HTMLElement>;
+      const rect = elem.dom.getBoundingClientRect();
+      Events.fireContextToolbarPosition(editor, {
+        x: rect.left,
+        y: rect.top,
+        width: rect.width,
+        height: rect.height
+      });
+      const currentParent = Traverse.parent(elem);
+      const alreadyInside = currentParent.exists((p) => Compare.eq(p, container));
+      if (!alreadyInside) {
+        Insert.append(container, elem);
+      }
+      stripPositioningStyles(elem);
+    });
+  };
+
   const getBounds = () => {
     const position = lastContextPosition.get().getOr('node');
     // Use a 1px margin for the bounds to keep the context toolbar from butting directly against
@@ -129,6 +154,7 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
       } else {
         lastTrigger.set(TriggerCause.Reposition);
         InlineView.reposition(contextbar);
+        applyFixedContainerLayout();
       }
     }
   };
@@ -212,6 +238,7 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
       return;
     }
 
+    const wasOpen = InlineView.isOpen(contextbar);
     const toolbarSpec = buildToolbar(toolbarApi);
 
     // TINY-4495 ASSUMPTION: Can only do toolbarApi[0].position because ContextToolbarLookup.filterToolbarsByPosition
@@ -240,6 +267,8 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
       }
     }, () => Optional.some(getBounds()));
 
+    applyFixedContainerLayout();
+
     // IMPORTANT: This must be stored after the initial render, otherwise the lookup of the last element in the
     // anchor placement will be incorrect as it'll reuse the new element as the anchor point.
     elem.fold(lastElement.clear, lastElement.set);
@@ -247,6 +276,8 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
     // It's possible we may have launched offscreen, if so then hide
     if (shouldContextToolbarHide()) {
       Css.set(contextBarEle, 'display', 'none');
+    } else if (!wasOpen) {
+      Events.fireContextToolbarOpen(editor);
     }
   };
 
