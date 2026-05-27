@@ -196,15 +196,21 @@ export const findIndex = <T>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): Optiona
   return Optional.none();
 };
 
-export const findLastIndex = <T>(arr: ArrayLike<T>, pred: ArrayPredicate<T>): Optional<number> => {
+const findLastByPredicate = <T>(arr: ArrayLike<T>, pred: ArrayPredicate<T>): Optional<{ v: T; i: number }> => {
   for (let i = arr.length - 1; i >= 0; i--) {
     if (pred(arr[i], i)) {
-      return Optional.some(i);
+      return Optional.some({ v: arr[i], i });
     }
   }
 
   return Optional.none();
 };
+
+export const findLast = <T>(arr: ArrayLike<T>, pred: ArrayPredicate<T>): Optional<T> =>
+  findLastByPredicate(arr, pred).map((r) => r.v);
+
+export const findLastIndex = <T>(arr: ArrayLike<T>, pred: ArrayPredicate<T>): Optional<number> =>
+  findLastByPredicate(arr, pred).map((r) => r.i);
 
 export const flatten = <T>(xs: ArrayLike<T[]>): T[] => {
   // Note, this is possible because push supports multiple arguments:
