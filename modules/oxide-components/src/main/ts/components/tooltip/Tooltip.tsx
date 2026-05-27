@@ -8,7 +8,7 @@ import {
   type PropsWithChildren, type ReactNode
 } from 'react';
 
-import { isSafari } from '../../utils/Browser';
+import * as Browser from '../../utils/Browser';
 import { DropdownContext } from '../dropdown/internals/Context';
 
 import { TooltipContext, useTooltip } from './internals/Context';
@@ -34,7 +34,7 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
     if (showCondition === 'always') {
       setCanShow(true);
       return;
-    } else if (showCondition === 'overflow' && isSafari()) {
+    } else if (showCondition === 'overflow' && Browser.isSafari()) {
       // Safari draws its own native tooltip when text is ellipsised; suppress
       // the custom one here so the user doesn't see two tooltips stacked.
       setCanShow(false);
