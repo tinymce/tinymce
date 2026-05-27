@@ -761,6 +761,62 @@ describe('browser.tinymce.core.fmt.FormatNoneditableTest', () => {
         TinyAssertions.assertContent(editor, `<p style="text-align: right;">a<span contenteditable="false">C<span contenteditable="true">E</span>F</span>b</p>`);
         TinyAssertions.assertCursor(editor, [ 0, 1, 1, 0 ], 0);
       });
+
+      it('TINY-13333: should apply block format with class to parent when ce=false inline element is selected', () => {
+        const editor = hook.editor();
+        editor.formatter.register('wrapper', { block: 'p', classes: 'wrapper' });
+        editor.setContent(`<p>a<span contenteditable="false">iframe</span>b</p>`);
+        TinySelections.select(editor, 'span[contenteditable="false"]', []);
+        editor.formatter.apply('wrapper');
+        TinyAssertions.assertContent(editor, `<p class="wrapper">a<span contenteditable="false">iframe</span>b</p>`);
+      });
+
+      it('TINY-13333: should apply block format with styles to parent when ce=false inline element is selected', () => {
+        const editor = hook.editor();
+        editor.formatter.register('highlight', { block: 'p', styles: { backgroundColor: 'yellow' }});
+        editor.setContent(`<p>a<span contenteditable="false">CEF</span>b</p>`);
+        TinySelections.select(editor, 'span[contenteditable="false"]', []);
+        editor.formatter.apply('highlight');
+        TinyAssertions.assertContent(editor, `<p style="background-color: yellow;">a<span contenteditable="false">CEF</span>b</p>`);
+      });
+
+      it('TINY-13333: should apply block format to different block types (h1, div, etc)', () => {
+        const editor = hook.editor();
+        editor.formatter.register('wrapper', { block: 'h1', classes: 'wrapper' });
+        editor.setContent(`<h1>a<span contenteditable="false">CEF</span>b</h1>`);
+        TinySelections.select(editor, 'span[contenteditable="false"]', []);
+        editor.formatter.apply('wrapper');
+        TinyAssertions.assertContent(editor, `<h1 class="wrapper">a<span contenteditable="false">CEF</span>b</h1>`);
+      });
+
+      it('TINY-13333: should toggle block format when applied twice', () => {
+        const editor = hook.editor();
+        editor.formatter.register('wrapper', { block: 'p', classes: 'wrapper' });
+        editor.setContent(`<p>a<span contenteditable="false">CEF</span>b</p>`);
+        TinySelections.select(editor, 'span[contenteditable="false"]', []);
+        editor.formatter.apply('wrapper');
+        TinyAssertions.assertContent(editor, `<p class="wrapper">a<span contenteditable="false">CEF</span>b</p>`);
+        // Toggle it off
+        editor.formatter.remove('wrapper');
+        TinyAssertions.assertContent(editor, `<p>a<span contenteditable="false">CEF</span>b</p>`);
+      });
+
+      it('TINY-13333: should work with media plugin iframe wrapper', () => {
+        const editor = hook.editor();
+        editor.formatter.register('wrapper', { block: 'p', classes: 'wrapper' });
+        editor.setContent(`<p><span class="mce-preview-object mce-object-iframe" contenteditable="false" data-mce-object="iframe"><iframe src="https://www.youtube.com/embed/test"></iframe></span></p>`);
+        TinySelections.select(editor, 'span[data-mce-object="iframe"]', []);
+        editor.formatter.apply('wrapper');
+        TinyAssertions.assertContent(editor, `<p class="wrapper"><span class="mce-preview-object mce-object-iframe" contenteditable="false" data-mce-object="iframe"><iframe src="https://www.youtube.com/embed/test"></iframe></span></p>`);
+      });
+
+      it('TINY-13333: should change parent block tag when ce=false inline element is selected', () => {
+        const editor = hook.editor();
+        editor.setContent(`<p>a<span contenteditable="false">CEF</span>b</p>`);
+        TinySelections.select(editor, 'span[contenteditable="false"]', []);
+        editor.formatter.apply('h1');
+        TinyAssertions.assertContent(editor, `<h1>a<span contenteditable="false">CEF</span>b</h1>`);
+      });
     });
   });
 });
