@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Selecting multiple table cells and applying indentation did not apply to the entire selection.
+time: 2026-05-27T16:03:12.522069852+02:00
+custom:
+    Issue: TINY-14370
