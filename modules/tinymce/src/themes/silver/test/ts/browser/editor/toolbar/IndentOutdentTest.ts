@@ -39,11 +39,11 @@ describe('browser.tinymce.themes.silver.editor.toolbar.IndentOutdentTest', () =>
       Mouse.mouseDown(firstTd, { button: 0 });
       Mouse.mouseOver(lastTd, { button: 0 });
       Mouse.mouseUp(lastTd, { button: 0 });
-      // this enabled even if there is no indentation to have the same behavior as the test:
+      // this is enabled even if there is no indentation to have the same behavior as the test:
       // `"Outdent on multiple paragraphs without margin/padding"` in `OutdentCommandTest.ts`
-      UiFinder.exists(SugarBody.body(), `[aria-label="Decrease indent"][aria-disabled="true"]`);
+      UiFinder.exists(SugarBody.body(), `[aria-label="Decrease indent"][aria-disabled="false"]`);
       editor.execCommand('indent');
-      UiFinder.exists(SugarBody.body(), `[aria-label="Decrease indent"][aria-disabled="true"]`);
+      UiFinder.exists(SugarBody.body(), `[aria-label="Decrease indent"][aria-disabled="false"]`);
       const tds = UiFinder.findAllIn(TinyDom.body(editor), 'td');
       Arr.each(tds, (td) => {
         assert.isTrue(Css.getRaw(td, 'padding-left').isSome(), `td ${td.dom.innerHTML} should be indented`);
