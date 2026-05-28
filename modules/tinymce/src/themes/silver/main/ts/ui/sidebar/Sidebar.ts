@@ -95,8 +95,8 @@ const makePanels = (parts: SlotContainerTypes.SlotContainerParts, panelConfigs: 
   });
 };
 
-const makeSidebar = (panelConfigs: SidebarConfig, sidebar: AlloyComponent): SimpleSpec => {
-  const resizeHandle = makeSidebarResizeHandler(Optional.from(sidebar)).getOrUndefined();
+const makeSidebar = (editor: Editor, panelConfigs: SidebarConfig, sidebar: AlloyComponent): SimpleSpec => {
+  const resizeHandle = makeSidebarResizeHandler(editor, Optional.from(sidebar)).getOrUndefined();
 
   return SlotContainer.sketch((parts) => ({
     dom: {
@@ -113,11 +113,11 @@ const makeSidebar = (panelConfigs: SidebarConfig, sidebar: AlloyComponent): Simp
   }));
 };
 
-const setSidebar = (sidebar: AlloyComponent, panelConfigs: SidebarConfig, showSidebar: string | undefined): void => {
+const setSidebar = (editor: Editor, sidebar: AlloyComponent, panelConfigs: SidebarConfig, showSidebar: string | undefined): void => {
   const optSlider = Composing.getCurrent(sidebar);
 
   optSlider.each((slider) => {
-    Replacing.set(slider, [ makeSidebar(panelConfigs, sidebar) ]);
+    Replacing.set(slider, [ makeSidebar(editor, panelConfigs, sidebar) ]);
 
     // Show the default sidebar
     const configKey = showSidebar?.toLowerCase();

@@ -4,9 +4,6 @@ import { Css, type SugarElement, type SugarPosition, Width } from '@ephox/sugar'
 
 import * as Utils from '../sizing/Utils';
 
-const RESIZE_MIN = 300;
-const RESIZE_MAX = 480;
-
 export interface HorizontalDimensions {
   readonly width: number;
 }
@@ -18,23 +15,23 @@ export const getOriginalDimensions = (sidebar: SugarElement<HTMLElement>): Horiz
   };
 };
 
-export const getDimensions = (deltas: SugarPosition, originalDimentions: HorizontalDimensions): HorizontalDimensions => {
+export const getDimensions = (deltas: SugarPosition, originalDimentions: HorizontalDimensions, min: number, max: number): HorizontalDimensions => {
   const dimensions = {
     width:
       Utils.calcCappedSize(
         originalDimentions.width - deltas.left,
-        Optional.from(RESIZE_MIN),
-        Optional.from(RESIZE_MAX) // should be width of the content?
+        Optional.from(min),
+        Optional.from(max)
       )
   };
 
   return dimensions;
 };
 
-export const resize = (sidebar: AlloyComponent, deltas: SugarPosition): HorizontalDimensions => {
+export const resize = (sidebar: AlloyComponent, deltas: SugarPosition, min: number, max: number): HorizontalDimensions => {
 
   const originalDimentions = getOriginalDimensions(sidebar.element);
-  const dimensions = getDimensions( deltas, originalDimentions);
+  const dimensions = getDimensions(deltas, originalDimentions, min, max);
 
   Css.set(sidebar.element, '--tox-private-sidebar-width', Utils.numToPx(dimensions.width));
 

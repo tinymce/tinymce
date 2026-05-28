@@ -57,6 +57,16 @@ tinymce.init({
   resize: 'both',
   setup: (editor) => {
     makeFakeCommentsSidebar(editor);
+    editor.on('init', () => {
+      const minInput = document.getElementById('sidebar-min-width') as HTMLInputElement | null;
+      const maxInput = document.getElementById('sidebar-max-width') as HTMLInputElement | null;
+      minInput?.addEventListener('input', () => {
+        editor.options.set('sidebar_min_width', Number(minInput.value));
+      });
+      maxInput?.addEventListener('input', () => {
+        editor.options.set('sidebar_max_width', Number(maxInput.value));
+      });
+    });
   },
   sidebar_show: 'fakecomments'
 });

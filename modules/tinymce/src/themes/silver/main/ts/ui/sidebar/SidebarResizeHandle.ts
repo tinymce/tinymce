@@ -2,23 +2,27 @@ import { AddEventsBehaviour, type AlloyComponent, AlloyEvents, Behaviour, Draggi
 import { Optional } from '@ephox/katamari';
 import { Attribute, SugarPosition } from '@ephox/sugar';
 
+import type Editor from 'tinymce/core/api/Editor';
+
+import * as Options from '../../api/Options';
+
 import * as SidebarResize from './SidebarResize';
 
 const setAriaValuetext = (comp: AlloyComponent, dimensions: SidebarResize.HorizontalDimensions) => {
   Attribute.set(comp.element, 'aria-valuetext', `Sidebar's width: ${dimensions.width} pixels`);
 };
 
-const keyboardHandler = (sidebar: AlloyComponent, comp: AlloyComponent, x: number, y: number): Optional<boolean> => {
+const keyboardHandler = (editor: Editor, sidebar: AlloyComponent, comp: AlloyComponent, x: number, y: number): Optional<boolean> => {
   const scale = 10;
   const delta = SugarPosition(x * scale, y * scale);
 
-  const newDimentions = SidebarResize.resize(sidebar, delta);
+  const newDimentions = SidebarResize.resize(sidebar, delta, Options.getSidebarMinWidth(editor), Options.getSidebarMaxWidth(editor));
   setAriaValuetext(comp, newDimentions);
 
   return Optional.some(true);
 };
 
-export const makeSidebarResizeHandler = (sidebarOpt: Optional<AlloyComponent>): Optional<SimpleSpec> => {
+export const makeSidebarResizeHandler = (editor: Editor, sidebarOpt: Optional<AlloyComponent>): Optional<SimpleSpec> => {
 
   return sidebarOpt.map( (sidebar) => {
     return {
@@ -37,14 +41,14 @@ export const makeSidebarResizeHandler = (sidebarOpt: Optional<AlloyComponent>): 
           mode: 'pointer',
           repositionTarget: false,
           onDrag: (comp, _target, delta) => {
-            const newDimentions = SidebarResize.resize(sidebar, delta);
+            const newDimentions = SidebarResize.resize(sidebar, delta, Options.getSidebarMinWidth(editor), Options.getSidebarMaxWidth(editor));
             setAriaValuetext(comp, newDimentions);
           }
         }),
         Keying.config({
           mode: 'special',
-          onLeft: (comp) => keyboardHandler(sidebar, comp, -1, 0),
-          onRight: (comp) => keyboardHandler(sidebar, comp, 1, 0),
+          onLeft: (comp) => keyboardHandler(editor, sidebar, comp, -1, 0),
+          onRight: (comp) => keyboardHandler(editor, sidebar, comp, 1, 0),
         }),
         Tabstopping.config({}),
         Focusing.config({}),
