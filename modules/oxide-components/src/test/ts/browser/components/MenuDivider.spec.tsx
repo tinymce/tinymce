@@ -32,7 +32,7 @@ describe('browser.MenuDividerTest', () => {
     const { container } = render(<TestComponent />, { wrapper });
     const separator = container.querySelector('[role="separator"]') as HTMLElement;
 
-    expect(separator).toBeDefined();
+    expect(separator).not.toBeNull();
     expect(separator.getAttribute('role')).toBe('separator');
   });
 
@@ -50,6 +50,7 @@ describe('browser.MenuDividerTest', () => {
     const { container } = render(<TestComponent />, { wrapper });
     const separator = container.querySelector('[role="separator"]') as HTMLElement;
 
+    expect(separator).not.toBeNull();
     expect(separator.className).toBe('tox-collection__item-separator');
   });
 
@@ -70,7 +71,7 @@ describe('browser.MenuDividerTest', () => {
     const separator = container.querySelector('[role="separator"]') as HTMLElement;
     const menuItems = container.querySelectorAll('[role="menuitem"]');
 
-    expect(separator).toBeDefined();
+    expect(separator).not.toBeNull();
     expect(menuItems.length).toBe(2);
   });
 });
