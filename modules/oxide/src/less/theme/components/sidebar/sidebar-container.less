@@ -36,6 +36,23 @@
     overflow: hidden;
   }
 
+  &:not(.tox-edit-focus) {
+   .tox-sidebar__pane-container  {
+    .tox-sidebar__resize-handle {
+      &:active::before,
+      &:focus-visible::before {
+        width: 3px;
+        background-color: #b3b3b3;
+      }
+
+      &:hover::before {
+        width: 3px;
+        background-color: @color-tint;
+      }
+    } 
+   }
+  }
+
   .tox-sidebar__pane-container {
     display: flex;
     flex-direction: row-reverse;
@@ -79,17 +96,6 @@
         height: 100%;
         background-color: #e3e3e3;
         transition: width .15s ease, background-color .15s ease;
-      }
-
-      &:active::before,
-      &:focus-visible::before {
-        width: 3px;
-        background-color: #b3b3b3;
-      }
-
-      &:hover::before {
-        width: 3px;
-        background-color: @color-tint;
       }
 
       @container editor (width <= 1024px) {
