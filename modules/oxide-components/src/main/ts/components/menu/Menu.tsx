@@ -5,6 +5,7 @@ import { forwardRef, useEffect, useRef, type MutableRefObject, type PropsWithChi
 import * as KeyboardNavigationHooks from '../../keynav/KeyboardNavigationHooks';
 import * as Bem from '../../utils/Bem';
 
+import { Divider } from './components/Divider';
 import { Item } from './components/Item';
 import { SubmenuItem } from './components/SubmenuItem';
 import { ToggleItem } from './components/ToggleItem';
@@ -54,5 +55,6 @@ export {
   Item,
   Root,
   SubmenuItem,
-  ToggleItem
+  ToggleItem,
+  Divider
 };
