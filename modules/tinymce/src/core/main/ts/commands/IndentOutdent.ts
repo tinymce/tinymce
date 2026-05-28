@@ -61,13 +61,11 @@ const parentIsListComponent = (el: SugarElement<Node>): boolean =>
   Traverse.parent(el).exists(isListComponent);
 
 const getBlocksToIndent = (editor: Editor): SugarElement<HTMLElement>[] => {
-  if (TableCellSelection.getCellsFromEditor(editor).length === 0) {
-    return Arr.filter(SugarElements.fromDom(editor.selection.getSelectedBlocks()), (el): el is SugarElement<HTMLElement> =>
+  const selectedCells = TableCellSelection.getCellsFromEditor(editor);
+  return selectedCells.length === 0 ?
+    Arr.filter(SugarElements.fromDom(editor.selection.getSelectedBlocks()), (el): el is SugarElement<HTMLElement> =>
       !isListComponent(el) && !parentIsListComponent(el) && isEditable(el)
-    );
-  } else {
-    return TableCellSelection.getCellsFromEditor(editor);
-  }
+    ) : selectedCells;
 };
 
 const handle = (editor: Editor, command: string): void => {
