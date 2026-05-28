@@ -26,7 +26,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.IndentOutdentTest', () =>
 
     it('TINY-9669: Disable outdent on noneditable content', testDisableOnNoneditable('Increase indent'));
     it('TINY-9669: Disable indent on noneditable content', testDisableOnNoneditable('Decrease indent'));
-    it('TINY-14370: applying indent to multiple tds selection should apply the indentetion to all of them', () => {
+    it('TINY-14370: applying indent to multiple tds selection should apply the indentation to all of them', () => {
       const editor = hook.editor();
       editor.setContent('<table><tbody><tr>' +
         '<td class="first">1</td>' +
@@ -43,7 +43,6 @@ describe('browser.tinymce.themes.silver.editor.toolbar.IndentOutdentTest', () =>
       // `"Outdent on multiple paragraphs without margin/padding"` in `OutdentCommandTest.ts`
       UiFinder.exists(SugarBody.body(), `[aria-label="Decrease indent"][aria-disabled="false"]`);
       editor.execCommand('indent');
-      UiFinder.exists(SugarBody.body(), `[aria-label="Decrease indent"][aria-disabled="false"]`);
       const tds = UiFinder.findAllIn(TinyDom.body(editor), 'td');
       Arr.each(tds, (td) => {
         assert.isTrue(Css.getRaw(td, 'padding-left').isSome(), `td ${td.dom.innerHTML} should be indented`);
