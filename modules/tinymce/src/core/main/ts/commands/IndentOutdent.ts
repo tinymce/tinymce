@@ -8,6 +8,7 @@ import { isList, isListItem, isTable } from '../dom/ElementType';
 import * as NodeType from '../dom/NodeType';
 import { indentListSelection, outdentListSelection } from '../lists/actions/Indentation';
 import * as ListIndentation from '../lists/listmodel/ListsIndendation';
+import * as TableCellSelection from '../selection/TableCellSelection';
 
 type IndentStyle = 'margin-left' | 'margin-right' | 'padding-left' | 'padding-right';
 
@@ -59,10 +60,15 @@ const isListComponent = (el: SugarElement<Node>): boolean =>
 const parentIsListComponent = (el: SugarElement<Node>): boolean =>
   Traverse.parent(el).exists(isListComponent);
 
-const getBlocksToIndent = (editor: Editor): SugarElement<HTMLElement>[] =>
-  Arr.filter(SugarElements.fromDom(editor.selection.getSelectedBlocks()), (el): el is SugarElement<HTMLElement> =>
-    !isListComponent(el) && !parentIsListComponent(el) && isEditable(el)
-  );
+const getBlocksToIndent = (editor: Editor): SugarElement<HTMLElement>[] => {
+  if (TableCellSelection.getCellsFromEditor(editor).length === 0) {
+    return Arr.filter(SugarElements.fromDom(editor.selection.getSelectedBlocks()), (el): el is SugarElement<HTMLElement> =>
+      !isListComponent(el) && !parentIsListComponent(el) && isEditable(el)
+    );
+  } else {
+    return TableCellSelection.getCellsFromEditor(editor);
+  }
+};
 
 const handle = (editor: Editor, command: string): void => {
   if (editor.mode.isReadOnly()) {
