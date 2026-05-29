@@ -94,6 +94,7 @@ const menu: JSX.Element = (
     >
       <span>Menu <span style={{ textDecoration: 'underline' }}>item  2</span></span>
     </Menu.ToggleItem>
+    <Menu.Divider />
     <Menu.SubmenuItem
       key={Id.generate('menu-item')}
       icon={'item'}
@@ -119,6 +120,7 @@ const menu: JSX.Element = (
           >
             {'Nested menu item 2'}
           </Menu.ToggleItem>
+          <Menu.Divider />
           <Menu.SubmenuItem
             key={Id.generate('menu-item')}
             icon={'item'}
