@@ -293,6 +293,18 @@ const applyFormatAction = (ed: Editor, name: string, vars?: FormatVars, node?: N
     // node variable is used by other functions above in the same scope so need to set it here
     node = targetNode;
     applyNodeStyle(formatList, node);
+    if (FormatUtils.isBlockFormat(format) && !dom.isBlock(targetNode)) {
+      const parentBlock = dom.getParent(targetNode, dom.isBlock);
+      if (dom.isEditable(parentBlock)) {
+        const wrapperElementName = format.block;
+        if (parentBlock.nodeName.toLowerCase() === wrapperElementName.toLowerCase()) {
+          ApplyElementFormat.setElementFormat(ed, parentBlock, format, vars, node);
+        } else if (!FormatUtils.isWrappingBlockFormat(format)) {
+          const elm = dom.rename(parentBlock, wrapperElementName);
+          ApplyElementFormat.setElementFormat(ed, elm, format, vars, node);
+        }
+      }
+    }
     Events.fireFormatApply(ed, name, node, vars);
     return;
   }

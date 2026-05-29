@@ -1,0 +1,6 @@
+project: katamari
+kind: Added
+body: New `Arr` function `findLast`.
+time: 2026-05-27T08:11:36.408396476+02:00
+custom:
+    Issue: TINY-14425

@@ -1,6 +1,7 @@
 import { Fun } from '@ephox/katamari';
 
 export const Keys = {
+  alt: Fun.constant(18),
   tab: Fun.constant(9),
   escape: Fun.constant(27),
   enter: Fun.constant(13),
@@ -16,5 +17,6 @@ export const Keys = {
   pageUp: Fun.constant(33),
   pageDown: Fun.constant(34),
   control: Fun.constant(17),
-  meta: Fun.constant(91)
+  // Firefox Mac returns 224 for the keycode for meta
+  meta: (isFirefoxMac: boolean = false): number => isFirefoxMac ? 224 : 91
 };
