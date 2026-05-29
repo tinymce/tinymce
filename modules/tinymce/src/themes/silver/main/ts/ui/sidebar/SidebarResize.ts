@@ -16,6 +16,11 @@ export const getOriginalDimensions = (sidebar: SugarElement<HTMLElement>): Horiz
 };
 
 export const getDimensions = (deltas: SugarPosition, originalDimentions: HorizontalDimensions, min: number, max: number): HorizontalDimensions => {
+  // Safety net, min sidebar width cannot be send to less than 100
+  const MIN_SIDEBAR_CONSTRAINT = 280;
+  if (min < MIN_SIDEBAR_CONSTRAINT) {
+    min = MIN_SIDEBAR_CONSTRAINT;
+  }
   const dimensions = {
     width:
       Utils.calcCappedSize(

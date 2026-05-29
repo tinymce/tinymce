@@ -8,6 +8,22 @@
     <h2>Plugin: accordion Demo Page</h2>
 
     <div style="margin-bottom: 15px;">
+      <p style="margin: 0 0 6px; font-size: 12px; color: #555;">
+        These inputs set the <code>sidebar_min_width</code> and <code>sidebar_max_width</code> editor options,
+        which clamp the sidebar width while the user drags the resize handle. The values are accepted
+        as-is, but kept within reason:
+      </p>
+      <ul style="margin: 0 0 6px; padding-left: 18px; font-size: 12px; color: #555;">
+        <li>
+          <strong>min</strong>: if the user sets it below 280, the resize logic floors it to 280 — so the
+          effective minimum is <code>max(userMin, 280)</code> and the sidebar can never be dragged below that.
+        </li>
+        <li>
+          <strong>max</strong>: used as-is for the drag clamp, but the CSS additionally caps the
+          rendered width at <code>100cqw - 280px</code>, guaranteeing the editor content area always keeps
+          at least 280px of room. So a large max is allowed, just not always fully visible.
+        </li>
+      </ul>
       <label>Sidebar min width: <input id="sidebar-min-width" type="number" value="300" /></label>
       <label style="margin-left: 12px;">Sidebar max width: <input id="sidebar-max-width" type="number" value="480" /></label>
     </div>

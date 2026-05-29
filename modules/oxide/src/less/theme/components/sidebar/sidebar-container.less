@@ -70,8 +70,8 @@
 
     // desktop
     @container editor (width > 1024px) {
-      // todo, but it needs css clamping
-      width: var(--tox-private-sidebar-width);
+      // Whatever is set, there has to be at least 280px for content of the editor
+      width: min(var(--tox-private-sidebar-width), calc(100cqw - 280px));
     }
 
 
