@@ -139,14 +139,29 @@
               flex: 1 0 0;
               gap: 8px;
 
+              .tox-suggestededits__card--attribution {
+                display: flex;
+                align-items: center;
+              }
+
               .tox-suggestededits__card--avatar {
                 height: 24px;
                 width: 24px;
+                position: relative;
+                z-index: 1;
 
                 .tox-skeleton__circle,
                 img {
                   height: 24px;
                   width: 24px;
+                }
+              }
+
+              .tox-suggestededits__card--ai-icon {
+                margin-left: -4px;
+
+                svg {
+                  display: block;
                 }
               }
 
