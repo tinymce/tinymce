@@ -747,16 +747,15 @@ const Quirks = (editor: Editor): Quirks => {
         firstBlockChildOrNewLine(target).each((firstBlock) => {
           const prevSiblings = Traverse.prevSiblings(firstBlock);
 
-          Arr.findLastIndex(prevSiblings, isValidSibling).bind((lastI) => Arr.get(prevSiblings, lastI))
-            .each((lastInlineBeforeBlock) => {
-              if (Arr.get(getClientRects([ lastInlineBeforeBlock.dom ]), 0).exists((rect) => clickAfterEl(e.clientX, e.clientY, rect))) {
-                CaretFinder.prevPosition(target.dom, CaretPosition(firstBlock.dom, 0)).each((pos) => {
-                  e.preventDefault();
-                  editor.focus();
-                  editor.selection.setRng(pos.toRange());
-                });
-              }
-            });
+          Arr.findLast(prevSiblings, isValidSibling).each((lastInlineBeforeBlock) => {
+            if (Arr.get(getClientRects([ lastInlineBeforeBlock.dom ]), 0).exists((rect) => clickAfterEl(e.clientX, e.clientY, rect))) {
+              CaretFinder.prevPosition(target.dom, CaretPosition(firstBlock.dom, 0)).each((pos) => {
+                e.preventDefault();
+                editor.focus();
+                editor.selection.setRng(pos.toRange());
+              });
+            }
+          });
         });
       }
     });
