@@ -1,9 +1,19 @@
+import { Fun } from '@ephox/katamari';
 import * as Tooltip from 'oxide-components/components/tooltip/Tooltip';
 import * as Bem from 'oxide-components/utils/Bem';
+import * as Browser from 'oxide-components/utils/Browser';
 import { createRef, useState, type FC } from 'react';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
+
+vi.mock(import('oxide-components/utils/Browser'), () => ({
+  isSafari: vi.fn(Fun.never)
+}));
+
+beforeEach(() => {
+  vi.mocked(Browser.isSafari).mockReturnValue(false);
+});
 
 describe('browser.TooltipTest', () => {
   const wrapper = ({ children }: { children: React.ReactNode }) => {
@@ -164,6 +174,62 @@ describe('browser.TooltipTest', () => {
       await expect.poll(() => document.querySelector(tooltipSelector)).toBeNull();
 
       await userEvent.click(getByTestId('swap'));
+
+      await expect.poll(() => document.querySelector(tooltipSelector)).not.toBeNull();
+    });
+  });
+
+  describe('TINY-14032: showCondition overflow gate', () => {
+    const tooltipSelector = Bem.blockSelector('tox-tooltip');
+
+    it('should not mount Content on Safari when showCondition is "overflow" and trigger overflows', async () => {
+      vi.mocked(Browser.isSafari).mockReturnValue(true);
+
+      render(
+        <Tooltip.Root showCondition='overflow'>
+          <Tooltip.Trigger>
+            <div style={{ width: '50px', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
+              This text is much longer than the trigger width
+            </div>
+          </Tooltip.Trigger>
+          <Tooltip.Content text='Tooltip' />
+        </Tooltip.Root>,
+        { wrapper }
+      );
+
+      expect(document.querySelector(tooltipSelector)).toBeNull();
+    });
+
+    it('should mount Content on non-Safari when showCondition is "overflow" and trigger overflows', async () => {
+      vi.mocked(Browser.isSafari).mockReturnValue(false);
+
+      render(
+        <Tooltip.Root showCondition='overflow'>
+          <Tooltip.Trigger>
+            <div style={{ width: '50px', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
+              This text is much longer than the trigger width
+            </div>
+          </Tooltip.Trigger>
+          <Tooltip.Content text='Tooltip' />
+        </Tooltip.Root>,
+        { wrapper }
+      );
+
+      await expect.poll(() => document.querySelector(tooltipSelector)).not.toBeNull();
+    });
+
+    it('should mount Content on Safari when showCondition is "always"', async () => {
+      vi.mocked(Browser.isSafari).mockReturnValue(true);
+
+      render(
+        <Tooltip.Root>
+          <Tooltip.Trigger>
+            <div>Short</div>
+          </Tooltip.Trigger>
+          <Tooltip.Content text='Tooltip' />
+        </Tooltip.Root>,
+        { wrapper }
+      );
 
       await expect.poll(() => document.querySelector(tooltipSelector)).not.toBeNull();
     });
