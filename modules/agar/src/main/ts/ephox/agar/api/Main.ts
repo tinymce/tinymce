@@ -10,6 +10,7 @@ import * as Clipboard from './Clipboard';
 import * as ConsoleReader from './ConsoleReader';
 import * as Cursors from './Cursors';
 import * as DragnDrop from './DragnDrop';
+import * as FetchSpy from './FetchSpy';
 import * as FileInput from './FileInput';
 import * as Files from './Files';
 import * as FocusTools from './FocusTools';
@@ -58,6 +59,7 @@ export {
   Clipboard,
   Cursors,
   ConsoleReader,
+  FetchSpy,
   FocusTools,
   GeneralSteps,
   StepSequence,
