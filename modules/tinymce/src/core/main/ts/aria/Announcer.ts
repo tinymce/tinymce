@@ -1,5 +1,5 @@
-import { Id, Optional, Singleton } from '@ephox/katamari';
-import { Attribute, Css, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
+import { Fun, Id, Singleton } from '@ephox/katamari';
+import { Attribute, Css, Insert, SugarBody, SugarElement, TextContent } from '@ephox/sugar';
 
 export const announcerContainerId = Id.generate('tiny-aria-announcer');
 
@@ -8,9 +8,13 @@ export interface Announcer {
   readonly assertive: (message: string) => void;
 }
 
-const POLITE_MESSAGE_TTL_MS = 60000;
+interface AnnouncerState {
+  readonly container: SugarElement<HTMLElement>;
+  readonly polite: SugarElement<HTMLDivElement>;
+  readonly assertive: SugarElement<HTMLDivElement>;
+}
 
-const offscreenStyles = {
+const OFFSCREEN_STYLES = {
   position: 'absolute',
   left: '-9999px',
   width: '1px',
@@ -32,69 +36,56 @@ const createAssertiveRegion = (): SugarElement<HTMLDivElement> => {
   const region = SugarElement.fromTag('div');
   Attribute.setAll(region, {
     'aria-live': 'assertive',
-    'aria-atomic': 'true',
-    'role': 'alert'
+    'aria-atomic': 'true'
   });
   return region;
 };
 
-interface AnnouncerState {
-  readonly container: SugarElement<HTMLElement>;
-  readonly polite: SugarElement<HTMLDivElement>;
-  readonly assertive: Optional<SugarElement<HTMLDivElement>>;
-}
+const wait = (duration: number): Promise<void> =>
+  new Promise((resolve) => setTimeout(resolve, duration));
 
 const isConnected = (element: SugarElement<HTMLElement>): boolean => element.dom.isConnected;
 
 export const createAnnouncer = (): Announcer => {
   const state = Singleton.value<AnnouncerState>();
 
-  const ensureMounted = (): AnnouncerState =>
-    state.get().filter((s) => isConnected(s.container) && isConnected(s.polite)).getOrThunk(() => {
-      state.on((s) => {
-        if (isConnected(s.container)) {
-          Remove.remove(s.container);
-        }
-      });
-      const container = SugarElement.fromTag('div');
-      Attribute.set(container, 'id', announcerContainerId);
-      Css.setAll(container, offscreenStyles);
+  const mountRegions = async () => {
+    return state.get().filter(({ container }) => isConnected(container)).fold(
+      async () => {
+        const container = SugarElement.fromTag('div');
+        const polite = createPoliteRegion();
+        const assertive = createAssertiveRegion();
 
-      const polite = createPoliteRegion();
-      Insert.append(container, polite);
-      Insert.append(SugarBody.body(), container);
+        Attribute.set(container, 'id', announcerContainerId);
+        Css.setAll(container, OFFSCREEN_STYLES);
 
-      const newState: AnnouncerState = { container, polite, assertive: Optional.none() };
-      state.set(newState);
-      return newState;
-    });
+        Insert.append(container, polite);
+        Insert.append(container, assertive);
+        Insert.append(SugarBody.body(), container);
+
+        const newState: AnnouncerState = { container, polite, assertive };
+        state.set(newState);
+
+        await wait(50); // Wait for screen readers to pick up the new regions before adding messages
+
+        return newState;
+      },
+      (state) => Promise.resolve(state)
+    );
+  };
 
   const polite = (message: string): void => {
-    const s = ensureMounted();
-    const messageDiv = SugarElement.fromTag('div');
-    Insert.append(messageDiv, SugarElement.fromText(message));
-    Insert.append(s.polite, messageDiv);
-    setTimeout(() => {
-      if (isConnected(messageDiv)) {
-        Remove.remove(messageDiv);
-      }
-    }, POLITE_MESSAGE_TTL_MS);
+    mountRegions().then(({ polite }) => {
+      const messageDiv = SugarElement.fromTag('div');
+      Insert.append(messageDiv, SugarElement.fromText(message));
+      Insert.append(polite, messageDiv);
+    }).catch(Fun.noop);
   };
 
   const assertive = (message: string): void => {
-    const s = ensureMounted();
-    s.assertive.each((r) => Remove.remove(r));
-    const region = createAssertiveRegion();
-    Insert.append(s.container, region);
-    state.set({ ...s, assertive: Optional.some(region) });
-    // The region must be connected to the DOM as an empty live region before its
-    // content is set; otherwise screen readers (notably VoiceOver) treat it as
-    // inserted-with-content and do not announce the change.
-    setTimeout(() => {
-      if (isConnected(region)) {
-        Insert.append(region, SugarElement.fromText(message));
-      }
-    }, 0);
+    mountRegions().then(({ assertive }) => {
+      TextContent.set(assertive, message);
+    }).catch(Fun.noop);
   };
 
   return { polite, assertive };
