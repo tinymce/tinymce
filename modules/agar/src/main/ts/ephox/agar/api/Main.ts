@@ -10,6 +10,7 @@ import * as Clipboard from './Clipboard';
 import * as ConsoleReader from './ConsoleReader';
 import * as Cursors from './Cursors';
 import * as DragnDrop from './DragnDrop';
+import * as FetchSpy from './FetchSpy';
 import * as FileInput from './FileInput';
 import * as Files from './Files';
 import * as FocusTools from './FocusTools';
@@ -31,6 +32,8 @@ import * as PropertySteps from './PropertySteps';
 import * as RealClipboard from './RealClipboard';
 import { type KeyPressAdt, RealKeys } from './RealKeys';
 import * as RealMouse from './RealMouse';
+import * as RequestFilter from './RequestFilter';
+import * as RequestMatcher from './RequestMatcher';
 import { Step } from './Step';
 import * as StepSequence from './StepSequence';
 import { TestLogs } from './TestLogs';
@@ -58,6 +61,7 @@ export {
   Clipboard,
   Cursors,
   ConsoleReader,
+  FetchSpy,
   FocusTools,
   GeneralSteps,
   StepSequence,
@@ -87,5 +91,7 @@ export {
   DragnDrop,
   Files,
   FileInput,
-  TestStore
+  TestStore,
+  RequestMatcher,
+  RequestFilter
 };
