@@ -1,5 +1,4 @@
-import { Id } from '@ephox/katamari';
-import { Attribute, Css, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
+import * as Announcer from '../../aria/Announcer';
 
 /**
  * Page-wide aria-live announcer used to send messages to screen readers without shifting focus.
@@ -17,95 +16,11 @@ import { Attribute, Css, Insert, Remove, SugarBody, SugarElement } from '@ephox/
  * @class tinymce.dom.AriaAnnouncer
  */
 
-export interface AriaAnnouncerApi {
+interface AriaAnnouncer {
   readonly announce: (message: string, options?: { assertive?: boolean }) => void;
 }
 
-const announcerContainerId = Id.generate('tiny-aria-announcer');
-const politeMessageTtlMs = 60000;
-
-const offscreenStyles = {
-  position: 'absolute',
-  left: '-9999px',
-  width: '1px',
-  height: '1px',
-  overflow: 'hidden'
-};
-
-const createPoliteRegion = (): SugarElement<HTMLDivElement> => {
-  const region: SugarElement<HTMLDivElement> = SugarElement.fromTag('div');
-  Attribute.setAll(region, {
-    'aria-live': 'polite',
-    'aria-atomic': 'false',
-    'aria-relevant': 'additions'
-  });
-  return region;
-};
-
-const createAssertiveRegion = (): SugarElement<HTMLDivElement> => {
-  const region: SugarElement<HTMLDivElement> = SugarElement.fromTag('div');
-  Attribute.setAll(region, {
-    'aria-live': 'assertive',
-    'aria-atomic': 'true',
-    'role': 'alert'
-  });
-  return region;
-};
-
-interface AnnouncerState {
-  readonly container: SugarElement<HTMLElement>;
-  readonly polite: SugarElement<HTMLDivElement>;
-  assertive: SugarElement<HTMLDivElement> | null;
-}
-
-const createAnnouncer = () => {
-  let state: AnnouncerState | null = null;
-
-  const ensureMounted = (): AnnouncerState => {
-    if (state === null || !state.container.dom.isConnected || !state.polite.dom.isConnected) {
-      if (state !== null && state.container.dom.isConnected) {
-        Remove.remove(state.container);
-      }
-      const container: SugarElement<HTMLElement> = SugarElement.fromTag('div');
-      Attribute.set(container, 'id', announcerContainerId);
-      Css.setAll(container, offscreenStyles);
-
-      const polite = createPoliteRegion();
-      Insert.append(container, polite);
-      Insert.append(SugarBody.body(), container);
-
-      state = { container, polite, assertive: null };
-    }
-    return state;
-  };
-
-  const polite = (message: string): void => {
-    const s = ensureMounted();
-    const messageDiv: SugarElement<HTMLDivElement> = SugarElement.fromTag('div');
-    Insert.append(messageDiv, SugarElement.fromText(message));
-    Insert.append(s.polite, messageDiv);
-    setTimeout(() => {
-      if (messageDiv.dom.isConnected) {
-        Remove.remove(messageDiv);
-      }
-    }, politeMessageTtlMs);
-  };
-
-  const assertive = (message: string): void => {
-    const s = ensureMounted();
-    if (s.assertive !== null) {
-      Remove.remove(s.assertive);
-    }
-    const region = createAssertiveRegion();
-    Insert.append(region, SugarElement.fromText(message));
-    Insert.append(s.container, region);
-    s.assertive = region;
-  };
-
-  return { polite, assertive };
-};
-
-const announcer = createAnnouncer();
+const announcer = Announcer.createAnnouncer();
 
 /**
  * Announces a message to screen readers via an aria-live region, without shifting focus.
@@ -126,7 +41,8 @@ const announce = (message: string, options?: { assertive?: boolean }): void => {
   }
 };
 
-const AriaAnnouncer: AriaAnnouncerApi = { announce };
+const AriaAnnouncer: AriaAnnouncer = {
+  announce
+};
 
-export { announcerContainerId, politeMessageTtlMs };
 export default AriaAnnouncer;
