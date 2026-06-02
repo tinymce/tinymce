@@ -1,7 +1,10 @@
-import { Fun, Id, Singleton } from '@ephox/katamari';
-import { Attribute, Css, Insert, SugarBody, SugarElement, TextContent } from '@ephox/sugar';
+import { Arr, Id, Singleton, Strings } from '@ephox/katamari';
+import { Attribute, Css, Insert, Remove, SelectorFilter, SugarBody, SugarElement, TextContent } from '@ephox/sugar';
 
 export const announcerContainerId = Id.generate('tiny-aria-announcer');
+
+const POLITE_MESSAGE_TTL_MS = 600000; // 10 minutes
+const politeTimestampAttr = 'data-mce-announced-at';
 
 export interface Announcer {
   readonly polite: (message: string) => void;
@@ -10,8 +13,8 @@ export interface Announcer {
 
 interface AnnouncerState {
   readonly container: SugarElement<HTMLElement>;
-  readonly polite: SugarElement<HTMLDivElement>;
-  readonly assertive: SugarElement<HTMLDivElement>;
+  readonly politeRegion: SugarElement<HTMLDivElement>;
+  readonly assertiveRegion: SugarElement<HTMLDivElement>;
 }
 
 const OFFSCREEN_STYLES = {
@@ -41,51 +44,57 @@ const createAssertiveRegion = (): SugarElement<HTMLDivElement> => {
   return region;
 };
 
-const wait = (duration: number): Promise<void> =>
-  new Promise((resolve) => setTimeout(resolve, duration));
-
 const isConnected = (element: SugarElement<HTMLElement>): boolean => element.dom.isConnected;
+
+const createNewState = () => {
+  const container = SugarElement.fromTag('div');
+  const politeRegion = createPoliteRegion();
+  const assertiveRegion = createAssertiveRegion();
+
+  Attribute.set(container, 'id', announcerContainerId);
+  Css.setAll(container, OFFSCREEN_STYLES);
+
+  Insert.append(container, politeRegion);
+  Insert.append(container, assertiveRegion);
+  Insert.append(SugarBody.body(), container);
+
+  return { container, politeRegion, assertiveRegion };
+};
+
+const cleanupExpiredPoliteMessages = (polite: SugarElement<HTMLDivElement>, now: number): void => {
+  Arr.each(SelectorFilter.children(polite, `div[${politeTimestampAttr}]`), (messageDiv) => {
+    Attribute.getOpt(messageDiv, politeTimestampAttr)
+      .bind((value) => Strings.toInt(value))
+      .filter((announcedAt) => now - announcedAt > POLITE_MESSAGE_TTL_MS)
+      .each(() => Remove.remove(messageDiv));
+  });
+};
 
 export const createAnnouncer = (): Announcer => {
   const state = Singleton.value<AnnouncerState>();
 
-  const mountRegions = async () => {
-    return state.get().filter(({ container }) => isConnected(container)).fold(
-      async () => {
-        const container = SugarElement.fromTag('div');
-        const polite = createPoliteRegion();
-        const assertive = createAssertiveRegion();
-
-        Attribute.set(container, 'id', announcerContainerId);
-        Css.setAll(container, OFFSCREEN_STYLES);
-
-        Insert.append(container, polite);
-        Insert.append(container, assertive);
-        Insert.append(SugarBody.body(), container);
-
-        const newState: AnnouncerState = { container, polite, assertive };
-        state.set(newState);
-
-        await wait(50); // Wait for screen readers to pick up the new regions before adding messages
-
-        return newState;
-      },
-      (state) => Promise.resolve(state)
-    );
+  const mountRegions = () => {
+    return state.get().filter(({ container }) => isConnected(container)).getOrThunk(() => {
+      const newState = createNewState();
+      state.set(newState);
+      return newState;
+    });
   };
 
   const polite = (message: string): void => {
-    mountRegions().then(({ polite }) => {
-      const messageDiv = SugarElement.fromTag('div');
-      Insert.append(messageDiv, SugarElement.fromText(message));
-      Insert.append(polite, messageDiv);
-    }).catch(Fun.noop);
+    const { politeRegion } = mountRegions();
+    const now = Date.now();
+
+    cleanupExpiredPoliteMessages(politeRegion, now);
+
+    const messageDiv = SugarElement.fromTag('div');
+    Attribute.set(messageDiv, politeTimestampAttr, String(now));
+    Insert.append(messageDiv, SugarElement.fromText(message));
+    Insert.append(politeRegion, messageDiv);
   };
 
   const assertive = (message: string): void => {
-    mountRegions().then(({ assertive }) => {
-      TextContent.set(assertive, message);
-    }).catch(Fun.noop);
+    TextContent.set(mountRegions().assertiveRegion, message);
   };
 
   return { polite, assertive };

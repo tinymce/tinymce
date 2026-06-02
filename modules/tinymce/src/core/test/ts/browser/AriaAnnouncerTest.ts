@@ -1,7 +1,7 @@
 import { UiFinder, Waiter } from '@ephox/agar';
 import { afterEach, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { Attribute, Css, Remove, SelectorFind, SugarBody, TextContent, type SugarElement } from '@ephox/sugar';
+import { Attribute, Css, Insert, Remove, SelectorFind, SugarBody, SugarElement, TextContent } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import AriaAnnouncer from 'tinymce/core/api/dom/AriaAnnouncer';
@@ -86,6 +86,33 @@ describe('browser.tinymce.core.AriaAnnouncerTest', () => {
     const assertive = UiFinder.findAllIn<HTMLElement>(container, 'div[aria-live="assertive"]');
     assert.lengthOf(assertive, 1, 'exactly one assertive region remains after the second announce');
     assert.equal(TextContent.get(assertive[0]), 'Error B');
+  });
+
+  it('TINY-12791: Polite messages older than 10 minutes are cleaned up on the next announce', async () => {
+    AriaAnnouncer.announce('Setup');
+    const container = await pGetContainer();
+    await pPoliteMessage(container, 'Setup');
+    const polite = await UiFinder.pWaitFor<HTMLElement>('waited for polite container', container, 'div[aria-live="polite"]');
+
+    // Fake a few messages that were announced more than 10 minutes ago
+    const expiredTimestamp = String(Date.now() - (10 * 60 * 1000 + 1000));
+    const expiredMessages = [ 'Old 1', 'Old 2', 'Old 3' ];
+    Arr.each(expiredMessages, (text) => {
+      const messageDiv = SugarElement.fromTag('div');
+      Attribute.set(messageDiv, 'data-mce-announced-at', expiredTimestamp);
+      TextContent.set(messageDiv, text);
+      Insert.prepend(polite, messageDiv);
+    });
+
+    // A fresh announce triggers the cleanup of the expired messages
+    AriaAnnouncer.announce('Fresh');
+    await pPoliteMessage(container, 'Fresh');
+
+    await Waiter.pTryUntil('expired polite messages should be removed', () => {
+      const texts = Arr.map(UiFinder.findAllIn<HTMLElement>(polite, 'div'), TextContent.get);
+      Arr.each(expiredMessages, (text) => assert.isFalse(Arr.contains(texts, text), `expired message "${text}" should be removed`));
+      assert.deepEqual(texts, [ 'Setup', 'Fresh' ], 'only the non-expired messages should remain, in order');
+    });
   });
 
   it('TINY-12791: Assertive announce does not affect polite messages already in the region', async () => {
