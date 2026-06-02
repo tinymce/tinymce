@@ -85,9 +85,16 @@ export const createAnnouncer = (): Announcer => {
     const s = ensureMounted();
     s.assertive.each((r) => Remove.remove(r));
     const region = createAssertiveRegion();
-    Insert.append(region, SugarElement.fromText(message));
     Insert.append(s.container, region);
     state.set({ ...s, assertive: Optional.some(region) });
+    // The region must be connected to the DOM as an empty live region before its
+    // content is set; otherwise screen readers (notably VoiceOver) treat it as
+    // inserted-with-content and do not announce the change.
+    setTimeout(() => {
+      if (isConnected(region)) {
+        Insert.append(region, SugarElement.fromText(message));
+      }
+    }, 0);
   };
 
   return { polite, assertive };
