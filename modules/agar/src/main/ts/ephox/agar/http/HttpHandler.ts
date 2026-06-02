@@ -1,6 +1,6 @@
-import { Arr, Optional } from '@ephox/katamari';
-import { PathPattern } from '@ephox/polaris';
+import { Arr, type Optional } from '@ephox/katamari';
 
+import * as RequestMatcher from './RequestMatcher';
 import * as Shared from './Shared';
 
 export interface RequestHandlerDetails {
@@ -17,24 +17,15 @@ export type RequestHandler = (requestDetails: RequestHandlerDetails) => Promise<
 
 const hasMockPrefix = (path: string): boolean => path.startsWith(Shared.mockPrefix);
 
-const matchMethod = (request: Request, method: string): boolean =>
-  request.method.toUpperCase() === method.toUpperCase();
-
 const makeMethodHttpHandler = (method: string) => (pathPattern: string, handler: RequestHandler) => {
-  const pathMatcher = PathPattern.makePathMatcher(pathPattern);
-
   if (!hasMockPrefix(pathPattern)) {
     throw new Error(`Path pattern "${pathPattern}" must start with "${Shared.mockPrefix}"`);
   }
 
-  return (request: Request, abortSignal: AbortSignal): Optional<Promise<Response>> => {
-    if (matchMethod(request, method)) {
-      const url = new URL(request.url);
-      return pathMatcher(url.pathname).map((params) => handler({ params, request, abortSignal }));
-    } else {
-      return Optional.none();
-    }
-  };
+  const requestMatcher = RequestMatcher.makeRequestMatcher(method, pathPattern);
+
+  return (request: Request, abortSignal: AbortSignal): Optional<Promise<Response>> =>
+    requestMatcher(request).map((params) => handler({ params, request, abortSignal }));
 };
 
 export const get = makeMethodHttpHandler('GET');
