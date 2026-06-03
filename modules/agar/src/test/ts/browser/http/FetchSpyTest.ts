@@ -1,7 +1,9 @@
 import { Assert, beforeEach, describe, it } from '@ephox/bedrock-client';
+import { Fun } from '@ephox/katamari';
 
 import * as FetchSpy from 'ephox/agar/api/FetchSpy';
 import * as Http from 'ephox/agar/api/Http';
+import * as RequestFilter from 'ephox/agar/api/RequestFilter';
 import { TestStore } from 'ephox/agar/api/TestStore';
 
 describe('browser.agar.http.FetchSpyTest', () => {
@@ -23,6 +25,7 @@ describe('browser.agar.http.FetchSpyTest', () => {
     const methods = [ 'GET', 'POST', 'PUT', 'DELETE', 'PATCH' ];
 
     await FetchSpy.pWithFetchSpy({
+      filter: Fun.always,
       onFetch: (request) => store.add(`${request.method} ${new URL(request.url).pathname}`)
     }, async () => {
       for (const method of methods) {
@@ -43,6 +46,7 @@ describe('browser.agar.http.FetchSpyTest', () => {
     const methods = [ 'GET', 'POST', 'PUT', 'DELETE', 'PATCH' ];
 
     await FetchSpy.pWithFetchSpy({
+      filter: Fun.always,
       onFetch: (request) => store.add(`fetched ${request.method}`),
       onAbort: (request) => store.add(`aborted ${request.method}`)
     }, async () => {
@@ -76,10 +80,57 @@ describe('browser.agar.http.FetchSpyTest', () => {
     ]);
   });
 
+  it('TINY-14123: Only requests matching filter should be spied on', async () => {
+    await FetchSpy.pWithFetchSpy({
+      filter: RequestFilter.patch('/custom/test'),
+      onFetch: (request) => store.add(`fetched ${request.method}`),
+      onAbort: (request) => store.add(`aborted ${request.method}`)
+    }, async () => {
+
+      const getController = new window.AbortController();
+      const pendingGet = window.fetch('/custom/test', { method: 'GET', signal: getController.signal });
+      let getThrown: Error | undefined;
+      getController.abort();
+
+      try {
+        await pendingGet;
+      } catch (error) {
+        getThrown = error;
+      }
+
+      Assert.eq(
+        `Aborted get fetch should reject with an AbortError`,
+        'AbortError',
+        getThrown?.name
+      );
+
+      const patchController = new window.AbortController();
+      const pendingPatch = window.fetch('/custom/test', { method: 'PATCH', signal: patchController.signal });
+      let patchThrown: Error | undefined;
+      patchController.abort();
+
+      try {
+        await pendingPatch;
+      } catch (error) {
+        patchThrown = error;
+      }
+
+      Assert.eq(
+        `Aborted patch fetch should reject with an AbortError`,
+        'AbortError',
+        patchThrown?.name
+      );
+    });
+
+    store.assertEq('Spy should only observe PATCH requests', [
+      'fetched PATCH', 'aborted PATCH',
+    ]);
+  });
+
   it('TINY-14123: restores window.fetch after callback resolves', async () => {
     const originalFetch = window.fetch;
 
-    await FetchSpy.pWithFetchSpy({}, async () => {
+    await FetchSpy.pWithFetchSpy({ filter: Fun.always }, async () => {
       Assert.eq('fetch should be replaced inside callback', true, window.fetch !== originalFetch);
     });
 
@@ -91,7 +142,7 @@ describe('browser.agar.http.FetchSpyTest', () => {
     let thrown: unknown;
 
     try {
-      await FetchSpy.pWithFetchSpy({}, async () => {
+      await FetchSpy.pWithFetchSpy({ filter: Fun.always }, async () => {
         throw new Error('boom');
       });
     } catch (e) {
