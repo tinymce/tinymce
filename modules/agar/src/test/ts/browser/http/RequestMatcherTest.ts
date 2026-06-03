@@ -1,62 +1,86 @@
 import { Assert, describe, it } from '@ephox/bedrock-client';
-import { Arr } from '@ephox/katamari';
+import type { Optional } from '@ephox/katamari';
 
 import * as RequestMatcher from 'ephox/agar/http/RequestMatcher';
 
 describe('browser.agar.http.RequestMatcherTest', () => {
-  const mkReq = (method: string, url: string): Request => new window.Request(url, { method });
-
-  const allMethods = [ 'GET', 'POST', 'PUT', 'DELETE', 'PATCH' ];
+  const methods = [ 'GET', 'POST', 'PUT', 'DELETE', 'PATCH' ] as const;
+  type HttpMethod = typeof methods[number];
+  const makeRequest = (method: HttpMethod, url: string): Request => new window.Request(url, { method });
 
   describe('makeRequestMatcher', () => {
-    it('TINY-14123: matches when the request method case differs from the matcher method', () => {
-      const matcher = RequestMatcher.makeRequestMatcher('GET', '/users');
-      Assert.eq('Lowercase request method should match an uppercase matcher', true, matcher(mkReq('get', 'https://example.com/users')).isSome());
-    });
-
-    it('TINY-14123: matches when the matcher method case differs from the request method', () => {
-      const matcher = RequestMatcher.makeRequestMatcher('get', '/users');
-      Assert.eq('Uppercase request method should match a lowercase matcher', true, matcher(mkReq('GET', 'https://example.com/users')).isSome());
+    it('TINY-14123: matches regardless of the case used for the matcher method', () => {
+      const request = makeRequest('GET', '/users');
+      const upperMatcher = RequestMatcher.makeRequestMatcher('GET', '/users');
+      const lowerMatcher = RequestMatcher.makeRequestMatcher('GET', '/users');
+      Assert.eq('An uppercase matcher should match a GET request', true, upperMatcher(request).isSome());
+      Assert.eq('A lowercase matcher should match a GET request', true, lowerMatcher(request).isSome());
     });
 
     it('TINY-14123: returns none when the method does not match (path would otherwise match)', () => {
       const matcher = RequestMatcher.makeRequestMatcher('GET', '/users');
-      Assert.eq('A POST request should not match a GET matcher', true, matcher(mkReq('POST', 'https://example.com/users')).isNone());
-    });
-
-    it('TINY-14123: matches against url.pathname only and passes path params through', () => {
-      const matcher = RequestMatcher.makeRequestMatcher('GET', '/users/:id');
-      const result = matcher(mkReq('GET', 'https://example.com/users/42?foo=bar#frag'));
-      Assert.eq('Pathname-only match should yield the expected params', { id: '42' }, result.getOrDie('Expected the matcher to return some params'));
+      Assert.eq('A POST request should not match a GET matcher', true, matcher(makeRequest('POST', '/users')).isNone());
     });
 
     it('TINY-14123: returns none when the method matches but the path does not', () => {
       const matcher = RequestMatcher.makeRequestMatcher('GET', '/users/:id');
-      Assert.eq('Path mismatch should yield none even on a method match', true, matcher(mkReq('GET', 'https://example.com/posts/42')).isNone());
+      Assert.eq('Path mismatch should cause none even on a method match', true, matcher(makeRequest('GET', '/posts/42')).isNone());
+    });
+
+    it('TINY-14123: matches against url.pathname', () => {
+      const matcher = RequestMatcher.makeRequestMatcher('GET', '/users/:id');
+      const request = makeRequest('GET', '/users/42?foo=bar#frag');
+      const result = matcher(request);
+      Assert.eq('Path with query params should match', true, result.isSome());
+    });
+
+    it('TINY-14123: returns matched params', () => {
+      const matcher = RequestMatcher.makeRequestMatcher('GET', '/users/:userId/conversations/:conversationId');
+      const request = makeRequest('GET', '/users/33/conversations/123');
+      const result = matcher(request);
+
+      Assert.eq('Path should match', true, result.isSome());
+      Assert.eq('Path parameters should be returned properly', { userId: '33', conversationId: '123' }, result.getOrDie());
     });
   });
 
-  describe('curried per-method helpers', () => {
-    const helpers: ReadonlyArray<{ readonly name: string; readonly method: string; readonly helper: (pattern: string) => (request: Request) => ReturnType<ReturnType<typeof RequestMatcher.makeRequestMatcher>> }> = [
-      { name: 'get', method: 'GET', helper: RequestMatcher.get },
-      { name: 'post', method: 'POST', helper: RequestMatcher.post },
-      { name: 'put', method: 'PUT', helper: RequestMatcher.put },
-      { name: 'del', method: 'DELETE', helper: RequestMatcher.del },
-      { name: 'patch', method: 'PATCH', helper: RequestMatcher.patch }
-    ];
+  describe('per-method helpers', () => {
+    const assertHelperMatchesOnly = (
+      helper: (pattern: string) => (request: Request) => Optional<Record<string, string>>,
+      expectedMethod: HttpMethod
+    ): void => {
+      const matcher = helper('/path');
 
-    Arr.each(helpers, ({ name, method, helper }) => {
-      it(`TINY-14123: ${name} matches ${method} requests and rejects every other method`, () => {
-        const matcher = helper('/path');
-        Arr.each(allMethods, (candidate) => {
-          const result = matcher(mkReq(candidate, 'https://example.com/path'));
-          if (candidate === method) {
-            Assert.eq(`${name} should match a ${candidate} request`, true, result.isSome());
-          } else {
-            Assert.eq(`${name} should not match a ${candidate} request`, true, result.isNone());
-          }
-        });
-      });
+      for (const method of methods) {
+        const request = makeRequest(method, '/path');
+        const result = matcher(request);
+
+        if (method === expectedMethod) {
+          Assert.eq(`${expectedMethod} helper should match a ${method} request`, true, result.isSome());
+        } else {
+          Assert.eq(`${expectedMethod} helper should not match a ${method} request`, false, result.isSome());
+        }
+      }
+    };
+
+    it('TINY-14123: get matches GET requests and rejects every other method', () => {
+      assertHelperMatchesOnly(RequestMatcher.get, 'GET');
+    });
+
+    it('TINY-14123: post matches POST requests and rejects every other method', () => {
+      assertHelperMatchesOnly(RequestMatcher.post, 'POST');
+    });
+
+    it('TINY-14123: put matches PUT requests and rejects every other method', () => {
+      assertHelperMatchesOnly(RequestMatcher.put, 'PUT');
+    });
+
+    it('TINY-14123: del matches DELETE requests and rejects every other method', () => {
+      assertHelperMatchesOnly(RequestMatcher.del, 'DELETE');
+    });
+
+    it('TINY-14123: patch matches PATCH requests and rejects every other method', () => {
+      assertHelperMatchesOnly(RequestMatcher.patch, 'PATCH');
     });
   });
 });
