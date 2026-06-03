@@ -1,26 +1,7 @@
-import { Optional } from '@ephox/katamari';
-import { PathPattern } from '@ephox/polaris';
-
 export interface FetchSpyOptions {
   readonly onFetch?: (request: Request) => void;
   readonly onAbort?: (request: Request) => void;
 }
-
-const matchMethod = (request: Request, method: string): boolean =>
-  request.method.toUpperCase() === method.toUpperCase();
-
-const makeRequestMatcher = (method: string) =>
-  (pattern: string) => {
-    const pathMatcher = PathPattern.makePathMatcher(pattern);
-    return (request: Request) => {
-      if (matchMethod(request, method)) {
-        const url = new URL(request.url);
-        return pathMatcher(url.pathname);
-      } else {
-        return Optional.none();
-      }
-    };
-  };
 
 const pWithFetchSpy = async <T>(
   options: FetchSpyOptions,
@@ -44,17 +25,6 @@ const pWithFetchSpy = async <T>(
   }
 };
 
-const matchGet = makeRequestMatcher('GET');
-const matchPost = makeRequestMatcher('POST');
-const matchPut = makeRequestMatcher('PUT');
-const matchDel = makeRequestMatcher('DELETE');
-const matchPatch = makeRequestMatcher('PATCH');
-
 export {
-  matchGet,
-  matchPost,
-  matchPut,
-  matchDel,
-  matchPatch,
   pWithFetchSpy
 };
