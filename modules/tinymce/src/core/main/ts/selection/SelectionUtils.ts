@@ -12,7 +12,7 @@ import * as NodeType from '../dom/NodeType';
 
 import * as TableCellSelection from './TableCellSelection';
 
-const getStartNode = (rng: Range) => {
+const getStartNode = (rng: Range): Optional<SugarElement<ChildNode>> => {
   const sc = rng.startContainer, so = rng.startOffset;
   if (NodeType.isText(sc)) {
     return so === 0 ? Optional.some(SugarElement.fromDom(sc)) : Optional.none();
@@ -149,6 +149,9 @@ const isSelectionOverWholeAnchor = (range: Range): boolean => isSelectionOverWho
 
 export {
   hasAllContentsSelected,
+  getFirstChildren,
+  getLastChildren,
+  getStartNode,
   moveEndPoint,
   hasAnyRanges,
   runOnRanges,

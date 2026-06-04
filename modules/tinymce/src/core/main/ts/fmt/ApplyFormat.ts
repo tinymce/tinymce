@@ -1,5 +1,5 @@
 import { Arr, Fun, Obj, Type } from '@ephox/katamari';
-import { PredicateExists, PredicateFilter, SugarElement, SugarElements } from '@ephox/sugar';
+import { PredicateExists, SugarElement, SugarElements } from '@ephox/sugar';
 
 import type DOMUtils from '../api/dom/DOMUtils';
 import type Editor from '../api/Editor';
@@ -10,7 +10,6 @@ import Tools from '../api/util/Tools';
 import * as Bookmarks from '../bookmark/Bookmarks';
 import * as Empty from '../dom/Empty';
 import * as NodeType from '../dom/NodeType';
-import * as RangeNodes from '../selection/RangeNodes';
 import * as RangeNormalizer from '../selection/RangeNormalizer';
 import type { RangeLikeObject } from '../selection/RangeTypes';
 import * as RangeWalk from '../selection/RangeWalk';
@@ -44,41 +43,26 @@ const canFormatBR = (editor: Editor, format: ApplyFormat, node: HTMLBRElement, p
   }
 };
 
-const cellContentRange = (dom: DOMUtils, fakeRng: Range): Range => {
-  const td = RangeNodes.getNode(fakeRng.startContainer, fakeRng.startOffset);
-  if (!NodeType.isElement(td) || !td.hasChildNodes()) {
-    return fakeRng;
-  }
-
-  const leaf = (n: Node, kind: 'first' | 'last'): Node => {
-    let currentNode = n;
-    const childType = kind === 'first' ? 'firstChild' : 'lastChild';
-    while (NodeType.isElement(currentNode) && currentNode[childType]) {
-      if (Bookmarks.isBookmarkNode(currentNode[childType])) {
-        const nonBookmarkSiblings = PredicateFilter.siblings(SugarElement.fromDom(currentNode[childType]), (el) => !Bookmarks.isBookmarkNode(el.dom)).map((el) => el.dom);
-        currentNode = Arr[kind === 'first' ? 'head' : 'last'](nonBookmarkSiblings).getOr(currentNode[childType]);
+const cellContentRange = (dom: DOMUtils, fakeRng: Range): Range =>
+  SelectionUtils.getStartNode(fakeRng).fold(
+    () => fakeRng,
+    (td) => {
+      const start = Arr.last(SelectionUtils.getFirstChildren(td)).getOr(td).dom;
+      const end = Arr.last(SelectionUtils.getLastChildren(td)).getOr(td).dom;
+      const rng = dom.createRng();
+      if (NodeType.isText(start)) {
+        rng.setStart(start, 0);
       } else {
-        currentNode = currentNode[childType];
+        rng.setStartBefore(start);
       }
+      if (NodeType.isText(end)) {
+        rng.setEnd(end, end.data.length);
+      } else {
+        rng.setEndAfter(end);
+      }
+      return rng;
     }
-    return currentNode;
-  };
-
-  const start = leaf(td, 'first');
-  const end = leaf(td, 'last');
-  const rng = dom.createRng();
-  if (NodeType.isText(start)) {
-    rng.setStart(start, 0);
-  } else {
-    rng.setStartBefore(start);
-  }
-  if (NodeType.isText(end)) {
-    rng.setEnd(end, end.data.length);
-  } else {
-    rng.setEndAfter(end);
-  }
-  return rng;
-};
+  );
 
 const applyFormatAction = (ed: Editor, name: string, vars?: FormatVars, node?: Node | RangeLikeObject | null): void => {
   const formatList = ed.formatter.get(name) as ApplyFormat[];
