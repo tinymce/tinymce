@@ -81,6 +81,7 @@
   },
   "dependencies": {
     "@ephox/katamari": "^11.0.0",
+    "@ephox/sand": "^8.0.0",
     "@ephox/sugar": "^11.0.0"
   }
 }
