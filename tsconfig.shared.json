@@ -1,6 +1,10 @@
 {
   "compilerOptions": {
     "moduleResolution": "node",
+    // 'node' (node10) and 'baseUrl' are deprecated in TS6 and removed in TS7. They are kept
+    // for now because the webpack/rollup path resolution (tsconfig-paths-webpack-plugin) relies
+    // on baseUrl + paths. This flag silences the TS6 deprecation errors during the transition.
+    "ignoreDeprecations": "6.0",
     "target": "es2022",
     "module": "es2022",
     "lib": ["es2022", "dom"],
