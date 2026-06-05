@@ -27,11 +27,21 @@ describe('browser.agar.http.RequestMatcherTest', () => {
       Assert.eq('Path mismatch should cause none even on a method match', true, matcher(makeRequest('GET', '/posts/42')).isNone());
     });
 
-    it('TINY-14123: matches against url.pathname', () => {
+    it('TINY-14123: matches against url.pathname, ignores query params', () => {
       const matcher = RequestMatcher.makeRequestMatcher('GET', '/users/:id');
       const request = makeRequest('GET', '/users/42?foo=bar#frag');
       const result = matcher(request);
       Assert.eq('Path with query params should match', true, result.isSome());
+    });
+
+    it('TINY-14123: matches against url.pathname, ignores domain', () => {
+      const matcher = RequestMatcher.makeRequestMatcher('GET', '/users/:id');
+
+      const tinyCloudRequest = makeRequest('GET', 'https://tiny.cloud/users/:id');
+      Assert.eq('Path with tiny.cloud domain should match', true, matcher(tinyCloudRequest).isSome());
+
+      const tinyDevRequest = makeRequest('GET', 'https://tiny.dev/users/:id');
+      Assert.eq('Path with tiny.dev domain should match', true, matcher(tinyDevRequest).isSome());
     });
 
     it('TINY-14123: returns matched params', () => {
