@@ -17,7 +17,7 @@ export type RequestHandler = (requestDetails: RequestHandlerDetails) => Promise<
 
 const hasMockPrefix = (path: string): boolean => path.startsWith(Shared.mockPrefix);
 
-const makeMethodHttpHandler = (method: string) => (pathPattern: string, handler: RequestHandler) => {
+const makeMethodHttpHandler = (method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH') => (pathPattern: string, handler: RequestHandler) => {
   if (!hasMockPrefix(pathPattern)) {
     throw new Error(`Path pattern "${pathPattern}" must start with "${Shared.mockPrefix}"`);
   }
