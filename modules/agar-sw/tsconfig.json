@@ -5,10 +5,9 @@
     "lib": ["es2022", "WebWorker"],
     "outDir": "lib",
     "rootDir": "src",
-    "baseUrl": ".",
     "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo",
     "paths": {
-      "ephox/agar-sw/*": ["src/main/ts/*"]
+      "ephox/agar-sw/*": ["./src/main/ts/*"]
     }
   },
   "include": [

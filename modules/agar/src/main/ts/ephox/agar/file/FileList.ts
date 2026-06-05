@@ -1,13 +1,14 @@
 import { Arr } from '@ephox/katamari';
 
 const createFileList = (inputFiles: File[]): FileList => {
+  const snapshot = inputFiles.slice();
   const files: FileList = {
-    length: inputFiles.length,
-    item: (idx: number) => inputFiles[idx],
-    [Symbol.iterator]: () => inputFiles[Symbol.iterator]()
+    length: snapshot.length,
+    item: (idx: number) => snapshot[idx] ?? null,
+    [Symbol.iterator]: () => snapshot[Symbol.iterator]()
   };
 
-  Arr.each(inputFiles, (file, idx) => {
+  Arr.each(snapshot, (file, idx) => {
     files[idx] = file;
   });
 

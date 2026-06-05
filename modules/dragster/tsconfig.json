@@ -3,12 +3,11 @@
   "compilerOptions": {
     "outDir": "lib",
     "rootDir": "src",
-    "baseUrl": ".",
     "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo",
     "paths": {
-      "ephox/dragster/test/*": ["src/test/ts/module/ephox/dragster/test/*"],
-      "ephox/dragster/demo/*": ["src/demo/ts/ephox/dragster/demo/*"],
-      "ephox/dragster/*": ["src/main/ts/ephox/dragster/*"]
+      "ephox/dragster/test/*": ["./src/test/ts/module/ephox/dragster/test/*"],
+      "ephox/dragster/demo/*": ["./src/demo/ts/ephox/dragster/demo/*"],
+      "ephox/dragster/*": ["./src/main/ts/ephox/dragster/*"]
     }
   },
   "include": [

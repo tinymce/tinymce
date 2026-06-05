@@ -3,11 +3,10 @@
   "compilerOptions": {
     "outDir": "lib",
     "rootDir": "src",
-    "baseUrl": ".",
     "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo",
     "paths": {
-      "ephox/acid/test/*": ["src/test/ts/module/ephox/acid/test/*"],
-      "ephox/acid/*": ["src/main/ts/ephox/acid/*"]
+      "ephox/acid/test/*": ["./src/test/ts/module/ephox/acid/test/*"],
+      "ephox/acid/*": ["./src/main/ts/ephox/acid/*"]
     }
   },
   "include": [

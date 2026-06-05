@@ -869,6 +869,7 @@ module.exports = function (grunt) {
       standard: {
         browser: grunt.option('bedrock-browser') !== undefined ? grunt.option('bedrock-browser') : 'chrome-headless',
         config: 'tsconfig.json',
+        bundler: 'rspack',
         testfiles: ['src/**/test/ts/**/*Test.ts'],
         overallTimeout: 900000,
         singleTimeout: 30000,

@@ -85,6 +85,7 @@ const Content = forwardRef<HTMLDivElement, DropdownContentProps>(({ children, on
   const insetProps = PositioningUtils.getInset(side, gap);
   const area = PositioningUtils.getPositionArea(side, align);
   return <div
+    // @ts-expect-error - TODO: Remove this expect error once we've upgraded to React 19+
     popover='auto'
     className={[ Bem.block('tox-dropdown-content'), propClassName ].join(' ')}
     ref={(el: HTMLDivElement) => {
@@ -99,7 +100,6 @@ const Content = forwardRef<HTMLDivElement, DropdownContentProps>(({ children, on
     style={{
       ...propStyle,
       ...insetProps,
-      // @ts-expect-error - TODO: Remove this expect error once we've upgraded to React 19+
       positionArea: area,
       positionAnchor: popupAnchor
     }}

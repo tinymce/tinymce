@@ -3,12 +3,11 @@
   "compilerOptions": {
     "outDir": "lib",
     "rootDir": "src",
-    "baseUrl": ".",
     "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo",
     "paths": {
-      "ephox/alloy/test/*": ["src/test/ts/module/ephox/alloy/test/*"],
-      "ephox/alloy/demo/*": ["src/demo/ts/ephox/alloy/demo/*"],
-      "ephox/alloy/*": ["src/main/ts/ephox/alloy/*"]
+      "ephox/alloy/test/*": ["./src/test/ts/module/ephox/alloy/test/*"],
+      "ephox/alloy/demo/*": ["./src/demo/ts/ephox/alloy/demo/*"],
+      "ephox/alloy/*": ["./src/main/ts/ephox/alloy/*"]
     }
   },
   "include": [
