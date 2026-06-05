@@ -52,6 +52,13 @@ describe('browser.agar.http.RequestMatcherTest', () => {
       Assert.eq('Path should match', true, result.isSome());
       Assert.eq('Path parameters should be returned properly', { userId: '33', conversationId: '123' }, result.getOrDie());
     });
+
+    it('TINY-14123: pattern should only include path, not full url', () => {
+      const matcher = RequestMatcher.makeRequestMatcher('GET', 'https://tiny.cloud/users/:id');
+      const request = makeRequest('GET', 'https://tiny.cloud/users/:id');
+
+      Assert.eq('Pattern defined with full url should always fail', false, matcher(request).isSome());
+    });
   });
 
   describe('per-method helpers', () => {
