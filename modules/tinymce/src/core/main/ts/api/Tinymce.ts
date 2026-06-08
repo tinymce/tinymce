@@ -3,7 +3,7 @@ import type { UndoManager as UndoManagerType } from '../undo/UndoManagerTypes';
 
 import AddOnManager from './AddOnManager';
 import Annotator from './Annotator';
-import AriaAnnouncer, { type AriaAnnouncerApi } from './dom/AriaAnnouncer';
+import AriaAnnouncer from './dom/AriaAnnouncer';
 import BookmarkManager from './dom/BookmarkManager';
 import ControlSelection from './dom/ControlSelection';
 import DOMUtils, { type DOMUtilsSettings } from './dom/DOMUtils';
@@ -113,7 +113,7 @@ interface TinyMCE extends EditorManager {
     BookmarkManager: BookmarkManagerNamespace;
     Selection: (dom: DOMUtils, win: Window, serializer: DomSerializer, editor: Editor) => EditorSelection;
     StyleSheetLoader: (documentOrShadowRoot: Document | ShadowRoot, settings: StyleSheetLoaderSettings) => StyleSheetLoader;
-    AriaAnnouncer: AriaAnnouncerApi;
+    AriaAnnouncer: AriaAnnouncer;
     Event: EventUtils;
   };
 
