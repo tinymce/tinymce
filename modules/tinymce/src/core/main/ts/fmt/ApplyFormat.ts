@@ -43,27 +43,6 @@ const canFormatBR = (editor: Editor, format: ApplyFormat, node: HTMLBRElement, p
   }
 };
 
-const cellContentRange = (dom: DOMUtils, fakeRng: Range): Range =>
-  SelectionUtils.getStartNode(fakeRng).fold(
-    () => fakeRng,
-    (td) => {
-      const start = Arr.last(SelectionUtils.getFirstChildren(td)).getOr(td).dom;
-      const end = Arr.last(SelectionUtils.getLastChildren(td)).getOr(td).dom;
-      const rng = dom.createRng();
-      if (NodeType.isText(start)) {
-        rng.setStart(start, 0);
-      } else {
-        rng.setStartBefore(start);
-      }
-      if (NodeType.isText(end)) {
-        rng.setEnd(end, end.data.length);
-      } else {
-        rng.setEndAfter(end);
-      }
-      return rng;
-    }
-  );
-
 const applyFormatAction = (ed: Editor, name: string, vars?: FormatVars, node?: Node | RangeLikeObject | null): void => {
   const formatList = ed.formatter.get(name) as ApplyFormat[];
   const format = formatList[0];
@@ -123,11 +102,15 @@ const applyFormatAction = (ed: Editor, name: string, vars?: FormatVars, node?: N
     const isMatchingWrappingBlock = (node: Node) =>
       FormatUtils.isWrappingBlockFormat(format) && MatchFormat.matchNode(ed, node, name, vars);
 
+    const canRenameChildBlocks = (node: Node) =>
+      Arr.forall(node.childNodes, (child) => !FormatUtils.isTextBlock(ed.schema, child) || FormatUtils.isValid(ed, wrapName, child.nodeName.toLowerCase()));
+
     const canRenameBlock = (node: Node, parentName: string, isEditableDescendant: boolean) => {
       const isValidBlockFormatForNode =
         FormatUtils.isNonWrappingBlockFormat(format) &&
         FormatUtils.isTextBlock(ed.schema, node) &&
-        FormatUtils.isValid(ed, parentName, wrapName);
+        FormatUtils.isValid(ed, parentName, wrapName) &&
+        canRenameChildBlocks(node);
       return isEditableDescendant && isValidBlockFormatForNode;
     };
 
@@ -351,8 +334,7 @@ const applyFormatAction = (ed: Editor, name: string, vars?: FormatVars, node?: N
           ed,
           () => {
             SelectionUtils.runOnRanges(ed, (selectionRng, fake) => {
-              const rngToExpand = fake ? cellContentRange(dom, selectionRng) : selectionRng;
-              const expandedRng = ExpandRange.expandRng(dom, rngToExpand, formatList);
+              const expandedRng = fake ? selectionRng : ExpandRange.expandRng(dom, selectionRng, formatList);
               applyRngStyle(dom, expandedRng, false);
             });
           },
