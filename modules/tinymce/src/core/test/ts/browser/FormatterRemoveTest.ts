@@ -8,7 +8,6 @@ import { ZWSP } from 'tinymce/core/text/Zwsp';
 
 import * as KeyUtils from '../module/test/KeyUtils';
 
-
 describe('browser.tinymce.core.FormatterRemoveTest', () => {
   const browser = PlatformDetection.detect().browser;
   const isOldSafari = browser.isSafari() && (browser.version.major === 18 && browser.version.minor < 3);
