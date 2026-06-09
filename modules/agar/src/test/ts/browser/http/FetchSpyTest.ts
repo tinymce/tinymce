@@ -127,6 +127,20 @@ describe('browser.agar.http.FetchSpyTest', () => {
     ]);
   });
 
+  it('TINY-14123: Abort should not be emitted, if abort controller fires after request finished executing', async () => {
+    await FetchSpy.pWithFetchSpy({
+      filter: Fun.always,
+      onFetch: (request) => store.add(`fetched ${request.method}`),
+      onAbort: (request) => store.add(`aborted ${request.method}`)
+    }, async () => {
+      const controller = new window.AbortController();
+      await window.fetch('/custom/test', { signal: controller.signal });
+      controller.abort();
+
+      store.assertEq('Spy should not observe abort, after request resolved', [ 'fetched GET' ]);
+    });
+  });
+
   it('TINY-14123: restores window.fetch after callback resolves', async () => {
     const originalFetch = window.fetch;
 
