@@ -6,7 +6,6 @@ const FilesAsStrings = PluginString({
 
 let zipUtils = require('./tools/modules/zip-helper');
 let gruntUtils = require('./tools/modules/grunt-utils');
-let gruntWebPack = require('./tools/modules/grunt-webpack');
 let swag = require('@ephox/swag');
 const nodeResolve = require('@rollup/plugin-node-resolve');
 const alias = require('@rollup/plugin-alias');
@@ -254,27 +253,6 @@ module.exports = function (grunt) {
       })
     ),
 
-    'webpack-dev-server': {
-      everything: () => gruntWebPack.all(plugins, themes, models),
-      options: {
-        devServer: {
-          port: grunt.option('webpack-port') !== undefined ? grunt.option('webpack-port') : 3000,
-          host: '0.0.0.0',
-          allowedHosts: 'all',
-          static: {
-            publicPath: '/',
-            directory: path.join(__dirname)
-          },
-          hot: false,
-          liveReload: false,
-          setupMiddlewares: (middlewares, devServer) => {
-            gruntWebPack.generateDemoIndex(grunt, devServer.app, plugins, themes, models);
-            return middlewares;
-          }
-        }
-      },
-    },
-
     concat: Object.assign({
         options: {
           process: function(content) {
@@ -493,7 +471,6 @@ module.exports = function (grunt) {
               'modules/*/package.json',
               'modules/*/tsconfig*.json',
               'modules/*/.eslint*.json',
-              'modules/*/webpack.config.js',
               'modules/*/.stylelintignore',
               'modules/*/.stylelintrc',
               'modules/tinymce/tools',
@@ -955,16 +932,11 @@ module.exports = function (grunt) {
     'globals',
     'emoji',
     'html-i18n',
-    // TODO: Make webpack use the oxide CSS directly
-    // as well as making development easier, then we can update 'bun dev' to run 'oxide-build' in parallel with 'tinymce-grunt dev'
-    // that will save 2-3 seconds on incremental builds
     'copy:ui-skins',
     'copy:content-skins',
     'copy:default-icons',
     'copy:html-i18n'
   ]);
-
-  grunt.registerTask('start', ['webpack-dev-server']);
 
   grunt.registerTask('buildOnly', ['clean:dist', 'prod']);
   grunt.registerTask('default', ['clean:dist', 'prod']);
