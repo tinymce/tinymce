@@ -141,7 +141,7 @@ describe('browser.agar.http.FetchSpyTest', () => {
     });
   });
 
-  it('TINY-14124: onAbort fires for a pre-aborted signal', async () => {
+  it('TINY-14495: onAbort fires for a pre-aborted signal', async () => {
     const controller = new window.AbortController();
     controller.abort();
 
