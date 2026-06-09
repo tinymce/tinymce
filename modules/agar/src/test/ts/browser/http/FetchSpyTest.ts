@@ -21,7 +21,7 @@ describe('browser.agar.http.FetchSpyTest', () => {
     store.clear();
   });
 
-  it('TINY-14123: onFetch fires for each request', async () => {
+  it('TINY-14495: onFetch fires for each request', async () => {
     const methods = [ 'GET', 'POST', 'PUT', 'DELETE', 'PATCH' ];
 
     await FetchSpy.pWithFetchSpy({
@@ -42,7 +42,7 @@ describe('browser.agar.http.FetchSpyTest', () => {
     ]);
   });
 
-  it('TINY-14123: onAbort fires when a request is aborted', async () => {
+  it('TINY-14495: onAbort fires when a request is aborted', async () => {
     const methods = [ 'GET', 'POST', 'PUT', 'DELETE', 'PATCH' ];
 
     await FetchSpy.pWithFetchSpy({
@@ -80,7 +80,7 @@ describe('browser.agar.http.FetchSpyTest', () => {
     ]);
   });
 
-  it('TINY-14123: Only requests matching filter should be spied on', async () => {
+  it('TINY-14495: Only requests matching filter should be spied on', async () => {
     await FetchSpy.pWithFetchSpy({
       filter: RequestFilter.patch('/custom/test'),
       onFetch: (request) => store.add(`fetched ${request.method}`),
@@ -127,7 +127,7 @@ describe('browser.agar.http.FetchSpyTest', () => {
     ]);
   });
 
-  it('TINY-14123: Abort should not be emitted, if abort controller fires after request finished executing', async () => {
+  it('TINY-14495: Abort should not be emitted, if abort controller fires after request finished executing', async () => {
     await FetchSpy.pWithFetchSpy({
       filter: Fun.always,
       onFetch: (request) => store.add(`fetched ${request.method}`),
@@ -160,7 +160,7 @@ describe('browser.agar.http.FetchSpyTest', () => {
     ]);
   });
 
-  it('TINY-14123: restores window.fetch after callback resolves', async () => {
+  it('TINY-14495: restores window.fetch after callback resolves', async () => {
     const originalFetch = window.fetch;
 
     await FetchSpy.pWithFetchSpy({ filter: Fun.always }, async () => {
@@ -170,7 +170,7 @@ describe('browser.agar.http.FetchSpyTest', () => {
     Assert.eq('fetch should be restored after callback resolves', true, window.fetch === originalFetch);
   });
 
-  it('TINY-14123: restores window.fetch after callback throws', async () => {
+  it('TINY-14495: restores window.fetch after callback throws', async () => {
     const originalFetch = window.fetch;
     let thrown: unknown;
 
