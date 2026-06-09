@@ -82,6 +82,8 @@ export {
   RealClipboard,
   RealKeys,
   RealMouse,
+  RequestFilter,
+  RequestMatcher,
   Step,
   TestLogs,
   UiControls,
@@ -91,7 +93,5 @@ export {
   DragnDrop,
   Files,
   FileInput,
-  TestStore,
-  RequestMatcher,
-  RequestFilter
+  TestStore
 };
