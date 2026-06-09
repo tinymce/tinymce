@@ -1,8 +1,7 @@
 import { Fun, Optional } from '@ephox/katamari';
 import { PathPattern } from '@ephox/polaris';
 
-type Method = 'get' | 'post' | 'put' | 'delete' | 'patch';
-type HttpMethod = Method | Uppercase<Method>;
+import type { HttpMethod } from './HttpMethod';
 
 const matchMethod = (request: Request, method: HttpMethod): boolean =>
   request.method.toUpperCase() === method.toUpperCase();
