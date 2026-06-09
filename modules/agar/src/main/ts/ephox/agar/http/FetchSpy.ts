@@ -12,13 +12,17 @@ const pWithFetchSpy = async <T>(
 
   window.fetch = (input, init) => {
     const request = new window.Request(input, init);
+    const abortHandler = () => options.onAbort?.(request);
 
     if (options.filter(request)) {
       options.onFetch?.(request);
-      request.signal.addEventListener('abort', () => options.onAbort?.(request), { once: true });
+      request.signal.addEventListener('abort', abortHandler, { once: true });
     }
 
-    return originalFetch.call(window, input, init);
+    const resultPromise: ReturnType<typeof originalFetch> = originalFetch.call(window, input, init);
+    return resultPromise.finally(() => {
+      request.signal.removeEventListener('abort', abortHandler);
+    });
   };
 
   try {
