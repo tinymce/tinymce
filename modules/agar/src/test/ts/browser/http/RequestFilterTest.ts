@@ -35,16 +35,16 @@ describe('browser.agar.http.RequestFilterTest', () => {
     it('TINY-14123: matches against url.pathname, ignores domain', () => {
       const filter = RequestFilter.makeRequestFilter('GET', '/users/:id');
 
-      const tinyCloudRequest = makeRequest('GET', 'https://tiny.cloud/users/:id');
+      const tinyCloudRequest = makeRequest('GET', 'https://tiny.cloud/users/55');
       Assert.eq('Path with tiny.cloud domain should match', true, filter(tinyCloudRequest));
 
-      const tinyDevRequest = makeRequest('GET', 'https://tiny.dev/users/:id');
+      const tinyDevRequest = makeRequest('GET', 'https://tiny.dev/users/55');
       Assert.eq('Path with tiny.dev domain should match', true, filter(tinyDevRequest));
     });
 
     it('TINY-14123: pattern should only include path, not full url', () => {
       const filter = RequestFilter.makeRequestFilter('GET', 'https://tiny.cloud/users/:id');
-      const request = makeRequest('GET', 'https://tiny.cloud/users/:id');
+      const request = makeRequest('GET', 'https://tiny.cloud/users/55');
 
       Assert.eq('Pattern defined with full url should always fail', false, filter(request));
     });

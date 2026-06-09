@@ -12,7 +12,7 @@ describe('browser.agar.http.RequestMatcherTest', () => {
     it('TINY-14123: matches regardless of the case used for the matcher method', () => {
       const request = makeRequest('GET', '/users');
       const upperMatcher = RequestMatcher.makeRequestMatcher('GET', '/users');
-      const lowerMatcher = RequestMatcher.makeRequestMatcher('GET', '/users');
+      const lowerMatcher = RequestMatcher.makeRequestMatcher('get', '/users');
       Assert.eq('An uppercase matcher should match a GET request', true, upperMatcher(request).isSome());
       Assert.eq('A lowercase matcher should match a GET request', true, lowerMatcher(request).isSome());
     });
@@ -37,10 +37,10 @@ describe('browser.agar.http.RequestMatcherTest', () => {
     it('TINY-14123: matches against url.pathname, ignores domain', () => {
       const matcher = RequestMatcher.makeRequestMatcher('GET', '/users/:id');
 
-      const tinyCloudRequest = makeRequest('GET', 'https://tiny.cloud/users/:id');
+      const tinyCloudRequest = makeRequest('GET', 'https://tiny.cloud/users/55');
       Assert.eq('Path with tiny.cloud domain should match', true, matcher(tinyCloudRequest).isSome());
 
-      const tinyDevRequest = makeRequest('GET', 'https://tiny.dev/users/:id');
+      const tinyDevRequest = makeRequest('GET', 'https://tiny.dev/users/55');
       Assert.eq('Path with tiny.dev domain should match', true, matcher(tinyDevRequest).isSome());
     });
 
@@ -55,7 +55,7 @@ describe('browser.agar.http.RequestMatcherTest', () => {
 
     it('TINY-14123: pattern should only include path, not full url', () => {
       const matcher = RequestMatcher.makeRequestMatcher('GET', 'https://tiny.cloud/users/:id');
-      const request = makeRequest('GET', 'https://tiny.cloud/users/:id');
+      const request = makeRequest('GET', 'https://tiny.cloud/users/55');
 
       Assert.eq('Pattern defined with full url should always fail', false, matcher(request).isSome());
     });
