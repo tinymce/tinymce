@@ -141,6 +141,25 @@ describe('browser.agar.http.FetchSpyTest', () => {
     });
   });
 
+  it('TINY-14124: onAbort fires for a pre-aborted signal', async () => {
+    const controller = new window.AbortController();
+    controller.abort();
+
+    await FetchSpy.pWithFetchSpy({
+      filter: Fun.always,
+      onFetch: (req) => store.add(`fetched ${req.method}`),
+      onAbort: (req) => store.add(`aborted ${req.method}`)
+    }, async () => {
+      try {
+        await window.fetch('/custom/test', { signal: controller.signal });
+      } catch (_) { /* AbortError expected */ }
+    });
+
+    store.assertEq('Pre-aborted signal should trigger both onFetch and onAbort', [
+      'fetched GET', 'aborted GET'
+    ]);
+  });
+
   it('TINY-14123: restores window.fetch after callback resolves', async () => {
     const originalFetch = window.fetch;
 
