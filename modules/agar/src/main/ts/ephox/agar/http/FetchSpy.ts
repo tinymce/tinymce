@@ -16,7 +16,12 @@ const pWithFetchSpy = async <T>(
 
     if (options.filter(request)) {
       options.onFetch?.(request);
-      request.signal.addEventListener('abort', abortHandler, { once: true });
+
+      if (request.signal.aborted) {
+        options.onAbort?.(request);
+      } else {
+        request.signal.addEventListener('abort', abortHandler, { once: true });
+      }
     }
 
     const resultPromise: ReturnType<typeof originalFetch> = originalFetch.call(window, input, init);
