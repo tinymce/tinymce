@@ -1,5 +1,6 @@
 import { Arr, type Optional } from '@ephox/katamari';
 
+import type { HttpMethod } from './HttpMethod';
 import * as RequestMatcher from './RequestMatcher';
 import * as Shared from './Shared';
 
@@ -17,7 +18,7 @@ export type RequestHandler = (requestDetails: RequestHandlerDetails) => Promise<
 
 const hasMockPrefix = (path: string): boolean => path.startsWith(Shared.mockPrefix);
 
-const makeMethodHttpHandler = (method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH') => (pathPattern: string, handler: RequestHandler) => {
+const makeMethodHttpHandler = (method: HttpMethod) => (pathPattern: string, handler: RequestHandler) => {
   if (!hasMockPrefix(pathPattern)) {
     throw new Error(`Path pattern "${pathPattern}" must start with "${Shared.mockPrefix}"`);
   }

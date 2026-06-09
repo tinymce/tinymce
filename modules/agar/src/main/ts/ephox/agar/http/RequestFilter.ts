@@ -1,9 +1,7 @@
 import { Fun } from '@ephox/katamari';
 
+import type { HttpMethod } from './HttpMethod';
 import * as RequestMatcher from './RequestMatcher';
-
-type Method = 'get' | 'post' | 'put' | 'delete' | 'patch';
-type HttpMethod = Method | Uppercase<Method>;
 
 /**
  * Builds a filter that tests a `Request` against an HTTP method and URL path pattern.
