@@ -1,11 +1,10 @@
 const path = require("path");
 const { TsCheckerRspackPlugin } = require("ts-checker-rspack-plugin");
 
-const createDemoConfig = ({ pkgDir, entry, open = "demo.html" }) => {
+const createDemoConfig = ({ pkgDir, entry, staticDir = "src/demo/html" }) => {
   const moduleName = path.basename(pkgDir);
   const resolvedEntry = entry ?? `./src/demo/ts/ephox/${moduleName}/demo/Demo.ts`;
   const isMultiEntry = typeof resolvedEntry === "object";
-  const openPages = (Array.isArray(open) ? open : [open]).map((page) => `/${page}`);
 
   return {
     context: pkgDir,
@@ -58,8 +57,8 @@ const createDemoConfig = ({ pkgDir, entry, open = "demo.html" }) => {
       port: '3000',
       host: "0.0.0.0",
       allowedHosts: "all",
-      static: { directory: path.resolve(pkgDir, "src/demo/html") },
-      open: openPages,
+      static: { directory: path.resolve(pkgDir, staticDir) },
+      open: false,
       hot: false,
     },
   };

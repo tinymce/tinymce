@@ -5,5 +5,4 @@ module.exports = createDemoConfig({
   entry: {
     detect: "./src/demo/ts/ephox/snooker/demo/DetectDemo.ts",
   },
-  open: "DetectDemo.html",
 });

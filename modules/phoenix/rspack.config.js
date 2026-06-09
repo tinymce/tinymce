@@ -7,5 +7,4 @@ module.exports = createDemoConfig({
     reuse: "./src/demo/ts/ephox/phoenix/demo/ReuseDemo.ts",
     search: "./src/demo/ts/ephox/phoenix/demo/SearchDemo.ts",
   },
-  open: ["LatinDemo.html", "ReuseDemo.html", "SearchDemo.html"],
 });
