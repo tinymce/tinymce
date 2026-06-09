@@ -9,7 +9,7 @@ const exportToModuleLoaders = (tinymce: TinyMCE) => {
       module.exports = tinymce;
     } catch {
       // It will thrown an error when running this module
-      // within webpack where the module.exports object is sealed
+      // within rspack where the module.exports object is sealed
     }
   }
 };

@@ -10,6 +10,7 @@
   "scripts": {
     "prepublishOnly": "tsc -b",
     "build": "tsc",
+    "dev": "rspack serve",
     "lint": "eslint --max-warnings=0 src/**/*.ts"
   },
   "dependencies": {

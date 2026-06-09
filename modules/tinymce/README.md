@@ -16,10 +16,10 @@ Build tasks
 Lints, compiles, minifies and creates release packages for TinyMCE. This will produce the production ready packages.
 
 `grunt start`
-Starts a webpack-dev-server that compiles the core, themes, plugins and all demos. Go to `localhost:3000` for a list of links to all the demo pages.
+Starts a rspack dev server that compiles the core, themes, plugins and all demos. Go to `localhost:3000` for a list of links to all the demo pages.
 
 `grunt dev`
-Runs tsc, webpack and less. This will only produce the bare essentials for a development build and is a lot faster.
+Runs tsc, less. This will only produce the bare essentials for a development build and is a lot faster.
 
 `grunt test`
 Runs all tests on chrome-headless.
@@ -29,21 +29,6 @@ Runs all tests manually in a browser.
 
 `grunt bedrock-auto:<browser>`
 Runs all tests through selenium browsers supported are chrome, firefox, ie, MicrosoftEdge, and chrome-headless.
-
-`grunt webpack:core`
-Builds the demo js files for the core part of tinymce this is required to get the core demos working.
-
-`grunt webpack:plugins`
-Builds the demo js files for the plugins part of tinymce this is required to get the plugins demos working.
-
-`grunt webpack:themes`
-Builds the demo js files for the themes part of tinymce this is required to get the themes demos working.
-
-`grunt webpack:<name>-plugin`
-Builds the demo js files for the specific plugin.
-
-`grunt webpack:<name>-theme`
-Builds the demo js files for the specific theme.
 
 `grunt --help`
 Displays the various build tasks.

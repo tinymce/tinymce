@@ -5,7 +5,7 @@
     "paths": {
       // duplicate paths, copied from tsconfig.json
       // the exception is the tinymce core paths which point to the lib directories
-      // once there is a webpack path plugin that supports project references most of this can be deleted
+      // once there is a rspack path plugin that supports project references most of this can be deleted
       "tinymce": ["modules/tinymce/lib/core/main/ts/api/Main"],
       "tinymce/core/*": ["modules/tinymce/lib/globals/tinymce/core/*"],
       "tinymce/themes/silver/resources/*": ["modules/tinymce/src/themes/silver/main/resources/*"],
