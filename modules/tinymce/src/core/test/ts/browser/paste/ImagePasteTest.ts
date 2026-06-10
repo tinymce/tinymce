@@ -205,4 +205,38 @@ describe('browser.tinymce.core.paste.ImagePasteTest', () => {
     await pWaitForSelector(editor, 'img');
     TinyAssertions.assertContent(editor, '<p><img src=\"data:image/gif;base64,' + base64ImgSrc + '" width="100" height="100">a</p>');
   });
+
+  it('TINY-14411: Pasting a broken image should still insert it without width and height', async () => {
+    const editor = hook.editor();
+
+    // Raw bytes that are not valid image data — browser fires error event when loading as img
+    const invalidBytes = new Uint8Array([ 0x00, 0x01, 0x02, 0x03 ]);
+    const invalidFile = new window.File([ invalidBytes ], 'broken.gif', { type: 'image/gif' });
+    const expectedBase64 = btoa(Array.from(invalidBytes).map((b) => String.fromCharCode(b)).join(''));
+
+    const event = mockEvent('paste', [ invalidFile ]);
+    Clipboard.pasteImageData(editor, event, editor.selection.getRng());
+
+    await pAssertInputEvents();
+    await pWaitForSelector(editor, 'img');
+    TinyAssertions.assertContent(editor, `<p><img src="data:image/gif;base64,${expectedBase64}">a</p>`);
+  });
+
+  it('TINY-14411: Pasting multiple images where one is broken should paste all of them', async () => {
+    const editor = hook.editor();
+
+    const invalidBytes = new Uint8Array([ 0x00, 0x01, 0x02, 0x03 ]);
+    const invalidFile = new window.File([ invalidBytes ], 'broken.gif', { type: 'image/gif' });
+    const validFile = base64ToBlob(base64ImgSrc, 'image/gif', 'valid.gif');
+
+    const event = mockEvent('paste', [ invalidFile, validFile ]);
+    Clipboard.pasteImageData(editor, event, editor.selection.getRng());
+
+    await Waiter.pTryUntilPredicate('Wait for 2 images to be pasted', () => editor.dom.select('img').length >= 2);
+
+    const imgs = editor.dom.select('img');
+    assert.equal(imgs.length, 2, 'Both images should be pasted');
+    const imgsWithDimensions = imgs.filter((img) => img.hasAttribute('width') && img.hasAttribute('height'));
+    assert.equal(imgsWithDimensions.length, 1, 'Only the valid image should have width and height');
+  });
 });

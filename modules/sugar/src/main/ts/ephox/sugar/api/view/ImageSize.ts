@@ -7,26 +7,26 @@ export interface ImageDimensions {
 const parseIntAndGetMax = (val1: any, val2: any): number =>
   Math.max(parseInt(val1, 10), parseInt(val2, 10));
 
-const getImageSize = (url: string): Promise<ImageDimensions> => new Promise((callback) => {
+const getImageSize = (url: string): Promise<ImageDimensions> => new Promise((resolve, reject) => {
   const img = document.createElement('img');
 
-  const done = (dimensions: Promise<ImageDimensions>): void => {
+  const cleanUp = (): void => {
     if (img.parentNode) {
       img.parentNode.removeChild(img);
     }
-
-    callback(dimensions);
   };
 
   img.addEventListener('load', () => {
-    const width = parseIntAndGetMax(img.width, img.clientWidth);
-    const height = parseIntAndGetMax(img.height, img.clientHeight);
+    const width = parseIntAndGetMax(img.width || img.naturalWidth, img.clientWidth);
+    const height = parseIntAndGetMax(img.height || img.naturalHeight, img.clientHeight);
     const dimensions = { width, height };
-    done(Promise.resolve(dimensions));
+    cleanUp();
+    resolve(dimensions);
   });
 
   img.addEventListener('error', () => {
-    done(Promise.reject(`Failed to get image dimensions for: ${url}`));
+    cleanUp();
+    reject(`Failed to get image dimensions for: ${url}`);
   });
 
   const style = img.style;

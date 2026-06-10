@@ -120,7 +120,7 @@ const createBlobInfo = (editor: Editor, blobCache: BlobCache, file: File, base64
   return blobInfo;
 };
 
-const pasteImage = (editor: Editor, imageItem: FileResult): Promise<void> => {
+const pasteImage = (editor: Editor, imageItem: FileResult, rng: Range | undefined): Promise<void> => {
   return Conversions.parseDataUri(imageItem.uri).fold(
     () => Promise.resolve(),
     async ({ data, type, base64Encoded }) => {
@@ -133,8 +133,23 @@ const pasteImage = (editor: Editor, imageItem: FileResult): Promise<void> => {
       const blobInfo = existingBlobInfo ?? createBlobInfo(editor, blobCache, file, base64);
 
       const blobUri = blobInfo.blobUri();
-      const dimensions = await ImageSize.getImageSize(blobUri);
-      pasteHtml(editor, `<img src="${blobUri}" width="${dimensions.width}" height="${dimensions.height}">`, false, true);
+
+      try {
+        const dimensions = await ImageSize.getImageSize(blobUri);
+        if (rng) {
+          editor.selection.setRng(rng);
+        }
+        if (!editor.removed) {
+          pasteHtml(editor, `<img src="${blobUri}" width="${dimensions.width}" height="${dimensions.height}">`, false, true);
+        }
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error(e);
+        if (rng) {
+          editor.selection.setRng(rng);
+        }
+        pasteHtml(editor, `<img src="${blobUri}">`, false, true);
+      }
     });
 };
 
@@ -180,8 +195,8 @@ const pasteImageData = (editor: Editor, e: ClipboardEvent | DragEvent, rng: Rang
           editor.selection.setRng(rng);
         }
 
-        await Promise.all(Arr.map(fileResults, (result) => {
-          return pasteImage(editor, result);
+        await Promise.allSettled(Arr.map(fileResults, (result) => {
+          return pasteImage(editor, result, rng);
         }));
       });
 
