@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { SugarElement } from '@ephox/sugar';
 
-import { Editor, TinyMCE } from 'tinymce/core/api/PublicApi';
+import type { Editor, TinyMCE } from 'tinymce/core/api/PublicApi';
 
 // import ButtonSetupDemo from './ButtonSetupDemo';
 declare let tinymce: TinyMCE;
@@ -30,6 +30,7 @@ export default (): void => {
 
   tinymce.init({
     selector: 'textarea.tiny-text',
+    license_key: 'gpl',
     theme: 'silver',
     toolbar: 'sidebar1 sidebar2 sidebar3',
     plugins: [

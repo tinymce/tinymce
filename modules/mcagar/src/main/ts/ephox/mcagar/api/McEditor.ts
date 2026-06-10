@@ -2,7 +2,7 @@ import { Chain } from '@ephox/agar';
 import { Global, Id, Type } from '@ephox/katamari';
 import { Attribute, Insert, Remove, Selectors, SugarBody, SugarElement, SugarShadowDom } from '@ephox/sugar';
 
-import { Editor as EditorType } from '../alien/EditorTypes';
+import type { Editor as EditorType } from '../alien/EditorTypes';
 import { loadScript } from '../loader/Loader';
 import { detectTinymceBaseUrl, setupTinymceBaseUrl } from '../loader/Urls';
 
@@ -13,6 +13,7 @@ const pFromElement = <T extends EditorType = EditorType>(element: SugarElement<E
     const nuSettings: Record<string, any> = {
       toolbar_mode: 'wrap',
       promotion: false,
+      license_key: 'gpl',
       ...settings
     };
 

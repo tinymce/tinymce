@@ -4,7 +4,7 @@ import { Insert, Remove, SugarBody, SugarElement, SugarHead, TextContent, Width 
 import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.themes.silver.editor.sizing.GridSinkSizingTest', () => {
   let style: SugarElement<HTMLStyleElement>;

@@ -1,19 +1,19 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Cell, Fun } from '@ephox/katamari';
-import { EventArgs, SugarPosition } from '@ephox/sugar';
+import type { EventArgs, SugarPosition } from '@ephox/sugar';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Focusing } from '../../api/behaviour/Focusing';
 import { Keying } from '../../api/behaviour/Keying';
 import { Tabstopping } from '../../api/behaviour/Tabstopping';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { OptionalDomSchema } from '../../api/component/SpecTypes';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
+import type { OptionalDomSchema } from '../../api/component/SpecTypes';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
-import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
+import type { NativeSimulatedEvent } from '../../events/SimulatedEvent';
 import * as KeyMatch from '../../navigation/KeyMatch';
 import * as PartType from '../../parts/PartType';
-import { EdgeActions, SliderDetail } from '../types/SliderTypes';
+import type { EdgeActions, SliderDetail } from '../types/SliderTypes';
 
 const labelPart = PartType.optional({
   schema: [ FieldSchema.required('dom') ],

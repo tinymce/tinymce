@@ -1,15 +1,16 @@
-import { AutocompleterEventArgs } from '../autocomplete/AutocompleteTypes';
-import { GetContentArgs, SetContentArgs } from '../content/ContentTypes';
-import { FormatVars } from '../fmt/FormatTypes';
-import { RangeLikeObject } from '../selection/RangeTypes';
-import { UndoLevel } from '../undo/UndoManagerTypes';
-import { SetAttribEvent } from './dom/DOMUtils';
-import Editor from './Editor';
-import { ParserArgs } from './html/DomParser';
-import { NotificationApi, NotificationSpec } from './NotificationManager';
-import { Dialog } from './ui/Ui';
-import { NativeEventMap } from './util/EventDispatcher';
-import { InstanceApi } from './WindowManager';
+import type { AutocompleterEventArgs } from '../autocomplete/AutocompleteTypes';
+import type { GetContentArgs, SetContentArgs } from '../content/ContentTypes';
+import type { FormatVars } from '../fmt/FormatTypes';
+import type { RangeLikeObject } from '../selection/RangeTypes';
+import type { UndoLevel } from '../undo/UndoManagerTypes';
+
+import type { SetAttribEvent } from './dom/DOMUtils';
+import type Editor from './Editor';
+import type { ParserArgs } from './html/DomParser';
+import type { NotificationApi, NotificationSpec } from './NotificationManager';
+import type { Dialog } from './ui/Ui';
+import type { EditorEvent, NativeEventMap } from './util/EventDispatcher';
+import type { InstanceApi } from './WindowManager';
 
 export interface ExecCommandEvent {
   command: string;
@@ -94,7 +95,7 @@ export interface ChangeEvent {
 }
 
 export interface AddUndoEvent extends ChangeEvent {
-  originalEvent: Event | undefined;
+  originalEvent: EditorEvent<unknown> | undefined;
 }
 
 export interface UndoRedoEvent {
@@ -173,93 +174,97 @@ export interface OpenNotificationEvent {
   notification: NotificationApi;
 }
 
+export interface DisabledStateChangeEvent {
+  readonly state: boolean;
+}
+
 export interface EditorEventMap extends Omit<NativeEventMap, 'blur' | 'focus'> {
-  'activate': { relatedTarget: Editor | null };
-  'deactivate': { relatedTarget: Editor };
-  'focus': { blurredEditor: Editor | null };
-  'blur': { focusedEditor: Editor | null };
-  'resize': UIEvent;
-  'scroll': UIEvent;
-  'input': InputEvent;
-  'beforeinput': InputEvent;
-  'detach': { };
-  'remove': { };
-  'init': { };
-  'ScrollIntoView': ScrollIntoViewEvent;
-  'AfterScrollIntoView': ScrollIntoViewEvent;
-  'ObjectResized': ObjectResizeEvent;
-  'ObjectResizeStart': ObjectResizeEvent;
-  'SwitchMode': SwitchModeEvent;
-  'ScrollWindow': Event;
-  'ResizeWindow': UIEvent;
-  'SkinLoaded': { };
-  'SkinLoadError': LoadErrorEvent;
-  'PluginLoadError': LoadErrorEvent;
-  'ModelLoadError': LoadErrorEvent;
-  'IconsLoadError': LoadErrorEvent;
-  'ThemeLoadError': LoadErrorEvent;
-  'LanguageLoadError': LoadErrorEvent;
-  'BeforeExecCommand': ExecCommandEvent;
-  'ExecCommand': ExecCommandEvent;
-  'NodeChange': NodeChangeEvent;
-  'FormatApply': FormatEvent;
-  'FormatRemove': FormatEvent;
-  'ShowCaret': ShowCaretEvent;
-  'SelectionChange': { };
-  'ObjectSelected': ObjectSelectedEvent;
-  'BeforeObjectSelected': ObjectSelectedEvent;
-  'GetSelectionRange': { range: Range };
-  'SetSelectionRange': SetSelectionRangeEvent;
-  'AfterSetSelectionRange': SetSelectionRangeEvent;
-  'BeforeGetContent': BeforeGetContentEvent;
-  'GetContent': GetContentEvent;
-  'BeforeSetContent': BeforeSetContentEvent;
-  'SetContent': SetContentEvent;
-  'SaveContent': SaveContentEvent;
-  'RawSaveContent': SaveContentEvent;
-  'LoadContent': { load: boolean; element: HTMLElement };
-  'PreviewFormats': { };
-  'AfterPreviewFormats': { };
-  'ScriptsLoaded': { };
-  'PreInit': { };
-  'PostRender': { };
-  'NewBlock': NewBlockEvent;
-  'ClearUndos': { };
-  'TypingUndo': { };
-  'Redo': UndoRedoEvent;
-  'Undo': UndoRedoEvent;
-  'BeforeAddUndo': AddUndoEvent;
-  'AddUndo': AddUndoEvent;
-  'change': ChangeEvent;
-  'CloseWindow': WindowEvent<any>;
-  'OpenWindow': WindowEvent<any>;
-  'ProgressState': ProgressStateEvent;
-  'AfterProgressState': AfterProgressStateEvent;
-  'PlaceholderToggle': PlaceholderToggleEvent;
-  'tap': TouchEvent;
-  'longpress': TouchEvent;
-  'longpresscancel': { };
-  'PreProcess': PreProcessEvent;
-  'PostProcess': PostProcessEvent;
-  'AutocompleterStart': AutocompleterEventArgs;
-  'AutocompleterUpdate': AutocompleterEventArgs;
-  'AutocompleterEnd': { };
-  'PastePlainTextToggle': PastePlainTextToggleEvent;
-  'PastePreProcess': PastePreProcessEvent;
-  'PastePostProcess': PastePostProcessEvent;
-  'TableModified': TableModifiedEvent;
-  'NewRow': NewTableRowEvent;
-  'NewCell': NewTableCellEvent;
-  'SetAttrib': SetAttribEvent;
-  'hide': { };
-  'show': { };
-  'dirty': { };
-  'BeforeOpenNotification': BeforeOpenNotificationEvent;
-  'OpenNotification': OpenNotificationEvent;
+  activate: { relatedTarget: Editor | null };
+  deactivate: { relatedTarget: Editor };
+  focus: { blurredEditor: Editor | null };
+  blur: { focusedEditor: Editor | null };
+  resize: UIEvent;
+  scroll: UIEvent;
+  input: InputEvent;
+  beforeinput: InputEvent;
+  detach: { };
+  remove: { };
+  init: { };
+  ScrollIntoView: ScrollIntoViewEvent;
+  AfterScrollIntoView: ScrollIntoViewEvent;
+  ObjectResized: ObjectResizeEvent;
+  ObjectResizeStart: ObjectResizeEvent;
+  SwitchMode: SwitchModeEvent;
+  ScrollWindow: Event;
+  ResizeWindow: UIEvent;
+  SkinLoaded: { };
+  SkinLoadError: LoadErrorEvent;
+  PluginLoadError: LoadErrorEvent;
+  ModelLoadError: LoadErrorEvent;
+  IconsLoadError: LoadErrorEvent;
+  ThemeLoadError: LoadErrorEvent;
+  LanguageLoadError: LoadErrorEvent;
+  BeforeExecCommand: ExecCommandEvent;
+  ExecCommand: ExecCommandEvent;
+  NodeChange: NodeChangeEvent;
+  FormatApply: FormatEvent;
+  FormatRemove: FormatEvent;
+  ShowCaret: ShowCaretEvent;
+  SelectionChange: { };
+  ObjectSelected: ObjectSelectedEvent;
+  BeforeObjectSelected: ObjectSelectedEvent;
+  GetSelectionRange: { range: Range };
+  SetSelectionRange: SetSelectionRangeEvent;
+  AfterSetSelectionRange: SetSelectionRangeEvent;
+  BeforeGetContent: BeforeGetContentEvent;
+  GetContent: GetContentEvent;
+  BeforeSetContent: BeforeSetContentEvent;
+  SetContent: SetContentEvent;
+  SaveContent: SaveContentEvent;
+  RawSaveContent: SaveContentEvent;
+  LoadContent: { load: boolean; element: HTMLElement };
+  PreviewFormats: { };
+  AfterPreviewFormats: { };
+  ScriptsLoaded: { };
+  PreInit: { };
+  PostRender: { };
+  NewBlock: NewBlockEvent;
+  ClearUndos: { };
+  TypingUndo: { };
+  Redo: UndoRedoEvent;
+  Undo: UndoRedoEvent;
+  BeforeAddUndo: AddUndoEvent;
+  AddUndo: AddUndoEvent;
+  change: ChangeEvent;
+  CloseWindow: WindowEvent<any>;
+  OpenWindow: WindowEvent<any>;
+  ProgressState: ProgressStateEvent;
+  AfterProgressState: AfterProgressStateEvent;
+  PlaceholderToggle: PlaceholderToggleEvent;
+  tap: TouchEvent;
+  longpress: TouchEvent;
+  longpresscancel: { };
+  PreProcess: PreProcessEvent;
+  PostProcess: PostProcessEvent;
+  AutocompleterStart: AutocompleterEventArgs;
+  AutocompleterUpdate: AutocompleterEventArgs;
+  AutocompleterEnd: { };
+  PastePlainTextToggle: PastePlainTextToggleEvent;
+  PastePreProcess: PastePreProcessEvent;
+  PastePostProcess: PastePostProcessEvent;
+  TableModified: TableModifiedEvent;
+  NewRow: NewTableRowEvent;
+  NewCell: NewTableCellEvent;
+  SetAttrib: SetAttribEvent;
+  hide: { };
+  show: { };
+  dirty: { };
+  BeforeOpenNotification: BeforeOpenNotificationEvent;
+  OpenNotification: OpenNotificationEvent;
 }
 
 export interface EditorManagerEventMap {
-  'AddEditor': { editor: Editor };
-  'RemoveEditor': { editor: Editor };
-  'BeforeUnload': { returnValue: any };
+  AddEditor: { editor: Editor };
+  RemoveEditor: { editor: Editor };
+  BeforeUnload: { returnValue: any };
 }

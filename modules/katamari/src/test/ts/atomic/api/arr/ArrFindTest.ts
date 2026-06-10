@@ -3,7 +3,7 @@ import fc from 'fast-check';
 
 import * as Arr from 'ephox/katamari/api/Arr';
 import * as Fun from 'ephox/katamari/api/Fun';
-import { Optional } from 'ephox/katamari/api/Optional';
+import type { Optional } from 'ephox/katamari/api/Optional';
 import { assertNone, assertSome } from 'ephox/katamari/test/AssertOptional';
 
 describe('atomic.katamari.api.arr.ArrFindTest', () => {

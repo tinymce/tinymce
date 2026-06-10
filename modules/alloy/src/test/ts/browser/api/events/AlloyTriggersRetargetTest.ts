@@ -1,6 +1,6 @@
 import { Chain, Logger, Mouse, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Classes, EventArgs, SelectorFind } from '@ephox/sugar';
+import { Classes, type EventArgs, SelectorFind } from '@ephox/sugar';
 
 import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -8,7 +8,7 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('AlloyTriggersRetargetTest', (success, failure) => {
   /*
@@ -78,7 +78,7 @@ UnitTest.asynctest('AlloyTriggersRetargetTest', (success, failure) => {
     (_doc, _body, _gui, component, store) => [
       Logger.t(
         'Trigger a click on the original recipient',
-        Chain.isolate(component, Chain.fromChains([
+        Chain.isolate(component.element, Chain.fromChains([
           UiFinder.cFindIn('.original-recipient'),
           Mouse.cClickWith({ })
         ]))

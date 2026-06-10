@@ -3,7 +3,7 @@ import { Arr } from '@ephox/katamari';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import LocalStorage from 'tinymce/core/api/util/LocalStorage';
 import * as Options from 'tinymce/themes/silver/ui/core/color/Options';
 
@@ -111,5 +111,38 @@ describe('browser.tinymce.themes.silver.editor.color.ColorSettingsTest', () => {
     assertCols(editor, 'default', 5);
     assertCols(editor, 'forecolor', 5);
     assertCols(editor, 'hilitecolor', 5);
+  });
+  it('TBA: getCurrentColor should use raw color styles', () => {
+    const colorSettings = [
+      '#1abc9c', 'Black',
+      'hsl(145, 63.2%, 49.0%)', 'Black',
+      'var(--red)', 'Red',
+    ];
+
+    const mappedColors: ExpectedColor[] = [
+      {
+        text: 'Black',
+        value: '#1abc9c',
+        type: 'choiceitem'
+      },
+      {
+        text: 'Black',
+        value: 'hsl(145, 63.2%, 49.0%)',
+        type: 'choiceitem'
+      },
+      {
+        text: 'Red',
+        value: 'var(--red)',
+        type: 'choiceitem'
+      },
+    ];
+
+    const calculatedColors = Options.mapColorsRaw(colorSettings);
+
+    Arr.each(mappedColors, (item, i) => {
+      assert.equal(calculatedColors[i].text, item.text, 'Color text should match');
+      assert.equal(calculatedColors[i].value, item.value, 'Color value should match');
+      assert.equal(calculatedColors[i].type, item.type, 'Color type should match');
+    });
   });
 });

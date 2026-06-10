@@ -1,7 +1,7 @@
-import { Dialog } from '@ephox/bridge';
+import type { Dialog } from '@ephox/bridge';
 
-import Editor from 'tinymce/core/api/Editor';
-import { WindowParams } from 'tinymce/core/api/WindowManager';
+import type Editor from 'tinymce/core/api/Editor';
+import type { WindowParams } from 'tinymce/core/api/WindowManager';
 
 const dummyDialog: Dialog.DialogSpec<{}> = {
   title: 'Dummy dialog',

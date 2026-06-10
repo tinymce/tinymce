@@ -19,8 +19,9 @@
 import { RgbaColour, Transformations } from '@ephox/acid';
 import { Obj, Unicode } from '@ephox/katamari';
 
-import { URLConverter } from '../OptionTypes';
-import Schema, { SchemaMap } from './Schema';
+import type { URLConverter } from '../OptionTypes';
+
+import type { SchemaMap, default as Schema } from './Schema';
 
 export type StyleMap = Record<string, string | number>;
 
@@ -58,6 +59,7 @@ const Styles = (settings: StylesSettings = {}, schema?: Schema): Styles => {
     encodingLookup[invisibleChar + i] = encodingItems[i];
   }
 
+  // eslint-disable-next-line consistent-this
   const self: Styles = {
     /**
      * Parses the specified style value into an object collection. This parser will also
@@ -283,7 +285,10 @@ const Styles = (settings: StylesSettings = {}, schema?: Schema): Styles => {
         compress('border', '-style');
         compress('padding', '');
         compress('margin', '');
-        compress2('border', 'border-width', 'border-style', 'border-color');
+
+        if (!/(#.* rgb(a?)\(.*)|(rgb(a?)\(.*\) )/.test(styles['border-color'])) {
+          compress2('border', 'border-width', 'border-style', 'border-color');
+        }
 
         // Remove pointless border, IE produces these
         if (styles.border === 'medium none') {

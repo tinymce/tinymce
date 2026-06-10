@@ -1,4 +1,4 @@
-import { UiFinder } from '@ephox/agar';
+import { Keys, UiFinder } from '@ephox/agar';
 import { afterEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
@@ -6,8 +6,8 @@ import { Attribute, Classes, Css, Html, SelectorFind, SugarBody, SugarDocument, 
 import { McEditor, TinyContentActions, TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
-import { NotificationApi } from 'tinymce/core/api/NotificationManager';
+import type Editor from 'tinymce/core/api/Editor';
+import type { NotificationApi } from 'tinymce/core/api/NotificationManager';
 import FullscreenPlugin from 'tinymce/plugins/fullscreen/Plugin';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 
@@ -130,6 +130,7 @@ describe('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', () => {
       const hook = tester.setup<Editor>({
         plugins: 'fullscreen link',
         base_url: '/project/tinymce/js/tinymce',
+        toolbar: 'fullscreen',
         setup: (editor: Editor) => {
           firedEvents = [];
           editor.on('FullscreenStateChanged ResizeEditor', (e: any) => {
@@ -205,6 +206,25 @@ describe('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', () => {
         notification.close();
         assertApiAndEvents(editor, false);
         assertPageState(editor, false);
+      });
+
+      const assertButtonNativelyEnabled = (editor: Editor, selector: string) => UiFinder.exists(TinyDom.container(editor), `[data-mce-name="${selector}"]:not([disabled="disabled"])`);
+      const pAssertMenuItemEnabled = (editor: Editor, menuItemLabel: string) => TinyUiActions.pWaitForUi(editor, `[role="menuitemcheckbox"][aria-label="${menuItemLabel}"][aria-disabled="false"]`);
+
+      it('TINY-11264: Fullscreen toolbar button and menu item should be enabled at all time', async () => {
+        const editor = hook.editor();
+        assertButtonNativelyEnabled(editor, 'fullscreen');
+        TinyUiActions.clickOnMenu(editor, '.tox-mbtn:contains("View")');
+        await pAssertMenuItemEnabled(editor, 'Fullscreen');
+        TinyUiActions.keystroke(editor, Keys.escape());
+
+        editor.mode.set('readonly');
+        assertButtonNativelyEnabled(editor, 'fullscreen');
+        TinyUiActions.clickOnMenu(editor, '.tox-mbtn:contains("View")');
+        await pAssertMenuItemEnabled(editor, 'Fullscreen');
+        TinyUiActions.keystroke(editor, Keys.escape());
+
+        editor.mode.set('design');
       });
     });
 

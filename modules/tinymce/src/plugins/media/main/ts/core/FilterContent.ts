@@ -1,12 +1,84 @@
-import { Arr, Obj } from '@ephox/katamari';
+import { Arr, Obj, Optional, Type } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
-import AstNode from 'tinymce/core/api/html/Node';
+import type Editor from 'tinymce/core/api/Editor';
+import type AstNode from 'tinymce/core/api/html/Node';
 
 import * as Nodes from './Nodes';
 import * as Sanitize from './Sanitize';
 
 declare let unescape: any;
+
+const buildMediaElement = (editor: Editor, node: AstNode) => {
+  const realElmName = node.attr('data-mce-object') as string;
+  const element = document.createElement(realElmName);
+
+  // Add width/height to everything but audio
+  if (realElmName !== 'audio') {
+    const className = node.attr('class');
+    const firstChild = node.firstChild;
+
+    if (className && className.indexOf('mce-preview-object') !== -1 && firstChild) {
+      const width = firstChild.attr('width');
+      const height = firstChild.attr('height');
+
+      if (Type.isString(width)) {
+        element.setAttribute('width', width);
+      }
+
+      if (Type.isString(height)) {
+        element.setAttribute('height', height);
+      }
+    } else {
+      const width = node.attr('width');
+      const height = node.attr('height');
+
+      if (Type.isString(width)) {
+        element.setAttribute('width', width);
+      }
+
+      if (Type.isString(height)) {
+        element.setAttribute('height', height);
+      }
+    }
+  }
+
+  const style = node.attr('style');
+  if (Type.isString(style)) {
+    element.setAttribute('style', style);
+  }
+
+  // Unprefix all placeholder attributes
+  const attribs = node.attributes ?? [];
+  let ai = attribs.length;
+  while (ai--) {
+    const attrName = attribs[ai].name;
+
+    if (attrName.indexOf('data-mce-p-') === 0) {
+      element.setAttribute(attrName.substr(11), attribs[ai].value);
+    }
+  }
+
+  // Inject innerhtml
+  const innerHtml = node.attr('data-mce-html');
+  if (Type.isString(innerHtml)) {
+    element.innerHTML = unescape(innerHtml);
+  } else {
+    element.innerHTML = '\u00a0';
+  }
+
+  const fragment = Sanitize.parseAndSanitize(editor, element.outerHTML);
+  const newElement = fragment.getAll(realElmName)[0];
+
+  if (Type.isNonNullable(newElement)) {
+    if (!Type.isString(innerHtml)) {
+      newElement.empty();
+    }
+
+    return Optional.some(newElement);
+  } else {
+    return Optional.none();
+  }
+};
 
 const setup = (editor: Editor): void => {
   editor.on('PreInit', () => {
@@ -34,7 +106,7 @@ const setup = (editor: Editor): void => {
     parser.addNodeFilter('iframe,video,audio,object,embed', Nodes.placeHolderConverter(editor));
 
     // Replaces placeholder images with real elements for video, object, iframe etc
-    serializer.addAttributeFilter('data-mce-object', (nodes, name) => {
+    serializer.addAttributeFilter('data-mce-object', (nodes) => {
       let i = nodes.length;
       while (i--) {
         const node = nodes[i];
@@ -42,48 +114,10 @@ const setup = (editor: Editor): void => {
           continue;
         }
 
-        const realElmName = node.attr(name) as string;
-        const realElm = new AstNode(realElmName, 1);
-
-        // Add width/height to everything but audio
-        if (realElmName !== 'audio') {
-          const className = node.attr('class');
-          if (className && className.indexOf('mce-preview-object') !== -1 && node.firstChild) {
-            realElm.attr({
-              width: node.firstChild.attr('width'),
-              height: node.firstChild.attr('height')
-            });
-          } else {
-            realElm.attr({
-              width: node.attr('width'),
-              height: node.attr('height')
-            });
-          }
-        }
-
-        realElm.attr({
-          style: node.attr('style')
-        });
-
-        // Unprefix all placeholder attributes
-        const attribs = node.attributes ?? [];
-        let ai = attribs.length;
-        while (ai--) {
-          const attrName = attribs[ai].name;
-
-          if (attrName.indexOf('data-mce-p-') === 0) {
-            realElm.attr(attrName.substr(11), attribs[ai].value);
-          }
-        }
-
-        // Inject innerhtml
-        const innerHtml = node.attr('data-mce-html');
-        if (innerHtml) {
-          const fragment = Sanitize.parseAndSanitize(editor, realElmName, unescape(innerHtml));
-          Arr.each(fragment.children(), (child) => realElm.append(child));
-        }
-
-        node.replace(realElm);
+        buildMediaElement(editor, node).fold(
+          () => node.remove(),
+          (realElm) => node.replace(realElm)
+        );
       }
     });
   });

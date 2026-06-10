@@ -1,9 +1,11 @@
 import { Type } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
-import { EditorOptions } from 'tinymce/core/api/OptionTypes';
+import type Editor from 'tinymce/core/api/Editor';
+import type { EditorOptions } from 'tinymce/core/api/OptionTypes';
+import type { UploadFileData, UploadHandler } from 'tinymce/core/file/Uploader';
 
-import { UserListItem } from '../ui/DialogTypes';
+import type { UserListItem } from '../ui/DialogTypes';
+
 import { AssumeExternalTargets } from './Types';
 
 type UserLinkListCallback = (callback: (items: UserListItem[]) => void) => void;
@@ -82,6 +84,19 @@ const register = (editor: Editor): void => {
     processor: 'boolean',
     default: false
   });
+
+  registerOption('link_attributes_postprocess', {
+    processor: 'function',
+  });
+
+  registerOption('files_upload_handler', {
+    processor: 'function'
+  });
+
+  registerOption('link_uploadtab', {
+    processor: 'boolean',
+    default: true
+  });
 };
 
 const assumeExternalTargets = option<AssumeExternalTargets>('link_assume_external_targets');
@@ -95,6 +110,16 @@ const getLinkClassList = option<UserListItem[]>('link_class_list');
 const shouldShowLinkTitle = option<boolean>('link_title');
 const allowUnsafeLinkTarget = option<boolean>('allow_unsafe_link_target');
 const useQuickLink = option<boolean>('link_quicklink');
+const attributesPostProcess = option<(attributes: Record<string, string | null | undefined>) => void>('link_attributes_postprocess');
+const getFilesUploadHandler = option<UploadHandler<UploadFileData>>('files_upload_handler');
+const hasLinkUploadtab = option<boolean>('link_uploadtab');
+const getDocumentsFileTypes = option('documents_file_types');
+
+const hasFilesUploadHandler = (editor: Editor): boolean =>
+  Type.isNonNullable(editor.options.get('files_upload_handler'));
+
+const hasDocumentsFileTypes = (editor: Editor): boolean =>
+  Type.isNonNullable(editor.options.get('documents_file_types'));
 
 export {
   register,
@@ -105,8 +130,14 @@ export {
   getTargetList,
   getRelList,
   getLinkClassList,
+  hasFilesUploadHandler,
+  hasDocumentsFileTypes,
+  getFilesUploadHandler,
+  hasLinkUploadtab,
   shouldShowLinkTitle,
   allowUnsafeLinkTarget,
   useQuickLink,
-  getDefaultLinkProtocol
+  getDefaultLinkProtocol,
+  getDocumentsFileTypes,
+  attributesPostProcess
 };

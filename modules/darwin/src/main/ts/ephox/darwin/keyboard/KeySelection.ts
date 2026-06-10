@@ -1,9 +1,9 @@
 import { Optional } from '@ephox/katamari';
-import { Awareness, Compare, SelectorFind, SugarElement } from '@ephox/sugar';
+import { Awareness, Compare, SelectorFind, type SugarElement } from '@ephox/sugar';
 
-import { SelectionAnnotation } from '../api/SelectionAnnotation';
+import type { SelectionAnnotation } from '../api/SelectionAnnotation';
 import * as CellSelection from '../selection/CellSelection';
-import { IdentifiedExt } from '../selection/Identified';
+import type { IdentifiedExt } from '../selection/Identified';
 import { Response } from '../selection/Response';
 import * as Util from '../selection/Util';
 

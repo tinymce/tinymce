@@ -1,6 +1,6 @@
 import { Insert, SelectorFind, SugarBody, SugarElement, Value } from '@ephox/sugar';
 
-import { TinyMCE } from 'tinymce/core/api/PublicApi';
+import type { TinyMCE } from 'tinymce/core/api/PublicApi';
 
 declare let tinymce: TinyMCE;
 
@@ -17,6 +17,7 @@ export default (init: ShadowRootInit): void => {
 
   tinymce.init({
     target: node.dom,
+    license_key: 'gpl',
     plugins: 'advlist charmap code codesample emoticons fullscreen image link lists media preview searchreplace table wordcount'
   });
 };

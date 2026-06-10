@@ -3,7 +3,7 @@ import { Fun, Optional } from '@ephox/katamari';
 import { assert } from 'chai';
 
 import { PlatformDetection } from 'ephox/sand/core/PlatformDetection';
-import { UserAgentData, UserAgentDataBrand } from 'ephox/sand/detect/UaData';
+import type { UserAgentData, UserAgentDataBrand } from 'ephox/sand/detect/UaData';
 import * as PlatformQuery from 'ephox/sand/test/PlatformQuery';
 
 type PlatformQuery = typeof PlatformQuery;

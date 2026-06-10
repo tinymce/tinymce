@@ -1,8 +1,10 @@
 import { Cell, Fun } from '@ephox/katamari';
 
+import { registerEventsAndFilters } from '../mode/Disabled';
 import { registerMode, setMode } from '../mode/Mode';
-import { isReadOnly, registerReadOnlyContentFilters, registerReadOnlySelectionBlockers } from '../mode/Readonly';
-import Editor from './Editor';
+import { isReadOnly, registerReadOnlyInputBlockers } from '../mode/Readonly';
+
+import type Editor from './Editor';
 
 /**
  * TinyMCE Editor Mode API.
@@ -83,8 +85,8 @@ export const create = (editor: Editor): EditorMode => {
     }
   });
 
-  registerReadOnlyContentFilters(editor);
-  registerReadOnlySelectionBlockers(editor);
+  registerReadOnlyInputBlockers(editor);
+  registerEventsAndFilters(editor);
 
   return {
     isReadOnly: () => isReadOnly(editor),

@@ -1,6 +1,7 @@
 import { Arr } from '@ephox/katamari';
 
 import { SugarElement } from '../node/SugarElement';
+
 import * as DomEvent from './DomEvent';
 
 const documentReady = (f: () => void): void => {
@@ -50,7 +51,28 @@ const image = (image: SugarElement<HTMLImageElement>): Promise<SugarElement<HTML
   }
 });
 
+const video = (videoEl: SugarElement<HTMLVideoElement>): Promise<SugarElement<HTMLVideoElement>> => new Promise((resolve) => {
+  const loaded = () => {
+    destroy();
+    resolve(videoEl);
+  };
+  const listeners = [
+    DomEvent.bind(videoEl, 'loadeddata', loaded),
+    DomEvent.bind(videoEl, 'error', () => {
+      destroy();
+      throw (new Error('Unable to load data from video: ' + videoEl.dom.src));
+    }),
+  ];
+
+  const destroy = () => Arr.each(listeners, (l) => l.unbind());
+
+  if (videoEl.dom.readyState >= videoEl.dom.HAVE_ENOUGH_DATA) {
+    loaded();
+  }
+});
+
 export {
   documentReady as document,
-  image
+  image,
+  video
 };

@@ -1,6 +1,6 @@
 import { Fun } from '@ephox/katamari';
 
-import { TinyMCE } from 'tinymce/core/api/PublicApi';
+import type { TinyMCE } from 'tinymce/core/api/PublicApi';
 
 declare let tinymce: TinyMCE;
 
@@ -14,6 +14,7 @@ export default (): void => {
   tinymce.init({
     skin_url: '../../../../js/tinymce/skins/ui/oxide',
     selector: 'div.tinymce',
+    license_key: 'gpl',
     toolbar: 'annotate-alpha get-all-alpha remove-all-alpha remove-alpha',
     plugins: [ ],
 

@@ -1,25 +1,25 @@
 import { FieldPresence, FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
-import { Arr, Optional, Result } from '@ephox/katamari';
+import { Arr, type Optional, type Result } from '@ephox/katamari';
 
-import { AlloyComponent } from '../api/component/ComponentApi';
-import { ComponentDetail, SimpleOrSketchSpec, StructDomSchema } from '../api/component/SpecTypes';
-import { AlloyEventRecord } from '../api/events/AlloyEvents';
+import type { AlloyComponent } from '../api/component/ComponentApi';
+import type { ComponentDetail, SimpleOrSketchSpec, StructDomSchema } from '../api/component/SpecTypes';
+import type { AlloyEventRecord } from '../api/events/AlloyEvents';
 import * as NativeEvents from '../api/events/NativeEvents';
 import * as SystemEvents from '../api/events/SystemEvents';
-import { DomDefinitionDetail } from '../dom/DomDefinition';
-import { DomModification, nu as NuModification } from '../dom/DomModification';
+import type { DomDefinitionDetail } from '../dom/DomDefinition';
+import { type DomModification, nu as NuModification } from '../dom/DomModification';
 
 // NB: Tsc requires AlloyEventHandler to be imported here.
 export interface CustomDetail<A> {
-  dom: StructDomSchema;
+  'dom': StructDomSchema;
   // By this stage, the components are built.
-  components: AlloyComponent[];
-  uid: string;
-  events: AlloyEventRecord;
-  apis: A;
-  eventOrder: Record<string, string[]>;
-  domModification: Optional<DomModification>;
-  originalSpec: SimpleOrSketchSpec;
+  'components': AlloyComponent[];
+  'uid': string;
+  'events': AlloyEventRecord;
+  'apis': A;
+  'eventOrder': Record<string, string[]>;
+  'domModification': Optional<DomModification>;
+  'originalSpec': SimpleOrSketchSpec;
   'debug.sketcher': string;
 }
 

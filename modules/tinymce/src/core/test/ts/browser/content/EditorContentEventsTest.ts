@@ -3,9 +3,10 @@ import { Arr, Singleton } from '@ephox/katamari';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
-import { SetContentEvent, GetContentEvent } from 'tinymce/core/api/EventTypes';
-import { ContentFormat } from 'tinymce/core/content/ContentTypes';
+import type Editor from 'tinymce/core/api/Editor';
+import type { SetContentEvent, GetContentEvent } from 'tinymce/core/api/EventTypes';
+import type { ContentFormat } from 'tinymce/core/content/ContentTypes';
+import * as SetSelectionContent from 'tinymce/core/selection/SetSelectionContent';
 
 describe('browser.tinymce.core.content.EditorContentEventsTest', () => {
   const initialContent = '<p>Some initial content</p>';
@@ -99,7 +100,7 @@ describe('browser.tinymce.core.content.EditorContentEventsTest', () => {
 
     clearEvents();
     preventSetContent();
-    editor.selection.setContent('New content');
+    SetSelectionContent.setContentInternal(editor, 'New content');
     assertEvents([ 'beforesetcontent', 'setcontent' ]);
     TinyAssertions.assertContent(editor, initialContent);
 
@@ -120,7 +121,7 @@ describe('browser.tinymce.core.content.EditorContentEventsTest', () => {
 
     clearEvents();
     TinySelections.select(editor, 'p', [ 0 ]);
-    editor.selection.setContent('Selection content', { no_events: true });
+    SetSelectionContent.setContentInternal(editor, 'Selection content', { no_events: true });
     assertEvents([]);
     TinyAssertions.assertContent(editor, '<p>Selection content</p>');
   });
@@ -149,5 +150,23 @@ describe('browser.tinymce.core.content.EditorContentEventsTest', () => {
       assert.equal(lastEvent.hello, data.hello);
       assert.equal(lastEvent.test, data.test);
     });
+  });
+
+  it('TINY-12146: reset content dispatches a SetContent event with initial true', () => {
+    const editor = hook.editor();
+    const lastEventState = Singleton.value<SetContentEvent>();
+    editor.once('SetContent', (e) => lastEventState.set(e));
+    editor.resetContent();
+    const lastEvent = lastEventState.get().getOrDie('Should be set');
+    assert.equal(lastEvent.initial, true);
+  });
+
+  it('TINY-12146: reset content with content dispatches a SetContent event with initial true', () => {
+    const editor = hook.editor();
+    const lastEventState = Singleton.value<SetContentEvent>();
+    editor.once('SetContent', (e) => lastEventState.set(e));
+    editor.resetContent('<p>hello</p>');
+    const lastEvent = lastEventState.get().getOrDie('Should be set');
+    assert.equal(lastEvent.initial, true);
   });
 });

@@ -1,10 +1,10 @@
-import { ApproxStructure, Assertions, FocusTools, Keys, StructAssert, UiControls, UiFinder } from '@ephox/agar';
+import { ApproxStructure, Assertions, FocusTools, Keys, type StructAssert, UiControls, UiFinder } from '@ephox/agar';
 import { describe, it, before, after } from '@ephox/bedrock-client';
 import { Attribute, SugarBody, SugarDocument } from '@ephox/sugar';
 import { TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/link/Plugin';
 
 import { TestLinkUi } from '../module/TestLinkUi';
@@ -25,13 +25,13 @@ describe('browser.tinymce.plugins.link.DialogFlowTest', () => {
   });
 
   const pAssertInputValue = async (editor: Editor, expected: string, group: string) => {
-    const input = await TestLinkUi.pFindInDialog<HTMLInputElement>(editor, 'label:contains("' + group + '") + input');
+    const input = await TestLinkUi.pFindTargetByLabelInDialog<HTMLInputElement>(editor, group);
     const value = UiControls.getValue(input);
     assert.equal(value, expected, 'Checking input value');
   };
 
   const pAssertUrlStructure = async (editor: Editor, expected: ApproxStructure.Builder<StructAssert>) => {
-    const input = await TestLinkUi.pFindInDialog(editor, 'label:contains("URL") + .tox-form__controls-h-stack input');
+    const input = await TestLinkUi.pFindTargetByLabelInDialog(editor, 'URL');
     Assertions.assertStructure(
       'Checking content of url input',
       ApproxStructure.build(expected),
@@ -69,7 +69,7 @@ describe('browser.tinymce.plugins.link.DialogFlowTest', () => {
     editor.setContent('<p><a name="anchor1"></a>Our Anchor1</p><p><a name="anchor2"></a>Our Anchor2</p>');
 
     await TestLinkUi.pOpenLinkDialog(editor);
-    await TestLinkUi.pSetListBoxItem(editor, 'Anchor', 'anchor2');
+    await TestLinkUi.pSetListBoxItem(editor, 'Anchors', 'anchor2');
     TestLinkUi.assertDialogContents({
       href: '#anchor2',
       text: 'anchor2',
@@ -78,7 +78,7 @@ describe('browser.tinymce.plugins.link.DialogFlowTest', () => {
       target: ''
     });
 
-    await TestLinkUi.pSetListBoxItem(editor, 'Anchor', 'anchor1');
+    await TestLinkUi.pSetListBoxItem(editor, 'Anchors', 'anchor1');
     TestLinkUi.assertDialogContents({
       href: '#anchor1',
       text: 'anchor1',
@@ -89,7 +89,7 @@ describe('browser.tinymce.plugins.link.DialogFlowTest', () => {
 
     // Change the text ...so text won't change, but href will still
     await TestLinkUi.pSetInputFieldValue(editor, 'Text to display', 'Other text');
-    await TestLinkUi.pSetListBoxItem(editor, 'Anchor', 'anchor2');
+    await TestLinkUi.pSetListBoxItem(editor, 'Anchors', 'anchor2');
     TestLinkUi.assertDialogContents({
       href: '#anchor2',
       text: 'Other text',

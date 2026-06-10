@@ -1,15 +1,15 @@
 import { FieldSchema, StructureSchema } from '@ephox/boulder';
-import { Fun, Optional } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import { Fun, type Optional } from '@ephox/katamari';
+import type { SugarElement } from '@ephox/sugar';
 
-import { NamedConfiguredBehaviour } from '../api/behaviour/Behaviour';
+import type { NamedConfiguredBehaviour } from '../api/behaviour/Behaviour';
 import { Receiving } from '../api/behaviour/Receiving';
 import { Sandboxing } from '../api/behaviour/Sandboxing';
-import { AlloyComponent } from '../api/component/ComponentApi';
+import type { AlloyComponent } from '../api/component/ComponentApi';
 import * as AlloyTriggers from '../api/events/AlloyTriggers';
 import * as SystemEvents from '../api/events/SystemEvents';
 import * as Channels from '../api/messages/Channels';
-import { ReceivingChannelSpec, ReceivingConfig, ReceivingConfigSpec } from '../behaviour/receiving/ReceivingTypes';
+import type { ReceivingChannelSpec, ReceivingConfig, ReceivingConfigSpec } from '../behaviour/receiving/ReceivingTypes';
 
 interface DismissalReceivingDetail {
   isExtraPart: (sandbox: AlloyComponent, target: SugarElement<Node>) => boolean;

@@ -1,12 +1,13 @@
 import { Checked, SelectorFind, SugarBody, Value } from '@ephox/sugar';
 
-import { Editor, TinyMCE } from 'tinymce/core/api/PublicApi';
+import type { Editor, TinyMCE } from 'tinymce/core/api/PublicApi';
 
 declare let tinymce: TinyMCE;
 
 export default (): void => {
   tinymce.init({
     selector: 'textarea#editor',
+    license_key: 'gpl',
     skin_url: '../../../../js/tinymce/skins/ui/oxide',
     content_css: '../../../../js/tinymce/skins/content/default/content.css',
     image_caption: true,
@@ -15,6 +16,7 @@ export default (): void => {
       'searchreplace', 'wordcount', 'visualblocks', 'visualchars', 'code', 'fullscreen', 'insertdatetime', 'media', 'nonbreaking',
       'save', 'table', 'directionality', 'emoticons', 'importcss', 'codesample', 'help'
     ],
+    sandbox_iframes: false,
     add_unload_trigger: false,
     autosave_ask_before_unload: false,
     toolbar: 'fontsize fontfamily insertfile undo redo | styles | bold italic | alignleft aligncenter alignright alignjustify | ' +

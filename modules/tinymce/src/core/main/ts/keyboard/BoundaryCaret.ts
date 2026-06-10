@@ -1,4 +1,4 @@
-import { Cell, Optional } from '@ephox/katamari';
+import { type Cell, Optional } from '@ephox/katamari';
 
 import * as CaretContainer from '../caret/CaretContainer';
 import * as CaretContainerInline from '../caret/CaretContainerInline';
@@ -6,7 +6,8 @@ import * as CaretContainerRemove from '../caret/CaretContainerRemove';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import * as NodeType from '../dom/NodeType';
-import { LocationAdt } from './BoundaryLocation';
+
+import type { LocationAdt } from './BoundaryLocation';
 
 const insertInlinePos = (pos: CaretPosition, before: boolean) => {
   if (NodeType.isText(pos.container())) {

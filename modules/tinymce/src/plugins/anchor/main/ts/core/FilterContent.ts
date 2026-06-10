@@ -1,5 +1,5 @@
-import Editor from 'tinymce/core/api/Editor';
-import AstNode from 'tinymce/core/api/html/Node';
+import type Editor from 'tinymce/core/api/Editor';
+import type AstNode from 'tinymce/core/api/html/Node';
 
 import { isEmptyString } from './Utils';
 

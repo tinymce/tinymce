@@ -2,14 +2,14 @@ import { Fun } from '@ephox/katamari';
 import { Insert, SugarElement } from '@ephox/sugar';
 
 import DomTreeWalker from '../api/dom/TreeWalker';
-import Editor from '../api/Editor';
-import Schema from '../api/html/Schema';
-import { EditorEvent } from '../api/util/EventDispatcher';
+import type Editor from '../api/Editor';
+import type Schema from '../api/html/Schema';
+import type { EditorEvent } from '../api/util/EventDispatcher';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import * as NodeType from '../dom/NodeType';
 import * as ScrollIntoView from '../dom/ScrollIntoView';
-import { LocationAdt } from '../keyboard/BoundaryLocation';
+import type { LocationAdt } from '../keyboard/BoundaryLocation';
 import * as BoundaryLocation from '../keyboard/BoundaryLocation';
 import * as InlineUtils from '../keyboard/InlineUtils';
 import * as NormalizeRange from '../selection/NormalizeRange';

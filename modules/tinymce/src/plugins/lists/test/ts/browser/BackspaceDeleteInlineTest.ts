@@ -3,7 +3,7 @@ import { Html, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/lists/Plugin';
 
 describe('browser.tinymce.plugins.lists.BackspaceDeleteInlineTest', () => {

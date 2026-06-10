@@ -1,10 +1,10 @@
 import { Waiter } from '@ephox/agar';
 import { Type } from '@ephox/katamari';
-import { Height, SugarElement, SugarLocation, Width } from '@ephox/sugar';
+import { Height, type SugarElement, SugarLocation, Width } from '@ephox/sugar';
 import { TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import { ToolbarMode } from 'tinymce/themes/silver/api/Options';
 
 import { pCloseMore, pOpenMore } from './MenuUtils';

@@ -1,7 +1,7 @@
 import { Optional } from '@ephox/katamari';
-import { Compare, SimRange, SimSelection, SugarElement, SugarNode, SugarText, Traverse } from '@ephox/sugar';
+import { Compare, type SimRange, SimSelection, SugarElement, SugarNode, SugarText, Traverse } from '@ephox/sugar';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import Env from '../api/Env';
 import * as NodeType from '../dom/NodeType';
 
@@ -63,7 +63,7 @@ const bookmarkToNativeRng = (bookmark: SimRange): Optional<Range> => {
     rng.setStart(bookmark.start.dom, bookmark.soffset);
     rng.setEnd(bookmark.finish.dom, bookmark.foffset);
     return Optional.some(rng);
-  } catch (_) {
+  } catch {
     return Optional.none();
   }
 };

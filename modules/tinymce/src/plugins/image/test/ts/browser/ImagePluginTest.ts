@@ -1,11 +1,11 @@
-import { Cursors } from '@ephox/agar';
+import type { Cursors } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/image/Plugin';
 
-import { advancedTabSelectors, assertInputValue, fillActiveDialog, ImageDialogData } from '../module/Helpers';
+import { advancedTabLabels, assertInputValue, fillActiveDialog, type ImageDialogData } from '../module/Helpers';
 
 describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -131,8 +131,8 @@ describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
       hook.editor(),
       'margin-left: 15px; margin-right: 15px;',
       () => {
-        assertInputValue(advancedTabSelectors.vspace, '');
-        assertInputValue(advancedTabSelectors.hspace, '15');
+        assertInputValue(advancedTabLabels.vspace, '');
+        assertInputValue(advancedTabLabels.hspace, '15');
       }
     )
   );
@@ -142,8 +142,8 @@ describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
       hook.editor(),
       'margin-top: 15px; margin-bottom: 15px;',
       () => {
-        assertInputValue(advancedTabSelectors.vspace, '15');
-        assertInputValue(advancedTabSelectors.hspace, '');
+        assertInputValue(advancedTabLabels.vspace, '15');
+        assertInputValue(advancedTabLabels.hspace, '');
       }
     )
   );
@@ -153,8 +153,8 @@ describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
       hook.editor(),
       'margin: 5px;',
       () => {
-        assertInputValue(advancedTabSelectors.vspace, '5');
-        assertInputValue(advancedTabSelectors.hspace, '5');
+        assertInputValue(advancedTabLabels.vspace, '5');
+        assertInputValue(advancedTabLabels.hspace, '5');
       }
     )
   );
@@ -164,8 +164,8 @@ describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
       hook.editor(),
       'margin: 5px 10px;',
       () => {
-        assertInputValue(advancedTabSelectors.vspace, '5');
-        assertInputValue(advancedTabSelectors.hspace, '10');
+        assertInputValue(advancedTabLabels.vspace, '5');
+        assertInputValue(advancedTabLabels.hspace, '10');
       }
     )
   );
@@ -175,8 +175,8 @@ describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
       hook.editor(),
       'margin: 5px 10px 15px;',
       () => {
-        assertInputValue(advancedTabSelectors.vspace, '');
-        assertInputValue(advancedTabSelectors.hspace, '10');
+        assertInputValue(advancedTabLabels.vspace, '');
+        assertInputValue(advancedTabLabels.hspace, '10');
       }
     )
   );
@@ -186,8 +186,8 @@ describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
       hook.editor(),
       'margin: 5px 10px 15px 20px;',
       () => {
-        assertInputValue(advancedTabSelectors.vspace, '');
-        assertInputValue(advancedTabSelectors.hspace, '');
+        assertInputValue(advancedTabLabels.vspace, '');
+        assertInputValue(advancedTabLabels.hspace, '');
       }
     )
   );
@@ -197,8 +197,8 @@ describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
       hook.editor(),
       'margin: 5px 10px 15px 20px; margin-top: 15px;',
       () => {
-        assertInputValue(advancedTabSelectors.vspace, '15');
-        assertInputValue(advancedTabSelectors.hspace, '');
+        assertInputValue(advancedTabLabels.vspace, '15');
+        assertInputValue(advancedTabLabels.hspace, '');
       }
     )
   );

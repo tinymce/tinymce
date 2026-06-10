@@ -1,7 +1,7 @@
 import { Fun } from '@ephox/katamari';
 import { Attribute, PredicateExists, SelectorFind, SugarElement, SugarNode } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import * as Options from '../api/Options';
 

@@ -5,8 +5,8 @@ import { Attribute, Height, SelectorFind, SugarBody, SugarDocument, SugarElement
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
-import { Dialog } from 'tinymce/core/api/ui/Ui';
+import type Editor from 'tinymce/core/api/Editor';
+import type { Dialog } from 'tinymce/core/api/ui/Ui';
 import I18n from 'tinymce/core/api/util/I18n';
 
 import * as DialogUtils from '../../module/DialogUtils';

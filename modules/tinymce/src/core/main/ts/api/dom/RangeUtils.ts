@@ -5,10 +5,11 @@ import * as CaretRangeFromPoint from '../../selection/CaretRangeFromPoint';
 import * as NormalizeRange from '../../selection/NormalizeRange';
 import * as RangeCompare from '../../selection/RangeCompare';
 import * as RangeNodes from '../../selection/RangeNodes';
-import { RangeLikeObject } from '../../selection/RangeTypes';
+import type { RangeLikeObject } from '../../selection/RangeTypes';
 import * as RangeWalk from '../../selection/RangeWalk';
 import * as SplitRange from '../../selection/SplitRange';
-import DOMUtils from './DOMUtils';
+
+import type DOMUtils from './DOMUtils';
 
 interface RangeUtils {
   walk: (rng: Range, callback: (nodes: Node[]) => void) => void;
@@ -72,7 +73,7 @@ const RangeUtils = (dom: DOMUtils): RangeUtils => {
    */
   const expand = (rng: Range, options: { type: 'word' } = { type: 'word' }): Range => {
     if (options.type === 'word') {
-      const rangeLike = ExpandRange.expandRng(dom, rng, [{ inline: 'span' }]);
+      const rangeLike = ExpandRange.expandRng(dom, rng, [{ inline: 'span' }], { includeTrailingSpace: false, expandToBlock: false });
       const newRange = dom.createRng();
       newRange.setStart(rangeLike.startContainer, rangeLike.startOffset);
       newRange.setEnd(rangeLike.endContainer, rangeLike.endOffset);

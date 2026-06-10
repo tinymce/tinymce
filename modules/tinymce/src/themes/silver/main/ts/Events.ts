@@ -1,10 +1,10 @@
-import { Attachment, Channels, Gui, SystemEvents } from '@ephox/alloy';
+import { Attachment, Channels, type Gui, SystemEvents } from '@ephox/alloy';
 import { Arr } from '@ephox/katamari';
-import { Compare, DomEvent, EventArgs, SugarDocument, SugarElement, SugarShadowDom } from '@ephox/sugar';
+import { Compare, DomEvent, type EventArgs, SugarDocument, SugarElement, SugarShadowDom } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
-import { AfterProgressStateEvent } from 'tinymce/core/api/EventTypes';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type Editor from 'tinymce/core/api/Editor';
+import type { AfterProgressStateEvent } from 'tinymce/core/api/EventTypes';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 import * as ScrollingContext from './modes/ScrollingContext';
 
@@ -25,6 +25,14 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMotherships: Gui.Gui
     Channels.dismissPopups(),
     { target: evt.target }
   );
+
+  const fireCloseTooltips = (event: Event) => {
+    broadcastOn(Channels.closeTooltips(), {
+      closedTooltip: () => {
+        event.preventDefault();
+      }
+    });
+  };
 
   // Document touch events
   const doc = SugarDocument.getDocument();
@@ -112,6 +120,7 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMotherships: Gui.Gui
     editor.on('ResizeEditor', onEditorResize);
     editor.on('AfterProgressState', onEditorProgress);
     editor.on('DismissPopups', onDismissPopups);
+    editor.on('CloseActiveTooltips', fireCloseTooltips);
 
     Arr.each([ mothership, ...uiMotherships ], (gui) => {
       gui.element.dom.addEventListener('focusin', onFocusIn);
@@ -130,6 +139,7 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMotherships: Gui.Gui
     editor.off('ResizeEditor', onEditorResize);
     editor.off('AfterProgressState', onEditorProgress);
     editor.off('DismissPopups', onDismissPopups);
+    editor.off('CloseActiveTooltips', fireCloseTooltips);
 
     Arr.each([ mothership, ...uiMotherships ], (gui) => {
       gui.element.dom.removeEventListener('focusin', onFocusIn);

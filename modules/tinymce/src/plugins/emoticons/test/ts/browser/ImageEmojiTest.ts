@@ -4,11 +4,9 @@ import { Attribute, SugarBody, SugarDocument, SugarElement } from '@ephox/sugar'
 import { TinyAssertions, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Resource from 'tinymce/core/api/Resource';
 import Plugin from 'tinymce/plugins/emoticons/Plugin';
-
-import { fakeEvent } from '../module/test/Utils';
 
 // TODO TINY-10480: Investigate flaky tests
 describe.skip('browser.tinymce.plugins.emoticons.ImageEmojiTest', () => {
@@ -29,8 +27,7 @@ describe.skip('browser.tinymce.plugins.emoticons.ImageEmojiTest', () => {
     TinyUiActions.clickOnToolbar(editor, 'button');
     await TinyUiActions.pWaitForDialog(editor);
     await FocusTools.pTryOnSelector('Focus should start on input', doc, 'input');
-    const input = FocusTools.setActiveValue(doc, 'dog');
-    fakeEvent(input, 'input');
+    FocusTools.setActiveValue(doc, 'dog');
     await Waiter.pTryUntil(
       'Wait until dog is the first choice (search should filter)',
       () => {

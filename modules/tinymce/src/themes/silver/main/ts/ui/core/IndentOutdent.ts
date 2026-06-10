@@ -1,5 +1,5 @@
-import Editor from 'tinymce/core/api/Editor';
-import { Toolbar } from 'tinymce/core/api/ui/Ui';
+import type Editor from 'tinymce/core/api/Editor';
+import type { Toolbar } from 'tinymce/core/api/ui/Ui';
 
 import { onActionExecCommand, onSetupEditableToggle, onSetupEvent } from './ControlUtils';
 
@@ -19,7 +19,7 @@ const registerButtons = (editor: Editor): void => {
   editor.ui.registry.addButton('indent', {
     tooltip: 'Increase indent',
     icon: 'indent',
-    onSetup: onSetupEditableToggle(editor),
+    onSetup: onSetupEditableToggle(editor, () => editor.queryCommandState('indent')),
     onAction: onActionExecCommand(editor, 'indent')
   });
 };

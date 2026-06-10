@@ -3,10 +3,11 @@ import { context, describe, it } from '@ephox/bedrock-client';
 import { SelectorFind } from '@ephox/sugar';
 import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.themes.silver.editor.header.PromotionTest', () => {
   const promotionSelector = '.tox-promotion';
+  const promotionLinkSelector = '.tox-promotion-link';
 
   context('promotion turned off', () => {
     const hook = TinyHooks.bddSetup<Editor>({
@@ -14,10 +15,10 @@ describe('browser.tinymce.themes.silver.editor.header.PromotionTest', () => {
       promotion: false
     }, []);
 
-    it('TINY-8840: promotion should not be displayed', () => {
+    it('TINY-8840: promotion link should not be displayed', () => {
       const editor = hook.editor();
 
-      UiFinder.notExists(TinyDom.container(editor), promotionSelector);
+      UiFinder.notExists(TinyDom.container(editor), promotionLinkSelector);
     });
   });
 

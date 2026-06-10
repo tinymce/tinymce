@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Mouse, Waiter } from '@ephox/agar';
-import { AlloyComponent, GuiFactory, TestHelpers } from '@ephox/alloy';
+import { type AlloyComponent, GuiFactory } from '@ephox/alloy';
 import { afterEach, describe, it } from '@ephox/bedrock-client';
-import { Menu, Toolbar } from '@ephox/bridge';
+import type { Menu, Toolbar } from '@ephox/bridge';
 import { Cell, Fun, Optional } from '@ephox/katamari';
 import { Attribute, Class, SelectorFind } from '@ephox/sugar';
 import { assert } from 'chai';
@@ -9,6 +9,7 @@ import { assert } from 'chai';
 import { renderMenuButton } from 'tinymce/themes/silver/ui/button/MenuButton';
 import { renderSplitButton, renderToolbarButton, renderToolbarToggleButton } from 'tinymce/themes/silver/ui/toolbar/button/ToolbarButtons';
 
+import * as GuiSetup from '../../module/GuiSetup';
 import TestBackstage from '../../module/TestBackstage';
 import * as TestExtras from '../../module/TestExtras';
 
@@ -17,7 +18,7 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
   const shouldActivate = Cell(false);
   const extrasHook = TestExtras.bddSetup();
 
-  const hook = TestHelpers.GuiSetup.bddSetup((store, _doc, _body) => GuiFactory.build({
+  const hook = GuiSetup.bddSetup((store, _doc, _body) => GuiFactory.build({
     dom: {
       tag: 'div'
     },
@@ -29,6 +30,7 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
         },
         components: [
           renderToolbarButton({
+            context: 'any',
             type: 'button',
             shortcut: Optional.none(),
             enabled: true,
@@ -54,6 +56,7 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
         },
         components: [
           renderToolbarToggleButton({
+            context: 'any',
             type: 'togglebutton',
             shortcut: Optional.none(),
             enabled: true,
@@ -80,9 +83,11 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
           classes: [ 'button3-container' ]
         },
         components: [
-          renderSplitButton({
+          ...renderSplitButton({
+            context: 'any',
             type: 'splitbutton',
             tooltip: Optional.some('tooltip'),
+            chevronTooltip: Optional.none(),
             icon: Optional.none(),
             text: Optional.some('button3'),
             columns: 1,
@@ -121,6 +126,8 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
         },
         components: [
           renderMenuButton({
+            context: 'any',
+            buttonType: 'default',
             tooltip: Optional.some('tooltip'),
             icon: Optional.none(),
             text: Optional.some('button4'),
@@ -258,54 +265,28 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
     const store = hook.store();
     store.clear();
 
-    const button3 = getButton('.button3-container .tox-split-button');
+    const button3 = getButton('.button3-container .tox-tbtn:not(.tox-split-button__chevron)');
     Assertions.assertStructure(
       'Checking initial structure',
-      ApproxStructure.build((s, str, arr) => s.element('div', {
-        classes: [ arr.has('tox-split-button') ],
+      ApproxStructure.build((s, str, arr) => s.element('button', {
+        classes: [ arr.has('tox-tbtn') ],
         attrs: {
-          'role': str.is('button'),
-          'aria-label': str.is('tooltip'),
-          'aria-expanded': str.is('false'),
-          'aria-haspopup': str.is('true'),
-          'aria-pressed': str.is('false')
-        },
-        children: [
-          s.element('span', {
-            attrs: {
-              role: str.is('presentation')
-            },
-            classes: [ arr.has('tox-tbtn'), arr.has('tox-tbtn--select') ]
-          }),
-          s.element('span', {
-            attrs: {
-              role: str.is('presentation')
-            },
-            classes: [ arr.has('tox-tbtn'), arr.has('tox-split-button__chevron') ]
-          }),
-          s.element('span', {
-            attrs: {
-              'aria-hidden': str.is('true'),
-              'style': str.contains('display: none;')
-            },
-            children: [
-              s.text(str.is('To open the popup, press Shift+Enter'))
-            ]
-          })
-        ]
+          'type': str.is('button'),
+          'aria-label': str.is('tooltip')
+        }
       })),
       button3.element
     );
 
     // Toggle button
-    Mouse.clickOn(component.element, '.button3-container .tox-split-button .tox-tbtn');
+    Mouse.clickOn(component.element, '.button3-container .tox-tbtn:not(.tox-split-button__chevron)');
     store.assertEq('Store should have action3', [ 'onToggleAction.3' ]);
     store.clear();
     assertSplitButtonDisabledState('Enabled', false, button3);
     assertSplitButtonActiveState('Off', false, button3);
 
     // Menu item selected
-    Mouse.clickOn(component.element, '.button3-container .tox-split-button .tox-split-button__chevron');
+    Mouse.clickOn(component.element, '.button3-container .tox-split-button__chevron');
     await Waiter.pTryUntil('Wait for split button menu item to show',
       () => Mouse.clickOn(body, '.tox-collection .tox-collection__item')
     );
@@ -315,28 +296,28 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
     assertSplitButtonActiveState('Off', true, button3);
 
     shouldActivate.set(true);
-    Mouse.clickOn(component.element, '.button3-container .tox-split-button .tox-tbtn');
+    Mouse.clickOn(component.element, '.button3-container .tox-tbtn:not(.tox-split-button__chevron)');
     store.assertEq('Store should have action3', [ 'onToggleAction.3' ]);
     store.clear();
     assertSplitButtonDisabledState('Disabled', false, button3);
     assertSplitButtonActiveState('Off', true, button3);
 
     shouldActivate.set(false);
-    Mouse.clickOn(component.element, '.button3-container .tox-split-button .tox-tbtn');
+    Mouse.clickOn(component.element, '.button3-container .tox-tbtn:not(.tox-split-button__chevron)');
     store.assertEq('Store should have action3', [ 'onToggleAction.3' ]);
     store.clear();
     assertSplitButtonDisabledState('Disabled', false, button3);
     assertSplitButtonActiveState('Off', false, button3);
 
     shouldDisable.set(true);
-    Mouse.clickOn(component.element, '.button3-container .tox-split-button .tox-tbtn');
+    Mouse.clickOn(component.element, '.button3-container .tox-tbtn:not(.tox-split-button__chevron)');
     store.assertEq('Store should now have action3', [ 'onToggleAction.3' ]);
     store.clear();
     assertSplitButtonDisabledState('Disabled', true, button3);
     assertSplitButtonActiveState('Off still', false, button3);
 
     // TINY-9504: The button is disabled now. Clicking on it should not call onAction callback.
-    Mouse.clickOn(component.element, '.button3-container .tox-split-button .tox-tbtn');
+    Mouse.clickOn(component.element, '.button3-container .tox-tbtn:not(.tox-split-button__chevron)');
     store.assertEq('Store should not have action3', [ ]);
     assertSplitButtonDisabledState('Disabled', true, button3);
     assertSplitButtonActiveState('Off still', false, button3);

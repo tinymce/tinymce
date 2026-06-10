@@ -1,6 +1,6 @@
 import { SimRange, SugarElement } from '@ephox/sugar';
 
-import { Editor } from '../alien/EditorTypes';
+import type { Editor } from '../alien/EditorTypes';
 
 export interface TinyDom {
   readonly fromDom: <T extends Node | Window>(elm: T) => SugarElement<T>;

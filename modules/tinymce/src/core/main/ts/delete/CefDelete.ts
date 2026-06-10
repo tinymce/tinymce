@@ -1,11 +1,12 @@
 import { Arr, Fun, Optional } from '@ephox/katamari';
 import { Remove, SelectorFilter, SugarElement } from '@ephox/sugar';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import CaretPosition from '../caret/CaretPosition';
 import * as CefUtils from '../dom/CefUtils';
 import * as NodeType from '../dom/NodeType';
 import { isCefAtEdgeSelected } from '../keyboard/CefUtils';
+
 import * as CefDeleteAction from './CefDeleteAction';
 import * as DeleteElement from './DeleteElement';
 import * as DeleteUtils from './DeleteUtils';

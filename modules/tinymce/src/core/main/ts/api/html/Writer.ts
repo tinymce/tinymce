@@ -1,5 +1,6 @@
-import { EntityEncoding } from '../OptionTypes';
+import type { EntityEncoding } from '../OptionTypes';
 import Tools from '../util/Tools';
+
 import Entities from './Entities';
 
 /**

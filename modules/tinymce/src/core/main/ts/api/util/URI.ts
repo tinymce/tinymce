@@ -1,6 +1,7 @@
 import { Arr, Type } from '@ephox/katamari';
 
 import Entities from '../html/Entities';
+
 import Tools from './Tools';
 
 /**
@@ -54,7 +55,7 @@ const decodeUri = (encodedUri: string) => {
   try {
     // Might throw malformed URI sequence
     return decodeURIComponent(encodedUri);
-  } catch (ex) {
+  } catch {
     // Fallback to non UTF-8 decoder
     return unescape(encodedUri);
   }

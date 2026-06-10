@@ -1,8 +1,8 @@
-import { FutureResult, Global, Obj, Optional, Result, Strings, Type } from '@ephox/katamari';
+import { Arr, FutureResult, Global, Obj, Optional, Result, Strings, Type } from '@ephox/katamari';
 
 import { DataType } from './DataType';
-import { RequestBody, ResponseBodyDataTypes, ResponseType, ResponseTypeMap, textData } from './HttpData';
-import { HttpError, HttpErrorCode } from './HttpError';
+import { type RequestBody, type ResponseBodyDataTypes, type ResponseType, type ResponseTypeMap, textData } from './HttpData';
+import { type HttpError, HttpErrorCode } from './HttpError';
 import * as HttpTypes from './HttpTypes';
 import * as ResponseError from './ResponseError';
 import * as ResponseSuccess from './ResponseSuccess';
@@ -165,7 +165,10 @@ const fetchDownload = (init: HttpTypes.DownloadHttpRequest): FutureResult<Blob, 
       const reader = body.getReader();
       const process = (result: ReadableStreamReadResult<Uint8Array>) => {
         if (result.done) {
-          resolve(Result.value(new Blob(chunks, { type: mime.getOr('') })));
+          // The Blob constructor does not accept ArrayBufferLike objects and so to keep
+          // TypeScript happy we need to convert the chunks to Uint8Array to be sure.
+          const properChunks = Arr.map(chunks, (chunk) => new Uint8Array(chunk));
+          resolve(Result.value(new Blob(properChunks, { type: mime.getOr('') })));
         } else {
           chunks.push(result.value);
           loaded += result.value.length;

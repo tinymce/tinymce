@@ -7,7 +7,7 @@ import { Keying } from 'ephox/alloy/api/behaviour/Keying';
 import { Positioning } from 'ephox/alloy/api/behaviour/Positioning';
 import { Tooltipping } from 'ephox/alloy/api/behaviour/Tooltipping';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
+import type { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Container } from 'ephox/alloy/api/ui/Container';

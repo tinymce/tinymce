@@ -1,6 +1,6 @@
-import { Universe } from '@ephox/boss';
+import type { Universe } from '@ephox/boss';
 import { Adt, Arr, Optional } from '@ephox/katamari';
-import { Descent, Gather, Spot, SpotPoint, Transition } from '@ephox/phoenix';
+import { Descent, Gather, Spot, type SpotPoint, type Transition } from '@ephox/phoenix';
 
 import * as Structure from '../api/general/Structure';
 

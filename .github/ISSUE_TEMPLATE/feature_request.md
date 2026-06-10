@@ -1,7 +1,7 @@
 ---
 name: "⭐ Feature request"
 about: Propose an improvement or something new.
-labels: type:feature
+labels: ["type: feature"]
 
 ---
 

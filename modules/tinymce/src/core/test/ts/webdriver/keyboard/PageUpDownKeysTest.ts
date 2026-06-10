@@ -3,7 +3,7 @@ import { before, context, describe, it } from '@ephox/bedrock-client';
 import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('webdriver.tinymce.core.keyboard.PageUpDownKeyTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({

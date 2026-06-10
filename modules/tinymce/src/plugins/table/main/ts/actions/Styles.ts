@@ -1,7 +1,7 @@
 import { Type } from '@ephox/katamari';
 
-import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import Editor from 'tinymce/core/api/Editor';
+import type DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import type Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 
 const getTDTHOverallStyle = (dom: DOMUtils, elm: Element, name: string): string | undefined => {

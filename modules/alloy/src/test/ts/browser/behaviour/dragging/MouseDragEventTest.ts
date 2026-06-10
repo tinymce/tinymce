@@ -1,13 +1,13 @@
-import { Assertions, Chain, Mouse, NamedChain, TestStore, UiFinder } from '@ephox/agar';
+import { Assertions, Chain, Mouse, NamedChain, type TestStore, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Result } from '@ephox/katamari';
-import { Css, SugarElement } from '@ephox/sugar';
+import { Css, type SugarElement } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Dragging } from 'ephox/alloy/api/behaviour/Dragging';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 interface StoreMouseDragEventTest {
   readonly left: number;

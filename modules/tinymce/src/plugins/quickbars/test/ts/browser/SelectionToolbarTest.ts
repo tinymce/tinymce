@@ -3,7 +3,7 @@ import { describe, it } from '@ephox/bedrock-client';
 import { SugarBody } from '@ephox/sugar';
 import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import PageBreakPlugin from 'tinymce/plugins/pagebreak/Plugin';
 import QuickbarsPlugin from 'tinymce/plugins/quickbars/Plugin';

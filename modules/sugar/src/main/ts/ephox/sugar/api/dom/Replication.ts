@@ -1,7 +1,8 @@
-import { HTMLElementFullTagNameMap } from '../../alien/DomTypes';
+import type { HTMLElementFullTagNameMap } from '../../alien/DomTypes';
 import { SugarElement } from '../node/SugarElement';
 import * as Attribute from '../properties/Attribute';
 import * as Traverse from '../search/Traverse';
+
 import * as Insert from './Insert';
 import * as InsertAll from './InsertAll';
 import * as Remove from './Remove';

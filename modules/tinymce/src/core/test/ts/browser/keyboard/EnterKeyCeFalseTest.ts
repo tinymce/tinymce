@@ -2,7 +2,7 @@ import { describe, it } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 
 import * as HtmlUtils from '../../module/test/HtmlUtils';
@@ -78,7 +78,7 @@ describe('browser.tinymce.core.keyboard.EnterKeyCeFalseTest', () => {
   it('TINY-9101: Pressing Enter on a cE=false block should do nothing', () => {
     const editor = hook.editor();
     editor.setContent('<p>First</p><p contenteditable="false">Second</p><p>Third</p>');
-    TinySelections.select(editor, 'p:eq(1)', [ ]);
+    TinySelections.select(editor, 'p:nth-child(2)', [ ]);
     pressEnter(editor);
     TinyAssertions.assertContent(editor, '<p>First</p><p contenteditable="false">Second</p><p>Third</p>');
     assert.equal(editor.selection.getNode().nodeName, 'P');

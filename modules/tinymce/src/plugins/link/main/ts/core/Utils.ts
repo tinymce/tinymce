@@ -1,8 +1,8 @@
 import { Obj, Optional, Type } from '@ephox/katamari';
 
-import EditorSelection from 'tinymce/core/api/dom/Selection';
+import type EditorSelection from 'tinymce/core/api/dom/Selection';
 import DomTreeWalker from 'tinymce/core/api/dom/TreeWalker';
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 
 const isAnchor = (elm: Node | null | undefined): elm is HTMLAnchorElement =>
@@ -116,6 +116,17 @@ const isOnlyTextSelected = (editor: Editor): boolean => {
 const isImageFigure = (elm: Element | null): elm is HTMLElement =>
   Type.isNonNullable(elm) && elm.nodeName === 'FIGURE' && /\bimage\b/i.test(elm.className);
 
+const blobToDataUri = (blob: Blob): Promise<string> => new Promise((resolve, reject) => {
+  const reader = new FileReader();
+  reader.onload = () => {
+    resolve(reader.result as string);
+  };
+  reader.onerror = () => {
+    reject(new Error(reader.error?.message ?? 'Failed to convert blob to a data url'));
+  };
+  reader.readAsDataURL(blob);
+});
+
 export {
   isImageFigure,
   isLink,
@@ -129,5 +140,6 @@ export {
   isInAnchor,
   getAnchorText,
   applyRelTargetRules,
-  hasProtocol
+  hasProtocol,
+  blobToDataUri
 };

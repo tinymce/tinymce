@@ -1,6 +1,6 @@
 import { Arr } from '@ephox/katamari';
 
-import { PRange } from '../pattern/Types';
+import type { PRange } from '../pattern/Types';
 
 /** Adjust a PositionArray positions by an offset */
 const translate = <T extends PRange>(parray: T[], offset: number): T[] => {

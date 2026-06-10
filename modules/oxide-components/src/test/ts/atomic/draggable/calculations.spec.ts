@@ -1,0 +1,217 @@
+import { delta, clamp, boundaries, position } from 'oxide-components/components/draggable/internals/Calculations';
+import { describe, expect, it } from 'vitest';
+
+describe('browser.draggable.calculations', () => {
+  describe('delta', () => {
+    it('calculates delta with positive differences', () => {
+      const start = { x: 10, y: 20 };
+      const end = { x: 30, y: 50 };
+      const result = delta(start, end);
+
+      expect(result.deltaX).toBe(20);
+      expect(result.deltaY).toBe(30);
+    });
+
+    it('calculates delta with negative differences', () => {
+      const start = { x: 50, y: 80 };
+      const end = { x: 30, y: 40 };
+      const result = delta(start, end);
+
+      expect(result.deltaX).toBe(-20);
+      expect(result.deltaY).toBe(-40);
+    });
+  });
+
+  describe('clamp', () => {
+    it('clamp', () => {
+      expect(clamp(5, 0, 10)).toBe(5);
+      expect(clamp(15, 0, 10)).toBe(10);
+      expect(clamp(-5, 0, 10)).toBe(0);
+      expect(clamp(0, 0, 10)).toBe(0);
+      expect(clamp(10, 0, 10)).toBe(10);
+    });
+  });
+
+  describe('boundaries', () => {
+    it('should calculate max and min pointer position when left top is in 0, 0', () => {
+      const upperLeftCorner = { x: 0, y: 0 };
+      const bottomRightCorner = { x: 1500, y: 1500 };
+      const allowedOverflow = { horizontal: 0, vertical: 0 };
+      const element = { x: 50, y: 50, width: 300, height: 300 };
+      const mousePosition = { x: 100, y: 100 };
+
+      const calculatedBoundaries = boundaries(element, mousePosition, { upperLeftCorner, bottomRightCorner }, allowedOverflow);
+
+      expect(calculatedBoundaries).toMatchObject({
+        x: {
+          min: 50,
+          max: 1250
+        },
+        y: {
+          min: 50,
+          max: 1250
+        }
+      });
+    });
+
+    it('should calculate max and min pointer when left top is in 500, 500', () => {
+      const upperLeftCorner = { x: 500, y: 500 };
+      const bottomRightCorner = { x: 1500, y: 1500 };
+      const element = { x: 700, y: 600, width: 50, height: 50 };
+      const allowedOverflow = { horizontal: 0, vertical: 0 };
+      const mousePosition = { x: 710, y: 620 };
+      const calculatedBoundaries = boundaries(element, mousePosition, { upperLeftCorner, bottomRightCorner }, allowedOverflow);
+
+      expect(calculatedBoundaries).toMatchObject({
+        x: {
+          min: 510,
+          max: 1460
+        },
+        y: {
+          min: 520,
+          max: 1470
+        }
+      });
+    });
+
+    it('should round boundaries correctly', () => {
+      const upperLeftCorner = { x: 0, y: 0 };
+      const bottomRightCorner = { x: 1500, y: 1500 };
+      const element = { x: 750, y: 285, width: 250, height: 500 };
+      const allowedOverflow = { horizontal: 0, vertical: 0 };
+      const mousePosition = { x: 751.5, y: 286.5 };
+      const calculatedBoundaries = boundaries(element, mousePosition, { upperLeftCorner, bottomRightCorner }, allowedOverflow);
+
+      expect(calculatedBoundaries).toMatchObject({
+        x: {
+          min: 2, // 1.5 rounded up
+          max: 1251 // 1251.5 rounded down
+        },
+        y: {
+          min: 2, // 1.5 rounded up
+          max: 1001 // 1001.5 rounded down
+        }
+      });
+    });
+
+    it('should calculate max and min pointer position including allowed horizontal overflow', () => {
+      const upperLeftCorner = { x: 0, y: 0 };
+      const bottomRightCorner = { x: 1500, y: 1500 };
+      const allowedOverflow = { horizontal: 100, vertical: 0 };
+      const element = { x: 50, y: 50, width: 300, height: 300 };
+      const mousePosition = { x: 100, y: 100 };
+
+      const calculatedBoundaries = boundaries(element, mousePosition, { upperLeftCorner, bottomRightCorner }, allowedOverflow);
+
+      expect(calculatedBoundaries).toMatchObject({
+        x: {
+          min: -50,
+          max: 1350
+        },
+        y: {
+          min: 50,
+          max: 1250
+        }
+      });
+    });
+
+    it('should calculate max and min pointer position including allowed vertical overflow', () => {
+      const upperLeftCorner = { x: 0, y: 0 };
+      const bottomRightCorner = { x: 1500, y: 1500 };
+      const allowedOverflow = { horizontal: 0, vertical: 100 };
+      const element = { x: 50, y: 50, width: 300, height: 300 };
+      const mousePosition = { x: 100, y: 100 };
+
+      const calculatedBoundaries = boundaries(element, mousePosition, { upperLeftCorner, bottomRightCorner }, allowedOverflow);
+
+      expect(calculatedBoundaries).toMatchObject({
+        x: {
+          min: 50,
+          max: 1250
+        },
+        y: {
+          min: -50,
+          max: 1350
+        }
+      });
+    });
+  });
+
+  describe('position', () => {
+    const testOriginPosition = (params: {
+      origin: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+      element: { x: number; y: number; width: number; height: number };
+      viewport: { width: number; height: number };
+      expected: { x: number; y: number };
+    }) => {
+      const result = position(params.element, params.viewport, params.origin);
+      expect(result).toEqual(params.expected);
+    };
+
+    it('should calculate position for top-left origin', () => {
+      testOriginPosition({
+        origin: 'top-left',
+        element: { x: 100, y: 200, width: 50, height: 50 },
+        viewport: { width: 1000, height: 1000 },
+        expected: { x: 100, y: 200 }
+      });
+    });
+
+    it('should calculate position for top-right origin', () => {
+      testOriginPosition({
+        origin: 'top-right',
+        element: { x: 100, y: 200, width: 50, height: 50 },
+        viewport: { width: 1000, height: 1000 },
+        expected: { x: 850, y: 200 }
+      });
+    });
+
+    it('should calculate position for bottom-left origin', () => {
+      testOriginPosition({
+        origin: 'bottom-left',
+        element: { x: 100, y: 200, width: 50, height: 50 },
+        viewport: { width: 1000, height: 1000 },
+        expected: { x: 100, y: 750 }
+      });
+    });
+
+    it('should calculate position for bottom-right origin', () => {
+      testOriginPosition({
+        origin: 'bottom-right',
+        element: { x: 100, y: 200, width: 50, height: 50 },
+        viewport: { width: 1000, height: 1000 },
+        expected: { x: 850, y: 750 }
+      });
+    });
+
+    const testRounding = (params: {
+      element: { x: number; y: number; width: number; height: number };
+      expected: { x: number; y: number };
+    }) => {
+      const viewport = { width: 1000, height: 1000 };
+      const result = position(params.element, viewport, 'top-left');
+      expect(result).toEqual(params.expected);
+    };
+
+    it('should round down fractional positions', () => {
+      testRounding({
+        element: { x: 100.4, y: 200.3, width: 50, height: 50 },
+        expected: { x: 100, y: 200 }
+      });
+    });
+
+    it('should round up fractional positions', () => {
+      testRounding({
+        element: { x: 100.6, y: 200.7, width: 50, height: 50 },
+        expected: { x: 101, y: 201 }
+      });
+    });
+
+    it('should round .5 values up', () => {
+      testRounding({
+        element: { x: 100.5, y: 200.5, width: 50, height: 50 },
+        expected: { x: 101, y: 201 }
+      });
+    });
+  });
+});

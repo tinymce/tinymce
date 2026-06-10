@@ -38,7 +38,8 @@ const deprecated: Record<string, boolean> = {
   webkitMovementX: true,
   webkitMovementY: true,
   keyIdentifier: true,
-  mozPressure: true
+  mozPressure: true,
+  mozInputSource: true,
 };
 
 // Note: We can't rely on `instanceof` here as it won't work if the event was fired from another window.

@@ -3,7 +3,7 @@ import { describe, it } from '@ephox/bedrock-client';
 import { SugarBody } from '@ephox/sugar';
 import { TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/searchreplace/Plugin';
 
 import * as Utils from '../module/test/Utils';
@@ -26,7 +26,7 @@ describe('browser.tinymce.plugins.searchreplace.UndoReplaceSpanTest', () => {
     await Utils.pSetFieldValue(editor, findInputSelector, 'cats');
     await Utils.pSetFieldValue(editor, replaceWithInputSelector, 'dogs');
     Utils.clickFind(editor);
-    await UiFinder.pWaitFor('wait for button to be enabled', SugarBody.body(), 'button[disabled!="disabled"]:contains("Replace")');
+    await UiFinder.pWaitFor('wait for button to be enabled', SugarBody.body(), 'button:enabled:contains("Replace")');
     Utils.clickReplace(editor);
     Utils.clickClose(editor);
     editor.undoManager.undo();

@@ -1,15 +1,15 @@
-import { AlloyComponent, AlloySpec, Behaviour, Blocking, Composing, DomFactory, Replacing, SketchSpec } from '@ephox/alloy';
+import { type AlloyComponent, type AlloySpec, Behaviour, Blocking, Composing, DomFactory, Replacing, type SketchSpec } from '@ephox/alloy';
 import { Arr, Cell, Optional, Singleton, Type } from '@ephox/katamari';
 import { Attribute, Class, Css, Focus, SugarElement, SugarNode } from '@ephox/sugar';
 
-import { EventUtilsEvent } from 'tinymce/core/api/dom/EventUtils';
-import Editor from 'tinymce/core/api/Editor';
-import { ExecCommandEvent } from 'tinymce/core/api/EventTypes';
+import type { EventUtilsEvent } from 'tinymce/core/api/dom/EventUtils';
+import type Editor from 'tinymce/core/api/Editor';
+import type { ExecCommandEvent } from 'tinymce/core/api/EventTypes';
 import Delay from 'tinymce/core/api/util/Delay';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 import * as Events from '../../api/Events';
-import { UiFactoryBackstageProviders, UiFactoryBackstageShared } from '../../backstage/Backstage';
+import type { UiFactoryBackstageProviders, UiFactoryBackstageShared } from '../../backstage/Backstage';
 
 const getBusySpec = (providerBackstage: UiFactoryBackstageProviders) => (_root: AlloyComponent, _behaviours: Behaviour.AlloyBehaviourRecord): AlloySpec => ({
   dom: {

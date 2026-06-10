@@ -1,25 +1,26 @@
 import {
   AddEventsBehaviour,
   Button as AlloyButton,
-  AlloyComponent, AlloyEvents,
+  type AlloyComponent, AlloyEvents,
   FormField as AlloyFormField,
-  AlloySpec, AlloyTriggers, Behaviour,
+  type AlloySpec, AlloyTriggers, Behaviour,
   GuiFactory, Memento,
-  RawDomSchema, Replacing, SimpleOrSketchSpec, SketchSpec, Tabstopping, Tooltipping
+  type RawDomSchema, Replacing, type SimpleOrSketchSpec, type SketchSpec, Tabstopping, Tooltipping
 } from '@ephox/alloy';
-import { Dialog, Toolbar } from '@ephox/bridge';
+import type { Dialog, Toolbar } from '@ephox/bridge';
 import { Fun, Merger, Optional, Type } from '@ephox/katamari';
 
-import { UiFactoryBackstage, UiFactoryBackstageProviders } from '../../backstage/Backstage';
-import * as ReadOnly from '../../ReadOnly';
+import type { UiFactoryBackstage, UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import * as UiState from '../../UiState';
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { DisablingConfigs } from '../alien/DisablingConfigs';
 import { renderFormField } from '../alien/FieldLabeller';
 import * as RepresentingConfigs from '../alien/RepresentingConfigs';
 import { renderIconFromPack, renderReplaceableIconFromPack } from '../button/ButtonSlices';
-import { getFetch, renderMenuButton, StoredMenuButton } from '../button/MenuButton';
+import { getFetch, renderMenuButton, type StoredMenuButton } from '../button/MenuButton';
 import { componentRenderPipeline } from '../menus/item/build/CommonMenuItem';
 import { ToolbarButtonClasses, ViewButtonClasses } from '../toolbar/button/ButtonClasses';
+
 import { formActionEvent, formCancelEvent, formSubmitEvent } from './FormEvents';
 
 type Behaviours = Behaviour.NamedConfiguredBehaviour<any, any, any>[];
@@ -48,8 +49,8 @@ export const renderCommonSpec = (
 
   const common = {
     buttonBehaviours: Behaviour.derive([
-      DisablingConfigs.button(() => !spec.enabled || providersBackstage.isDisabled()),
-      ReadOnly.receivingConfig(),
+      DisablingConfigs.item(() => !spec.enabled || providersBackstage.checkUiComponentContext(spec.context).shouldDisable),
+      UiState.toggleOnReceive(() => providersBackstage.checkUiComponentContext(spec.context)),
       Tabstopping.config({}),
       ...tooltip.map(
         (t) => Tooltipping.config(
@@ -267,6 +268,7 @@ export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, b
 
     const fixedSpec: Toolbar.ToolbarMenuButton = {
       ...spec,
+      buttonType: 'default',
       type: 'menubutton',
       // Currently, dialog-based menu buttons cannot be searchable.
       search: Optional.none(),
@@ -284,6 +286,7 @@ export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, b
     const action = getAction(spec.name, buttonType);
     const buttonSpec = {
       ...spec,
+      context: buttonType === 'cancel' ? 'any' : spec.context,
       borderless: false
     };
     return renderButton(buttonSpec, action, backstage.shared.providers, [ ]);

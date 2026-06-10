@@ -1,17 +1,17 @@
 import { Arr, Fun, Optional } from '@ephox/katamari';
 import { DomDescent } from '@ephox/phoenix';
 import {
-  CellMutations, ResizeBehaviour, RunOperation, TableFill, TableGridSize, TableSection, TableOperations, TableLookup
+  CellMutations, ResizeBehaviour, type RunOperation, TableFill, TableGridSize, TableSection, TableOperations, TableLookup
 } from '@ephox/snooker';
 import { Attribute, SugarBody, SugarElement, SugarNode } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
-import { TableEventData } from 'tinymce/core/api/EventTypes';
+import type Editor from 'tinymce/core/api/Editor';
+import type { TableEventData } from 'tinymce/core/api/EventTypes';
 
 import * as Events from '../api/Events';
 import * as Options from '../api/Options';
-import { TableCellSelectionHandler } from '../api/TableCellSelectionHandler';
-import { TableResizeHandler } from '../api/TableResizeHandler';
+import type { TableCellSelectionHandler } from '../api/TableCellSelectionHandler';
+import type { TableResizeHandler } from '../api/TableResizeHandler';
 import * as Utils from '../core/TableUtils';
 import * as TableSize from '../queries/TableSize';
 

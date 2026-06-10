@@ -1,9 +1,9 @@
 import { Arr, Optional } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import type { SugarElement } from '@ephox/sugar';
 
 import * as Structs from '../api/Structs';
 import * as GridRow from '../model/GridRow';
-import { CellElement, CompElm } from '../util/TableTypes';
+import type { CellElement, CompElm } from '../util/TableTypes';
 
 type Subst = () => SugarElement<HTMLTableCellElement>;
 

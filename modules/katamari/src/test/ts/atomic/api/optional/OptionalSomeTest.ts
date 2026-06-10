@@ -79,7 +79,7 @@ describe('atomic.katamari.api.optional.OptionalsSomeTest', () => {
   });
 
   it('Checking some.getOrDie() never throws', () => {
-    fc.assert(fc.property(fc.integer(), fc.string(1, 40), (i, s) => {
+    fc.assert(fc.property(fc.integer(), fc.string({ minLength: 1, maxLength: 40 }), (i, s) => {
       const opt = Optional.some(i);
       opt.getOrDie(s);
     }));

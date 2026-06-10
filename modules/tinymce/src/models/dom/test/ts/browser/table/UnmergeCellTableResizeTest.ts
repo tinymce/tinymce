@@ -4,7 +4,7 @@ import { Fun } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
 import { TinyContentActions, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import * as TableTestUtils from '../../module/table/TableTestUtils';
 
@@ -257,6 +257,7 @@ describe('browser.tinymce.models.dom.table.UnmergeCellTableResizeTest', () => {
   };
 
   const pMergeResizeUnmergeMeasureWidth = async (editor: Editor, scenario: Scenario) => {
+    editor.focus();
     const table = insertTable(editor, scenario.html);
     await TableTestUtils.pDragHandle(editor, 'se', -100, 0);
     TableTestUtils.mergeCells(editor, scenario.select);

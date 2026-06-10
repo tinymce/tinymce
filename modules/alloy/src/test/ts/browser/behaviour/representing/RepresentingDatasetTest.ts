@@ -5,10 +5,10 @@ import { Value } from '@ephox/sugar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
-import { DatasetRepresentingState } from 'ephox/alloy/behaviour/representing/RepresentingTypes';
-import { TypeaheadData } from 'ephox/alloy/ui/types/TypeaheadTypes';
+import type { DatasetRepresentingState } from 'ephox/alloy/behaviour/representing/RepresentingTypes';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
+import type { TypeaheadData } from 'ephox/alloy/ui/types/TypeaheadTypes';
 
 UnitTest.asynctest('RepresentingTest (mode: dataset)', (success, failure) => {
   GuiSetup.setup((_store, _doc, _body) => GuiFactory.build(

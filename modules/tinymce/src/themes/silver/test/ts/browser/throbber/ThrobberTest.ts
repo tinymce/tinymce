@@ -3,7 +3,7 @@ import { describe, it } from '@ephox/bedrock-client';
 import { SugarBody } from '@ephox/sugar';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.themes.silver.throbber.ThrobberTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -41,7 +41,7 @@ describe('browser.tinymce.themes.silver.throbber.ThrobberTest', () => {
         children: [
           s.element('div', {
             attrs: {
-              'aria-label': str.is('Loading...'),
+              'aria-label': str.is('Loading…'),
               'tabindex': str.is('0'),
             },
             classes: [ arr.has('tox-throbber__busy-spinner') ],

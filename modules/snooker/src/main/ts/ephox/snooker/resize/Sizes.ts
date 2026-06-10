@@ -1,5 +1,5 @@
-import { Fun, Optional, Strings } from '@ephox/katamari';
-import { Attribute, Css, Dimension, Height, SugarBody, SugarElement, SugarNode, Traverse, Width } from '@ephox/sugar';
+import { Fun, type Optional, Strings } from '@ephox/katamari';
+import { Attribute, Css, Dimension, Height, SugarBody, type SugarElement, SugarNode, Traverse, Width } from '@ephox/sugar';
 
 import * as TableLookup from '../api/TableLookup';
 import { getSpan } from '../util/CellUtils';
@@ -83,7 +83,7 @@ export const getPercentageWidth = (cell: SugarElement<HTMLTableCellElement | HTM
 
 export const getPixelWidth = (cell: SugarElement<HTMLTableCellElement | HTMLTableColElement>): number =>
   // For col elements use the computed width as col elements aren't affected by borders, padding, etc...
-  isCol(cell) ? Width.get(cell) : Width.getRuntime(cell);
+  isCol(cell) ? Math.round(Width.get(cell)) : Width.getRuntime(cell);
 
 export const getHeight = (cell: SugarElement<HTMLTableCellElement | HTMLTableRowElement>): number => {
   return isRow(cell) ? Height.get(cell) : get(cell as SugarElement<HTMLTableCellElement>, 'rowspan', getTotalHeight);

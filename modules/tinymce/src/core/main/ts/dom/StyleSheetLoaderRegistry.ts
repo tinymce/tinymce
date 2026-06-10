@@ -1,7 +1,7 @@
 import { Optional } from '@ephox/katamari';
-import { SugarElement, SugarShadowDom } from '@ephox/sugar';
+import { type SugarElement, SugarShadowDom } from '@ephox/sugar';
 
-import StyleSheetLoader, { StyleSheetLoaderSettings } from '../api/dom/StyleSheetLoader';
+import StyleSheetLoader, { type StyleSheetLoaderSettings } from '../api/dom/StyleSheetLoader';
 
 export interface StyleSheetLoaderRegistry {
   readonly forElement: (referenceElement: SugarElement<Node>, settings: StyleSheetLoaderSettings) => StyleSheetLoader;

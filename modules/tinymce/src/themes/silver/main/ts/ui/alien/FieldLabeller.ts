@@ -1,7 +1,7 @@
-import { AlloySpec, Behaviour, FormField as AlloyFormField, GuiFactory, RawDomSchema, SketchSpec } from '@ephox/alloy';
-import { Optional } from '@ephox/katamari';
+import { type AlloySpec, Behaviour, FormField as AlloyFormField, GuiFactory, type RawDomSchema, type SketchSpec } from '@ephox/alloy';
+import type { Optional } from '@ephox/katamari';
 
-import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import type { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 
 type FormFieldSpec = Parameters<typeof AlloyFormField['sketch']>[0];
 

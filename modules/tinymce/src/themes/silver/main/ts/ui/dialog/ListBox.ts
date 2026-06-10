@@ -1,12 +1,12 @@
 import {
-  AlloyComponent, AlloySpec, AlloyTriggers, Behaviour, Disabling, Focusing, FormField as AlloyFormField, Representing, SimpleSpec, SketchSpec,
+  type AlloyComponent, type AlloySpec, AlloyTriggers, Behaviour, Disabling, Focusing, FormField as AlloyFormField, Representing, type SimpleSpec, type SketchSpec,
   Tabstopping
 } from '@ephox/alloy';
-import { Dialog, Menu as BridgeMenu } from '@ephox/bridge';
+import type { Dialog, Menu as BridgeMenu } from '@ephox/bridge';
 import { Arr, Fun, Obj, Optional, Optionals } from '@ephox/katamari';
 import { Attribute } from '@ephox/sugar';
 
-import { UiFactoryBackstage } from '../../backstage/Backstage';
+import type { UiFactoryBackstage } from '../../backstage/Backstage';
 import { renderLabel } from '../alien/FieldLabeller';
 import * as RepresentingConfigs from '../alien/RepresentingConfigs';
 import { renderCommonDropdown, updateMenuText } from '../dropdown/CommonDropdown';
@@ -66,6 +66,7 @@ export const renderListBox = (spec: ListBoxSpec, backstage: UiFactoryBackstage, 
     dom: { },
     factory: {
       sketch: (sketchSpec: SketchSpec) => renderCommonDropdown({
+        context: spec.context,
         uid: sketchSpec.uid,
         text: initialItem.map((item) => item.text),
         icon: Optional.none(),
@@ -129,7 +130,7 @@ export const renderListBox = (spec: ListBoxSpec, backstage: UiFactoryBackstage, 
     components: Arr.flatten<AlloySpec>([ pLabel.toArray(), [ listBoxWrap ]]),
     fieldBehaviours: Behaviour.derive([
       Disabling.config({
-        disabled: Fun.constant(!spec.enabled),
+        disabled: () => !spec.enabled || providersBackstage.checkUiComponentContext(spec.context).shouldDisable,
         onDisabled: (comp) => {
           AlloyFormField.getField(comp).each(Disabling.disable);
         },

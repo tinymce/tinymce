@@ -1,4 +1,4 @@
-import { tinymce, TinyMCE } from './Tinymce';
+import { tinymce, type TinyMCE } from './Tinymce';
 
 declare const module: any;
 declare const window: any;
@@ -7,7 +7,7 @@ const exportToModuleLoaders = (tinymce: TinyMCE) => {
   if (typeof module === 'object') {
     try {
       module.exports = tinymce;
-    } catch (_) {
+    } catch {
       // It will thrown an error when running this module
       // within webpack where the module.exports object is sealed
     }

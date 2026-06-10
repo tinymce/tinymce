@@ -6,7 +6,7 @@ import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Composing } from '../../api/behaviour/Composing';
 import { Representing } from '../../api/behaviour/Representing';
 import { Toggling } from '../../api/behaviour/Toggling';
-import { AlloyComponent } from '../../api/component/ComponentApi';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
@@ -15,9 +15,9 @@ import { FormField } from '../../api/ui/FormField';
 import * as Fields from '../../data/Fields';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as PartType from '../../parts/PartType';
-import { ButtonSpec } from '../types/ButtonTypes';
-import { FormCoupledInputsDetail } from '../types/FormCoupledInputsTypes';
-import { FormFieldSpec } from '../types/FormFieldTypes';
+import type { ButtonSpec } from '../types/ButtonTypes';
+import type { FormCoupledInputsDetail } from '../types/FormCoupledInputsTypes';
+import type { FormFieldSpec } from '../types/FormFieldTypes';
 
 const schema = Fun.constant([
   FieldSchema.defaulted('field1Name', 'field1'),
@@ -25,7 +25,8 @@ const schema = Fun.constant([
   Fields.onStrictHandler('onLockedChange'),
   Fields.markers([ 'lockClass' ]),
   FieldSchema.defaulted('locked', false),
-  SketchBehaviours.field('coupledFieldBehaviours', [ Composing, Representing ])
+  SketchBehaviours.field('coupledFieldBehaviours', [ Composing, Representing ]),
+  FieldSchema.defaultedFunction('onInput', Fun.noop)
 ]);
 
 const getField = (comp: AlloyComponent, detail: FormCoupledInputsDetail, partName: string) => AlloyParts.getPart(comp, detail, partName).bind(Composing.getCurrent);
@@ -44,6 +45,8 @@ const coupledPart = (selfName: string, otherName: string) => PartType.required<F
                 if (Toggling.isOn(lock)) {
                   detail.onLockedChange(me, other, lock);
                 }
+
+                detail.onInput(me);
               });
             });
           })

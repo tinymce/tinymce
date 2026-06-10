@@ -3,7 +3,7 @@ import { afterEach, describe, it } from '@ephox/bedrock-client';
 import { SugarBody } from '@ephox/sugar';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('webdriver.tinymce.themes.silver.editor.menubar.DisabledNestedMenuItemTest', () => {
 
@@ -42,7 +42,7 @@ describe('webdriver.tinymce.themes.silver.editor.menubar.DisabledNestedMenuItemT
         text: 'Services',
         getSubmenuItems: () => [{
           type: 'menuitem',
-          text: 'Services Preferences...',
+          text: 'Services Preferences…',
         }]
       });
     }
@@ -64,7 +64,7 @@ describe('webdriver.tinymce.themes.silver.editor.menubar.DisabledNestedMenuItemT
   };
 
   const assertServicesMenuIsOpen = () => {
-    UiFinder.exists(SugarBody.body(), '[role="menuitem"]:contains("Services Preferences...")');
+    UiFinder.exists(SugarBody.body(), '[role="menuitem"]:contains("Services Preferences…")');
   };
 
   afterEach(() => {

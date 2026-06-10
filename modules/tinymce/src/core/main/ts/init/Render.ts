@@ -4,8 +4,8 @@ import { Attribute, SugarElement } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
 import EventUtils from '../api/dom/EventUtils';
 import ScriptLoader from '../api/dom/ScriptLoader';
-import StyleSheetLoader from '../api/dom/StyleSheetLoader';
-import Editor from '../api/Editor';
+import type StyleSheetLoader from '../api/dom/StyleSheetLoader';
+import type Editor from '../api/Editor';
 import IconManager from '../api/IconManager';
 import ModelManager from '../api/ModelManager';
 import NotificationManager from '../api/NotificationManager';
@@ -18,6 +18,8 @@ import WindowManager from '../api/WindowManager';
 import * as NodeType from '../dom/NodeType';
 import * as StyleSheetLoaderRegistry from '../dom/StyleSheetLoaderRegistry';
 import * as ErrorReporter from '../ErrorReporter';
+import LicenseKeyManagerLoader from '../licensekey/LicenseKeyManager';
+
 import * as Init from './Init';
 
 interface UrlMeta {
@@ -67,6 +69,10 @@ const loadModel = (editor: Editor, suffix: string): void => {
   }
 };
 
+const loadLicenseKeyManager = (editor: Editor, suffix: string): void => {
+  LicenseKeyManagerLoader.load(editor, suffix);
+};
+
 const getIconsUrlMetaFromUrl = (editor: Editor): Optional<UrlMeta> => Optional.from(Options.getIconsUrl(editor))
   .filter(Strings.isNotEmpty)
   .map((url) => ({
@@ -94,6 +100,12 @@ const loadIcons = (scriptLoader: ScriptLoader, editor: Editor, suffix: string) =
 
 const loadPlugins = (editor: Editor, suffix: string) => {
   const loadPlugin = (name: string, url: string) => {
+    // If licensekeymanager is included in the plugins list
+    // or through external_plugins, skip it
+    if (name === 'licensekeymanager') {
+      return;
+    }
+
     PluginManager.load(name, url).catch(() => {
       ErrorReporter.pluginLoadError(editor, url, name);
     });
@@ -127,15 +139,21 @@ const loadScripts = (editor: Editor, suffix: string) => {
   const scriptLoader = ScriptLoader.ScriptLoader;
 
   const initEditor = () => {
-    // If the editor has been destroyed or the theme and model haven't loaded then
+    // If the editor has been destroyed or the theme, model haven't loaded then
     // don't continue to load the editor
-    if (!editor.removed && isThemeLoaded(editor) && isModelLoaded(editor)) {
+    if (
+      !editor.removed &&
+      isThemeLoaded(editor) &&
+      isModelLoaded(editor)
+    ) {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       Init.init(editor);
     }
   };
 
   loadTheme(editor, suffix);
   loadModel(editor, suffix);
+  loadLicenseKeyManager(editor, suffix);
   loadLanguage(scriptLoader, editor);
   loadIcons(scriptLoader, editor, suffix);
   loadPlugins(editor, suffix);

@@ -1,6 +1,6 @@
 import { Type } from '@ephox/katamari';
 
-import { RangeLikeObject } from './RangeTypes';
+import type { RangeLikeObject } from './RangeTypes';
 
 const isEq = (rng1: RangeLikeObject | undefined, rng2: RangeLikeObject | undefined): boolean => {
   return Type.isNonNullable(rng1) && Type.isNonNullable(rng2) &&

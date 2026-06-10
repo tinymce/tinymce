@@ -3,8 +3,9 @@ import { Class, Classes } from '@ephox/sugar';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import * as SystemEvents from '../../api/events/SystemEvents';
+
 import * as DockingApis from './DockingApis';
-import { DockingConfig, DockingState } from './DockingTypes';
+import type { DockingConfig, DockingState } from './DockingTypes';
 
 const events = (dockInfo: DockingConfig, dockState: DockingState): AlloyEvents.AlloyEventRecord =>
   AlloyEvents.derive([

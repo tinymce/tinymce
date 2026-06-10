@@ -4,7 +4,7 @@ import { SelectorFind } from '@ephox/sugar';
 import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import * as TableTestUtils from '../../module/table/TableTestUtils';
 
@@ -134,6 +134,21 @@ describe('browser.tinymce.models.dom.table.InsertRowTableResizeTest', () => {
           '</table>'
   };
 
+  const attrTable = {
+    html: '<table width="100%" border="1">' +
+          '<tbody>' +
+            '<tr>' +
+              '<td></td>' +
+              '<td></td>' +
+            '</tr>' +
+            '<tr>' +
+              '<td></td>' +
+              '<td></td>' +
+            '</tr>' +
+          '</tbody>' +
+          '</table>'
+  };
+
   const insertTable = (editor: Editor, table: string) => {
     editor.setContent(table);
     const bodyElem = TinyDom.fromDom(editor.getBody());
@@ -171,6 +186,8 @@ describe('browser.tinymce.models.dom.table.InsertRowTableResizeTest', () => {
 
   context('Insert rows, erase row and assert the table width and cell widths does not change', () => {
     it('table which is empty', () => insertRowAssertWidth(emptyTable));
+
+    it('table with width attribute', () => insertRowAssertWidth(attrTable));
 
     it('table with contents in some cells', () => insertRowAssertWidth(contentsInSomeCells));
 

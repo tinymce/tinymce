@@ -1,7 +1,7 @@
 import { Testable } from '@ephox/dispute';
 import { assert } from 'chai';
 
-import { Result } from 'ephox/katamari/api/Result';
+import type { Result } from 'ephox/katamari/api/Result';
 import { tResult } from 'ephox/katamari/api/ResultInstances';
 
 type Testable<A> = Testable.Testable<A>;

@@ -1,8 +1,8 @@
-import { Cell } from '@ephox/katamari';
+import type { Cell } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
-import { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type Editor from 'tinymce/core/api/Editor';
+import type { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 const toggleActiveState = (editor: Editor, enabledState: Cell<boolean>) => (api: Toolbar.ToolbarToggleButtonInstanceApi | Menu.ToggleMenuItemInstanceApi) => {
   api.setActive(enabledState.get());
@@ -18,14 +18,16 @@ const register = (editor: Editor, enabledState: Cell<boolean>): void => {
     icon: 'visualblocks',
     tooltip: 'Show blocks',
     onAction,
-    onSetup: toggleActiveState(editor, enabledState)
+    onSetup: toggleActiveState(editor, enabledState),
+    context: 'any'
   });
 
   editor.ui.registry.addToggleMenuItem('visualblocks', {
     text: 'Show blocks',
     icon: 'visualblocks',
     onAction,
-    onSetup: toggleActiveState(editor, enabledState)
+    onSetup: toggleActiveState(editor, enabledState),
+    context: 'any'
   });
 };
 

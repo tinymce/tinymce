@@ -4,7 +4,7 @@ import { SugarBody, TextContent } from '@ephox/sugar';
 import { TinyHooks, TinySelections, TinyAssertions, TinyContentActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/accordion/Plugin';
 
 import * as AccordionUtils from '../module/AccordionUtils';

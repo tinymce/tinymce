@@ -4,7 +4,7 @@ import { Attribute, Class, Focus, Insert, Remove, SelectorFind, SugarElement } f
 import { TinyContentActions, TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import * as DialogUtils from '../../module/test/DialogUtils';
 
@@ -72,7 +72,7 @@ describe('browser.tinymce.core.focus.HighlightOnFocus', () => {
     it('TINY-9277: Content area should be highlighted on focus and removed when shifted to toolbar', async () => {
       const editor = hook.editor();
       assertHighlightOnFocus(editor);
-      TinyUiActions.clickOnToolbar(editor, '[aria-label^="Text color"] > .tox-tbtn + .tox-split-button__chevron');
+      TinyUiActions.clickOnToolbar(editor, 'button[data-mce-name="forecolor-chevron"]');
       await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
       await pAssertIsNotHighlighted(editor);
       TinyUiActions.keyup(editor, Keys.escape());

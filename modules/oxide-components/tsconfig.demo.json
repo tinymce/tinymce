@@ -1,0 +1,42 @@
+{
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.demo.tsbuildinfo",
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "rootDir": "src",
+    "baseUrl": ".",
+    "lib": [
+      "ES2020",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "jsx": "react-jsx",
+    "noEmit": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true,
+    "paths": {
+      "oxide-components/*": ["src/main/ts/*"]
+    }
+  },
+  "include": [
+    "src/demo/ts",
+    "src/**/*.stories.*"
+  ],
+  "references": [
+    {
+      "path": "../katamari/tsconfig.json"
+    },
+    {
+      "path": "../sugar/tsconfig.json"
+    }
+  ]
+}

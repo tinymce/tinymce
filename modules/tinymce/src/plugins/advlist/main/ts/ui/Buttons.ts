@@ -1,8 +1,8 @@
-import { Type } from '@ephox/katamari';
+import { Arr, Obj, Type } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
-import { NodeChangeEvent } from 'tinymce/core/api/EventTypes';
-import { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
+import type Editor from 'tinymce/core/api/Editor';
+import type { NodeChangeEvent } from 'tinymce/core/api/EventTypes';
+import type { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
 import Tools from 'tinymce/core/api/util/Tools';
 
 import * as Options from '../api/Options';
@@ -28,7 +28,7 @@ const makeSetupHandler = (editor: Editor, nodeName: ListType) => (api: Toolbar.T
   const updateButtonState = (editor: Editor, parents: Node[]) => {
     const element = editor.selection.getStart(true);
     api.setActive(ListUtils.inList(editor, parents, nodeName));
-    api.setEnabled(!ListUtils.isWithinNonEditableList(editor, element) && editor.selection.isEditable());
+    api.setEnabled(!ListUtils.isWithinNonEditableList(editor, element));
   };
   const nodeChangeHandler = (e: NodeChangeEvent) => updateButtonState(editor, e.parents);
 
@@ -36,15 +36,24 @@ const makeSetupHandler = (editor: Editor, nodeName: ListType) => (api: Toolbar.T
 };
 
 const addSplitButton = (editor: Editor, id: string, tooltip: string, cmd: string, nodeName: ListType, styles: string[]): void => {
+  const listStyleTypeAliases: Record<string, string> = {
+    'lower-latin': 'lower-alpha',
+    'upper-latin': 'upper-alpha',
+    'lower-alpha': 'lower-latin',
+    'upper-alpha': 'upper-latin'
+  };
+  const stylesContainsAliasMap = Obj.map(listStyleTypeAliases, (alias) => Arr.contains(styles, alias));
+
   editor.ui.registry.addSplitButton(id, {
     tooltip,
+    chevronTooltip: tooltip,
     icon: nodeName === ListType.OrderedList ? 'ordered-list' : 'unordered-list',
     presets: 'listpreview',
-    columns: 3,
+    columns: nodeName === ListType.OrderedList ? 3 : 4,
     fetch: (callback) => {
       const items = Tools.map(styles, (styleValue): Menu.ChoiceMenuItemSpec => {
         const iconStyle = nodeName === ListType.OrderedList ? 'num' : 'bull';
-        const iconName = styleValue === 'disc' || styleValue === 'decimal' ? 'default' : styleValue;
+        const iconName = styleValue === 'decimal' ? 'default' : styleValue;
         const itemValue = normalizeStyleValue(styleValue);
         const displayText = styleValueToText(styleValue);
         return {
@@ -62,7 +71,7 @@ const addSplitButton = (editor: Editor, id: string, tooltip: string, cmd: string
     },
     select: (value) => {
       const listStyleType = ListUtils.getSelectedStyleType(editor);
-      return listStyleType.map((listStyle) => value === listStyle).getOr(false);
+      return listStyleType.exists((listStyle) => value === listStyle || (listStyleTypeAliases[listStyle] === value && !stylesContainsAliasMap[value]));
     },
     onSetup: makeSetupHandler(editor, nodeName)
   });

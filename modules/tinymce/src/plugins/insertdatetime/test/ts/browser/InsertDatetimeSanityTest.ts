@@ -1,8 +1,8 @@
-import { ApproxStructure } from '@ephox/agar';
+import { ApproxStructure, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/insertdatetime/Plugin';
 
 describe('browser.tinymce.plugins.insertdatetime.InsertDatetimeSanityTest', () => {
@@ -18,7 +18,7 @@ describe('browser.tinymce.plugins.insertdatetime.InsertDatetimeSanityTest', () =
     const editor = hook.editor();
     TinyUiActions.clickOnToolbar(editor, '[aria-haspopup="true"]');
     await TinyUiActions.pWaitForUi(editor, '[role="menu"]');
-    TinyUiActions.clickOnUi(editor, '[role="menu"] [role="menuitemradio"]:first');
+    TinyUiActions.clickOnUi(editor, '[role="menu"] [role="menuitemradio"]:first-child');
 
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s) => {
       return s.element('body', {
@@ -31,5 +31,20 @@ describe('browser.tinymce.plugins.insertdatetime.InsertDatetimeSanityTest', () =
         ]
       });
     }));
+  });
+
+  it('TINY-11264: Insert date time should not insert or update time element in readonly mode', async () => {
+    const editor = hook.editor();
+    TinyUiActions.clickOnToolbar(editor, '[aria-haspopup="true"]');
+    await TinyUiActions.pWaitForUi(editor, '[role="menu"]');
+    TinyUiActions.clickOnUi(editor, '[role="menu"] [role="menuitemradio"]:first-child');
+
+    editor.mode.set('readonly');
+    const content = editor.getContent();
+    await Waiter.pWaitBetweenUserActions();
+    TinySelections.setCursor(editor, [ 0, 0 ], 0);
+    editor.execCommand('mceInsertTime');
+
+    TinyAssertions.assertContent(editor, content);
   });
 });

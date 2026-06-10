@@ -5,15 +5,17 @@ import { Gene } from './Gene';
 import { SpecialGene } from './SpecialGene';
 import { TestUniverse } from './TestUniverse';
 import { TextGene } from './TextGene';
-import { Universe } from './Universe';
-/* eslint-disable import/order */
+import type { Universe } from './Universe';
+
+/* eslint-disable import-x/order */
 // NON API USAGE
 // used by phoenix
 import * as Logger from '../mutant/Logger';
 // used by soldier tests
 import * as Locator from '../mutant/Locator';
-/* eslint-enable import/order */
+/* eslint-enable import-x/order */
 
+export type { Universe };
 export {
   BasicPage,
   CommentGene,
@@ -23,6 +25,5 @@ export {
   TestUniverse,
   TextGene,
   Logger,
-  Locator,
-  Universe
+  Locator
 };

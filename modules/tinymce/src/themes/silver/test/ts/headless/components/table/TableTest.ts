@@ -1,13 +1,14 @@
 import { ApproxStructure, Assertions } from '@ephox/agar';
-import { GuiFactory, TestHelpers } from '@ephox/alloy';
+import { GuiFactory } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 
 import { renderTable } from 'tinymce/themes/silver/ui/dialog/Table';
 
+import * as GuiSetup from '../../../module/GuiSetup';
 import TestProviders from '../../../module/TestProviders';
 
 describe('headless.tinymce.themes.silver.components.table.TableTest', () => {
-  const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
+  const hook = GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
     renderTable({
       header: [ 'one', 'two', 'three' ],
       cells: [

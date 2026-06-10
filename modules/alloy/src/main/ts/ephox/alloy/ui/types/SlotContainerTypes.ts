@@ -1,11 +1,11 @@
-import { Optional } from '@ephox/katamari';
+import type { Optional } from '@ephox/katamari';
 
-import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { SketchBehaviours } from '../../api/component/SketchBehaviours';
-import { OptionalDomSchema, RawDomSchema, SimpleOrSketchSpec, SketchSpec } from '../../api/component/SpecTypes';
-import { CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
-import { ConfiguredPart } from '../../parts/AlloyParts';
+import type { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
+import type { SketchBehaviours } from '../../api/component/SketchBehaviours';
+import type { OptionalDomSchema, RawDomSchema, SimpleOrSketchSpec, SketchSpec } from '../../api/component/SpecTypes';
+import type { CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
+import type { ConfiguredPart } from '../../parts/AlloyParts';
 
 export interface SlotContainerDetail extends CompositeSketchDetail {
   uid: string;

@@ -1,7 +1,7 @@
-import { describe, it, context, before } from '@ephox/bedrock-client';
+import { describe, it, context, before, beforeEach } from '@ephox/bedrock-client';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/link/Plugin';
 
 import { TestLinkUi } from '../module/TestLinkUi';
@@ -17,6 +17,9 @@ describe('browser.tinymce.plugins.link.DefaultLinkProtocolTest', () => {
     before(() => {
       const editor = hook.editor();
       editor.options.set('link_default_protocol', 'http');
+    });
+    beforeEach(() => {
+      hook.editor().setContent('');
     });
 
     it('TBA: www-urls are prompted to add http:// prefix, accept', async () => {
@@ -46,6 +49,9 @@ describe('browser.tinymce.plugins.link.DefaultLinkProtocolTest', () => {
     before(() => {
       const editor = hook.editor();
       editor.options.set('link_default_protocol', 'https');
+    });
+    beforeEach(() => {
+      hook.editor().setContent('');
     });
 
     it('TBA: www-urls are prompted to add https:// prefix, accept', async () => {

@@ -1,5 +1,5 @@
 import { Cell, Fun } from '@ephox/katamari';
-import { EventArgs, SugarElement } from '@ephox/sugar';
+import type { EventArgs, SugarElement } from '@ephox/sugar';
 
 export interface EventFormat {
   readonly target: SugarElement<Node>;

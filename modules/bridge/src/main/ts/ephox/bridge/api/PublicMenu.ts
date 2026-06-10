@@ -1,19 +1,19 @@
-import { CardContainerSpec } from '../components/menu/card/CardContainer';
-import { CardImageSpec } from '../components/menu/card/CardImage';
-import { CardItemSpec } from '../components/menu/card/CardItem';
-import { CardTextSpec } from '../components/menu/card/CardText';
-import { CardMenuItemInstanceApi, CardMenuItemSpec } from '../components/menu/CardMenuItem';
-import { ChoiceMenuItemInstanceApi, ChoiceMenuItemSpec } from '../components/menu/ChoiceMenuItem';
-import { ContextMenuApi, ContextMenuContents, ContextMenuItem, ContextSubMenu } from '../components/menu/ContextMenu';
-import { ColorSwatchMenuItemSpec, FancyMenuItemSpec, InsertTableMenuItemSpec } from '../components/menu/FancyMenuItem';
-import { MenuItemInstanceApi, MenuItemSpec } from '../components/menu/MenuItem';
-import { NestedMenuItemContents, NestedMenuItemInstanceApi, NestedMenuItemSpec } from '../components/menu/NestedMenuItem';
-import { SeparatorMenuItemSpec } from '../components/menu/SeparatorMenuItem';
-import { ToggleMenuItemInstanceApi, ToggleMenuItemSpec } from '../components/menu/ToggleMenuItem';
+import type { CardContainerSpec } from '../components/menu/card/CardContainer';
+import type { CardImageSpec } from '../components/menu/card/CardImage';
+import type { CardItemSpec } from '../components/menu/card/CardItem';
+import type { CardTextSpec } from '../components/menu/card/CardText';
+import type { CardMenuItemInstanceApi, CardMenuItemSpec } from '../components/menu/CardMenuItem';
+import type { ChoiceMenuItemInstanceApi, ChoiceMenuItemSpec } from '../components/menu/ChoiceMenuItem';
+import type { ContextMenuApi, ContextMenuContents, ContextMenuItem, ContextSubMenu } from '../components/menu/ContextMenu';
+import type { ColorSwatchMenuItemSpec, FancyMenuItemSpec, InsertTableMenuItemSpec } from '../components/menu/FancyMenuItem';
+import type { MenuItemInstanceApi, MenuItemSpec } from '../components/menu/MenuItem';
+import type { NestedMenuItemContents, NestedMenuItemInstanceApi, NestedMenuItemSpec } from '../components/menu/NestedMenuItem';
+import type { SeparatorMenuItemSpec } from '../components/menu/SeparatorMenuItem';
+import type { ToggleMenuItemInstanceApi, ToggleMenuItemSpec } from '../components/menu/ToggleMenuItem';
 
 // These are the types that are exposed though a public end user api
 
-export {
+export type {
   MenuItemSpec,
   MenuItemInstanceApi,
 

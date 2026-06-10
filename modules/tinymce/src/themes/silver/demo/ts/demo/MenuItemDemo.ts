@@ -1,6 +1,6 @@
 import { Fun } from '@ephox/katamari';
 
-import { TinyMCE } from 'tinymce/core/api/PublicApi';
+import type { TinyMCE } from 'tinymce/core/api/PublicApi';
 
 import * as MockDemo from './MockDemo';
 
@@ -14,6 +14,7 @@ export default (): void => {
 
   tinymce.init({
     selector: 'textarea.tiny-text',
+    license_key: 'gpl',
     theme: 'silver',
     // toolbar: [ 'basic-button-1', 'basic-button-2', 'menu-button-1', 'panel-button-1', 'dialog-button', 'MagicButton' ],
     plugins: [

@@ -1,9 +1,9 @@
 import { Fun, Singleton } from '@ephox/katamari';
 
-import { Bindable, Event } from 'ephox/porkbun/Event';
+import { type Bindable, Event } from 'ephox/porkbun/Event';
 import * as Events from 'ephox/porkbun/Events';
 
-import { DieEvent, Outlaw, Saloon, ShootEvent } from './Types';
+import type { DieEvent, Outlaw, Saloon, ShootEvent } from './Types';
 
 interface OutlawEvents {
   registry: {

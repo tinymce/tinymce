@@ -1,4 +1,4 @@
-import { Gene, TestUniverse } from '@ephox/boss';
+import type { Gene, TestUniverse } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 import * as fc from 'fast-check';
 
@@ -22,8 +22,8 @@ const getIds = (item: Gene, predicate: (g: Gene) => boolean): string[] => {
   const rest = Arr.bind(item.children || [], (id) => {
     return getIds(id, predicate);
   });
-  const self = predicate(item) && item.id !== 'root' ? [ item.id ] : [];
-  return self.concat(rest);
+  const itemIdArray = predicate(item) && item.id !== 'root' ? [ item.id ] : [];
+  return itemIdArray.concat(rest);
 };
 
 const textIds = (universe: TestUniverse) => {

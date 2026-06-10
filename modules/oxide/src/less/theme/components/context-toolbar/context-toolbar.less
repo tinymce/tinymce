@@ -1,0 +1,44 @@
+//
+// Context Toolbar
+//
+.tox {
+  .tox-context-toolbar {
+    // CSS Anchor Positioning (required for anchor() to work)
+    position: absolute;
+
+    // Enable automatic flip when toolbar would overflow viewport, very new, not recongnized by stylelint yet
+    // stylelint-disable-next-line property-no-unknown -- CSS Anchor Positioning spec (Chrome 125+)
+    position-try-fallbacks:
+      flip-block,
+      flip-inline,
+      flip-block flip-inline;
+    z-index: @z-index-menu;
+
+    background-color: var(--tox-private-background-color, @background-color);
+    color: var(--tox-private-text-color, @text-color);
+    border: 1px solid @border-color-light;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    padding: 8px;
+
+    &[popover] {
+      inset: auto;
+      margin: 0;
+    }
+
+    .tox-toolbar {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 8px;
+    }
+
+    .tox-toolbar__group {
+      display: flex;
+      flex-wrap: nowrap;
+      flex-shrink: 0;
+      gap: 8px;
+      align-items: center;
+      padding: 0;
+    }
+  }
+}

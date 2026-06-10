@@ -15,7 +15,7 @@ const awaiter = (resolveCb: (data: any) => void, rejectCb: (err?: any) => void, 
     if (!done) {
       done = true;
       if (timer !== null) {
-        clearTimeout(timer);
+        window.clearTimeout(timer);
         timer = null;
       }
       completer.apply(null, args);
@@ -25,7 +25,7 @@ const awaiter = (resolveCb: (data: any) => void, rejectCb: (err?: any) => void, 
   const reject = complete(rejectCb);
   const start = (...args: Parameters<typeof reject>) => {
     if (!done && timer === null) {
-      timer = setTimeout(() => reject.apply(null, args), timeout);
+      timer = window.setTimeout(() => reject.apply(null, args), timeout);
     }
   };
   return {

@@ -4,7 +4,8 @@ import { Focus, SugarElement } from '@ephox/sugar';
 import * as EditorView from '../EditorView';
 import * as EditorFocus from '../focus/EditorFocus';
 import NotificationManagerImpl from '../ui/NotificationManagerImpl';
-import Editor from './Editor';
+
+import type Editor from './Editor';
 import * as Options from './Options';
 
 export interface NotificationManagerImpl {
@@ -155,10 +156,16 @@ const NotificationManager = (editor: Editor): NotificationManager => {
       });
     });
 
-    editor.addShortcut('alt+F12', 'Focus to notification', () =>
-      getTopNotification()
-        .map((notificationApi) => SugarElement.fromDom(notificationApi.getEl()))
-        .each((elm) => Focus.focus(elm)));
+    editor.on('keydown', (e) => {
+      // TODO: TINY-11429 Remove this once we remove the use of keycodes
+      const isF12 = e.key?.toLowerCase() === 'f12' || e.keyCode === 123;
+      if (e.altKey && isF12) {
+        e.preventDefault();
+        getTopNotification()
+          .map((notificationApi) => SugarElement.fromDom(notificationApi.getEl()))
+          .each((elm) => Focus.focus(elm));
+      }
+    });
   };
 
   registerEvents(editor);
@@ -170,7 +177,7 @@ const NotificationManager = (editor: Editor): NotificationManager => {
      * @method open
      * @param {Object} args A <code>name: value</code> collection containing settings such as: <code>timeout</code>, <code>type</code>, and message (<code>text</code>).
      * <br /><br />
-     * For information on the available settings, see: <a href="https://www.tiny.cloud/docs/tinymce/7/creating-custom-notifications/">Create custom notifications</a>.
+     * For information on the available settings, see: <a href="https://www.tiny.cloud/docs/tinymce/8/creating-custom-notifications/">Create custom notifications</a>.
      */
     open,
 

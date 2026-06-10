@@ -1,9 +1,9 @@
 import { Fun } from '@ephox/katamari';
-import { Compare, PredicateExists, SugarElement } from '@ephox/sugar';
+import { Compare, PredicateExists, type SugarElement } from '@ephox/sugar';
 
-import { AlloyComponent } from '../api/component/ComponentApi';
+import type { AlloyComponent } from '../api/component/ComponentApi';
 import * as AriaControls from '../aria/AriaControls';
-import { AnchorSpec } from '../positioning/mode/Anchoring';
+import type { AnchorSpec } from '../positioning/mode/Anchoring';
 
 const isAriaPartOf = (component: AlloyComponent, queryElem: SugarElement<Node>): boolean =>
   AriaControls.find(queryElem).exists((owner) => isPartOf(component, owner));

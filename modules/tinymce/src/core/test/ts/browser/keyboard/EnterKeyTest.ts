@@ -2,7 +2,7 @@ import { describe, it } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyAssertions, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 
 import * as HtmlUtils from '../../module/test/HtmlUtils';

@@ -1,8 +1,8 @@
-import Editor from 'tinymce/core/api/Editor';
-import { EditorOptions } from 'tinymce/core/api/OptionTypes';
+import type Editor from 'tinymce/core/api/Editor';
+import type { EditorOptions } from 'tinymce/core/api/OptionTypes';
 
-import { DataToHtmlCallback } from '../core/DataToHtml';
-import { MediaResolver } from '../core/Service';
+import type { DataToHtmlCallback } from '../core/DataToHtml';
+import type { MediaResolver } from '../core/Service';
 
 const option: {
   <K extends keyof EditorOptions>(name: K): (editor: Editor) => EditorOptions[K];

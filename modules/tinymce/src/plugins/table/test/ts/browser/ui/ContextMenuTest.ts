@@ -4,7 +4,7 @@ import { Arr } from '@ephox/katamari';
 import { SugarBody, SugarDocument } from '@ephox/sugar';
 import { TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
 
 describe('browser.tinymce.plugins.table.ContextMenuTest', () => {
@@ -17,7 +17,7 @@ describe('browser.tinymce.plugins.table.ContextMenuTest', () => {
 
   const pOpenContextMenu = async (editor: Editor, target: string) => {
     await TinyUiActions.pTriggerContextMenu(editor, target, '.tox-silver-sink [role="menuitem"]');
-    await Waiter.pWait(0);
+    await Waiter.pWaitBetweenUserActions();
   };
 
   const pAssertFocusOnItem = (label: string, selector: string) =>

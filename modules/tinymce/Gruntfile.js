@@ -8,6 +8,8 @@ let zipUtils = require('./tools/modules/zip-helper');
 let gruntUtils = require('./tools/modules/grunt-utils');
 let gruntWebPack = require('./tools/modules/grunt-webpack');
 let swag = require('@ephox/swag');
+const nodeResolve = require('@rollup/plugin-node-resolve');
+const alias = require('@rollup/plugin-alias');
 let path = require('path');
 
 let plugins = [
@@ -37,6 +39,7 @@ const stripSourceMaps = function (data) {
   return sourcemap > -1 ? data.slice(0, sourcemap) : data;
 };
 
+/** @param {import('grunt')} grunt */
 module.exports = function (grunt) {
   const packageData = grunt.file.readJSON('package.json');
 
@@ -56,15 +59,8 @@ module.exports = function (grunt) {
     shell: {
       prismjs: { command: 'node ./bin/build-prism.js', cwd: '../../' },
       tsc: { command: 'tsc -b' },
-      moxiedoc: { command: 'moxiedoc "src/core/main/ts" -t tinymcenext --fail-on-warning --dry' }
-    },
-
-    eslint: {
-      options: {
-        maxWarnings: 0,
-        fix: grunt.option('fix')
-      },
-      target: [ 'src/**/*.ts' ]
+      moxiedoc: { command: 'moxiedoc "src/core/main/ts" -t tinymcenext --fail-on-warning --dry' },
+      eslint: { command: 'eslint --max-warnings=0 src/**/*.ts' }
     },
 
     globals: {
@@ -79,18 +75,16 @@ module.exports = function (grunt) {
       {
         core: {
           options: {
-            treeshake: true,
             format: 'iife',
             onwarn: swag.onwarn,
             plugins: [
               FilesAsStrings,
-              swag.nodeResolve({
-                basedir: __dirname,
-                prefixes: {
-                  'tinymce/core': 'lib/core/main/ts'
-                }
-              }),
-              swag.remapImports()
+              nodeResolve(),
+              alias({
+                entries: [
+                  { find: 'tinymce/core', replacement: path.resolve(__dirname, 'lib/core/main/ts') }
+                ]
+              })
             ]
           },
           files:[
@@ -102,7 +96,6 @@ module.exports = function (grunt) {
         },
         'core-types': {
           options: {
-            treeshake: true,
             format: 'es',
             onwarn: (warning) => {
               // Ignore circular deps in types
@@ -130,24 +123,17 @@ module.exports = function (grunt) {
       gruntUtils.generate(plugins, 'plugin', (name) => {
         return {
           options: {
-            treeshake: true,
             format: 'iife',
             onwarn: swag.onwarn,
             plugins: [
               FilesAsStrings,
-              swag.nodeResolve({
-                basedir: __dirname,
-                prefixes: gruntUtils.prefixes({
-                  'tinymce/core': 'lib/globals/tinymce/core'
-                }, [
-                  [`tinymce/plugins/${name}`, `lib/plugins/${name}/main/ts`]
-                ]),
-                mappers: [
-                  swag.mappers.replaceDir('./lib/core/main/ts/api', './lib/globals/tinymce/core/api'),
-                  swag.mappers.invalidDir('./lib/core/main/ts')
+              nodeResolve(),
+              alias({
+                entries: [
+                  { find: /^tinymce\/core\/(.+)$/, replacement: path.resolve(__dirname, 'lib/globals/tinymce/core/$1') },
+                  { find: `tinymce/plugins/${name}`, replacement: path.resolve(__dirname, `lib/plugins/${name}/main/ts`) }
                 ]
-              }),
-              swag.remapImports()
+              })
             ]
           },
           files:[ { src: `lib/plugins/${name}/main/ts/Main.js`, dest: `js/tinymce/plugins/${name}/plugin.js` } ]
@@ -156,25 +142,18 @@ module.exports = function (grunt) {
       gruntUtils.generate(themes, 'theme', (name) => {
         return {
           options: {
-            treeshake: true,
             format: 'iife',
             onwarn: swag.onwarn,
             plugins: [
               FilesAsStrings,
-              swag.nodeResolve({
-                basedir: __dirname,
-                prefixes: gruntUtils.prefixes({
-                  'tinymce/core': 'lib/globals/tinymce/core'
-                }, [
-                  [`tinymce/themes/${name}/resources`, `src/themes/${name}/main/resources`],
-                  [`tinymce/themes/${name}`, `lib/themes/${name}/main/ts`]
-                ]),
-                mappers: [
-                  swag.mappers.replaceDir('./lib/core/main/ts/api', './lib/globals/tinymce/core/api'),
-                  swag.mappers.invalidDir('./lib/core/main/ts')
+              nodeResolve(),
+              alias({
+                entries: [
+                  { find: /^tinymce\/core\/(.+)$/, replacement: path.resolve(__dirname, 'lib/globals/tinymce/core/$1') },
+                  { find: `tinymce/themes/${name}/resources`, replacement: path.resolve(__dirname, `src/themes/${name}/main/resources`) },
+                  { find: `tinymce/themes/${name}`, replacement: path.resolve(__dirname, `lib/themes/${name}/main/ts`) }
                 ]
-              }),
-              swag.remapImports()
+              })
             ]
           },
           files:[
@@ -188,24 +167,17 @@ module.exports = function (grunt) {
       gruntUtils.generate(models, 'model', (name) => {
         return {
           options: {
-            treeshake: true,
             format: 'iife',
             onwarn: swag.onwarn,
             plugins: [
               FilesAsStrings,
-              swag.nodeResolve({
-                basedir: __dirname,
-                prefixes: gruntUtils.prefixes({
-                  'tinymce/core': 'lib/globals/tinymce/core'
-                }, [
-                  [`tinymce/models/${name}`, `lib/models/${name}/main/ts`]
-                ]),
-                mappers: [
-                  swag.mappers.replaceDir('./lib/core/main/ts/api', './lib/globals/tinymce/core/api'),
-                  swag.mappers.invalidDir('./lib/core/main/ts')
+              nodeResolve(),
+              alias({
+                entries: [
+                  { find: /^tinymce\/core\/(.+)$/, replacement: path.resolve(__dirname, 'lib/globals/tinymce/core/$1') },
+                  { find: `tinymce/models/${name}`, replacement: path.resolve(__dirname, `lib/models/${name}/main/ts`) }
                 ]
-              }),
-              swag.remapImports()
+              })
             ]
           },
           files:[
@@ -228,9 +200,8 @@ module.exports = function (grunt) {
     terser: Object.assign(
       {
         options: {
-          ecma: 2018,
+          ecma: 2022,
           output: {
-            comments: 'all',
             ascii_only: true
           },
           compress: {
@@ -318,6 +289,14 @@ module.exports = function (grunt) {
             'js/tinymce/tinymce.js'
           ],
           dest: 'js/tinymce/tinymce.js'
+        },
+        'license-headers': {
+          src: [
+            'src/core/text/build-header.js',
+            'src/core/text/tinymce-license-headers.js',
+            `js/tinymce/tinymce.min.js`
+          ],
+          dest: `js/tinymce/tinymce.min.js`
         }
       },
       gruntUtils.generate(plugins, 'plugin', function (name) {
@@ -379,6 +358,10 @@ module.exports = function (grunt) {
           {
             src: '../../README.md',
             dest: 'js/tinymce/README.md'
+          },
+          {
+            src: '../../NOTICES.txt',
+            dest: 'js/tinymce/notices.txt'
           }
         ]
       },
@@ -393,6 +376,14 @@ module.exports = function (grunt) {
         ]
       },
       'ui-skins': {
+        options: {
+          process: function (content) {
+            return content.replace(
+              /'ui\/([^\/]+)\/([^']+)'/,
+              (_, p1, p2) => `'ui/${oxideUiSkinMap[p1] || p1}/${p2}'`
+            );
+          },
+        },
         files: gruntUtils.flatMap(oxideUiSkinMap, function (name, mappedName) {
           return [
             {
@@ -466,6 +457,7 @@ module.exports = function (grunt) {
           'js/tinymce/tinymce.d.ts',
           'js/tinymce/tinymce.min.js',
           'js/tinymce/license.md',
+          'js/tinymce/notices.txt',
           'CHANGELOG.md',
           'LICENSE.md',
           'README.md'
@@ -506,9 +498,9 @@ module.exports = function (grunt) {
               'modules/*/.stylelintrc',
               'modules/tinymce/tools',
               'bin',
-              'patches',
               '.yarnrc',
               'LICENSE.md',
+              'NOTICES.txt',
               'README.md',
               'lerna.json',
               'package.json',
@@ -592,7 +584,8 @@ module.exports = function (grunt) {
           'js/tinymce/icons',
           'js/tinymce/themes',
           'js/tinymce/models',
-          'js/tinymce/license.md'
+          'js/tinymce/license.md',
+          'js/tinymce/notices.txt'
         ]
       },
 
@@ -632,7 +625,7 @@ module.exports = function (grunt) {
             zip.addData('bower.json', jsonToBuffer({
               'name': 'tinymce',
               'description': 'Web based JavaScript HTML WYSIWYG editor control.',
-              'license': 'GPL-2.0-or-later',
+              'license': 'SEE LICENSE IN license.md',
               'keywords': keywords,
               'homepage': 'https://www.tiny.cloud/',
               'ignore': ['README.md', 'composer.json', 'package.json', '.npmignore', 'CHANGELOG.md']
@@ -650,7 +643,7 @@ module.exports = function (grunt) {
               'author': 'Ephox Corporation DBA Tiny Technologies, Inc',
               'main': 'tinymce.js',
               'types': 'tinymce.d.ts',
-              'license': 'GPL-2.0-or-later',
+              'license': 'SEE LICENSE IN license.md',
               'keywords': keywords,
               'homepage': 'https://www.tiny.cloud/',
               'bugs': { 'url': 'https://github.com/tinymce/tinymce/issues' }
@@ -660,7 +653,7 @@ module.exports = function (grunt) {
               'name': 'tinymce/tinymce',
               'version': packageData.version,
               'description': 'Web based JavaScript HTML WYSIWYG editor control.',
-              'license': ['GPL-2.0-or-later'],
+              'license': ['SEE LICENSE IN license.md'],
               'keywords': keywords,
               'homepage': 'https://www.tiny.cloud/',
               'type': 'component',
@@ -716,6 +709,23 @@ module.exports = function (grunt) {
             if (args.filePath.endsWith('.min.css')) {
               args.data = stripSourceMaps(args.data);
             }
+
+            // TINY-13411: The component zip which is used for NPM needs to have dual license as noted in the license-npm.md file
+            if (args.filePath.endsWith('license.md')) {
+              const npmlicensedata = grunt.file.read('src/core/text/license-npm.md', { encoding: null });
+              args.data = Buffer.from(npmlicensedata);
+            }
+
+            // TINY-13411: The core repo README.md mentions GPL 2.0 in the license section
+            // but for dist/NPM packages we want to just point to a license.md file
+            if (args.filePath.endsWith('README.md')) {
+              let processed = args.data.toString();
+              processed = processed.replace(
+                /^##\s*License\s*\n[\s\S]*?(?=\n##\s|\n*$)/m,
+                '## License\n\nLicense terms can be found in the license.md file.'
+              );
+              args.data = Buffer.from(processed);
+            }
           }
         },
         src: [
@@ -729,7 +739,8 @@ module.exports = function (grunt) {
           'js/tinymce/tinymce.min.js',
           'js/tinymce/license.md',
           'CHANGELOG.md',
-          'js/tinymce/README.md'
+          'js/tinymce/README.md',
+          'js/tinymce/notices.txt'
         ]
       }
     },
@@ -779,6 +790,7 @@ module.exports = function (grunt) {
           { src: 'js/tinymce/tinymce.d.ts', dest: '/content/scripts/tinymce/tinymce.d.ts' },
           { src: 'js/tinymce/tinymce.min.js', dest: '/content/scripts/tinymce/tinymce.min.js' },
           { src: 'js/tinymce/license.md', dest: '/content/scripts/tinymce/license.md' },
+          { src: 'js/tinymce/notices.txt', dest: '/content/scripts/tinymce/notices.txt' },
           { src: 'tools/nuget/build/TinyMCE.targets', dest: '/build/TinyMCE.targets' }
         ]
       },
@@ -886,16 +898,6 @@ module.exports = function (grunt) {
         retries: 3,
         customRoutes: 'src/core/test/json/routes.json',
         name: grunt.option('bedrock-browser') !== undefined ? grunt.option('bedrock-browser') : 'chrome-headless'
-      },
-      silver: {
-        browser: 'phantomjs',
-        config: 'tsconfig.json',
-        testfiles: ['src/themes/silver/test/ts/phantom/**/*Test.ts', 'src/themes/silver/test/ts/browser/**/*Test.ts', 'src/themes/silver/test/ts/webdriver/*/*Test.ts'],
-        stopOnFailure: true,
-        overallTimeout: 600000,
-        singleTimeout: 300000,
-        customRoutes: 'src/core/test/json/routes.json',
-        name: 'silver-tests'
       }
     }
   });
@@ -935,7 +937,8 @@ module.exports = function (grunt) {
     'rollup',
     'concat',
     'copy',
-    'terser'
+    'terser',
+    'concat:license-headers'
   ]);
 
   grunt.registerTask('prod', [
@@ -964,7 +967,7 @@ module.exports = function (grunt) {
   grunt.registerTask('start', ['webpack-dev-server']);
 
   grunt.registerTask('buildOnly', ['clean:dist', 'prod']);
-  grunt.registerTask('default', ['clean:dist', 'eslint', 'prod']);
+  grunt.registerTask('default', ['clean:dist', 'prod']);
   grunt.registerTask('test', ['bedrock-auto:standard']);
   grunt.registerTask('test-manual', ['bedrock-manual']);
 };

@@ -1,5 +1,5 @@
-import Editor from 'tinymce/core/api/Editor';
-import { Menu } from 'tinymce/core/api/ui/Ui';
+import type Editor from 'tinymce/core/api/Editor';
+import type { Menu } from 'tinymce/core/api/ui/Ui';
 
 import { onActionExecCommand, onSetupEvent } from './ControlUtils';
 
@@ -12,7 +12,8 @@ const registerMenuItems = (editor: Editor): void => {
   editor.ui.registry.addToggleMenuItem('visualaid', {
     text: 'Visual aids',
     onSetup: onSetupVisualAidState(editor),
-    onAction: onActionExecCommand(editor, 'mceToggleVisualAid')
+    onAction: onActionExecCommand(editor, 'mceToggleVisualAid'),
+    context: 'any'
   });
 };
 
@@ -20,7 +21,8 @@ const registerToolbarButton = (editor: Editor): void => {
   editor.ui.registry.addButton('visualaid', {
     tooltip: 'Visual aids',
     text: 'Visual aids',
-    onAction: onActionExecCommand(editor, 'mceToggleVisualAid')
+    onAction: onActionExecCommand(editor, 'mceToggleVisualAid'),
+    context: 'any'
   });
 };
 

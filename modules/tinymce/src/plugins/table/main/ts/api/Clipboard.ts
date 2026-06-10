@@ -5,7 +5,7 @@
  */
 
 import { Arr, Optional } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import type { SugarElement } from '@ephox/sugar';
 
 import FakeClipboard from 'tinymce/core/api/FakeClipboard';
 

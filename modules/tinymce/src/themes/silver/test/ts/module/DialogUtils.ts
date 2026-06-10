@@ -1,10 +1,10 @@
-import { TestStore, UiFinder } from '@ephox/agar';
+import { type TestStore, UiFinder } from '@ephox/agar';
 import { SugarBody } from '@ephox/sugar';
 import { TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
-import { Dialog } from 'tinymce/core/api/ui/Ui';
-import { WindowParams } from 'tinymce/core/api/WindowManager';
+import type Editor from 'tinymce/core/api/Editor';
+import type { Dialog } from 'tinymce/core/api/ui/Ui';
+import type { WindowParams } from 'tinymce/core/api/WindowManager';
 
 const open = <T extends Dialog.DialogData>(editor: Editor, spec: Dialog.DialogSpec<T>, params: WindowParams): Dialog.DialogInstanceApi<T> =>
   editor.windowManager.open(spec, params);

@@ -1,4 +1,5 @@
-import { UnitTest } from '@ephox/bedrock-client';
+import { afterEach, Assert, beforeEach, describe, it, UnitTest } from '@ephox/bedrock-client';
+import { Testable } from '@ephox/dispute';
 import { Class, Css, Hierarchy, Html, Insert, Remove, SugarElement, SugarNode } from '@ephox/sugar';
 
 import * as Assertions from 'ephox/agar/api/Assertions';
@@ -104,4 +105,74 @@ UnitTest.asynctest('UiFinderTest', (success, failure) => {
     teardown();
     success();
   }, failure);
+});
+
+describe('UiFinderTest', () => {
+  const body = SugarElement.fromDom(document.body);
+  let container: SugarElement<HTMLElement>;
+
+  beforeEach(() => {
+    container = SugarElement.fromHtml<HTMLElement>('<div class="container"></div>');
+    Insert.append(body, container);
+  });
+
+  afterEach(() => {
+    Remove.remove(container);
+  });
+
+  it('Should find target by label', async () => {
+    const content = SugarElement.fromHtml(
+      '<div>' +
+        '<label for="input-width">Width</label>' +
+        '<input type="number" id="input-width"></input>' +
+      '</div>'
+    );
+    Insert.append(container, content);
+    const input = container.dom.querySelector('#input-width');
+
+    Assert.eq('Should find target by label', input, UiFinder.findTargetByLabel(container, 'Width').getOrDie().dom, Testable.tStrict);
+  });
+
+  it('Should find input target by label when input inside label', async () => {
+    const content = SugarElement.fromHtml(
+      '<label>' +
+        'Has Border' +
+        '<input type="checkbox" id="has-border"></input>' +
+      '</label>'
+    );
+    Insert.append(container, content);
+    const input = container.dom.querySelector('#has-border');
+
+    Assert.eq('Should find input inside label', input, UiFinder.findTargetByLabel(container, 'Has Border').getOrDie().dom, Testable.tStrict);
+  });
+
+  it('Should find textarea target by label when textarea inside label', async () => {
+    const content = SugarElement.fromHtml(
+      '<label>' +
+        'Description' +
+        '<textarea id="description"></textarea>' +
+      '</label>'
+    );
+    Insert.append(container, content);
+    const input = container.dom.querySelector('#description');
+
+    Assert.eq('Should find textarea inside label', input, UiFinder.findTargetByLabel(container, 'Description').getOrDie().dom, Testable.tStrict);
+  });
+
+  it('Should match full label', async () => {
+    const content = SugarElement.fromHtml(
+      '<div>' +
+        '<label for="sort-by">Sort by</label>' +
+        '<input id="sort-by"></input>' +
+        '<label for="sort">Sort</label>' +
+        '<input id="sort"></input>' +
+      '</div>'
+    );
+    Insert.append(container, content);
+    const sortByInput = container.dom.querySelector('#sort-by');
+    const sortInput = container.dom.querySelector('#sort');
+
+    Assert.eq('Should find sortBy', sortByInput, UiFinder.findTargetByLabel(container, 'Sort by').getOrDie().dom, Testable.tStrict);
+    Assert.eq('Should find sort', sortInput, UiFinder.findTargetByLabel(container, 'Sort').getOrDie().dom, Testable.tStrict);
+  });
 });

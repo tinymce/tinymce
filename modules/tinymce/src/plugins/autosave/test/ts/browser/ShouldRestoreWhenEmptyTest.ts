@@ -3,7 +3,7 @@ import { Num } from '@ephox/katamari';
 import { McEditor, TinyAssertions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/autosave/Plugin';
 
 describe('browser.tinymce.plugins.autosave.ShouldRestoreWhenEmptyTest', () => {

@@ -5,7 +5,7 @@ import { assert } from 'chai';
 import * as fc from 'fast-check';
 
 import {
-  makeRatioConverter, noSizeConversion, nuSize, ratioSizeConversion, Size, SizeConversion, SizeUnit
+  makeRatioConverter, noSizeConversion, nuSize, ratioSizeConversion, type Size, type SizeConversion, type SizeUnit
 } from 'tinymce/themes/silver/ui/sizeinput/SizeInputModel';
 
 import { largeSensible, units } from './SizeInputShared';
@@ -47,7 +47,7 @@ describe('atomic.tinymce.themes.silver.components.sizeinput.SizeInputConverterTe
 
   it('noSizeConversion always returns none', () => {
     fc.assert(fc.property(
-      fc.integer(0, largeSensible), fc.constantFrom(...units),
+      fc.integer({ min: 0, max: largeSensible }), fc.constantFrom(...units),
       (value: number, unit: SizeUnit) => {
         assert.isTrue(noSizeConversion({ value, unit }).isNone());
       }

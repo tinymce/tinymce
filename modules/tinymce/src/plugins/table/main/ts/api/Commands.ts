@@ -1,6 +1,6 @@
 import { Fun, Obj } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import * as Utils from '../core/Utils';
 import * as CellDialog from '../ui/CellDialog';

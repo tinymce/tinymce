@@ -1,9 +1,10 @@
-import { RawEditorOptions, TinyMCE } from 'tinymce/core/api/PublicApi';
+import type { RawEditorOptions, TinyMCE } from 'tinymce/core/api/PublicApi';
 
 declare let tinymce: TinyMCE;
 
 const quickbarsClassicConfig: RawEditorOptions = {
   selector: 'textarea.tinymce',
+  license_key: 'gpl',
   plugins: 'quickbars link code',
   toolbar: 'quickbars code',
   menubar: 'view insert tools custom',
@@ -22,6 +23,7 @@ const quickbarsClassicConfig: RawEditorOptions = {
 };
 
 const dfreeHeaderConfig: RawEditorOptions = {
+  license_key: 'gpl',
   selector: '.dfree-header',
   plugins: [ 'quickbars' ],
   toolbar: false,
@@ -31,6 +33,7 @@ const dfreeHeaderConfig: RawEditorOptions = {
 };
 
 const dfreeBodyConfig: RawEditorOptions = {
+  license_key: 'gpl',
   selector: '.dfree-body',
   menubar: false,
   inline: true,

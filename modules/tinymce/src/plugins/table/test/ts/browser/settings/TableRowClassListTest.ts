@@ -1,7 +1,7 @@
 import { afterEach, describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
 
 import * as TableTestUtils from '../../module/test/TableTestUtils';
@@ -40,7 +40,7 @@ describe('browser.tinymce.plugins.table.TableRowClassListTest', () => {
     editor.setContent(tableHtml);
     TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 1);
     editor.execCommand('mceTableRowProps');
-    await TableTestUtils.pAssertListBox('Select class', editor, 'Class', { title: 'Select...', value: 'mce-no-match' });
+    await TableTestUtils.pAssertListBox('Select class', editor, 'Class', { title: 'Select…', value: 'mce-no-match' });
     await TableTestUtils.pClickDialogButton(editor, true);
     TinyAssertions.assertContent(editor, tableHtml);
   });
@@ -78,7 +78,7 @@ describe('browser.tinymce.plugins.table.TableRowClassListTest', () => {
     TinyAssertions.assertContent(editor, tableHtml);
   });
 
-  it('TINY-6653: Selecting "Select..." will do nothing', async () => {
+  it('TINY-6653: Selecting "Select…" will do nothing', async () => {
     const editor = hook.editor();
     editor.options.set('table_row_class_list', [
       { title: 'none', value: '' },
@@ -88,12 +88,12 @@ describe('browser.tinymce.plugins.table.TableRowClassListTest', () => {
     editor.setContent(content);
     TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 1);
     await TableTestUtils.openPropsDialog(editor, 'mceTableRowProps');
-    await TableTestUtils.selectListBoxValue(editor, 'Class', 'Select...');
+    await TableTestUtils.selectListBoxValue(editor, 'Class', 'Select…');
     await TableTestUtils.pClickDialogButton(editor, true);
     TinyAssertions.assertContent(editor, content);
   });
 
-  it('TINY-6653: Selecting multiple rows with different class values should show "Select..."', async () => {
+  it('TINY-6653: Selecting multiple rows with different class values should show "Select…"', async () => {
     const editor = hook.editor();
     editor.options.set('table_row_class_list', [
       { title: 'none', value: '' },
@@ -103,7 +103,7 @@ describe('browser.tinymce.plugins.table.TableRowClassListTest', () => {
     editor.setContent(content);
     TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 1, 0, 0 ], 1);
     await TableTestUtils.openPropsDialog(editor, 'mceTableRowProps');
-    await TableTestUtils.pAssertListBox('Select class', editor, 'Class', { title: 'Select...', value: 'mce-no-match' });
+    await TableTestUtils.pAssertListBox('Select class', editor, 'Class', { title: 'Select…', value: 'mce-no-match' });
     await TableTestUtils.pClickDialogButton(editor, true);
     TinyAssertions.assertContent(editor, content);
   });

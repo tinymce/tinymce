@@ -1,8 +1,8 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Fun, Optional } from '@ephox/katamari';
-import { SugarElement, SugarPosition } from '@ephox/sugar';
+import type { SugarElement, SugarPosition } from '@ephox/sugar';
 
-import { DragApi, DragMode, DragSink } from 'ephox/dragster/api/DragApis';
+import { type DragApi, DragMode, DragSink } from 'ephox/dragster/api/DragApis';
 import * as Dragging from 'ephox/dragster/core/Dragging';
 
 UnitTest.test('DraggerTest', () => {

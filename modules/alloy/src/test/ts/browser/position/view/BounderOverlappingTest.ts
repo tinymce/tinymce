@@ -3,10 +3,10 @@ import { Fun } from '@ephox/katamari';
 import { SugarElement, SugarPosition } from '@ephox/sugar';
 import { assert } from 'chai';
 
-import { Bounds, bounds } from 'ephox/alloy/alien/Boxes';
-import { Bubble, BubbleInstance } from 'ephox/alloy/positioning/layout/Bubble';
+import { type Bounds, bounds } from 'ephox/alloy/alien/Boxes';
+import type { Bubble, BubbleInstance } from 'ephox/alloy/positioning/layout/Bubble';
 import * as LayoutInset from 'ephox/alloy/positioning/layout/LayoutInset';
-import { AnchorBox, AnchorElement, AnchorLayout } from 'ephox/alloy/positioning/layout/LayoutTypes';
+import type { AnchorBox, AnchorElement, AnchorLayout } from 'ephox/alloy/positioning/layout/LayoutTypes';
 import * as Bounder from 'ephox/alloy/positioning/view/Bounder';
 
 interface TestDecisionSpec {

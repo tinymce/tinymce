@@ -1,6 +1,6 @@
-import { EventArgs } from '@ephox/sugar';
+import type { EventArgs } from '@ephox/sugar';
 
-import { AlloyComponent } from '../../api/component/ComponentApi';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
 
 export interface BlockerDragApi<T extends Event> {
   drop: (comp: AlloyComponent) => void;

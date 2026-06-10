@@ -1,7 +1,7 @@
 import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
 import { Attribute, Compare, Remove, SugarElement, SugarNode } from '@ephox/sugar';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import { isAfterTable, isBeforeTable } from '../caret/CaretPositionPredicates';
@@ -11,6 +11,7 @@ import * as NodeType from '../dom/NodeType';
 import * as PaddingBr from '../dom/PaddingBr';
 import * as Parents from '../dom/Parents';
 import * as TableCellSelection from '../selection/TableCellSelection';
+
 import * as DeleteElement from './DeleteElement';
 import { deleteRangeContents } from './DeleteUtils';
 import * as TableDeleteAction from './TableDeleteAction';

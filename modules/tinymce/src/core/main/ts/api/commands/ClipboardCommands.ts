@@ -1,4 +1,4 @@
-import Editor from '../Editor';
+import type Editor from '../Editor';
 import Env from '../Env';
 
 export const registerCommands = (editor: Editor): void => {
@@ -10,7 +10,7 @@ export const registerCommands = (editor: Editor): void => {
       // Try executing the native command
       try {
         doc.execCommand(command);
-      } catch (ex) {
+      } catch {
         // Command failed
         failed = true;
       }

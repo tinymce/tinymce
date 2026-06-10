@@ -1,21 +1,22 @@
-import { Cell, Fun, Obj, Optional, Type } from '@ephox/katamari';
+import { type Cell, Fun, Obj, Optional, Type } from '@ephox/katamari';
 
-import Editor from './api/Editor';
-import Formatter from './api/Formatter';
-import { Content, ContentFormat, GetContentArgs, GetSelectionContentArgs, SetContentArgs, SetContentResult, InsertContentDetails } from './content/ContentTypes';
+import type Editor from './api/Editor';
+import type Formatter from './api/Formatter';
+import type { EditorEvent } from './api/util/EventDispatcher';
+import type { Content, ContentFormat, GetContentArgs, GetSelectionContentArgs, SetContentArgs, SetContentResult, InsertContentDetails } from './content/ContentTypes';
 import { getContentInternal } from './content/GetContentImpl';
 import { insertHtmlAtCaret } from './content/InsertContentImpl';
 import { setContentInternal } from './content/SetContentImpl';
 import * as ApplyFormat from './fmt/ApplyFormat';
-import { FormatChangeCallback, UnbindFormatChanged, RegisteredFormats, formatChangedInternal } from './fmt/FormatChanged';
-import { Format, FormatVars } from './fmt/FormatTypes';
+import { type FormatChangeCallback, type UnbindFormatChanged, type RegisteredFormats, formatChangedInternal } from './fmt/FormatChanged';
+import type { Format, FormatVars } from './fmt/FormatTypes';
 import * as MatchFormat from './fmt/MatchFormat';
 import * as RemoveFormat from './fmt/RemoveFormat';
 import * as ToggleFormat from './fmt/ToggleFormat';
 import { getSelectedContentInternal } from './selection/GetSelectionContentImpl';
-import { RangeLikeObject } from './selection/RangeTypes';
+import type { RangeLikeObject } from './selection/RangeTypes';
 import * as Operations from './undo/Operations';
-import { Index, Locks, UndoBookmark, UndoLevel, UndoManager } from './undo/UndoManagerTypes';
+import type { Index, Locks, UndoBookmark, UndoLevel, UndoManager } from './undo/UndoManagerTypes';
 import { addVisualInternal } from './view/VisualAidsImpl';
 
 /** API implemented by the RTC plugin */
@@ -81,7 +82,7 @@ interface RtcAdaptor {
       locks: Locks,
       beforeBookmark: UndoBookmark,
       level?: Partial<UndoLevel>,
-      event?: Event
+      event?: EditorEvent<unknown>
     ) => UndoLevel | null;
     undo: (undoManager: UndoManager, locks: Locks, index: Index) => UndoLevel | undefined;
     redo: (index: Index, data: UndoLevel[]) => UndoLevel | undefined;
@@ -341,7 +342,7 @@ export const addUndoLevel = (
   locks: Locks,
   beforeBookmark: UndoBookmark,
   level?: Partial<UndoLevel>,
-  event?: Event
+  event?: EditorEvent<unknown>
 ): UndoLevel | null =>
   getRtcInstanceWithError(editor).undoManager.add(undoManager, index, locks, beforeBookmark, level, event);
 

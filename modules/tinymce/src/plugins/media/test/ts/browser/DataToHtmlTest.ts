@@ -1,12 +1,12 @@
-import { ApproxStructure, Assertions, StructAssert, Waiter } from '@ephox/agar';
+import { ApproxStructure, Assertions, type StructAssert, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import * as DataToHtml from 'tinymce/plugins/media/core/DataToHtml';
-import { MediaData } from 'tinymce/plugins/media/core/Types';
+import type { MediaData } from 'tinymce/plugins/media/core/Types';
 import Plugin from 'tinymce/plugins/media/Plugin';
 
 describe('browser.tinymce.plugins.media.core.DataToHtmlTest', () => {

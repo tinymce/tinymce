@@ -1,10 +1,10 @@
 import { UiControls, UiFinder, Waiter } from '@ephox/agar';
 import { Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { SugarElement } from '@ephox/sugar';
+import type { SugarElement } from '@ephox/sugar';
 import { TinyContentActions, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 const platform = PlatformDetection.detect();
 

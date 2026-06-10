@@ -1,15 +1,17 @@
-import { Arr, Obj, Type } from '@ephox/katamari';
+import { Arr, Obj, Type, Id } from '@ephox/katamari';
 
 import * as ErrorReporter from '../ErrorReporter';
 import * as FocusController from '../focus/FocusController';
+import LicenseKeyManagerLoader, { type LicenseKeyManagerAddon } from '../licensekey/LicenseKeyManager';
+
 import AddOnManager from './AddOnManager';
 import DOMUtils from './dom/DOMUtils';
-import { EventUtilsEvent } from './dom/EventUtils';
+import type { EventUtilsEvent } from './dom/EventUtils';
 import Editor from './Editor';
 import Env from './Env';
-import { EditorManagerEventMap } from './EventTypes';
-import { RawEditorOptions } from './OptionTypes';
-import I18n, { TranslatedString, Untranslated } from './util/I18n';
+import type { EditorManagerEventMap } from './EventTypes';
+import type { RawEditorOptions } from './OptionTypes';
+import I18n, { type TranslatedString, type Untranslated } from './util/I18n';
 import Observable from './util/Observable';
 import Tools from './util/Tools';
 import URI from './util/URI';
@@ -99,6 +101,7 @@ interface EditorManager extends Observable<EditorManagerEventMap> {
   documentBaseURL: string;
   i18n: I18n;
   suffix: string;
+  pageUid: string;
 
   add (this: EditorManager, editor: Editor): Editor;
   addI18n: (code: string, item: Record<string, string>) => void;
@@ -117,6 +120,7 @@ interface EditorManager extends Observable<EditorManagerEventMap> {
   translate: (text: Untranslated) => TranslatedString;
   triggerSave: () => void;
   _setBaseUrl (this: EditorManager, baseUrl: string): void;
+  _addLicenseKeyManager (this: EditorManager, addOn: LicenseKeyManagerAddon): void;
 }
 
 const isQuirksMode = document.compatMode !== 'CSS1Compat';
@@ -137,6 +141,14 @@ const EditorManager: EditorManager = {
 
   documentBaseURL: null as any,
   suffix: null as any,
+
+  /**
+   * A uuid string to anonymously identify the page tinymce is loaded in
+   *
+   * @property pageUid
+   * @type String
+   */
+  pageUid: Id.uuidV4(),
 
   /**
    * Major version of TinyMCE build.
@@ -275,6 +287,17 @@ const EditorManager: EditorManager = {
     self.suffix = suffix;
 
     FocusController.setup(self);
+
+    // Lock certain properties to reduce misuse
+    Arr.each(
+      [ 'majorVersion', 'minorVersion', 'releaseDate', 'pageUid', '_addLicenseKeyManager' ],
+      (property) =>
+        Object.defineProperty(self, property, {
+          writable: false,
+          configurable: false,
+          enumerable: true,
+        })
+    );
   },
 
   /**
@@ -320,7 +343,7 @@ const EditorManager: EditorManager = {
   /**
    * Initializes a set of editors. This method will create editors based on various settings.
    * <br /><br />
-   * For information on basic usage of <code>init</code>, see: <a href="https://www.tiny.cloud/docs/tinymce/7/basic-setup/">Basic setup</a>.
+   * For information on basic usage of <code>init</code>, see: <a href="https://www.tiny.cloud/docs/tinymce/8/basic-setup/">Basic setup</a>.
    *
    * @method init
    * @param {Object} options Options object to be passed to each editor instance.
@@ -375,7 +398,7 @@ const EditorManager: EditorManager = {
       if (Env.browser.isIE() || Env.browser.isEdge()) {
         ErrorReporter.initError(
           'TinyMCE does not support the browser you are using. For a list of supported' +
-          ' browsers please see: https://www.tiny.cloud/docs/tinymce/7/support/#supportedwebbrowsers'
+          ' browsers please see: https://www.tiny.cloud/docs/tinymce/8/support/#supportedwebbrowsers'
         );
         return [];
       } else if (isQuirksMode) {
@@ -477,7 +500,6 @@ const EditorManager: EditorManager = {
    *   ed.windowManager.alert('Hello world!');
    * });
    */
-  // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
   get(id?: number | string): any {
     if (arguments.length === 0) {
       return editors.slice(0);
@@ -736,7 +758,9 @@ const EditorManager: EditorManager = {
   _setBaseUrl(baseUrl: string) {
     this.baseURL = new URI(this.documentBaseURL).toAbsolute(baseUrl.replace(/\/+$/, ''));
     this.baseURI = new URI(this.baseURL);
-  }
+  },
+
+  _addLicenseKeyManager: (addOn: LicenseKeyManagerAddon) => LicenseKeyManagerLoader.add(addOn),
 };
 
 EditorManager.setup();

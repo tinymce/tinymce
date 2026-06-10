@@ -1,4 +1,4 @@
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 
 const setup = (editor: Editor): void => {
   // Add some inline shortcuts

@@ -1,9 +1,9 @@
 import { Unicode } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import type { SugarElement } from '@ephox/sugar';
 import * as fc from 'fast-check';
 
 import * as ArbNodes from './ArbNodes';
-import { ArbitraryDetail, CompositeDetail, StructureDetail } from './ArbSchemaTypes';
+import type { ArbitraryDetail, CompositeDetail, StructureDetail } from './ArbSchemaTypes';
 
 const formatting: CompositeDetail = {
   type: 'composite',

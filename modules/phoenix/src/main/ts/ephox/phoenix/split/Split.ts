@@ -1,4 +1,4 @@
-import { Universe } from '@ephox/boss';
+import type { Universe } from '@ephox/boss';
 import { Arr, Optional } from '@ephox/katamari';
 import { Strings } from '@ephox/polaris';
 

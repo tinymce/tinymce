@@ -1,10 +1,10 @@
-import { ApproxStructure, Assertions, StructAssert, Waiter } from '@ephox/agar';
+import { ApproxStructure, Assertions, type StructAssert, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import AstNode from 'tinymce/core/api/html/Node';
 import Plugin from 'tinymce/plugins/media/Plugin';
 

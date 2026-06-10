@@ -1,9 +1,9 @@
 import { Arr, Optional, Optionals } from '@ephox/katamari';
-import { SugarElement, SugarNode } from '@ephox/sugar';
+import { type SugarElement, SugarNode } from '@ephox/sugar';
 
-import * as Structs from '../api/Structs';
-import { Warehouse } from '../api/Warehouse';
-import { CellElement } from '../util/TableTypes';
+import type * as Structs from '../api/Structs';
+import type { Warehouse } from '../api/Warehouse';
+import type { CellElement } from '../util/TableTypes';
 
 export type RowHeaderType = 'section' | 'cells' | 'sectionCells';
 export type RowType = 'header' | 'body' | 'footer';

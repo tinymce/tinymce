@@ -1,8 +1,8 @@
 import { Optional, Type } from '@ephox/katamari';
 
 import DOMUtils from './api/dom/DOMUtils';
-import EditorSelection from './api/dom/Selection';
-import Editor from './api/Editor';
+import type EditorSelection from './api/dom/Selection';
+import type Editor from './api/Editor';
 import * as Events from './api/Events';
 
 type Nullable<T> = {

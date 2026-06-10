@@ -1,4 +1,5 @@
 import * as BagUtils from '../util/BagUtils';
+
 import * as Arr from './Arr';
 import * as Fun from './Fun';
 import * as Obj from './Obj';

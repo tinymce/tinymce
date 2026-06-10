@@ -1,12 +1,12 @@
-import { Assertions, Cursors, StructAssert } from '@ephox/agar';
+import { Assertions, Cursors, type StructAssert } from '@ephox/agar';
 import { Optional } from '@ephox/katamari';
 import { Hierarchy, Html, SugarElement } from '@ephox/sugar';
 
-import { Editor, GetContentArgs } from '../../alien/EditorTypes';
-import { Presence } from '../pipeline/TinyApis';
+import type { Editor, GetContentArgs } from '../../alien/EditorTypes';
+import type { Presence } from '../pipeline/TinyApis';
 import { TinyDom } from '../TinyDom';
 
-const assertPath = (label: string, root: SugarElement<Node>, expPath: number[], expOffset: number, actElement: Node, actOffset: number) => {
+const assertPath = (label: string, root: SugarElement<Node>, expPath: number[], expOffset: number, actElement: Node, actOffset: number): void => {
   const expected = Cursors.calculateOne(root, expPath);
   const message = () => {
     const actual = SugarElement.fromDom(actElement);
@@ -50,6 +50,7 @@ const assertCursor = (editor: Editor, path: number[], offset: number): void =>
   assertSelection(editor, path, offset, path, offset);
 
 export {
+  assertPath,
   assertContent,
   assertRawContent,
   assertContentPresence,

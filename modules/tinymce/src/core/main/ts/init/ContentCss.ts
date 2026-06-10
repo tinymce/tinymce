@@ -1,16 +1,16 @@
 import { Arr } from '@ephox/katamari';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import * as Options from '../api/Options';
-import { TinyMCE } from '../api/Tinymce';
+import type { TinyMCE } from '../api/Tinymce';
 
 declare let tinymce: TinyMCE;
 
 const isContentCssSkinName = (url: string) => /^[a-z0-9\-]+$/i.test(url);
 
-const toContentSkinResourceName = (url: string): string => 'content/' + url + '/content.css';
+const toContentSkinResourceName = (name: string): string => 'content/' + name + '/content.css';
 
-const isBundledCssSkinName = (url: string) => tinymce.Resource.has(toContentSkinResourceName(url));
+const isBundledCssSkinName = (name: string) => tinymce.Resource.has(toContentSkinResourceName(name));
 
 const getContentCssUrls = (editor: Editor): string[] => {
   return transformToUrls(editor, Options.getContentCss(editor));
@@ -27,7 +27,7 @@ const transformToUrls = (editor: Editor, cssLinks: string[]): string[] => {
 
   return Arr.map(cssLinks, (url) => {
     if (isBundledCssSkinName(url)) {
-      return url;
+      return toContentSkinResourceName(url);
     } else if (isContentCssSkinName(url) && !editor.inline) {
       return `${skinUrl}/${url}/${contentCssFile}`;
     } else {
@@ -41,6 +41,5 @@ const appendContentCssFromSettings = (editor: Editor): void => {
 };
 
 export {
-  toContentSkinResourceName,
   appendContentCssFromSettings
 };

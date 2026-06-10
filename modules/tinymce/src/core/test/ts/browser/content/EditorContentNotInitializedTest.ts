@@ -7,7 +7,6 @@ import EditorManager from 'tinymce/core/api/EditorManager';
 import AstNode from 'tinymce/core/api/html/Node';
 
 describe('browser.tinymce.core.content.EditorContentNotInitializedTest', () => {
-
   const settings = {
     menubar: false,
     toolbar: false,
@@ -17,9 +16,11 @@ describe('browser.tinymce.core.content.EditorContentNotInitializedTest', () => {
 
   const createEditor = () => new Editor('editor', settings, EditorManager);
 
-  const setContentAndAssertReturn = (editor: Editor, content: AstNode | string) => {
-    const actual = editor.setContent(content);
-    assert.deepEqual(actual, content, 'should return what you tried to set');
+  const setContentAndAssertNoThrow = (editor: Editor, content: AstNode | string) => {
+    assert.doesNotThrow(
+      () => editor.setContent(content),
+      'Does not throw an error when setting content'
+    );
   };
 
   const getAndAssertContent = (editor: Editor, expected: AstNode | string, tree?: boolean) => {
@@ -34,14 +35,14 @@ describe('browser.tinymce.core.content.EditorContentNotInitializedTest', () => {
 
   it('set content on editor without initializing it', () => {
     const editor = createEditor();
-    setContentAndAssertReturn(editor, 'hello');
+    setContentAndAssertNoThrow(editor, 'hello');
     McEditor.remove(editor);
   });
 
   it('set content on editor where the body has been removed', async () => {
     const editor = await McEditor.pFromHtml<Editor>('<textarea></textarea>', settings);
     removeBodyElement(editor);
-    setContentAndAssertReturn(editor, 'hello');
+    setContentAndAssertNoThrow(editor, 'hello');
     McEditor.remove(editor);
   });
 
@@ -60,14 +61,14 @@ describe('browser.tinymce.core.content.EditorContentNotInitializedTest', () => {
 
   it('set tree content on editor without initializing it', () => {
     const editor = createEditor();
-    setContentAndAssertReturn(editor, new AstNode('p', 1));
+    setContentAndAssertNoThrow(editor, new AstNode('p', 1));
     McEditor.remove(editor);
   });
 
   it('set tree content on editor where the body has been removed', async () => {
     const editor = await McEditor.pFromHtml<Editor>('<textarea></textarea>', settings);
     removeBodyElement(editor);
-    setContentAndAssertReturn(editor, new AstNode('p', 1));
+    setContentAndAssertNoThrow(editor, new AstNode('p', 1));
     McEditor.remove(editor);
   });
 

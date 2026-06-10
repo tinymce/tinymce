@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Mouse, UiFinder, Waiter } from '@ephox/agar';
-import { GuiFactory, TestHelpers } from '@ephox/alloy';
+import { GuiFactory } from '@ephox/alloy';
 import { before, beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun, Strings } from '@ephox/katamari';
 import { SelectorFind, Selectors, SugarDocument } from '@ephox/sugar';
@@ -7,12 +7,13 @@ import { assert } from 'chai';
 
 import SilverMenubar from 'tinymce/themes/silver/ui/menus/menubar/SilverMenubar';
 
+import * as GuiSetup from '../../module/GuiSetup';
 import * as TestExtras from '../../module/TestExtras';
 
 describe('headless.tinymce.themes.silver.sketchers.SilverMenubar Test', () => {
   const extrasHook = TestExtras.bddSetup();
 
-  const hook = TestHelpers.GuiSetup.bddSetup((store, _doc, _body) => GuiFactory.build({
+  const hook = GuiSetup.bddSetup((store, _doc, _body) => GuiFactory.build({
     dom: {
       tag: 'div',
       classes: [ 'silvermenubar-test-container' ]
@@ -277,7 +278,7 @@ describe('headless.tinymce.themes.silver.sketchers.SilverMenubar Test', () => {
       const menubar = getMenubar();
       const sink = extrasHook.access().getPopupSink();
       Mouse.hoverOn(menubar.element, 'button[role="menuitem"]:contains("Basic Menu Button")');
-      await Waiter.pWait(100);
+      await Waiter.pWaitBetweenUserActions();
       UiFinder.notExists(sink, '[role="menu"]');
       Mouse.clickOn(menubar.element, 'button[role="menuitem"]:contains("Changes")');
       await UiFinder.pWaitForVisible(

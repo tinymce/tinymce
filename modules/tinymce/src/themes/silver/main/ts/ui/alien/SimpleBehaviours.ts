@@ -1,4 +1,4 @@
-import { AddEventsBehaviour, AlloyEvents, Behaviour } from '@ephox/alloy';
+import { AddEventsBehaviour, type AlloyEvents, Behaviour } from '@ephox/alloy';
 import { Id } from '@ephox/katamari';
 
 // Consider moving to alloy once it takes shape.

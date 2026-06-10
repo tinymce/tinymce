@@ -1,13 +1,14 @@
-import { AlloyComponent, Disabling, ItemTypes } from '@ephox/alloy';
-import { Menu } from '@ephox/bridge';
+import { type AlloyComponent, Disabling, type ItemTypes } from '@ephox/alloy';
+import type { Menu } from '@ephox/bridge';
 import { Fun, Optional } from '@ephox/katamari';
 import { Attribute, SelectorFind } from '@ephox/sugar';
 
-import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
+import type { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 
-import ItemResponse from '../ItemResponse';
+import type ItemResponse from '../ItemResponse';
 import { renderDownwardsCaret, renderSubmenuCaret } from '../structure/ItemSlices';
 import { renderItemStructure } from '../structure/ItemStructure';
+
 import { buildData, renderCommonItem } from './CommonMenuItem';
 
 // Note, this does not create a valid SketchSpec.
@@ -33,11 +34,13 @@ const renderNestedItem = (spec: Menu.NestedMenuItem, itemResponse: ItemResponse,
     textContent: spec.text,
     htmlContent: Optional.none(),
     ariaLabel: spec.text,
+    labelContent: Optional.none(),
     caret: Optional.some(caret),
     checkMark: Optional.none(),
     shortcutContent: spec.shortcut
   }, providersBackstage, renderIcons);
   return renderCommonItem({
+    context: spec.context,
     data: buildData(spec),
     getApi,
     enabled: spec.enabled,

@@ -1,9 +1,9 @@
-import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
-import { SketchBehaviours } from '../../api/component/SketchBehaviours';
-import { AlloySpec, OptionalDomSchema } from '../../api/component/SpecTypes';
-import { AlloyEventRecord } from '../../api/events/AlloyEvents';
-import { SingleSketch, SingleSketchDetail, SingleSketchSpec } from '../../api/ui/Sketcher';
-import { DomModification, DomModificationSpec } from '../../dom/DomModification';
+import type { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
+import type { SketchBehaviours } from '../../api/component/SketchBehaviours';
+import type { AlloySpec, OptionalDomSchema } from '../../api/component/SpecTypes';
+import type { AlloyEventRecord } from '../../api/events/AlloyEvents';
+import type { SingleSketch, SingleSketchDetail, SingleSketchSpec } from '../../api/ui/Sketcher';
+import type { DomModification, DomModificationSpec } from '../../dom/DomModification';
 
 export interface ContainerDetail extends SingleSketchDetail {
   uid: string;

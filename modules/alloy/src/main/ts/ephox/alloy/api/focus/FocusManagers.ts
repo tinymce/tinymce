@@ -1,8 +1,8 @@
-import { Fun, Optional } from '@ephox/katamari';
-import { Compare, Focus, SugarElement } from '@ephox/sugar';
+import { Fun, type Optional } from '@ephox/katamari';
+import { Compare, Focus, type SugarElement } from '@ephox/sugar';
 
 import { Highlighting } from '../behaviour/Highlighting';
-import { AlloyComponent } from '../component/ComponentApi';
+import type { AlloyComponent } from '../component/ComponentApi';
 import * as AlloyTriggers from '../events/AlloyTriggers';
 import * as SystemEvents from '../events/SystemEvents';
 

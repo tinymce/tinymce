@@ -2,7 +2,7 @@ import { Arr, Fun, Obj, Optional, Strings, Type, Unicode } from '@ephox/katamari
 import { Attribute, Insert, PredicateFind, Remove, SugarElement, SugarNode, SugarText, Traverse } from '@ephox/sugar';
 
 import DomTreeWalker from '../api/dom/TreeWalker';
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import CaretPosition from '../caret/CaretPosition';
 import * as DeleteElement from '../delete/DeleteElement';
 import * as NodeType from '../dom/NodeType';
@@ -10,9 +10,10 @@ import * as PaddingBr from '../dom/PaddingBr';
 import * as SplitRange from '../selection/SplitRange';
 import { isWhiteSpace } from '../text/CharType';
 import * as Zwsp from '../text/Zwsp';
+
 import * as ExpandRange from './ExpandRange';
 import { CARET_ID, getParentCaretContainer, isCaretNode } from './FormatContainer';
-import { FormatVars } from './FormatTypes';
+import type { FormatVars } from './FormatTypes';
 import * as FormatUtils from './FormatUtils';
 import * as MatchFormat from './MatchFormat';
 
@@ -307,7 +308,7 @@ const removeCaretFormat = (editor: Editor, name: string, vars?: FormatVars, simi
     rng.collapse(true);
 
     // Expand the range to the closest word and split it at those points
-    let expandedRng = ExpandRange.expandRng(dom, rng, formatList, true);
+    let expandedRng = ExpandRange.expandRng(dom, rng, formatList, { includeTrailingSpace: true });
     expandedRng = SplitRange.split(expandedRng);
 
     // TODO: Figure out how on earth this works, as it shouldn't since remove format

@@ -1,8 +1,9 @@
-import { Cell } from '@ephox/katamari';
+import type { Cell } from '@ephox/katamari';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import Env from '../api/Env';
 import VK from '../api/util/VK';
+
 import * as BoundarySelection from './BoundarySelection';
 import * as CefNavigation from './CefNavigation';
 import * as MatchKeys from './MatchKeys';

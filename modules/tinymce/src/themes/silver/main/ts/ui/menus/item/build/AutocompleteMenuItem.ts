@@ -1,13 +1,13 @@
-import { Behaviour, GuiFactory, ItemTypes, MaxHeight, Tooltipping } from '@ephox/alloy';
-import { InlineContent, Toolbar } from '@ephox/bridge';
+import { type Behaviour, GuiFactory, type ItemTypes, MaxHeight, Tooltipping } from '@ephox/alloy';
+import type { InlineContent, Toolbar } from '@ephox/bridge';
 import { Fun, Obj, Optional, Regex } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import I18n from 'tinymce/core/api/util/I18n';
-import { UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
+import type { UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
 import { buildData, renderCommonItem } from 'tinymce/themes/silver/ui/menus/item/build/CommonMenuItem';
-import ItemResponse from 'tinymce/themes/silver/ui/menus/item/ItemResponse';
+import type ItemResponse from 'tinymce/themes/silver/ui/menus/item/ItemResponse';
 import { renderItemStructure } from 'tinymce/themes/silver/ui/menus/item/structure/ItemStructure';
 
 type ItemValueHandler = (itemValue: string, itemMeta: Record<string, any>) => void;
@@ -89,6 +89,7 @@ const renderAutocompleteItem = (
     textContent: Optional.none(),
     htmlContent: useText ? spec.text.map((text) => replaceText(text, matchText)) : Optional.none(),
     ariaLabel: spec.text,
+    labelContent: Optional.none(),
     iconContent: spec.icon,
     shortcutContent: Optional.none(),
     checkMark: Optional.none(),
@@ -98,6 +99,7 @@ const renderAutocompleteItem = (
 
   const tooltipString = spec.text.filter((text) => !useText && text !== '');
   return renderCommonItem({
+    context: 'mode:design',
     data: buildData(spec),
     enabled: spec.enabled,
     getApi: Fun.constant({}),

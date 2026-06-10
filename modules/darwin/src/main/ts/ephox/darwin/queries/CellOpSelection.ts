@@ -1,8 +1,8 @@
 import { Arr, Fun, Optional } from '@ephox/katamari';
-import { RunOperation } from '@ephox/snooker';
-import { Attribute, SugarElement } from '@ephox/sugar';
+import type { RunOperation } from '@ephox/snooker';
+import { Attribute, type SugarElement } from '@ephox/sugar';
 
-import { Ephemera } from '../api/Ephemera';
+import type { Ephemera } from '../api/Ephemera';
 import * as TableSelection from '../api/TableSelection';
 
 const selection: (selectedCells: SugarElement<HTMLTableCellElement>[]) => SugarElement<HTMLTableCellElement>[] = Fun.identity;

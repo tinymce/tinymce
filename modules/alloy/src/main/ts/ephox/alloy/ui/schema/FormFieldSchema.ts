@@ -5,7 +5,7 @@ import { Composing } from '../../api/behaviour/Composing';
 import { Representing } from '../../api/behaviour/Representing';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as PartType from '../../parts/PartType';
-import { FormFieldDetail } from '../types/FormFieldTypes';
+import type { FormFieldDetail } from '../types/FormFieldTypes';
 
 const schema = Fun.constant([
   FieldSchema.defaulted('prefix', 'form-field'),

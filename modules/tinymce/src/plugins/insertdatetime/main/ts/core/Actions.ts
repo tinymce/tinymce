@@ -1,4 +1,4 @@
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import * as Options from '../api/Options';
 
@@ -48,7 +48,7 @@ const updateElement = (editor: Editor, timeElm: HTMLTimeElement, computerTime: s
 };
 
 const insertDateTime = (editor: Editor, format: string): void => {
-  if (Options.shouldInsertTimeElement(editor)) {
+  if (Options.shouldInsertTimeElement(editor) && editor.selection.isEditable()) {
     const userTime = getDateTime(editor, format);
     let computerTime;
 

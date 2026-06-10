@@ -1,5 +1,5 @@
 import { Num, Optional } from '@ephox/katamari';
-import { Attribute, SugarElement, SugarNode } from '@ephox/sugar';
+import { Attribute, type SugarElement, SugarNode } from '@ephox/sugar';
 
 import * as DomPinpoint from './DomPinpoint';
 

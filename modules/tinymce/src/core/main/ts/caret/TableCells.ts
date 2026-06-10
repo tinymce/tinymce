@@ -1,9 +1,9 @@
-// eslint-disable-next-line max-len
 import { Arr, Fun, Optional } from '@ephox/katamari';
 import { SelectorFilter, SugarElement } from '@ephox/sugar';
 
 import * as ClientRect from '../geom/ClientRect';
-import { CaretPosition } from './CaretPosition';
+
+import type { CaretPosition } from './CaretPosition';
 import { findClosestHorizontalPosition, getFirstLinePositions, getLastLinePositions } from './LineReader';
 
 type GeomClientRect = ClientRect.ClientRect;

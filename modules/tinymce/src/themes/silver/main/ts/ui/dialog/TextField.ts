@@ -1,13 +1,12 @@
 import {
-  AddEventsBehaviour, AlloyEvents, AlloyTriggers, Behaviour, Disabling, FormField as AlloyFormField, Input as AlloyInput, Invalidating, Keying,
-  NativeEvents, Representing, SketchSpec, SystemEvents, Tabstopping
+  AddEventsBehaviour, AlloyEvents, FormField as AlloyFormField, Input as AlloyInput, AlloyTriggers, Behaviour, Disabling, Invalidating, Keying, NativeEvents, Representing, type SketchSpec, SystemEvents, Tabstopping
 } from '@ephox/alloy';
-import { Dialog } from '@ephox/bridge';
+import type { Dialog } from '@ephox/bridge';
 import { Arr, Fun, Future, Optional, Result } from '@ephox/katamari';
 import { Traverse } from '@ephox/sugar';
 
-import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
-import * as ReadOnly from '../../ReadOnly';
+import type { UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import * as UiState from '../../UiState';
 import { renderFormFieldWith, renderLabel } from '../alien/FieldLabeller';
 import { formChangeEvent, formSubmitEvent } from '../general/FormEvents';
 
@@ -28,6 +27,8 @@ export interface TextField {
   }>;
   readonly maximized: boolean;
   readonly data: Optional<string>;
+  readonly context: string;
+  readonly spellcheck: Optional<boolean>;
 }
 
 type InputSpec = Omit<Dialog.Input, 'type'>;
@@ -38,9 +39,9 @@ const renderTextField = (spec: TextField, providersBackstage: UiFactoryBackstage
 
   const baseInputBehaviours: Behaviour.NamedConfiguredBehaviour<any, any, any>[] = [
     Disabling.config({
-      disabled: () => spec.disabled || providersBackstage.isDisabled()
+      disabled: () => spec.disabled || providersBackstage.checkUiComponentContext(spec.context).shouldDisable
     }),
-    ReadOnly.receivingConfig(),
+    UiState.toggleOnReceive(() => providersBackstage.checkUiComponentContext(spec.context)),
     Keying.config({
       mode: 'execution',
       useEnter: spec.multiline !== true,
@@ -78,8 +79,10 @@ const renderTextField = (spec: TextField, providersBackstage: UiFactoryBackstage
 
   const placeholder = spec.placeholder.fold( Fun.constant({}), (p) => ({ placeholder: providersBackstage.translate(p) }));
   const inputMode = spec.inputMode.fold(Fun.constant({}), (mode) => ({ inputmode: mode }));
+  const spellcheck = spec.spellcheck.fold(Fun.constant({}), (spellchecker) => ({ spellcheck: spellchecker }));
 
   const inputAttributes = {
+    ...spellcheck,
     ...placeholder,
     ...inputMode,
     'data-mce-name': spec.name
@@ -114,7 +117,7 @@ const renderTextField = (spec: TextField, providersBackstage: UiFactoryBackstage
 
   const extraBehaviours = [
     Disabling.config({
-      disabled: () => spec.disabled || providersBackstage.isDisabled(),
+      disabled: () => spec.disabled || providersBackstage.checkUiComponentContext(spec.context).shouldDisable,
       onDisabled: (comp) => {
         AlloyFormField.getField(comp).each(Disabling.disable);
       },
@@ -122,7 +125,7 @@ const renderTextField = (spec: TextField, providersBackstage: UiFactoryBackstage
         AlloyFormField.getField(comp).each(Disabling.enable);
       }
     }),
-    ReadOnly.receivingConfig()
+    UiState.toggleOnReceive(() => providersBackstage.checkUiComponentContext(spec.context)),
   ];
 
   return renderFormFieldWith(pLabel, pTextField, extraClasses2, extraBehaviours);
@@ -139,7 +142,9 @@ const renderInput = (spec: InputSpec, providersBackstage: UiFactoryBackstageProv
   classname: 'tox-textfield',
   validation: Optional.none(),
   maximized: spec.maximized,
-  data: initialData
+  data: initialData,
+  context: spec.context,
+  spellcheck: Optional.none(),
 }, providersBackstage);
 
 const renderTextarea = (spec: TextAreaSpec, providersBackstage: UiFactoryBackstageProviders, initialData: Optional<string>): SketchSpec => renderTextField({
@@ -153,7 +158,9 @@ const renderTextarea = (spec: TextAreaSpec, providersBackstage: UiFactoryBacksta
   classname: 'tox-textarea',
   validation: Optional.none(),
   maximized: spec.maximized,
-  data: initialData
+  data: initialData,
+  context: spec.context,
+  spellcheck: spec.spellcheck,
 }, providersBackstage);
 
 export {

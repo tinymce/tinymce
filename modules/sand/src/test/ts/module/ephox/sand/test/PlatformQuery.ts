@@ -1,4 +1,4 @@
-import { PlatformDetection } from 'ephox/sand/core/PlatformDetection';
+import type { PlatformDetection } from 'ephox/sand/core/PlatformDetection';
 
 const isEdge = (platform: PlatformDetection): boolean => {
   return platform.browser.isEdge();

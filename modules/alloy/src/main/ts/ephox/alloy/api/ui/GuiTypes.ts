@@ -1,10 +1,10 @@
 import { Objects } from '@ephox/boulder';
-import { Id, Obj, Optional } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import { Id, Obj, type Optional } from '@ephox/katamari';
+import type { SugarElement } from '@ephox/sugar';
 
 import * as FunctionAnnotator from '../../debugging/FunctionAnnotator';
-import { AlloyComponent } from '../component/ComponentApi';
-import { AlloySpec, PremadeSpec } from '../component/SpecTypes';
+import type { AlloyComponent } from '../component/ComponentApi';
+import type { AlloySpec, PremadeSpec } from '../component/SpecTypes';
 
 const premadeTag = Id.generate('alloy-premade');
 

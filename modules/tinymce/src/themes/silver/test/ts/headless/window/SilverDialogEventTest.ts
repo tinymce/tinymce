@@ -1,17 +1,19 @@
-import { Mouse, TestStore, UiFinder, Waiter } from '@ephox/agar';
-import { AlloyComponent, Behaviour, GuiFactory, ModalDialog, Positioning, TestHelpers, TooltippingTypes } from '@ephox/alloy';
+import { Mouse, type TestStore, UiFinder, Waiter } from '@ephox/agar';
+import { type AlloyComponent, Behaviour, GuiFactory, ModalDialog, Positioning, type TooltippingTypes } from '@ephox/alloy';
 import { before, beforeEach, describe, it } from '@ephox/bedrock-client';
 import { ValueType } from '@ephox/boulder';
-import { DialogManager } from '@ephox/bridge';
+import type { DialogManager } from '@ephox/bridge';
 import { Fun, Optional, Result } from '@ephox/katamari';
 import { SugarBody } from '@ephox/sugar';
 
 import I18n from 'tinymce/core/api/util/I18n';
-import { UiFactoryBackstage, UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
+import type { UiFactoryBackstage, UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 import { renderDialog } from 'tinymce/themes/silver/ui/window/SilverDialog';
 
+import * as GuiSetup from '../../module/GuiSetup';
+
 describe('headless.tinymce.themes.silver.window.SilverDialogEventTest', () => {
-  const hook = TestHelpers.GuiSetup.bddSetup(() =>
+  const hook = GuiSetup.bddSetup(() =>
     // Build the sink for the component
     GuiFactory.build({
       dom: {
@@ -34,6 +36,7 @@ describe('headless.tinymce.themes.silver.window.SilverDialogEventTest', () => {
       },
       buttons: [
         {
+          context: 'any',
           type: 'cancel',
           name: 'cancel',
           text: 'Cancel',
@@ -44,6 +47,7 @@ describe('headless.tinymce.themes.silver.window.SilverDialogEventTest', () => {
           icon: Optional.none()
         },
         {
+          context: 'any',
           type: 'submit',
           name: 'save',
           text: 'Save',
@@ -95,6 +99,7 @@ describe('headless.tinymce.themes.silver.window.SilverDialogEventTest', () => {
         shared: {
           getSink: () => Result.value(sink),
           providers: {
+            checkUiComponentContext: Fun.constant({ contextType: 'any', shouldDisable: false }),
             icons: () => ({}),
             menuItems: () => ({}),
             translate: I18n.translate,

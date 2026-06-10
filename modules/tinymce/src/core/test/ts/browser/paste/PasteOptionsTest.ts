@@ -1,8 +1,8 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { McEditor, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
-import { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
+import type Editor from 'tinymce/core/api/Editor';
+import type { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
 
 describe('browser.tinymce.core.paste.PasteOptionsTest', () => {
   const pCreateInlineEditor = (settings: RawEditorOptions) =>

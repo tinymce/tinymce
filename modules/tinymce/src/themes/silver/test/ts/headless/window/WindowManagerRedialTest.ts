@@ -3,8 +3,8 @@ import { before, describe, it } from '@ephox/bedrock-client';
 import { SugarBody, Value } from '@ephox/sugar';
 import { assert } from 'chai';
 
-import { Dialog } from 'tinymce/core/api/ui/Ui';
-import { WindowManagerImpl } from 'tinymce/core/api/WindowManager';
+import type { Dialog } from 'tinymce/core/api/ui/Ui';
+import type { WindowManagerImpl } from 'tinymce/core/api/WindowManager';
 import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 
 import * as TestExtras from '../../module/TestExtras';
@@ -145,17 +145,17 @@ describe('headless.tinymce.themes.silver.window.WindowManagerRedialTest', () => 
 
   it('Check redialing a dialog', async () => {
     const dialogApi = openDialog();
-    UiFinder.exists(SugarBody.body(), 'button:contains("Destination: DialogB"):not([disabled])');
+    UiFinder.exists(SugarBody.body(), 'button:enabled:contains("Destination: DialogB")');
     Mouse.clickOn(SugarBody.body(), 'button:contains("Disable other")');
     // Button should be disabled
-    UiFinder.notExists(SugarBody.body(), 'button:contains("Destination: DialogB"):not([disabled])');
+    UiFinder.notExists(SugarBody.body(), 'button:enabled:contains("Destination: DialogB")');
 
     Mouse.clickOn(SugarBody.body(), 'button:contains("Disable other")');
     Mouse.clickOn(SugarBody.body(), 'button:contains("Destination: DialogB")');
 
     Mouse.clickOn(SugarBody.body(), 'button:contains("Enable other")');
     // Button should be enabled
-    UiFinder.exists(SugarBody.body(), 'button:contains("Destination: DialogB"):not([disabled])');
+    UiFinder.exists(SugarBody.body(), 'button:enabled:contains("Destination: DialogB")');
     Mouse.clickOn(SugarBody.body(), 'button:contains("Destination: DialogB")');
 
     Mouse.clickOn(SugarBody.body(), 'button:contains("Destination: DialogC")');

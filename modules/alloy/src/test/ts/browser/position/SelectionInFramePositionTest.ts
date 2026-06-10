@@ -1,14 +1,14 @@
 import { Chain, Cursors, Guard, NamedChain } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Optional, Result } from '@ephox/katamari';
-import { Css, DomEvent, Scroll, SelectorFind, SimRange, SugarElement, SugarNode, SugarPosition, Traverse, WindowSelection } from '@ephox/sugar';
+import { Css, DomEvent, Scroll, SelectorFind, type SimRange, SugarElement, SugarNode, type SugarPosition, Traverse, WindowSelection } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import * as Boxes from 'ephox/alloy/alien/Boxes';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as ChainUtils from 'ephox/alloy/test/ChainUtils';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import * as PositionTestUtils from 'ephox/alloy/test/PositionTestUtils';
 import { toDomRange } from 'ephox/alloy/test/RangeUtils';
 import * as Sinks from 'ephox/alloy/test/Sinks';

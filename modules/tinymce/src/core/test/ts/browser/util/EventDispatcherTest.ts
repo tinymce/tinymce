@@ -1,7 +1,7 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
 
-import EventDispatcher, { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import EventDispatcher, { type EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 describe('browser.tinymce.core.util.EventDispatcherTest', () => {
   it('fire (no event listeners)', () => {

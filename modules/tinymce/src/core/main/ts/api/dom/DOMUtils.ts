@@ -7,15 +7,16 @@ import * as NodeType from '../../dom/NodeType';
 import * as Position from '../../dom/Position';
 import * as StyleSheetLoaderRegistry from '../../dom/StyleSheetLoaderRegistry';
 import * as TrimNode from '../../dom/TrimNode';
-import { GeomRect } from '../geom/Rect';
+import type { GeomRect } from '../geom/Rect';
 import Entities from '../html/Entities';
 import Schema from '../html/Schema';
-import Styles, { StyleMap } from '../html/Styles';
-import { URLConverter } from '../OptionTypes';
-import { MappedEvent } from '../util/EventDispatcher';
+import Styles, { type StyleMap } from '../html/Styles';
+import type { URLConverter } from '../OptionTypes';
+import type { MappedEvent } from '../util/EventDispatcher';
 import Tools from '../util/Tools';
-import EventUtils, { EventUtilsCallback } from './EventUtils';
-import StyleSheetLoader from './StyleSheetLoader';
+
+import EventUtils, { type EventUtilsCallback } from './EventUtils';
+import type StyleSheetLoader from './StyleSheetLoader';
 
 /**
  * Utility class for various DOM manipulation and retrieval functions.
@@ -64,6 +65,7 @@ export interface DOMUtilsSettings {
   onSetAttrib: (event: SetAttribEvent) => void;
   contentCssCors: boolean;
   referrerPolicy: ReferrerPolicy;
+  crossOrigin: (url: string, resourceType: 'script' | 'stylesheet') => string | undefined;
 }
 
 export type Target = Node | Window;
@@ -331,7 +333,16 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
   const boxModel = true;
   const styleSheetLoader = StyleSheetLoaderRegistry.instance.forElement(SugarElement.fromDom(doc), {
     contentCssCors: settings.contentCssCors,
-    referrerPolicy: settings.referrerPolicy
+    referrerPolicy: settings.referrerPolicy,
+    crossOrigin: (url) => {
+      const crossOrigin = settings.crossOrigin;
+
+      if (Type.isFunction(crossOrigin)) {
+        return crossOrigin(url, 'stylesheet');
+      } else {
+        return undefined;
+      }
+    }
   });
   const boundEvents: Array<[ Target, string, Callback<any>, any ]> = [];
   const schema = settings.schema ? settings.schema : Schema({});
@@ -1096,6 +1107,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     ', endOffset: ' + r.endOffset
   );
 
+  // eslint-disable-next-line consistent-this
   const self: DOMUtils = {
     doc,
     settings,
@@ -1276,7 +1288,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
      * @return {String} String with new HTML element, for example: <a href="#">test</a>.
      * @example
      * // Creates a html chunk and inserts it at the current selection/caret location
-     * tinymce.activeEditor.selection.setContent(tinymce.activeEditor.dom.createHTML('a', { href: 'test.html' }, 'some line'));
+     * tinymce.activeEditor.insertContent(tinymce.activeEditor.dom.createHTML('a', { href: 'test.html' }, 'some line'));
      */
     createHTML,
 

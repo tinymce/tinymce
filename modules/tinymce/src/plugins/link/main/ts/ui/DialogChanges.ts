@@ -1,6 +1,6 @@
 import { Arr, Fun, Obj, Optional, Optionals } from '@ephox/katamari';
 
-import { LinkDialogCatalog, LinkDialogData, LinkDialogUrlData, ListGroup, ListItem, ListValue } from './DialogTypes';
+import type { LinkDialogCatalog, LinkDialogData, LinkDialogUrlData, ListGroup, ListItem, ListValue } from './DialogTypes';
 
 export interface DialogDelta {
   readonly url: LinkDialogUrlData;

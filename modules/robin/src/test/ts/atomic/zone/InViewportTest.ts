@@ -4,9 +4,9 @@ import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { Arr, Fun } from '@ephox/katamari';
 
 import { ZonePosition } from 'ephox/robin/api/general/ZonePosition';
-import { ZoneViewports } from 'ephox/robin/api/general/ZoneViewports';
+import type { ZoneViewports } from 'ephox/robin/api/general/ZoneViewports';
 import { WordDecision } from 'ephox/robin/words/WordDecision';
-import { ZoneDetails } from 'ephox/robin/zone/LanguageZones';
+import type { ZoneDetails } from 'ephox/robin/zone/LanguageZones';
 import * as ZoneWalker from 'ephox/robin/zone/ZoneWalker';
 
 UnitTest.asyncTest('atomic.robin.zone.InViewportTest', (success, failure) => {

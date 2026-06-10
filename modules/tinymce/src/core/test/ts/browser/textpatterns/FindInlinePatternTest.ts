@@ -3,12 +3,12 @@ import { Obj } from '@ephox/katamari';
 import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import * as InlinePattern from 'tinymce/core/textpatterns/core/InlinePattern';
-import {
+import type {
   DynamicPatternContext, InlinePattern as InlinePatternType, InlinePatternMatch, PatternSet
 } from 'tinymce/core/textpatterns/core/PatternTypes';
-import { PathRange } from 'tinymce/core/textpatterns/utils/PathRange';
+import type { PathRange } from 'tinymce/core/textpatterns/utils/PathRange';
 import { getBeforeText, getParentBlock, resolveFromDynamicPatterns } from 'tinymce/core/textpatterns/utils/Utils';
 import ListsPlugin from 'tinymce/plugins/lists/Plugin';
 

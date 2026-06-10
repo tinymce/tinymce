@@ -1,8 +1,8 @@
-import { SugarElement } from '@ephox/sugar';
+import type { SugarElement } from '@ephox/sugar';
 
 import * as Sizes from '../resize/Sizes';
 import * as CellUtils from '../util/CellUtils';
-import { CellElement } from '../util/TableTypes';
+import type { CellElement } from '../util/TableTypes';
 
 const halve = (main: SugarElement<CellElement>, other: SugarElement<CellElement>): void => {
   // Only set width on the new cell if we have a colspan of 1 (or no colspan) as we can only safely do that for cells

@@ -4,7 +4,7 @@ import { SugarBody } from '@ephox/sugar';
 import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.fmt.BlockFormatsTest', () => {
   context('Testing that the selection is still collapsed after a formatting operation', () => {

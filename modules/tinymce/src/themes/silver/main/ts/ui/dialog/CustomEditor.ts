@@ -1,5 +1,5 @@
-import { AddEventsBehaviour, AlloyEvents, Behaviour, Focusing, Memento, SimpleSpec, Tabstopping } from '@ephox/alloy';
-import { Dialog } from '@ephox/bridge';
+import { AddEventsBehaviour, AlloyEvents, Behaviour, Focusing, Memento, type SimpleSpec, Tabstopping } from '@ephox/alloy';
+import type { Dialog } from '@ephox/bridge';
 import { Obj, Optional, Singleton } from '@ephox/katamari';
 
 import Resource from 'tinymce/core/api/Resource';
@@ -43,6 +43,7 @@ export const renderCustomEditor = (spec: CustomEditorSpec): SimpleSpec => {
       AddEventsBehaviour.config('custom-editor-events', [
         AlloyEvents.runOnAttached((component) => {
           memReplaced.getOpt(component).each((ta) => {
+            // eslint-disable-next-line @typescript-eslint/no-floating-promises
             (isOldCustomEditor(spec)
               ? spec.init(ta.element.dom)
               : Resource.load(spec.scriptId, spec.scriptUrl).then(

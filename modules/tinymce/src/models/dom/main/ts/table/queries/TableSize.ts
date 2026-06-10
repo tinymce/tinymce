@@ -1,7 +1,7 @@
 import { TableSize } from '@ephox/snooker';
-import { SugarElement } from '@ephox/sugar';
+import type { SugarElement } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import * as Options from '../api/Options';
 

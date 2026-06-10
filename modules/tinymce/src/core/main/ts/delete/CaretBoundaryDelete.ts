@@ -1,8 +1,8 @@
 import { Fun, Optional } from '@ephox/katamari';
 
-import DOMUtils from '../api/dom/DOMUtils';
-import Editor from '../api/Editor';
-import CaretPosition from '../caret/CaretPosition';
+import type DOMUtils from '../api/dom/DOMUtils';
+import type Editor from '../api/Editor';
+import type CaretPosition from '../caret/CaretPosition';
 import { isAfterContentEditableFalse, isAfterMedia, isBeforeContentEditableFalse, isBeforeMedia } from '../caret/CaretPositionPredicates';
 import * as CaretUtils from '../caret/CaretUtils';
 import { CaretWalker, HDirection } from '../caret/CaretWalker';

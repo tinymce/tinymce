@@ -7,7 +7,7 @@ import { Html, SelectorFilter, SelectorFind, SimSelection, SugarBody, SugarEleme
 import { TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/quickbars/Plugin';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 
@@ -327,7 +327,7 @@ describe.skip('browser.tinymce.plugins.quickbars.ToolbarPositionTest', () => {
       });
     });
 
-    context('Selection outside table', () => {
+    context(`Selection outside table with layout ${tableLayout}`, () => {
       // Skipping safari, the quickbar toolbar is positioned differently in safari and chrome, see TINY-9851
       const skipIfSafari = PlatformDetection.detect().browser.isSafari() ? it.skip : it;
 

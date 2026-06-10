@@ -1,5 +1,5 @@
-import Editor from 'tinymce/core/api/Editor';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type Editor from 'tinymce/core/api/Editor';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 export type ToggledAccordionEvent = EditorEvent<{ element: HTMLDetailsElement; state: boolean }>;
 export type ToggledAllAccordionsEvent = EditorEvent<{ elements: HTMLDetailsElement[]; state?: boolean }>;

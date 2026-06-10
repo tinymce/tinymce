@@ -1,6 +1,6 @@
-import { SugarElement } from '@ephox/sugar';
+import type { SugarElement } from '@ephox/sugar';
 
-import { AnchorBox } from './LayoutTypes';
+import type { AnchorBox } from './LayoutTypes';
 import * as Origins from './Origins';
 
 /*

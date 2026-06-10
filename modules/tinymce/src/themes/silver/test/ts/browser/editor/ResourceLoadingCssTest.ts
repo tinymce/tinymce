@@ -3,7 +3,7 @@ import { McEditor, TinyDom } from '@ephox/mcagar';
 import { Css } from '@ephox/sugar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import { tinymce } from 'tinymce/core/api/Tinymce';
 
 describe('browser.tinymce.themes.silver.editor.ResourceLoadingCssTest', () => {
@@ -27,10 +27,10 @@ describe('browser.tinymce.themes.silver.editor.ResourceLoadingCssTest', () => {
   });
 
   it('TINY-10378: A resource is added, and it is relevant to our skins', async () => {
-    tinymce.Resource.add('ui/default/skin.css', '* {background-color: red !important;}');
+    tinymce.Resource.add('ui/oxide/skin.css', '* {background-color: red !important;}');
     const editor = await pGetEditor();
     assert.equal(Css.get(TinyDom.container(editor), 'background-color'), 'rgb(255, 0, 0)');
-    tinymce.Resource.unload('ui/default/skin.css');
+    tinymce.Resource.unload('ui/oxide/skin.css');
     McEditor.remove(editor);
 
     // confidence check that subsequent editor aren't also red.

@@ -2,6 +2,7 @@ import { Adt } from '@ephox/katamari';
 
 import { SugarElement } from '../node/SugarElement';
 import * as Traverse from '../search/Traverse';
+
 import { SimRange } from './SimRange';
 import { Situ } from './Situ';
 

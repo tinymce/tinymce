@@ -9,8 +9,6 @@ import * as Zwsp from 'tinymce/core/text/Zwsp';
 
 import * as ViewBlock from '../../module/test/ViewBlock';
 
-declare const escape: any;
-
 describe('browser.tinymce.core.dom.SerializerTest', () => {
   const DOM = DOMUtils.DOM;
   const viewBlock = ViewBlock.bddSetup();
@@ -356,9 +354,8 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
     assert.equal(ser.serialize(getTestElement()).replace(/\r/g, ''), '<s' + 'cript type="mylanguage"></s' + 'cript>');
   });
 
-  it('Script with tags inside a comment with element_format: xhtml and sanitize: false', () => {
-    // TINY-8363: Disable sanitization to avoid DOMPurify false positive affecting expected output
-    const ser = DomSerializer({ fix_list_elements: true, element_format: 'xhtml', sanitize: false });
+  it('Script with tags inside a comment with element_format: xhtml and sanitize: true', () => {
+    const ser = DomSerializer({ fix_list_elements: true, element_format: 'xhtml' });
     ser.setRules('script[type|language|src]');
 
     setTestHtml('<s' + 'cript>// <img src="test"><a href="#"></a></s' + 'cript>');
@@ -368,9 +365,8 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
     );
   });
 
-  it('Script with tags inside a comment with sanitize: false', () => {
-    // TINY-8363: Disable sanitization to avoid DOMPurify false positive affecting expected output
-    const ser = DomSerializer({ fix_list_elements: true, sanitize: false });
+  it('Script with tags inside a comment with sanitize: true', () => {
+    const ser = DomSerializer({ fix_list_elements: true });
     ser.setRules('script[type|language|src]');
 
     setTestHtml('<s' + 'cript>// <img src="test"><a href="#"></a></s' + 'cript>');
@@ -610,21 +606,6 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
     assert.equal(ser.serialize(getTestElement()), '<script>/* <!-- */\nvar hi = \"hello\";\n/*-->*/</script>');
   });
 
-  it('Protected blocks', () => {
-    const ser = DomSerializer({ fix_list_elements: true });
-
-    ser.setRules('noscript[test]');
-
-    setTestHtml('<!--mce:protected ' + escape('<noscript test="test"><br></noscript>') + '-->');
-    assert.equal(ser.serialize(getTestElement()), '<noscript test="test"><br></noscript>');
-
-    setTestHtml('<!--mce:protected ' + escape('<noscript><br></noscript>') + '-->');
-    assert.equal(ser.serialize(getTestElement()), '<noscript><br></noscript>');
-
-    setTestHtml('<!--mce:protected ' + escape('<noscript><!-- text --><br></noscript>') + '-->');
-    assert.equal(ser.serialize(getTestElement()), '<noscript><!-- text --><br></noscript>');
-  });
-
   it('Style with whitespace at beginning with element_format: xhtml', () => {
     const ser = DomSerializer({ fix_list_elements: true, valid_children: '+body[style]', element_format: 'xhtml' });
     ser.setRules('style');
@@ -658,7 +639,7 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
   });
 
   it('CDATA', () => {
-    const ser = DomSerializer({ fix_list_elements: true, preserve_cdata: true });
+    const ser = DomSerializer({ fix_list_elements: true, preserve_cdata: true, allow_html_in_comments: true });
     ser.setRules('span');
 
     setTestHtml('123<!--[CDATA[<test>]]-->abc');
@@ -923,4 +904,3 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
       'Should remove br');
   });
 });
-

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>TinyMCE Context Toolbar Demo Page</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Context-Toolbar"
+    content="default-src 'none'; script-src 'self'; connect-src 'self' blob:; img-src 'self' data: blob:; style-src 'self'; font-src 'self';" />
+</head>
+
+<body>
+  <main>
+    <h1>TinyMCE Context Toolbar Demo Page</h1>
+    <div id="ephox-ui">
+      <textarea>
+        <p>some P</p>
+        <div>some Div</div>
+      </textarea>
+    </div>
+    <div class="tinymce">Inline demo
+      <p>some P</p>
+      <div>some Div</div>
+    </div>
+    <script src="../../../../js/tinymce/tinymce.js"></script>
+    <script src="../../../../scratch/demos/core/demo.js"></script>
+    <script>demos.ContextToolbarDemo();</script>
+  </main>
+</body>
+
+</html>

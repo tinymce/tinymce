@@ -1,9 +1,11 @@
 import { Arr, Optional } from '@ephox/katamari';
+import { Focus, SugarBody, type SugarElement } from '@ephox/sugar';
 
 import * as SelectionBookmark from '../selection/SelectionBookmark';
 import WindowManagerImpl from '../ui/WindowManagerImpl';
-import Editor from './Editor';
-import { Dialog } from './ui/Ui';
+
+import type Editor from './Editor';
+import type { Dialog } from './ui/Ui';
 
 /**
  * This class handles the creation of native windows and dialogs. This class can be extended to provide for example inline dialogs.
@@ -53,7 +55,10 @@ export interface WindowManagerImpl {
 }
 
 const WindowManager = (editor: Editor): WindowManager => {
-  let dialogs: InstanceApi<any>[] = [];
+  let dialogs: Array<{
+    instanceApi: InstanceApi<any>;
+    triggerElement: Optional<SugarElement<HTMLElement>>;
+  }> = [];
 
   const getImplementation = (): WindowManagerImpl => {
     const theme = editor.theme;
@@ -78,19 +83,23 @@ const WindowManager = (editor: Editor): WindowManager => {
     });
   };
 
-  const addDialog = <T extends Dialog.DialogData>(dialog: InstanceApi<T>) => {
-    dialogs.push(dialog);
+  const addDialog = <T extends Dialog.DialogData>(dialog: InstanceApi<T>, triggerElement: Optional<SugarElement<HTMLElement>>) => {
+    dialogs.push({ instanceApi: dialog, triggerElement });
     fireOpenEvent(dialog);
   };
 
   const closeDialog = <T extends Dialog.DialogData>(dialog: InstanceApi<T>) => {
     fireCloseEvent(dialog);
-    dialogs = Arr.filter(dialogs, (otherDialog) => {
-      return otherDialog !== dialog;
-    });
+
+    const dialogTriggerElement = Arr.findMap(dialogs, ({ instanceApi, triggerElement }) => instanceApi === dialog ? triggerElement : Optional.none());
+    dialogs = Arr.filter(dialogs, ({ instanceApi }) => instanceApi !== dialog);
+
     // Move focus back to editor when the last window is closed
     if (dialogs.length === 0) {
       editor.focus();
+    } else {
+      // Move focus to the element that was active before the dialog was opened
+      dialogTriggerElement.filter(SugarBody.inBody).each(Focus.focus);
     }
   };
 
@@ -102,9 +111,11 @@ const WindowManager = (editor: Editor): WindowManager => {
     editor.editorManager.setActive(editor);
     SelectionBookmark.store(editor);
 
+    const activeEl = Focus.active();
+
     editor.ui.show();
     const dialog = openDialog();
-    addDialog(dialog);
+    addDialog(dialog, activeEl);
     return dialog;
   };
 
@@ -116,25 +127,41 @@ const WindowManager = (editor: Editor): WindowManager => {
     return storeSelectionAndOpenDialog(() => getImplementation().openUrl(args, closeDialog));
   };
 
+  const restoreFocus = (activeEl: Optional<SugarElement<HTMLElement>>): void => {
+    if (dialogs.length !== 0) {
+      // If there are some dialogs, the confirm/alert was probably triggered from the dialog
+      // Move focus to the element that was active before the confirm/alert was opened
+      activeEl.each((el) => Focus.focus(el));
+    }
+  };
+
   const alert = (message: string, callback?: () => void, scope?: any) => {
+    const activeEl = Focus.active();
     const windowManagerImpl = getImplementation();
-    windowManagerImpl.alert(message, funcBind(scope ? scope : windowManagerImpl, callback));
+    windowManagerImpl.alert(message, funcBind(scope ? scope : windowManagerImpl, () => {
+      restoreFocus(activeEl);
+      callback?.();
+    }));
   };
 
   const confirm = (message: string, callback?: (state: boolean) => void, scope?: any) => {
+    const activeEl = Focus.active();
     const windowManagerImpl = getImplementation();
-    windowManagerImpl.confirm(message, funcBind(scope ? scope : windowManagerImpl, callback));
+    windowManagerImpl.confirm(message, funcBind(scope ? scope : windowManagerImpl, (state: boolean) => {
+      restoreFocus(activeEl);
+      callback?.(state);
+    }));
   };
 
   const close = () => {
-    getTopDialog().each((dialog) => {
+    getTopDialog().each(({ instanceApi: dialog }) => {
       getImplementation().close(dialog);
       closeDialog(dialog);
     });
   };
 
   editor.on('remove', () => {
-    Arr.each(dialogs, (dialog) => {
+    Arr.each(dialogs, ({ instanceApi: dialog }) => {
       getImplementation().close(dialog);
     });
   });
@@ -144,8 +171,8 @@ const WindowManager = (editor: Editor): WindowManager => {
      * Opens a new window.
      *
      * @method open
-     * @param {Object} config For information on the available options, see: <a href="https://www.tiny.cloud/docs/tinymce/7/dialog-configuration/#options">Dialog - Configuration options</a>.
-     * @param {Object} params (Optional) For information on the available options, see: <a href="https://www.tiny.cloud/docs/tinymce/7/dialog-configuration/#configuration-parameters">Dialog - Configuration parameters</a>.
+     * @param {Object} config For information on the available options, see: <a href="https://www.tiny.cloud/docs/tinymce/8/dialog-configuration/#options">Dialog - Configuration options</a>.
+     * @param {Object} params (Optional) For information on the available options, see: <a href="https://www.tiny.cloud/docs/tinymce/8/dialog-configuration/#configuration-parameters">Dialog - Configuration parameters</a>.
      * @returns {WindowManager.DialogInstanceApi} A new dialog instance.
      */
     open,
@@ -154,7 +181,7 @@ const WindowManager = (editor: Editor): WindowManager => {
      * Opens a new window for the specified url.
      *
      * @method openUrl
-     * @param {Object} config For information on the available options, see: <a href="https://www.tiny.cloud/docs/tinymce/7/urldialog/#configuration">URL dialog - Configuration</a>.
+     * @param {Object} config For information on the available options, see: <a href="https://www.tiny.cloud/docs/tinymce/8/urldialog/#configuration">URL dialog - Configuration</a>.
      * @returns {WindowManager.UrlDialogInstanceApi} A new URL dialog instance.
      */
     openUrl,

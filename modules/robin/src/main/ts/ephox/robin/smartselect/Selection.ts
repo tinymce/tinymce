@@ -1,8 +1,9 @@
-import { Universe } from '@ephox/boss';
+import type { Universe } from '@ephox/boss';
 import { Optional } from '@ephox/katamari';
 
-import { WordRange } from '../data/WordRange';
+import type { WordRange } from '../data/WordRange';
 import * as CurrentWord from '../util/CurrentWord';
+
 import * as EndofWord from './EndofWord';
 
 /*  Given an initial position (item, offset), identify the optional selection range which represents the

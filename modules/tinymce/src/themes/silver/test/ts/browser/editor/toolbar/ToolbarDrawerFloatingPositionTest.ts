@@ -4,7 +4,7 @@ import { PlatformDetection } from '@ephox/sand';
 import { Css, Insert, Remove, Scroll, SugarBody, SugarElement, SugarLocation } from '@ephox/sugar';
 import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import { pAssertFloatingToolbarHeight, pOpenFloatingToolbarAndAssertPosition } from '../../../module/ToolbarUtils';
 
@@ -38,7 +38,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarDrawerFloatingPosi
   before(async () => {
     // Firefox requires a small wait, otherwise the initial toolbar position is incorrect
     if (PlatformDetection.detect().browser.isFirefox()) {
-      await Waiter.pWait(100);
+      await Waiter.pWaitBetweenUserActions();
     }
   });
 

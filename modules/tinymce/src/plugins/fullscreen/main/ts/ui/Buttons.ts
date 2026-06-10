@@ -1,10 +1,10 @@
-import { Cell } from '@ephox/katamari';
+import type { Cell } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
-import { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type Editor from 'tinymce/core/api/Editor';
+import type { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
-import { FullScreenInfo } from '../core/Actions';
+import type { FullScreenInfo } from '../core/Actions';
 
 const makeSetupHandler = (editor: Editor, fullscreenState: Cell<FullScreenInfo | null>) => (api: Toolbar.ToolbarToggleButtonInstanceApi | Menu.ToggleMenuItemInstanceApi) => {
   api.setActive(fullscreenState.get() !== null);
@@ -21,7 +21,8 @@ const register = (editor: Editor, fullscreenState: Cell<FullScreenInfo | null>):
     icon: 'fullscreen',
     shortcut: 'Meta+Shift+F',
     onAction,
-    onSetup: makeSetupHandler(editor, fullscreenState)
+    onSetup: makeSetupHandler(editor, fullscreenState),
+    context: 'any'
   });
 
   editor.ui.registry.addToggleButton('fullscreen', {
@@ -29,7 +30,8 @@ const register = (editor: Editor, fullscreenState: Cell<FullScreenInfo | null>):
     icon: 'fullscreen',
     onAction,
     onSetup: makeSetupHandler(editor, fullscreenState),
-    shortcut: 'Meta+Shift+F'
+    shortcut: 'Meta+Shift+F',
+    context: 'any'
   });
 };
 

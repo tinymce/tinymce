@@ -1,12 +1,15 @@
-import { Arr, Fun, Obj, Strings, Type } from '@ephox/katamari';
-import { Attribute, NodeTypes, Remove, Replication, SugarElement } from '@ephox/sugar';
-import createDompurify, { Config, DOMPurifyI, SanitizeAttributeHookEvent, SanitizeElementHookEvent } from 'dompurify';
+import { Arr, Fun, Obj, Optional, Strings, Type } from '@ephox/katamari';
+import { Attribute, NodeTypes, Remove, Replication, SugarElement, TextContent } from '@ephox/sugar';
+import createDompurify, { type Config, type DOMPurify, type UponSanitizeAttributeHookEvent, type UponSanitizeElementHookEvent } from 'dompurify';
 
-import { DomParserSettings } from '../api/html/DomParser';
-import Schema from '../api/html/Schema';
+import type { DomParserSettings } from '../api/html/DomParser';
+import type Schema from '../api/html/Schema';
 import Tools from '../api/util/Tools';
 import * as URI from '../api/util/URI';
+import * as ElementType from '../dom/ElementType';
 import * as NodeType from '../dom/NodeType';
+
+import * as KeepHtmlComments from './KeepHtmlComments';
 import * as Namespace from './Namespace';
 
 export type MimeType = 'text/html' | 'application/xhtml+xml';
@@ -21,13 +24,19 @@ const filteredUrlAttrs = Tools.makeMap('src,href,data,background,action,formacti
 const internalElementAttr = 'data-mce-type';
 
 let uid = 0;
-const processNode = (node: Node, settings: DomParserSettings, schema: Schema, scope: Namespace.NamespaceType, evt?: SanitizeElementHookEvent): void => {
+const processNode = (node: Node, settings: DomParserSettings, schema: Schema, scope: Namespace.NamespaceType, evt?: UponSanitizeElementHookEvent): void => {
   const validate = settings.validate;
   const specialElements = schema.getSpecialElements();
 
-  // Pad conditional comments if they aren't allowed
-  if (node.nodeType === NodeTypes.COMMENT && !settings.allow_conditional_comments && /^\[if/i.test(node.nodeValue ?? '')) {
-    node.nodeValue = ' ' + node.nodeValue;
+  if (node.nodeType === NodeTypes.COMMENT) {
+    // Pad conditional comments if they aren't allowed
+    if (!settings.allow_conditional_comments && /^\[if/i.test(node.nodeValue ?? '')) {
+      node.nodeValue = ' ' + node.nodeValue;
+    }
+
+    if (settings.sanitize && settings.allow_html_in_comments && Type.isString(node.nodeValue)) {
+      node.nodeValue = KeepHtmlComments.encodeData(node.nodeValue);
+    }
   }
 
   const lcTagName = evt?.tagName ?? node.nodeName.toLowerCase();
@@ -46,6 +55,20 @@ const processNode = (node: Node, settings: DomParserSettings, schema: Schema, sc
 
   // Construct the sugar element wrapper
   const element = SugarElement.fromDom(node) as SugarElement<Element>;
+
+  if (settings.sanitize) {
+    // TINY-9655: Preserve the content of script and style tags if they are valid elements in the schema
+    const shouldKeepContent = (ElementType.isScript(element) && schema.isValid('script')) || (ElementType.isStyle(element) && schema.isValid('style'));
+    if (shouldKeepContent) {
+      Optional.from(TextContent.get(element)).each((content) => Attribute.set(element, 'data-mce-tmp', content));
+    }
+
+    // TINY-9655: Clear innerHTML of script and iframe tags to prevent DOMPurify from removing them entirely
+    const shouldClearContent = ElementType.isIframe(element) && schema.isValid('iframe');
+    if (shouldKeepContent || shouldClearContent) {
+      Remove.empty(element);
+    }
+  }
 
   // Determine if we're dealing with an internal attribute
   const isInternalElement = Attribute.has(element, internalElementAttr);
@@ -108,7 +131,7 @@ const processNode = (node: Node, settings: DomParserSettings, schema: Schema, sc
   }
 };
 
-const processAttr = (ele: Element, settings: DomParserSettings, schema: Schema, scope: Namespace.NamespaceType, evt: SanitizeAttributeHookEvent) => {
+const processAttr = (ele: Element, settings: DomParserSettings, schema: Schema, scope: Namespace.NamespaceType, evt: UponSanitizeAttributeHookEvent) => {
   const tagName = ele.tagName.toLowerCase();
   const { attrName, attrValue } = evt;
 
@@ -116,8 +139,7 @@ const processAttr = (ele: Element, settings: DomParserSettings, schema: Schema, 
 
   if (evt.keepAttr) {
     evt.allowedAttributes[attrName] = true;
-
-    if (isBooleanAttribute(attrName, schema)) {
+    if (isBooleanAttributeOfNonCustomElement(attrName, schema, ele.nodeName)) {
       evt.attrValue = attrName;
     }
 
@@ -144,8 +166,8 @@ const shouldKeepAttribute = (settings: DomParserSettings, schema: Schema, scope:
 const isRequiredAttributeOfInternalElement = (ele: Element, attrName: string): boolean =>
   ele.hasAttribute(internalElementAttr) && (attrName === 'id' || attrName === 'class' || attrName === 'style');
 
-const isBooleanAttribute = (attrName: string, schema: Schema): boolean =>
-  attrName in schema.getBoolAttrs();
+const isBooleanAttributeOfNonCustomElement = (attrName: string, schema: Schema, nodeName: string): boolean =>
+  attrName in schema.getBoolAttrs() && !Obj.has(schema.getCustomElements(), nodeName.toLowerCase());
 
 const filterAttributes = (ele: Element, settings: DomParserSettings, schema: Schema, scope: Namespace.NamespaceType): void => {
   const { attributes } = ele;
@@ -155,18 +177,34 @@ const filterAttributes = (ele: Element, settings: DomParserSettings, schema: Sch
     const attrValue = attr.value;
     if (!shouldKeepAttribute(settings, schema, scope, ele.tagName.toLowerCase(), attrName, attrValue) && !isRequiredAttributeOfInternalElement(ele, attrName)) {
       ele.removeAttribute(attrName);
-    } else if (isBooleanAttribute(attrName, schema)) {
+    } else if (isBooleanAttributeOfNonCustomElement(attrName, schema, ele.nodeName)) {
       ele.setAttribute(attrName, attrName);
     }
   }
 };
 
-const setupPurify = (settings: DomParserSettings, schema: Schema, namespaceTracker: Namespace.NamespaceTracker): DOMPurifyI => {
+const restoreValidContent = (node: Node) => {
+  // Construct the sugar element wrapper
+  const element = SugarElement.fromDom(node) as SugarElement<Element>;
+
+  if (ElementType.isScript(element) || ElementType.isStyle(element)) {
+    Attribute.getOpt(element, 'data-mce-tmp').each((content) => {
+      TextContent.set(element, content);
+      Attribute.remove(element, 'data-mce-tmp');
+    });
+  }
+};
+
+const setupPurify = (settings: DomParserSettings, schema: Schema, namespaceTracker: Namespace.NamespaceTracker): DOMPurify => {
   const purify = createDompurify();
 
   // We use this to add new tags to the allow-list as we parse, if we notice that a tag has been banned but it's still in the schema
   purify.addHook('uponSanitizeElement', (ele, evt) => {
     processNode(ele, settings, schema, namespaceTracker.track(ele), evt);
+  });
+
+  purify.addHook('afterSanitizeElements', (ele) => {
+    restoreValidContent(ele);
   });
 
   // Let's do the same thing for attributes
@@ -177,14 +215,14 @@ const setupPurify = (settings: DomParserSettings, schema: Schema, namespaceTrack
   return purify;
 };
 
-const getPurifyConfig = (settings: DomParserSettings, mimeType: string): Config => {
+const getPurifyConfig = (settings: DomParserSettings, mimeType: MimeType): Config => {
   const basePurifyConfig: Config = {
     IN_PLACE: true,
     ALLOW_UNKNOWN_PROTOCOLS: true,
     // Deliberately ban all tags and attributes by default, and then un-ban them on demand in hooks
     // #comment and #cdata-section are always allowed as they aren't controlled via the schema
     // body is also allowed due to the DOMPurify checking the root node before sanitizing
-    ALLOWED_TAGS: [ '#comment', '#cdata-section', 'body' ],
+    ALLOWED_TAGS: [ '#comment', '#cdata-section', 'body', 'html' ],
     ALLOWED_ATTR: []
   };
   const config = { ...basePurifyConfig };
@@ -195,7 +233,7 @@ const getPurifyConfig = (settings: DomParserSettings, mimeType: string): Config 
   // Allow any URI when allowing script urls
   if (settings.allow_script_urls) {
     config.ALLOWED_URI_REGEXP = /.*/;
-  // Allow anything except javascript (or similar) URIs if all html data urls are allowed
+    // Allow anything except javascript (or similar) URIs if all html data urls are allowed
   } else if (settings.allow_html_data_urls) {
     config.ALLOWED_URI_REGEXP = /^(?!(\w+script|mhtml):)/i;
   }
@@ -203,32 +241,91 @@ const getPurifyConfig = (settings: DomParserSettings, mimeType: string): Config 
   return config;
 };
 
-const sanitizeNamespaceElement = (ele: Element) => {
+const sanitizeSvgElement = (ele: Element) => {
+  // xlink:href used to be the way to do links in SVG 1.x https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/xlink:href
+  const xlinkAttrs = [ 'type', 'href', 'role', 'arcrole', 'title', 'show', 'actuate', 'label', 'from', 'to' ].map((name) => `xlink:${name}`);
+  const config: Config = {
+    IN_PLACE: true,
+    USE_PROFILES: {
+      html: true,
+      svg: true,
+      svgFilters: true
+    },
+    ALLOWED_ATTR: xlinkAttrs
+  };
+
+  createDompurify().sanitize(ele, config);
+
+};
+
+const sanitizeMathmlElement = (node: Element, settings: DomParserSettings) => {
+  const config: Config = {
+    IN_PLACE: true,
+    USE_PROFILES: {
+      mathMl: true
+    },
+  };
+
+  const purify = createDompurify();
+  const allowedEncodings = settings.allow_mathml_annotation_encodings;
+  const hasAllowedEncodings = Type.isArray(allowedEncodings) && allowedEncodings.length > 0;
+  const hasValidEncoding = (el: Element) => {
+    const encoding = el.getAttribute('encoding');
+    return hasAllowedEncodings && Type.isString(encoding) && Arr.contains(allowedEncodings, encoding);
+  };
+
+  const isValidElementOpt = (node: Node, lcTagName: string) => {
+    if (hasAllowedEncodings && lcTagName === 'semantics') {
+      return Optional.some(true);
+    } else if (lcTagName === 'annotation') {
+      return Optional.some(NodeType.isElement(node) && hasValidEncoding(node));
+    } else if (Type.isArray(settings.extended_mathml_elements)) {
+      if (settings.extended_mathml_elements.includes(lcTagName)) {
+        return Optional.from(true);
+      } else {
+        return Optional.none();
+      }
+    } else {
+      return Optional.none();
+    }
+  };
+
+  purify.addHook('uponSanitizeElement', (node, evt) => {
+    // We know the node is an element as we have
+    // passed an element to the purify.sanitize function below
+    const lcTagName = evt.tagName ?? node.nodeName.toLowerCase();
+    const keepElementOpt = isValidElementOpt(node, lcTagName);
+
+    keepElementOpt.each((keepElement) => {
+      evt.allowedTags[lcTagName] = keepElement;
+      if (!keepElement && settings.sanitize) {
+        if (NodeType.isElement(node)) {
+          node.remove();
+        }
+      }
+    });
+  });
+
+  purify.addHook('uponSanitizeAttribute', (_node, event) => {
+    if (Type.isArray(settings.extended_mathml_attributes)) {
+      const keepAttribute = settings.extended_mathml_attributes.includes(event.attrName);
+
+      if (keepAttribute) {
+        event.forceKeepAttr = true;
+      }
+    }
+  });
+
+  purify.sanitize(node, config);
+};
+
+const mkSanitizeNamespaceElement = (settings: DomParserSettings) => (ele: Element) => {
   const namespaceType = Namespace.toScopeType(ele);
 
   if (namespaceType === 'svg') {
-    // xlink:href used to be the way to do links in SVG 1.x https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/xlink:href
-    const xlinkAttrs = [ 'type', 'href', 'role', 'arcrole', 'title', 'show', 'actuate', 'label', 'from', 'to' ].map((name) => `xlink:${name}`);
-    const config: Config = {
-      IN_PLACE: true,
-      USE_PROFILES: {
-        html: true,
-        svg: true,
-        svgFilters: true
-      },
-      ALLOWED_ATTR: xlinkAttrs
-    };
-
-    createDompurify().sanitize(ele, config);
+    sanitizeSvgElement(ele);
   } else if (namespaceType === 'math') {
-    const config: Config = {
-      IN_PLACE: true,
-      USE_PROFILES: {
-        mathMl: true
-      },
-    };
-
-    createDompurify().sanitize(ele, config);
+    sanitizeMathmlElement(ele, settings);
   } else {
     throw new Error('Not a namespace element');
   }
@@ -247,7 +344,7 @@ const getSanitizer = (settings: DomParserSettings, schema: Schema): Sanitizer =>
 
     return {
       sanitizeHtmlElement,
-      sanitizeNamespaceElement
+      sanitizeNamespaceElement: mkSanitizeNamespaceElement(settings)
     };
   } else {
     const sanitizeHtmlElement = (body: HTMLElement, _mimeType: MimeType) => {

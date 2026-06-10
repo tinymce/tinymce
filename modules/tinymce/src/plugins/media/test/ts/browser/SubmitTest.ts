@@ -2,9 +2,9 @@ import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import AstNode from 'tinymce/core/api/html/Node';
-import { DataToHtmlCallback } from 'tinymce/plugins/media/core/DataToHtml';
+import type { DataToHtmlCallback } from 'tinymce/plugins/media/core/DataToHtml';
 import Plugin from 'tinymce/plugins/media/Plugin';
 
 import * as Utils from '../module/test/Utils';

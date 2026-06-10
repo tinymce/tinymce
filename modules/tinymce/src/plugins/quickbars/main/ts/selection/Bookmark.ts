@@ -1,4 +1,4 @@
-import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import type DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 
 interface Bookmark {
   startContainer: Node;

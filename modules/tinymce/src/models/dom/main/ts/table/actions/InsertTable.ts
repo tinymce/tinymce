@@ -1,8 +1,8 @@
 import { Arr, Fun, Type } from '@ephox/katamari';
 import { TableRender, TableConversions } from '@ephox/snooker';
-import { Attribute, Html, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
+import { Attribute, Html, SelectorFilter, SelectorFind, type SugarElement } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import * as Events from '../api/Events';
 import * as Options from '../api/Options';
@@ -67,10 +67,9 @@ const insert = (editor: Editor, columns: number, rows: number, colHeaders: numbe
 
 const insertTable = (editor: Editor, rows: number, columns: number, options: Record<string, number> = {}): HTMLTableElement | null => {
   const checkInput = (val: any) => Type.isNumber(val) && val > 0;
-
   if (checkInput(rows) && checkInput(columns)) {
-    const headerRows = options.headerRows || 0;
-    const headerColumns = options.headerColumns || 0;
+    const headerRows = options.headerRows ?? Options.defaultHeaderRows(editor);
+    const headerColumns = options.headerColumns ?? Options.defaultHeaderCols(editor);
     return insert(editor, columns, rows, headerColumns, headerRows);
   } else {
     // eslint-disable-next-line no-console

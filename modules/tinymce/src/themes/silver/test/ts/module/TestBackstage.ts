@@ -1,9 +1,9 @@
-import { AlloyComponent, GuiFactory, HotspotAnchorSpec, TooltippingTypes } from '@ephox/alloy';
+import { type AlloyComponent, GuiFactory, type HotspotAnchorSpec, type TooltippingTypes } from '@ephox/alloy';
 import { Cell, Fun, Future, Optional, Result } from '@ephox/katamari';
 import { SugarBody } from '@ephox/sugar';
 
-import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
-import { ApiUrlData } from 'tinymce/themes/silver/backstage/UrlInputBackstage';
+import type { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
+import type { ApiUrlData } from 'tinymce/themes/silver/backstage/UrlInputBackstage';
 
 import TestProviders from './TestProviders';
 

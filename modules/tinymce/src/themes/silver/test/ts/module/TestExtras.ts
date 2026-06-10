@@ -1,10 +1,10 @@
 import { Attachment, Behaviour, DomFactory, Gui, GuiFactory, Positioning } from '@ephox/alloy';
 import { after, afterEach, before } from '@ephox/bedrock-client';
 import { Fun, Optional } from '@ephox/katamari';
-import { Class, SugarBody, SugarElement } from '@ephox/sugar';
+import { Class, SugarBody, type SugarElement } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
-import { UiFactoryBackstagePair } from 'tinymce/themes/silver/backstage/Backstage';
+import type Editor from 'tinymce/core/api/Editor';
+import type { UiFactoryBackstagePair } from 'tinymce/themes/silver/backstage/Backstage';
 
 import TestBackstage from './TestBackstage';
 

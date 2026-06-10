@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.themes.silver.editor.MenuGroupHeadingTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({

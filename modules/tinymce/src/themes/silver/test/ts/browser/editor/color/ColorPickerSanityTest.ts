@@ -1,17 +1,17 @@
 import { FocusTools, Keys, Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
-import { Arr, Optional } from '@ephox/katamari';
-import { Attribute, SelectorFilter, SugarDocument, SugarElement, SugarShadowDom } from '@ephox/sugar';
+import { Arr, type Optional } from '@ephox/katamari';
+import { Attribute, SelectorFilter, SugarDocument, type SugarElement, SugarShadowDom } from '@ephox/sugar';
 import { TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import * as ColorSwatch from 'tinymce/themes/silver/ui/core/color/ColorSwatch';
 
 describe('browser.tinymce.themes.silver.editor.color.ColorPickerSanityTest', () => {
   const selectors = {
-    backcolorToolbar: '[aria-label^="Background color"] > .tox-tbtn + .tox-split-button__chevron',
-    forecolorToolbar: '[aria-label^="Text color"] > .tox-tbtn + .tox-split-button__chevron'
+    backcolorToolbar: 'button[data-mce-name="backcolor-chevron"][aria-label^="Background color"]',
+    forecolorToolbar: 'button[data-mce-name="forecolor-chevron"][aria-label^="Text color"]'
   };
 
   Arr.each([
@@ -33,7 +33,7 @@ describe('browser.tinymce.themes.silver.editor.color.ColorPickerSanityTest', () 
         await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
         TinyUiActions.clickOnUi(editor, 'button[data-mce-name="Custom color"]');
         const backgroundDialog = await TinyUiActions.pWaitForDialog(editor);
-        const backgroundDialogResult = UiFinder.findIn<HTMLInputElement>(backgroundDialog, 'label:contains("#") + input').getOrDie();
+        const backgroundDialogResult = UiFinder.findTargetByLabel<HTMLInputElement>(backgroundDialog, '#').getOrDie();
         await Waiter.pTryUntil('Dialog should start with the right color', () => assert.equal(backgroundDialogResult.dom.value, '80FF80'));
         TinyUiActions.cancelDialog(editor);
       });
@@ -45,7 +45,7 @@ describe('browser.tinymce.themes.silver.editor.color.ColorPickerSanityTest', () 
         await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
         TinyUiActions.clickOnUi(editor, 'button[data-mce-name="Custom color"]');
         const textDialog = await TinyUiActions.pWaitForDialog(editor);
-        const textDialogResult = UiFinder.findIn<HTMLInputElement>(textDialog, 'label:contains("#") + input').getOrDie();
+        const textDialogResult = UiFinder.findTargetByLabel<HTMLInputElement>(textDialog, '#').getOrDie();
         await Waiter.pTryUntil('Dialog should start with the right color', () => assert.equal(textDialogResult.dom.value, 'FFC0CB'));
         TinyUiActions.cancelDialog(editor);
       });
@@ -86,8 +86,7 @@ describe('browser.tinymce.themes.silver.editor.color.ColorPickerSanityTest', () 
         const hexInput = inputs[inputs.length - 1];
         hexInput.dom.value = hex;
         fireEvent(hexInput, 'input');
-        // Give form invalidation a chance to run (asynchronous)
-        await Waiter.pWait(0);
+        await Waiter.pWaitBetweenUserActions();
       };
 
       const pOpenDialog = async (editor: Editor) => {
@@ -165,7 +164,7 @@ describe('browser.tinymce.themes.silver.editor.color.ColorPickerSanityTest', () 
         await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
         TinyUiActions.clickOnUi(editor, 'button[data-mce-name="Custom color"]');
         const backgroundDialog = await TinyUiActions.pWaitForDialog(editor);
-        const backgroundDialogResult = UiFinder.findIn<HTMLInputElement>(backgroundDialog, 'label:contains("#") + input').getOrDie();
+        const backgroundDialogResult = UiFinder.findTargetByLabel<HTMLInputElement>(backgroundDialog, '#').getOrDie();
         await Waiter.pTryUntil('Dialog should start with the right color', () => assert.equal(backgroundDialogResult.dom.value, '00FF00'));
         TinyUiActions.cancelDialog(editor);
       });
@@ -177,7 +176,7 @@ describe('browser.tinymce.themes.silver.editor.color.ColorPickerSanityTest', () 
         await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
         TinyUiActions.clickOnUi(editor, 'button[data-mce-name="Custom color"]');
         const textDialog = await TinyUiActions.pWaitForDialog(editor);
-        const textDialogResult = UiFinder.findIn<HTMLInputElement>(textDialog, 'label:contains("#") + input').getOrDie();
+        const textDialogResult = UiFinder.findTargetByLabel<HTMLInputElement>(textDialog, '#').getOrDie();
         await Waiter.pTryUntil('Dialog should start with the right color', () => assert.equal(textDialogResult.dom.value, 'FF00FF'));
         TinyUiActions.cancelDialog(editor);
       });

@@ -1,7 +1,7 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import * as Hooks from 'tinymce/core/fmt/Hooks';
 
 describe('browser.tinymce.core.fmt.HooksTest', () => {

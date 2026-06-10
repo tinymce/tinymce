@@ -4,7 +4,7 @@ import { Css, Insert, InsertAll, Remove, Scroll, SugarBody, SugarElement } from 
 import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/fullscreen/Plugin';
 
 describe('browser.tinymce.plugins.fullscreen.FullscreenRestoreScrollTest', () => {

@@ -1,14 +1,15 @@
 import { Arr, Fun, Optional, Type } from '@ephox/katamari';
 import { PredicateExists, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
-import Editor from '../api/Editor';
-import Schema from '../api/html/Schema';
+import type Editor from '../api/Editor';
+import type Schema from '../api/html/Schema';
 import CaretPosition from '../caret/CaretPosition';
 import * as NodeType from '../dom/NodeType';
 import * as Parents from '../dom/Parents';
 import * as CaretFormat from '../fmt/CaretFormat';
 import * as FormatContainer from '../fmt/FormatContainer';
 import * as FormatUtils from '../fmt/FormatUtils';
+
 import * as DeleteElement from './DeleteElement';
 import * as DeleteUtils from './DeleteUtils';
 
@@ -39,7 +40,7 @@ const getFormatNodes = (editor: Editor, parentInlines: SugarElement<Node>[]): No
   return Arr.bind(parentInlines, (elm) => isFormatElement(elm) ? [ elm.dom ] : [ ]);
 };
 
-const getFormatNodesAtStart = (editor: Editor) => {
+const getFormatNodesAtStart = (editor: Editor): Node[] => {
   const parentInlines = getParentInlines(editor);
   return getFormatNodes(editor, parentInlines);
 };
@@ -165,5 +166,7 @@ const refreshCaret = (editor: Editor): boolean => {
 
 export {
   backspaceDelete,
-  refreshCaret
+  refreshCaret,
+  getFormatNodesAtStart,
+  updateCaretFormat
 };

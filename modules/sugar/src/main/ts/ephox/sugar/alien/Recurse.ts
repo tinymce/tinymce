@@ -1,4 +1,4 @@
-import { Optional } from '@ephox/katamari';
+import type { Optional } from '@ephox/katamari';
 
 /**
  * Applies f repeatedly until it completes (by returning Optional.none()).

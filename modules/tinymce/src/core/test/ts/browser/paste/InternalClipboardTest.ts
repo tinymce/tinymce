@@ -4,9 +4,9 @@ import { Singleton } from '@ephox/katamari';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
-import { PastePostProcessEvent, PastePreProcessEvent } from 'tinymce/core/api/EventTypes';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type Editor from 'tinymce/core/api/Editor';
+import type { PastePostProcessEvent, PastePreProcessEvent } from 'tinymce/core/api/EventTypes';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as InternalHtml from 'tinymce/core/paste/InternalHtml';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 
@@ -141,7 +141,7 @@ describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
                 '<td>b</td>\n' +
               '</tr>\n' +
             '</tbody>\n' +
-          '</table>', 'ab');
+          '</table>', 'a\tb');
       TinyAssertions.assertSelection(editor, [ 0, 0, 0, 1, 0 ], 0, [ 0, 0, 0, 1, 0 ], 0);
     });
 

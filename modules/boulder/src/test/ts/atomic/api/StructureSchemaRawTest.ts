@@ -7,7 +7,7 @@ import * as FieldPresence from 'ephox/boulder/api/FieldPresence';
 import * as FieldSchema from 'ephox/boulder/api/FieldSchema';
 import * as Objects from 'ephox/boulder/api/Objects';
 import * as StructureSchema from 'ephox/boulder/api/StructureSchema';
-import { StructureProcessor } from 'ephox/boulder/core/StructureProcessor';
+import type { StructureProcessor } from 'ephox/boulder/core/StructureProcessor';
 import * as ValueType from 'ephox/boulder/core/ValueType';
 
 UnitTest.test('StructureSchemaRawTest', () => {

@@ -3,7 +3,7 @@ import { before, describe, it } from '@ephox/bedrock-client';
 import { SugarBody } from '@ephox/sugar';
 import { McEditor, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
 
 describe('browser.tinymce.plugins.table.TableToolbarTest', () => {
@@ -25,8 +25,7 @@ describe('browser.tinymce.plugins.table.TableToolbarTest', () => {
     editor.focus();
     editor.setContent(tableHtml);
     TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 1);
-    // Wait for a while to allow the toolbar a chance to render
-    await Waiter.pWait(100);
+    await Waiter.pWaitBetweenUserActions();
     UiFinder.notExists(SugarBody.body(), 'div.tox-pop div.tox-toolbar');
     McEditor.remove(editor);
   });

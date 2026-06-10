@@ -1,4 +1,4 @@
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import * as FakeCaretUtils from '../caret/FakeCaretUtils';
 import * as CefUtils from '../dom/CefUtils';
 import { isContentEditableFalse, isMedia } from '../dom/NodeType';

@@ -1,7 +1,7 @@
 import { Assert, TestLabel } from '@ephox/bedrock-client';
 import { Arr, Fun, Id, Strings } from '@ephox/katamari';
 
-import { ArrayAssert, StringAssert } from './ApproxStructures';
+import type { ArrayAssert, StringAssert } from './ApproxStructures';
 
 const missingValuePlaceholder: string = Id.generate('missing');
 

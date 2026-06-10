@@ -1,4 +1,4 @@
-import { Cell } from '@ephox/katamari';
+import type { Cell } from '@ephox/katamari';
 
 export interface Api {
   readonly isEnabled: () => boolean;

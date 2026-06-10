@@ -2,9 +2,10 @@ import { FieldPresence, FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
 
 import * as ComponentSchema from '../../core/ComponentSchema';
+
 import { alertBannerSchema } from './AlertBanner';
 import { createBarFields } from './Bar';
-import { BodyComponent, BodyComponentSpec } from './BodyComponent';
+import type { BodyComponent, BodyComponentSpec } from './BodyComponent';
 import { buttonSchema } from './Button';
 import { checkboxSchema } from './Checkbox';
 import { collectionSchema } from './Collection';

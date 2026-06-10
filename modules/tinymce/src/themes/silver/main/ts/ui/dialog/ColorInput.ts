@@ -1,14 +1,14 @@
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Composing, CustomEvent, Disabling, Focusing, FormField, Input,
-  Invalidating, Layout, Memento, Representing, SimpleSpec, Tabstopping
+  AddEventsBehaviour, type AlloyComponent, AlloyEvents, type AlloySpec, AlloyTriggers, Behaviour, Composing, type CustomEvent, Disabling, Focusing, FormField, Input,
+  Invalidating, Layout, Memento, Representing, type SimpleSpec, Tabstopping
 } from '@ephox/alloy';
-import { Dialog } from '@ephox/bridge';
-import { Fun, Future, Id, Optional, Result } from '@ephox/katamari';
+import type { Dialog } from '@ephox/bridge';
+import { Fun, Future, Id, type Optional, Result } from '@ephox/katamari';
 import { Css, SugarElement, Traverse } from '@ephox/sugar';
 
-import { UiFactoryBackstageShared } from '../../backstage/Backstage';
-import { UiFactoryBackstageForColorInput } from '../../backstage/ColorInputBackstage';
-import * as ReadOnly from '../../ReadOnly';
+import type { UiFactoryBackstageShared } from '../../backstage/Backstage';
+import type { UiFactoryBackstageForColorInput } from '../../backstage/ColorInputBackstage';
+import * as UiState from '../../UiState';
 import { renderLabel } from '../alien/FieldLabeller';
 import * as ColorCache from '../core/color/ColorCache';
 import * as ColorSwatch from '../core/color/ColorSwatch';
@@ -48,9 +48,9 @@ export const renderColorInput = (
 
     inputBehaviours: Behaviour.derive([
       Disabling.config({
-        disabled: sharedBackstage.providers.isDisabled
+        disabled: () => sharedBackstage.providers.isDisabled() || sharedBackstage.providers.checkUiComponentContext(spec.context).shouldDisable
       }),
-      ReadOnly.receivingConfig(),
+      UiState.toggleOnReceive(() => sharedBackstage.providers.checkUiComponentContext(spec.context)),
       Tabstopping.config({ }),
       Invalidating.config({
         invalidClass: 'tox-textbox-field-invalid',
@@ -135,7 +135,8 @@ export const renderColorInput = (
       fetch: ColorSwatch.getFetch(colorInputBackstage.getColors(spec.storageKey), spec.storageKey, colorInputBackstage.hasCustomColors()),
       columns: colorInputBackstage.getColorCols(spec.storageKey),
       presets: 'color',
-      onItemAction
+      onItemAction,
+      context: spec.context
     }, sharedBackstage)
   );
 

@@ -1,17 +1,19 @@
 import { ApproxStructure, Assertions } from '@ephox/agar';
-import { GuiFactory, TestHelpers } from '@ephox/alloy';
+import { GuiFactory } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
 
 import { renderFooterButton } from 'tinymce/themes/silver/ui/general/Button';
 
+import * as GuiSetup from '../../../module/GuiSetup';
 import TestBackstage from '../../../module/TestBackstage';
 
 describe('headless.tinymce.themes.silver.components.dialogbutton.DialogFooterButtonTest', () => {
   const backstage = TestBackstage();
   describe('primary style', () => {
-    const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
+    const hook = GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
       renderFooterButton({
+        context: 'any',
         text: 'Submit>Text',
         name: 'Submit',
         enabled: true,
@@ -35,8 +37,9 @@ describe('headless.tinymce.themes.silver.components.dialogbutton.DialogFooterBut
   });
 
   describe('secondary style', () => {
-    const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
+    const hook = GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
       renderFooterButton({
+        context: 'any',
         name: 'test-button',
         text: 'Cancel Button',
         enabled: true,

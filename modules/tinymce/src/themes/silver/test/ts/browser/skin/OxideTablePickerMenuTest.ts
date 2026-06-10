@@ -1,11 +1,11 @@
-import { ApproxStructure, Assertions, FocusTools, Keys, Mouse, StructAssert, UiFinder, Waiter } from '@ephox/agar';
+import { ApproxStructure, Assertions, FocusTools, Keys, Mouse, type StructAssert, UiFinder, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { SugarBody, SugarDocument } from '@ephox/sugar';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
-import { Menu } from 'tinymce/core/api/ui/Ui';
+import type Editor from 'tinymce/core/api/Editor';
+import type { Menu } from 'tinymce/core/api/ui/Ui';
 
 const tableCellsApprox = (s: ApproxStructure.StructApi, str: ApproxStructure.StringApi, arr: ApproxStructure.ArrayApi, selectedRows: number, selectedCols: number) => {
   const cells: StructAssert[] = [];
@@ -84,7 +84,7 @@ describe('browser.tinymce.themes.silver.skin.OxideTablePickerMenuTest', () => {
       ApproxStructure.build((s, str, arr) => insertTablePickerApprox(s, str, arr, 1, 1)),
       menu
     );
-    await FocusTools.pTryOnSelector('Focus should be on first table cell', doc, '.tox-insert-table-picker__selected:last');
+    await FocusTools.pTryOnSelector('Focus should be on first table cell', doc, '.tox-insert-table-picker__selected');
     TinyUiActions.keydown(editor, Keys.down());
     TinyUiActions.keydown(editor, Keys.right());
     Assertions.assertStructure(
@@ -92,7 +92,7 @@ describe('browser.tinymce.themes.silver.skin.OxideTablePickerMenuTest', () => {
       ApproxStructure.build((s, str, arr) => insertTablePickerApprox(s, str, arr, 2, 2)),
       menu
     );
-    await FocusTools.pTryOnSelector('Focus should be on 2 down, 2 across table cell', doc, '.tox-insert-table-picker__selected:last');
+    await FocusTools.pTryOnSelector('Focus should be on 2 down, 2 across table cell', doc, 'div[role="button"]:nth-last-child(1 of .tox-insert-table-picker__selected)');
     TinyUiActions.keyup(editor, Keys.escape());
   });
 

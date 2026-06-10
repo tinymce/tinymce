@@ -5,7 +5,7 @@ import { SugarElement } from '@ephox/sugar';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.EditorOptionsDebugTest', () => {
   const createHook = (options: Record<string, unknown>) =>
@@ -13,7 +13,7 @@ describe('browser.tinymce.core.EditorOptionsDebugTest', () => {
       ...options,
       base_url: '/project/tinymce/js/tinymce',
     }, []);
-  const ignoredKeys = new Set([ 'promotion', 'toolbar', 'menubar', 'statusbar', 'base_url', 'selector', 'setup' ]);
+  const ignoredKeys = new Set([ 'license_key', 'promotion', 'toolbar', 'menubar', 'statusbar', 'base_url', 'selector', 'setup' ]);
   const assertDebugLog = (editor: Editor, expectedLog: unknown) => {
     const logs: unknown[] = [];
     const originalLog = console.log;

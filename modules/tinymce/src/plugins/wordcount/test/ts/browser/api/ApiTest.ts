@@ -3,8 +3,8 @@ import { Type } from '@ephox/katamari';
 import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
-import { WordCountApi } from 'tinymce/plugins/wordcount/api/Api';
+import type Editor from 'tinymce/core/api/Editor';
+import type { WordCountApi } from 'tinymce/plugins/wordcount/api/Api';
 import Plugin from 'tinymce/plugins/wordcount/Plugin';
 
 interface Sel {

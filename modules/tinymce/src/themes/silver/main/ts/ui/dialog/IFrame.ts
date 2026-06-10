@@ -1,10 +1,10 @@
-import { AlloyComponent, Behaviour, Focusing, FormField, Receiving, SketchSpec, Tabstopping } from '@ephox/alloy';
-import { Dialog } from '@ephox/bridge';
+import { type AlloyComponent, Behaviour, Focusing, FormField, Receiving, type SketchSpec, Tabstopping } from '@ephox/alloy';
+import type { Dialog } from '@ephox/bridge';
 import { Cell, Fun, Optional, Optionals, Throttler, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Attribute, Class, Compare, SugarElement, Traverse } from '@ephox/sugar';
+import { Attribute, Class, Compare, type SugarElement, Traverse } from '@ephox/sugar';
 
-import * as Backstage from '../../backstage/Backstage';
+import type * as Backstage from '../../backstage/Backstage';
 import * as FieldLabeller from '../alien/FieldLabeller';
 import * as RepresentingConfigs from '../alien/RepresentingConfigs';
 import * as NavigableObject from '../general/NavigableObject';

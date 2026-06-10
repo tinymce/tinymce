@@ -1,4 +1,4 @@
-import { Toolbar } from '@ephox/bridge';
+import type { Toolbar } from '@ephox/bridge';
 
 interface MenuClasses {
   readonly backgroundMenu: string;

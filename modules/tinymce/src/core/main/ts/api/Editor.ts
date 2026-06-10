@@ -1,53 +1,56 @@
-import { Arr, Fun, Type } from '@ephox/katamari';
+import { Arr, Fun, Type, Id } from '@ephox/katamari';
 
 import * as EditorContent from '../content/EditorContent';
 import * as Deprecations from '../Deprecations';
 import * as NodeType from '../dom/NodeType';
 import * as EditorRemove from '../EditorRemove';
-import { BlobInfoImagePair } from '../file/ImageScanner';
+import type { BlobInfoImagePair } from '../file/ImageScanner';
 import * as EditorFocus from '../focus/EditorFocus';
 import * as Render from '../init/Render';
+import type { LicenseKeyManager } from '../licensekey/LicenseKeyManager';
+import { type UserLookup, createUserLookup } from '../lookup/UserLookup';
 import * as EditableRoot from '../mode/EditableRoot';
-import { NodeChange } from '../NodeChange';
+import type { NodeChange } from '../NodeChange';
 import { normalizeOptions } from '../options/NormalizeOptions';
-import SelectionOverrides from '../SelectionOverrides';
-import { UndoManager } from '../undo/UndoManagerTypes';
-import Quirks from '../util/Quirks';
+import type SelectionOverrides from '../SelectionOverrides';
+import type { UndoManager } from '../undo/UndoManagerTypes';
+import type Quirks from '../util/Quirks';
 import * as VisualAids from '../view/VisualAids';
+
 import AddOnManager from './AddOnManager';
-import Annotator from './Annotator';
+import type Annotator from './Annotator';
 import * as Commands from './commands/Commands';
 import DOMUtils from './dom/DOMUtils';
-import { EventUtilsCallback } from './dom/EventUtils';
+import type { EventUtilsCallback } from './dom/EventUtils';
 import ScriptLoader from './dom/ScriptLoader';
-import EditorSelection from './dom/Selection';
-import DomSerializer from './dom/Serializer';
-import EditorCommands, { ExecCommandArgs, EditorCommandCallback } from './EditorCommands';
-import EditorManager from './EditorManager';
+import type EditorSelection from './dom/Selection';
+import type DomSerializer from './dom/Serializer';
+import EditorCommands, { type ExecCommandArgs, type EditorCommandCallback } from './EditorCommands';
+import type EditorManager from './EditorManager';
 import EditorObservable from './EditorObservable';
-import { BuiltInOptionType, BuiltInOptionTypeMap, Options as EditorOptions, create as createOptions } from './EditorOptions';
-import EditorUpload, { UploadResult } from './EditorUpload';
+import { type BuiltInOptionType, type BuiltInOptionTypeMap, type Options as EditorOptions, create as createOptions } from './EditorOptions';
+import type { UploadResult, default as EditorUpload } from './EditorUpload';
 import Env from './Env';
-import { SaveContentEvent } from './EventTypes';
-import Formatter from './Formatter';
-import DomParser from './html/DomParser';
-import AstNode from './html/Node';
-import Schema from './html/Schema';
-import { create as createMode, EditorMode } from './Mode';
-import { Model } from './ModelManager';
-import NotificationManager from './NotificationManager';
+import type { SaveContentEvent } from './EventTypes';
+import type Formatter from './Formatter';
+import type DomParser from './html/DomParser';
+import type AstNode from './html/Node';
+import type Schema from './html/Schema';
+import { create as createMode, type EditorMode } from './Mode';
+import type { Model } from './ModelManager';
+import type NotificationManager from './NotificationManager';
 import * as Options from './Options';
-import { NormalizedEditorOptions, RawEditorOptions } from './OptionTypes';
-import PluginManager, { Plugin } from './PluginManager';
+import type { NormalizedEditorOptions, RawEditorOptions } from './OptionTypes';
+import PluginManager, { type Plugin } from './PluginManager';
 import Shortcuts from './Shortcuts';
-import { Theme } from './ThemeManager';
+import type { Theme } from './ThemeManager';
 import { registry } from './ui/Registry';
-import { EditorUi } from './ui/Ui';
-import EventDispatcher, { NativeEventMap } from './util/EventDispatcher';
-import I18n, { TranslatedString, Untranslated } from './util/I18n';
+import type { EditorUi } from './ui/Ui';
+import type { NativeEventMap, default as EventDispatcher } from './util/EventDispatcher';
+import I18n, { type TranslatedString, type Untranslated } from './util/I18n';
 import Tools from './util/Tools';
 import URI from './util/URI';
-import WindowManager from './WindowManager';
+import type WindowManager from './WindowManager';
 
 /**
  * This class contains the core logic for a TinyMCE editor.
@@ -86,7 +89,6 @@ const extend = Tools.extend, each = Tools.each;
  */
 
 class Editor implements EditorObservable {
-  public documentBaseUrl: string;
   public baseUri: URI;
 
   /**
@@ -96,6 +98,14 @@ class Editor implements EditorObservable {
    * @type String
    */
   public id: string;
+
+  /**
+   * A uuid string to uniquely identify an editor across any page.
+   *
+   * @property editorUid
+   * @type String
+   */
+  public editorUid: string;
 
   /**
    * Name/Value object containing plugin instances.
@@ -184,6 +194,14 @@ class Editor implements EditorObservable {
    */
   public editorUpload!: EditorUpload;
 
+  /**
+   * Editor user lookup API
+   *
+   * @property userLookup
+   * @type tinymce.UserLookup
+   */
+  public userLookup!: UserLookup;
+
   public shortcuts: Shortcuts;
   public loadedCSS: Record<string, any> = {};
   public editorCommands: EditorCommands;
@@ -234,6 +252,7 @@ class Editor implements EditorObservable {
   public model!: Model;
   public undoManager!: UndoManager;
   public windowManager!: WindowManager;
+  public licenseKeyManager!: LicenseKeyManager;
   public _beforeUnload: (() => void) | undefined;
   public _eventDispatcher: EventDispatcher<NativeEventMap> | undefined;
   public _nodeChangeDispatcher!: NodeChange;
@@ -264,18 +283,21 @@ class Editor implements EditorObservable {
    */
   public constructor(id: string, options: RawEditorOptions, editorManager: EditorManager) {
     this.editorManager = editorManager;
-    this.documentBaseUrl = editorManager.documentBaseURL;
 
     // Patch in the EditorObservable functions
     extend(this, EditorObservable);
     const self = this;
 
     this.id = id;
+    this.editorUid = Id.uuidV4();
     this.hidden = false;
     const normalizedOptions = normalizeOptions(editorManager.defaultOptions, options);
 
     this.options = createOptions(self, normalizedOptions, options);
     Options.register(self);
+
+    this.userLookup = createUserLookup(this);
+
     const getOption = this.options.get;
 
     if (getOption('deprecation_warnings')) {
@@ -299,6 +321,16 @@ class Editor implements EditorObservable {
       ScriptLoader.ScriptLoader._setReferrerPolicy(referrerPolicy);
       DOMUtils.DOM.styleSheetLoader._setReferrerPolicy(referrerPolicy);
     }
+
+    ScriptLoader.ScriptLoader._setCrossOrigin((url) => {
+      const crossOrigin = Options.getCrossOrigin(self);
+      return crossOrigin(url, 'script');
+    });
+
+    DOMUtils.DOM.styleSheetLoader._setCrossOrigin((url) => {
+      const crossOrigin = Options.getCrossOrigin(self);
+      return crossOrigin(url, 'stylesheet');
+    });
 
     const contentCssCors = Options.hasContentCssCors(self);
     if (Type.isNonNullable(contentCssCors)) {
@@ -336,6 +368,13 @@ class Editor implements EditorObservable {
     };
 
     this.mode = createMode(self);
+
+    // Lock certain properties to reduce misuse
+    Object.defineProperty(this, 'editorUid', {
+      writable: false,
+      configurable: false,
+      enumerable: true,
+    });
 
     // Call setup
     editorManager.dispatch('SetupEditor', { editor: this });
@@ -702,14 +741,13 @@ class Editor implements EditorObservable {
    *
    * @method load
    * @param {Object} args Optional content object, this gets passed around through the whole load process.
-   * @return {String} HTML string that got set into the editor.
    */
-  public load(args: Partial<EditorContent.SetContentArgs> = {}): string {
+  public load(args: Partial<EditorContent.SetContentArgs> = {}): void {
     const self = this;
     const elm = self.getElement();
 
     if (self.removed) {
-      return '';
+      return;
     }
 
     if (elm) {
@@ -720,7 +758,7 @@ class Editor implements EditorObservable {
 
       const value = NodeType.isTextareaOrInput(elm) ? elm.value : elm.innerHTML;
 
-      const html = self.setContent(value, loadArgs);
+      self.setContent(value, loadArgs);
 
       if (!loadArgs.no_events) {
         self.dispatch('LoadContent', {
@@ -728,10 +766,6 @@ class Editor implements EditorObservable {
           element: elm
         });
       }
-
-      return html;
-    } else {
-      return '';
     }
   }
 
@@ -811,7 +845,6 @@ class Editor implements EditorObservable {
    * @method setContent
    * @param {String} content Content to set to editor, normally HTML contents but can be other formats as well.
    * @param {Object} args Optional content object, this gets passed around through the whole set process.
-   * @return {String} HTML string that got set into the editor.
    * @example
    * // Sets the HTML contents of the activeEditor editor
    * tinymce.activeEditor.setContent('<span>some</span> html');
@@ -822,11 +855,9 @@ class Editor implements EditorObservable {
    * // Sets the content of the activeEditor editor using the specified format
    * tinymce.activeEditor.setContent('<p>Some html</p>', { format: 'html' });
    */
-  public setContent(content: string, args?: Partial<EditorContent.SetContentArgs>): string;
-  public setContent(content: AstNode, args?: Partial<EditorContent.SetContentArgs>): AstNode;
-  public setContent(content: EditorContent.Content, args?: Partial<EditorContent.SetContentArgs>): EditorContent.Content;
-  public setContent(content: EditorContent.Content, args?: Partial<EditorContent.SetContentArgs>): EditorContent.Content {
-    return EditorContent.setContent(this, content, args);
+  public setContent(content: string | AstNode, args?: Partial<EditorContent.SetContentArgs>): void;
+  public setContent(content: EditorContent.Content, args?: Partial<EditorContent.SetContentArgs>): void {
+    EditorContent.setContent(this, content, args);
   }
 
   /**
@@ -878,9 +909,9 @@ class Editor implements EditorObservable {
     // Set the editor content
     if (initialContent === undefined) {
       // editor.startContent is generated by using the `raw` format, so we should set it the same way
-      EditorContent.setContent(this, this.startContent, { format: 'raw' });
+      EditorContent.setContent(this, this.startContent, { initial: true, format: 'raw' });
     } else {
-      EditorContent.setContent(this, initialContent);
+      EditorContent.setContent(this, initialContent, { initial: true });
     }
 
     // Update the editor/undo manager state

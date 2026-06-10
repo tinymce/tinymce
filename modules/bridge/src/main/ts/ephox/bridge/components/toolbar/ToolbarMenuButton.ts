@@ -1,8 +1,8 @@
 import { StructureSchema } from '@ephox/boulder';
-import { Result } from '@ephox/katamari';
+import type { Result } from '@ephox/katamari';
 
 import * as ComponentSchema from '../../core/ComponentSchema';
-import { BaseMenuButton, BaseMenuButtonSpec, baseMenuButtonFields, BaseMenuButtonInstanceApi, MenuButtonItemTypes } from '../../core/MenuButton';
+import { type BaseMenuButton, type BaseMenuButtonSpec, baseMenuButtonFields, type BaseMenuButtonInstanceApi, type MenuButtonItemTypes } from '../../core/MenuButton';
 
 export type ToolbarMenuButtonItemTypes = MenuButtonItemTypes;
 export type SuccessCallback = (menu: string | ToolbarMenuButtonItemTypes[]) => void;

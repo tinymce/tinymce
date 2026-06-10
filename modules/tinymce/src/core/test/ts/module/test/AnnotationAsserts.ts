@@ -5,7 +5,7 @@ import { TinyAssertions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import * as Markings from 'tinymce/core/annotate/Markings';
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 const annotate = (editor: Editor, name: string, uid: string, data: {}): void => {
   editor.annotator.annotate(name, {

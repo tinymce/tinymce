@@ -1,6 +1,6 @@
 import { Strings } from '@ephox/katamari';
 
-import { SugarElement } from '../api/node/SugarElement';
+import type { SugarElement } from '../api/node/SugarElement';
 import * as Css from '../api/properties/Css';
 
 const toNumber = (px: string, fallback: number): number =>

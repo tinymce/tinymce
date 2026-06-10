@@ -4,7 +4,7 @@ import { Unicode } from '@ephox/katamari';
 import { TinyHooks, TinyUiActions, TinySelections, TinyAssertions, TinyState } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/visualchars/Plugin';
 
 import { assertSpanStruct, assertNbspStruct, assertStruct } from '../module/test/Utils';

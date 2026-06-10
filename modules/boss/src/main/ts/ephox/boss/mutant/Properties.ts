@@ -1,6 +1,6 @@
 import { Arr, Obj, Optional } from '@ephox/katamari';
 
-import { Gene } from '../api/Gene';
+import type { Gene } from '../api/Gene';
 import TagBoundaries from '../common/TagBoundaries';
 
 // Warning: not exhaustive
@@ -27,18 +27,22 @@ const document = (_item: Gene): undefined => {
 };
 
 const isText = (item: Gene): boolean => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
   return item.name === GeneTypes.Text;
 };
 
 const isComment = (item: Gene): boolean => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
   return item.name === GeneTypes.Comment;
 };
 
 const isElement = (item: Gene): boolean => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
   return item.name !== undefined && item.name !== GeneTypes.Text && item.name !== GeneTypes.Comment;
 };
 
 const isSpecial = (item: Gene): boolean => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
   return item.name === GeneTypes.Special;
 };
 

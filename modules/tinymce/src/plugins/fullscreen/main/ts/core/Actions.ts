@@ -1,12 +1,13 @@
-import { Cell, Fun, Optional, Optionals, Singleton, Throttler } from '@ephox/katamari';
-import { Class, Css, DomEvent, EventUnbinder, SugarElement, SugarShadowDom, Traverse, WindowVisualViewport, SugarNode } from '@ephox/sugar';
+import { type Cell, Fun, Optional, Optionals, Singleton, Throttler } from '@ephox/katamari';
+import { Class, Css, DomEvent, type EventUnbinder, SugarElement, SugarShadowDom, Traverse, WindowVisualViewport, SugarNode } from '@ephox/sugar';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 
 import * as Events from '../api/Events';
 import * as Options from '../api/Options';
+
 import { exitFullscreen, getFullscreenchangeEventName, getFullscreenRoot, isFullscreenElement, requestFullscreen } from './NativeFullscreen';
 import * as Thor from './Thor';
 

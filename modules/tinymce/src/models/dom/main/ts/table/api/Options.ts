@@ -1,8 +1,8 @@
-import { Arr, Optional } from '@ephox/katamari';
-import { SugarElement, Width } from '@ephox/sugar';
+import { Arr, Optional, Type } from '@ephox/katamari';
+import { SelectorFind, SugarBody, SugarElement, Width } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
-import { EditorOptions } from 'tinymce/core/api/OptionTypes';
+import type Editor from 'tinymce/core/api/Editor';
+import type { EditorOptions } from 'tinymce/core/api/OptionTypes';
 
 export type TableSizingMode = 'fixed' | 'relative' | 'responsive' | 'auto';
 export type TableColumnResizing = 'preservetable' | 'resizetable';
@@ -107,6 +107,16 @@ const register = (editor: Editor): void => {
     processor: 'boolean',
     default: true
   });
+
+  registerOption('table_default_header_rows', {
+    processor: 'number',
+    default: 0
+  });
+
+  registerOption('table_default_header_cols', {
+    processor: 'number',
+    default: 0
+  });
 };
 
 const getTableCloneElements = (editor: Editor): Optional<string[]> => {
@@ -145,6 +155,10 @@ const shouldStyleWithCss = option<boolean>('table_style_by_css');
 
 const shouldMergeContentOnPaste = option<boolean>('table_merge_content_on_paste');
 
+const defaultHeaderRows = option<number>('table_default_header_rows');
+
+const defaultHeaderCols = option<number>('table_default_header_cols');
+
 const getTableDefaultAttributes = (editor: Editor): Record<string, string> => {
   // Note: The we don't rely on the default here as we need to dynamically lookup the widths based on the current editor state
   const options = editor.options;
@@ -160,6 +174,32 @@ const getTableDefaultStyles = (editor: Editor): Record<string, string> => {
 };
 
 const tableUseColumnGroup = option<boolean>('table_use_colgroups');
+
+const fixedContainerSelector = option('fixed_toolbar_container');
+const fixedToolbarContainerTarget = option('fixed_toolbar_container_target');
+const fixedContainerTarget = (editor: Editor): Optional<SugarElement> => {
+  if (!editor.inline) {
+    return Optional.none();
+  }
+
+  const selector = fixedContainerSelector(editor) ?? '';
+  if (selector.length > 0) {
+    return SelectorFind.descendant(SugarBody.body(), selector);
+  }
+
+  const element = fixedToolbarContainerTarget(editor);
+  if (Type.isNonNullable(element)) {
+    return Optional.some(SugarElement.fromDom(element));
+  }
+
+  return Optional.none();
+};
+
+const useFixedContainer = (editor: Editor): boolean =>
+  editor.inline && fixedContainerTarget(editor).isSome();
+const getUiMode = option<string>('ui_mode');
+const isSplitUiMode = (editor: Editor): boolean =>
+  !useFixedContainer(editor) && getUiMode(editor) === 'split';
 
 export {
   register,
@@ -177,5 +217,8 @@ export {
   getTableDefaultAttributes,
   getTableDefaultStyles,
   tableUseColumnGroup,
-  shouldMergeContentOnPaste
+  shouldMergeContentOnPaste,
+  isSplitUiMode,
+  defaultHeaderRows,
+  defaultHeaderCols
 };

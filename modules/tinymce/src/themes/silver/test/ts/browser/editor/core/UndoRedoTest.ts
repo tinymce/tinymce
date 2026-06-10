@@ -3,7 +3,7 @@ import { describe, it } from '@ephox/bedrock-client';
 import { SugarBody } from '@ephox/sugar';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.themes.silver.editor.core.UndoRedoTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -74,7 +74,7 @@ describe('browser.tinymce.themes.silver.editor.core.UndoRedoTest', () => {
 
     // 2. switch to readonly mode
     editor.mode.set('readonly');
-    await pWaitForToolbarState(editor, true);
+    await pWaitForToolbarState(editor, false);
     assertToolbarButtonState('redo', true);
     assertToolbarButtonState('undo', true);
 

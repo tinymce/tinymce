@@ -3,6 +3,7 @@ import { Fun } from '@ephox/katamari';
 import * as Dimensions from '../dom/Dimensions';
 import * as ClientRect from '../geom/ClientRect';
 import * as ArrUtils from '../util/ArrUtils';
+
 import * as CaretCandidate from './CaretCandidate';
 import CaretPosition from './CaretPosition';
 import * as CaretUtils from './CaretUtils';
@@ -44,7 +45,7 @@ const walkUntil = (direction: VDirection, isAboveFn: PosPredicate, isBeflowFn: P
   const add = (node: Node): boolean => {
 
     let clientRects = Dimensions.getClientRects([ node ]);
-    if (direction === -1) {
+    if (direction === VDirection.Up) {
       clientRects = clientRects.reverse();
     }
 
@@ -110,7 +111,7 @@ const positionsUntil = (direction: VDirection, root: Node, predicateFn: RectPred
   const result: LinePosClientRect[] = [];
   let line = 0;
 
-  if (direction === 1) {
+  if (direction === VDirection.Down) {
     walkFn = caretWalker.next;
     isBelowFn = ClientRect.isBelow;
     isAboveFn = ClientRect.isAbove;

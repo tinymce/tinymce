@@ -1,5 +1,5 @@
 import { Fun, Optional } from '@ephox/katamari';
-import { Compare, Focus, PredicateFind, SugarElement, SugarShadowDom } from '@ephox/sugar';
+import { Compare, Focus, PredicateFind, type SugarElement, SugarShadowDom } from '@ephox/sugar';
 
 const preserve = <T extends Node, R>(f: (e: SugarElement<T>) => R, container: SugarElement<T>): R => {
   const dos = SugarShadowDom.getRootNode(container);

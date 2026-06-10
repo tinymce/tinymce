@@ -1,22 +1,23 @@
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Boxes, Docking, GuiFactory, HotspotAnchorSpec, InlineView, Keying,
-  MakeshiftAnchorSpec, ModalDialog, NodeAnchorSpec, SelectionAnchorSpec, SystemEvents
+  AddEventsBehaviour, type AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Boxes, Channels, Docking, GuiFactory, type HotspotAnchorSpec, InlineView, Keying,
+  type MakeshiftAnchorSpec, ModalDialog, type NodeAnchorSpec, type SelectionAnchorSpec, SystemEvents
 } from '@ephox/alloy';
-import { StructureProcessor, StructureSchema } from '@ephox/boulder';
-import { Dialog, DialogManager } from '@ephox/bridge';
+import { type StructureProcessor, StructureSchema } from '@ephox/boulder';
+import { type Dialog, DialogManager } from '@ephox/bridge';
 import { Optional, Singleton, Type } from '@ephox/katamari';
 import { SelectorExists, SugarBody, SugarElement, SugarLocation } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
-import { WindowManagerImpl, WindowParams } from 'tinymce/core/api/WindowManager';
+import type Editor from 'tinymce/core/api/Editor';
+import type { WindowManagerImpl, WindowParams } from 'tinymce/core/api/WindowManager';
 
 import * as Options from '../../api/Options';
-import { UiFactoryBackstagePair } from '../../backstage/Backstage';
+import type { UiFactoryBackstagePair } from '../../backstage/Backstage';
 import * as ScrollingContext from '../../modes/ScrollingContext';
 import { formCancelEvent } from '../general/FormEvents';
 import { renderDialog } from '../window/SilverDialog';
 import { renderInlineDialog } from '../window/SilverInlineDialog';
 import { renderUrlDialog } from '../window/SilverUrlDialog';
+
 import * as AlertDialog from './AlertDialog';
 import * as ConfirmDialog from './ConfirmDialog';
 
@@ -32,7 +33,7 @@ const validateData = <T extends Dialog.DialogData>(data: Partial<T>, validator: 
 const isAlertOrConfirmDialog = (target: SugarElement<Node>): boolean =>
   SelectorExists.closest(target, '.tox-alert-dialog') || SelectorExists.closest(target, '.tox-confirm-dialog');
 
-const inlineAdditionalBehaviours = (editor: Editor, isStickyToolbar: boolean, isToolbarLocationTop: boolean): Behaviour.NamedConfiguredBehaviour<any, any>[] => {
+const inlineAdditionalBehaviours = (editor: Editor, isStickyToolbar: boolean, isToolbarLocationTop: boolean, onHide: () => void): Behaviour.NamedConfiguredBehaviour<any, any>[] => {
   // When using sticky toolbars it already handles the docking behaviours so applying docking would
   // do nothing except add additional processing when scrolling, so we don't want to include it here
   // (Except when the toolbar is located at the bottom since the anchor will be at the top)
@@ -45,7 +46,8 @@ const inlineAdditionalBehaviours = (editor: Editor, isStickyToolbar: boolean, is
           lazyContext: () => Optional.some(Boxes.box(SugarElement.fromDom(editor.getContentAreaContainer()))),
           fadeInClass: 'tox-dialog-dock-fadein',
           fadeOutClass: 'tox-dialog-dock-fadeout',
-          transitionClass: 'tox-dialog-dock-transition'
+          transitionClass: 'tox-dialog-dock-transition',
+          onHide
         },
         modes: [ 'top' ],
         lazyViewport: (comp) => {
@@ -179,6 +181,7 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
           closeWindow: () => {
             inlineDialog.on(InlineView.hide);
             editor.off('ResizeEditor', refreshDocking);
+            editor.off('ScrollWindow', repositionPopups);
             inlineDialog.clear();
             closeWindow(dialogUi.instanceApi);
           }
@@ -187,6 +190,9 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
         windowParams.ariaAttrs,
         refreshDocking
       );
+
+      const repositionPopups = () => dialogUi.dialog.getSystem().broadcastOn([ Channels.repositionPopups() ], { target: dialogUi.dialog.element });
+      const dismissPopups = () => dialogUi.dialog.getSystem().broadcastOn([ Channels.dismissPopups() ], { target: dialogUi.dialog.element });
 
       const inlineDialogComp = GuiFactory.build(InlineView.sketch({
         lazySink: extras.backstages.popup.shared.getSink,
@@ -209,7 +215,7 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
               AlloyTriggers.emit(dialogUi.dialog, formCancelEvent);
             })
           ]),
-          ...inlineAdditionalBehaviours(editor, isStickyToolbar, isToolbarLocationTop)
+          ...inlineAdditionalBehaviours(editor, isStickyToolbar, isToolbarLocationTop, dismissPopups)
         ]),
         // Treat alert or confirm dialogs as part of the inline dialog
         isExtraPart: (_comp, target) => isAlertOrConfirmDialog(target)
@@ -240,6 +246,7 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
         // 'ResizeWindow` as that's handled by docking already.
         editor.on('ResizeEditor', refreshDocking);
       }
+      editor.on('ScrollWindow', repositionPopups);
 
       // Set the initial data in the dialog and focus the first focusable item
       dialogUi.instanceApi.setData(initialData);

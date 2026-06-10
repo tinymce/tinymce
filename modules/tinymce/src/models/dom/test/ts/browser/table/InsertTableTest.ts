@@ -2,7 +2,7 @@ import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import * as TableTestUtils from '../../module/table/TableTestUtils';
 
@@ -11,18 +11,18 @@ describe('browser.tinymce.models.dom.table.InsertTableTest', () => {
     { label: 'no colgroup', withColgroup: false },
     { label: 'colgroup', withColgroup: true },
   ], ({ label, withColgroup }) => {
-    const hook = TinyHooks.bddSetup<Editor>({
-      indent: false,
-      valid_styles: {
-        '*': 'width,height,vertical-align,text-align,float,border-color,' +
-          'background-color,border,padding,border-spacing,border-collapse'
-      },
-      base_url: '/project/tinymce/js/tinymce',
-      statusbar: false,
-      table_use_colgroups: withColgroup
-    }, []);
-
     context(label, () => {
+      const hook = TinyHooks.bddSetup<Editor>({
+        indent: false,
+        valid_styles: {
+          '*': 'width,height,vertical-align,text-align,float,border-color,' +
+            'background-color,border,padding,border-spacing,border-collapse'
+        },
+        base_url: '/project/tinymce/js/tinymce',
+        statusbar: false,
+        table_use_colgroups: withColgroup
+      }, []);
+
       it('TBA: insert 2x2 table', () =>
         TableTestUtils.insertTableTest(hook.editor(), 2, 2, [
           [ 50, 50 ],

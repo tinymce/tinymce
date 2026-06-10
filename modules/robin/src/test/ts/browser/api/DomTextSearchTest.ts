@@ -6,7 +6,7 @@ import { Pattern } from '@ephox/polaris';
 import { Compare, Html, Insert, InsertAll, SugarElement } from '@ephox/sugar';
 
 import * as DomTextSearch from 'ephox/robin/api/dom/DomTextSearch';
-import { TextSeekerOutcome, TextSeekerPhaseConstructor } from 'ephox/robin/textdata/TextSeeker';
+import type { TextSeekerOutcome, TextSeekerPhaseConstructor } from 'ephox/robin/textdata/TextSeeker';
 
 UnitTest.test('DomTextSearchTest', () => {
   const wordbreaker = () => {

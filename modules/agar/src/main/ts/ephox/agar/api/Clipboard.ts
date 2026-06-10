@@ -1,13 +1,14 @@
 import { Arr, Obj } from '@ephox/katamari';
-import { SugarBody, SugarElement } from '@ephox/sugar';
+import { SugarBody, type SugarElement } from '@ephox/sugar';
 
 import { createCopyEvent, createCutEvent, createPasteEvent } from '../clipboard/ClipboardEvents';
 import { createDataTransfer } from '../datatransfer/DataTransfer';
 import { getWindowFromElement } from '../dragndrop/DndEvents';
 import * as BlobReader from '../file/BlobReader';
+
 import { Chain } from './Chain';
 import * as ChainSequence from './ChainSequence';
-import { Step } from './Step';
+import type { Step } from './Step';
 import { cFindIn } from './UiFinder';
 
 export interface PasteUrlItem {

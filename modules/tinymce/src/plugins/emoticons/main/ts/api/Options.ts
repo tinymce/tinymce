@@ -1,5 +1,5 @@
-import Editor from 'tinymce/core/api/Editor';
-import { EditorOptions } from 'tinymce/core/api/OptionTypes';
+import type Editor from 'tinymce/core/api/Editor';
+import type { EditorOptions } from 'tinymce/core/api/OptionTypes';
 
 export interface UserEmojiEntry {
   readonly keywords?: string[];

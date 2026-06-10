@@ -1,12 +1,13 @@
 import { Fun, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import { cleanupBogusElements, cleanupInputNames } from '../content/ContentCleanup';
-import { Content, ContentFormat, GetSelectionContentArgs } from '../content/ContentTypes';
+import type { Content, ContentFormat, GetSelectionContentArgs } from '../content/ContentTypes';
 import { postProcessGetContent, preProcessGetContent } from '../content/PrePostProcess';
 import * as CharType from '../text/CharType';
 import * as Zwsp from '../text/Zwsp';
+
 import * as EventProcessRanges from './EventProcessRanges';
 import * as FragmentReader from './FragmentReader';
 import * as MultiRange from './MultiRange';

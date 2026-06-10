@@ -21,7 +21,7 @@ export const arbOptionalSome = <T> (at: Arbitrary<T>): Arbitrary<Optional<T>> =>
 
 export const arbOptional = <T> (at: Arbitrary<T>): Arbitrary<Optional<T>> => fc.oneof(arbOptionalNone<T>(), arbOptionalSome(at));
 
-export const arbNegativeInteger = (): Arbitrary<number> => fc.integer(Number.MIN_SAFE_INTEGER, -1);
+export const arbNegativeInteger = (): Arbitrary<number> => fc.integer({ min: Number.MIN_SAFE_INTEGER, max: -1 });
 
 export const arbFutureNow = <A> (arbA: Arbitrary<A>): Arbitrary<Future<A>> =>
   arbA.map(Future.pure);
@@ -38,3 +38,20 @@ export const arbFutureNever = <A> (): Arbitrary<Future<A>> =>
 
 export const arbFutureNowOrSoon = <A> (arbA: Arbitrary<A>): Arbitrary<Future<A>> =>
   fc.oneof(arbFutureNow(arbA), arbFutureSoon(arbA));
+
+const bannedProperties = [
+  '__proto__', // Avoid testing prototype pollution
+  'constructor',
+  'valueOf', // Banned in strict mode
+  'toString', // Banned in strict mode
+  'length', // Banned in strict mode
+];
+
+export const arbAsciiString = (stringConstraints?: fc.StringConstraints): Arbitrary<string> =>
+  fc.string({ unit: 'binary-ascii', ...stringConstraints }).filter((s) => !bannedProperties.includes(s));
+
+export const arbAsciiDict = <T>(valArb: Arbitrary<T>, stringConstraints?: fc.StringConstraints): Arbitrary<Record<string, T>> => fc.dictionary(
+  arbAsciiString(stringConstraints),
+  valArb,
+  { noNullPrototype: true }
+);

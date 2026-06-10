@@ -1,20 +1,22 @@
-import { AlloyComponent, AlloySpec } from '@ephox/alloy';
-import { Dialog, Menu } from '@ephox/bridge';
-import { Cell, Optional, Result } from '@ephox/katamari';
+import type { AlloyComponent, AlloySpec } from '@ephox/alloy';
+import type { Dialog, Menu } from '@ephox/bridge';
+import { Cell, Obj, Optional, type Result } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
-import I18n, { TranslatedString, Untranslated } from 'tinymce/core/api/util/I18n';
+import type Editor from 'tinymce/core/api/Editor';
+import I18n, { type TranslatedString, type Untranslated } from 'tinymce/core/api/util/I18n';
 import * as UiFactory from 'tinymce/themes/silver/ui/general/UiFactory';
 
-import { IconProvider } from '../ui/icons/Icons';
-import { UiFactoryBackstageAnchors } from './Anchors';
+import * as Options from '../api/Options';
+import type { IconProvider } from '../ui/icons/Icons';
+
+import type { UiFactoryBackstageAnchors } from './Anchors';
 import * as Anchors from './Anchors';
-import { ColorInputBackstage, UiFactoryBackstageForColorInput } from './ColorInputBackstage';
-import { DialogBackstage, UiFactoryBackstageForDialog } from './DialogBackstage';
-import { HeaderBackstage, UiFactoryBackstageForHeader } from './HeaderBackstage';
-import { init as initStyleFormatBackstage, UiFactoryBackstageForStyleFormats } from './StyleFormatsBackstage';
-import { TooltipsBackstage, TooltipsProvider } from './TooltipsBackstage';
-import { UiFactoryBackstageForUrlInput, UrlInputBackstage } from './UrlInputBackstage';
+import { ColorInputBackstage, type UiFactoryBackstageForColorInput } from './ColorInputBackstage';
+import { DialogBackstage, type UiFactoryBackstageForDialog } from './DialogBackstage';
+import { HeaderBackstage, type UiFactoryBackstageForHeader } from './HeaderBackstage';
+import { init as initStyleFormatBackstage, type UiFactoryBackstageForStyleFormats } from './StyleFormatsBackstage';
+import { TooltipsBackstage, type TooltipsProvider } from './TooltipsBackstage';
+import { type UiFactoryBackstageForUrlInput, UrlInputBackstage } from './UrlInputBackstage';
 
 export interface UiFactoryBackstageProviders {
   readonly icons: IconProvider;
@@ -23,6 +25,7 @@ export interface UiFactoryBackstageProviders {
   readonly isDisabled: () => boolean;
   readonly getOption: Editor['options']['get'];
   readonly tooltips: TooltipsProvider;
+  readonly checkUiComponentContext: (specContext: string) => { contextType: string; shouldDisable: boolean };
 }
 
 export interface UiFactoryBackstageShared {
@@ -56,9 +59,29 @@ const init = (lazySinks: { popup: () => Result<AlloyComponent, string>; dialog: 
     icons: () => editor.ui.registry.getAll().icons,
     menuItems: () => editor.ui.registry.getAll().menuItems,
     translate: I18n.translate,
-    isDisabled: () => editor.mode.isReadOnly() || !editor.ui.isEnabled(),
+    isDisabled: () => !editor.ui.isEnabled(),
     getOption: editor.options.get,
-    tooltips: TooltipsBackstage(lazySinks.dialog)
+    tooltips: TooltipsBackstage(lazySinks.dialog),
+    checkUiComponentContext: (specContext: string) => {
+      if (Options.isDisabled(editor)) {
+        return {
+          contextType: 'disabled',
+          shouldDisable: true
+        };
+      }
+      const [ key, value = '' ] = specContext.split(':');
+      const contexts = editor.ui.registry.getAll().contexts;
+      const enabledInContext = Obj.get(contexts, key)
+        .fold(
+          // Fallback to 'mode:design' if key is not found
+          () => Obj.get(contexts, 'mode').map((pred) => pred('design')).getOr(false),
+          (pred) => value.charAt(0) === '!' ? !pred(value.slice(1)) : pred(value)
+        );
+      return {
+        contextType: key,
+        shouldDisable: !enabledInContext
+      };
+    }
   };
 
   const urlinput = UrlInputBackstage(editor);

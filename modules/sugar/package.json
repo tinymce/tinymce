@@ -1,6 +1,6 @@
 {
   "name": "@ephox/sugar",
-  "version": "10.0.0",
+  "version": "11.0.0",
   "description": "Basic DOM manipulation",
   "repository": {
     "type": "git",
@@ -12,7 +12,7 @@
     "build": "tsc",
     "test": "bedrock-auto -b chrome-headless --stopOnFailure -d src/test/ts",
     "test-manual": "bedrock --stopOnFailure -d src/test/ts",
-    "lint": "eslint --config ../../.eslintrc.json --max-warnings=0 src/**/*.ts"
+    "lint": "eslint --max-warnings=0 src/**/*.ts"
   },
   "keywords": [
     "DOM",
@@ -23,12 +23,13 @@
   "author": "Ephox Corporation DBA Tiny Technologies, Inc",
   "license": "GPL-2.0-or-later",
   "dependencies": {
-    "@ephox/katamari": "^10.0.0",
-    "@ephox/sand": "^7.0.0"
+    "@ephox/katamari": "^11.0.0",
+    "@ephox/sand": "^8.0.0"
   },
   "devDependencies": {
-    "@ephox/katamari-assertions": "^5.0.0"
+    "@ephox/katamari-assertions": "^6.0.0"
   },
+  "sideEffects": false,
   "files": [
     "lib/main",
     "lib/demo",
@@ -42,5 +43,12 @@
   ],
   "main": "./lib/main/ts/ephox/sugar/api/Main.js",
   "module": "./lib/main/ts/ephox/sugar/api/Main.js",
-  "types": "./lib/main/ts/ephox/sugar/api/Main.d.ts"
+  "types": "./lib/main/ts/ephox/sugar/api/Main.d.ts",
+  "exports": {
+    ".": {
+      "tiny:source": "./src/main/ts/ephox/sugar/api/Main.ts",
+      "types": "./lib/main/ts/ephox/sugar/api/Main.d.ts",
+      "default": "./lib/main/ts/ephox/sugar/api/Main.js"
+    }
+  }
 }

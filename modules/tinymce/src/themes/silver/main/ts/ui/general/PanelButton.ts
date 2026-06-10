@@ -1,11 +1,11 @@
 import {
-  AlloyComponent, AlloySpec, Behaviour, Dropdown as AlloyDropdown, Layouts, RawDomSchema, SketchSpec, Tabstopping, Unselecting
+  type AlloyComponent, type AlloySpec, Behaviour, Dropdown as AlloyDropdown, type Layouts, type RawDomSchema, type SketchSpec, Tabstopping, Unselecting
 } from '@ephox/alloy';
-import { Menu, Toolbar } from '@ephox/bridge';
+import type { Menu, Toolbar } from '@ephox/bridge';
 import { Fun, Future, Id, Merger, Optional } from '@ephox/katamari';
 
-import { UiFactoryBackstageShared } from '../../backstage/Backstage';
-import * as ReadOnly from '../../ReadOnly';
+import type { UiFactoryBackstageShared } from '../../backstage/Backstage';
+import * as UiState from '../../UiState';
 import { DisablingConfigs } from '../alien/DisablingConfigs';
 import ItemResponse from '../menus/item/ItemResponse';
 import { createPartialChoiceMenu } from '../menus/menu/MenuChoice';
@@ -22,6 +22,7 @@ export interface SwatchPanelButtonSpec {
   readonly getHotspot?: (comp: AlloyComponent) => Optional<AlloyComponent>;
   readonly onItemAction: (comp: AlloyComponent, value: string) => void;
   readonly layouts?: Layouts;
+  readonly context: string;
 }
 
 export const renderPanelButton = (spec: SwatchPanelButtonSpec, sharedBackstage: UiFactoryBackstageShared): SketchSpec => AlloyDropdown.sketch({
@@ -31,8 +32,8 @@ export const renderPanelButton = (spec: SwatchPanelButtonSpec, sharedBackstage: 
   toggleClass: 'mce-active',
 
   dropdownBehaviours: Behaviour.derive([
-    DisablingConfigs.button(sharedBackstage.providers.isDisabled),
-    ReadOnly.receivingConfig(),
+    DisablingConfigs.button(() => sharedBackstage.providers.isDisabled() || sharedBackstage.providers.checkUiComponentContext(spec.context).shouldDisable),
+    UiState.toggleOnReceive(() => sharedBackstage.providers.checkUiComponentContext(spec.context)),
     Unselecting.config({}),
     Tabstopping.config({})
   ]),

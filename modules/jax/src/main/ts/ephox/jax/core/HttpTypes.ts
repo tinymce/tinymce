@@ -1,7 +1,7 @@
-import { FutureResult } from '@ephox/katamari';
+import type { FutureResult } from '@ephox/katamari';
 
-import { RequestBody, ResponseBody, ResponseBodyDataTypes, ResponseType } from './HttpData';
-import { HttpError } from './HttpError';
+import type { RequestBody, ResponseBody, ResponseBodyDataTypes, ResponseType } from './HttpData';
+import type { HttpError } from './HttpError';
 
 export const enum HttpMethod {
   Get = 'get',

@@ -1,6 +1,6 @@
-import { Arr, Fun, Optional, Strings } from '@ephox/katamari';
+import { Arr, Fun, type Optional, Strings } from '@ephox/katamari';
 
-import { EmojiEntry } from './EmojiDatabase';
+import type { EmojiEntry } from './EmojiDatabase';
 
 const emojiMatches = (emoji: EmojiEntry, lowerCasePattern: string): boolean =>
   Strings.contains(emoji.title.toLowerCase(), lowerCasePattern) ||

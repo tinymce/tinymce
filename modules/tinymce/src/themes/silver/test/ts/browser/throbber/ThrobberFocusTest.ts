@@ -4,7 +4,7 @@ import { Focus, Insert, Remove, SelectorFind, SugarBody, SugarDocument, SugarEle
 import { TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 // TODO TINY-10480: Investigate flaky tests
 describe.skip('browser.tinymce.themes.silver.throbber.ThrobberFocusTest', () => {

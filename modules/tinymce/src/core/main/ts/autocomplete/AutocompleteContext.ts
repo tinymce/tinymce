@@ -1,7 +1,8 @@
 import { Optional, Strings } from '@ephox/katamari';
 
 import * as TextSearch from '../alien/TextSearch';
-import DOMUtils from '../api/dom/DOMUtils';
+import type DOMUtils from '../api/dom/DOMUtils';
+
 import { getText, isValidTextRange, isWhitespace } from './AutocompleteUtils';
 
 export interface AutocompleteContext {

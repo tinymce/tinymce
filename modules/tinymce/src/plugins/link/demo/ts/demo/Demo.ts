@@ -1,9 +1,11 @@
-import { TinyMCE } from 'tinymce/core/api/PublicApi';
+import type { BlobInfo } from 'tinymce/core/api/file/BlobCache';
+import type { TinyMCE } from 'tinymce/core/api/PublicApi';
 
 declare let tinymce: TinyMCE;
 
 tinymce.init({
   selector: 'textarea.tinymce',
+  license_key: 'gpl',
   plugins: 'link code',
   toolbar: 'link unlink openlink code',
   menubar: 'view insert tools custom',
@@ -15,6 +17,9 @@ tinymce.init({
   menu: {
     custom: { title: 'Custom', items: 'link unlink openlink' }
   },
+  // link_attributes_postprocess: (attrs: any) => {
+  // attrs.rel += ' noreferrer';
+  // },
   height: 600,
   setup: (ed) => {
     ed.on('init', () => {
@@ -32,7 +37,18 @@ tinymce.init({
         <p>Lorem <a href="https://www.google.com">ipsum</a> dolor <a href="https://www.tiny.cloud">sit</a> amet</p>
       `);
     });
-  }
+  },
+  files_upload_handler: (blobInfo: BlobInfo, _progress: (p: number) => void) => new Promise((success) => {
+    // eslint-disable-next-line no-console
+    console.log('files_upload_handler blobInfo: ', blobInfo);
+    setTimeout(() => {
+      success({ url: 'https://www.google.com/logos/google.jpg', fileName: 'test-in-demo' });
+    }, 5000);
+  }),
+  documents_file_types: [
+    { mimeType: 'application/msword', extensions: [ 'doc' ] },
+    { mimeType: 'text/plain', extensions: [ 'txt' ] }
+  ]
 });
 
 export {};

@@ -5,10 +5,8 @@ import { Attribute, SugarBody, SugarDocument } from '@ephox/sugar';
 import { TinyAssertions, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/emoticons/Plugin';
-
-import { fakeEvent } from '../module/test/Utils';
 
 describe('browser.tinymce.plugins.emoticons.EmojiSearchTest', () => {
   before(function () {
@@ -33,12 +31,11 @@ describe('browser.tinymce.plugins.emoticons.EmojiSearchTest', () => {
     TinyUiActions.clickOnToolbar(editor, 'button');
     await TinyUiActions.pWaitForDialog(editor);
     await FocusTools.pTryOnSelector('Focus should start on input', doc, 'input');
-    const input = FocusTools.setActiveValue(doc, 'rainbow');
-    fakeEvent(input, 'input');
+    FocusTools.setActiveValue(doc, 'rainbow');
     await Waiter.pTryUntil(
       'Wait until rainbow is the first choice (search should filter)',
       () => {
-        const item = UiFinder.findIn(SugarBody.body(), '.tox-collection__item:first').getOrDie();
+        const item = UiFinder.findIn(SugarBody.body(), '.tox-collection__item:first-child').getOrDie();
         const value = Attribute.get(item, 'data-collection-item-value');
         assert.equal(value, '🌈', 'Search should show rainbow');
       }

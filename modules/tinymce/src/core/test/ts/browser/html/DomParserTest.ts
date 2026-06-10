@@ -3,10 +3,10 @@ import { Arr, Fun, Obj } from '@ephox/katamari';
 import { assert } from 'chai';
 
 import Env from 'tinymce/core/api/Env';
-import { BlobCache, BlobInfo } from 'tinymce/core/api/file/BlobCache';
-import DomParser, { DomParserSettings, ParserArgs, ParserFilterCallback } from 'tinymce/core/api/html/DomParser';
-import AstNode, { Attributes } from 'tinymce/core/api/html/Node';
-import Schema, { SchemaElement, SchemaSettings } from 'tinymce/core/api/html/Schema';
+import { BlobCache, type BlobInfo } from 'tinymce/core/api/file/BlobCache';
+import DomParser, { type DomParserSettings, type ParserArgs, type ParserFilterCallback } from 'tinymce/core/api/html/DomParser';
+import type { default as AstNode, Attributes } from 'tinymce/core/api/html/Node';
+import Schema, { type SchemaElement, type SchemaSettings } from 'tinymce/core/api/html/Schema';
 import HtmlSerializer from 'tinymce/core/api/html/Serializer';
 
 interface ParseTestResult {
@@ -18,6 +18,7 @@ interface ParseTestResult {
 describe('browser.tinymce.core.html.DomParserTest', () => {
   const schema = Schema({ valid_elements: '*[class|title]' });
   const serializer = HtmlSerializer({}, schema);
+  const fullDocumentParseHtml = '<html><head><style></style><!--header Some Text 1--></head><body data-test="Test">Some Text 2</body><!--footer Some Text 3--></html>';
 
   const countNodes = (node: AstNode, counter: Record<string, number> = {}) => {
     if (node.name in counter) {
@@ -60,6 +61,24 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
           'Element attributes'
         );
         assert.deepEqual(countNodes(root), { 'body': 1, 'b': 1, '#text': 1 }, 'Element attributes (count)');
+      });
+
+      it('TINY-12589: Parse full document, with root_name = "#document"', () => {
+        const parser = DomParser({ ...scenario.settings, root_name: '#document' }, schema);
+        const root = parser.parse(fullDocumentParseHtml);
+        assert.equal(serializer.serialize(root), '<head><style></style><!--header Some Text 1--></head><body data-test="Test">Some Text 2</body><!--footer Some Text 3-->', 'Document context remains');
+        assert.equal(root.firstChild?.type, 1, 'Element type');
+        assert.equal(root.firstChild?.name, 'head', 'Element name');
+        assert.deepEqual(countNodes(root), { 'html': 1, 'head': 1, 'style': 1, 'body': 1, '#text': 1, '#comment': 2 }, 'Element attributes (count)');
+      });
+
+      it('TINY-12589: Parse full document, without root_name = "#document"', () => {
+        const parser = DomParser(scenario.settings, schema);
+        const root = parser.parse(fullDocumentParseHtml);
+        assert.equal(serializer.serialize(root), 'Some Text 2', 'Content should have been stripped of its document context');
+        assert.equal(root.firstChild?.type, 3, 'Element type, without');
+        assert.equal(root.firstChild?.name, '#text', 'Element name, without');
+        assert.deepEqual(countNodes(root), { 'body': 1, '#text': 1 }, 'Element attributes (count), without');
       });
 
       it('Retains code inside a script', () => {
@@ -763,14 +782,31 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
         );
       });
 
-      // TINY-9624: Safari encodes the iframe innerHTML is `&lt;textarea&gt;`. On Chrome and Firefox, the innerHTML is `<textarea>`, causing
-      // the mXSS cleaner in DOMPurify to run and remove the iframe.
       it('parse iframe XSS', () => {
         const serializer = HtmlSerializer();
 
         assert.equal(
           serializer.serialize(DomParser(scenario.settings).parse('<iframe><textarea></iframe><img src="a" onerror="alert(document.domain)" />')),
-          scenario.isSanitizeEnabled ? '<img src="a">' : '<iframe><textarea></iframe><img src="a">'
+          scenario.isSanitizeEnabled ? '<iframe></iframe><img src="a">' : '<iframe><textarea></iframe><img src="a">'
+        );
+      });
+
+      it('TINY-9655: remove invalid script elements', () => {
+        const serializer = HtmlSerializer();
+        const parser = DomParser(scenario.settings, Schema());
+
+        assert.equal(serializer.serialize(parser.parse('<script src="example.js" onload="alert(document.domain)">var variable;</script>')), '');
+      });
+
+      it('TINY-9655: keep valid script elements but remove xss ', () => {
+        const serializer = HtmlSerializer();
+        const parser = DomParser(scenario.settings, Schema({
+          extended_valid_elements: 'script[src]'
+        }));
+
+        assert.equal(
+          serializer.serialize(parser.parse('<script src="example.js" onload="alert(document.domain)">var variable;</script>')),
+          '<script src="example.js">var variable;</script>'
         );
       });
 
@@ -1049,7 +1085,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
         assert.equal(serializedHtml, '<div><!--[CDATA[<!--x----><!--y-->--&gt;]]&gt;</div>');
 
         const serializedXHtml = serializer.serialize(parser.parse('<div><![CDATA[<!--x--><!--y-->--><!--]]></div>', { format: 'xhtml' }));
-        assert.equal(serializedXHtml, '<div><![CDATA[<!--x--><!--y-->--><!--]]></div>');
+        assert.equal(serializedXHtml, scenario.isSanitizeEnabled ? '' : '<div><![CDATA[<!--x--><!--y-->--><!--]]></div>');
       });
 
       it('TINY-7756: Parsing invalid nested children', () => {
@@ -1105,12 +1141,31 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
         );
       });
 
-      it('TINY-8205: Fixes up invalid children even when top-level element does not fit the context', () => {
+      it('TINY-11927: Parser should just mark result as invalid when parsing in context', () => {
         const parser = DomParser(scenario.settings);
         const html = '<p>Hello world! <button>This is a button with a meta tag in it<meta /></button></p>';
-        const serializedHtml = serializer.serialize(parser.parse(html, { context: 'p' }));
+        const parserArgs: ParserArgs = { context: 'p' };
+        const serializedHtml = serializer.serialize(parser.parse(html, parserArgs));
 
-        assert.equal(serializedHtml, '<p>Hello world! <button>This is a button with a meta tag in it</button></p>');
+        assert.equal(serializedHtml, '<p>Hello world! <button>This is a button with a meta tag in it<meta></button></p>', 'Should not have removed anything that is for the second pass');
+        assert.isTrue(parserArgs.invalid);
+      });
+
+      it('TINY-11927: Parser should just mark context parses as invalid then split with full context', () => {
+        const parser = DomParser(scenario.settings);
+        const html = '<p>B<button>C<meta>D</button>E</p>';
+        const parserArgs: ParserArgs = { context: 'span' };
+        const serializedHtml = serializer.serialize(parser.parse(html, parserArgs));
+
+        assert.equal(serializedHtml, '<p>B<button>C<meta>D</button>E</p>', 'Should not have removed anything that is for the second pass');
+        assert.isTrue(parserArgs.invalid, 'Should be marked as invalid');
+
+        const fullHtml = `<div><em>A${serializedHtml}F</em></div>`;
+        const fullParserArgs: ParserArgs = {};
+        const fullSerializedHtml = serializer.serialize(parser.parse(fullHtml, fullParserArgs));
+
+        assert.equal(fullSerializedHtml, '<div><em>A</em><p>B<button>CD</button>E</p><em>F</em></div>', 'Should split the em to produce a valid fragment');
+        assert.isUndefined(fullParserArgs.invalid, 'Should not be marked as invalid');
       });
 
       it('TINY-7756: should prevent dom clobbering overriding document/form properties', () => {
@@ -1327,6 +1382,68 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
 
         const serializedHtml = serializer.serialize(parser.parse(html));
         assert.equal(serializedHtml, '<p>paragraph</p><p>div</p>');
+      });
+
+      context('Template elements', () => {
+        it('TINY-12157: Templates should not be enabled by default', () => {
+          const parser = DomParser(scenario.settings);
+          const html = '<template><p>Paragraph inside template</p></template>';
+          const serializedHtml = serializer.serialize(parser.parse(html));
+
+          assert.equal(serializedHtml, '', 'Should not parse template since it is not enabled by default');
+        });
+
+        it('TINY-12157: Added support for retaining nodes inside template elements', () => {
+          const parser = DomParser(scenario.settings, Schema({ extended_valid_elements: 'template[foo]' }));
+          const html = '<template foo="1" bar="2"><p>Paragraph inside template</p><img onerror="alert(1)"><script>alert(2)</script></template>';
+          const serializedHtml = serializer.serialize(parser.parse(html));
+
+          if (scenario.isSanitizeEnabled) {
+            assert.equal(
+              serializedHtml,
+              '<template foo="1"><p>Paragraph inside template</p><img></template>',
+              'Should retain configured attributes and remove scripts inside template element when sanitizing'
+            );
+          } else {
+            assert.equal(
+              serializedHtml,
+              '<template foo="1"><p>Paragraph inside template</p><img onerror="alert(1)"><script>alert(2)</script></template>',
+              'Should retain configured attributes and scripts inside template element when not sanitizing'
+            );
+          }
+        });
+
+        it('TINY-12157: Should not execute filters on content inside templates', () => {
+          const html = '<template><p>Paragraph inside template</p></template><p>Paragraph outside template</p>';
+          const parser = DomParser(scenario.settings, Schema({ extended_valid_elements: 'template' }));
+
+          parser.addNodeFilter('p', (nodes) => {
+            Arr.each(nodes, (node) => {
+              node.attr('processed', 'true');
+            });
+          });
+
+          const serializedHtml = serializer.serialize(parser.parse(html));
+
+          assert.equal(
+            serializedHtml,
+            '<template><p>Paragraph inside template</p></template><p processed="true">Paragraph outside template</p>',
+            'Since templates are holders of arbitrary content, filters should not be applied to their contents'
+          );
+        });
+
+        it('TINY-12157: Whitespace is trimmed as if the template was a block element', () => {
+          const html = '<template>\n<p>Paragraph inside template</p>\n</template>';
+          const parser = DomParser(scenario.settings, Schema({ extended_valid_elements: 'template' }));
+
+          const serializedHtml = serializer.serialize(parser.parse(html));
+
+          assert.equal(
+            serializedHtml,
+            '<template><p>Paragraph inside template</p></template>',
+            'Whitespace should be trimmed as if the template was a block element'
+          );
+        });
       });
 
       context('validate: false', () => {
@@ -1599,6 +1716,31 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
         });
       });
     });
+
+    context('allow_html_in_comments', () => {
+      it('TINY-12220: Should allow html in comment elements', () => {
+        const parser = DomParser({ ...scenario.settings, allow_html_in_comments: true }, schema);
+        const serializer = HtmlSerializer({}, schema);
+
+        const initialHtml = '<!-- <b>test</b> -->';
+        const fragment = parser.parse(initialHtml);
+        const serializedHtml = serializer.serialize(fragment);
+
+        assert.equal(serializedHtml, initialHtml, 'Should match the initial HTML');
+      });
+
+      it('TINY-12220: Should allow html in comment if sanitize is set to false', () => {
+        const parser = DomParser({ ...scenario.settings }, schema);
+        const serializer = HtmlSerializer({}, schema);
+
+        const initialHtml = '<p>foo<!-- <b>bar</b> --></p><!-- <b>baz</b> -->';
+        const fragment = parser.parse(initialHtml);
+        const serializedHtml = serializer.serialize(fragment);
+        const expectedHtml = scenario.isSanitizeEnabled ? '<p>foo</p>' : initialHtml;
+
+        assert.equal(serializedHtml, expectedHtml, 'Should match the expected HTML');
+      });
+    });
   });
 
   context('TINY-9600: sanitize: false with unsafe input', () => {
@@ -1665,12 +1807,21 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
       assert.equal(serializedHtml, '<svg></svg><p>foo</p>');
     });
 
-    it('TINY-10237: Should retain SVG elements as is but filter out scripts', () => {
+    // Updated for TINY-11332: Remove html elements inside SVG
+    it('TINY-10237: Should retain SVG elements as is but filter out scripts and invalid children', () => {
       const schema = Schema();
       schema.addValidElements('svg[*]');
       const input = '<svg><circle><desc><b>foo</b><script>alert(1)</script></desc></circle></svg>foo';
       const serializedHtml = HtmlSerializer({}, schema).serialize(DomParser({ forced_root_block: 'p' }, schema).parse(input));
-      assert.equal(serializedHtml, '<svg><circle><desc><b>foo</b></desc></circle></svg><p>foo</p>');
+      assert.equal(serializedHtml, '<svg><circle><desc></desc></circle></svg><p>foo</p>');
+    });
+
+    it('TINY-11332: Should retain SVG elements and keep HTML elements that are valid inside an SVG', () => {
+      const schema = Schema();
+      schema.addValidElements('svg[*]');
+      const input = '<svg><a href="/docs/Web/SVG/Element/circle"><circle cx="50" cy="40" r="35" /></a><script>alert(1)</script></svg>foo';
+      const serializedHtml = HtmlSerializer({}, schema).serialize(DomParser({ forced_root_block: 'p' }, schema).parse(input));
+      assert.equal(serializedHtml, '<svg><a href="/docs/Web/SVG/Element/circle"><circle cx="50" cy="40" r="35"></circle></a></svg><p>foo</p>');
     });
 
     it('TINY-10237: Should retain SVG elements and keep scripts if sanitize is set to false', () => {
@@ -1695,6 +1846,20 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
       const input = '<div>  <svg> <circle> </circle> </svg>  <svg> <circle> </circle> </svg>  </div>';
       const serializedHtml = HtmlSerializer({}, schema).serialize(DomParser({ forced_root_block: 'p' }, schema).parse(input));
       assert.equal(serializedHtml, '<div><svg> <circle> </circle> </svg> <svg> <circle> </circle> </svg></div>');
+    });
+  });
+
+  context('Table elements', () => {
+    it('Should strip whitespace elements in table element', () => {
+      const input = '<table>  \t\r\n  <tbody>  \t\r\n <tr> \t\r\n <td> \t\r\n  test  \t\r\n </td> \t\r\n  </tr> \t\r\n </tbody>  \t\r\n  </table>';
+      const serializedHtml = HtmlSerializer({}, schema).serialize(DomParser().parse(input));
+      assert.equal(serializedHtml, '<table><tbody><tr><td>test</td></tr></tbody></table>');
+    });
+
+    it('TINY-12092: Should strip whitespace around colgroup and col elements', () => {
+      const input = '<table> \t\r\n <colgroup> \t\r\n <col> \t\r\n </colgroup>  \t\r\n  <tbody>  \t\r\n <tr> \t\r\n <td> \t\r\n  test  \t\r\n </td> \t\r\n  </tr> \t\r\n </tbody>  \t\r\n  </table>';
+      const serializedHtml = HtmlSerializer({}, schema).serialize(DomParser().parse(input));
+      assert.equal(serializedHtml, '<table><colgroup><col></colgroup><tbody><tr><td>test</td></tr></tbody></table>');
     });
   });
 
@@ -1739,6 +1904,13 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
       assert.equal(serializedHtml, '<div><math> <mrow> </mrow> </math> <math> </math></div>');
     });
 
+    it('TINY-11755: Should retain semantics and annotations if allow_mathml_annotation_encodings is set', () => {
+      const schema = Schema();
+      schema.addValidElements('math[*]');
+      const input = '<math><semantics><annotation encoding="-x-custom-mime">annotation1</annotation><annotation encoding="text/html">annotation2</annotation></semantics></math>';
+      const serializedHtml = HtmlSerializer({}, schema).serialize(DomParser({ allow_mathml_annotation_encodings: [ '-x-custom-mime' ] }, schema).parse(input));
+      assert.equal(serializedHtml, '<math><semantics><annotation encoding="-x-custom-mime">annotation1</annotation></semantics></math>');
+    });
   });
 
   context('Special elements', () => {
@@ -1788,6 +1960,29 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
         input: `<div><${elementName}><em>test</em></${elementName}></div>`,
         expected: `<div><${elementName}><em>test</em></${elementName}></div>`
       }));
+    });
+
+    it('TINY-12857: Serializer newlines properly', () => {
+      const originalText = [
+        '<head>',
+        '<meta http-equiv="x-ua-compatible" content="ie=edge">',
+        '<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">',
+        '<link rel="canonical" href="https://www.tiny.cloud/docs/tinymce/latest/">',
+        '<link rel="sitemap" type="application/xml" href="/gatsby_sitemap.xml">',
+        '<meta content="My Website">',
+        '<meta content="Check out my awesome site!">',
+        '</head>',
+        '<body></body>'
+      ];
+
+      const output = HtmlSerializer({
+        validate: false,
+        indent: true,
+        indent_before: 'head,html,body,meta,title,script,link,style',
+        indent_after: 'head,html,body,meta,title,script,link,style'
+      }, schema).serialize( DomParser({ root_name: '#document', sanitize: false }, schema).parse('<html>' + originalText.join('') + '</html>'));
+
+      assert.equal(output, originalText.join('\n'));
     });
   });
 });

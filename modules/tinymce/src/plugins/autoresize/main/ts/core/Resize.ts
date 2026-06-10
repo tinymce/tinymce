@@ -1,10 +1,10 @@
-import { Cell } from '@ephox/katamari';
+import type { Cell } from '@ephox/katamari';
 
-import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import Editor from 'tinymce/core/api/Editor';
+import type DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import type Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
-import { SetContentEvent } from 'tinymce/core/api/EventTypes';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type { SetContentEvent } from 'tinymce/core/api/EventTypes';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 import * as Events from '../api/Events';
 import * as Options from '../api/Options';
@@ -175,9 +175,6 @@ const setup = (editor: Editor, oldSize: Cell<ResizeData>): void => {
   });
 };
 
-export {
-  resize,
-  ResizeData,
-  setup
-};
+export type { ResizeData };
+export { resize, setup };
 

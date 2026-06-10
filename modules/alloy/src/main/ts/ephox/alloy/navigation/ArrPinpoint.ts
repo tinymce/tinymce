@@ -1,4 +1,4 @@
-import { Arr, Optional } from '@ephox/katamari';
+import { Arr, type Optional } from '@ephox/katamari';
 
 export interface IndexInfo<A> {
   readonly index: number;

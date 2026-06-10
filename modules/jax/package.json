@@ -1,6 +1,6 @@
 {
   "name": "@ephox/jax",
-  "version": "8.0.0",
+  "version": "9.0.0",
   "description": "AJAX library",
   "repository": {
     "type": "git",
@@ -9,7 +9,7 @@
   },
   "scripts": {
     "prepublishOnly": "yarn run lint && yarn run build",
-    "lint": "eslint --config ../../.eslintrc.json --max-warnings=0 src/**/*.ts",
+    "lint": "eslint --max-warnings=0 src/**/*.ts",
     "build": "tsc -b",
     "test": "bedrock-auto -b chrome-headless --customRoutes ../tinymce/src/core/test/json/routes.json -d src/test/ts/",
     "test-manual": "bedrock --customRoutes --customRoutes ../tinymce/src/core/test/json/routes.json -d src/test/ts/",
@@ -22,8 +22,9 @@
   "author": "Ephox Corporation DBA Tiny Technologies, Inc",
   "license": "GPL-2.0-or-later",
   "dependencies": {
-    "@ephox/katamari": "^10.0.0"
+    "@ephox/katamari": "^11.0.0"
   },
+  "sideEffects": false,
   "files": [
     "lib/main",
     "lib/demo",
@@ -37,5 +38,12 @@
   ],
   "main": "./lib/main/ts/ephox/jax/api/Main.js",
   "module": "./lib/main/ts/ephox/jax/api/Main.js",
-  "types": "./lib/main/ts/ephox/jax/api/Main.d.ts"
+  "types": "./lib/main/ts/ephox/jax/api/Main.d.ts",
+  "exports": {
+    ".": {
+      "tiny:source": "./src/main/ts/ephox/jax/api/Main.ts",
+      "types": "./lib/main/ts/ephox/jax/api/Main.d.ts",
+      "default": "./lib/main/ts/ephox/jax/api/Main.js"
+    }
+  }
 }

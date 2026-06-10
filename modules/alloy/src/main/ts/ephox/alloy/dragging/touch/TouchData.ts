@@ -1,5 +1,5 @@
 import { Optional } from '@ephox/katamari';
-import { EventArgs, SugarPosition } from '@ephox/sugar';
+import { type EventArgs, SugarPosition } from '@ephox/sugar';
 
 const getDataFrom = (touches: TouchList): Optional<SugarPosition> => {
   const touch = touches[0];

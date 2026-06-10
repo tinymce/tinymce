@@ -24,6 +24,7 @@ export interface BlobInfoData {
   base64: string;
   blobUri?: string;
   uri?: string;
+  allowEmptyFile?: boolean;
 }
 
 export interface BlobInfo {
@@ -75,7 +76,7 @@ export const BlobCache = (): BlobCache => {
   };
 
   const toBlobInfo = (o: BlobInfoData): BlobInfo => {
-    if (!o.blob || !o.base64) {
+    if (Type.isNullable(o.blob) || Type.isNullable(o.base64) || (o.base64 === '' && !o.allowEmptyFile)) {
       throw new Error('blob and base64 representations of the image are required for BlobInfo to be created');
     }
 

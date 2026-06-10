@@ -3,7 +3,9 @@ import { Arr, Obj, Type } from '@ephox/katamari';
 import { SugarElement, SugarNode } from '@ephox/sugar';
 import { assert } from 'chai';
 
-import Schema, { AttributePattern, SchemaElement } from 'tinymce/core/api/html/Schema';
+import DomParser from 'tinymce/core/api/html/DomParser';
+import Schema, { type AttributePattern, type SchemaElement } from 'tinymce/core/api/html/Schema';
+import HtmlSerializer from 'tinymce/core/api/html/Serializer';
 
 describe('browser.tinymce.core.html.SchemaTest', () => {
   const getElementRule = (schema: Schema, name: string) =>
@@ -226,13 +228,13 @@ describe('browser.tinymce.core.html.SchemaTest', () => {
       DL: {}, CENTER: {}, BLOCKQUOTE: {}, CAPTION: {}, UL: {}, OL: {}, LI: {},
       TD: {}, TR: {}, TH: {}, TFOOT: {}, THEAD: {}, TBODY: {}, TABLE: {}, FORM: {},
       PRE: {}, ADDRESS: {}, DIV: {}, P: {}, HR: {}, H6: {}, H5: {}, H4: {}, H3: {},
-      H2: {}, H1: {}, NAV: {}, FIGURE: {}, DATALIST: {}, OPTGROUP: {}, OPTION: {}, SELECT: {},
+      H2: {}, H1: {}, NAV: {}, FIGURE: {}, DATALIST: {}, OPTGROUP: {}, OPTION: {}, SELECT: {}, COL: {}, COLGROUP: {},
       details: {}, listing: {}, multicol: {}, body: {}, html: {}, summary: {}, main: {}, aside: {}, hgroup: {}, section: {}, article: {}, footer: {}, header: {},
       isindex: {}, menu: {}, noscript: {}, fieldset: {}, dir: {}, dd: {}, dt: {}, dl: {}, center: {},
       blockquote: {}, caption: {}, ul: {}, ol: {}, li: {}, td: {}, tr: {}, th: {}, tfoot: {}, thead: {},
       tbody: {}, table: {}, form: {}, pre: {}, address: {}, div: {}, p: {}, hr: {}, h6: {},
       h5: {}, h4: {}, h3: {}, h2: {}, h1: {}, nav: {}, figure: {}, figcaption: {}, datalist: {}, optgroup: {},
-      option: {}, select: {}
+      option: {}, select: {}, col: {}, colgroup: {}
     });
   });
 
@@ -846,6 +848,20 @@ describe('browser.tinymce.core.html.SchemaTest', () => {
       assert.isTrue(schema.isValid('foo.-bar'));
       assert.isTrue(schema.isValidChild('foo.-bar', 'bar.-baz'));
     });
+
+    it('TINY-13006: Add custom elements with component urls', () => {
+      const schema = Schema({});
+
+      schema.addCustomElements({
+        'custom-element1': { componentUrl: 'https://example.com/component.js' },
+        'custom-element2': { componentUrl: 'https://example.com/component.js' }
+      });
+
+      assert.deepEqual(schema.getComponentUrls(), {
+        'custom-element1': 'https://example.com/component.js',
+        'custom-element2': 'https://example.com/component.js'
+      });
+    });
   });
 
   context('custom_elements with spec record', () => {
@@ -882,6 +898,13 @@ describe('browser.tinymce.core.html.SchemaTest', () => {
 
       assert.isTrue(schema.isValidChild('foo', 'span'));
       assert.isFalse(schema.isValidChild('foo', 'strong'));
+    });
+
+    it('TINY-12858: Meta property is kept', () => {
+      const schema = Schema();
+
+      const html = '<head><meta property="myProperty"></head><body></body>';
+      assert.equal(HtmlSerializer({}, schema).serialize(DomParser({ root_name: '#document' }, schema).parse(html)), html);
     });
   });
 });

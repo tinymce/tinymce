@@ -1,7 +1,7 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
 
-import { CharMap } from 'tinymce/plugins/charmap/core/CharMap';
+import type { CharMap } from 'tinymce/plugins/charmap/core/CharMap';
 import * as Scan from 'tinymce/plugins/charmap/core/Scan';
 
 describe('atomic.tinymce.plugins.charmap.ScanTest', () => {

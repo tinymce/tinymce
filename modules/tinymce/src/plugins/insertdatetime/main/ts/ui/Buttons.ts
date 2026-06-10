@@ -1,7 +1,7 @@
 import { Cell } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
-import { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
+import type Editor from 'tinymce/core/api/Editor';
+import type { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
 import Tools from 'tinymce/core/api/util/Tools';
 
 import * as Options from '../api/Options';
@@ -29,6 +29,7 @@ const register = (editor: Editor): void => {
   editor.ui.registry.addSplitButton('insertdatetime', {
     icon: 'insert-time',
     tooltip: 'Insert date/time',
+    chevronTooltip: 'Insert date/time menu',
     select: (value) => value === defaultFormat.get(),
     fetch: (done) => {
       done(Tools.map(formats, (format): Menu.ChoiceMenuItemSpec =>

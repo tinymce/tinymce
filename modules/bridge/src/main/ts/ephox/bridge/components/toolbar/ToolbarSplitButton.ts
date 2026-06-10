@@ -1,21 +1,22 @@
 import { FieldSchema, StructureSchema } from '@ephox/boulder';
-import { Optional, Result } from '@ephox/katamari';
+import type { Optional, Result } from '@ephox/katamari';
 
-import { ChoiceMenuItemSpec, SeparatorMenuItemSpec } from '../../api/Menu';
+import type { ChoiceMenuItemSpec, ImageMenuItemSpec, SeparatorMenuItemSpec } from '../../api/Menu';
 import * as ComponentSchema from '../../core/ComponentSchema';
 
 // Temporarily disable separators until things are clearer
-export type ToolbarSplitButtonItemTypes = ChoiceMenuItemSpec | SeparatorMenuItemSpec;
+export type ToolbarSplitButtonItemTypes = ChoiceMenuItemSpec | SeparatorMenuItemSpec | ImageMenuItemSpec;
 export type SuccessCallback = (menu: ToolbarSplitButtonItemTypes[]) => void;
 export type SelectPredicate = (value: string) => boolean;
 
-export type PresetTypes = 'color' | 'normal' | 'listpreview';
-export type PresetItemTypes = 'color' | 'normal';
+export type PresetTypes = 'color' | 'normal' | 'listpreview' | 'imageselector';
+export type PresetItemTypes = 'color' | 'img' | 'normal';
 export type ColumnTypes = number | 'auto';
 
 export interface ToolbarSplitButtonSpec {
   type?: 'splitbutton';
   tooltip?: string;
+  chevronTooltip?: string;
   icon?: string;
   text?: string;
   select?: SelectPredicate;
@@ -25,11 +26,13 @@ export interface ToolbarSplitButtonSpec {
   onSetup?: (api: ToolbarSplitButtonInstanceApi) => (api: ToolbarSplitButtonInstanceApi) => void;
   onAction: (api: ToolbarSplitButtonInstanceApi) => void;
   onItemAction: (api: ToolbarSplitButtonInstanceApi, value: string) => void;
+  context?: string;
 }
 
 export interface ToolbarSplitButton {
   type: 'splitbutton';
   tooltip: Optional<string>;
+  chevronTooltip: Optional<string>;
   icon: Optional<string>;
   text: Optional<string>;
   select: Optional<SelectPredicate>;
@@ -39,6 +42,7 @@ export interface ToolbarSplitButton {
   onSetup: (api: ToolbarSplitButtonInstanceApi) => (api: ToolbarSplitButtonInstanceApi) => void;
   onAction: (api: ToolbarSplitButtonInstanceApi) => void;
   onItemAction: (api: ToolbarSplitButtonInstanceApi, value: string) => void;
+  context: string;
 }
 
 export interface ToolbarSplitButtonInstanceApi {
@@ -55,6 +59,7 @@ export interface ToolbarSplitButtonInstanceApi {
 export const splitButtonSchema = StructureSchema.objOf([
   ComponentSchema.type,
   ComponentSchema.optionalTooltip,
+  ComponentSchema.optionalChevronTooltip,
   ComponentSchema.optionalIcon,
   ComponentSchema.optionalText,
   ComponentSchema.optionalSelect,
@@ -64,7 +69,8 @@ export const splitButtonSchema = StructureSchema.objOf([
   FieldSchema.defaultedStringEnum('presets', 'normal', [ 'normal', 'color', 'listpreview' ]),
   ComponentSchema.defaultedColumns(1),
   ComponentSchema.onAction,
-  ComponentSchema.onItemAction
+  ComponentSchema.onItemAction,
+  FieldSchema.defaultedString('context', 'mode:design')
 ]);
 
 export const isSplitButtonButton = (spec: any): spec is ToolbarSplitButton => spec.type === 'splitbutton';

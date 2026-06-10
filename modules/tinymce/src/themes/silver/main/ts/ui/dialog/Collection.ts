@@ -1,18 +1,18 @@
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Bubble, Disabling, EventFormat, FormField as AlloyFormField, Keying,
+  AddEventsBehaviour, type AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Bubble, Disabling, type EventFormat, FormField as AlloyFormField, Keying,
   Layout,
-  NativeEvents, Replacing, Representing, SimulatedEvent, SketchSpec, SystemEvents, Tabstopping, Tooltipping
+  NativeEvents, Replacing, Representing, type SimulatedEvent, type SketchSpec, SystemEvents, Tabstopping, Tooltipping
 } from '@ephox/alloy';
-import { Dialog } from '@ephox/bridge';
-import { Arr, Fun, Optional } from '@ephox/katamari';
-import { Attribute, Class, EventArgs, Focus, Html, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
+import type { Dialog } from '@ephox/bridge';
+import { Arr, Fun, type Optional } from '@ephox/katamari';
+import { Attribute, Class, type EventArgs, Focus, Html, SelectorFilter, SelectorFind, type SugarElement } from '@ephox/sugar';
 
 import Entities from 'tinymce/core/api/html/Entities';
 import I18n from 'tinymce/core/api/util/I18n';
 import { renderFormFieldWith, renderLabel } from 'tinymce/themes/silver/ui/alien/FieldLabeller';
 
-import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
-import * as ReadOnly from '../../ReadOnly';
+import type { UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import * as UiState from '../../UiState';
 import { detectSize } from '../alien/FlatgridAutodetect';
 import { formActionEvent, formResizeEvent } from '../general/FormEvents';
 import * as ItemClasses from '../menus/item/ItemClasses';
@@ -42,6 +42,10 @@ export const renderCollection = (
   };
 
   const setContents = (comp: AlloyComponent, items: Dialog.CollectionItem[]) => {
+    // Giving it a default `mode:design` context, these shouldn't run at all in mode:readonly
+    const disabled = providersBackstage.checkUiComponentContext('mode:design').shouldDisable || providersBackstage.isDisabled();
+    const disabledClass = disabled ? ' tox-collection__item--state-disabled' : '';
+
     const htmlLines = Arr.map(items, (item) => {
       const itemText = I18n.translate(item.text);
       const textContent = spec.columns === 1 ? `<div class="tox-collection__item-label">${itemText}</div>` : '';
@@ -61,7 +65,6 @@ export const renderCollection = (
       // But if only the title attribute is used instead, the names are read out twice. i.e., the description followed by the item.text.
       const ariaLabel = itemText.replace(/\_| \- |\-/g, (match) => mapItemName[match]);
 
-      const disabledClass = providersBackstage.isDisabled() ? ' tox-collection__item--state-disabled' : '';
       return `<div data-mce-tooltip="${ariaLabel}" class="tox-collection__item${disabledClass}" tabindex="-1" data-collection-item-value="${Entities.encodeAllRaw(item.value)}" aria-label="${ariaLabel}">${iconContent}${textContent}</div>`;
     });
 
@@ -73,7 +76,7 @@ export const renderCollection = (
 
   const onClick = runOnItem((comp, se, tgt, itemValue) => {
     se.stop();
-    if (!providersBackstage.isDisabled()) {
+    if (!(providersBackstage.checkUiComponentContext('mode:design').shouldDisable || providersBackstage.isDisabled())) {
       AlloyTriggers.emitWith(comp, formActionEvent, {
         name: spec.name,
         value: itemValue
@@ -120,7 +123,7 @@ export const renderCollection = (
     factory: { sketch: Fun.identity },
     behaviours: Behaviour.derive([
       Disabling.config({
-        disabled: providersBackstage.isDisabled,
+        disabled: () => providersBackstage.checkUiComponentContext(spec.context).shouldDisable,
         onDisabled: (comp) => {
           iterCollectionItems(comp, (childElm) => {
             Class.add(childElm, 'tox-collection__item--state-disabled');
@@ -134,7 +137,7 @@ export const renderCollection = (
           });
         }
       }),
-      ReadOnly.receivingConfig(),
+      UiState.toggleOnReceive(() => providersBackstage.checkUiComponentContext(spec.context)),
       Replacing.config({ }),
       Tooltipping.config(
         {

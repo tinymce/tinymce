@@ -1,7 +1,8 @@
 import { Arr, Obj, Type } from '@ephox/katamari';
 
 import Tools from '../api/util/Tools';
-import { ElementRule } from './SchemaTypes';
+
+import type { ElementRule } from './SchemaTypes';
 
 export const split = (items: string | undefined, delim?: string): string[] => {
   items = Tools.trim(items);

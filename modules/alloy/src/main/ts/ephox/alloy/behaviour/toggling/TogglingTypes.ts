@@ -1,8 +1,8 @@
-import { Optional } from '@ephox/katamari';
+import type { Optional } from '@ephox/katamari';
 
-import * as Behaviour from '../../api/behaviour/Behaviour';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { BehaviourCellState } from '../common/BehaviourCellState';
+import type * as Behaviour from '../../api/behaviour/Behaviour';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
+import type { BehaviourCellState } from '../common/BehaviourCellState';
 
 export interface TogglingBehaviour extends Behaviour.AlloyBehaviour<TogglingConfigSpec, TogglingConfig> {
   config: (config: TogglingConfigSpec) => Behaviour.NamedConfiguredBehaviour<TogglingConfigSpec, TogglingConfig>;

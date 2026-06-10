@@ -6,7 +6,7 @@ import * as fc from 'fast-check';
 
 import { arbTextIds } from 'ephox/robin/test/Arbitraries';
 import * as Clustering from 'ephox/robin/words/Clustering';
-import { WordDecisionItem } from 'ephox/robin/words/WordDecision';
+import type { WordDecisionItem } from 'ephox/robin/words/WordDecision';
 import { LanguageZones } from 'ephox/robin/zone/LanguageZones';
 
 UnitTest.test('ClusteringTest', () => {

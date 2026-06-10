@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.themes.silver.editor.header.HeaderLocationTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
@@ -24,6 +24,9 @@ describe('browser.tinymce.themes.silver.editor.header.HeaderLocationTest', () =>
             s.element('div', {
               classes: [ arr.has('tox-editor-header') ],
               children: [
+                s.element('div', {
+                  classes: [ arr.has('tox-promotion') ],
+                }),
                 s.element('div', {
                   classes: [ arr.has('tox-menubar') ]
                 }),

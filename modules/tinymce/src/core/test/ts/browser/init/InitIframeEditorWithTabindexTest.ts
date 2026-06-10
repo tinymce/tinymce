@@ -3,7 +3,7 @@ import { Attribute, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar
 import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.init.InitIframeEditorWithTabindexTest', () => {
   const setup = () => {

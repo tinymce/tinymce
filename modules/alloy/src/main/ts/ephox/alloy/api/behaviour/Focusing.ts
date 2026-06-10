@@ -1,7 +1,8 @@
 import * as ActiveFocus from '../../behaviour/focusing/ActiveFocus';
 import * as FocusApis from '../../behaviour/focusing/FocusApis';
-import { FocusingBehaviour } from '../../behaviour/focusing/FocusingTypes';
+import type { FocusingBehaviour } from '../../behaviour/focusing/FocusingTypes';
 import FocusSchema from '../../behaviour/focusing/FocusSchema';
+
 import * as Behaviour from './Behaviour';
 
 const Focusing: FocusingBehaviour = Behaviour.create({

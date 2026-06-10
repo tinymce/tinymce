@@ -1,8 +1,9 @@
+import { Mouse } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyHooks, TinySelections, TinyAssertions } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/accordion/Plugin';
 
 import type { ToggledAccordionEvent, ToggledAllAccordionsEvent } from '../../../main/ts/api/Events';
@@ -51,7 +52,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
       initialContent: '<p>tiny</p>',
       initialCursor: [[ 0, 0 ], 'tiny'.length ],
       assertContent: '<p>tiny</p>' + AccordionUtils.createAccordion(),
-      assertCursor: [[ 1, 0, 0 ], 'Accordion summary...'.length ],
+      assertCursor: [[ 1, 0, 0 ], 'Accordion summary…'.length ],
     });
   });
 
@@ -60,7 +61,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
       initialContent: '<p><br></p>',
       initialCursor: [[ 0, 0 ], 0 ],
       assertContent: AccordionUtils.createAccordion(),
-      assertCursor: [[ 0, 0, 0 ], 'Accordion summary...'.length ],
+      assertCursor: [[ 0, 0, 0 ], 'Accordion summary…'.length ],
     });
   });
 
@@ -69,7 +70,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
       initialContent: '<ol><li>tiny</li></ol>',
       initialCursor: [[ 0, 0, 0 ], 'tiny'.length ],
       assertContent: `<ol><li>tiny${AccordionUtils.createAccordion()}</li></ol>`,
-      assertCursor: [[ 0, 0, 1, 0, 0 ], 'Accordion summary...'.length ],
+      assertCursor: [[ 0, 0, 1, 0, 0 ], 'Accordion summary…'.length ],
     });
   });
 
@@ -78,7 +79,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
       initialContent: '<dl><dt>tiny</dt></dl>',
       initialCursor: [[ 0, 0, 0 ], 'tiny'.length ],
       assertContent: `<dl><dt>tiny${AccordionUtils.createAccordion()}</dt></dl>`,
-      assertCursor: [[ 0, 0, 1, 0, 0 ], 'Accordion summary...'.length ],
+      assertCursor: [[ 0, 0, 1, 0, 0 ], 'Accordion summary…'.length ],
     });
   });
 
@@ -87,7 +88,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
       initialContent: '<dl><dd>tiny</dd></dl>',
       initialCursor: [[ 0, 0, 0 ], 'tiny'.length ],
       assertContent: `<dl><dd>tiny${AccordionUtils.createAccordion()}</dd></dl>`,
-      assertCursor: [[ 0, 0, 1, 0, 0 ], 'Accordion summary...'.length ],
+      assertCursor: [[ 0, 0, 1, 0, 0 ], 'Accordion summary…'.length ],
     });
   });
 
@@ -96,7 +97,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
       initialContent: '<table><colgroup><col></colgroup><tbody><tr><td>&nbsp;</td></tr></tbody></table>',
       initialCursor: [[ 0, 1, 0, 0, 0 ], 0 ],
       assertContent: `<table><colgroup><col></colgroup><tbody><tr><td>${AccordionUtils.createAccordion()}</td></tr></tbody></table>`,
-      assertCursor: [[ 0, 1, 0, 0, 0, 0, 0 ], 'Accordion summary...'.length ],
+      assertCursor: [[ 0, 1, 0, 0, 0, 0, 0 ], 'Accordion summary…'.length ],
     });
   });
 
@@ -105,7 +106,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
       initialContent: AccordionUtils.createAccordion({ summary: 'summary', body: '<p>body</p>' }),
       initialCursor: [[ 0, 1, 0, 0 ], 'body'.length ],
       assertContent: AccordionUtils.createAccordion({ summary: 'summary', body: `<p>body</p>${AccordionUtils.createAccordion()}` }),
-      assertCursor: [[ 0, 1, 1, 0, 0 ], 'Accordion summary...'.length ],
+      assertCursor: [[ 0, 1, 1, 0, 0 ], 'Accordion summary…'.length ],
     });
   });
 
@@ -143,10 +144,95 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
     editor.execCommand('ToggleAccordion');
     TinyAssertions.assertContentPresence(editor, { 'details:not([open="open"])': 1 });
+    TinyAssertions.assertContentPresence(editor, { 'details[data-mce-accordion-open="closed"]': 1 });
     TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 0);
     editor.execCommand('ToggleAccordion');
     TinyAssertions.assertContentPresence(editor, { 'details[open="open"]': 1 });
+    TinyAssertions.assertContentPresence(editor, { 'details[data-mce-accordion-open="open"]': 1 });
     TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 0);
+  });
+
+  it('TINY-12316: Toggle an accordion element under the cursor while read only', () => {
+    const editor = hook.editor();
+    editor.setContent(`${AccordionUtils.createAccordion({ open: true })}<p>tiny</p>`);
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
+    editor.mode.set('readonly');
+    editor.execCommand('ToggleAccordion');
+    TinyAssertions.assertContentPresence(editor, { 'details:not([open="open"])': 1 });
+    TinyAssertions.assertContentPresence(editor, { 'details[data-mce-accordion-open="open"]': 1 });
+    TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 0);
+    editor.execCommand('ToggleAccordion');
+    TinyAssertions.assertContentPresence(editor, { 'details[open="open"]': 1 });
+    TinyAssertions.assertContentPresence(editor, { 'details[data-mce-accordion-open="open"]': 1 });
+    editor.mode.set('design');
+    TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 0);
+  });
+
+  it('TINY-12316: Toggle an accordion element not possible when disabled', () => {
+    // Setup
+    const editor = hook.editor();
+    const onClick = (event: Event) => {
+      assert.isTrue(event.defaultPrevented);
+    };
+    editor.on('click', onClick);
+
+    // Test that nothing happens when the accordion is disabled and already open ( setup )
+    editor.setContent(`${AccordionUtils.createAccordion({ open: true })}<p>tiny</p>`);
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
+    editor.options.set('disabled', true);
+
+    // Test that nothing happens when the accordion is disabled and already open
+    TinyAssertions.assertContentPresence(editor, { 'details[open="open"]': 1 });
+    editor.execCommand('ToggleAccordion'); // By command
+    TinyAssertions.assertContentPresence(editor, { 'details[open="open"]': 1 });
+    Mouse.clickOn(TinyDom.body(editor), 'details[open="open"]'); // By click
+    TinyAssertions.assertContentPresence(editor, { 'details[open="open"]': 1 });
+    editor.options.unset('disabled');
+
+    // Test that nothing happens when the accordion is disabled and already closed ( setup )
+    editor.setContent(`${AccordionUtils.createAccordion({ open: false })}<p>tiny</p>`);
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
+    editor.options.set('disabled', true);
+
+    // Test that nothing happens when the accordion is disabled and already closed
+    TinyAssertions.assertContentPresence(editor, { 'details:not([open])': 1 });
+    editor.execCommand('ToggleAccordion'); // By command
+    TinyAssertions.assertContentPresence(editor, { 'details:not([open])': 1 });
+    Mouse.clickOn(TinyDom.body(editor), 'details:not([open])'); // By click
+    TinyAssertions.assertContentPresence(editor, { 'details:not([open])': 1 });
+    TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 0);
+
+    // Cleanup
+    editor.options.unset('disabled');
+    editor.off('click', onClick);
+  });
+
+  it('TINY-12316: Accordion undo levels are properly created', () => {
+    const editor = hook.editor();
+    editor.setContent(`${AccordionUtils.createAccordion({ open: true })}<p>tiny</p>`);
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
+    editor.undoManager.add();
+    const undoLevelDepth1 = editor.undoManager.data.length;
+    editor.execCommand('ToggleAccordion');
+    editor.undoManager.add();
+    assert.equal(undoLevelDepth1 + 1, editor.undoManager.data.length, 'Should have increased');
+    editor.undoManager.add();
+    assert.equal(undoLevelDepth1 + 1, editor.undoManager.data.length, 'Should remain the same');
+    editor.execCommand('ToggleAccordion');
+    editor.undoManager.add();
+    assert.equal(undoLevelDepth1 + 2, editor.undoManager.data.length, 'Should have increased');
+
+    editor.mode.set('readonly');
+    editor.undoManager.add();
+    const undoLevelDepth2 = editor.undoManager.data.length;
+    editor.execCommand('ToggleAccordion');
+    assert.equal(undoLevelDepth2, editor.undoManager.data.length, 'Should remain the same');
+    editor.undoManager.add();
+    assert.equal(undoLevelDepth2, editor.undoManager.data.length, 'Should remain the same');
+    editor.execCommand('ToggleAccordion');
+    editor.undoManager.add();
+    assert.equal(undoLevelDepth2, editor.undoManager.data.length, 'Should remain the same');
+    editor.mode.set('design');
   });
 
   it('TINY-9731: Toggle an accordion element under the cursor with an argument', () => {

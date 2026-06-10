@@ -1,13 +1,12 @@
 import { Arr, Optional } from '@ephox/katamari';
 
-import DOMUtils from '../api/dom/DOMUtils';
-import DomParser from '../api/html/DomParser';
-import AstNode from '../api/html/Node';
+import type DOMUtils from '../api/dom/DOMUtils';
+import type DomParser from '../api/html/DomParser';
+import type AstNode from '../api/html/Node';
 import * as Zwsp from '../text/Zwsp';
-import { DomSerializerSettings } from './DomSerializerImpl';
-import * as RemoveTrailingBr from './RemoveTrailingBr';
 
-declare const unescape: any;
+import type { DomSerializerSettings } from './DomSerializerImpl';
+import * as RemoveTrailingBr from './RemoveTrailingBr';
 
 const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: DOMUtils): void => {
   // Convert tabindex back to elements when serializing contents
@@ -118,7 +117,7 @@ const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: D
     }
   });
 
-  // Convert comments to cdata and handle protected comments
+  // Convert comments to cdata
   htmlParser.addNodeFilter('#comment', (nodes) => {
     let i = nodes.length;
     while (i--) {
@@ -129,11 +128,6 @@ const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: D
         node.name = '#cdata';
         node.type = 4;
         node.value = dom.decode(value.replace(/^\[CDATA\[|\]\]$/g, ''));
-      } else if (value?.indexOf('mce:protected ') === 0) {
-        node.name = '#text';
-        node.type = 3;
-        node.raw = true;
-        node.value = unescape(value).substr(14);
       }
     }
   });

@@ -1,10 +1,11 @@
 import { Obj } from '@ephox/katamari';
 
-import { isReadOnly, processReadonlyEvents } from '../mode/Readonly';
+import * as Disabled from '../mode/Disabled';
+
 import DOMUtils from './dom/DOMUtils';
-import { EventUtilsCallback } from './dom/EventUtils';
-import Editor from './Editor';
-import { EditorEventMap } from './EventTypes';
+import type { EventUtilsCallback } from './dom/EventUtils';
+import type Editor from './Editor';
+import type { EditorEventMap } from './EventTypes';
 import * as Options from './Options';
 import Observable from './util/Observable';
 import Tools from './util/Tools';
@@ -55,13 +56,12 @@ const getEventTarget = (editor: Editor, eventName: string): Node => {
   return editor.getBody();
 };
 
-const isListening = (editor: Editor) => !editor.hidden && !isReadOnly(editor);
-
+const isListening = (editor: Editor) => !editor.hidden && !Disabled.isDisabled(editor);
 const fireEvent = (editor: Editor, eventName: string, e: Event) => {
   if (isListening(editor)) {
     editor.dispatch(eventName, e);
-  } else if (isReadOnly(editor)) {
-    processReadonlyEvents(editor, e);
+  } else if (Disabled.isDisabled(editor)) {
+    Disabled.processDisabledEvents(editor, e);
   }
 };
 

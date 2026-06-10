@@ -1,5 +1,5 @@
-import Editor from '../api/Editor';
-import { Content, ContentFormat, GetSelectionContentArgs } from '../content/ContentTypes';
+import type Editor from '../api/Editor';
+import type { Content, ContentFormat, GetSelectionContentArgs } from '../content/ContentTypes';
 import * as Rtc from '../Rtc';
 
 const getContent = (editor: Editor, args: Partial<GetSelectionContentArgs> = {}): Content => {

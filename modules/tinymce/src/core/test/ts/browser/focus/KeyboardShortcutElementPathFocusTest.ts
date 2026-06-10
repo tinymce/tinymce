@@ -21,7 +21,7 @@ describe('browser.tinymce.core.focus.KeyboardShortcutElementPathFocusTest ', () 
         const editor = hook.editor();
         const doc = SugarDocument.getDocument();
         TinyContentActions.keystroke(editor, 122, { alt: true });
-        await FocusTools.pTryOnSelector('Assert element path is focused', doc, 'div[role=navigation] .tox-statusbar__path-item');
+        await FocusTools.pTryOnSelector('Assert element path is focused', doc, 'div[role=group] .tox-statusbar__path-item');
         TinyUiActions.keystroke(editor, Keys.escape());
       });
     });

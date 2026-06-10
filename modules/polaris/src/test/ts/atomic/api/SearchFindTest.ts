@@ -4,7 +4,7 @@ import { Arr, Unicode } from '@ephox/katamari';
 import * as Pattern from 'ephox/polaris/api/Pattern';
 import * as Search from 'ephox/polaris/api/Search';
 import * as Safe from 'ephox/polaris/pattern/Safe';
-import { PRegExp } from 'ephox/polaris/pattern/Types';
+import type { PRegExp } from 'ephox/polaris/pattern/Types';
 
 describe('atomic.polaris.api.SearchFindTest', () => {
   const checkAll = (expected: [number, number][], input: string, pattern: PRegExp) => {
@@ -54,6 +54,19 @@ describe('atomic.polaris.api.SearchFindTest', () => {
     checkAll([[ 'this '.length, 'this e'.length + Unicode.zeroWidth.length + 'nds'.length ]], 'this e' + Unicode.zeroWidth + 'nds here', Pattern.unsafeword('e' + Unicode.zeroWidth + 'nds'));
 
     checkAll([[ 1, 5 ]], ' [wo] and more', Pattern.unsafetoken(Safe.sanitise('[') + '[^' + Safe.sanitise(']') + ']*' + Safe.sanitise(']')));
+  });
+
+  it('TINY-11560: Overlapping detected areas should not exist.', () => {
+    checkMany(
+      [
+        [ 0, 2, 'A' ],
+        [ 3, 7, 'B' ],
+      ],
+      'D. dd.D.',
+      [
+        testData(Pattern.safeword('D.'), 'A'),
+        testData(Pattern.safeword('dd.D'), 'B'),
+      ]);
   });
 
   it('TINY-10062: checkMany ', () => {

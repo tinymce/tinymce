@@ -1,5 +1,5 @@
 import { Arr, Fun } from '@ephox/katamari';
-import { Scroll, SugarDocument, SugarElement, SugarLocation, SugarPosition } from '@ephox/sugar';
+import { Scroll, SugarDocument, type SugarElement, SugarLocation, SugarPosition } from '@ephox/sugar';
 
 import * as Frames from './Frames';
 import * as Navigation from './Navigation';

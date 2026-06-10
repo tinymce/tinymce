@@ -1,9 +1,9 @@
 import { Merger, Obj } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
-import * as fc from 'fast-check';
+import type { SugarElement } from '@ephox/sugar';
+import type * as fc from 'fast-check';
 
 import { ArbSchema } from './ArbSchema';
-import { Schema, SchemaDetail } from './ArbSchemaTypes';
+import type { Schema, SchemaDetail } from './ArbSchemaTypes';
 import * as ArbSchemaTypes from './ArbSchemaTypes';
 
 interface ContentSchema {

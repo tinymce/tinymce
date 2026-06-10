@@ -4,7 +4,7 @@ import { Obj } from '@ephox/katamari';
 import { SugarBody, SugarDocument } from '@ephox/sugar';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/help/Plugin';
 
 describe('browser.tinymce.plugins.help.DialogKeyboardNavTest', () => {
@@ -78,7 +78,7 @@ describe('browser.tinymce.plugins.help.DialogKeyboardNavTest', () => {
       await pAssertFocusOnItem(`Installed Plugins link:${installedPlugin}`, `a[href*="${installedPlugin}"]`);
       pressTabKey(editor);
     }
-    await pAssertFocusOnItem('Premium Plugins link:Learn more...', `a[href*="/pricing"]`);
+    await pAssertFocusOnItem('Premium Plugins link:Learn more…', `a[href*="/pricing"]`);
     pressTabKey(editor);
     await pAssertFocusOnItem('Close Button', '.tox-button:contains("Close")');
     pressTabKey(editor);

@@ -5,10 +5,10 @@ import { Attribute, SugarNode } from '@ephox/sugar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Coupling } from 'ephox/alloy/api/behaviour/Coupling';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Button } from 'ephox/alloy/api/ui/Button';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as Tagger from 'ephox/alloy/registry/Tagger';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import * as StepUtils from 'ephox/alloy/test/StepUtils';
 
 UnitTest.asynctest('CouplingTest', (success, failure) => {

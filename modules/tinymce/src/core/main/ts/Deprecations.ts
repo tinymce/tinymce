@@ -1,6 +1,6 @@
 import { Arr, Obj } from '@ephox/katamari';
 
-import { NormalizedEditorOptions, RawEditorOptions } from './api/OptionTypes';
+import type { NormalizedEditorOptions, RawEditorOptions } from './api/OptionTypes';
 import Tools from './api/util/Tools';
 
 interface DeprecatedPlugin {
@@ -18,12 +18,16 @@ const removedOptions = (
   'template_cdate_classes,template_mdate_classes,template_selected_content_classes,template_preview_replace_values,template_replace_values,templates,template_cdate_format,template_mdate_format'
 ).split(',');
 
-// const deprecatedOptions: string[] = ('').split(',');
-const deprecatedOptions: string[] = [];
+const deprecatedOptions: string[] = [ 'content_css_cors' ];
 
 const removedPlugins = 'bbcode,colorpicker,contextmenu,fullpage,legacyoutput,spellchecker,template,textcolor,rtc'.split(',');
 
-const deprecatedPlugins: DeprecatedPlugin[] = [];
+const deprecatedPlugins: DeprecatedPlugin[] = [
+  {
+    name: 'export',
+    replacedWith: 'Export to PDF'
+  },
+];
 
 const getMatchingOptions = (options: RawEditorOptions, searchingFor: string[]): string[] => {
   const settingNames = Arr.filter(searchingFor, (setting) => Obj.has(options, setting));
@@ -72,8 +76,8 @@ const logRemovedWarnings = (rawOptions: RawEditorOptions, normalizedOptions: Nor
     const optionsMessage = hasRemovedOptions ? `\n\nOptions:${listJoiner}${removedOptions.join(listJoiner)}` : '';
     // eslint-disable-next-line no-console
     console.warn(
-      'The following deprecated features are currently enabled and have been removed in TinyMCE 7.0. These features will no longer work and should be removed from the TinyMCE configuration. ' +
-      'See https://www.tiny.cloud/docs/tinymce/7/migration-from-6x/ for more information.' +
+      'The following deprecated features are currently enabled and have been removed in TinyMCE 8.0. These features will no longer work and should be removed from the TinyMCE configuration. ' +
+      'See https://www.tiny.cloud/docs/tinymce/8/migration-from-7x/ for more information.' +
       themesMessage +
       pluginsMessage +
       optionsMessage
@@ -119,6 +123,17 @@ const logWarnings = (rawOptions: RawEditorOptions, normalizedOptions: Normalized
   logDeprecatedWarnings(rawOptions, normalizedOptions);
 };
 
+const deprecatedFeatures = {
+  fire: 'The "fire" event api has been deprecated and will be removed in TinyMCE 9. Use "dispatch" instead.',
+  selectionSetContent: 'The "editor.selection.setContent" method has been deprecated and will be removed in TinyMCE 9. Use "editor.insertContent" instead.'
+};
+
+const logFeatureDeprecationWarning = (feature: keyof typeof deprecatedFeatures): void => {
+  // eslint-disable-next-line no-console
+  console.warn(deprecatedFeatures[feature], new Error().stack);
+};
+
 export {
-  logWarnings
+  logWarnings,
+  logFeatureDeprecationWarning
 };

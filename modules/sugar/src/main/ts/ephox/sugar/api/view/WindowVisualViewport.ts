@@ -2,8 +2,9 @@ import { Fun, Optional } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
 import { fromRawEvent } from '../../impl/FilteredEvent';
-import { EventHandler, EventUnbinder } from '../events/Types';
+import type { EventHandler, EventUnbinder } from '../events/Types';
 import { SugarElement } from '../node/SugarElement';
+
 import * as Scroll from './Scroll';
 
 export interface Bounds {

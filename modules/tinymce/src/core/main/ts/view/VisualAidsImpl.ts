@@ -1,6 +1,6 @@
 import { Arr, Type } from '@ephox/katamari';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import * as Options from '../api/Options';
 
 export const addVisualInternal = (editor: Editor, elm?: HTMLElement): void => {

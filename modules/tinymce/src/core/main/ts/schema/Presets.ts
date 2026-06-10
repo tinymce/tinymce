@@ -1,7 +1,7 @@
 import { Optional, Thunk } from '@ephox/katamari';
 
 import * as SchemaElementSets from './SchemaElementSets';
-import * as SchemaTypes from './SchemaTypes';
+import type * as SchemaTypes from './SchemaTypes';
 
 export type PresetName = 'blocks' | 'phrasing' | 'flow';
 
@@ -11,6 +11,7 @@ const cachedSets = {
   'html5-strict': Thunk.cached(() => SchemaElementSets.getElementSets('html5-strict'))
 };
 
+// eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
 export const getElementsPreset = (type: SchemaTypes.SchemaType, name: PresetName | string): Optional<readonly string[]> => {
   const { blockContent, phrasingContent, flowContent } = cachedSets[type]();
 

@@ -1,8 +1,8 @@
-import { ItemTypes, ItemWidget, Menu as AlloyMenu, MenuTypes } from '@ephox/alloy';
-import { Menu } from '@ephox/bridge';
+import { type ItemTypes, ItemWidget, Menu as AlloyMenu, type MenuTypes } from '@ephox/alloy';
+import type { Menu } from '@ephox/bridge';
 import { Fun, Id } from '@ephox/katamari';
 
-import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
+import type { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 import * as ColorSwatch from 'tinymce/themes/silver/ui/core/color/ColorSwatch';
 
 import { createPartialChoiceMenu } from '../../menu/MenuChoice';

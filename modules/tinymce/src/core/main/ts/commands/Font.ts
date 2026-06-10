@@ -1,7 +1,7 @@
 import { Arr, Strings } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import type { SugarElement } from '@ephox/sugar';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import * as Options from '../api/Options';
 import * as FontInfo from '../fmt/FontInfo';
 import { mapRange } from '../selection/RangeMap';

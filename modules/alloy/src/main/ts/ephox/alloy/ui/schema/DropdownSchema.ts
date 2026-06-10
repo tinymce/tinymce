@@ -11,7 +11,7 @@ import * as SketcherFields from '../../data/SketcherFields';
 import * as InternalSink from '../../parts/InternalSink';
 import * as PartType from '../../parts/PartType';
 import * as AnchorLayouts from '../../positioning/mode/AnchorLayouts';
-import { DropdownDetail, DropdownSpec } from '../types/DropdownTypes';
+import type { DropdownDetail, DropdownSpec } from '../types/DropdownTypes';
 
 const schema = Fun.constant([
   FieldSchema.required('dom'),

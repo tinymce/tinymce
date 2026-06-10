@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
 import { Global } from '@ephox/katamari';
 
-import { Editor, TinyMCE } from 'tinymce/core/api/PublicApi';
-import CaretPosition from 'tinymce/core/caret/CaretPosition';
+import type { Editor, TinyMCE } from 'tinymce/core/api/PublicApi';
+import type CaretPosition from 'tinymce/core/caret/CaretPosition';
 
 declare const tinymce: TinyMCE;
 
@@ -66,6 +66,7 @@ export default (): void => {
 
   tinymce.init({
     selector: 'textarea.tinymce',
+    license_key: 'gpl',
     skin_url: '../../../../js/tinymce/skins/ui/oxide',
     add_unload_trigger: false,
     toolbar: 'insertfile undo redo | styles | bold italic | alignleft aligncenter alignright alignjustify' +
@@ -77,6 +78,7 @@ export default (): void => {
 
   tinymce.init({
     selector: 'div.tinymce',
+    license_key: 'gpl',
     inline: true,
     skin_url: '../../../../js/tinymce/skins/ui/oxide',
     add_unload_trigger: false,

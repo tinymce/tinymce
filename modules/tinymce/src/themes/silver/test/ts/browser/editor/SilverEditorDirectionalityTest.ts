@@ -1,10 +1,10 @@
-import { ApproxStructure, Assertions, StructAssert } from '@ephox/agar';
+import { ApproxStructure, Assertions, type StructAssert } from '@ephox/agar';
 import { before, describe, it } from '@ephox/bedrock-client';
 import { McEditor, TinyDom } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
-import { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
+import type { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
 
 describe('browser.tinymce.themes.silver.editor.SilverEditorDirectionalityTest', () => {
   before(() => {

@@ -1,8 +1,9 @@
-import { AlloyComponent, AlloyTriggers } from '@ephox/alloy';
-import { Dialog } from '@ephox/bridge';
+import { type AlloyComponent, AlloyTriggers } from '@ephox/alloy';
+import type { Dialog } from '@ephox/bridge';
 import { Type } from '@ephox/katamari';
 
 import { formBlockEvent, formCloseEvent, formUnblockEvent } from '../general/FormEvents';
+
 import { bodySendMessageChannel } from './DialogChannels';
 
 const getUrlDialogApi = (root: AlloyComponent): Dialog.UrlDialogInstanceApi => {

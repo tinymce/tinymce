@@ -1,14 +1,15 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { InlineContent } from '@ephox/bridge';
-import { Arr, Fun } from '@ephox/katamari';
+import type { InlineContent } from '@ephox/bridge';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 import { assert } from 'chai';
 
-import { ContextType } from 'tinymce/themes/silver/ui/context/ContextToolbar';
+import type { ContextType } from 'tinymce/themes/silver/ui/context/ContextToolbar';
 import { filterByPositionForAncestorNode, filterByPositionForStartNode } from 'tinymce/themes/silver/ui/context/ContextToolbarLookup';
 
 describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarLookupPositionPriorityTest', () => {
   const createToolbars = (positions: InlineContent.ContextPosition[]): ContextType[] => Arr.map(positions, (p) => ({
     type: 'contexttoolbar',
+    launch: Optional.none(),
     items: 'bold italic',
     predicate: Fun.always,
     position: p,

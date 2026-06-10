@@ -4,7 +4,7 @@ import { Arr } from '@ephox/katamari';
 import { SugarBody } from '@ephox/sugar';
 import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import AdvListPlugin from 'tinymce/plugins/advlist/Plugin';
 import ListsPlugin from 'tinymce/plugins/lists/Plugin';
 
@@ -71,8 +71,9 @@ ${listContent}
   ];
 
   const checkToolbarDisabled = (editor: Editor, listType: string) => {
-    UiFinder.exists(SugarBody.body(), `[aria-label="${listType}"][aria-disabled="true"] > .tox-tbtn`);
-    TinyUiActions.clickOnToolbar(editor, `[aria-label="${listType}"][aria-disabled="true"] > .tox-tbtn`);
+    const buttonSelector = `[aria-label="${listType}"][aria-disabled="true"]`;
+    UiFinder.exists(SugarBody.body(), buttonSelector);
+    TinyUiActions.clickOnToolbar(editor, buttonSelector);
   };
 
   const performActionAndAssertNoChange = (list: ListParameters, action: (editor: Editor) => any) => {

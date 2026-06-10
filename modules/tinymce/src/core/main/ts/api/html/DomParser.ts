@@ -6,15 +6,17 @@ import * as NodeType from '../../dom/NodeType';
 import * as FilterNode from '../../html/FilterNode';
 import * as FilterRegistry from '../../html/FilterRegistry';
 import * as InvalidNodes from '../../html/InvalidNodes';
+import * as KeepHtmlComments from '../../html/KeepHtmlComments';
 import * as LegacyFilter from '../../html/LegacyFilter';
 import * as Namespace from '../../html/Namespace';
 import * as ParserFilters from '../../html/ParserFilters';
 import { isEmpty, isLineBreakNode, isPaddedWithNbsp, paddEmptyNode } from '../../html/ParserUtils';
 import { getSanitizer, internalElementAttr } from '../../html/Sanitization';
-import { BlobCache } from '../file/BlobCache';
+import type { BlobCache } from '../file/BlobCache';
 import Tools from '../util/Tools';
+
 import AstNode from './Node';
-import Schema, { SchemaMap, SchemaRegExpMap, getTextRootBlockElements } from './Schema';
+import Schema, { type SchemaMap, type SchemaRegExpMap, getTextRootBlockElements } from './Schema';
 
 /**
  * @summary
@@ -29,6 +31,8 @@ import Schema, { SchemaMap, SchemaRegExpMap, getTextRootBlockElements } from './
  * @class tinymce.html.DomParser
  * @version 3.4
  */
+
+const extraBlockLikeElements = [ 'script', 'style', 'template', 'param', 'meta', 'title', 'link' ];
 
 const makeMap = Tools.makeMap, extend = Tools.extend;
 
@@ -53,13 +57,17 @@ export interface DomParserSettings {
   allow_html_data_urls?: boolean;
   allow_svg_data_urls?: boolean;
   allow_conditional_comments?: boolean;
+  allow_html_in_comments?: boolean;
   allow_html_in_named_anchor?: boolean;
   allow_script_urls?: boolean;
   allow_unsafe_link_target?: boolean;
+  allow_mathml_annotation_encodings?: string[];
   blob_cache?: BlobCache;
   convert_fonts_to_spans?: boolean;
   convert_unsafe_embeds?: boolean;
   document?: Document;
+  extended_mathml_elements?: string[];
+  extended_mathml_attributes?: string[];
   fix_list_elements?: boolean;
   font_size_legacy_values?: string;
   forced_root_block?: boolean | string;
@@ -87,7 +95,13 @@ interface DomParser {
 
 type WalkerCallback = (node: AstNode) => void;
 
-const transferChildren = (parent: AstNode, nativeParent: Node, specialElements: SchemaRegExpMap, nsSanitizer: (el: Element) => void) => {
+const transferChildren = (
+  parent: AstNode,
+  nativeParent: Node,
+  specialElements: SchemaRegExpMap,
+  nsSanitizer: (el: Element) => void,
+  decodeComments: boolean
+) => {
   const parentName = parent.name;
   // Exclude the special elements where the content is RCDATA as their content needs to be parsed instead of being left as plain text
   // See: https://html.spec.whatwg.org/multipage/parsing.html#parsing-html-fragments
@@ -114,12 +128,19 @@ const transferChildren = (parent: AstNode, nativeParent: Node, specialElements: 
       if (isSpecial) {
         child.raw = true;
       }
-    } else if (NodeType.isComment(nativeChild) || NodeType.isCData(nativeChild) || NodeType.isPi(nativeChild)) {
+    } else if (NodeType.isComment(nativeChild)) {
+      child.value = decodeComments ? KeepHtmlComments.decodeData(nativeChild.data) : nativeChild.data;
+    } else if (NodeType.isCData(nativeChild) || NodeType.isPi(nativeChild)) {
       child.value = nativeChild.data;
     }
 
-    if (!Namespace.isNonHtmlElementRootName(child.name)) {
-      transferChildren(child, nativeChild, specialElements, nsSanitizer);
+    if (NodeType.isTemplate(nativeChild)) {
+      const content = AstNode.create('#text');
+      content.value = nativeChild.innerHTML;
+      content.raw = true;
+      child.append(content);
+    } else if (!Namespace.isNonHtmlElementRootName(child.name)) {
+      transferChildren(child, nativeChild, specialElements, nsSanitizer, decodeComments);
     }
 
     parent.append(child);
@@ -156,7 +177,7 @@ const whitespaceCleaner = (root: AstNode, schema: Schema, settings: DomParserSet
   const validate = settings.validate;
   const nonEmptyElements = schema.getNonEmptyElements();
   const whitespaceElements = schema.getWhitespaceElements();
-  const blockElements: Record<string, string> = extend(makeMap('script,style,head,html,body,title,meta,param'), schema.getBlockElements());
+  const blockElements: Record<string, string> = extend(makeMap(extraBlockLikeElements), schema.getBlockElements());
   const textRootBlockElements = getTextRootBlockElements(schema);
   const allWhiteSpaceRegExp = /[ \t\r\n]+/g;
   const startWhiteSpaceRegExp = /^[ \t\r\n]+/;
@@ -272,6 +293,8 @@ const getRootBlockName = (settings: DomParserSettings, args: ParserArgs) => {
   }
 };
 
+const xhtmlAttribte = ' xmlns="http://www.w3.org/1999/xhtml"';
+
 const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomParser => {
   const nodeFilterRegistry = FilterRegistry.create<ParserFilterCallback>();
   const attributeFilterRegistry = FilterRegistry.create<ParserFilterCallback>();
@@ -281,30 +304,34 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
     validate: true,
     root_name: 'body',
     sanitize: true,
+    allow_html_in_comments: false,
     ...settings
   };
 
   const parser = new DOMParser();
   const sanitizer = getSanitizer(defaultedSettings, schema);
 
-  const parseAndSanitizeWithContext = (html: string, rootName: string, format: string = 'html'): Element => {
-    const mimeType = format === 'xhtml' ? 'application/xhtml+xml' : 'text/html';
+  const parseAndSanitizeWithContext = (html: string, rootName: string, format: string = 'html', useDocumentNotBody: boolean = false): Element => {
+    const isxhtml = format === 'xhtml';
+    const mimeType = isxhtml ? 'application/xhtml+xml' : 'text/html';
     // Determine the root element to wrap the HTML in when parsing. If we're dealing with a
     // special element then we need to wrap it so the internal content is handled appropriately.
     const isSpecialRoot = Obj.has(schema.getSpecialElements(), rootName.toLowerCase());
     const content = isSpecialRoot ? `<${rootName}>${html}</${rootName}>` : html;
     const makeWrap = () => {
-      if (format === 'xhtml') {
-        // If parsing XHTML then the content must contain the xmlns declaration, see https://www.w3.org/TR/xhtml1/normative.html#strict
-        return `<html xmlns="http://www.w3.org/1999/xhtml"><head></head><body>${content}</body></html>`;
-      } else if (/^[\s]*<head/i.test(html) || /^[\s]*<html/i.test(html) || /^[\s]*<!DOCTYPE/i.test(html)) {
-        return `<html>${content}</html>`;
+      if (/^[\s]*<head/i.test(html) || /^[\s]*<html/i.test(html) || /^[\s]*<!DOCTYPE/i.test(html)) {
+        return `<html${isxhtml ? xhtmlAttribte : ''}>${content}</html>`;
       } else {
-        return `<body>${content}</body>`;
+        if (isxhtml) {
+          return `<html${xhtmlAttribte}><head></head><body>${content}</body></html>`;
+        } else {
+          return `<body>${content}</body>`;
+        }
       }
     };
 
-    const body = parser.parseFromString(makeWrap(), mimeType).body;
+    const document = parser.parseFromString(makeWrap(), mimeType);
+    const body = useDocumentNotBody ? document.documentElement : document.body;
     sanitizer.sanitizeHtmlElement(body, mimeType);
     return isSpecialRoot ? body.firstChild as Element : body;
   };
@@ -389,7 +416,7 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
   };
 
   const addRootBlocks = (rootNode: AstNode, rootBlockName: string): void => {
-    const blockElements = extend(makeMap('script,style,head,html,body,title,meta,param'), schema.getBlockElements());
+    const blockElements = extend(makeMap(extraBlockLikeElements), schema.getBlockElements());
     const startWhiteSpaceRegExp = /^[ \t\r\n]+/;
     const endWhiteSpaceRegExp = /[ \t\r\n]+$/;
 
@@ -452,16 +479,17 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
    */
   const parse = (html: string, args: ParserArgs = {}): AstNode => {
     const validate = defaultedSettings.validate;
-    const rootName = args.context ?? defaultedSettings.root_name;
+    const preferFullDocument = (args.context ?? defaultedSettings.root_name) === '#document';
+    const rootName = args.context ?? (preferFullDocument ? 'html' : defaultedSettings.root_name);
 
     // Parse and sanitize the content
-    const element = parseAndSanitizeWithContext(html, rootName, args.format);
+    const element = parseAndSanitizeWithContext(html, rootName, args.format, preferFullDocument);
 
     TransparentElements.updateChildren(schema, element);
 
     // Create the AST representation
     const rootNode = new AstNode(rootName, 11);
-    transferChildren(rootNode, element, schema.getSpecialElements(), sanitizer.sanitizeNamespaceElement);
+    transferChildren(rootNode, element, schema.getSpecialElements(), sanitizer.sanitizeNamespaceElement, defaultedSettings.sanitize && defaultedSettings.allow_html_in_comments);
 
     // This next line is needed to fix a memory leak in chrome and firefox.
     // For more information see TINY-9186
@@ -487,9 +515,7 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
     // Fix invalid children or report invalid children in a contextual parsing
     if (validate && invalidChildren.length > 0) {
       if (args.context) {
-        const { pass: topLevelChildren, fail: otherChildren } = Arr.partition(invalidChildren, (child) => child.parent === rootNode);
-        InvalidNodes.cleanInvalidNodes(otherChildren, schema, rootNode, matchFinder);
-        args.invalid = topLevelChildren.length > 0;
+        args.invalid = true;
       } else {
         InvalidNodes.cleanInvalidNodes(invalidChildren, schema, rootNode, matchFinder);
       }

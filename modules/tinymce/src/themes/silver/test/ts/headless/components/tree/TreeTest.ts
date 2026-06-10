@@ -1,18 +1,19 @@
 import { ApproxStructure, Assertions, FocusTools, Keys, Mouse, UiFinder } from '@ephox/agar';
-import { AlloyComponent, AlloyTriggers, GuiFactory, NativeEvents, TestHelpers } from '@ephox/alloy';
+import { type AlloyComponent, AlloyTriggers, GuiFactory, NativeEvents } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 import { StructureSchema } from '@ephox/boulder';
 import { Dialog } from '@ephox/bridge';
-import { Class, SelectorFind, SugarBody, SugarDocument } from '@ephox/sugar';
+import { Class, SelectorFind, SugarBody, SugarDocument, SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import { renderTree } from 'tinymce/themes/silver/ui/dialog/Tree';
 
+import * as GuiSetup from '../../../module/GuiSetup';
 import * as TestExtras from '../../../module/TestExtras';
 
 describe('headless.tinymce.themes.silver.tree.TreeTest', () => {
   const extrasHook = TestExtras.bddSetup();
-  const hook = TestHelpers.GuiSetup.bddSetup((store, _doc, _body) => {
+  const hook = GuiSetup.bddSetup((store, _doc, _body) => {
     const fullTree: Dialog.TreeItemSpec [] = [
       {
         type: 'directory',
@@ -71,6 +72,22 @@ describe('headless.tinymce.themes.silver.tree.TreeTest', () => {
         title: 'File 6',
         id: '6',
       },
+      {
+        type: 'directory',
+        id: 'dir2',
+        title: 'Dir2',
+        customStateIcon: 'color-swatch',
+        customStateIconTooltip: 'Test Tooltip 1',
+        children: [
+          {
+            type: 'leaf',
+            title: 'File 3',
+            id: '3',
+            customStateIcon: 'color-swatch',
+            customStateIconTooltip: 'Test Tooltip 2',
+          },
+        ]
+      },
     ];
 
     const treeSpec = StructureSchema.getOrDie(Dialog.createTree({
@@ -119,6 +136,14 @@ describe('headless.tinymce.themes.silver.tree.TreeTest', () => {
     assertLeafSelectedState('File 3', true, file3);
   });
 
+  it('TINY-11131: Check that custom icon is correct', () => {
+    const element = SugarElement.fromDom(getTreeItem('.tox-tree__label[aria-label="Dir2"').element.dom.parentElement);
+    SelectorFind.child(element, '.tox-icon-custom-state').getOrDie();
+    SelectorFind.child(SelectorFind.sibling(element, '.tox-tree--directory__children').getOrDie(), '.tox-icon-custom-state');
+    const element2 = SugarElement.fromDom(getTreeItem('.tox-tree__label[aria-label="Dir"').element.dom.parentElement);
+    assert.isNull(SelectorFind.descendant(element2, '.tox-icon-custom-state').getOrNull());
+  });
+
   it('TINY-9614: Basic tree interactions', async () => {
     const dir = getTreeItem('.tox-tree--directory');
     const store = hook.store();
@@ -137,8 +162,9 @@ describe('headless.tinymce.themes.silver.tree.TreeTest', () => {
     store.assertEq('Dir collapsed', [ 'dir-collapsed' ]);
     store.clear();
 
+    const subdir = UiFinder.findIn(dir.element, '.tox-tree--directory').getOrDie();
     assertDirectoryExpandedState('Subdir', false, getTreeItem('.tox-tree--directory .tox-tree--directory'));
-    Mouse.clickOn(dir.element, '.tox-tree--directory .tox-trbtn.tox-tree--directory__label');
+    Mouse.clickOn(subdir, '.tox-trbtn.tox-tree--directory__label');
     assertDirectoryExpandedState('Subdir', true, getTreeItem('.tox-tree--directory .tox-tree--directory'));
     store.assertEq('Subir expanded', [ 'subdir-expanded' ]);
     store.clear();
@@ -156,7 +182,7 @@ describe('headless.tinymce.themes.silver.tree.TreeTest', () => {
     Mouse.clickOn(SugarBody.body(), '[aria-label="menuitem"]');
     store.assertEq('menuitem', [ 'menuitem' ]);
 
-    Mouse.clickOn(dir.element, '.tox-tree--directory .tox-trbtn.tox-tree--directory__label');
+    Mouse.clickOn(subdir, '.tox-trbtn.tox-tree--directory__label');
     assertDirectoryExpandedState('Subdir', false, getTreeItem('.tox-tree--directory .tox-tree--directory'));
 
   });

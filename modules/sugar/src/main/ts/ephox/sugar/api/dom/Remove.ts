@@ -1,7 +1,8 @@
 import { Arr } from '@ephox/katamari';
 
-import { SugarElement } from '../node/SugarElement';
+import type { SugarElement } from '../node/SugarElement';
 import * as Traverse from '../search/Traverse';
+
 import * as InsertAll from './InsertAll';
 
 const empty = (element: SugarElement<Node>): void => {

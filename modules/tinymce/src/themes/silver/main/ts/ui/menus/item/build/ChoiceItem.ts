@@ -1,13 +1,14 @@
-import { AlloyComponent, Disabling, ItemTypes, Toggling, Tooltipping } from '@ephox/alloy';
-import { Menu, Toolbar } from '@ephox/bridge';
+import { type AlloyComponent, Disabling, type ItemTypes, Toggling, Tooltipping } from '@ephox/alloy';
+import type { Menu, Toolbar } from '@ephox/bridge';
 import { Fun, Merger, Optional } from '@ephox/katamari';
 
-import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
+import type { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 
 import * as ItemClasses from '../ItemClasses';
-import ItemResponse from '../ItemResponse';
+import type ItemResponse from '../ItemResponse';
 import { renderCheckmark } from '../structure/ItemSlices';
 import { renderItemStructure } from '../structure/ItemStructure';
+
 import { buildData, renderCommonItem } from './CommonMenuItem';
 
 const renderChoiceItem = (
@@ -33,6 +34,7 @@ const renderChoiceItem = (
     presets,
     textContent: useText ? spec.text : Optional.none(),
     htmlContent: Optional.none(),
+    labelContent: spec.label,
     ariaLabel: spec.text,
     iconContent: spec.icon,
     shortcutContent: useText ? spec.shortcut : Optional.none(),
@@ -55,6 +57,7 @@ const renderChoiceItem = (
 
   return Merger.deepMerge(
     renderCommonItem({
+      context: spec.context,
       data: buildData(spec),
       enabled: spec.enabled,
       getApi,

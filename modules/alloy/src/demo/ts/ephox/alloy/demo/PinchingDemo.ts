@@ -1,4 +1,4 @@
-import { Css, Height, SelectorFind, SugarElement, Width } from '@ephox/sugar';
+import { Css, Height, SelectorFind, type SugarElement, Width } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Pinching } from 'ephox/alloy/api/behaviour/Pinching';

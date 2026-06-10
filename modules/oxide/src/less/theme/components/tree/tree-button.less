@@ -127,9 +127,7 @@
     color: @tree-button-disabled-text-color;
     cursor: not-allowed;
 
-    // Disable stylelint below because we're mixing the :disabled modifier with the "--disabled" class
-    // since they need to be kept the same/use the same rules
-    svg { /* stylelint-disable-line no-descending-specificity */
+    svg {
       fill: @tree-button-disabled-icon-color;
     }
   }
@@ -146,9 +144,7 @@
       transform: @tree-button-enabled-transform;
     }
 
-    // Disable stylelint below because we're mixing the :hover modifier with the "--enabled" class
-    // since they need to be kept the same/use the same rules
-    svg { /* stylelint-disable-line no-descending-specificity */
+    svg {
       fill: @tree-button-enabled-icon-color;
     }
   }
@@ -191,7 +187,6 @@
     display: flex;
     flex-direction: column;
 
-    /* stylelint-disable no-descending-specificity */
     .tox-tree--directory__label {
       font-weight: bold;
 
@@ -274,6 +269,12 @@
         fill: @tree-button-icon-color;
       }
     }
+  }
+
+  .tox-icon-custom-state {
+    flex-grow: 1;
+    display: flex;
+    justify-content: flex-end;
   }
 
   .tox-tree--directory__children {

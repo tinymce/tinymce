@@ -4,9 +4,9 @@ import { Insert, Remove, Selectors, SugarBody, SugarElement } from '@ephox/sugar
 import { assert } from 'chai';
 
 import 'tinymce';
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
-import { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
+import type { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
 
 // TODO TINY-10480: Investigate flaky tests
 describe.skip('browser.tinymce.core.EditorAutoFocusTest', () => {
@@ -38,9 +38,11 @@ describe.skip('browser.tinymce.core.EditorAutoFocusTest', () => {
   const pSetupEditorAutoFocus = (id: string, options: RawEditorOptions) => {
     const height = restOfWindowHeight();
     return new Promise((resolve) => {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       EditorManager.init({
         selector: 'div.tinymce',
         base_url: '/project/tinymce/js/tinymce/',
+        license_key: 'gpl',
         menubar: false,
         statusbar: false,
         height,

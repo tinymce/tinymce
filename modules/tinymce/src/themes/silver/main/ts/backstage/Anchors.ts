@@ -1,8 +1,8 @@
-import { AlloyComponent, Bubble, HotspotAnchorSpec, Layout, LayoutInset, MaxHeight, NodeAnchorSpec, SelectionAnchorSpec } from '@ephox/alloy';
+import { type AlloyComponent, Bubble, type HotspotAnchorSpec, Layout, LayoutInset, MaxHeight, type NodeAnchorSpec, type SelectionAnchorSpec } from '@ephox/alloy';
 import { Optional } from '@ephox/katamari';
 import { Height, SimSelection, SugarElement, SugarShadowDom } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import { useFixedContainer } from '../api/Options';
 

@@ -1,7 +1,7 @@
 import { FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
 import { Fun, Optional, Type } from '@ephox/katamari';
 
-import { NestedMenuItemContents } from '../components/menu/NestedMenuItem';
+import type { NestedMenuItemContents } from '../components/menu/NestedMenuItem';
 
 export type MenuButtonItemTypes = NestedMenuItemContents;
 export type SuccessCallback = (menu: string | MenuButtonItemTypes[]) => void;
@@ -12,6 +12,7 @@ export interface MenuButtonFetchContext {
 }
 
 export interface BaseMenuButtonSpec {
+  buttonType?: 'default' | 'bordered';
   text?: string;
   tooltip?: string;
   icon?: string;
@@ -20,15 +21,18 @@ export interface BaseMenuButtonSpec {
   // as an additional argument to fetch.
   fetch: (success: SuccessCallback, fetchContext: MenuButtonFetchContext, api: BaseMenuButtonInstanceApi) => void;
   onSetup?: (api: BaseMenuButtonInstanceApi) => (api: BaseMenuButtonInstanceApi) => void;
+  context?: string;
 }
 
 export interface BaseMenuButton {
+  buttonType: 'default' | 'bordered';
   text: Optional<string>;
   tooltip: Optional<string>;
   icon: Optional<string>;
   search: Optional<{ placeholder: Optional<string> }>;
   fetch: (success: SuccessCallback, fetchContext: MenuButtonFetchContext, api: BaseMenuButtonInstanceApi) => void;
   onSetup: (api: BaseMenuButtonInstanceApi) => (api: BaseMenuButtonInstanceApi) => void;
+  context: string;
 }
 
 export interface BaseMenuButtonInstanceApi {
@@ -36,11 +40,13 @@ export interface BaseMenuButtonInstanceApi {
   setEnabled: (state: boolean) => void;
   isActive: () => boolean;
   setActive: (state: boolean) => void;
+  setTooltip: (tooltip: string) => void;
   setText: (text: string) => void;
   setIcon: (icon: string) => void;
 }
 
 export const baseMenuButtonFields = [
+  FieldSchema.defaultedString('buttonType', 'default'),
   FieldSchema.optionString('text'),
   FieldSchema.optionString('tooltip'),
   FieldSchema.optionString('icon'),
@@ -74,5 +80,6 @@ export const baseMenuButtonFields = [
   ),
 
   FieldSchema.requiredFunction('fetch'),
-  FieldSchema.defaultedFunction('onSetup', () => Fun.noop)
+  FieldSchema.defaultedFunction('onSetup', () => Fun.noop),
+  FieldSchema.defaultedString('context', 'mode:design')
 ];

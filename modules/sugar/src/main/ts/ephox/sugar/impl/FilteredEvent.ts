@@ -1,6 +1,6 @@
 import { Fun } from '@ephox/katamari';
 
-import { EventArgs, EventFilter, EventHandler, EventUnbinder } from '../api/events/Types';
+import type { EventArgs, EventFilter, EventHandler, EventUnbinder } from '../api/events/Types';
 import { SugarElement } from '../api/node/SugarElement';
 import * as SugarShadowDom from '../api/node/SugarShadowDom';
 

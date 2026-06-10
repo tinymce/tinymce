@@ -1,8 +1,8 @@
-import { Cell } from '@ephox/katamari';
+import type { Cell } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
-import Editor from '../api/Editor';
-import { EditorEvent } from '../api/util/EventDispatcher';
+import type Editor from '../api/Editor';
+import type { EditorEvent } from '../api/util/EventDispatcher';
 import VK from '../api/util/VK';
 import * as BlockBoundaryDelete from '../delete/BlockBoundaryDelete';
 import * as BlockRangeDelete from '../delete/BlockRangeDelete';
@@ -15,8 +15,10 @@ import * as InlineBoundaryDelete from '../delete/InlineBoundaryDelete';
 import * as InlineFormatDelete from '../delete/InlineFormatDelete';
 import * as MediaDelete from '../delete/MediaDelete';
 import * as Outdent from '../delete/Outdent';
+import * as SelectedHTMLElementDelete from '../delete/SelectedHTMLElementDelete';
 import * as TableDelete from '../delete/TableDelete';
 import * as InputEvents from '../events/InputEvents';
+
 import * as MatchKeys from './MatchKeys';
 
 const platform = PlatformDetection.detect();
@@ -69,7 +71,9 @@ const executeKeydownOverride = (editor: Editor, caret: Cell<Text | null>, evt: K
     { keyCode: VK.BACKSPACE, action: MatchKeys.action(InlineFormatDelete.backspaceDelete, editor, false) },
     { keyCode: VK.DELETE, action: MatchKeys.action(InlineFormatDelete.backspaceDelete, editor, true) },
     { keyCode: VK.BACKSPACE, action: MatchKeys.action(DivDelete.backspaceDelete, editor, false) },
-    { keyCode: VK.DELETE, action: MatchKeys.action(DivDelete.backspaceDelete, editor, true) }
+    { keyCode: VK.DELETE, action: MatchKeys.action(DivDelete.backspaceDelete, editor, true) },
+    { keyCode: VK.BACKSPACE, action: MatchKeys.action(SelectedHTMLElementDelete.backspaceDelete, editor, false) },
+    { keyCode: VK.DELETE, action: MatchKeys.action(SelectedHTMLElementDelete.backspaceDelete, editor, true) },
   ], evt)
     .filter((_) => editor.selection.isEditable())
     .each((applyAction) => {
@@ -83,7 +87,7 @@ const executeKeydownOverride = (editor: Editor, caret: Cell<Text | null>, evt: K
     });
 };
 
-const executeKeyupOverride = (editor: Editor, evt: KeyboardEvent, isBackspaceKeydown: boolean) =>
+const executeKeyupOverride = (editor: Editor, evt: KeyboardEvent, isBackspaceKeydown: boolean, formatNodes: Node[]) =>
   MatchKeys.execute([
     { keyCode: VK.BACKSPACE, action: MatchKeys.action(CefDelete.paddEmptyElement, editor) },
     { keyCode: VK.DELETE, action: MatchKeys.action(CefDelete.paddEmptyElement, editor) },
@@ -96,7 +100,10 @@ const executeKeyupOverride = (editor: Editor, evt: KeyboardEvent, isBackspaceKey
       ...isBackspaceKeydown ? [{
         // Firefox detects macOS Command key code as "Command" not "Meta"
         keyCode: isFirefox ? 224 : 91,
-        action: MatchKeys.action(InlineFormatDelete.refreshCaret, editor)
+        action: MatchKeys.action(() => {
+          InlineFormatDelete.updateCaretFormat(editor, formatNodes);
+          return InlineFormatDelete.refreshCaret(editor);
+        })
       }] : []
     ] : [
       { keyCode: VK.BACKSPACE, ctrlKey: true, action: MatchKeys.action(InlineFormatDelete.refreshCaret, editor) },
@@ -107,21 +114,26 @@ const executeKeyupOverride = (editor: Editor, evt: KeyboardEvent, isBackspaceKey
 const setup = (editor: Editor, caret: Cell<Text | null>): void => {
   // track backspace keydown state for emulating Meta + Backspace keyup detection on macOS
   let isBackspaceKeydown = false;
+  let formatNodes: Node[] = [];
 
-  editor.on('keydown', (evt: EditorEvent<KeyboardEvent>) => {
-    isBackspaceKeydown = evt.keyCode === VK.BACKSPACE;
+  editor.on('init', () => {
+    editor.on('keydown', (evt: EditorEvent<KeyboardEvent>) => {
+      isBackspaceKeydown = evt.keyCode === VK.BACKSPACE;
+      formatNodes = InlineFormatDelete.getFormatNodesAtStart(editor);
 
-    if (!evt.isDefaultPrevented()) {
-      executeKeydownOverride(editor, caret, evt);
-    }
-  });
+      if (!evt.isDefaultPrevented()) {
+        executeKeydownOverride(editor, caret, evt);
+      }
+    });
 
-  editor.on('keyup', (evt: EditorEvent<KeyboardEvent>) => {
-    if (!evt.isDefaultPrevented()) {
-      executeKeyupOverride(editor, evt, isBackspaceKeydown);
-    }
+    editor.on('keyup', (evt: EditorEvent<KeyboardEvent>) => {
+      if (!evt.isDefaultPrevented()) {
+        executeKeyupOverride(editor, evt, isBackspaceKeydown, formatNodes);
+        formatNodes.length = 0;
+      }
 
-    isBackspaceKeydown = false;
+      isBackspaceKeydown = false;
+    });
   });
 };
 

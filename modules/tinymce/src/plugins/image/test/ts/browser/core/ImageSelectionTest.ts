@@ -2,8 +2,8 @@ import { ApproxStructure, UiFinder, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
-import { ImageData } from 'tinymce/plugins/image/core/ImageData';
+import type Editor from 'tinymce/core/api/Editor';
+import type { ImageData } from 'tinymce/plugins/image/core/ImageData';
 import { insertOrUpdateImage } from 'tinymce/plugins/image/core/ImageSelection';
 import Plugin from 'tinymce/plugins/image/Plugin';
 
@@ -59,8 +59,7 @@ describe('browser.tinymce.plugins.image.core.ImageSelectionTest', () => {
                   width: str.is('100'),
                   height: str.is('100')
                 }
-              }),
-              s.element('br', {})
+              })
             ]
           }),
           s.element('div', { attrs: { id: str.is('mceResizeHandlenw') }}),
@@ -110,7 +109,6 @@ describe('browser.tinymce.plugins.image.core.ImageSelectionTest', () => {
               })
             ]
           }),
-          s.element('p', {}),
           s.anything(),
           s.element('div', { attrs: { id: str.is('mceResizeHandlenw') }}),
           s.element('div', { attrs: { id: str.is('mceResizeHandlene') }}),

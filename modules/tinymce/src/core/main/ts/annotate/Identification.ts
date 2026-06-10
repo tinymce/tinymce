@@ -1,7 +1,8 @@
-import { Arr, Obj, Optional } from '@ephox/katamari';
+import { Arr, Obj, type Optional } from '@ephox/katamari';
 import { Attribute, Class, Compare, SelectorExists, SelectorFilter, SelectorFind, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
+
 import * as Markings from './Markings';
 
 const isRoot = (root: SugarElement<Node>) => (node: SugarElement<Node>) =>

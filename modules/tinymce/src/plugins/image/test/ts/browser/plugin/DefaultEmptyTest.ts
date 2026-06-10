@@ -1,10 +1,10 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/image/Plugin';
 
-import { assertCleanHtml, assertInputValue, fillActiveDialog, generalTabSelectors } from '../../module/Helpers';
+import { assertCleanHtml, assertInputValue, fillActiveDialog, generalTabLabels } from '../../module/Helpers';
 
 describe('browser.tinymce.plugins.image.plugin.DefaultEmptyTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -18,10 +18,10 @@ describe('browser.tinymce.plugins.image.plugin.DefaultEmptyTest', () => {
     editor.execCommand('mceImage');
     await TinyUiActions.pWaitForDialog(editor);
 
-    assertInputValue(generalTabSelectors.src, '');
-    assertInputValue(generalTabSelectors.alt, '');
-    assertInputValue(generalTabSelectors.height, '');
-    assertInputValue(generalTabSelectors.width, '');
+    assertInputValue(generalTabLabels.src, '');
+    assertInputValue(generalTabLabels.alt, '');
+    assertInputValue(generalTabLabels.height, '');
+    assertInputValue(generalTabLabels.width, '');
 
     fillActiveDialog({
       src: {

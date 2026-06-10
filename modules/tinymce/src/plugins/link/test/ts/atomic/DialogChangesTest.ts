@@ -2,8 +2,8 @@ import { Assert, describe, context, it } from '@ephox/bedrock-client';
 import { Fun, Optional, OptionalInstances } from '@ephox/katamari';
 import fc from 'fast-check';
 
-import { DialogChanges, DialogDelta } from 'tinymce/plugins/link/ui/DialogChanges';
-import { LinkDialogCatalog, LinkDialogData, ListItem } from 'tinymce/plugins/link/ui/DialogTypes';
+import { DialogChanges, type DialogDelta } from 'tinymce/plugins/link/ui/DialogChanges';
+import type { LinkDialogCatalog, LinkDialogData, ListItem } from 'tinymce/plugins/link/ui/DialogTypes';
 
 const tOptional = OptionalInstances.tOptional;
 
@@ -73,7 +73,7 @@ describe('browser.tinymce.plugins.link.DialogChangesTest', () => {
     it('no initial data', () => {
       const dialogChange = DialogChanges.init({ title: '', text: '' } as LinkDialogData, { } as LinkDialogCatalog);
 
-      fc.assert(fc.property(fc.webUrl(), fc.asciiString(), fc.asciiString(), (url, title, text) => {
+      fc.assert(fc.property(fc.webUrl(), fc.string({ unit: 'binary-ascii' }), fc.string({ unit: 'binary-ascii' }), (url, title, text) => {
         const data = Fun.constant({ url: {
           value: url,
           meta: { title, text }
@@ -102,7 +102,7 @@ describe('browser.tinymce.plugins.link.DialogChangesTest', () => {
       const dialogChangeNoTitle = DialogChanges.init({ title: '', text: 'orig text' } as LinkDialogData, { } as LinkDialogCatalog);
       const dialogChangeNoText = DialogChanges.init({ title: 'orig title', text: '' } as LinkDialogData, { } as LinkDialogCatalog);
 
-      fc.assert(fc.property(fc.webUrl(), fc.asciiString(), fc.asciiString(), (url, title, text) => {
+      fc.assert(fc.property(fc.webUrl(), fc.string({ unit: 'binary-ascii' }), fc.string({ unit: 'binary-ascii' }), (url, title, text) => {
         const data = Fun.constant({ url: {
           value: url,
           meta: { title, text }
@@ -129,4 +129,3 @@ describe('browser.tinymce.plugins.link.DialogChangesTest', () => {
     });
   });
 });
-

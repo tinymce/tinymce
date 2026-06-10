@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { Fun } from '@ephox/katamari';
 
-import { TinyMCE } from 'tinymce/core/api/PublicApi';
+import type { TinyMCE } from 'tinymce/core/api/PublicApi';
 
 import ButtonSetupDemo from './ButtonSetupDemo';
 
@@ -11,11 +11,12 @@ export default (): void => {
   tinymce.init({
     // TODO: Investigate. Should this get the styles (e.g. margin) of the div/textarea?
     selector: 'div.tiny-text',
+    license_key: 'gpl',
     inline: false,
     theme: 'silver',
     toolbar: [ 'styles', 'MagicButton', 'code', 'undo', 'redo', 'preview', '|', 'help', 'link', '|', 'align', 'alignleft', 'alignright', 'aligncenter',
       'alignjustify', 'alignnone', '|', 'bold', 'italic', 'underline', 'strikethrough', 'subscript', 'superscript', '|', 'blockquote',
-      'outdent', 'indent', '|', 'cut', 'copy', 'paste', '|', 'help', 'selectall', 'visualaid', 'newdocument', 'removeformat', 'remove', '|', 'menu-button-1', '|', 'mailmerge', 'mailmerge-NoCollapse'
+      'outdent', 'indent', '|', 'cut', 'copy', 'paste', '|', 'help', 'selectall', 'visualaid', 'newdocument', 'removeformat', 'remove', '|', 'menu-button-1', '|', 'mailmerge', 'mailmerge-NoCollapse', 'image-selector-button'
     ].join(' '),
     // content_css: ['//fonts.googleapis.com/css?family=Lato:300,300i,400,400i', 'https://staging.tiny.cloud/css/content-standard.min.css'],
     plugins: [

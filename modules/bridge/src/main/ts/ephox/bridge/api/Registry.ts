@@ -1,17 +1,17 @@
-import { AutocompleterSpec } from '../components/content/Autocompleter';
-import { ContextFormSpec } from '../components/content/ContextForm';
-import { ContextToolbarSpec } from '../components/content/ContextToolbar';
-import { ContextMenuApi } from '../components/menu/ContextMenu';
-import { MenuItemSpec } from '../components/menu/MenuItem';
-import { NestedMenuItemSpec } from '../components/menu/NestedMenuItem';
-import { ToggleMenuItemSpec } from '../components/menu/ToggleMenuItem';
-import { SidebarSpec } from '../components/sidebar/Sidebar';
-import { GroupToolbarButtonSpec } from '../components/toolbar/GroupToolbarButton';
-import { ToolbarButtonSpec } from '../components/toolbar/ToolbarButton';
-import { ToolbarMenuButtonSpec } from '../components/toolbar/ToolbarMenuButton';
-import { ToolbarSplitButtonSpec } from '../components/toolbar/ToolbarSplitButton';
-import { ToolbarToggleButtonSpec } from '../components/toolbar/ToolbarToggleButton';
-import { ViewSpec } from '../components/view/View';
+import type { AutocompleterSpec } from '../components/content/Autocompleter';
+import type { ContextFormSpec } from '../components/content/ContextForm';
+import type { ContextToolbarSpec } from '../components/content/ContextToolbar';
+import type { ContextMenuApi } from '../components/menu/ContextMenu';
+import type { MenuItemSpec } from '../components/menu/MenuItem';
+import type { NestedMenuItemSpec } from '../components/menu/NestedMenuItem';
+import type { ToggleMenuItemSpec } from '../components/menu/ToggleMenuItem';
+import type { SidebarSpec } from '../components/sidebar/Sidebar';
+import type { GroupToolbarButtonSpec } from '../components/toolbar/GroupToolbarButton';
+import type { ToolbarButtonSpec } from '../components/toolbar/ToolbarButton';
+import type { ToolbarMenuButtonSpec } from '../components/toolbar/ToolbarMenuButton';
+import type { ToolbarSplitButtonSpec } from '../components/toolbar/ToolbarSplitButton';
+import type { ToolbarToggleButtonSpec } from '../components/toolbar/ToolbarToggleButton';
+import type { ViewSpec } from '../components/view/View';
 
 // This would be part of the tinymce api under editor.ui.* so editor.ui.addButton('bold', ...)
 // TODO: This should maybe not be part of this project but rather something built into tinymce core using these public types
@@ -32,6 +32,7 @@ export interface Registry {
   addAutocompleter: (name: string, spec: AutocompleterSpec) => void;
   addSidebar: (name: string, spec: SidebarSpec) => void;
   addView: (name: string, spec: ViewSpec) => void;
+  addContext: (name: string, pred: (args: string) => boolean) => void;
 
   getAll: () => {
     buttons: Record<string, ToolbarButtonSpec | GroupToolbarButtonSpec | ToolbarMenuButtonSpec | ToolbarSplitButtonSpec | ToolbarToggleButtonSpec>;
@@ -42,6 +43,7 @@ export interface Registry {
     icons: Record<string, string>;
     sidebars: Record<string, SidebarSpec>;
     views: Record<string, ViewSpec>;
+    contexts: Record<string, (args: string) => boolean>;
   };
 }
 
@@ -52,12 +54,17 @@ export const create = (): Registry => {
   const icons: Record<string, string> = {};
   const contextMenus: Record<string, ContextMenuApi> = {};
   const contextToolbars: Record<string, ContextToolbarSpec | ContextFormSpec> = {};
+  const contexts: Record<string, (args: string) => boolean> = {};
   const sidebars: Record<string, SidebarSpec> = {};
   const views: Record<string, ViewSpec> = {};
   const add = <T, S extends T>(collection: Record<string, T>, type: string) => (name: string, spec: S): void => {
     collection[name.toLowerCase()] = { ...spec, type };
   };
+  const addDefaulted = <T, S extends T>(collection: Record<string, T>, type: string) => (name: string, spec: S): void => {
+    collection[name.toLowerCase()] = { type, ...spec };
+  };
   const addIcon = (name: string, svgData: string) => icons[name.toLowerCase()] = svgData;
+  const addContext = (name: string, pred: (args: string) => boolean) => contexts[name.toLowerCase()] = pred;
 
   return {
     addButton: add(buttons, 'button'),
@@ -71,10 +78,11 @@ export const create = (): Registry => {
     addAutocompleter: add(popups, 'autocompleter'),
     addContextMenu: add(contextMenus, 'contextmenu'),
     addContextToolbar: add(contextToolbars, 'contexttoolbar'),
-    addContextForm: add(contextToolbars, 'contextform'),
+    addContextForm: addDefaulted(contextToolbars, 'contextform'),
     addSidebar: add(sidebars, 'sidebar'),
     addView: add(views, 'views'),
     addIcon,
+    addContext,
 
     getAll: () => ({
       buttons,
@@ -89,7 +97,8 @@ export const create = (): Registry => {
 
       contextToolbars,
       sidebars,
-      views
+      views,
+      contexts
     })
   };
 };

@@ -4,7 +4,7 @@ import { SugarBody } from '@ephox/sugar';
 import { McEditor } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.init.InitContentBodyEditInitialContentTest', () => {
   it('TINY-10008: if CSS loading takes too long a loader should be applied to the editor', async () => {

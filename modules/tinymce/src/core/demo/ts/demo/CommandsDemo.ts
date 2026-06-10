@@ -1,7 +1,7 @@
 import { Arr } from '@ephox/katamari';
 import { DomEvent, Html, Insert, SelectorFind, SugarBody, SugarElement } from '@ephox/sugar';
 
-import { TinyMCE } from 'tinymce/core/api/PublicApi';
+import type { TinyMCE } from 'tinymce/core/api/PublicApi';
 
 declare let tinymce: TinyMCE;
 
@@ -103,6 +103,7 @@ export default (): void => {
   tinymce.init({
     skin_url: '../../../../js/tinymce/skins/ui/oxide',
     selector: 'textarea.tinymce',
+    license_key: 'gpl',
     plugins: [
       'advlist', 'autolink', 'link', 'image', 'lists', 'charmap', 'preview', 'anchor', 'pagebreak',
       'searchreplace', 'wordcount', 'visualblocks', 'visualchars', 'code', 'fullscreen', 'insertdatetime', 'media', 'nonbreaking',

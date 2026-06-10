@@ -2,7 +2,7 @@ import { context, describe, it } from '@ephox/bedrock-client';
 import { Obj } from '@ephox/katamari';
 import { assert } from 'chai';
 
-import { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
+import type { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
 import * as NormalizeOptions from 'tinymce/core/options/NormalizeOptions';
 
 describe('browser.tinymce.core.options.NormalizeOptionsTest', () => {

@@ -3,8 +3,8 @@ import { describe, context, it, afterEach, beforeEach } from '@ephox/bedrock-cli
 import { Singleton } from '@ephox/katamari';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
-import { Dialog } from 'tinymce/core/api/ui/Ui';
+import type Editor from 'tinymce/core/api/Editor';
+import type { Dialog } from 'tinymce/core/api/ui/Ui';
 
 type ButtonName = 'buttons-undefined' | 'buttons-empty' | 'buttons-nonempty';
 

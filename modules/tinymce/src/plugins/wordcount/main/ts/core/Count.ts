@@ -1,7 +1,7 @@
 import { Fun } from '@ephox/katamari';
 import { Words } from '@ephox/polaris';
 
-import Schema from 'tinymce/core/api/html/Schema';
+import type Schema from 'tinymce/core/api/html/Schema';
 
 import { getText } from './GetText';
 

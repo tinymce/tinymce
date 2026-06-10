@@ -6,9 +6,13 @@ import * as fc from 'fast-check';
 import * as Transformations from 'ephox/acid/api/colour/Transformations';
 
 describe('TransformationsTest', () => {
+  // https://fast-check.dev/docs/migration-guide/from-3.x-to-4.x/#hexa-or-hexastring
+  const items = '0123456789abcdef';
+  const hexa = () => fc.integer({ min: 0, max: 15 }).map((n) => items[n]);
+
   context('anyToHex', () => {
     it('TINY-7480: keep hex colors as is', () => {
-      fc.assert(fc.property(fc.hexaString(6, 6), (hex) => {
+      fc.assert(fc.property(fc.string({ unit: hexa(), minLength: 6, maxLength: 6 }), (hex) => {
         const result1 = Transformations.anyToHex(hex);
         const result2 = Transformations.anyToHex('#' + hex);
         assert.equal(result1.value, hex.toUpperCase(), 'without hash');

@@ -1,8 +1,8 @@
 import { Arr, Obj, Type } from '@ephox/katamari';
 import { Compare, PredicateFilter, PredicateFind, Remove, SelectorFilter, SugarElement, SugarElements, SugarNode, Traverse } from '@ephox/sugar';
 
-import AstNode from '../api/html/Node';
-import Schema, { SchemaMap } from '../api/html/Schema';
+import type AstNode from '../api/html/Node';
+import type { SchemaMap, default as Schema } from '../api/html/Schema';
 import * as Empty from '../dom/Empty';
 import * as NodeType from '../dom/NodeType';
 import * as Namespace from '../html/Namespace';

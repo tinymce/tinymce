@@ -2,8 +2,8 @@ import { Arr, Fun, Obj } from '@ephox/katamari';
 import { TableLookup } from '@ephox/snooker';
 import { SelectorFilter, SugarElement } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
-import { Dialog } from 'tinymce/core/api/ui/Ui';
+import type Editor from 'tinymce/core/api/Editor';
+import type { Dialog } from 'tinymce/core/api/ui/Ui';
 
 import * as Styles from '../actions/Styles';
 import * as Events from '../api/Events';
@@ -11,6 +11,7 @@ import * as Options from '../api/Options';
 import * as Utils from '../core/Utils';
 import { ephemera } from '../selection/Ephemera';
 import * as TableSelection from '../selection/TableSelection';
+
 import { getAdvancedTab } from './DialogAdvancedTab';
 import { DomModifier } from './DomModifier';
 import * as Helpers from './Helpers';

@@ -1,4 +1,4 @@
-import { Universe } from '@ephox/boss';
+import type { Universe } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 
 export interface OrphanText<E> {

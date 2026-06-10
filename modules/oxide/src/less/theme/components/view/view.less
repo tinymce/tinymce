@@ -1,4 +1,4 @@
-@view-header-padding: (@pad-sm + @keyboard-focus-outline-width) (@pad-sm + @keyboard-focus-outline-width) @keyboard-focus-outline-width (@pad-sm + @keyboard-focus-outline-width);    // Account for outline/border of the buttons
+@view-header-padding: (@pad-sm + @keyboard-focus-outline-width);    // Account for outline/border of the buttons
 @view-header-padding-mobile: @pad-sm;
 @view-pane-padding: @pad-sm;
 
@@ -20,6 +20,7 @@
     flex: 1 1 auto;
     flex-direction: column;
     overflow: hidden;
+    background-color: @background-color;
   }
 
   .tox-view__header {
@@ -56,6 +57,10 @@
   .tox-view--scrolling {
     flex-wrap: nowrap;
     overflow-x: auto;
+  }
+
+  .tox-view__align-right {
+    margin-left: auto;
   }
 
   .tox-view__toolbar {

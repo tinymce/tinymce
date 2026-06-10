@@ -1,11 +1,11 @@
 import { Assertions } from '@ephox/agar';
 import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
-import { Fun, Optional } from '@ephox/katamari';
+import { Fun, type Optional } from '@ephox/katamari';
 import { Hierarchy, SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import Schema from 'tinymce/core/api/html/Schema';
-import CaretPosition from 'tinymce/core/caret/CaretPosition';
+import type CaretPosition from 'tinymce/core/caret/CaretPosition';
 import * as CefDeleteAction from 'tinymce/core/delete/CefDeleteAction';
 
 import * as ViewBlock from '../../module/test/ViewBlock';

@@ -1,15 +1,15 @@
 import {
-  AddEventsBehaviour, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Disabling, FormField as AlloyFormField, HtmlSelect as AlloyHtmlSelect,
-  NativeEvents, SimpleSpec, SketchSpec, Tabstopping
+  AddEventsBehaviour, AlloyEvents, type AlloySpec, AlloyTriggers, Behaviour, Disabling, FormField as AlloyFormField, HtmlSelect as AlloyHtmlSelect,
+  NativeEvents, type SimpleSpec, type SketchSpec, Tabstopping
 } from '@ephox/alloy';
-import { Dialog } from '@ephox/bridge';
+import type { Dialog } from '@ephox/bridge';
 import { Arr, Optional } from '@ephox/katamari';
 
-import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
+import type { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 import { renderLabel } from 'tinymce/themes/silver/ui/alien/FieldLabeller';
 import * as Icons from 'tinymce/themes/silver/ui/icons/Icons';
 
-import * as ReadOnly from '../../ReadOnly';
+import * as UiState from '../../UiState';
 import { formChangeEvent } from '../general/FormEvents';
 
 type SelectBoxSpec = Omit<Dialog.SelectBox, 'type'>;
@@ -34,7 +34,7 @@ export const renderSelectBox = (spec: SelectBoxSpec, providersBackstage: UiFacto
     factory: AlloyHtmlSelect,
     selectBehaviours: Behaviour.derive([
       Disabling.config({
-        disabled: () => !spec.enabled || providersBackstage.isDisabled()
+        disabled: () => !spec.enabled || providersBackstage.checkUiComponentContext(spec.context).shouldDisable
       }),
       Tabstopping.config({ }),
       AddEventsBehaviour.config('selectbox-change', [
@@ -64,7 +64,7 @@ export const renderSelectBox = (spec: SelectBoxSpec, providersBackstage: UiFacto
     components: Arr.flatten<AlloySpec>([ pLabel.toArray(), [ selectWrap ]]),
     fieldBehaviours: Behaviour.derive([
       Disabling.config({
-        disabled: () => !spec.enabled || providersBackstage.isDisabled(),
+        disabled: () => !spec.enabled || providersBackstage.checkUiComponentContext(spec.context).shouldDisable,
         onDisabled: (comp) => {
           AlloyFormField.getField(comp).each(Disabling.disable);
         },
@@ -72,7 +72,7 @@ export const renderSelectBox = (spec: SelectBoxSpec, providersBackstage: UiFacto
           AlloyFormField.getField(comp).each(Disabling.enable);
         }
       }),
-      ReadOnly.receivingConfig()
+      UiState.toggleOnReceive(() => providersBackstage.checkUiComponentContext(spec.context))
     ])
   });
 };

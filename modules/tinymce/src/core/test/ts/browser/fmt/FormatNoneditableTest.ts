@@ -1,9 +1,9 @@
-import { Cursors } from '@ephox/agar';
+import type { Cursors } from '@ephox/agar';
 import { after, before, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun, Type } from '@ephox/katamari';
 import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 interface Action {
   readonly select: (editor: Editor) => void;
@@ -61,7 +61,7 @@ describe('browser.tinymce.core.fmt.FormatNoneditableTest', () => {
 
       TinyAssertions.assertContent(editor, expectedHtml);
       if (Type.isNonNullable(pAssertAfter)) {
-        pAssertAfter(editor);
+        await pAssertAfter(editor);
       }
       if (Type.isNonNullable(selectionAfter)) {
         TinyAssertions.assertSelection(
@@ -345,7 +345,7 @@ describe('browser.tinymce.core.fmt.FormatNoneditableTest', () => {
                 },
                 {
                   select: () => TinySelections.setCursor(editor, [ 0, 1, 1, 0, 0 ], 1),
-                  expectedHtml: `<p><${format.html}>first</${format.tag}> ${noneditableBeforeHtml}<span contenteditable="true">editable</span>${noneditableAfterHtml} <${format.html}>third</${format.tag}></p>`,
+                  expectedHtml: `<p><${format.html}>first </${format.tag}>${noneditableBeforeHtml}<span contenteditable="true">editable</span>${noneditableAfterHtml}<${format.html}> third</${format.tag}></p>`,
                   pAssertAfter: pAssertToolbar(false)
                 },
               ]);

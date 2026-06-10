@@ -5,22 +5,23 @@ import { Attribute, TextContent, Traverse } from '@ephox/sugar';
 import * as AriaLabel from '../../aria/AriaLabel';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as ModalDialogSchema from '../../ui/schema/ModalDialogSchema';
-import { GetBusySpec, ModalDialogApis, ModalDialogDetail, ModalDialogSketcher, ModalDialogSpec } from '../../ui/types/ModalDialogTypes';
+import type { GetBusySpec, ModalDialogApis, ModalDialogDetail, ModalDialogSketcher, ModalDialogSpec } from '../../ui/types/ModalDialogTypes';
 import * as AddEventsBehaviour from '../behaviour/AddEventsBehaviour';
 import * as Behaviour from '../behaviour/Behaviour';
 import { Blocking } from '../behaviour/Blocking';
 import { Focusing } from '../behaviour/Focusing';
 import { Keying } from '../behaviour/Keying';
 import { Replacing } from '../behaviour/Replacing';
-import { AlloyComponent } from '../component/ComponentApi';
+import type { AlloyComponent } from '../component/ComponentApi';
 import * as GuiFactory from '../component/GuiFactory';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as AlloyEvents from '../events/AlloyEvents';
 import * as NativeEvents from '../events/NativeEvents';
 import * as SystemEvents from '../events/SystemEvents';
 import * as Attachment from '../system/Attachment';
+
 import * as Sketcher from './Sketcher';
-import { CompositeSketchFactory } from './UiSketcher';
+import type { CompositeSketchFactory } from './UiSketcher';
 
 const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (detail, components, spec, externals) => {
 
@@ -96,7 +97,7 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
     eventOrder,
     domModification: {
       attributes: {
-        'role': 'dialog',
+        'role': detail.role,
         'aria-modal': 'true'
       }
     },
@@ -119,10 +120,12 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
             // TINY-10808 - Workaround to address the dialog header not being announced on VoiceOver with aria-labelledby, ideally we should use the aria-labelledby
             const titleElm = AlloyParts.getPartOrDie(c, detail, 'title').element;
             const title = TextContent.get(titleElm);
-            if (browser.os.isMacOS() && Type.isNonNullable(title)) {
-              Attribute.set(c.element, 'aria-label', title);
-            } else {
-              AriaLabel.labelledBy(c.element, titleElm);
+            if (Type.isNonNullable(title) && title !== '') {
+              if (browser.os.isMacOS()) {
+                Attribute.set(c.element, 'aria-label', title);
+              } else {
+                AriaLabel.labelledBy(c.element, titleElm);
+              }
             }
           })
         ])

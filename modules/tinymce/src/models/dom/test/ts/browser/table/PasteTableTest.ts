@@ -3,14 +3,14 @@ import { describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/mcagar';
 import { SugarElement } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.models.dom.table.PasteTableTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
     table_merge_content_on_paste: false,
     base_url: '/project/tinymce/js/tinymce',
   }, []);
-  const nestedTable = `<table style="border-collapse: collapse; width: 100.242%;" border="1"><colgroup> <col style="width: 49.9179%;"> <col style="width: 49.9179%;"> </colgroup>
+  const nestedTable = `<table style="border-collapse: collapse; width: 100.242%;" border="1"><colgroup><col style="width: 49.9179%;"><col style="width: 49.9179%;"></colgroup>
 <tbody>
 <tr>
 <td>1</td>
@@ -24,7 +24,7 @@ describe('browser.tinymce.models.dom.table.PasteTableTest', () => {
 </table>`;
 
   const getContent = (secondCellContent = '&nbsp;') =>
-    `<table style="border-collapse: collapse; width: 100%;" border="1"><colgroup> <col style="width: 33.2976%;"> <col style="width: 33.2976%;"> <col style="width: 33.2976%;"> </colgroup>
+    `<table style="border-collapse: collapse; width: 100%;" border="1"><colgroup><col style="width: 33.2976%;"><col style="width: 33.2976%;"><col style="width: 33.2976%;"></colgroup>
 <tbody>
 <tr>
 <td>

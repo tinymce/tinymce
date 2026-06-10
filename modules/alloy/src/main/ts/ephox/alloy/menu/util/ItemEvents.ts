@@ -2,7 +2,7 @@ import { Fun } from '@ephox/katamari';
 import { Focus } from '@ephox/sugar';
 
 import { Focusing } from '../../api/behaviour/Focusing';
-import { AlloyComponent } from '../../api/component/ComponentApi';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 
 const hoverEvent = 'alloy.item-hover';

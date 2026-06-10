@@ -1,4 +1,4 @@
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Resource from 'tinymce/core/api/Resource';
 import I18n from 'tinymce/core/api/util/I18n';
 
@@ -11,6 +11,7 @@ const pLoadI18nHtml = (baseUrl: string): Promise<string> =>
 
 const initI18nLoad = (editor: Editor, baseUrl: string): void => {
   editor.on('init', () => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     pLoadI18nHtml(baseUrl);
   });
 };

@@ -1,4 +1,4 @@
-import { SugarElement, SugarLocation, SugarNode, Traverse } from '@ephox/sugar';
+import { type SugarElement, SugarLocation, SugarNode, Traverse } from '@ephox/sugar';
 
 const point = (type: string, element: SugarElement<Node>, x: number, y: number): void => {
   const touch = {

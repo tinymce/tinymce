@@ -3,7 +3,7 @@ import { Arr, Optional, OptionalInstances } from '@ephox/katamari';
 import { assert } from 'chai';
 import fc from 'fast-check';
 
-import { parseStartValue, parseDetail, ListDetail } from 'tinymce/plugins/lists/core/ListNumbering';
+import { type ListDetail, parseDetail, parseStartValue } from 'tinymce/plugins/lists/ui/ListNumbering';
 
 describe('atomic.tinymce.plugins.lists.core.ListNumberingTest', () => {
   const tOptional = OptionalInstances.tOptional;
@@ -65,7 +65,7 @@ describe('atomic.tinymce.plugins.lists.core.ListNumberingTest', () => {
       fc.mapToConstant({ num: 26, build: (v) => String.fromCharCode(65 + v) }),
       fc.mapToConstant({ num: 26, build: (v) => String.fromCharCode(97 + v) }),
       fc.mapToConstant({ num: 10, build: (v) => v.toString() })
-    ], (c) => fc.stringOf(c, 1, 5));
+    ], (c) => fc.string({ unit: c, minLength: 1, maxLength: 5 }));
 
     fc.assert(fc.property(
       fc.oneof(...arbitrary),

@@ -2,6 +2,7 @@ import { Fun, Optional, Unicode } from '@ephox/katamari';
 import { Insert, SugarElement } from '@ephox/sugar';
 
 import * as NodeType from '../dom/NodeType';
+
 import { CaretPosition } from './CaretPosition';
 import { getElementFromPosition } from './CaretUtils';
 

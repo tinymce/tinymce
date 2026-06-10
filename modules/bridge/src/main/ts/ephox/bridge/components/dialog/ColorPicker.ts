@@ -1,7 +1,7 @@
 import { StructureSchema, ValueType } from '@ephox/boulder';
-import { Result } from '@ephox/katamari';
+import type { Result } from '@ephox/katamari';
 
-import { FormComponentWithLabel, formComponentWithLabelFields, FormComponentWithLabelSpec } from './FormComponent';
+import { type FormComponentWithLabel, formComponentWithLabelFields, type FormComponentWithLabelSpec } from './FormComponent';
 
 export interface ColorPickerSpec extends FormComponentWithLabelSpec {
   type: 'colorpicker';

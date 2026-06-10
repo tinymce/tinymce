@@ -1,11 +1,11 @@
 import { FocusTools, Keys, UiFinder, Waiter } from '@ephox/agar';
-import { before, describe, it, TestLabel } from '@ephox/bedrock-client';
-import { Result } from '@ephox/katamari';
+import { before, describe, it, type TestLabel } from '@ephox/bedrock-client';
+import type { Result } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { SelectorExists, SugarBody, SugarDocument, SugarElement, WindowSelection } from '@ephox/sugar';
+import { SelectorExists, SugarBody, SugarDocument, type SugarElement, WindowSelection } from '@ephox/sugar';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.themes.silver.editor.DialogPopupsTest', () => {
   before(function () {

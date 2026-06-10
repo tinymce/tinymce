@@ -1,4 +1,4 @@
-import { FieldPresence, FieldProcessor, FieldSchema, ValueType } from '@ephox/boulder';
+import { FieldPresence, type FieldProcessor, FieldSchema, ValueType } from '@ephox/boulder';
 import { Fun, Id } from '@ephox/katamari';
 
 export const type = FieldSchema.requiredString('type');
@@ -7,6 +7,7 @@ export const label = FieldSchema.requiredString('label');
 export const text = FieldSchema.requiredString('text');
 export const title = FieldSchema.requiredString('title');
 export const icon = FieldSchema.requiredString('icon');
+export const url = FieldSchema.requiredString('url');
 export const value = FieldSchema.requiredString('value');
 export const fetch = FieldSchema.requiredFunction('fetch');
 export const getSubmenuItems = FieldSchema.requiredFunction('getSubmenuItems');
@@ -18,7 +19,9 @@ export const optionalName = FieldSchema.optionString('name');
 export const optionalText = FieldSchema.optionString('text');
 export const optionalRole = FieldSchema.optionString('role');
 export const optionalIcon = FieldSchema.optionString('icon');
+export const optionalUrl = FieldSchema.optionString('url');
 export const optionalTooltip = FieldSchema.optionString('tooltip');
+export const optionalChevronTooltip = FieldSchema.optionString('chevronTooltip');
 export const optionalLabel = FieldSchema.optionString('label');
 export const optionalShortcut = FieldSchema.optionString('shortcut');
 export const optionalSelect = FieldSchema.optionFunction('select');

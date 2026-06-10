@@ -1,5 +1,5 @@
-import { Universe } from '@ephox/boss';
-import { Optional } from '@ephox/katamari';
+import type { Universe } from '@ephox/boss';
+import type { Optional } from '@ephox/katamari';
 
 export interface SpotPoint<E> {
   readonly element: E;

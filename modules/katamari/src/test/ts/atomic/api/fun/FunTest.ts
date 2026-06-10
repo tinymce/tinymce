@@ -5,46 +5,97 @@ import fc from 'fast-check';
 import * as Fun from 'ephox/katamari/api/Fun';
 
 describe('atomic.katamari.api.fun.FunTest', () => {
-  it('unit tests', () => {
+  it('should compose functions correctly', () => {
     const add2 = (n: number) => n + 2;
-
     const squared = (n: number) => n * n;
-
     const add2squared = Fun.compose(squared, add2);
+    assert.equal(add2squared(2), 16);
+  });
 
+  it('should handle noarg correctly', () => {
     const f0 = (...args: any[]) => {
       return assert.lengthOf(args, 0);
     };
     Fun.noarg(f0)(1, 2, 3);
+  });
 
-    assert.equal(add2squared(2), 16);
-
+  it('should identity correctly', () => {
     assert.isUndefined(Fun.identity(undefined));
     assert.equal(Fun.identity(10), 10);
     assert.deepEqual(Fun.identity([ 1, 2, 4 ]), [ 1, 2, 4 ]);
     assert.deepEqual(Fun.identity({ a: 'a', b: 'b' }), { a: 'a', b: 'b' });
+  });
 
+  it('TINY-12729: should handle identityAsync correctly', async () => {
+    const results = await Promise.all([
+      Fun.identityAsync(undefined),
+      Fun.identityAsync(10),
+      Fun.identityAsync([ 1, 2, 4 ]),
+      Fun.identityAsync({ a: 'a', b: 'b' })
+    ]);
+
+    assert.isUndefined(results[0]);
+    assert.equal(results[1], 10);
+    assert.deepEqual(results[2], [ 1, 2, 4 ]);
+    assert.deepEqual(results[3], { a: 'a', b: 'b' });
+  });
+
+  it('should handle constant correctly', () => {
     assert.isUndefined(Fun.constant(undefined)());
     assert.equal(Fun.constant(10)(), 10);
     assert.deepEqual(Fun.constant({ a: 'a' })(), { a: 'a' });
+  });
 
+  it('TINY-12729: should handle constantAsync correctly', async () => {
+    const results = await Promise.all([
+      Fun.constantAsync(undefined)(),
+      Fun.constantAsync(10)(),
+      Fun.constantAsync({ a: 'a' })()
+    ]);
+
+    assert.isUndefined(results[0]);
+    assert.equal(results[1], 10);
+    assert.deepEqual(results[2], { a: 'a' });
+  });
+
+  it('should handle never correctly', () => {
     assert.isFalse(Fun.never());
+  });
+
+  it('TINY-12729: should handle neverAsync correctly', async () => {
+    const result = await Fun.neverAsync();
+    assert.isFalse(result);
+  });
+
+  it('should handle always correctly', () => {
     assert.isTrue(Fun.always());
+  });
 
+  it('TINY-12729: should handle alwaysAsync correctly', async () => {
+    const result = await Fun.alwaysAsync();
+    assert.isTrue(result);
+  });
+
+  it('should handle curry correctly', () => {
     const c = <T>(...args: T[]): T[] => args;
-
     assert.deepEqual(Fun.curry(c)(), []);
     assert.deepEqual(Fun.curry(c, 'a')(), [ 'a' ]);
     assert.deepEqual(Fun.curry(c, 'a')('b'), [ 'a', 'b' ]);
     assert.deepEqual(Fun.curry(c)('a', 'b'), [ 'a', 'b' ]);
     assert.deepEqual(Fun.curry(c)('a', 'b', 'c'), [ 'a', 'b', 'c' ]);
     assert.deepEqual(Fun.curry(c, 'a', 'b')('c'), [ 'a', 'b', 'c' ]);
+  });
 
+  it('should handle not correctly', () => {
     assert.isFalse(Fun.not((_x: number) => true)(3));
     assert.isTrue(Fun.not((_x: string) => false)('cat'));
+  });
 
+  it('should throw an error with die', () => {
     assert.throws(Fun.die('Died!'));
+  });
 
+  it('should handle apply correctly', () => {
     let called = false;
     const f = () => {
       called = true;
@@ -76,9 +127,23 @@ describe('atomic.katamari.api.fun.FunTest', () => {
     }));
   });
 
+  it('TINY-12729: Check constantAsync :: constantAsync(a)() === a', async () => {
+    await fc.assert(fc.asyncProperty(fc.json(), async (json) => {
+      const result = await Fun.constantAsync(json)();
+      assert.deepEqual(result, json);
+    }));
+  });
+
   it('Check identity :: identity(a) === a', () => {
     fc.assert(fc.property(fc.json(), (json) => {
       assert.deepEqual(Fun.identity(json), json);
+    }));
+  });
+
+  it('TINY-12729: Check identityAsync :: identityAsync(a) === a', async () => {
+    await fc.assert(fc.asyncProperty(fc.json(), async (json) => {
+      const result = await Fun.identityAsync(json);
+      assert.deepEqual(result, json);
     }));
   });
 
@@ -88,9 +153,23 @@ describe('atomic.katamari.api.fun.FunTest', () => {
     }));
   });
 
+  it('TINY-12729: Check alwaysAsync :: f(x) === true', async () => {
+    await fc.assert(fc.asyncProperty(fc.json(), async (json) => {
+      const result = await Fun.alwaysAsync(json);
+      assert.isTrue(result);
+    }));
+  });
+
   it('Check never :: f(x) === false', () => {
     fc.assert(fc.property(fc.json(), (json) => {
       assert.isFalse(Fun.never(json));
+    }));
+  });
+
+  it('TINY-12729: Check neverAsync :: f(x) === false', async () => {
+    await fc.assert(fc.asyncProperty(fc.json(), async (json) => {
+      const result = await Fun.neverAsync(json);
+      assert.isFalse(result);
     }));
   });
 

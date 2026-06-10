@@ -1,4 +1,4 @@
-import { PathRange } from '../utils/PathRange';
+import type { PathRange } from '../utils/PathRange';
 
 export type BlockPatternTrigger = 'enter' | 'space';
 

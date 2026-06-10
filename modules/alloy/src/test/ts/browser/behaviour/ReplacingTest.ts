@@ -5,13 +5,13 @@ import { Compare, SugarBody } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Replacing } from 'ephox/alloy/api/behaviour/Replacing';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import type { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as DomFactory from 'ephox/alloy/api/component/DomFactory';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Memento from 'ephox/alloy/api/component/Memento';
-import { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
+import type { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
 import { Container } from 'ephox/alloy/api/ui/Container';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('ReplacingTest', (success, failure) => {
   const make = (reuseDom: boolean) => Container.sketch({

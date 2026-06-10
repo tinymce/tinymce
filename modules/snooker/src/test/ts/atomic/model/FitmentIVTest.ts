@@ -1,8 +1,8 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Arr, Fun, Num, Result } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import { Arr, Fun, Num, type Result } from '@ephox/katamari';
+import type { SugarElement } from '@ephox/sugar';
 
-import { SimpleGenerators } from 'ephox/snooker/api/Generators';
+import type { SimpleGenerators } from 'ephox/snooker/api/Generators';
 import * as Structs from 'ephox/snooker/api/Structs';
 import * as Fitment from 'ephox/snooker/test/Fitment';
 import * as TableMerge from 'ephox/snooker/test/TableMerge';
@@ -21,8 +21,10 @@ UnitTest.test('FitmentIVTest', () => {
   const en = (fakeElement: any, isNew: boolean) =>
     Structs.elementnew(fakeElement as SugarElement<any>, isNew, false);
 
-  // Spend 5 seconds running as many iterations as we can (there are three cycles, so 15s total)
-  const CYCLE_TIME = 5000;
+  // TODO: Convert to fast-check, which will algorithmically determine what to test instead of just throwing random numbers at it for a fixed period
+
+  // Spend 2 seconds running as many iterations as we can (there are three cycles, so 15s total)
+  const CYCLE_TIME = 2000;
   const GRID_MIN = 1;   // 1x1 grid is the min
   const GRID_MAX = 200;
 

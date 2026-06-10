@@ -1,10 +1,11 @@
 import { Arr, Id, Obj, Optional, Optionals, Type } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
-import { Dialog } from 'tinymce/core/api/ui/Ui';
+import type Editor from 'tinymce/core/api/Editor';
+import type { Dialog } from 'tinymce/core/api/ui/Ui';
 
 import * as Options from '../api/Options';
-import { CustomTabSpecs, TabSpecs } from '../Plugin';
+import type { CustomTabSpecs, TabSpecs } from '../Plugin';
+
 import * as KeyboardNavTab from './KeyboardNavTab';
 import * as KeyboardShortcutsTab from './KeyboardShortcutsTab';
 import * as PluginsTab from './PluginsTab';
@@ -68,6 +69,7 @@ const pParseCustomTabs = async (editor: Editor, customTabs: CustomTabSpecs, plug
 };
 
 const init = (editor: Editor, customTabs: CustomTabSpecs, pluginUrl: string) => (): void => {
+  // eslint-disable-next-line @typescript-eslint/no-floating-promises
   pParseCustomTabs(editor, customTabs, pluginUrl).then(({ tabs, names }) => {
     const foundTabs: Optional<Dialog.TabSpec>[] = Arr.map(names, (name) => Obj.get(tabs, name));
     const dialogTabs: Dialog.TabSpec[] = Optionals.cat(foundTabs);

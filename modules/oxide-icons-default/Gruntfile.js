@@ -8,7 +8,7 @@ module.exports = function (grunt) {
         'icon-packager': {
             options: {
                 name: 'default',
-                filePaths: grunt.file.expand('src/svg/**/*.svg')
+                filePaths: grunt.file.expand('src/svg/*.svg')
             }
         }
     });

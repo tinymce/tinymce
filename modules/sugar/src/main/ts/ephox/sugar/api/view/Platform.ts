@@ -8,6 +8,8 @@ interface ChoiceOption<T> {
 
 const isTouch: () => boolean = () => PlatformDetection.detect().deviceType.isTouch();
 const isAndroid: () => boolean = () => PlatformDetection.detect().deviceType.isAndroid();
+const isMacOS: () => boolean = () => PlatformDetection.detect().os.isMacOS();
+const isiOS: () => boolean = () => PlatformDetection.detect().os.isiOS();
 
 // TODO: Work out what these values are supposed to be.
 const MINIMUM_LARGE_WIDTH = 620;
@@ -49,5 +51,7 @@ export {
   isLargeTouch,
   isSmallTouch,
   isLargeDesktop,
-  isSmallAndroid
+  isSmallAndroid,
+  isMacOS,
+  isiOS
 };

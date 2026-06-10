@@ -1,6 +1,6 @@
 import { Class, Insert, SelectorFind, SugarBody, SugarElement, Value } from '@ephox/sugar';
 
-import { TinyMCE } from 'tinymce/core/api/PublicApi';
+import type { TinyMCE } from 'tinymce/core/api/PublicApi';
 
 declare let tinymce: TinyMCE;
 
@@ -30,6 +30,7 @@ export default (): void => {
     },
 
     selector: 'textarea.tinymce',
+    license_key: 'gpl',
     toolbar1: 'demoButton bold italic',
     menubar: false
   });

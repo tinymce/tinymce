@@ -3,9 +3,9 @@ import { describe, it } from '@ephox/bedrock-client';
 import { Arr, Type } from '@ephox/katamari';
 import { TinyAssertions, TinyContentActions, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
-import { AutocompleterStructure, pAssertAutocompleterStructure, pWaitForAutocompleteToClose } from '../../module/AutocompleterUtils';
+import { type AutocompleterStructure, pAssertAutocompleterStructure, pWaitForAutocompleteToClose } from '../../module/AutocompleterUtils';
 
 interface Scenario {
   readonly triggerChar: string;

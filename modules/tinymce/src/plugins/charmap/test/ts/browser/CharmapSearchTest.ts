@@ -5,10 +5,8 @@ import { Attribute, SugarBody, SugarDocument } from '@ephox/sugar';
 import { TinyAssertions, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/charmap/Plugin';
-
-import { fakeEvent } from '../module/Helpers';
 
 describe('browser.tinymce.plugins.charmap.SearchTest', () => {
   before(function () {
@@ -34,12 +32,11 @@ describe('browser.tinymce.plugins.charmap.SearchTest', () => {
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Special character"]');
     await TinyUiActions.pWaitForDialog(editor);
     await FocusTools.pTryOnSelector('Focus should start on', doc, 'input'); // TODO: Remove duped startup of these tests
-    const input = FocusTools.setActiveValue(doc, 'euro');
-    fakeEvent(input, 'input');
+    FocusTools.setActiveValue(doc, 'euro');
     await Waiter.pTryUntil(
       'Wait until Euro is the first choice (search should filter)',
       () => {
-        const item = UiFinder.findIn(body, '.tox-collection__item:first').getOrDie();
+        const item = UiFinder.findIn(body, '.tox-collection__item:first-child').getOrDie();
         const value = Attribute.get(item, 'data-collection-item-value');
         assert.equal(value, '€', 'Search should show euro');
       }

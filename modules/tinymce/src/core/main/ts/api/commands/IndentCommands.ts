@@ -1,5 +1,5 @@
 import * as IndentOutdent from '../../commands/IndentOutdent';
-import Editor from '../Editor';
+import type Editor from '../Editor';
 
 export const registerCommands = (editor: Editor): void => {
   editor.editorCommands.addCommands({
@@ -14,5 +14,6 @@ export const registerCommands = (editor: Editor): void => {
 
   editor.editorCommands.addCommands({
     Outdent: () => IndentOutdent.canOutdent(editor),
+    Indent: () => IndentOutdent.canIndent(editor),
   }, 'state');
 };

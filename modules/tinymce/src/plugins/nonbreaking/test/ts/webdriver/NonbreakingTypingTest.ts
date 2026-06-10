@@ -3,7 +3,7 @@ import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { Unicode } from '@ephox/katamari';
 import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import Plugin from 'tinymce/plugins/nonbreaking/Plugin';
 
@@ -17,6 +17,7 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingTypingTest', () => {
   }, [ Plugin ]);
 
   const isFirefox = Env.browser.isFirefox();
+  const isFirefoxPre139 = Env.browser.isFirefox() && Env.browser.version.major < 139;
 
   const clickNbspToolbarButton = (editor: Editor) => TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Nonbreaking space"]');
 
@@ -90,8 +91,8 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingTypingTest', () => {
         children: [
           s.element('p', {
             children: [
-              s.text(str.is(isFirefox ? Unicode.nbsp + ' ' : Unicode.nbsp + Unicode.nbsp))
-            ].concat(isFirefox ? [ s.element('br', {}) ] : [])
+              s.text(str.is(isFirefoxPre139 ? Unicode.nbsp + ' ' : Unicode.nbsp + Unicode.nbsp))
+            ].concat(isFirefoxPre139 ? [ s.element('br', {}) ] : [])
           })
         ]
       });

@@ -4,11 +4,11 @@ import { Arr, Throttler, Type } from '@ephox/katamari';
 import { SugarBody } from '@ephox/sugar';
 import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import { getGreenImageDataUrl } from '../../../module/Assets';
 import {
-  AutocompleterStructure, pAssertAutocompleterStructure, pWaitForAutocompleteToClose, pWaitForAutocompleteToOpen
+  type AutocompleterStructure, pAssertAutocompleterStructure, pWaitForAutocompleteToClose, pWaitForAutocompleteToOpen
 } from '../../../module/AutocompleterUtils';
 
 interface TriggerDetails {
@@ -766,4 +766,20 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteTest', (
     },
     assertion: (editor) => TinyAssertions.assertContent(editor, '<p>multi-bB</p>')
   }));
+
+  it('TINY-11273: Autocomplete should be triggered for content with font size formatting applied', async () => {
+    const editor = hook.editor();
+    editor.execCommand('FontSize', false, '36px');
+    await TinyContentActions.pType(editor, '+');
+    editor.dispatch('input');
+    await pWaitForAutocompleteToOpen();
+  });
+
+  it('TINY-11273: Autocomplete should be triggered for content with bold formatting applied', async () => {
+    const editor = hook.editor();
+    editor.execCommand('Bold');
+    await TinyContentActions.pType(editor, '+');
+    editor.dispatch('input');
+    await pWaitForAutocompleteToOpen();
+  });
 });

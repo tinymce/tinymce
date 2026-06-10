@@ -3,7 +3,7 @@ import { context, describe, it } from '@ephox/bedrock-client';
 import { SugarBody } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyState, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import AdvListPlugin from 'tinymce/plugins/advlist/Plugin';
 import ListPlugin from 'tinymce/plugins/lists/Plugin';
 
@@ -27,8 +27,8 @@ describe('browser.tinymce.plugins.advlist.NoneditableRootTest', () => {
       TinyState.withNoneditableRootEditor<Editor>(hook.editor(), (editor) => {
         setupEditor(editor);
 
-        UiFinder.exists(TinyDom.container(editor), 'div[data-mce-name="numlist"][aria-disabled="true"]');
-        UiFinder.exists(TinyDom.container(editor), 'div[data-mce-name="bullist"][aria-disabled="true"]');
+        UiFinder.exists(TinyDom.container(editor), 'button[data-mce-name="numlist"][aria-disabled="true"]');
+        UiFinder.exists(TinyDom.container(editor), 'button[data-mce-name="bullist"][aria-disabled="true"]');
       });
     });
 
@@ -48,8 +48,8 @@ describe('browser.tinymce.plugins.advlist.NoneditableRootTest', () => {
       await TinyState.withNoneditableRootEditorAsync<Editor>(hook.editor(), async (editor) => {
         setupEditor(editor);
 
-        await TinyUiActions.pTriggerContextMenu(editor, 'li', '.tox-silver-sink [role="menuitem"]:contains("List properties...")');
-        UiFinder.exists(SugarBody.body(), '[role="menuitem"][aria-disabled="true"]:contains("List properties...")');
+        await TinyUiActions.pTriggerContextMenu(editor, 'li', '.tox-silver-sink [role="menuitem"]:contains("List properties…")');
+        UiFinder.exists(SugarBody.body(), '[role="menuitem"][aria-disabled="true"]:contains("List properties…")');
       });
     });
   });

@@ -4,7 +4,7 @@ import { Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import AccordionPlugin from '../../../main/ts/Plugin';
 import * as AccordionUtils from '../module/AccordionUtils';
@@ -46,8 +46,11 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
     `${AccordionUtils.createAccordion({ summary, body })}`;
   const assertAccordionContent = (editor: Editor, spec?: AccordionSpec) =>
     TinyAssertions.assertContent(editor, getAccordionContent(spec));
-  const createAccordion = (editor: Editor, spec?: AccordionSpec) =>
-    editor.setContent(getAccordionContent(spec));
+  const createAccordion = (editor: Editor, spec?: AccordionSpec) => {
+    const content = getAccordionContent(spec);
+    editor.setContent(content);
+    return content;
+  };
 
   context('Undo/redo backspace/delete', () => {
     const testUndoRedo = (deletionKey: DeletionKey, location: ContentLocation) => async () => {

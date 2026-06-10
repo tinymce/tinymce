@@ -1,9 +1,9 @@
 import { Assertions, UiFinder, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { SugarBody, SugarElement, TextContent } from '@ephox/sugar';
+import { SugarBody, type SugarElement, TextContent } from '@ephox/sugar';
 import { TinyAssertions, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/media/Plugin';
 
 import * as Utils from '../module/test/Utils';
@@ -38,7 +38,7 @@ describe('browser.tinymce.plugins.media.IsCachedResponseTest', () => {
     await TinyUiActions.pWaitForDialog(editor);
     const input = await Utils.pSetSourceInput(editor, 'test');
     Utils.fakeEvent(input, 'paste');
-    await Waiter.pWait(0); // wait is needed because paste is triggered async
+    await Waiter.pWaitBetweenUserActions();
     await Utils.pAssertEmbedData(editor, '<div>x</div>');
     await Utils.pSetSourceInput(editor, 'XXX');
     TinyUiActions.submitDialog(editor);

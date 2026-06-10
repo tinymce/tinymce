@@ -1,4 +1,4 @@
-import * as Behaviour from '../../api/behaviour/Behaviour';
+import type * as Behaviour from '../../api/behaviour/Behaviour';
 
 export interface TabstoppingBehaviour extends Behaviour.AlloyBehaviour<TabstoppingConfigSpec, TabstoppingConfig> {
   config: (config: TabstoppingConfigSpec) => Behaviour.NamedConfiguredBehaviour<TabstoppingConfigSpec, TabstoppingConfig>;

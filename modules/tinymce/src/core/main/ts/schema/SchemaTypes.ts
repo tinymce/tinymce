@@ -76,5 +76,6 @@ export interface CustomElementSpec {
   attributes?: string[];
   children?: string[];
   padEmpty?: boolean;
+  componentUrl?: string;
 }
 

@@ -1,11 +1,14 @@
-import { Arr, Obj, Strings, Type } from '@ephox/katamari';
+import { FieldSchema, StructureSchema } from '@ephox/boulder';
+import { Arr, Result, Fun, Obj, Optional, Strings, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
 import * as Pattern from '../textpatterns/core/Pattern';
-import * as PatternTypes from '../textpatterns/core/PatternTypes';
+import type * as PatternTypes from '../textpatterns/core/PatternTypes';
+
 import DOMUtils from './dom/DOMUtils';
-import Editor from './Editor';
-import { EditorOptions } from './OptionTypes';
+import type Editor from './Editor';
+import { fireDisabledStateChange } from './Events';
+import type { DocumentsFileTypes, DocumentsFileTypesProcessorReturnType, EditorOptions } from './OptionTypes';
 import I18n from './util/I18n';
 import Tools from './util/Tools';
 
@@ -79,6 +82,11 @@ const register = (editor: Editor): void => {
     default: ''
   });
 
+  registerOption('crossorigin', {
+    processor: 'function',
+    default: Fun.constant(undefined)
+  });
+
   registerOption('language_load', {
     processor: 'boolean',
     default: true
@@ -101,7 +109,7 @@ const register = (editor: Editor): void => {
 
   registerOption('document_base_url', {
     processor: 'string',
-    default: editor.documentBaseUrl
+    default: editor.editorManager.documentBaseURL
   });
 
   registerOption('body_id', {
@@ -304,6 +312,10 @@ const register = (editor: Editor): void => {
     processor: 'string'
   });
 
+  registerOption('content_language', {
+    processor: 'string'
+  });
+
   registerOption('content_css_cors', {
     processor: 'boolean',
     default: false
@@ -321,6 +333,14 @@ const register = (editor: Editor): void => {
       }
     },
     default: []
+  });
+
+  registerOption('extended_mathml_attributes', {
+    processor: 'string[]'
+  });
+
+  registerOption('extended_mathml_elements', {
+    processor: 'string[]'
   });
 
   registerOption('inline_boundaries', {
@@ -360,6 +380,15 @@ const register = (editor: Editor): void => {
   });
 
   registerOption('service_message', {
+    processor: 'string'
+  });
+
+  registerOption('onboarding', {
+    processor: 'boolean',
+    default: true
+  });
+
+  registerOption('tiny_cloud_entry_url', {
     processor: 'string'
   });
 
@@ -437,6 +466,25 @@ const register = (editor: Editor): void => {
     default: false
   });
 
+  registerOption('disabled', {
+    processor: (value) => {
+      if (Type.isBoolean(value)) {
+        if (editor.initialized && isDisabled(editor) !== value) {
+          // Schedules the callback to run in the next microtask queue once the option is updated
+          // TODO: TINY-11586 - Implement `onChange` callback when the value of an option changes
+          // eslint-disable-next-line @typescript-eslint/no-floating-promises
+          Promise.resolve().then(() => {
+            fireDisabledStateChange(editor, value);
+          });
+        }
+        return { valid: true, value };
+      }
+
+      return { valid: false, message: 'The value must be a boolean.' };
+    },
+    default: false
+  });
+
   registerOption('readonly', {
     processor: 'boolean',
     default: false
@@ -491,7 +539,7 @@ const register = (editor: Editor): void => {
 
   registerOption('iframe_aria_text', {
     processor: 'string',
-    default: 'Rich Text Area. Press ALT-0 for help.'
+    default: 'Rich Text Area'.concat(editor.hasPlugin('help') ? '. Press ALT-0 for help.' : '')
   });
 
   registerOption('setup', {
@@ -537,6 +585,11 @@ const register = (editor: Editor): void => {
     default: false
   });
 
+  registerOption('allow_html_in_comments', {
+    processor: 'boolean',
+    default: false
+  });
+
   registerOption('allow_script_urls', {
     processor: 'boolean',
     default: false
@@ -545,6 +598,14 @@ const register = (editor: Editor): void => {
   registerOption('allow_unsafe_link_target', {
     processor: 'boolean',
     default: false
+  });
+
+  registerOption('allow_mathml_annotation_encodings', {
+    processor: (value) => {
+      const valid = Type.isArrayOf(value, Type.isString);
+      return valid ? { value, valid } : { valid: false, message: 'Must be an array of strings.' };
+    },
+    default: []
   });
 
   registerOption('convert_fonts_to_spans', {
@@ -769,6 +830,11 @@ const register = (editor: Editor): void => {
     default: (_ctx: PatternTypes.DynamicPatternContext): PatternTypes.Pattern[] => [ ]
   });
 
+  registerOption('allow_noneditable', {
+    processor: 'boolean',
+    default: true
+  });
+
   registerOption('noneditable_class', {
     processor: 'string',
     default: 'mceNonEditable'
@@ -859,6 +925,51 @@ const register = (editor: Editor): void => {
     default: true
   });
 
+  registerOption('user_id', {
+    processor: 'string',
+    default: 'Anonymous'
+  });
+
+  registerOption('content_id', {
+    processor: 'string',
+  });
+
+  registerOption('fetch_users', {
+    processor: (value) => {
+      if (value === undefined) {
+        return { valid: true, value: undefined };
+      }
+      if (Type.isFunction(value)) {
+        return { valid: true, value };
+      }
+      return {
+        valid: false,
+        message: 'fetch_users must be a function that returns a Promise<ExpectedUser[]>'
+      };
+    }
+  });
+
+  const documentsFileTypesOptionsSchema = StructureSchema.arrOfObj([
+    FieldSchema.requiredString('mimeType'),
+    FieldSchema.requiredArrayOf('extensions', StructureSchema.valueOf((ext) => {
+      if (Type.isString(ext)) {
+        return Result.value(ext);
+      } else {
+        return Result.error('Extensions must be an array of strings');
+      }
+    })),
+  ]);
+
+  registerOption('documents_file_types', {
+    processor: (value: unknown) => StructureSchema.asRaw<DocumentsFileTypes[]>('documents_file_types', documentsFileTypesOptionsSchema, value).fold<DocumentsFileTypesProcessorReturnType>(
+      (_err) => ({
+        valid: false,
+        message: 'Must be a non-empty array of objects matching the configuration schema: https://www.tiny.cloud/docs/tinymce/latest/uploadcare-documents/#documents-file-types'
+      }),
+      (val) => ({ valid: true, value: val })
+    )
+  });
+
   // These options must be registered later in the init sequence due to their default values
   editor.on('ScriptsLoaded', () => {
     registerOption('directionality', {
@@ -871,6 +982,25 @@ const register = (editor: Editor): void => {
       // Fallback to the original elements placeholder if not set in the settings
       default: DOM.getAttrib(editor.getElement(), 'placeholder')
     });
+  });
+
+  registerOption('lists_indent_on_tab', {
+    processor: 'boolean',
+    default: true
+  });
+
+  registerOption('list_max_depth', {
+    processor: (value) => {
+      const valid = Type.isNumber(value);
+      if (valid) {
+        if (value < 0) {
+          throw new Error('list_max_depth cannot be set to lower than 0');
+        }
+        return { value, valid };
+      } else {
+        return { valid: false, message: 'Must be a number' };
+      }
+    },
   });
 };
 
@@ -899,12 +1029,14 @@ const getImagesUploadCredentials = option('images_upload_credentials');
 const getImagesUploadHandler = option('images_upload_handler');
 const shouldUseContentCssCors = option('content_css_cors');
 const getReferrerPolicy = option('referrer_policy');
+const getCrossOrigin = option('crossorigin');
 const getLanguageCode = option('language');
 const getLanguageUrl = option('language_url');
 const shouldIndentUseMargin = option('indent_use_margin');
 const getIndentation = option('indentation');
 const getContentCss = option('content_css');
 const getContentStyle = option('content_style');
+const getContentLanguage = option('content_language');
 const getFontCss = option('font_css');
 const getDirectionality = option('directionality');
 const getInlineBoundarySelector = option('inline_boundaries_selector');
@@ -960,6 +1092,7 @@ const getPasteTabSpaces = option('paste_tab_spaces');
 const shouldAllowHtmlDataUrls = option('allow_html_data_urls');
 const getTextPatterns = option('text_patterns');
 const getTextPatternsLookup = option('text_patterns_lookup');
+const shouldAllowNonEditable = option('allow_noneditable');
 const getNonEditableClass = option('noneditable_class');
 const getEditableClass = option('editable_class');
 const getNonEditableRegExps = option('noneditable_regexp');
@@ -980,6 +1113,15 @@ const getSandboxIframesExclusions = (editor: Editor): string[] => editor.options
 const shouldConvertUnsafeEmbeds = option('convert_unsafe_embeds');
 const getLicenseKey = option('license_key');
 const getApiKey = option('api_key');
+const isDisabled = option('disabled');
+const getExtendedMathmlAttributes = option('extended_mathml_attributes');
+const getExtendedMathmlElements = option('extended_mathml_elements');
+const getUserId = option('user_id');
+const getFetchUsers = option('fetch_users');
+const shouldIndentOnTab = option('lists_indent_on_tab');
+const getListMaxDepth = (editor: Editor): Optional<number> =>
+  Optional.from(editor.options.get('list_max_depth'));
+const getDocumentsFileTypes = option('documents_file_types');
 
 export {
   register,
@@ -987,6 +1129,8 @@ export {
   getIframeAttrs,
   getDocType,
   getDocumentBaseUrl,
+  getExtendedMathmlAttributes,
+  getExtendedMathmlElements,
   getBodyId,
   getBodyClass,
   getContentSecurityPolicy,
@@ -1011,12 +1155,14 @@ export {
   getImagesUploadHandler,
   shouldUseContentCssCors,
   getReferrerPolicy,
+  getCrossOrigin,
   getLanguageCode,
   getLanguageUrl,
   shouldIndentUseMargin,
   getIndentation,
   getContentCss,
   getContentStyle,
+  getContentLanguage,
   getDirectionality,
   getInlineBoundarySelector,
   getObjectResizing,
@@ -1075,6 +1221,7 @@ export {
   getTextPatterns,
   getTextPatternsLookup,
   hasTextPatternsLookup,
+  shouldAllowNonEditable,
   getNonEditableClass,
   getNonEditableRegExps,
   getEditableClass,
@@ -1089,5 +1236,11 @@ export {
   getLicenseKey,
   getSandboxIframesExclusions,
   shouldConvertUnsafeEmbeds,
-  getApiKey
+  getApiKey,
+  isDisabled,
+  shouldIndentOnTab,
+  getListMaxDepth,
+  getDocumentsFileTypes,
+  getFetchUsers,
+  getUserId
 };

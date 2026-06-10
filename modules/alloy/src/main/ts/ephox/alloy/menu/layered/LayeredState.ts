@@ -1,7 +1,8 @@
 import { Arr, Cell, Obj, Optional, Optionals, Singleton } from '@ephox/katamari';
 
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { MenuPreparation } from '../../ui/single/TieredMenuSpec';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
+import type { MenuPreparation } from '../../ui/single/TieredMenuSpec';
+
 import * as MenuPathing from './MenuPathing';
 
 // Object indexed by menu value. Each entry has a list of item values.

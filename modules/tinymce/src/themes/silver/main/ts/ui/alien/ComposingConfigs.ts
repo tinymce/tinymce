@@ -1,10 +1,11 @@
-import { AlloyComponent, Composing, MementoRecord } from '@ephox/alloy';
+import { type AlloyComponent, Composing, type MementoRecord } from '@ephox/alloy';
 import { Optional } from '@ephox/katamari';
 import { Traverse } from '@ephox/sugar';
 
 type ComposingBehaviour = ReturnType<typeof Composing['config']>;
 
 // TODO: Move this to alloy if the concept works out
+// eslint-disable-next-line consistent-this
 const self = (): ComposingBehaviour => Composing.config({
   find: Optional.some
 });

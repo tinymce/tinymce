@@ -2,8 +2,8 @@ import { describe, it } from '@ephox/bedrock-client';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
-import { EmojiEntry } from 'tinymce/plugins/emoticons/core/EmojiDatabase';
+import type Editor from 'tinymce/core/api/Editor';
+import type { EmojiEntry } from 'tinymce/plugins/emoticons/core/EmojiDatabase';
 import Plugin from 'tinymce/plugins/emoticons/Plugin';
 
 describe('browser.tinymce.plugins.emoticons.EmoticonsPluginTest', () => {

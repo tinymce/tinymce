@@ -1,4 +1,4 @@
-import { Arr, Optional } from '@ephox/katamari';
+import { Arr, type Optional } from '@ephox/katamari';
 
 export type ArrCycle<A> = (values: A[], index: number, predicate: (a: A) => boolean) => Optional<A>;
 

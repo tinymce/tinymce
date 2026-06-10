@@ -3,7 +3,7 @@ import { Arr, Result } from '@ephox/katamari';
 import { assert } from 'chai';
 import * as fc from 'fast-check';
 
-import { nuSize, parseSize, Size, SizeUnit } from 'tinymce/themes/silver/ui/sizeinput/SizeInputModel';
+import { nuSize, parseSize, type Size, type SizeUnit } from 'tinymce/themes/silver/ui/sizeinput/SizeInputModel';
 
 import { largeSensible, units } from './SizeInputShared';
 
@@ -63,7 +63,7 @@ describe('atomic.tinymce.themes.silver.components.sizeinput.SizeInputParsingTest
     });
 
     fc.assert(fc.property(
-      arbPad, fc.integer(0, largeSensible), arbPad, fc.constantFrom(...units), arbPad,
+      arbPad, fc.integer({ min: 0, max: largeSensible }), arbPad, fc.constantFrom(...units), arbPad,
       (pad1: string, nonNegNumber: number, pad2: string, unit: SizeUnit, pad3: string) => {
         const str = pad1 + nonNegNumber + pad2 + unit + pad3;
         const parsed = parseSize(str);

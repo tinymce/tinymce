@@ -47,7 +47,7 @@ describe('atomic.katamari.api.arr.GroupByTest', () => {
   it('Adjacent groups have different hashes, and everything in a group has the same hash', () => {
     fc.assert(fc.property(
       fc.array(fc.integer()),
-      fc.func(fc.asciiString()),
+      fc.func(fc.string({ unit: 'binary-ascii' })),
       (xs, f) => {
         const groups = Arr.groupBy(xs, (x) => f(x));
 

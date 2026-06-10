@@ -1,7 +1,7 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/accordion/Plugin';
 
 import * as AccordionUtils from '../module/AccordionUtils';
@@ -23,7 +23,7 @@ describe('browser.tinymce.plugins.accordion.AccordionContextMenuTest', () => {
 
   it('TINY-9961: Toggle open, then closed, then delete', async () => {
     const editor = hook.editor();
-    const startContent = AccordionUtils.createAccordion({ summary: 'heading', open: false });
+    const startContent = AccordionUtils.createAccordion({ summary: 'heading', body: 'body', open: false });
     editor.setContent(startContent);
 
     await TinyUiActions.pTriggerContextMenu(editor, 'details', contextMenuSelector);
@@ -40,7 +40,7 @@ describe('browser.tinymce.plugins.accordion.AccordionContextMenuTest', () => {
 
   it('TINY-9961: Toggle closed, then open, then delete', async () => {
     const editor = hook.editor();
-    const startContent = AccordionUtils.createAccordion({ summary: 'heading', open: true });
+    const startContent = AccordionUtils.createAccordion({ summary: 'heading', body: 'body', open: true });
     editor.setContent(startContent);
 
     await TinyUiActions.pTriggerContextMenu(editor, 'details', contextMenuSelector);

@@ -1,14 +1,12 @@
-import { FocusTools, Keys, UiFinder } from '@ephox/agar';
+import { FocusTools, Keys, UiControls, UiFinder } from '@ephox/agar';
 import { before, context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { Attribute, Css, SugarElement, SugarShadowDom, Traverse, Value } from '@ephox/sugar';
+import { Attribute, Css, type SugarElement, SugarShadowDom, Traverse, Value } from '@ephox/sugar';
 import { TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/charmap/Plugin';
-
-import { fakeEvent } from '../module/Helpers';
 
 describe('browser.tinymce.plugins.charmap.DialogHeightTest', () => {
   const isChromeEdge = () => navigator.userAgent.includes(' Edg/');
@@ -37,8 +35,7 @@ describe('browser.tinymce.plugins.charmap.DialogHeightTest', () => {
 
       const type = (doc: SugarElement<Document | ShadowRoot>, text: string) => {
         const input = FocusTools.getFocused(doc).getOrDie() as SugarElement<HTMLInputElement>;
-        Value.set(input, Value.get(input) + text);
-        fakeEvent(input, 'input');
+        UiControls.setValue(input, Value.get(input) + text, 'input');
       };
 
       // Edge is being strange and focusing the body in this test but not when executed in isolation see #TINY-10579 for details

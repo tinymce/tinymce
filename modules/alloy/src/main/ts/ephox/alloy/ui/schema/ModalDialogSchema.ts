@@ -9,7 +9,7 @@ import { Keying } from '../../api/behaviour/Keying';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as Fields from '../../data/Fields';
 import * as PartType from '../../parts/PartType';
-import { ModalDialogDetail } from '../types/ModalDialogTypes';
+import type { ModalDialogDetail } from '../types/ModalDialogTypes';
 
 const schema = Fun.constant([
   FieldSchema.required('lazySink'),
@@ -18,6 +18,7 @@ const schema = Fun.constant([
   FieldSchema.defaulted('useTabstopAt', Fun.always),
   FieldSchema.defaulted('firstTabstop', 0),
   FieldSchema.defaulted('eventOrder', {}),
+  FieldSchema.defaultedStringEnum('role', 'dialog', [ 'dialog', 'alertdialog' ]),
   SketchBehaviours.field('modalBehaviours', [ Keying ]),
 
   Fields.onKeyboardHandler('onExecute'),

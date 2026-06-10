@@ -1,8 +1,8 @@
-import { Optional } from '@ephox/katamari';
+import type { Optional } from '@ephox/katamari';
 
-import { Dialog } from 'tinymce/core/api/ui/Ui';
+import type { Dialog } from 'tinymce/core/api/ui/Ui';
 
-import { ImageData } from '../core/ImageData';
+import type { ImageData } from '../core/ImageData';
 
 export type ListValue = Dialog.ListBoxSingleItemSpec;
 export type ListGroup = Dialog.ListBoxNestedItemSpec;
@@ -17,6 +17,7 @@ export interface UserListItem {
 }
 
 export interface ImageDialogInfo {
+  readonly alertErr: (message: string, callback: () => void) => void;
   readonly image: ImageData;
   readonly imageList: Optional<ListItem[]>;
   readonly classList: Optional<ListItem[]>;

@@ -4,7 +4,7 @@ import { Singleton } from '@ephox/katamari';
 import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.fmt.FormatChangeVarsTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -126,7 +126,7 @@ describe('browser.tinymce.core.fmt.FormatChangeVarsTest', () => {
       clearEvents();
 
       editor.formatter.remove('fontname', { value: helveticaFont });
-      await Waiter.pWait(0);
+      await Waiter.pWaitBetweenUserActions();
       assert.deepEqual(events.general, [ false ], 'font-family has been turned off');
       assert.deepEqual(events.helvetica, [ false ], 'font-family helvetica has been turned off');
       clearEvents();
@@ -181,7 +181,7 @@ describe('browser.tinymce.core.fmt.FormatChangeVarsTest', () => {
       clearEvents();
 
       editor.formatter.remove('fontname', { value: helveticaFont });
-      await Waiter.pWait(0);
+      await Waiter.pWaitBetweenUserActions();
 
       assert.deepEqual(events.general, [ ], 'font-family was not changed');
       assert.deepEqual(events.helvetica, [ false ], 'font-family helvetica was turned off');

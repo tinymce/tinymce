@@ -1,4 +1,4 @@
-import { FieldProcessor, FieldSchema } from '@ephox/boulder';
+import { type FieldProcessor, FieldSchema } from '@ephox/boulder';
 import { Cell, Fun } from '@ephox/katamari';
 
 import { Coupling } from '../../api/behaviour/Coupling';

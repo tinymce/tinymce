@@ -1,5 +1,5 @@
-import Editor from 'tinymce/core/api/Editor';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type Editor from 'tinymce/core/api/Editor';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 const fireSkinLoaded = (editor: Editor): void => {
   editor.dispatch('SkinLoaded');
@@ -71,6 +71,14 @@ const fireToggleView = (editor: Editor): void => {
   editor.dispatch('ToggleView');
 };
 
+const fireContextToolbarClose = (editor: Editor): void => {
+  editor.dispatch('ContextToolbarClose');
+};
+
+const fireContextFormSlideBack = (editor: Editor): void => {
+  editor.dispatch('ContextFormSlideBack');
+};
+
 export {
   fireSkinLoaded,
   fireSkinLoadError,
@@ -88,5 +96,7 @@ export {
   fireBlocksTextUpdate,
   fireFontFamilyTextUpdate,
   fireToggleSidebar,
-  fireToggleView
+  fireToggleView,
+  fireContextToolbarClose,
+  fireContextFormSlideBack
 };

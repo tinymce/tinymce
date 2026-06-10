@@ -3,9 +3,9 @@ import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
-import { ChangeEvent, ExecCommandEvent } from 'tinymce/core/api/EventTypes';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type Editor from 'tinymce/core/api/Editor';
+import type { ChangeEvent, ExecCommandEvent } from 'tinymce/core/api/EventTypes';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 describe('browser.tinymce.core.commands.LineHeightTest', () => {
   const platform = PlatformDetection.detect();
@@ -91,5 +91,13 @@ describe('browser.tinymce.core.commands.LineHeightTest', () => {
     TinyAssertions.assertContent(editor, '<p style="line-height: 2;">Hello</p>');
     assert.deepEqual(events, [ 'beforeexeccommand', 'execcommand', 'change' ]);
     editor.off('BeforeExecCommand change ExecCommand', logEvents);
+  });
+
+  it('TINY-13053: Editor command can toggle line-height on multiple lines', () => {
+    const editor = hook.editor();
+    editor.setContent('<p style="line-height: 1;">Line 1</p><p style="line-height: 2;">Line 2</p>');
+    TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 1, 0 ], 1);
+    editor.execCommand('LineHeight', false, '1');
+    TinyAssertions.assertContent(editor, '<p>Line 1</p>\n<p>Line 2</p>');
   });
 });

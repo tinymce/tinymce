@@ -1,7 +1,8 @@
 import { Selectors, SugarElement } from '@ephox/sugar';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import * as Options from '../api/Options';
+
 import * as NewLineUtils from './NewLineUtils';
 
 const matchesSelector = (editor: Editor, selector: string) => {

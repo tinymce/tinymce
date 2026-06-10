@@ -5,8 +5,8 @@ import { Html } from '@ephox/sugar';
 import { McEditor, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
-import { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
+import type Editor from 'tinymce/core/api/Editor';
+import type { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
 import Plugin from 'tinymce/plugins/help/Plugin';
 
 describe('browser.tinymce.plugins.help.CustomTabsTest', () => {

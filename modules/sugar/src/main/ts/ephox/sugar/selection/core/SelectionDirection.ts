@@ -1,7 +1,8 @@
 import { Adt, Fun, Optional, Thunk } from '@ephox/katamari';
 
 import { SugarElement } from '../../api/node/SugarElement';
-import { SimSelection } from '../../api/selection/SimSelection';
+import type { SimSelection } from '../../api/selection/SimSelection';
+
 import * as NativeRange from './NativeRange';
 
 type SelectionDirectionHandler<U> = (start: SugarElement<Node>, soffset: number, finish: SugarElement<Node>, foffset: number) => U;

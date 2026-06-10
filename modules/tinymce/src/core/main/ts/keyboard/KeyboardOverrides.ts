@@ -1,8 +1,9 @@
 import { Cell } from '@ephox/katamari';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import * as CaretContainerInput from '../caret/CaretContainerInput';
 import * as Rtc from '../Rtc';
+
 import * as ArrowKeys from './ArrowKeys';
 import * as Autocompleter from './Autocompleter';
 import * as BoundarySelection from './BoundarySelection';

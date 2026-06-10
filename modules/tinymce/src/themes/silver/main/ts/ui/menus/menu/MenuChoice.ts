@@ -1,13 +1,15 @@
-import { ItemTypes } from '@ephox/alloy';
-import { Menu as BridgeMenu, Toolbar } from '@ephox/bridge';
+import type { ItemTypes } from '@ephox/alloy';
+import { Menu as BridgeMenu, type Toolbar } from '@ephox/bridge';
 import { Arr, Optional, Optionals } from '@ephox/katamari';
 
-import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
+import type { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 
 import { renderChoiceItem } from '../item/build/ChoiceItem';
-import ItemResponse from '../item/ItemResponse';
+import { renderImgItem } from '../item/build/ImageItem';
+import type ItemResponse from '../item/ItemResponse';
+
 import * as MenuUtils from './MenuUtils';
-import { SingleMenuItemSpec } from './SingleMenuTypes';
+import type { SingleMenuItemSpec } from './SingleMenuTypes';
 
 type PartialMenuSpec = MenuUtils.PartialMenuSpec;
 
@@ -45,6 +47,37 @@ export const createChoiceItems = (
         MenuUtils.handleError,
         (d) => Optional.some(renderChoiceItem(
           d,
+          columns === 1,
+          itemPresets,
+          onItemValueHandler,
+          select(d.value),
+          itemResponse,
+          providersBackstage,
+          MenuUtils.menuHasIcons(items)
+        ))
+      );
+    } else if (item.type === 'imageitem') {
+      return BridgeMenu.createImageMenuItem(item).fold(
+        MenuUtils.handleError,
+        (d) => Optional.some(renderImgItem(
+          d,
+          onItemValueHandler,
+          select(d.value),
+          itemResponse,
+          providersBackstage
+        ))
+      );
+    } else if (item.type === 'resetimage') {
+      return BridgeMenu.createResetImageItem(item).fold(
+        MenuUtils.handleError,
+        (d) => Optional.some(renderChoiceItem(
+          ({
+            ...d,
+            type: 'choiceitem',
+            text: d.tooltip,
+            icon: Optional.some(d.icon),
+            label: Optional.some(d.label),
+          }),
           columns === 1,
           itemPresets,
           onItemValueHandler,

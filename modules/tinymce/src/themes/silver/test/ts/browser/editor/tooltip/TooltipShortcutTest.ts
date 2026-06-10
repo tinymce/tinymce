@@ -3,7 +3,7 @@ import { Arr } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import FullscreenPlugin from 'tinymce/plugins/fullscreen/Plugin';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import SavePlugin from 'tinymce/plugins/save/Plugin';

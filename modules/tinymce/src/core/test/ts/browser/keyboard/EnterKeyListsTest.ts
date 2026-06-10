@@ -3,7 +3,7 @@ import { describe, it } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 
 describe('browser.tinymce.core.keyboard.EnterKeyListsTest', () => {

@@ -8,9 +8,9 @@
 import { TableSelection } from '@ephox/darwin';
 import { Arr, Fun, Optionals } from '@ephox/katamari';
 import { TableLookup } from '@ephox/snooker';
-import { Attribute, Compare, SelectorFind, SugarElement, SugarElements, SugarNode } from '@ephox/sugar';
+import { Attribute, Compare, SelectorFind, type SugarElement, SugarElements, SugarNode } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import { ephemera } from './Ephemera';
 

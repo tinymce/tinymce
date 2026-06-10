@@ -1,21 +1,24 @@
 import { Arr, Optional, Type } from '@ephox/katamari';
+import { DomDescent } from '@ephox/phoenix';
 import { ContentEditable, Insert, PredicateFilter, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
-import DOMUtils from '../api/dom/DOMUtils';
+import type DOMUtils from '../api/dom/DOMUtils';
 import DomTreeWalker from '../api/dom/TreeWalker';
-import Editor from '../api/Editor';
-import { SchemaMap } from '../api/html/Schema';
+import type Editor from '../api/Editor';
+import type { SchemaMap } from '../api/html/Schema';
 import * as Options from '../api/Options';
-import { EditorEvent } from '../api/util/EventDispatcher';
+import type { EditorEvent } from '../api/util/EventDispatcher';
 import Tools from '../api/util/Tools';
 import { findPreviousBr, isAfterBr } from '../caret/CaretBr';
 import * as CaretContainer from '../caret/CaretContainer';
 import CaretPosition from '../caret/CaretPosition';
 import { isAfterTable } from '../caret/CaretPositionPredicates';
+import { isList, isListItem } from '../dom/ElementType';
 import * as NodeType from '../dom/NodeType';
 import * as NormalizeRange from '../selection/NormalizeRange';
 import { isWhitespaceText } from '../text/Whitespace';
 import * as Zwsp from '../text/Zwsp';
+
 import * as InsertDetailsNewLine from './InsertDetailsNewLine';
 import * as InsertLi from './InsertLi';
 import * as NewLineUtils from './NewLineUtils';
@@ -36,8 +39,11 @@ const isEmptyAnchor = (dom: DOMUtils, elm: Node): boolean => {
   return elm && elm.nodeName === 'A' && dom.isEmpty(elm);
 };
 
-const containerAndSiblingName = (container: Node, nodeName: string) => {
+const containerAndPreviousSiblingName = (container: Node, nodeName: string) => {
   return container.nodeName === nodeName || (container.previousSibling && container.previousSibling.nodeName === nodeName);
+};
+const containerAndNextSiblingName = (container: Node, nodeName: string) => {
+  return container.nodeName === nodeName || (container.nextSibling && container.nextSibling.nodeName === nodeName);
 };
 
 // Returns true if the block can be split into two blocks or not
@@ -241,7 +247,10 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
     }
 
     // Caret can be before/after a table or a hr
-    if (containerAndSiblingName(container, 'TABLE') || containerAndSiblingName(container, 'HR')) {
+    if (containerAndPreviousSiblingName(container, 'TABLE') || containerAndPreviousSiblingName(container, 'HR')) {
+      if (containerAndNextSiblingName(container, 'BR')) {
+        return !start;
+      }
       return (isAfterLastNodeInContainer && !start) || (!isAfterLastNodeInContainer && start);
     }
 
@@ -280,6 +289,19 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
     }
 
     return true;
+  };
+
+  const isInsideLiBeforeAList = (newBlock: SugarElement<Element>) => {
+    const nextSibling = Traverse.firstChild(newBlock).bind(Traverse.nextSibling);
+    return isListItem(newBlock) && nextSibling.exists(isList);
+  };
+
+  const trimEmptySpacesInLeftLeaf = (newBlock: Element) => {
+    const leaf = DomDescent.toLeaf(SugarElement.fromDom(newBlock), 0).element;
+
+    if (SugarNode.isText(leaf) && dom.isEmpty(leaf.dom)) {
+      leaf.dom.remove();
+    }
   };
 
   const insertNewBlockAfter = () => {
@@ -413,7 +435,7 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
 
     newBlock = parentBlockParent.insertBefore(createNewBlock(), parentBlock);
 
-    const root = containerAndSiblingName(parentBlock, 'HR') || afterTable ? newBlock : prevBrOpt.getOr(parentBlock);
+    const root = containerAndPreviousSiblingName(parentBlock, 'HR') || afterTable ? newBlock : prevBrOpt.getOr(parentBlock);
     NewLineUtils.moveToCaretPosition(editor, root);
   } else {
     // Extract after fragment and insert it after the current block
@@ -423,9 +445,19 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
     trimZwsp(fragment);
     trimLeadingLineBreaks(fragment);
     newBlock = fragment.firstChild as Element;
-    dom.insertAfter(fragment, parentBlock);
-    trimInlineElementsOnLeftSideOfBlock(dom, nonEmptyElementsMap, newBlock);
-    addBrToBlockIfNeeded(dom, parentBlock);
+    if (parentBlock === newBlock) { // Can't add yourself to yourself. Additionally the newBlock is removed from the DOM earlier, so even if you could, it'd still not work.
+      if (Type.isNonNullable(parentBlockParent)) {
+        dom.insertAfter(fragment, parentBlockParent);
+      }
+    } else {
+      dom.insertAfter(fragment, parentBlock);
+    }
+    if (!isInsideLiBeforeAList(SugarElement.fromDom(newBlock))) {
+      trimInlineElementsOnLeftSideOfBlock(dom, nonEmptyElementsMap, newBlock);
+      addBrToBlockIfNeeded(dom, parentBlock);
+    } else {
+      trimEmptySpacesInLeftLeaf(newBlock);
+    }
 
     if (dom.isEmpty(parentBlock)) {
       NewLineUtils.emptyBlock(parentBlock);

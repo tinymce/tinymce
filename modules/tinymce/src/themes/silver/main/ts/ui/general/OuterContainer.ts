@@ -1,21 +1,21 @@
 import {
-  AlloyComponent, AlloySpec, Behaviour, Composite, CustomList, Keying, RawDomSchema, Sketcher, SketchSpec, Toolbar, UiSketcher
+  type AlloyComponent, type AlloySpec, Behaviour, Composite, CustomList, Keying, type RawDomSchema, Sketcher, type SketchSpec, Toolbar, type UiSketcher
 } from '@ephox/alloy';
 import { FieldSchema } from '@ephox/boulder';
-import { Arr, Id, Optional, Optionals, Result } from '@ephox/katamari';
-import { Attribute, Css, SelectorFind, SugarElement } from '@ephox/sugar';
+import { Arr, Id, Obj, Optional, Optionals, Type, type Result } from '@ephox/katamari';
+import { Attribute, Css, SelectorFind, type SugarElement } from '@ephox/sugar';
 
 import { ToolbarMode } from '../../api/Options';
-import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
-import { HeaderSpec, renderHeader } from '../header/CommonHeader';
-import SilverMenubar, { MenubarItemSpec, SilverMenubarSpec } from '../menus/menubar/SilverMenubar';
-import { renderPromotion } from '../promotion/Promotion';
+import type { UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import { type HeaderSpec, renderHeader } from '../header/CommonHeader';
+import SilverMenubar, { type MenubarItemSpec, type SilverMenubarSpec } from '../menus/menubar/SilverMenubar';
+import { type PromotionSpec, renderPromotion } from '../promotion/Promotion';
 import * as Sidebar from '../sidebar/Sidebar';
 import * as Throbber from '../throbber/Throbber';
 import {
-  MoreDrawerData, MoreDrawerToolbarSpec, renderFloatingMoreToolbar, renderSlidingMoreToolbar, renderToolbar, renderToolbarGroup, ToolbarGroup
+  type MoreDrawerData, type MoreDrawerToolbarSpec, renderFloatingMoreToolbar, renderSlidingMoreToolbar, renderToolbar, renderToolbarGroup, type ToolbarGroup
 } from '../toolbar/CommonToolbar';
-import * as ViewTypes from '../view/ViewTypes';
+import type * as ViewTypes from '../view/ViewTypes';
 import ViewWrapper from '../view/ViewWrapper';
 
 export interface OuterContainerSketchSpec extends Sketcher.CompositeSketchSpec {
@@ -72,7 +72,7 @@ interface OuterContainerApis {
   readonly focusToolbar: (comp: AlloyComponent) => void;
   readonly setMenubar: (comp: AlloyComponent, groups: MenubarItemSpec[]) => void;
   readonly focusMenubar: (comp: AlloyComponent) => void;
-  readonly setViews: (comp: AlloyComponent, viewConfigs: ViewTypes.ViewConfig) => void;
+  readonly setViews: (comp: AlloyComponent, viewConfigs: ViewTypes.ViewConfig, showView?: string) => void;
   readonly toggleView: (comp: AlloyComponent, name: string) => boolean;
   readonly whichView: (comp: AlloyComponent) => string | null;
   readonly showMainView: (comp: AlloyComponent) => void;
@@ -179,10 +179,14 @@ const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, Out
         SilverMenubar.focus(menubar);
       });
     },
-    setViews: (comp, viewConfigs) => {
+    setViews: (comp, viewConfigs, showView) => {
       Composite.parts.getPart(comp, detail, 'viewWrapper').each((wrapper) => {
         ViewWrapper.setViews(wrapper, viewConfigs);
       });
+      const configKey = showView?.toLowerCase();
+      if (Type.isString(configKey) && Obj.has(viewConfigs, configKey)) {
+        apis.toggleView(comp, configKey);
+      }
     },
     toggleView: (comp, name) => {
       return Composite.parts.getPart(comp, detail, 'viewWrapper').exists(
@@ -329,13 +333,14 @@ const partHeader = Composite.partType.optional<OuterContainerSketchDetail, Heade
   ]
 });
 
-const partPromotion = Composite.partType.optional<OuterContainerSketchDetail, HeaderSpec>({
+const partPromotion = Composite.partType.optional<OuterContainerSketchDetail, PromotionSpec >({
   factory: {
     sketch: renderPromotion
   },
   name: 'promotion',
   schema: [
-    FieldSchema.required('dom')
+    FieldSchema.required('dom'),
+    FieldSchema.required('promotionLink')
   ]
 });
 
@@ -462,8 +467,8 @@ export default Sketcher.composite<OuterContainerSketchSpec, OuterContainerSketch
     focusToolbar: (apis, comp) => {
       apis.focusToolbar(comp);
     },
-    setViews: (apis, comp, views) => {
-      apis.setViews(comp, views);
+    setViews: (apis, comp, views, showView) => {
+      apis.setViews(comp, views, showView);
     },
     toggleView: (apis, comp, name) => {
       return apis.toggleView(comp, name);

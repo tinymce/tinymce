@@ -1,10 +1,10 @@
 import { Transformations } from '@ephox/acid';
-import { Arr, Fun, Obj, Optional, Strings, Type } from '@ephox/katamari';
+import { Arr, Fun, Obj, type Optional, Strings, Type } from '@ephox/katamari';
 import { TableLookup, TableOperations } from '@ephox/snooker';
 import { Css, SugarElement, SugarElements } from '@ephox/sugar';
 
-import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import Editor from 'tinymce/core/api/Editor';
+import type DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import type Editor from 'tinymce/core/api/Editor';
 
 import * as Styles from '../actions/Styles';
 import * as Options from '../api/Options';

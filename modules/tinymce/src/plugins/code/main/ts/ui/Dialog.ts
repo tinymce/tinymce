@@ -1,4 +1,4 @@
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import * as Content from '../core/Content';
 
@@ -13,7 +13,8 @@ const open = (editor: Editor): void => {
       items: [
         {
           type: 'textarea',
-          name: 'code'
+          name: 'code',
+          spellcheck: false,
         }
       ]
     },

@@ -1,15 +1,16 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { InlineContent } from '@ephox/bridge';
+import type { InlineContent } from '@ephox/bridge';
 import { Arr, Fun, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
-import { ContextType } from 'tinymce/themes/silver/ui/context/ContextToolbar';
+import type { ContextType } from 'tinymce/themes/silver/ui/context/ContextToolbar';
 import { matchStartNode } from 'tinymce/themes/silver/ui/context/ContextToolbarLookup';
 
 describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarLookupPrioritisationTest', () => {
   const createToolbar = (items: string): InlineContent.ContextToolbar => ({
     type: 'contexttoolbar',
+    launch: Optional.none(),
     items,
     predicate: Fun.always,
     position: 'selection',
@@ -19,8 +20,11 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarLook
   const createForm = (): InlineContent.ContextForm => ({
     type: 'contextform',
     initValue: Fun.constant('test'),
+    placeholder: Optional.none(),
     label: Optional.none(),
     launch: Optional.none(),
+    onInput: Fun.noop,
+    onSetup: () => Fun.noop,
     commands: [{
       onAction: Fun.noop,
       original: {
@@ -30,7 +34,8 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarLook
       tooltip: Optional.none(),
       icon: Optional.none(),
       text: Optional.none(),
-      onSetup: () => Fun.noop
+      onSetup: () => Fun.noop,
+      context: 'any'
     }],
     predicate: Fun.always,
     position: 'selection',

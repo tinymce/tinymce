@@ -1,6 +1,6 @@
 import { Class, SugarElement } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import * as Options from '../api/Options';
 

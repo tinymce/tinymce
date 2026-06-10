@@ -4,11 +4,11 @@ import { Arr, Type } from '@ephox/katamari';
 import { TinyApis, TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
-import { BeforeGetContentEvent, BeforeSetContentEvent, GetContentEvent, SetContentEvent } from 'tinymce/core/api/EventTypes';
+import type Editor from 'tinymce/core/api/Editor';
+import type { BeforeGetContentEvent, BeforeSetContentEvent, GetContentEvent, SetContentEvent } from 'tinymce/core/api/EventTypes';
 import AstNode from 'tinymce/core/api/html/Node';
 import HtmlSerializer from 'tinymce/core/api/html/Serializer';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 const defaultExpectedEvents = [
   'beforesetcontent',
@@ -289,7 +289,7 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
           const content = '<div data-some-attribute="title=<br/>">abc</div>';
           const editor = hook.editor();
           editor.setContent(content);
-          TinyAssertions.assertContent(editor, content, { format: 'raw' });
+          TinyAssertions.assertContent(editor, '<div data-some-attribute="title=&lt;br/&gt;">abc</div>');
         });
 
         const initialContent = '<p>initial</p>';
@@ -601,7 +601,7 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
       });
     });
 
-    context('Content that can cause mXSS via ZWNBSP trimming', () => {
+    context(`Content that can cause mXSS via ZWNBSP trimming with inline: ${options.inline}`, () => {
       const hook = TinyHooks.bddSetupLight<Editor>({
         base_url: '/project/tinymce/js/tinymce',
         ...options
@@ -609,7 +609,7 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
 
       it('TINY-10305: setContent html should sanitize content that can cause mXSS via ZWNBSP trimming', () => {
         const editor = hook.editor();
-        editor.setContent('<p>test</p><!--\ufeff><iframe onload=alert(document.domain)>-></body>-->');
+        editor.setContent('<p>test</p><!--\ufeff><script onload=alert(document.domain)>-></body>-->');
         TinyAssertions.assertRawContent(editor, '<p>test</p><!---->');
       });
 
@@ -635,6 +635,8 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
         TinyAssertions.assertRawContent(editor, '<p>test</p><!---->');
       });
     });
+
+    // if you add new tests, put them inside the above label context otherwise the results will only be recorded once
   });
 
   context('SVG elements not enabled by default', () => {
@@ -705,7 +707,7 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
 
       editor.setContent('<noscript>&lt;/noscript&gt;&lt;style onload=xss()&gt;&lt;/style&gt;</noscript>');
 
-      await Waiter.pWait(1);
+      await Waiter.pWaitBetweenUserActions();
 
       delete editorWinGlobal.xss;
 
@@ -718,6 +720,237 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
 
       editor.setContent('<noscript>&amp;lt;/noscript&amp;&gt;</noscript>');
       TinyAssertions.assertContent(editor, '<noscript>&amp;lt;/noscript&amp;&gt;</noscript>');
+    });
+  });
+
+  context('math elements', () => {
+    context('annotations encodings defined', () => {
+      const hook = TinyHooks.bddSetupLight<Editor>({
+        base_url: '/project/tinymce/js/tinymce',
+        custom_elements: 'math',
+        allow_mathml_annotation_encodings: [
+          'application/x-tex',
+          'application/custom',
+          'wiris'
+        ]
+      }, []);
+
+      it('TINY-11166: allow_mathml_annotation_encodings should retain the specified annotation elements and the parent semantics element', () => {
+        const editor = hook.editor();
+
+        const input = [
+          '<div>',
+          '<math><semantics><mn>1</mn><annotation encoding="application/x-tex">\\frac{1}{2}</annotation></semantics></math>',
+          '<math><semantics><mn>1</mn><annotation encoding="application/custom">custom</annotation></semantics></math>',
+          '<math><semantics><mn>1</mn><annotation encoding="application/custom" src="foo">custom with src</annotation></semantics></math>',
+          '<math><semantics><mn>1</mn><annotation encoding="wiris">{"version":"1.1","math":"&lt;math xmlns="http://www.w3.org/1998/Math/MathML"&gt;&lt;mn&gt;1&gt;&lt;/mn&gt;&lt;/math&gt;"}</annotation></semantics></math>',
+          '<math><semantics><mn>1</mn><annotation encoding="text/html">html</annotation></semantics></math>',
+          '<math><semantics><mn>1</mn><annotation encoding="text/svg">svg</annotation></semantics></math>',
+          '</div>'
+        ].join('');
+
+        editor.setContent(input);
+
+        const expected = [
+          '<div>',
+          '<math><semantics><mn>1</mn><annotation encoding="application/x-tex">\\frac{1}{2}</annotation></semantics></math>',
+          '<math><semantics><mn>1</mn><annotation encoding="application/custom">custom</annotation></semantics></math>',
+          '<math><semantics><mn>1</mn><annotation encoding="application/custom">custom with src</annotation></semantics></math>',
+          '<math><semantics><mn>1</mn><annotation encoding="wiris">{"version":"1.1","math":"&lt;math xmlns="http://www.w3.org/1998/Math/MathML"&gt;&lt;mn&gt;1&gt;&lt;/mn&gt;&lt;/math&gt;"}</annotation></semantics></math>',
+          '<math><semantics><mn>1</mn></semantics></math>',
+          '<math><semantics><mn>1</mn></semantics></math>',
+          '</div>'
+        ].join('');
+
+        TinyAssertions.assertContent(editor, expected);
+      });
+    });
+
+    context('annotations encodings not defined', () => {
+      const hook = TinyHooks.bddSetupLight<Editor>({
+        base_url: '/project/tinymce/js/tinymce',
+        custom_elements: 'math'
+      }, []);
+
+      it('TINY-11166: not setting allow_mathml_annotation_encodings should not retain the semantics or annotation elements', () => {
+        const editor = hook.editor();
+
+        const input = [
+          '<div>',
+          '<math><semantics><mn>1</mn><annotation encoding="application/x-tex">\\frac{1}{2}</annotation></semantics></math>',
+          '<math><semantics><mn>1</mn><annotation encoding="application/custom">custom</annotation></semantics></math>',
+          '<math><semantics><mn>1</mn><annotation encoding="application/custom" src="foo">custom with src</annotation></semantics></math>',
+          '<math><semantics><mn>1</mn><annotation encoding="wiris">{"version":"1.1","math":"&lt;math xmlns="http://www.w3.org/1998/Math/MathML"&gt;&lt;mn&gt;1&gt;&lt;/mn&gt;&lt;/math&gt;"}</annotation></semantics></math>',
+          '<math><semantics><mn>1</mn><annotation encoding="text/html">html</annotation></semantics></math>',
+          '<math><semantics><mn>1</mn><annotation encoding="text/svg">svg</annotation></semantics></math>',
+          '</div>'
+        ].join('');
+
+        editor.setContent(input);
+
+        const expected = [
+          '<div>',
+          '<math><mn>1</mn></math>',
+          '<math><mn>1</mn></math>',
+          '<math><mn>1</mn></math>',
+          '<math><mn>1</mn></math>',
+          '<math><mn>1</mn></math>',
+          '<math><mn>1</mn></math>',
+          '</div>'
+        ].join('');
+
+        TinyAssertions.assertContent(editor, expected);
+      });
+    });
+
+    context('TINY-11756: Test for elements and attributes', () => {
+      const hook = TinyHooks.bddSetupLight<Editor>({
+        base_url: '/project/tinymce/js/tinymce',
+        custom_elements: 'math',
+        extended_mathml_elements: [ 'semantics' ],
+        extended_mathml_attributes: [ 'data-badAttribute' ]
+      }, []);
+
+      it('TINY-11756: extended mathml should allow elements and attributes', () => {
+        const editor = hook.editor();
+
+        const input = [
+          '<div>',
+          '<math><mn data-badAttribute="value">1</mn><semantics>2</semantics></math>',
+          '</div>'
+        ].join('');
+
+        editor.setContent(input);
+
+        const expected = [
+          '<div>',
+          '<math><mn data-badattribute="value">1</mn><semantics>2</semantics></math>',
+          '</div>'
+        ].join('');
+
+        TinyAssertions.assertContent(editor, expected);
+      });
+    });
+
+    context('Template elements', () => {
+      const hook = TinyHooks.bddSetupLight<Editor>({
+        base_url: '/project/tinymce/js/tinymce',
+        extended_valid_elements: 'template',
+        indent: false
+      }, []);
+
+      it('TINY-12157: Template elements should be retained when enabled via extended_valid_elements', () => {
+        const editor = hook.editor();
+
+        editor.setContent('<template>foo<script>alert(1)</script></template><p><template>bar</template></p>');
+        TinyAssertions.assertContent(editor, '<template>foo</template><p><template>bar</template></p>');
+      });
+    });
+
+    context('allow_html_in_comments', () => {
+      context('allow_html_in_comments: true', () => {
+        const hook = TinyHooks.bddSetupLight<Editor>({
+          base_url: '/project/tinymce/js/tinymce',
+          allow_html_in_comments: true
+        }, []);
+
+        it('TINY-12220: Should retain HTML like data in comments', () => {
+          const editor = hook.editor();
+
+          editor.setContent('<p><!-- <b>foo</b> -->foo</p>');
+          TinyAssertions.assertContent(editor, '<p><!-- <b>foo</b> -->foo</p>');
+        });
+      });
+
+      context('allow_html_in_comments: false', () => {
+        const hook = TinyHooks.bddSetupLight<Editor>({
+          base_url: '/project/tinymce/js/tinymce',
+          allow_html_in_comments: false
+        }, []);
+
+        it('TINY-12220: Should NOT retain HTML like data in comments', () => {
+          const editor = hook.editor();
+
+          editor.setContent('<p><!-- <b>foo</b> -->foo</p>');
+          TinyAssertions.assertContent(editor, '<p>foo</p>');
+        });
+      });
+
+      context('allow_html_in_comments default', () => {
+        const hook = TinyHooks.bddSetupLight<Editor>({
+          base_url: '/project/tinymce/js/tinymce'
+        }, []);
+
+        it('TINY-12220: Should NOT retain HTML like data in comments', () => {
+          const editor = hook.editor();
+
+          editor.setContent('<p><!-- <b>foo</b> -->foo</p>');
+          TinyAssertions.assertContent(editor, '<p>foo</p>');
+        });
+      });
+    });
+  });
+
+  context('GetContent with Writer args', () => {
+    context('default', () => {
+      const hook = TinyHooks.bddSetupLight<Editor>({
+        base_url: '/project/tinymce/js/tinymce',
+      }, []);
+
+      it('TINY-12786: Should disable indentation when indent=false', () => {
+        const editor = hook.editor();
+        const input = '<p>foo</p><p>bar</p>';
+        editor.setContent(input);
+        const content = editor.getContent({ indent: false });
+        assert.equal(content, input, 'Should return the same HTML without indentation when indent=false');
+      });
+
+      it('TINY-12786: Should serialize entities as named when entity_encoding="named"', () => {
+        const editor = hook.editor();
+        const input = '<p>&lt;&gt;&amp;&quot;&nbsp;&aring;&auml;&ouml;</p>';
+        editor.setContent(input);
+        const content = editor.getContent({ indent: false, entity_encoding: 'named' });
+        assert.equal(content, '<p>&lt;&gt;&amp;"&nbsp;&aring;&auml;&ouml;</p>', 'Should serialize using named entities for core and extended characters');
+      });
+
+      it('TINY-12786: Should serialize entities as numeric when entity_encoding="numeric"', () => {
+        const editor = hook.editor();
+        const input = '<p>&lt;&gt;&amp;&quot;&nbsp;&aring;&auml;&ouml;</p>';
+        editor.setContent(input);
+        const content = editor.getContent({ indent: false, entity_encoding: 'numeric' });
+        assert.equal(content, '<p>&lt;&gt;&amp;"&#160;&#229;&#228;&#246;</p>', 'Should serialize all non-core entities as numeric');
+      });
+
+      it('TINY-12786: Should serialize core entities as named and others as numeric when entity_encoding="named+numeric"', () => {
+        const editor = hook.editor();
+        const input = '<p>&lt;&gt;&amp;&quot;&nbsp;&aring;&auml;&ouml;</p>';
+        editor.setContent(input);
+        const content = editor.getContent({ indent: false, entity_encoding: 'named+numeric' });
+        assert.equal(content, '<p>&lt;&gt;&amp;"&nbsp;&aring;&auml;&ouml;</p>', 'Should serialize core entities as named, others as named if in map, with entity_encoding="named+numeric"');
+      });
+
+      it('TINY-12786: Should output raw characters when entity_encoding="raw"', () => {
+        const editor = hook.editor();
+        const input = '<p>&lt;&gt;&amp;&quot;&nbsp;&aring;&auml;&ouml;</p>';
+        editor.setContent(input);
+        const content = editor.getContent({ indent: false, entity_encoding: 'raw' });
+        assert.equal(content, '<p>&lt;&gt;&amp;"\u00a0\u00e5\u00e4\u00f6</p>', 'Should output raw characters with entity_encoding="raw');
+      });
+    });
+
+    context('entities option', () => {
+      const hook = TinyHooks.bddSetupLight<Editor>({
+        base_url: '/project/tinymce/js/tinymce',
+        entities: '160,nbsp,34,quot,38,amp,60,lt,62,gt'
+      }, []);
+
+      it('TINY-12786: Should honor custom entities map with entity_encoding="named+numeric"', () => {
+        const editor = hook.editor();
+        const input = '<p>&lt;&gt;&amp;&quot;&nbsp;&aring;&auml;&ouml;</p>';
+        editor.setContent(input);
+        const content = editor.getContent({ indent: false, entity_encoding: 'named+numeric' });
+        assert.equal(content, '<p>&lt;&gt;&amp;"&nbsp;&#229;&#228;&#246;</p>', 'Should respect custom entities map and output numeric for å, ä, ö');
+      });
     });
   });
 });

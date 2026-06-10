@@ -1,5 +1,7 @@
+import * as Deprecations from '../../Deprecations';
 import * as EventUtils from '../../events/EventUtils';
-import EventDispatcher, { EditorEvent, MappedEvent } from './EventDispatcher';
+
+import EventDispatcher, { type EditorEvent, type MappedEvent } from './EventDispatcher';
 
 interface Observable<T extends {}> {
   fire <K extends string, U extends MappedEvent<T, K>>(name: K, args?: U, bubble?: boolean): EditorEvent<U>;
@@ -45,9 +47,9 @@ const getEventDispatcher = (obj: ObservableObject): EventDispatcher<any> => {
 const Observable: Observable<any> = {
   /**
    * Fires the specified event by name. Consult the
-   * <a href="https://www.tiny.cloud/docs/tinymce/7/events/">event reference</a> for more details on each event.
+   * <a href="https://www.tiny.cloud/docs/tinymce/8/events/">event reference</a> for more details on each event.
    * <br>
-   * <em>Deprecated in TinyMCE 6.0 and has been marked for removal in TinyMCE 7.0. Use <code>dispatch</code> instead.</em>
+   * <em>Deprecated in TinyMCE 6.0 and has been marked for removal in TinyMCE 9.0. Use <code>dispatch</code> instead.</em>
    *
    * @method fire
    * @param {String} name Name of the event to fire.
@@ -59,12 +61,13 @@ const Observable: Observable<any> = {
    * instance.fire('event', {...});
    */
   fire<K extends string, U extends MappedEvent<any, K>>(name: K, args?: U, bubble?: boolean) {
+    Deprecations.logFeatureDeprecationWarning('fire');
     return this.dispatch(name, args, bubble);
   },
 
   /**
    * Dispatches the specified event by name. Consult the
-   * <a href="https://www.tiny.cloud/docs/tinymce/7/events/">event reference</a> for more details on each event.
+   * <a href="https://www.tiny.cloud/docs/tinymce/8/events/">event reference</a> for more details on each event.
    *
    * @method dispatch
    * @param {String} name Name of the event to dispatch.
@@ -98,7 +101,7 @@ const Observable: Observable<any> = {
 
   /**
    * Binds an event listener to a specific event by name. Consult the
-   * <a href="https://www.tiny.cloud/docs/tinymce/7/events/">event reference</a> for more details on each event.
+   * <a href="https://www.tiny.cloud/docs/tinymce/8/events/">event reference</a> for more details on each event.
    *
    * @method on
    * @param {String} name Event name or space separated list of events to bind.
@@ -116,7 +119,7 @@ const Observable: Observable<any> = {
 
   /**
    * Unbinds an event listener to a specific event by name. Consult the
-   * <a href="https://www.tiny.cloud/docs/tinymce/7/events/">event reference</a> for more details on each event.
+   * <a href="https://www.tiny.cloud/docs/tinymce/8/events/">event reference</a> for more details on each event.
    *
    * @method off
    * @param {String?} name Name of the event to unbind.
@@ -138,7 +141,7 @@ const Observable: Observable<any> = {
 
   /**
    * Bind the event callback and once it fires the callback is removed. Consult the
-   * <a href="https://www.tiny.cloud/docs/tinymce/7/events/">event reference</a> for more details on each event.
+   * <a href="https://www.tiny.cloud/docs/tinymce/8/events/">event reference</a> for more details on each event.
    *
    * @method once
    * @param {String} name Name of the event to bind.

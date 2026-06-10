@@ -1,8 +1,8 @@
 import { Arr } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import type { SugarElement } from '@ephox/sugar';
 
 import { Warehouse } from '../api/Warehouse';
-import { CellElement } from '../util/TableTypes';
+import type { CellElement } from '../util/TableTypes';
 
 // Returns the sum of elements of measures in the half-open range [start, end)
 // Measures is in pixels, treated as an array of integers or integers in string format.
@@ -77,10 +77,10 @@ const matchRowHeight = (warehouse: Warehouse, heights: number[]): CellHeight<HTM
   });
 };
 
+export type { CellWidthSpan };
 export {
   recalculateWidthForCells,
   recalculateWidthForColumns,
   recalculateHeightForCells,
-  matchRowHeight,
-  CellWidthSpan
+  matchRowHeight
 };

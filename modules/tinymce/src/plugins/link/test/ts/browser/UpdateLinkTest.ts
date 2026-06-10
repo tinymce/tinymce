@@ -3,7 +3,7 @@ import { describe, it, before, afterEach, context } from '@ephox/bedrock-client'
 import { SugarDocument } from '@ephox/sugar';
 import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/link/Plugin';
 
 import { TestLinkUi } from '../module/TestLinkUi';
@@ -65,6 +65,20 @@ describe('browser.tinymce.plugins.link.UpdateLinkTest', () => {
       'a[class="shouldbekept"]': 1,
       'a[title="shouldnotbekept"]': 0
     });
+  });
+
+  it('TBA: should move cursor behind updated link', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p><a href="http://tinymce.com">tiny</a></p>');
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 2); // ti|ny
+    editor.execCommand('mcelink');
+    await TinyUiActions.pWaitForDialog(editor);
+    TestLinkUi.assertDialogContents({
+      href: 'http://tinymce.com',
+      text: 'tiny',
+    });
+    TinyUiActions.keydown(editor, Keys.enter());
+    TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 2);
   });
 
   it('TINY-7998: Updating a link with a dangerous URL should remove the href attribute', async () => {

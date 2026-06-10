@@ -4,7 +4,7 @@ import { SelectorExists, SelectorFind } from '@ephox/sugar';
 import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.models.dom.table.DragEditorContentsOverTableTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({

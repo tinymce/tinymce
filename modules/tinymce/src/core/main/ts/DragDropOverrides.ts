@@ -3,12 +3,12 @@ import { Arr, Optional, Singleton, Throttler, Type } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 import DOMUtils from './api/dom/DOMUtils';
-import { EventUtilsEvent } from './api/dom/EventUtils';
-import EditorSelection from './api/dom/Selection';
-import Editor from './api/Editor';
+import type { EventUtilsEvent } from './api/dom/EventUtils';
+import type EditorSelection from './api/dom/Selection';
+import type Editor from './api/Editor';
 import * as Options from './api/Options';
 import Delay from './api/util/Delay';
-import { EditorEvent } from './api/util/EventDispatcher';
+import type { EditorEvent } from './api/util/EventDispatcher';
 import VK from './api/util/VK';
 import * as ClosestCaretCandidate from './caret/ClosestCaretCandidate';
 import * as MousePosition from './dom/MousePosition';

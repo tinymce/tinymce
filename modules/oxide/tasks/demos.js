@@ -3,6 +3,7 @@ const path = require('path');
 const connect = require('connect');
 const liveReload = require('connect-livereload');
 const serveStatic = require('serve-static');
+const chalk = require("chalk");
 
 module.exports = function (grunt) {
   grunt.registerTask('buildDemos', function() {

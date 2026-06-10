@@ -1,9 +1,9 @@
-import { ApproxStructure, Keys, Mouse, StructAssert, Waiter } from '@ephox/agar';
+import { ApproxStructure, Keys, Mouse, type StructAssert, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Arr, Type } from '@ephox/katamari';
 import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import { pWaitForAutocompleteToClose } from '../../../module/AutocompleterUtils';
 

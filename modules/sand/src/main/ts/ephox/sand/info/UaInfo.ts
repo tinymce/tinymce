@@ -1,4 +1,4 @@
-import { Version } from '../detect/Version';
+import type { Version } from '../detect/Version';
 
 export interface UaInfo {
   readonly current: string | undefined;

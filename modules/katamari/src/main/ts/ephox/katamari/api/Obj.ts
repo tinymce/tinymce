@@ -15,7 +15,6 @@ type ObjPredicate<T extends {}> = (value: T[keyof T], key: ObjKeys<T>) => boolea
 // Use the native keys if it is available (IE9+), otherwise fall back to manually filtering
 export const keys = Object.keys;
 
-// eslint-disable-next-line @typescript-eslint/unbound-method
 export const hasOwnProperty = Object.hasOwnProperty;
 
 export const each = <T extends {}>(obj: T, f: ObjCallback<T>): void => {
@@ -107,7 +106,7 @@ export const has = <T extends {}, K extends keyof T>(obj: T, key: K): boolean =>
 export const hasNonNullableKey = <T extends {}, K extends keyof T>(obj: T, key: K): obj is T & Record<K, NonNullable<T[K]>> =>
   has(obj, key) && obj[key] !== undefined && obj[key] !== null;
 
-export const isEmpty = (r: Record<any, any>): boolean => {
+export const isEmpty = (r: Record<any, any>): r is {} => {
   for (const x in r) {
     if (hasOwnProperty.call(r, x)) {
       return false;

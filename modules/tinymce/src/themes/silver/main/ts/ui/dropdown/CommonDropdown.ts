@@ -1,27 +1,31 @@
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, CustomEvent, Dropdown as AlloyDropdown, Focusing, GuiFactory, Highlighting,
-  Keying, MaxHeight, Memento, NativeEvents, Replacing, Representing, SimulatedEvent, SketchSpec, SystemEvents, TieredData, Tooltipping, Unselecting
+  AddEventsBehaviour, type AlloyComponent,
+  Dropdown as AlloyDropdown,
+  AlloyEvents, AlloyTriggers, Behaviour, type CustomEvent,
+  Focusing, GuiFactory, Highlighting,
+  Keying, MaxHeight, Memento, NativeEvents, Replacing, Representing, type SimulatedEvent, type SketchSpec, SystemEvents, type TieredData, Tooltipping, Unselecting
 } from '@ephox/alloy';
-import { Toolbar } from '@ephox/bridge';
-import { Arr, Cell, Fun, Future, Id, Merger, Optional, Type } from '@ephox/katamari';
-import { EventArgs, SugarElement } from '@ephox/sugar';
+import type { Toolbar } from '@ephox/bridge';
+import { Arr, Cell, Fun, Future, Id, Merger, Optional, Optionals, Type } from '@ephox/katamari';
+import { Attribute, type EventArgs, type SugarElement } from '@ephox/sugar';
 
 import { toolbarButtonEventOrder } from 'tinymce/themes/silver/ui/toolbar/button/ButtonEvents';
 
-import { UiFactoryBackstageShared } from '../../backstage/Backstage';
-import * as ReadOnly from '../../ReadOnly';
+import type { UiFactoryBackstageShared } from '../../backstage/Backstage';
+import * as UiState from '../../UiState';
 import { DisablingConfigs } from '../alien/DisablingConfigs';
 import * as UiUtils from '../alien/UiUtils';
 import { renderLabel, renderReplaceableIconFromPack } from '../button/ButtonSlices';
-import { onControlAttached, onControlDetached, OnDestroy } from '../controls/Controls';
+import { onControlAttached, onControlDetached, type OnDestroy } from '../controls/Controls';
 import * as Icons from '../icons/Icons';
 import { componentRenderPipeline } from '../menus/item/build/CommonMenuItem';
 import * as MenuParts from '../menus/menu/MenuParts';
 import { focusSearchField, handleRedirectToMenuItem, handleRefetchTrigger, updateAriaOnDehighlight, updateAriaOnHighlight } from '../menus/menu/searchable/SearchableMenu';
-import { RedirectMenuItemInteractionEvent, redirectMenuItemInteractionEvent, RefetchTriggerEvent, refetchTriggerEvent } from '../menus/menu/searchable/SearchableMenuEvents';
+import { type RedirectMenuItemInteractionEvent, redirectMenuItemInteractionEvent, type RefetchTriggerEvent, refetchTriggerEvent } from '../menus/menu/searchable/SearchableMenuEvents';
 
 export const updateMenuText = Id.generate('update-menu-text');
 export const updateMenuIcon = Id.generate('update-menu-icon');
+export const updateTooltiptext = Id.generate('update-tooltip-text');
 
 export interface UpdateMenuTextEvent extends CustomEvent {
   readonly text: string;
@@ -29,6 +33,10 @@ export interface UpdateMenuTextEvent extends CustomEvent {
 
 export interface UpdateMenuIconEvent extends CustomEvent {
   readonly icon: string;
+}
+
+export interface UpdateTooltipTextEvent extends CustomEvent {
+  readonly text: string;
 }
 
 export interface CommonDropdownSpec<T> {
@@ -48,6 +56,7 @@ export interface CommonDropdownSpec<T> {
   readonly dropdownBehaviours: Behaviour.NamedConfiguredBehaviour<any, any, any>[];
   readonly searchable?: boolean;
   readonly ariaLabel: Optional<string>;
+  readonly context: string;
 }
 
 // TODO: Use renderCommonStructure here.
@@ -58,6 +67,7 @@ const renderCommonDropdown = <T>(
   btnName?: string
 ): SketchSpec => {
   const editorOffCell = Cell(Fun.noop);
+  const tooltip = Cell<Optional<string>>(spec.tooltip);
 
   // We need mementos for display text and display icon because on the events
   // updateMenuText and updateMenuIcon respectively, their contents are changed
@@ -158,8 +168,8 @@ const renderCommonDropdown = <T>(
 
       dropdownBehaviours: Behaviour.derive([
         ...spec.dropdownBehaviours,
-        DisablingConfigs.button(() => spec.disabled || sharedBackstage.providers.isDisabled()),
-        ReadOnly.receivingConfig(),
+        DisablingConfigs.button(() => spec.disabled || sharedBackstage.providers.checkUiComponentContext(spec.context).shouldDisable),
+        UiState.toggleOnReceive(() => sharedBackstage.providers.checkUiComponentContext(spec.context)),
         // INVESTIGATE (TINY-9012): There was a old comment here about something not quite working, and that
         // we can still get the button focused. It was probably related to Unselecting.
         Unselecting.config({}),
@@ -167,7 +177,15 @@ const renderCommonDropdown = <T>(
 
         ...(spec.tooltip.map((t) => Tooltipping.config(
           sharedBackstage.providers.tooltips.getConfig({
-            tooltipText: sharedBackstage.providers.translate(t)
+            tooltipText: sharedBackstage.providers.translate(t),
+            onShow: (comp) => {
+              if (Optionals.lift2(tooltip.get(), spec.tooltip, (tooltipStr, tt) => tt !== tooltipStr).getOr(false)) {
+                const translatedTooltip = sharedBackstage.providers.translate(tooltip.get().getOr(''));
+                Tooltipping.setComponents(comp,
+                  sharedBackstage.providers.tooltips.getComponents({ tooltipText: translatedTooltip })
+                );
+              }
+            }
           })
         ))).toArray(),
 
@@ -178,7 +196,14 @@ const renderCommonDropdown = <T>(
           onControlDetached(spec, editorOffCell)
         ]),
         AddEventsBehaviour.config(fixWidthBehaviourName, [
-          AlloyEvents.runOnAttached((comp, _se) => spec.listRole === 'listbox' ? Fun.noop : UiUtils.forceInitialSize(comp)),
+          AlloyEvents.runOnAttached((comp, _se) => {
+            if (spec.listRole !== 'listbox') {
+              UiUtils.forceInitialSize(comp);
+            }
+          }),
+        ]),
+        AddEventsBehaviour.config('update-dropdown-width-variable', [
+          AlloyEvents.run(SystemEvents.windowResize(), (comp, _se) => AlloyDropdown.close(comp)),
         ]),
         AddEventsBehaviour.config('menubutton-update-display-text', [
           // These handlers are just using Replacing to replace either the menu
@@ -194,6 +219,11 @@ const renderCommonDropdown = <T>(
                 renderReplaceableIconFromPack(se.event.icon, sharedBackstage.providers.icons)
               ]);
             });
+          }),
+          AlloyEvents.run<UpdateTooltipTextEvent>(updateTooltiptext, (comp, se) => {
+            const translatedTooltip = sharedBackstage.providers.translate(se.event.text);
+            Attribute.set(comp.element, 'aria-label', translatedTooltip);
+            tooltip.set(Optional.some(se.event.text));
           })
         ])
       ]),

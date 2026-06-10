@@ -1,4 +1,4 @@
-import { Optional } from '@ephox/katamari';
+import type { Optional } from '@ephox/katamari';
 
 export interface BeforeAfter {
   readonly before: Optional<number>;

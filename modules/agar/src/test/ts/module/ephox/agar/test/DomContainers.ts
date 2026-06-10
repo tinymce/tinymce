@@ -36,16 +36,21 @@ const mSetupShadowRoot = Step.stateful((state, next, _die) => {
   next({
     container,
     input,
-    shadowRoot
+    shadowRoot,
+    shadowHost
   });
 });
 
 interface TeardownState {
   container: SugarElement<HTMLElement>;
+  shadowHost?: SugarElement<ShadowRoot>;
 }
 
 const mTeardown = Step.stateful<TeardownState, TeardownState>((state, next, _die) => {
   Remove.remove(state.container);
+  if (state.shadowHost) {
+    Remove.remove(state.shadowHost);
+  }
   next(state);
 });
 

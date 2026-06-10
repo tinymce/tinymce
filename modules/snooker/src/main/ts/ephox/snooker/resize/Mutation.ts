@@ -1,4 +1,4 @@
-import { Bindable, Event, Events } from '@ephox/porkbun';
+import { type Bindable, Event, Events } from '@ephox/porkbun';
 
 export interface DragDistanceEvent {
   readonly xDelta: number;

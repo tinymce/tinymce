@@ -1,4 +1,4 @@
-import { Universe } from '@ephox/boss';
+import type { Universe } from '@ephox/boss';
 import { Arr, Fun, Optional } from '@ephox/katamari';
 
 interface Bisect<E> {

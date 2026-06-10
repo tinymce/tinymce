@@ -1,9 +1,10 @@
 import { Optional } from '@ephox/katamari';
 import { SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
-import DOMUtils from '../api/dom/DOMUtils';
+import type DOMUtils from '../api/dom/DOMUtils';
 import DomTreeWalker from '../api/dom/TreeWalker';
 import * as NodeType from '../dom/NodeType';
+
 import { moveEndPoint } from './SelectionUtils';
 
 const getEndpointElement = (

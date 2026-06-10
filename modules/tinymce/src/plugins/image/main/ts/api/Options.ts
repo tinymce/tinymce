@@ -1,9 +1,9 @@
 import { Strings, Type } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
-import { EditorOptions } from 'tinymce/core/api/OptionTypes';
+import type Editor from 'tinymce/core/api/Editor';
+import type { EditorOptions } from 'tinymce/core/api/OptionTypes';
 
-import { UserListItem } from '../ui/DialogTypes';
+import type { UserListItem } from '../ui/DialogTypes';
 
 type UserImageListCallback = (callback: (imageList: UserListItem[]) => void) => void;
 

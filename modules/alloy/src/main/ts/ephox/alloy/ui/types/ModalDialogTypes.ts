@@ -1,14 +1,14 @@
-import { Optional } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import type { Optional } from '@ephox/katamari';
+import type { SugarElement } from '@ephox/sugar';
 
-import { Bounds } from '../../alien/Boxes';
-import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
-import { LazySink } from '../../api/component/CommonTypes';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { SketchBehaviours } from '../../api/component/SketchBehaviours';
-import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
-import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
-import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
+import type { Bounds } from '../../alien/Boxes';
+import type { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
+import type { LazySink } from '../../api/component/CommonTypes';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
+import type { SketchBehaviours } from '../../api/component/SketchBehaviours';
+import type { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
+import type { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
+import type { NativeSimulatedEvent } from '../../events/SimulatedEvent';
 
 export interface ModalDialogDetail extends CompositeSketchDetail {
   uid: string;
@@ -16,6 +16,7 @@ export interface ModalDialogDetail extends CompositeSketchDetail {
   components: AlloySpec[ ];
   modalBehaviours: SketchBehaviours;
   eventOrder: Record<string, string[]>;
+  role: 'dialog' | 'alertdialog';
 
   onExecute: (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Optional<boolean>;
   onEscape: (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Optional<boolean>;
@@ -33,6 +34,7 @@ export interface ModalDialogSpec extends CompositeSketchSpec {
   components?: AlloySpec[];
   modalBehaviours?: AlloyBehaviourRecord;
   eventOrder?: Record<string, string[]>;
+  role?: 'dialog' | 'alertdialog';
 
   lazySink?: LazySink;
   useTabstopAt?: (comp: SugarElement<HTMLElement>) => boolean;

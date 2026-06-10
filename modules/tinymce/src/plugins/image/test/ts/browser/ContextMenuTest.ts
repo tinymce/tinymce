@@ -3,7 +3,7 @@ import { describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/image/Plugin';
 
 describe('browser.tinymce.plugins.image.ContextMenuTest', () => {
@@ -16,8 +16,7 @@ describe('browser.tinymce.plugins.image.ContextMenuTest', () => {
   }, [ Plugin ], true);
 
   const pOpenContextMenu = async (editor: Editor, target: string) => {
-    // Not sure why this is needed, but without the browser deselects the contextmenu target
-    await Waiter.pWait(0);
+    await Waiter.pWaitBetweenUserActions();
     await TinyUiActions.pTriggerContextMenu(editor, target, '.tox-silver-sink [role="menuitem"]');
   };
 

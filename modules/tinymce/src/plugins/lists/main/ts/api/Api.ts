@@ -1,6 +1,4 @@
-import Editor from 'tinymce/core/api/Editor';
-
-import * as Delete from '../core/Delete';
+import type Editor from 'tinymce/core/api/Editor';
 
 export interface Api {
   readonly backspaceDelete: (isForward: boolean) => void;
@@ -8,7 +6,7 @@ export interface Api {
 
 const get = (editor: Editor): Api => ({
   backspaceDelete: (isForward: boolean) => {
-    Delete.backspaceDelete(editor, isForward);
+    editor.execCommand('mceListBackspaceDelete', false, isForward);
   }
 });
 

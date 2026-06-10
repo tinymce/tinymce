@@ -1,26 +1,30 @@
 import { ApproxStructure, Mouse, UiFinder, Clipboard } from '@ephox/agar';
-import { Assert, describe, it } from '@ephox/bedrock-client';
-import { Optional, OptionalInstances } from '@ephox/katamari';
-import { Class, Css, Scroll, SelectorFind, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
-import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { describe, it } from '@ephox/bedrock-client';
+import { PlatformDetection } from '@ephox/sand';
+import { Attribute, Class, Css, Scroll, SelectorFind, SugarBody, Traverse } from '@ephox/sugar';
+import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
-import * as Readonly from 'tinymce/core/mode/Readonly';
+import type Editor from 'tinymce/core/api/Editor';
+import AnchorPlugin from 'tinymce/plugins/anchor/Plugin';
+import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
-
-const tOptional = OptionalInstances.tOptional;
 
 describe('browser.tinymce.core.ReadOnlyModeTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     toolbar: 'bold',
-    plugins: 'table',
-    statusbar: false
-  }, [ TablePlugin ]);
+    plugins: 'table anchor link',
+    statusbar: false,
+  }, [ AnchorPlugin, LinkPlugin, TablePlugin ]);
 
   const setMode = (editor: Editor, mode: string) => {
     editor.mode.set(mode);
+  };
+
+  const setInitialContentWithReadOnly = (editor: Editor) => {
+    editor.setContent('<p>Initial content</p>');
+    setMode(editor, 'readonly');
   };
 
   const assertNestedContentEditableTrueDisabled = (editor: Editor, state: boolean, offscreen: boolean) => TinyAssertions.assertContentStructure(editor,
@@ -75,15 +79,32 @@ describe('browser.tinymce.core.ReadOnlyModeTest', () => {
     Mouse.mouseOver(table);
   };
 
-  const assertToolbarDisabled = (expectedState: boolean) => {
+  const assertToolbarButtonDisabled = (expectedState: boolean) => {
     const elm = UiFinder.findIn(SugarBody.body(), 'button[data-mce-name="bold"]').getOrDie();
     assert.equal(Class.has(elm, 'tox-tbtn--disabled'), expectedState, 'Button should have expected disabled state');
   };
 
-  const assertHrefOpt = (editor: Editor, selector: string, expectedHref: Optional<string>) => {
-    const elm = SugarElement.fromDom(editor.dom.select(selector)[0]);
-    const hrefOpt = Readonly.getAnchorHrefOpt(editor, elm);
-    Assert.eq('href options match', expectedHref, hrefOpt, tOptional());
+  const assertToolbarDisabled = (expectedState: boolean) => {
+    const elm = UiFinder.findIn(SugarBody.body(), '.tox-toolbar-overlord').getOrDie();
+    assert.equal(Class.has(elm, 'tox-tbtn--disabled'), expectedState, 'Toolbar should have expected disabled state');
+    assert.equal(Attribute.get(elm, 'aria-disabled'), expectedState.toString(), 'Toolbar should have expected disabled state');
+  };
+
+  const pSimulateIMEInput = async (editor: Editor, events: Array<{ type: string; data?: string; key?: string; code?: string; keyCode?: number }>) => {
+    const body = editor.getBody();
+    for (const event of events) {
+      if (event.type === ('compositionupdate')) {
+        // Make a direct DOM change that will trigger mutation observer, by typing the text
+        TinySelections.setCursor(editor, [], 0);
+        await TinyContentActions.pType(editor, 'test');
+      } else if (event.type.startsWith('composition')) {
+        const e = new window.CompositionEvent(event.type);
+        body.dispatchEvent(e);
+      } else if (event.type.startsWith('key')) {
+        const e = new KeyboardEvent(event.type, { key: event.key, code: event.code, keyCode: event.keyCode });
+        body.dispatchEvent(e);
+      }
+    };
   };
 
   it('TBA: Switching to readonly mode while having cef selection should remove fake selection', () => {
@@ -98,7 +119,7 @@ describe('browser.tinymce.core.ReadOnlyModeTest', () => {
     assertFakeSelection(editor, true);
   });
 
-  it('TBA: Selecting cef element while in readonly mode should not add fake selection', () => {
+  it('TBA: Selecting cef element should add fake selection in all modes', () => {
     const editor = hook.editor();
     setMode(editor, 'design');
     editor.setContent('<div contenteditable="false">CEF</div>');
@@ -106,66 +127,50 @@ describe('browser.tinymce.core.ReadOnlyModeTest', () => {
     assertFakeSelection(editor, true);
     setMode(editor, 'readonly');
     TinySelections.select(editor, 'div[contenteditable="false"]', []);
-    assertFakeSelection(editor, false);
+    assertFakeSelection(editor, true);
     setMode(editor, 'design');
     TinySelections.select(editor, 'div[contenteditable="false"]', []);
     assertFakeSelection(editor, true);
   });
 
-  it('TBA: Setting caret before cef in editor while in readonly mode should not render fake caret', () => {
+  it('TBA: Setting caret before cef in editor while in readonly mode should still render fake caret', () => {
+    const visualCaret = ApproxStructure.build((s, str, arr) => {
+      return s.element('body', {
+        children: [
+          s.element('p', {
+            attrs: {
+              'data-mce-caret': str.is('before'),
+              'data-mce-bogus': str.is('all')
+            },
+            children: [
+              s.element('br', {})
+            ]
+          }),
+          s.element('div', {
+            attrs: {
+              contenteditable: str.is('false')
+            },
+            children: [
+              s.text(str.is('CEF'))
+            ]
+          }),
+          s.element('div', {
+            attrs: {
+              'data-mce-bogus': str.is('all')
+            },
+            classes: [ arr.has('mce-visual-caret'), arr.has('mce-visual-caret-before') ]
+          })
+        ]
+      });
+    });
     const editor = hook.editor();
     setMode(editor, 'design');
     editor.setContent('<div contenteditable="false">CEF</div>');
     setMode(editor, 'readonly');
     TinySelections.setCursor(editor, [], 0);
-    TinyAssertions.assertContentStructure(editor,
-      ApproxStructure.build((s, str, _arr) => {
-        return s.element('body', {
-          children: [
-            s.element('div', {
-              attrs: {
-                contenteditable: str.is('false')
-              },
-              children: [
-                s.text(str.is('CEF'))
-              ]
-            })
-          ]
-        });
-      })
-    );
+    TinyAssertions.assertContentStructure(editor, visualCaret);
     setMode(editor, 'design');
-    TinyAssertions.assertContentStructure(editor,
-      ApproxStructure.build((s, str, arr) => {
-        return s.element('body', {
-          children: [
-            s.element('p', {
-              attrs: {
-                'data-mce-caret': str.is('before'),
-                'data-mce-bogus': str.is('all')
-              },
-              children: [
-                s.element('br', {})
-              ]
-            }),
-            s.element('div', {
-              attrs: {
-                contenteditable: str.is('false')
-              },
-              children: [
-                s.text(str.is('CEF'))
-              ]
-            }),
-            s.element('div', {
-              attrs: {
-                'data-mce-bogus': str.is('all')
-              },
-              classes: [ arr.has('mce-visual-caret'), arr.has('mce-visual-caret-before') ]
-            })
-          ]
-        });
-      })
-    );
+    TinyAssertions.assertContentStructure(editor, visualCaret);
   });
 
   it('TBA: Switching to readonly mode on content with nested contenteditable=true should toggle them to contenteditable=false', () => {
@@ -175,7 +180,7 @@ describe('browser.tinymce.core.ReadOnlyModeTest', () => {
     TinySelections.select(editor, 'div[contenteditable="false"]', []);
     assertFakeSelection(editor, true);
     setMode(editor, 'readonly');
-    assertNestedContentEditableTrueDisabled(editor, true, true);
+    assertNestedContentEditableTrueDisabled(editor, false, true);
     TinyAssertions.assertContent(editor, '<div contenteditable="false">a<span contenteditable="true">b</span>c</div>');
     assertFakeSelection(editor, false);
     setMode(editor, 'design');
@@ -187,7 +192,7 @@ describe('browser.tinymce.core.ReadOnlyModeTest', () => {
     const editor = hook.editor();
     setMode(editor, 'readonly');
     editor.setContent('<div contenteditable="false">a<span contenteditable="true">b</span>c</div>');
-    assertNestedContentEditableTrueDisabled(editor, true, false);
+    assertNestedContentEditableTrueDisabled(editor, false, false);
     TinyAssertions.assertContent(editor, '<div contenteditable="false">a<span contenteditable="true">b</span>c</div>');
     setMode(editor, 'design');
     TinyAssertions.assertContent(editor, '<div contenteditable="false">a<span contenteditable="true">b</span>c</div>');
@@ -229,13 +234,22 @@ describe('browser.tinymce.core.ReadOnlyModeTest', () => {
     UiFinder.sWaitFor('Waited for context toolbar', SugarBody.body(), '.tox-pop');
   });
 
-  it('TBA: Main toolbar should disable when switching to readonly mode', () => {
+  it('TBA: Main toolbar should not be disabled even when switching to readonly mode', () => {
     const editor = hook.editor();
     setMode(editor, 'design');
+    assertToolbarButtonDisabled(false);
     assertToolbarDisabled(false);
     setMode(editor, 'readonly');
-    assertToolbarDisabled(true);
+    assertToolbarButtonDisabled(true);
+    assertToolbarDisabled(false);
     setMode(editor, 'design');
+    assertToolbarButtonDisabled(false);
+    assertToolbarDisabled(false);
+    setMode(editor, 'readonly');
+    assertToolbarButtonDisabled(true);
+    assertToolbarDisabled(false);
+    setMode(editor, 'design');
+    assertToolbarButtonDisabled(false);
     assertToolbarDisabled(false);
   });
 
@@ -249,15 +263,7 @@ describe('browser.tinymce.core.ReadOnlyModeTest', () => {
     UiFinder.sNotExists(SugarBody.body(), '.tox-menu');
   });
 
-  it('TINY-6248: getAnchorHrefOpt should return an Optional of the href of the closest anchor tag', () => {
-    const editor = hook.editor();
-    editor.setContent('<p><a href="https://tiny.cloud">external link</a></p>');
-    assertHrefOpt(editor, 'a', Optional.some('https://tiny.cloud'));
-    editor.setContent('<p><a>external link with no href</a></p>');
-    assertHrefOpt(editor, 'a', Optional.none());
-    editor.setContent('<p><a href="https://tiny.cloud"><img src="">nested image </img>inside anchor</a></p>');
-    assertHrefOpt(editor, 'img', Optional.some('https://tiny.cloud'));
-  });
+  const metaKey = PlatformDetection.detect().os.isMacOS() ? { metaKey: true } : { ctrlKey: true };
 
   it('TINY-6248: processReadonlyEvents should scroll to bookmark with id', () => {
     const editor = hook.editor();
@@ -270,7 +276,7 @@ describe('browser.tinymce.core.ReadOnlyModeTest', () => {
     const doc = TinyDom.document(editor);
     const yPos = Scroll.get(doc).top;
     const anchor = UiFinder.findIn(body, 'a[href="#someBookmark"]').getOrDie();
-    Mouse.click(anchor);
+    Mouse.click(anchor, metaKey);
     const newPos = Scroll.get(doc).top;
     assert.notEqual(newPos, yPos, 'assert yPos has changed i.e. has scrolled');
   });
@@ -286,7 +292,7 @@ describe('browser.tinymce.core.ReadOnlyModeTest', () => {
     const doc = TinyDom.document(editor);
     const yPos = Scroll.get(doc).top;
     const anchor = UiFinder.findIn(body, 'a[href="#someBookmark"]').getOrDie();
-    Mouse.click(anchor);
+    Mouse.click(anchor, metaKey);
     const newPos = Scroll.get(doc).top;
     assert.notEqual(newPos, yPos, 'assert yPos has changed i.e. has scrolled');
   });
@@ -301,5 +307,127 @@ describe('browser.tinymce.core.ReadOnlyModeTest', () => {
     Clipboard.copy(TinyDom.body(editor));
     assert.equal(copyEventCount, 1, 'copy event should be fired');
     editor.off('copy', copyHandler);
+  });
+
+  it('TINY-11363: IME composition events should be blocked in readonly mode', async () => {
+    const editor = hook.editor();
+    setInitialContentWithReadOnly(editor);
+
+    await pSimulateIMEInput(editor, [
+      { type: 'compositionstart' },
+      { type: 'compositionupdate' },
+      { type: 'compositionend' }
+    ]);
+
+    TinyAssertions.assertContent(editor, '<p>Initial content</p>');
+  });
+
+  // it('TINY-11363: IME input with keyboard events should be blocked in readonly mode', () => {
+  //   const editor = hook.editor();
+  //   setInitialContentWithReadOnly(editor);
+
+  //   simulateIMEInput(editor, [
+  //     // { type: 'keydown', key: 'i', code: 'KeyI', keyCode: 73 },
+  //     { type: 'compositionstart' },
+  //     { type: 'compositionupdate' },
+  //     // { type: 'keydown', key: 'n', code: 'KeyN', keyCode: 78 },
+  //     { type: 'compositionupdate' },
+  //     // { type: 'keydown', key: 'Enter', code: 'Enter', keyCode: 13 },
+  //     { type: 'compositionupdate' },
+  //     { type: 'compositionend' },
+  //     { type: 'keyup', key: 'Enter', code: 'Enter', keyCode: 13 }
+  //   ]);
+
+  //   TinyAssertions.assertContent(editor, '<p>Initial content</p>');
+  // });
+
+  it('TINY-11363: IME input with space key should be blocked in readonly mode', async () => {
+    const editor = hook.editor();
+    setInitialContentWithReadOnly(editor);
+
+    await pSimulateIMEInput(editor, [
+      { type: 'keydown', key: ' ', code: 'Space', keyCode: 32 },
+      { type: 'compositionstart' },
+      { type: 'compositionupdate' },
+      { type: 'compositionend' },
+      { type: 'keyup', key: ' ', code: 'Space', keyCode: 32 }
+    ]);
+
+    TinyAssertions.assertContent(editor, '<p>Initial content</p>');
+  });
+
+  it('TINY-11363: IME input with enter key should be blocked in readonly mode', async () => {
+    const editor = hook.editor();
+    setInitialContentWithReadOnly(editor);
+
+    await pSimulateIMEInput(editor, [
+      { type: 'keydown', key: 'Enter', code: 'Enter', keyCode: 13 },
+      { type: 'compositionstart' },
+      { type: 'compositionupdate' },
+      { type: 'compositionend' },
+      { type: 'keyup', key: 'Enter', code: 'Enter', keyCode: 13 }
+    ]);
+
+    TinyAssertions.assertContent(editor, '<p>Initial content</p>');
+  });
+
+  it('TINY-11363: Input events should be blocked in readonly mode', () => {
+    const editor = hook.editor();
+    setMode(editor, 'readonly');
+
+    const body = editor.getBody();
+    const inputEvent = new window.InputEvent('input', { data: 'new content' });
+    body.dispatchEvent(inputEvent);
+
+    TinyAssertions.assertContent(editor, '<p>Initial content</p>');
+  });
+
+  it('TINY-11363: Undo/Redo should be disabled in readonly mode', () => {
+    const editor = hook.editor();
+    setInitialContentWithReadOnly(editor);
+    editor.undoManager.add();
+    editor.setContent('<p>Modified content</p>');
+    editor.undoManager.add();
+    setMode(editor, 'readonly');
+
+    editor.execCommand('Undo');
+    TinyAssertions.assertContent(editor, '<p>Modified content</p>');
+
+    editor.execCommand('Redo');
+    TinyAssertions.assertContent(editor, '<p>Modified content</p>');
+  });
+
+  it('TINY-11363: Mutation observer should clear undo stack after reverting changes in readonly mode', () => {
+    const editor = hook.editor();
+
+    // Set up initial state with some undo history
+    setInitialContentWithReadOnly(editor);
+    editor.undoManager.add();
+    editor.setContent('<p>Modified content</p>');
+    editor.undoManager.add();
+
+    // Verify we have undo/redo capability before readonly
+    assert.isTrue(editor.undoManager.hasUndo(), 'Should have undo levels before readonly');
+
+    setMode(editor, 'readonly');
+
+    // Start composition and make a mutation that should be caught by observer
+    editor.getBody().dispatchEvent(new window.CompositionEvent('compositionstart'));
+
+    // Make a direct DOM change that will trigger mutation observer
+    const firstPara = editor.getBody().firstChild;
+    if (firstPara) {
+      firstPara.textContent = 'Changed during composition';
+    }
+
+    // End composition which will process the mutations
+    editor.getBody().dispatchEvent(new window.CompositionEvent('compositionend'));
+
+    // Verify content is reverted
+    TinyAssertions.assertContent(editor, '<p>Modified content</p>');
+
+    // Verify undo stack is cleared
+    assert.isFalse(editor.undoManager.hasUndo(), 'Should not have undo levels after mutation revert');
+    assert.isFalse(editor.undoManager.hasRedo(), 'Should not have redo levels after mutation revert');
   });
 });

@@ -5,7 +5,8 @@ import {
 } from '@ephox/sugar';
 
 import TagBoundaries from '../common/TagBoundaries';
-import { Universe } from './Universe';
+
+import type { Universe } from './Universe';
 
 export default (): Universe<SugarElement, Document> => {
   const clone = (element: SugarElement<Node>) => {

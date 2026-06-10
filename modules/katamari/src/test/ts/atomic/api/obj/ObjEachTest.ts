@@ -3,6 +3,7 @@ import { assert } from 'chai';
 import fc from 'fast-check';
 
 import * as Obj from 'ephox/katamari/api/Obj';
+import { arbAsciiDict } from 'ephox/katamari/test/arb/ArbDataTypes';
 
 describe('atomic.katamari.api.obj.ObjEachTest', () => {
   it('ObjEachTest', () => {
@@ -25,7 +26,7 @@ describe('atomic.katamari.api.obj.ObjEachTest', () => {
 
   it('Each + set should equal the same object', () => {
     fc.assert(fc.property(
-      fc.dictionary(fc.asciiString(), fc.json()),
+      arbAsciiDict(fc.json()),
       (obj) => {
         const values: Record<string, string> = {};
         const output = Obj.each(obj, (x, i) => {

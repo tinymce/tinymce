@@ -1,4 +1,4 @@
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 const register = (editor: Editor): void => {
   const onAction = () => editor.execCommand('mceWordCount');
@@ -6,13 +6,15 @@ const register = (editor: Editor): void => {
   editor.ui.registry.addButton('wordcount', {
     tooltip: 'Word count',
     icon: 'character-count',
-    onAction
+    onAction,
+    context: 'any'
   });
 
   editor.ui.registry.addMenuItem('wordcount', {
     text: 'Word count',
     icon: 'character-count',
-    onAction
+    onAction,
+    context: 'any'
   });
 };
 

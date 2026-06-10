@@ -13,24 +13,40 @@
 @tooltip-padding-y: @pad-xs;
 @tooltip-text-color: @color-white;
 @tooltip-text-transform: none;
-@tooltip-max-width: 15em;
+@tooltip-max-width: min(80%, 15em);
 
 .tox {
   .tox-tooltip {
     display: inline-block;
     max-width: @tooltip-max-width;
-    padding: @tooltip-arrow-size;
-
-    /*
-     * The pointer-events: none is designed to make mouse events bleed through the tooltip
-     * to the underlying items. For example, a mouse hovering over a tooltip that hovers over
-     * another item should trigger the hover of the item obscured by the tooltip, even though
-     * the tooltip is on top
-     */
-    pointer-events: none;
+    padding: @tooltip-arrow-size 0 0 0;
     position: relative;
     width: max-content;
     z-index: @z-index-menu;
+
+    &.tox-tooltip--anchor {
+      display: none;
+      padding: var(--tox-private-pad-xs, @pad-xs) 0 0;
+      position: fixed;
+      position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
+      height: fit-content;
+
+      &.tox-tooltip--up {
+        position-area: block-end;
+      }
+
+      &.tox-tooltip--down {
+        position-area: block-start;
+      }
+
+      &.tox-tooltip--left {
+        position-area: inline-start;
+      }
+
+      &.tox-tooltip--right {
+        position-area: inline-end;
+      }
+    }
   }
 
   .tox-tooltip__body {

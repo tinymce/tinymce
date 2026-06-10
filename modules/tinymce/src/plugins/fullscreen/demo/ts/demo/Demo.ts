@@ -1,9 +1,10 @@
-import { TinyMCE } from 'tinymce/core/api/PublicApi';
+import type { TinyMCE } from 'tinymce/core/api/PublicApi';
 
 declare let tinymce: TinyMCE;
 
 tinymce.init({
   selector: 'textarea.tinymce',
+  license_key: 'gpl',
   plugins: 'fullscreen code',
   toolbar: 'fullscreen code',
   height: 600,
@@ -12,6 +13,7 @@ tinymce.init({
 
 tinymce.init({
   selector: 'textarea.tinymce2',
+  license_key: 'gpl',
   plugins: 'fullscreen code',
   toolbar: 'fullscreen code',
   height: 600

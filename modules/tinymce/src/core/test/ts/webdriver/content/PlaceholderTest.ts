@@ -4,11 +4,11 @@ import { Cell } from '@ephox/katamari';
 import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('webdriver.tinymce.core.content.PlaceholderTest', () => {
   const togglePlaceholderCount = Cell(0);
-  const placeholder = 'Type here...';
+  const placeholder = 'Type here…';
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     toolbar: 'undo redo | bold',
@@ -50,13 +50,13 @@ describe('webdriver.tinymce.core.content.PlaceholderTest', () => {
     await pAssertPlaceholderExists(editor);
   };
 
-  it('TINY-3917: Check placeholder restores when deleting content via command', () => {
+  it('TINY-3917: Check placeholder restores when deleting content via command', async () => {
     const editor = hook.editor();
     setContent(editor, '<p>a</p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 1);
-    pAssertPlaceholderNotExists(editor);
+    await pAssertPlaceholderNotExists(editor);
     editor.execCommand('Delete');
-    pAssertPlaceholderExists(editor);
+    await pAssertPlaceholderExists(editor);
     assertCount(1);
   });
 

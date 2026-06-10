@@ -3,7 +3,7 @@ import { Arr } from '@ephox/katamari';
 import { TinyApis, TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.content.EditorGetContentRawTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({

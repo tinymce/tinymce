@@ -4,7 +4,7 @@ import { Arr, Fun } from '@ephox/katamari';
 import { SugarBody } from '@ephox/sugar';
 import { TinyContentActions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import * as Assets from '../../../module/Assets';
 import * as AutocompleterUtils from '../../../module/AutocompleterUtils';
@@ -70,7 +70,7 @@ describe('browser.tinymce.themes.silver.editor.AutocompleterTooltipTest', () => 
       editor.focus();
       await TooltipUtils.pAssertTooltip(editor, async () => await pOpenAutocompleter(editor, '+'), 'p-aa');
       await TooltipUtils.pAssertTooltip(editor, async () => {
-        TooltipUtils.pTriggerTooltipWithMouse(editor, '.tox-collection__item .tox-collection__item-icon:contains("ab")');
+        await TooltipUtils.pTriggerTooltipWithMouse(editor, '.tox-collection__item .tox-collection__item-icon:contains("ab")');
         await TinyUiActions.pWaitForUi(editor, '.tox-silver-sink .tox-tooltip__body:contains("p-ab")');
         return Promise.resolve();
       }, 'p-ab');

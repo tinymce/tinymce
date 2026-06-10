@@ -1,7 +1,8 @@
 import { Arr, Obj, Type } from '@ephox/katamari';
 
 import * as SelectionBookmark from '../selection/SelectionBookmark';
-import Editor from './Editor';
+
+import type Editor from './Editor';
 
 /**
  * This class enables you to add custom editor commands and it contains
@@ -11,8 +12,8 @@ import Editor from './Editor';
  * @class tinymce.EditorCommands
  */
 
-export type EditorCommandCallback<S> = (this: S, ui: boolean, value: any) => void;
-export type EditorCommandsCallback = (command: string, ui: boolean, value?: any) => void;
+export type EditorCommandCallback<S> = (this: S, ui: boolean, value: any, args?: ExecCommandArgs) => void;
+export type EditorCommandsCallback = (command: string, ui: boolean, value?: any, args?: ExecCommandArgs) => void;
 
 interface Commands {
   state: Record<string, (command: string) => boolean>;
@@ -78,8 +79,8 @@ class EditorCommands {
 
     const func = this.commands.exec[lowerCaseCommand];
     if (Type.isFunction(func)) {
-      func(lowerCaseCommand, ui, value);
-      editor.dispatch('ExecCommand', { command, ui, value });
+      func(lowerCaseCommand, ui, value, args);
+      editor.dispatch('ExecCommand', { command, ui, value, args });
       return true;
     }
 
@@ -151,7 +152,26 @@ class EditorCommands {
   public addCommand(command: string, callback: EditorCommandCallback<Editor>): void;
   public addCommand(command: string, callback: EditorCommandCallback<any>, scope?: any): void {
     const lowerCaseCommand = command.toLowerCase();
-    this.commands.exec[lowerCaseCommand] = (_command, ui, value) => callback.call(scope ?? this.editor, ui, value);
+    this.commands.exec[lowerCaseCommand] = (_command, ui, value, args) => callback.call(scope ?? this.editor, ui, value, args);
+  }
+
+  /**
+   * Removes a command from the command collection.
+   *
+   * @method removeCommand
+   * @param {String} command Command name to remove.
+   * @param {String} type Optional type to remove, defaults to removing all types. Can be 'exec', 'state', 'value', or omitted for all.
+   */
+  public removeCommand(command: string, type?: 'exec' | 'state' | 'value'): void {
+    const lowerCaseCommand = command.toLowerCase();
+
+    if (type) {
+      delete this.commands[type][lowerCaseCommand];
+    } else {
+      delete this.commands.exec[lowerCaseCommand];
+      delete this.commands.state[lowerCaseCommand];
+      delete this.commands.value[lowerCaseCommand];
+    }
   }
 
   /**

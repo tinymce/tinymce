@@ -1,9 +1,9 @@
 import { Throttler } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
 
-import { WordCountApi } from '../api/Api';
+import type { WordCountApi } from '../api/Api';
 import * as Events from '../api/Events';
 
 const updateCount = (editor: Editor, api: WordCountApi): void => {

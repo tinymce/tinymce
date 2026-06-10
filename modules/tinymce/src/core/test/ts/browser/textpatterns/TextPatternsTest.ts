@@ -4,7 +4,7 @@ import { Unicode } from '@ephox/katamari';
 import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import ListsPlugin from 'tinymce/plugins/lists/Plugin';
 
 import * as Utils from '../../module/test/TextPatternsUtils';
@@ -373,5 +373,15 @@ describe('browser.tinymce.core.textpatterns.TextPatternsTest', () => {
     TinyAssertions.assertCursor(editor, [ 2 ], 0);
 
     editor.options.unset('text_patterns');
+  });
+
+  it('TINY-11264: should not add an empty list item when pressing Enter', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>*</p>');
+    editor.focus();
+    TinySelections.setCursor(editor, [ 0, 0 ], 1);
+    editor.mode.set('readonly');
+    TinyContentActions.keystroke(editor, Keys.enter());
+    TinyAssertions.assertContent(editor, '<p>*</p>');
   });
 });

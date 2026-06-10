@@ -4,7 +4,7 @@ import { Class, SugarDocument } from '@ephox/sugar';
 import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('webdriver.tinymce.core.keyboard.IframeTabfocusTest', () => {
   context('Focus shift on pressing tab', () => {

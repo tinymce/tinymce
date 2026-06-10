@@ -1,12 +1,13 @@
-import { Future, Optional } from '@ephox/katamari';
+import type { Future, Optional } from '@ephox/katamari';
 
-import { Bounds } from '../../alien/Boxes';
-import { LazySink } from '../../api/component/CommonTypes';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { AlloySpec, SimpleOrSketchSpec } from '../../api/component/SpecTypes';
-import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
-import { HasLayoutAnchor, HasLayoutAnchorSpec } from '../../positioning/mode/Anchoring';
-import { ToolbarSpec } from './ToolbarTypes';
+import type { Bounds } from '../../alien/Boxes';
+import type { LazySink } from '../../api/component/CommonTypes';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
+import type { AlloySpec, SimpleOrSketchSpec } from '../../api/component/SpecTypes';
+import type { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
+import type { HasLayoutAnchor, HasLayoutAnchorSpec } from '../../positioning/mode/Anchoring';
+
+import type { ToolbarSpec } from './ToolbarTypes';
 
 export interface FloatingToolbarButtonDetail extends CompositeSketchDetail, HasLayoutAnchor {
   lazySink: LazySink;
@@ -45,8 +46,8 @@ export interface FloatingToolbarButtonSpec extends CompositeSketchSpec, HasLayou
   };
 
   parts: {
-    'button': Partial<SimpleOrSketchSpec>;
-    'toolbar': Partial<ToolbarSpec>;
+    button: Partial<SimpleOrSketchSpec>;
+    toolbar: Partial<ToolbarSpec>;
   };
 
   onToggled?: (comp: AlloyComponent, state: boolean) => void;

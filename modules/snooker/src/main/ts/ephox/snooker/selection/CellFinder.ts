@@ -1,7 +1,8 @@
-import { Arr, Fun, Optional } from '@ephox/katamari';
-import { Compare, SugarElement } from '@ephox/sugar';
+import { Arr, Fun, type Optional } from '@ephox/katamari';
+import { Compare, type SugarElement } from '@ephox/sugar';
 
 import { Warehouse } from '../api/Warehouse';
+
 import * as CellBounds from './CellBounds';
 import * as CellGroup from './CellGroup';
 

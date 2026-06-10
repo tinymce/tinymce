@@ -100,15 +100,28 @@ const isDocument = isNodeType<Document>(9);
 const isDocumentFragment = isNodeType<DocumentFragment>(11);
 const isBr = matchNodeName<HTMLBRElement>('br');
 const isImg = matchNodeName<HTMLImageElement>('img');
+const isAnchor = matchNodeName<HTMLAnchorElement>('a');
 const isContentEditableTrue = hasContentEditableState('true');
 const isContentEditableFalse = hasContentEditableState('false');
+const isEditingHost = (node: Node): node is HTMLElement => isHTMLElement(node) && node.isContentEditable && Type.isNonNullable(node.parentElement) && !node.parentElement.isContentEditable;
 
 const isTableCell = matchNodeNames<HTMLTableCellElement>([ 'td', 'th' ]);
 const isTableCellOrCaption = matchNodeNames<HTMLTableCellElement>([ 'td', 'th', 'caption' ]);
+const isTemplate = matchNodeName<HTMLTemplateElement>('template');
 const isMedia = matchNodeNames<HTMLElement>([ 'video', 'audio', 'object', 'embed' ]);
 const isListItem = matchNodeName<HTMLLIElement>('li');
 const isDetails = matchNodeName<HTMLDetailsElement>('details');
 const isSummary = matchNodeName<HTMLElement>('summary');
+
+const ucVideoNodeName = 'uc-video' as const;
+
+interface UcVideo extends HTMLElement {
+  nodeName: typeof ucVideoNodeName;
+  width: number;
+  height: number;
+}
+
+const isUcVideo = matchNodeName<UcVideo>(ucVideoNodeName);
 
 export {
   isText,
@@ -122,8 +135,10 @@ export {
   isDocumentFragment,
   isBr,
   isImg,
+  isAnchor,
   isContentEditableTrue,
   isContentEditableFalse,
+  isEditingHost,
   isMedia,
   isTableCell,
   isTableCellOrCaption,
@@ -135,8 +150,12 @@ export {
   isBogus,
   isBogusAll,
   isTable,
+  isTemplate,
   isTextareaOrInput,
   isListItem,
   isDetails,
-  isSummary
+  isSummary,
+  ucVideoNodeName,
+  type UcVideo,
+  isUcVideo
 };

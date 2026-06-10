@@ -1,7 +1,8 @@
 import * as NodeType from '../dom/NodeType';
 import * as PaddingBr from '../dom/PaddingBr';
 import * as Zwsp from '../text/Zwsp';
-import { CaretPosition } from './CaretPosition';
+
+import type { CaretPosition } from './CaretPosition';
 
 /**
  * This module handles caret containers. A caret container is a node that

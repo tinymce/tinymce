@@ -2,7 +2,7 @@ import { describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
 
 import * as SchemaElementSets from 'tinymce/core/schema/SchemaElementSets';
-import * as SchemaTypes from 'tinymce/core/schema/SchemaTypes';
+import type * as SchemaTypes from 'tinymce/core/schema/SchemaTypes';
 
 describe('atomic.tinymce.core.schema.SchemaElementSetsTest', () => {
   const assertDirectMutation = (names: readonly string[]) => {
@@ -52,7 +52,7 @@ describe('atomic.tinymce.core.schema.SchemaElementSetsTest', () => {
         'a', 'abbr', 'b', 'bdo', 'br', 'button', 'cite', 'code', 'del', 'dfn', 'em', 'embed', 'i', 'iframe', 'img',
         'input', 'ins', 'kbd', 'label', 'map', 'noscript', 'object', 'q', 's', 'samp', 'script', 'select', 'small',
         'span', 'strong', 'sub', 'sup', 'textarea', 'u', 'var', '#text', '#comment', 'audio', 'canvas', 'command',
-        'data', 'datalist', 'mark', 'meter', 'output', 'picture', 'progress', 'time', 'wbr', 'video',
+        'data', 'datalist', 'mark', 'meter', 'output', 'picture', 'progress', 'template', 'time', 'wbr', 'video',
         'ruby', 'bdi', 'keygen', 'svg', 'acronym', 'applet', 'basefont', 'big', 'font', 'strike', 'tt'
       ],
       flowContent: [
@@ -62,7 +62,7 @@ describe('atomic.tinymce.core.schema.SchemaElementSetsTest', () => {
         'abbr', 'b', 'bdo', 'br', 'button', 'cite', 'code', 'del', 'dfn', 'em', 'embed', 'i', 'iframe', 'img', 'input',
         'ins', 'kbd', 'label', 'map', 'noscript', 'object', 'q', 's', 'samp', 'script', 'select', 'small', 'span', 'strong',
         'sub', 'sup', 'textarea', 'u', 'var', '#text', '#comment', 'audio', 'canvas', 'command', 'data', 'datalist', 'mark',
-        'meter', 'output', 'picture', 'progress', 'time', 'wbr', 'video', 'ruby', 'bdi', 'keygen', 'svg', 'acronym',
+        'meter', 'output', 'picture', 'progress', 'template', 'time', 'wbr', 'video', 'ruby', 'bdi', 'keygen', 'svg', 'acronym',
         'applet', 'basefont', 'big', 'font', 'strike', 'tt'
       ]
     }
@@ -80,7 +80,7 @@ describe('atomic.tinymce.core.schema.SchemaElementSetsTest', () => {
         'a', 'abbr', 'b', 'bdo', 'br', 'button', 'cite', 'code', 'del', 'dfn', 'em', 'embed', 'i', 'iframe', 'img',
         'input', 'ins', 'kbd', 'label', 'map', 'noscript', 'object', 'q', 's', 'samp', 'script', 'select', 'small',
         'span', 'strong', 'sub', 'sup', 'textarea', 'u', 'var', '#text', '#comment', 'audio', 'canvas', 'command',
-        'data', 'datalist', 'mark', 'meter', 'output', 'picture', 'progress', 'time', 'wbr', 'video',
+        'data', 'datalist', 'mark', 'meter', 'output', 'picture', 'progress', 'template', 'time', 'wbr', 'video',
         'ruby', 'bdi', 'keygen', 'svg'
       ],
       flowContent: [
@@ -90,7 +90,7 @@ describe('atomic.tinymce.core.schema.SchemaElementSetsTest', () => {
         'code', 'del', 'dfn', 'em', 'embed', 'i', 'iframe', 'img', 'input', 'ins', 'kbd', 'label', 'map', 'noscript',
         'object', 'q', 's', 'samp', 'script', 'select', 'small', 'span', 'strong', 'sub', 'sup', 'textarea', 'u',
         'var', '#text', '#comment', 'audio', 'canvas', 'command', 'data', 'datalist', 'mark', 'meter', 'output', 'picture',
-        'progress', 'time', 'wbr', 'video', 'ruby', 'bdi', 'keygen', 'svg'
+        'progress', 'template', 'time', 'wbr', 'video', 'ruby', 'bdi', 'keygen', 'svg'
       ]
     }
   }));

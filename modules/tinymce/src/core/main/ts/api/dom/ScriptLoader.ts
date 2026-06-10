@@ -1,6 +1,7 @@
 import { Arr, Fun, Obj, Optional, Type, Unique } from '@ephox/katamari';
 
 import Tools from '../util/Tools';
+
 import DOMUtils from './DOMUtils';
 
 /**
@@ -31,6 +32,7 @@ const DOM = DOMUtils.DOM;
 
 export interface ScriptLoaderSettings {
   referrerPolicy?: ReferrerPolicy;
+  crossOrigin?: (url: string) => string | undefined;
 }
 
 export interface ScriptLoaderConstructor {
@@ -64,6 +66,10 @@ class ScriptLoader {
     this.settings.referrerPolicy = referrerPolicy;
   }
 
+  public _setCrossOrigin(crossOrigin: (url: string) => string | undefined): void {
+    this.settings.crossOrigin = crossOrigin;
+  }
+
   /**
    * Loads a specific script directly without adding it to the load queue.
    *
@@ -74,6 +80,7 @@ class ScriptLoader {
   public loadScript(url: string): Promise<void> {
     return new Promise((resolve, reject) => {
       const dom = DOM;
+      const doc = document;
       let elm: HTMLScriptElement | null;
 
       const cleanup = () => {
@@ -100,7 +107,7 @@ class ScriptLoader {
       const id = dom.uniqueId();
 
       // Create new script element
-      elm = document.createElement('script');
+      elm = doc.createElement('script');
       elm.id = id;
       elm.type = 'text/javascript';
       elm.src = Tools._addCacheSuffix(url);
@@ -110,13 +117,21 @@ class ScriptLoader {
         dom.setAttrib(elm, 'referrerpolicy', this.settings.referrerPolicy);
       }
 
+      const crossOrigin = this.settings.crossOrigin;
+      if (Type.isFunction(crossOrigin)) {
+        const resultCrossOrigin = crossOrigin(url);
+        if (resultCrossOrigin !== undefined) {
+          dom.setAttrib(elm, 'crossorigin', resultCrossOrigin);
+        }
+      }
+
       elm.onload = done;
 
       // Add onerror event will get fired on some browsers but not all of them
       elm.onerror = error;
 
       // Add script to document
-      (document.getElementsByTagName('head')[0] || document.body).appendChild(elm);
+      (doc.head || doc.body).appendChild(elm);
     });
   }
 
@@ -278,6 +293,32 @@ class ScriptLoader {
     } else {
       return processQueue(uniqueScripts);
     }
+  }
+
+  /**
+   * Returns the attributes that should be added to a script tag when loading the specified URL.
+   *
+   * @method getScriptAttributes
+   * @param {String} url Url to get attributes for.
+   * @return {Object} Object with attributes to add to the script tag.
+   */
+  public getScriptAttributes(url: string): Record<string, string> {
+    const attrs: Record<string, string> = {};
+
+    if (this.settings.referrerPolicy) {
+      attrs.referrerpolicy = this.settings.referrerPolicy;
+    }
+
+    const crossOrigin = this.settings.crossOrigin;
+    if (Type.isFunction(crossOrigin)) {
+      const resultCrossOrigin = crossOrigin(url);
+
+      if (Type.isString(resultCrossOrigin)) {
+        attrs.crossorigin = resultCrossOrigin;
+      }
+    }
+
+    return attrs;
   }
 }
 

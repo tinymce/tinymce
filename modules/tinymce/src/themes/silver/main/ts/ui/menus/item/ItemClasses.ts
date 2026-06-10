@@ -1,4 +1,4 @@
-import { Toolbar } from '@ephox/bridge';
+import type { Toolbar } from '@ephox/bridge';
 import { Obj } from '@ephox/katamari';
 
 const navClass = 'tox-menu-nav__js';
@@ -14,6 +14,8 @@ const tickedClass = 'tox-collection__item--enabled';
 const separatorClass = 'tox-collection__separator';
 const groupHeadingClass = 'tox-collection__group-heading';
 const iconClass = 'tox-collection__item-icon';
+const imageClass = 'tox-collection__item-image';
+const imageSelectorClasll = 'tox-collection__item-image-selector';
 const textClass = 'tox-collection__item-label';
 const accessoryClass = 'tox-collection__item-accessory';
 const caretClass = 'tox-collection__item-caret';
@@ -43,6 +45,8 @@ export {
   separatorClass,
   groupHeadingClass,
   iconClass,
+  imageSelectorClasll,
+  imageClass,
   accessoryClass,
   caretClass,
   checkmarkClass,

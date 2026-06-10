@@ -1,13 +1,14 @@
 import { Obj } from '@ephox/katamari';
 
-import { Stateless } from '../../behaviour/common/BehaviourState';
+import type { Stateless } from '../../behaviour/common/BehaviourState';
 import * as KeyboardBranches from '../../behaviour/keyboard/KeyboardBranches';
 import * as KeyingState from '../../behaviour/keyboard/KeyingState';
-import {
+import type {
   AcylicConfigSpec, CyclicConfigSpec, ExecutingConfigSpec, FlatgridConfigSpec, FlatgridState, FlowConfigSpec, GeneralKeyingConfig, MatrixConfigSpec,
   MenuConfigSpec, SpecialConfigSpec
 } from '../../keying/KeyingModeTypes';
-import { AlloyComponent } from '../component/ComponentApi';
+import type { AlloyComponent } from '../component/ComponentApi';
+
 import * as Behaviour from './Behaviour';
 
 export interface KeyingBehaviour<D extends GeneralKeyingConfig> extends Behaviour.AlloyBehaviour<KeyingConfigSpec, D> {

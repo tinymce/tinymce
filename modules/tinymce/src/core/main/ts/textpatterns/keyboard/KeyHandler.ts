@@ -1,13 +1,13 @@
 import { Fun, Unicode } from '@ephox/katamari';
 
 import * as TextSearch from '../../alien/TextSearch';
-import Editor from '../../api/Editor';
+import type Editor from '../../api/Editor';
 import VK from '../../api/util/VK';
 import * as Zwsp from '../../text/Zwsp';
 import * as BlockPattern from '../core/BlockPattern';
 import * as BlockPatternOnSpace from '../core/BlockPatternOnSpace';
 import * as InlinePattern from '../core/InlinePattern';
-import { PatternSet } from '../core/PatternTypes';
+import type { PatternSet } from '../core/PatternTypes';
 import * as Utils from '../utils/Utils';
 
 const handleEnter = (editor: Editor, patternSet: PatternSet): boolean =>

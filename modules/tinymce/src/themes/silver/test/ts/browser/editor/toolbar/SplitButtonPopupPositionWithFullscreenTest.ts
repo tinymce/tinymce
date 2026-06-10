@@ -3,7 +3,7 @@ import { Css, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.themes.silver.editor.toolbar.SplitButtonPopupPositionWithFullscreenTest', () => {
   context('in scrollable container', () => {
@@ -40,8 +40,8 @@ describe('browser.tinymce.themes.silver.editor.toolbar.SplitButtonPopupPositionW
     it('TINY-10973: the split button popups should be rendered close to the split button', async () => {
       const editor = hook.editor();
       editor.execCommand('mceFullScreen');
-      const button = await TinyUiActions.pWaitForUi(editor, '[aria-label^="Numbered list"]');
-      TinyUiActions.clickOnToolbar(editor, '[aria-label^="Numbered list"] > .tox-tbtn + .tox-split-button__chevron');
+      const button = await TinyUiActions.pWaitForUi(editor, 'button[data-mce-name="numlist"][aria-label^="Numbered list"]');
+      TinyUiActions.clickOnToolbar(editor, 'button[data-mce-name="numlist-chevron"][aria-label^="Numbered list"]');
       const popup = await TinyUiActions.pWaitForUi(editor, '.tox-collection');
 
       const buttonRect = button.dom.getBoundingClientRect();

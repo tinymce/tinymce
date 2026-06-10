@@ -1,12 +1,12 @@
-import { Universe } from '@ephox/boss';
+import type { Universe } from '@ephox/boss';
 
 import * as Splitter from '../../search/Splitter';
 import * as Positions from '../../split/Positions';
 import * as Range from '../../split/Range';
 import * as Split from '../../split/Split';
-import { SplitPosition } from '../data/SplitPosition';
-import { TextSplit } from '../data/TextSplit';
-import { SpotRange } from '../data/Types';
+import type { SplitPosition } from '../data/SplitPosition';
+import type { TextSplit } from '../data/TextSplit';
+import type { SpotRange } from '../data/Types';
 
 type SplitApi = <E, D>(universe: Universe<E, D>, item: E, position: number) => TextSplit<E>;
 const split: SplitApi = Split.split;

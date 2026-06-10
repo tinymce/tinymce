@@ -3,7 +3,7 @@ import { before, describe, it } from '@ephox/bedrock-client';
 import { SugarBody } from '@ephox/sugar';
 import { McEditor, TinyContentActions, TinyDom, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 
 describe('browser.tinymce.themes.silver.editor.EventsTest', () => {
@@ -13,7 +13,7 @@ describe('browser.tinymce.themes.silver.editor.EventsTest', () => {
     menubar: 'file edit'
   };
 
-  const contextMenuItemSelector = '[role="menuitem"]:contains("Link...")';
+  const contextMenuItemSelector = '[role="menuitem"]:contains("Link…")';
   const fileMenuSelector = '[role="menuitem"]:contains("New document")';
   const editMenuSelector = '[role="menuitem"]:contains("Cut")';
   const fileMenuButtonSelector = 'button:contains("File")';

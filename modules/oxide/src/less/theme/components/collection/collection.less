@@ -37,6 +37,9 @@
 @collection-item-list-icon-height: 24px;
 @collection-item-list-icon-width: 24px;
 
+@collection-item-image-border-color: @border-color;
+@collection-item-image-margin-bottom: @pad-xs;
+
 @collection-item-list-image-radius: 50%;
 
 @collection-group-label-background-color: lighten(@collection-item-separator-color, 10%);
@@ -87,6 +90,8 @@
     border-style: solid;
     border-top-width: 1px;
     padding: @collection-item-separator-margin-y 0;
+    display: flex;
+    flex-direction: column;
 
     &:first-child {
       border-top-width: 0;
@@ -118,6 +123,53 @@
     user-select: none;
   }
 
+  .tox-image-selector-menu {
+    .tox-collection__item-image-selector, .tox-collection__item {
+      flex-direction: column;
+  
+      .tox-collection__item-icon,
+      .tox-collection__item-image,
+      .tox-collection__item-checkmark {
+        flex-grow: 1;
+      }
+  
+      label {
+        width: @collection-item-list-icon-width * 2;
+        white-space: nowrap;
+        overflow: hidden;
+        font-size: @font-size-xs;
+        color: @collection-item-label-text-color;
+        text-align: center;
+        align-self: flex-end;
+      }
+    }
+
+    .tox-collection__item-checkmark {
+      height: @collection-item-list-icon-height;
+      width: @collection-item-list-icon-width;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+
+      svg path {
+        fill: @color-tint;
+        stroke: @color-tint;
+      }
+    }
+
+    .tox-image-selector__row .tox-collection__item-image-selector.tox-collection__item--active:not(.tox-collection__item--state-disabled) {
+      background-color: @background-color;
+    }
+
+    .tox-image-selector__row .tox-collection__item-image-selector.tox-collection__item--enabled:not(.tox-collection__item--state-disabled) {
+      z-index: 2;
+      background-color: @background-color;
+      opacity: 0.8;
+      background-clip: content-box;
+    }
+  }
+
   .tox-collection--list .tox-collection__item {
     padding: @collection-item-padding;
   }
@@ -133,18 +185,37 @@
   }
 
   // Note: Ensure "enabled" is before "active", as active styles should have a higher precedence
-  .tox-collection--list .tox-collection__item--enabled {
+  .tox-collection--list .tox-collection__item--enabled:not(.tox-collection__item--state-disabled) {
     background-color: @collection-list-item-enabled-background-color;
     color: @collection-list-item-label-enabled-text-color;
   }
 
-  .tox-collection--list .tox-collection__item--active {
+  .tox-collection--list .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
     background-color: @collection-list-item-active-background-color;
+    color: @collection-list-item-label-active-text-color;
+
+    @media (forced-colors: active) {
+      border: solid 1px;
+    }
   }
 
-  .tox-collection--toolbar .tox-collection__item--enabled,
-  .tox-collection--toolbar .tox-collection__item--enabled.tox-collection__item--active,
-  .tox-collection--toolbar .tox-collection__item--enabled.tox-collection__item--active:hover {
+  .tox-collection--grid .tox-collection__item--enabled:not(.tox-collection__item--state-disabled) {
+    background-color: @collection-grid-item-enabled-background-color;
+    color: @collection-grid-item-label-enabled-text-color;
+  }
+
+  .tox-collection--grid .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
+    background-color: @collection-grid-item-active-background-color;
+    color: @collection-grid-item-label-active-text-color;
+    position: relative;
+    z-index: 1;
+
+    &:focus::after {
+      .keyboard-focus-outline-mixin(inset);
+    }
+  }
+
+  .tox-collection--toolbar .tox-collection__item--enabled:not(.tox-collection__item--state-disabled) {
     background-color: @collection-toolbar-item-enabled-background-color;
     color: @collection-toolbar-item-label-enabled-text-color;
 
@@ -154,7 +225,8 @@
     }
   }
 
-  .tox-collection--toolbar .tox-collection__item--active {
+  .tox-collection--toolbar .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
+    color: @collection-toolbar-item-label-active-text-color;
     background-color: @collection-toolbar-item-active-background-color;
     position: relative;
 
@@ -171,34 +243,6 @@
         .keyboard-focus-outline-mixin();
       }
     }
-  }
-
-  .tox-collection--grid .tox-collection__item--enabled {
-    background-color: @collection-grid-item-enabled-background-color;
-    color: @collection-grid-item-label-enabled-text-color;
-  }
-
-  .tox-collection--grid .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
-    background-color: @collection-grid-item-active-background-color;
-    color: @collection-grid-item-label-active-text-color;
-    position: relative;
-    z-index: 1;
-
-    &:focus::after {
-      .keyboard-focus-outline-mixin(inset);
-    }
-  }
-
-  .tox-collection--list .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
-    color: @collection-list-item-label-active-text-color;
-
-    @media (forced-colors: active) {
-      border: solid 1px;
-    }
-  }
-
-  .tox-collection--toolbar .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
-    color: @collection-toolbar-item-label-active-text-color;
 
     @media (forced-colors: active) {
       &:hover {
@@ -206,6 +250,16 @@
         outline: solid 1px;
       }
     }
+  }
+
+  .tox-collection__item-image {
+    border: 1px solid @collection-item-image-border-color;
+    border-radius: @control-border-radius;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-bottom: @collection-item-image-margin-bottom;
+    position: relative;
   }
 
   .tox-collection__item-icon,
@@ -300,7 +354,6 @@
     padding: 0;
   }
 
-  /* stylelint-disable-next-line no-descending-specificity */
   .tox-collection--horizontal .tox-collection__group {
     align-items: center;
     display: flex;

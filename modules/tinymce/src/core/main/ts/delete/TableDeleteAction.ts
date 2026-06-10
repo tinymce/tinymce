@@ -3,6 +3,7 @@ import { Compare, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import * as SelectionUtils from '../selection/SelectionUtils';
 import * as TableCellSelection from '../selection/TableCellSelection';
+
 import * as TableDeleteUtils from './TableDeleteUtils';
 
 type IsRootFn = TableDeleteUtils.IsRootFn;

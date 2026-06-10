@@ -1,16 +1,16 @@
 import { ApproxStructure, Assertions, FocusTools, Keys, Mouse, TestStore, UiFinder, Waiter } from '@ephox/agar';
-import { TestHelpers } from '@ephox/alloy';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { Arr, Strings } from '@ephox/katamari';
 import { SugarBody, SugarDocument, Css } from '@ephox/sugar';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
-import { Dialog } from 'tinymce/core/api/ui/Ui';
-import { WindowParams } from 'tinymce/core/api/WindowManager';
+import type Editor from 'tinymce/core/api/Editor';
+import type { Dialog } from 'tinymce/core/api/ui/Ui';
+import type { WindowParams } from 'tinymce/core/api/WindowManager';
 
 import * as DialogUtils from '../../module/DialogUtils';
+import * as GuiSetup from '../../module/GuiSetup';
 
 describe('browser.tinymce.themes.silver.window.SilverInlineDialogTest', () => {
   const store = TestStore();
@@ -18,7 +18,7 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, []);
 
-  TestHelpers.GuiSetup.bddAddStyles(SugarDocument.getDocument(), [
+  GuiSetup.bddAddStyles(SugarDocument.getDocument(), [
     '.tox-dialog { background: white; border: 2px solid black; padding: 1em; margin: 1em; }'
   ]);
 
@@ -266,5 +266,32 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogTest', () => {
       SugarDocument.getDocument(),
       'iframe.tox-edit-area__iframe'
     );
+  });
+
+  it('TINY-12918: Inline persistent dialog should remain focused after being blocked and unblocked', async () => {
+    const editor = hook.editor();
+    const api = DialogUtils.openWithStore(editor, dialogSpec, { inline: 'bottom', persistent: true }, store);
+    await TinyUiActions.pWaitForDialog(editor);
+
+    // Verify the dialog is focused initially
+    await FocusTools.pTryOnSelector(
+      'Focus should be on the input when dialog opens',
+      SugarDocument.getDocument(),
+      'input'
+    );
+
+    // Block the dialog for a short time to simulate an async action, then unblock it
+    api.block('Blocking dialog for test');
+    await Waiter.pWait(10);
+    api.unblock();
+
+    // Verify the dialog is still focused after unblocking
+    await FocusTools.pTryOnSelector(
+      'Focus should be on initial input after unblocking',
+      SugarDocument.getDocument(),
+      'input'
+    );
+
+    api.close();
   });
 });

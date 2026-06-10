@@ -1,6 +1,6 @@
 import { Arr, Fun } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import * as CodeSample from '../core/CodeSample';
 import * as Languages from '../core/Languages';
@@ -28,7 +28,8 @@ const open = (editor: Editor): void => {
         {
           type: 'textarea',
           name: 'code',
-          label: 'Code view'
+          label: 'Code view',
+          spellcheck: false,
         }
       ]
     },

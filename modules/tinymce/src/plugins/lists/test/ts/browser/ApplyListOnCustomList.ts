@@ -2,7 +2,7 @@ import { describe, it } from '@ephox/bedrock-client';
 import { Strings } from '@ephox/katamari';
 import { TinyAssertions, TinyHooks, TinyUiActions } from '@ephox/mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/lists/Plugin';
 
 describe('browser.tinymce.plugins.lists.ApplyListOnParagraphWithStylesTest', () => {

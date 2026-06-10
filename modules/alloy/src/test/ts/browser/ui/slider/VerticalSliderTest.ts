@@ -1,14 +1,14 @@
 import { Chain, FocusTools, Keyboard, Keys, Logger, NamedChain, Step, UiFinder, Waiter } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Fun, Result } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import type { SugarElement } from '@ephox/sugar';
 
 import { Keying } from 'ephox/alloy/api/behaviour/Keying';
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Slider } from 'ephox/alloy/api/ui/Slider';
 import * as RepresentPipes from 'ephox/alloy/test/behaviour/RepresentPipes';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('Browser Test: ui.slider.VerticalSliderTest', (success, failure) => {
 

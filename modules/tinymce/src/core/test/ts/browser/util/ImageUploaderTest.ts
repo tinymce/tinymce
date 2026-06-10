@@ -3,9 +3,9 @@ import { Arr } from '@ephox/katamari';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
-import { BlobCache, BlobInfo } from 'tinymce/core/api/file/BlobCache';
-import ImageUploader, { UploadResult } from 'tinymce/core/api/util/ImageUploader';
+import type Editor from 'tinymce/core/api/Editor';
+import { BlobCache, type BlobInfo } from 'tinymce/core/api/file/BlobCache';
+import ImageUploader, { type UploadResult } from 'tinymce/core/api/util/ImageUploader';
 
 describe('browser.tinymce.core.util.ImageUploaderTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({

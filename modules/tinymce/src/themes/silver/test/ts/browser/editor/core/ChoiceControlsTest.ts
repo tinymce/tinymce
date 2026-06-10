@@ -6,7 +6,7 @@ import { Attribute, SugarBody } from '@ephox/sugar';
 import { McEditor, TinyAssertions, TinyHooks, TinySelections, TinyState, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 interface ToolbarOrMenuSpec {
   readonly name: string;
@@ -275,7 +275,7 @@ describe('browser.tinymce.themes.silver.editor.core.ChoiceControlsTest', () => {
 
           editor.formatter.apply('lang', { value: 'zh' });
 
-          await Waiter.pWait(0);
+          await Waiter.pWaitBetweenUserActions();
           await pAssertOptions(editor, spec.menuSelector, defaultLanguages, Optional.some('Chinese'));
           spec.close(editor, 'Language');
         });

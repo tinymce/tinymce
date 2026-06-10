@@ -2,8 +2,8 @@ import { Future, Optional } from '@ephox/katamari';
 
 import { readBlobAsText } from './BlobReader';
 import { DataType } from './DataType';
-import { ResponseBodyDataTypes, ResponseType } from './HttpData';
-import { HttpError } from './HttpError';
+import type { ResponseBodyDataTypes, ResponseType } from './HttpData';
+import type { HttpError } from './HttpError';
 import * as JsonResponse from './JsonResponse';
 
 // can't get responseText of a blob, throws a DomException. Need to use FileReader.

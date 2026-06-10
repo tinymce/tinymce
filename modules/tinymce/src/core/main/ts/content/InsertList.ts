@@ -1,9 +1,9 @@
 import { Arr, Type, Unicode } from '@ephox/katamari';
 
-import DOMUtils from '../api/dom/DOMUtils';
-import AstNode from '../api/html/Node';
-import Schema from '../api/html/Schema';
-import HtmlSerializer from '../api/html/Serializer';
+import type DOMUtils from '../api/dom/DOMUtils';
+import type AstNode from '../api/html/Node';
+import type Schema from '../api/html/Schema';
+import type HtmlSerializer from '../api/html/Serializer';
 import Tools from '../api/util/Tools';
 import CaretPosition from '../caret/CaretPosition';
 import { CaretWalker } from '../caret/CaretWalker';

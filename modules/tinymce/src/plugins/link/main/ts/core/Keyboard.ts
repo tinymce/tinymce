@@ -1,4 +1,4 @@
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 const setup = (editor: Editor): void => {
   editor.addShortcut('Meta+K', '', () => {

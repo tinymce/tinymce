@@ -1,13 +1,14 @@
 import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { SugarElement, SugarNode, Width } from '@ephox/sugar';
+import { type SugarElement, SugarNode, Width } from '@ephox/sugar';
 
-import { TableSize } from '../api/TableSize';
+import type { TableSize } from '../api/TableSize';
 import { Warehouse } from '../api/Warehouse';
 import * as Blocks from '../lookup/Blocks';
 import * as CellUtils from '../util/CellUtils';
-import { CellElement } from '../util/TableTypes';
+import type { CellElement } from '../util/TableTypes';
 import * as Util from '../util/Util';
+
 import { height, width } from './BarPositions';
 import * as Sizes from './Sizes';
 
@@ -70,7 +71,7 @@ const getWidthFrom = <T>(
       } else {
         // Invalid column so fallback to trying to get the computed width from the cell
         const cell = Optionals.bindFrom(columnCells[c], Fun.identity);
-        return getDimension(cell, c, backups, colFilter, (cell) => fallback(Optional.some(Width.get(cell))), fallback);
+        return getDimension(cell, c, backups, colFilter, (cell) => fallback(Optional.some(Math.round(Width.get(cell)))), fallback);
       }
     }, fallback);
   });

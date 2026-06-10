@@ -23,7 +23,15 @@ const constant = <T>(value: T): () => T => {
   };
 };
 
+const constantAsync = <T>(value: T): () => Promise<T> => {
+  return async () => value;
+};
+
 const identity = <T = any>(x: T): T => {
+  return x;
+};
+
+const identityAsync = async <T = any>(x: T): Promise<T> => {
   return x;
 };
 
@@ -42,7 +50,6 @@ function curry <A, B, C, D, E, F, G, REST extends any[], OUT>(fn: (a: A, b: B, c
 function curry <A, B, C, D, E, F, G, H, REST extends any[], OUT>(fn: (a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, ...restArgs: REST) => OUT, a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H): (...restArgs: REST) => OUT;
 function curry <A, B, C, D, E, F, G, H, I, REST extends any[], OUT>(fn: (a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, ...restArgs: REST) => OUT, a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I): (...restArgs: REST) => OUT;
 function curry <A, B, C, D, E, F, G, H, I, J, REST extends any[], OUT>(fn: (a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, j: J, ...restArgs: REST) => OUT, a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, j: J): (...restArgs: REST) => OUT;
-// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
 function curry <OUT>(fn: (...allArgs: any[]) => OUT, ...initialArgs: any[]): (...restArgs: any[]) => OUT {
   return (...restArgs: any[]) => {
     const all = initialArgs.concat(restArgs);
@@ -69,6 +76,9 @@ const call = (f: () => any): void => {
 
 const never: (...args: any[]) => false = constant<false>(false);
 const always: (...args: any[]) => true = constant<true>(true);
+
+const neverAsync: (...args: any[]) => Promise<false> = constantAsync<false>(false);
+const alwaysAsync: (...args: any[]) => Promise<true> = constantAsync<true>(true);
 
 /* Used to weaken types */
 const weaken = <A, B extends A>(b: B): A => b;
@@ -123,7 +133,9 @@ export {
   compose,
   compose1,
   constant,
+  constantAsync,
   identity,
+  identityAsync,
   tripleEquals,
   curry,
   not,
@@ -131,7 +143,9 @@ export {
   apply,
   call,
   never,
+  neverAsync,
   always,
+  alwaysAsync,
   weaken,
   pipe
 };

@@ -3,20 +3,21 @@ import { Arr, Cell, Throttler, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Css, DomEvent, SugarElement, SugarPosition, SugarShadowDom } from '@ephox/sugar';
 
-import { EventUtilsEvent } from 'tinymce/core/api/dom/EventUtils';
-import Editor from 'tinymce/core/api/Editor';
-import { EditorUiApi } from 'tinymce/core/api/ui/Ui';
+import type { EventUtilsEvent } from 'tinymce/core/api/dom/EventUtils';
+import type Editor from 'tinymce/core/api/Editor';
+import type { EditorUiApi } from 'tinymce/core/api/ui/Ui';
 
 import * as Events from '../api/Events';
 import * as Options from '../api/Options';
-import { UiFactoryBackstage } from '../backstage/Backstage';
-import * as ReadOnly from '../ReadOnly';
-import { ModeRenderInfo, RenderArgs, RenderUiConfig } from '../Render';
+import type { UiFactoryBackstage } from '../backstage/Backstage';
+import type { ModeRenderInfo, RenderArgs, RenderUiConfig } from '../Render';
 import OuterContainer from '../ui/general/OuterContainer';
 import { identifyMenus } from '../ui/menus/menubar/Integration';
 import { iframe as loadIframeSkin } from '../ui/skin/Loader';
+import * as UiState from '../UiState';
+
 import { setToolbar } from './Toolbars';
-import { ReadyUiReferences } from './UiReferences';
+import type { ReadyUiReferences } from './UiReferences';
 
 const detection = PlatformDetection.detect();
 const isiOS12 = detection.os.isiOS() && detection.os.version.major <= 12;
@@ -99,6 +100,7 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
   const lastToolbarWidth = Cell(0);
   const outerContainer = mainUi.outerContainer;
 
+  // eslint-disable-next-line @typescript-eslint/no-floating-promises
   loadIframeSkin(editor);
 
   const eTargetNode = SugarElement.fromDom(args.targetNode);
@@ -107,16 +109,25 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
   Attachment.attachSystemAfter(eTargetNode, mainUi.mothership);
   attachUiMotherships(editor, uiRoot, uiRefs);
 
-  // TINY-10343: Using `SkinLoaded` instead of `PostRender` because if the skin loading takes too long you run in to rendering problems since things are measured before the CSS is being applied
-  editor.on('SkinLoaded', () => {
-    // Set the sidebar before the toolbar and menubar
-    // - each sidebar has an associated toggle toolbar button that needs to check the
-    //   sidebar that is set to determine its active state on setup
+  editor.on('PostRender', () => {
     OuterContainer.setSidebar(
       outerContainer,
       rawUiConfig.sidebar,
       Options.getSidebarShow(editor)
     );
+
+    OuterContainer.setViews(
+      outerContainer,
+      rawUiConfig.views,
+      Options.getViewShow(editor)
+    );
+  }, true);
+
+  // TINY-10343: Using `SkinLoaded` instead of `PostRender` because if the skin loading takes too long you run in to rendering problems since things are measured before the CSS is being applied
+  editor.on('SkinLoaded', () => {
+    // Set the sidebar before the toolbar and menubar
+    // - each sidebar has an associated toggle toolbar button that needs to check the
+    //   sidebar that is set to determine its active state on setup
 
     setToolbar(editor, uiRefs, rawUiConfig, backstage);
     lastToolbarWidth.set(editor.getWin().innerWidth);
@@ -125,8 +136,6 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
       outerContainer,
       identifyMenus(editor, rawUiConfig)
     );
-
-    OuterContainer.setViews(outerContainer, rawUiConfig.views);
 
     setupEvents(editor, uiRefs);
   });
@@ -147,7 +156,7 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
     editor.on('remove', unbinder.unbind);
   }
 
-  ReadOnly.setupReadonlyModeSwitch(editor, uiRefs);
+  UiState.setupEventsForUi(editor, uiRefs);
 
   editor.addCommand('ToggleSidebar', (_ui: boolean, value: string) => {
     OuterContainer.toggleSidebar(outerContainer, value);
@@ -195,7 +204,8 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
 
   const api: Partial<EditorUiApi> = {
     setEnabled: (state) => {
-      ReadOnly.broadcastReadonly(uiRefs, !state);
+      const eventType = state ? 'setEnabled' : 'setDisabled';
+      UiState.broadcastEvents(uiRefs, eventType);
     },
     isEnabled: () => !Disabling.isDisabled(outerContainer)
   };

@@ -1,9 +1,9 @@
 import { TestStore } from '@ephox/agar';
 import { after, afterEach, before, describe, it } from '@ephox/bedrock-client';
-import { DomEvent, EventUnbinder, SugarBody } from '@ephox/sugar';
+import { DomEvent, type EventUnbinder, SugarBody } from '@ephox/sugar';
 import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 
 describe('browser.tinymce.plugins.link.OpenLinkToolbarButtonTest', () => {

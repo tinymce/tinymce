@@ -1,18 +1,19 @@
 import { Arr, Merger, Optional, Strings, Type } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
-import { BlobInfo } from 'tinymce/core/api/file/BlobCache';
-import { StyleMap } from 'tinymce/core/api/html/Styles';
-import { Dialog as DialogType } from 'tinymce/core/api/ui/Ui';
-import ImageUploader, { UploadResult } from 'tinymce/core/api/util/ImageUploader';
+import type Editor from 'tinymce/core/api/Editor';
+import type { BlobInfo } from 'tinymce/core/api/file/BlobCache';
+import type { StyleMap } from 'tinymce/core/api/html/Styles';
+import type { Dialog as DialogType } from 'tinymce/core/api/ui/Ui';
+import ImageUploader, { type UploadResult } from 'tinymce/core/api/util/ImageUploader';
 
-import { getStyleValue, ImageData } from '../core/ImageData';
+import { getStyleValue, type ImageData } from '../core/ImageData';
 import { normalizeCss as doNormalizeCss } from '../core/ImageSelection';
 import { ListUtils } from '../core/ListUtils';
 import * as Utils from '../core/Utils';
+
 import { AdvTab } from './AdvTab';
 import { collect } from './DialogInfo';
-import { API, ImageDialogData, ImageDialogInfo, ImageMeta, ListValue } from './DialogTypes';
+import type { API, ImageDialogData, ImageDialogInfo, ImageMeta, ListValue } from './DialogTypes';
 import { MainTab } from './MainTab';
 import { UploadTab } from './UploadTab';
 
@@ -29,7 +30,6 @@ interface Helpers {
   readonly imageSize: (url: string) => Promise<Size>;
   readonly addToBlobCache: (blobInfo: BlobInfo) => void;
   readonly createBlobCache: (file: File, blobUri: string, dataUrl: string) => BlobInfo;
-  readonly alertErr: (message: string) => void;
   readonly normalizeCss: (cssText: string | undefined) => string;
   readonly parseStyle: (cssText: string) => StyleMap;
   readonly serializeStyle: (stylesArg: StyleMap, name?: string) => string;
@@ -238,6 +238,7 @@ const changeFileInput = (helpers: Helpers, info: ImageDialogInfo, state: ImageDi
         api.focus('src');
       };
 
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       Utils.blobToDataUri(file).then((dataUrl) => {
         const blobInfo = helpers.createBlobCache(file, blobUri, dataUrl);
         if (info.automaticUploads) {
@@ -246,7 +247,9 @@ const changeFileInput = (helpers: Helpers, info: ImageDialogInfo, state: ImageDi
             finalize();
           }).catch((err) => {
             finalize();
-            helpers.alertErr(err);
+            info.alertErr(err, () => {
+              api.focus('fileinput');
+            });
           });
         } else {
           helpers.addToBlobCache(blobInfo);
@@ -282,7 +285,7 @@ const makeDialogBody = (info: ImageDialogInfo): DialogType.TabPanelSpec | Dialog
       tabs: Arr.flatten([
         [ MainTab.makeTab(info) ],
         info.hasAdvTab ? [ AdvTab.makeTab(info) ] : [],
-        info.hasUploadTab && (info.hasUploadUrl || info.hasUploadHandler) ? [ UploadTab.makeTab(info) ] : []
+        info.hasUploadTab && (info.hasUploadUrl || info.hasUploadHandler) ? [ UploadTab.makeTab(info, () => new Promise((r) => info.alertErr('Selected images do not have allowed extensions', r))) ] : []
       ])
     };
     return tabPanel;
@@ -306,6 +309,7 @@ const submitHandler = (editor: Editor, info: ImageDialogInfo, helpers: Helpers) 
   };
 
   editor.execCommand('mceUpdateImage', false, toImageData(finalData, info.hasAccessibilityOptions));
+  // eslint-disable-next-line @typescript-eslint/no-floating-promises
   editor.editorUpload.uploadImagesAuto();
 
   api.close();
@@ -336,10 +340,6 @@ const addToBlobCache = (editor: Editor) => (blobInfo: BlobInfo): void => {
   editor.editorUpload.blobCache.add(blobInfo);
 };
 
-const alertErr = (editor: Editor) => (message: string): void => {
-  editor.windowManager.alert(message);
-};
-
 const normalizeCss = (editor: Editor) => (cssText: string | undefined): string =>
   doNormalizeCss(editor, cssText);
 
@@ -365,13 +365,13 @@ export const Dialog = (editor: Editor): { open: () => void } => {
     imageSize: imageSize(editor),
     addToBlobCache: addToBlobCache(editor),
     createBlobCache: createBlobCache(editor),
-    alertErr: alertErr(editor),
     normalizeCss: normalizeCss(editor),
     parseStyle: parseStyle(editor),
     serializeStyle: serializeStyle(editor),
     uploadImage: uploadImage(editor)
   };
   const open = () => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     collect(editor)
       .then((info: ImageDialogInfo): DialogType.DialogSpec<ImageDialogData> => {
         const state = createState(info);

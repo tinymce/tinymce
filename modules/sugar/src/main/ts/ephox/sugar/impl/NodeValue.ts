@@ -1,6 +1,6 @@
 import { Optional } from '@ephox/katamari';
 
-import { SugarElement } from '../api/node/SugarElement';
+import type { SugarElement } from '../api/node/SugarElement';
 
 export interface NodeValue {
   readonly get: (element: SugarElement<Node>) => string;

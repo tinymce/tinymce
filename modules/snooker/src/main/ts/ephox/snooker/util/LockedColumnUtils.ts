@@ -1,7 +1,7 @@
 import { Arr, Fun, Obj, Optional } from '@ephox/katamari';
-import { Attribute, SugarElement } from '@ephox/sugar';
+import { Attribute, type SugarElement } from '@ephox/sugar';
 
-import * as Structs from '../api/Structs';
+import type * as Structs from '../api/Structs';
 import * as GridRow from '../model/GridRow';
 
 export const LOCKED_COL_ATTR = 'data-snooker-locked-cols';

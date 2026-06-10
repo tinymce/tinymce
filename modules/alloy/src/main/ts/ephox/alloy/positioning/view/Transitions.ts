@@ -1,11 +1,12 @@
-import { Arr, Obj, Optional, Optionals, Singleton, Strings, Type } from '@ephox/katamari';
-import { Attribute, Classes, Compare, Css, DomEvent, EventArgs, SugarElement } from '@ephox/sugar';
+import { Arr, Obj, type Optional, Optionals, Singleton, Strings, Type } from '@ephox/katamari';
+import { Attribute, Classes, Compare, Css, DomEvent, type EventArgs, type SugarElement } from '@ephox/sugar';
 
 import * as NativeEvents from '../../api/events/NativeEvents';
-import { PlacerResult } from '../layout/LayoutTypes';
+import type { PlacerResult } from '../layout/LayoutTypes';
 import * as Origins from '../layout/Origins';
-import { PositionCss } from './PositionCss';
-import { RepositionDecision } from './Reposition';
+
+import type { PositionCss } from './PositionCss';
+import type { RepositionDecision } from './Reposition';
 
 export type TransitionProp = 'top' | 'left' | 'bottom' | 'right';
 export type TransitionMode = 'all' | 'layout' | 'placement';
@@ -103,7 +104,7 @@ const setupTransitionListeners = (element: SugarElement<HTMLElement>, transition
   // Request the next animation frame so we can roughly determine when the transition starts and then ensure
   // the transition is cleaned up. In addition add ~17ms to the delay as that's about about 1 frame at 60fps
   const duration = getTransitionDuration(element);
-  requestAnimationFrame(() => {
+  window.requestAnimationFrame(() => {
     timer = setTimeout(transitionDone, duration + 17);
     Attribute.set(element, timerAttr, timer);
   });

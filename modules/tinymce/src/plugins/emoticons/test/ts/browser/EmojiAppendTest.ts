@@ -1,13 +1,11 @@
-import { ApproxStructure, Assertions, FocusTools, Keys, StructAssert, UiFinder, Waiter } from '@ephox/agar';
+import { ApproxStructure, Assertions, FocusTools, Keys, type StructAssert, UiFinder, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Attribute, SugarBody, SugarDocument } from '@ephox/sugar';
 import { TinyAssertions, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/emoticons/Plugin';
-
-import { fakeEvent } from '../module/test/Utils';
 
 describe('browser.tinymce.plugins.emoticons.EmojiAppendTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -55,12 +53,11 @@ describe('browser.tinymce.plugins.emoticons.EmojiAppendTest', () => {
       ]
     })), tabList);
 
-    const input = FocusTools.setActiveValue(doc, 'clock');
-    fakeEvent(input, 'input');
+    FocusTools.setActiveValue(doc, 'clock');
     await Waiter.pTryUntil(
       'Wait until clock is the first choice (search should filter)',
       () => {
-        const item = UiFinder.findIn(SugarBody.body(), '.tox-collection__item:first').getOrDie();
+        const item = UiFinder.findIn(SugarBody.body(), '.tox-collection__item:first-child').getOrDie();
         const value = Attribute.get(item, 'data-collection-item-value');
         assert.equal(value, '⏲', 'Search should show custom clock');
       }

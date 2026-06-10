@@ -1,7 +1,7 @@
-import { Cell, Fun, Optional, Optionals } from '@ephox/katamari';
+import { type Cell, Fun, Optional, Optionals } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import * as Options from '../api/Options';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
@@ -10,6 +10,7 @@ import * as BoundaryCaret from '../keyboard/BoundaryCaret';
 import * as BoundaryLocation from '../keyboard/BoundaryLocation';
 import * as BoundarySelection from '../keyboard/BoundarySelection';
 import * as InlineUtils from '../keyboard/InlineUtils';
+
 import * as DeleteElement from './DeleteElement';
 import { execNativeDeleteCommand } from './DeleteUtils';
 

@@ -3,13 +3,14 @@ import { PlatformDetection } from '@ephox/sand';
 import { LegacyUnit, TinyApis, TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import { ZWSP } from 'tinymce/core/text/Zwsp';
 
 import * as KeyUtils from '../module/test/KeyUtils';
 
 describe('browser.tinymce.core.FormatterRemoveTest', () => {
   const browser = PlatformDetection.detect().browser;
+  const isOldSafari = browser.isSafari() && (browser.version.major === 18 && browser.version.minor < 3);
 
   const hook = TinyHooks.bddSetupLight<Editor>({
     indent: false,
@@ -375,7 +376,8 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
     editor.setContent(initialContent);
     LegacyUnit.setSelection(editor, 'p:nth-child(2) b', 0, 'p:last-of-type b', 3);
     editor.formatter.remove('format');
-    if (browser.isSafari()) {
+
+    if (isOldSafari) {
       // Safari 17 will not select the non-editable content
       // Selection only covers editable "def" and removes format correctly
       const expectedContent = '<p>abc</p><p>def</p><p contenteditable="false"><b>ghj</b></p>';

@@ -1,11 +1,12 @@
 import { Arr, Fun, Optional, Optionals, Singleton, Type } from '@ephox/katamari';
 import { Attribute, Dimension, SugarElement, SugarNode, TransformFind } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
-import { ContentLanguage } from 'tinymce/core/api/OptionTypes';
-import { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
+import type Editor from 'tinymce/core/api/Editor';
+import type { ContentLanguage } from 'tinymce/core/api/OptionTypes';
+import type { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
 
 import * as Options from '../../api/Options';
+
 import { composeUnbinders, onSetupEditableToggle } from './ControlUtils';
 
 interface ControlSpec<T> {

@@ -1,8 +1,8 @@
 import { Fun, Optional, Optionals } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
-import { NodeChangeEvent } from 'tinymce/core/api/EventTypes';
-import { InlineContent, Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
+import type Editor from 'tinymce/core/api/Editor';
+import type { NodeChangeEvent } from 'tinymce/core/api/EventTypes';
+import type { InlineContent, Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
 
 import * as Options from '../api/Options';
 import * as Actions from '../core/Actions';
@@ -115,7 +115,7 @@ const setupContextToolbars = (editor: Editor, openLink: OpenLink.LinkSelection):
 
   const onSetupLink = (buttonApi: InlineContent.ContextFormButtonInstanceApi) => {
     const node = editor.selection.getNode();
-    buttonApi.setEnabled(Utils.isInAnchor(editor, node));
+    buttonApi.setEnabled(Utils.isInAnchor(editor, node) && editor.selection.isEditable());
     return Fun.noop;
   };
 

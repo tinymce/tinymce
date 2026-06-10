@@ -26,7 +26,7 @@ describe('atomic.katamari.api.str.EmptyTest', () => {
   });
 
   it('A string with length 1 or larger should never be empty', () => {
-    fc.assert(fc.property(fc.string(1, 40), (str) => {
+    fc.assert(fc.property(fc.string({ minLength: 1, maxLength: 40 }), (str) => {
       assert.isFalse(Strings.isEmpty(str));
       assert.isTrue(Strings.isNotEmpty(str));
     }));

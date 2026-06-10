@@ -1,4 +1,4 @@
-import { SugarElement } from '../node/SugarElement';
+import type { SugarElement } from '../node/SugarElement';
 
 export interface SimRange {
   readonly start: SugarElement<Node>;

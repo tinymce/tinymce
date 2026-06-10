@@ -3,7 +3,7 @@ import { describe, it, before, after } from '@ephox/bedrock-client';
 import { SugarBody, SugarDocument } from '@ephox/sugar';
 import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/link/Plugin';
 
 import { TestLinkUi } from '../module/TestLinkUi';
@@ -60,8 +60,7 @@ describe('browser.tinymce.plugins.link.SelectedImageTest', () => {
     editor.setContent('<p><a href="http://www.google.com/" title="test"><img src="image.png"></a></p>');
     TinySelections.select(editor, 'a', []);
     await TestLinkUi.pOpenLinkDialog(editor);
-    const focused = FocusTools.setActiveValue(doc, '');
-    TestLinkUi.fireEvent(focused, 'input');
+    FocusTools.setActiveValue(doc, '');
     UiFinder.notExists(SugarBody.body(), '.tox-label:contains("Text to display")');
     TestLinkUi.assertDialogContents({
       url: '',

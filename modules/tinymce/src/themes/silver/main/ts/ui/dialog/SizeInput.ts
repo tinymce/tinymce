@@ -1,17 +1,21 @@
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, CustomEvent, Disabling,
+  AddEventsBehaviour, type AlloyComponent, AlloyEvents,
   FormCoupledInputs as AlloyFormCoupledInputs,
-  FormField as AlloyFormField, GuiFactory, Input as AlloyInput, NativeEvents, Representing, SketchSpec, Tabstopping, Tooltipping
+  FormField as AlloyFormField,
+  Input as AlloyInput,
+  type AlloySpec, AlloyTriggers, Behaviour, type CustomEvent, Disabling,
+  GuiFactory,
+  NativeEvents, Representing, type SketchSpec, Tabstopping, Tooltipping
 } from '@ephox/alloy';
-import { Dialog } from '@ephox/bridge';
+import type { Dialog } from '@ephox/bridge';
 import { Id, Unicode } from '@ephox/katamari';
 
 import { formChangeEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
 
-import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
-import * as ReadOnly from '../../ReadOnly';
+import type { UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import * as UiState from '../../UiState';
 import * as Icons from '../icons/Icons';
-import { formatSize, makeRatioConverter, noSizeConversion, parseSize, SizeConversion } from '../sizeinput/SizeInputModel';
+import { formatSize, makeRatioConverter, noSizeConversion, parseSize, type SizeConversion } from '../sizeinput/SizeInputModel';
 
 interface RatioEvent extends CustomEvent {
   readonly isField1: boolean;
@@ -26,6 +30,9 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
 
   const makeIcon = (iconName: string) =>
     Icons.render(iconName, { tag: 'span', classes: [ 'tox-icon', 'tox-lock-icon__' + iconName ] }, providersBackstage.icons);
+
+  const disabled = () => !spec.enabled || providersBackstage.checkUiComponentContext(spec.context).shouldDisable;
+  const toggleOnReceive = UiState.toggleOnReceive(() => providersBackstage.checkUiComponentContext(spec.context));
 
   const label = spec.label.getOr('Constrain proportions');
   const translatedLabel = providersBackstage.translate(label);
@@ -43,10 +50,8 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
       makeIcon('unlock')
     ],
     buttonBehaviours: Behaviour.derive([
-      Disabling.config({
-        disabled: () => !spec.enabled || providersBackstage.isDisabled()
-      }),
-      ReadOnly.receivingConfig(),
+      Disabling.config({ disabled }),
+      toggleOnReceive,
       Tabstopping.config({}),
       Tooltipping.config(
         providersBackstage.tooltips.getConfig({
@@ -68,10 +73,8 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
     factory: AlloyInput,
     inputClasses: [ 'tox-textfield' ],
     inputBehaviours: Behaviour.derive([
-      Disabling.config({
-        disabled: () => !spec.enabled || providersBackstage.isDisabled()
-      }),
-      ReadOnly.receivingConfig(),
+      Disabling.config({ disabled }),
+      toggleOnReceive,
       Tabstopping.config({}),
       AddEventsBehaviour.config('size-input-events', [
         AlloyEvents.run(NativeEvents.focusin(), (component, _simulatedEvent) => {
@@ -141,7 +144,7 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
     },
     coupledFieldBehaviours: Behaviour.derive([
       Disabling.config({
-        disabled: () => !spec.enabled || providersBackstage.isDisabled(),
+        disabled,
         onDisabled: (comp) => {
           AlloyFormCoupledInputs.getField1(comp).bind(AlloyFormField.getField).each(Disabling.disable);
           AlloyFormCoupledInputs.getField2(comp).bind(AlloyFormField.getField).each(Disabling.disable);
@@ -153,7 +156,7 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
           AlloyFormCoupledInputs.getLock(comp).each(Disabling.enable);
         }
       }),
-      ReadOnly.receivingConfig(),
+      UiState.toggleOnReceive(() => providersBackstage.checkUiComponentContext('mode:design')),
       AddEventsBehaviour.config('size-input-events2', [
         AlloyEvents.run<RatioEvent>(ratioEvent, (component, simulatedEvent) => {
           const isField1 = simulatedEvent.event.isField1;

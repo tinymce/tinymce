@@ -4,8 +4,8 @@ import { Fun, Singleton } from '@ephox/katamari';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type Editor from 'tinymce/core/api/Editor';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as Clipboard from 'tinymce/core/paste/Clipboard';
 
 import * as PasteEventUtils from '../../module/test/PasteEventUtils';

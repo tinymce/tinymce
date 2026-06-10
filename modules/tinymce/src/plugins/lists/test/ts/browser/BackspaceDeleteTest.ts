@@ -2,7 +2,7 @@ import { describe, it } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/lists/Plugin';
 
 describe('browser.tinymce.plugins.lists.BackspaceDeleteTest', () => {
@@ -59,6 +59,24 @@ describe('browser.tinymce.plugins.lists.BackspaceDeleteTest', () => {
     TinyAssertions.assertContent(editor, content);
 
     assert.equal(editor.selection.getNode().nodeName, 'LI');
+  });
+
+  it('TINY-11100: Backspacing with a selection should cause an input event', () => {
+    const editor = hook.editor();
+    editor.setContent('<ul><li>ab</li></ul>');
+
+    editor.focus();
+    let inputEventCounter = 0;
+    const inputEventHandler = () => inputEventCounter++;
+
+    TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 1);
+
+    editor.on('input', inputEventHandler);
+    editor.plugins.lists.backspaceDelete();
+    editor.off('input', inputEventHandler);
+
+    assert.equal(inputEventCounter, 1);
+    TinyAssertions.assertContent(editor, '<ul><li>b</li></ul>');
   });
 
   it('TBA: Backspace at end of single LI in UL with STRONG', () => {

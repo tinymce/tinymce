@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions, Keyboard, Keys, Mouse, Step, StructAssert } from '@ephox/agar';
+import { ApproxStructure, Assertions, Keyboard, Keys, Mouse, Step, type StructAssert } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Objects } from '@ephox/boulder';
 import { Arr, Obj } from '@ephox/katamari';
@@ -10,11 +10,11 @@ import { Keying } from 'ephox/alloy/api/behaviour/Keying';
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Menu } from 'ephox/alloy/api/ui/Menu';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import * as MenuEvents from 'ephox/alloy/menu/util/MenuEvents';
 import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('TieredMenuTest', (success, failure) => {
 

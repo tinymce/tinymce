@@ -1,6 +1,6 @@
-import { Assert, TestLabel } from '@ephox/bedrock-client';
+import { Assert, type TestLabel } from '@ephox/bedrock-client';
 import { Arr, Fun, Obj, Optional } from '@ephox/katamari';
-import { Attribute, Classes, Css, Html, SugarElement, SugarNode, SugarText, Traverse, Truncate, Value } from '@ephox/sugar';
+import { Attribute, Classes, Css, Html, type SugarElement, SugarNode, SugarText, Traverse, Truncate, Value } from '@ephox/sugar';
 
 import * as ApproxComparisons from './ApproxComparisons';
 
@@ -20,7 +20,7 @@ export interface ElementQueue {
   peek(): Optional<SugarElement<Node>>;
   take(): Optional<SugarElement<Node>>;
   mark(): {
-    reset: () => void ;
+    reset: () => void;
     atMark: () => boolean;
   };
 }
@@ -191,7 +191,7 @@ const either = (structAsserts: StructAssert[]): StructAssert => {
       try {
         applyAssert(structAsserts[i], queue);
         return;
-      } catch (e) {
+      } catch {
         mark.reset();
       }
     }
@@ -215,7 +215,7 @@ const repeat = (min: number, max: number | true = min) => (structAssert: StructA
       const mark = queue.mark();
       try {
         applyAssert(structAssert, queue);
-      } catch (e) {
+      } catch {
         mark.reset();
       }
       if (mark.atMark()) {

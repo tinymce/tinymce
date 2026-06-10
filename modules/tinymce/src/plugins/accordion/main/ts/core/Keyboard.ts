@@ -1,4 +1,4 @@
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import VK from 'tinymce/core/api/util/VK';
 
 import * as Utils from './Utils';

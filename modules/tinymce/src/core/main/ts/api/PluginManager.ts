@@ -1,5 +1,5 @@
 import AddOnManager from './AddOnManager';
-import Editor from './Editor';
+import type Editor from './Editor';
 
 export interface Plugin {
   getMetadata?: () => { name: string; url: string };

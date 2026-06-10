@@ -2,8 +2,8 @@ import { Arr, Optional, Optionals, Strings, Type, Unicode } from '@ephox/katamar
 import { Css, PredicateFind, SugarElement, SugarNode } from '@ephox/sugar';
 
 import DomTreeWalker from '../api/dom/TreeWalker';
-import Editor from '../api/Editor';
-import Schema from '../api/html/Schema';
+import type Editor from '../api/Editor';
+import type Schema from '../api/html/Schema';
 import { isAfterBlock, isAtEndOfBlock, isAtStartOfBlock, isBeforeBlock } from '../caret/BlockBoundary';
 import { isAfterBr, isBeforeBr } from '../caret/CaretBr';
 import * as CaretFinder from '../caret/CaretFinder';

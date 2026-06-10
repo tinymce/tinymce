@@ -3,7 +3,7 @@ import { Class, SugarElement } from '@ephox/sugar';
 
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Memento from 'ephox/alloy/api/component/Memento';
-import { PremadeSpec } from 'ephox/alloy/api/component/SpecTypes';
+import type { PremadeSpec } from 'ephox/alloy/api/component/SpecTypes';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Tabbar } from 'ephox/alloy/api/ui/Tabbar';

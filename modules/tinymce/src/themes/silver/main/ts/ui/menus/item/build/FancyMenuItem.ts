@@ -1,14 +1,17 @@
-import { ItemTypes } from '@ephox/alloy';
-import { Menu } from '@ephox/bridge';
-import { Obj, Optional } from '@ephox/katamari';
+import type { ItemTypes } from '@ephox/alloy';
+import type { Menu } from '@ephox/bridge';
+import { Obj, type Optional } from '@ephox/katamari';
 
-import { UiFactoryBackstage } from '../../../../backstage/Backstage';
+import type { UiFactoryBackstage } from '../../../../backstage/Backstage';
+
 import { renderColorSwatchItem } from './ColorSwatchItem';
+import { renderImageSelector } from './ImageSelector';
 import { renderInsertTableMenuItem } from './InsertTableMenuItem';
 
 const fancyMenuItems: Record<keyof Menu.FancyActionArgsMap, (mi: any, bs: UiFactoryBackstage) => ItemTypes.WidgetItemSpec> = {
   inserttable: renderInsertTableMenuItem,
-  colorswatch: renderColorSwatchItem
+  colorswatch: renderColorSwatchItem,
+  imageselect: renderImageSelector
 };
 
 const renderFancyMenuItem = (spec: Menu.FancyMenuItem, backstage: UiFactoryBackstage): Optional<ItemTypes.WidgetItemSpec> =>

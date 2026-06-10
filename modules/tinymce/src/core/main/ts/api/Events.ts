@@ -1,13 +1,14 @@
-import { AutocompleterEventArgs, AutocompleterUpdateActiveRange } from '../autocomplete/AutocompleteTypes';
-import { FormatVars } from '../fmt/FormatTypes';
-import { RangeLikeObject } from '../selection/RangeTypes';
-import Editor from './Editor';
-import {
+import type { AutocompleterEventArgs, AutocompleterUpdateActiveRange } from '../autocomplete/AutocompleteTypes';
+import type { FormatVars } from '../fmt/FormatTypes';
+import type { RangeLikeObject } from '../selection/RangeTypes';
+
+import type Editor from './Editor';
+import type {
   BeforeSetContentEvent, SetContentEvent, PastePlainTextToggleEvent, PastePostProcessEvent, PastePreProcessEvent, GetContentEvent, BeforeGetContentEvent,
-  PreProcessEvent, PostProcessEvent, EditableRootStateChangeEvent
+  PreProcessEvent, PostProcessEvent, EditableRootStateChangeEvent, DisabledStateChangeEvent
 } from './EventTypes';
-import { ParserArgs } from './html/DomParser';
-import { EditorEvent } from './util/EventDispatcher';
+import type { ParserArgs } from './html/DomParser';
+import type { EditorEvent } from './util/EventDispatcher';
 
 const firePreProcess = (editor: Editor, args: ParserArgs & { node: Element }): EditorEvent<PreProcessEvent> =>
   editor.dispatch('PreProcess', args);
@@ -103,6 +104,12 @@ const firePastePlainTextToggle = (editor: Editor, state: boolean): EditorEvent<P
 const fireEditableRootStateChange = (editor: Editor, state: boolean): EditorEvent<EditableRootStateChangeEvent> =>
   editor.dispatch('EditableRootStateChange', { state });
 
+const fireDisabledStateChange = (editor: Editor, state: boolean): EditorEvent<DisabledStateChangeEvent> =>
+  editor.dispatch('DisabledStateChange', { state });
+
+const fireCloseTooltips = (editor: Editor): EditorEvent<DisabledStateChangeEvent> =>
+  editor.dispatch('CloseActiveTooltips');
+
 export {
   firePreProcess,
   firePostProcess,
@@ -129,5 +136,7 @@ export {
   firePastePlainTextToggle,
   firePastePostProcess,
   firePastePreProcess,
-  fireEditableRootStateChange
+  fireEditableRootStateChange,
+  fireDisabledStateChange,
+  fireCloseTooltips
 };

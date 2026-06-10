@@ -1,6 +1,6 @@
 import { Arr, Fun, Obj, Type, Unicode } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 const isText = (node: Node): node is Text => node.nodeType === 3;
 

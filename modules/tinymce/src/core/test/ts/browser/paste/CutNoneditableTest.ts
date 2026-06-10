@@ -3,7 +3,7 @@ import { describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.paste.CutNoneditableTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
@@ -20,7 +20,7 @@ describe('browser.tinymce.core.paste.CutNoneditableTest', () => {
     TinySelections.setSelection(editor, [ 0, 0, 0 ], 1, [ 0, 0, 0 ], 2);
     const dataTransfer = Clipboard.cut(TinyDom.body(editor));
     assert.equal(dataTransfer.getData('text/html'), '', 'Should be empty since there is no editable content selected');
-    await Waiter.pWait(1); // The execCommand('Delete') inside the cut handler is executed using setTimeout(.., 0) to avoid command recursion.
+    await Waiter.pWaitBetweenUserActions();
     TinyAssertions.assertContent(editor, initialContent);
   });
 });

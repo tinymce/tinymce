@@ -1,6 +1,6 @@
-import { Optional } from '@ephox/katamari';
+import type { Optional } from '@ephox/katamari';
 
-import { SugarElement } from '../node/SugarElement';
+import type { SugarElement } from '../node/SugarElement';
 import * as SelectorFind from '../search/SelectorFind';
 
 const set = (element: SugarElement<HTMLInputElement>, status: boolean): void => {

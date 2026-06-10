@@ -4,7 +4,7 @@ import { Fun } from '@ephox/katamari';
 import { Class, Focus, Insert, Remove, SugarBody, SugarElement, SugarNode } from '@ephox/sugar';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.themes.silver.throbber.ThrobberPopupTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({

@@ -2,12 +2,13 @@ import { HexColour, RgbaColour } from '@ephox/acid';
 import { Arr, Cell, Fun, Optional, Optionals, Strings } from '@ephox/katamari';
 import { Css, SugarElement, SugarNode, TransformFind } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
-import { Dialog, Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type Editor from 'tinymce/core/api/Editor';
+import type { Dialog, Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 import * as Events from '../../../api/Events';
 import { composeUnbinders, onSetupEditableToggle } from '../ControlUtils';
+
 import * as ColorCache from './ColorCache';
 import * as Options from './Options';
 
@@ -148,6 +149,7 @@ const getToolTipText = (editor: Editor, format: ColorFormat, lastColor: string) 
 const registerTextColorButton = (editor: Editor, name: string, format: ColorFormat, lastColor: Cell<string>) => {
   editor.ui.registry.addSplitButton(name, {
     tooltip: getToolTipText(editor, format, lastColor.get()),
+    chevronTooltip: name === 'forecolor' ? 'Text color menu' : 'Background color menu',
     presets: 'color',
     icon: name === 'forecolor' ? 'text-color' : 'highlight-bg-color',
     select: select(editor, format),

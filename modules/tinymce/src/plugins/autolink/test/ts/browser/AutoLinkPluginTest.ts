@@ -4,9 +4,9 @@ import { LegacyUnit, TinyAssertions, TinyHooks, TinySelections } from '@ephox/wr
 import { assert } from 'chai';
 import fc from 'fast-check';
 
-import Editor from 'tinymce/core/api/Editor';
-import { ExecCommandEvent } from 'tinymce/core/api/EventTypes';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type Editor from 'tinymce/core/api/Editor';
+import type { ExecCommandEvent } from 'tinymce/core/api/EventTypes';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import Plugin from 'tinymce/plugins/autolink/Plugin';
 
 import * as KeyUtils from '../module/test/KeyUtils';
@@ -19,6 +19,10 @@ describe('browser.tinymce.plugins.autolink.AutoLinkPluginTest', () => {
     inline_boundaries: false,
     allow_unsafe_link_target: true
   }, [ Plugin ], true);
+
+  // https://fast-check.dev/docs/migration-guide/from-3.x-to-4.x/#hexa-or-hexastring
+  const items = '0123456789abcdef';
+  const hexa = () => fc.integer({ min: 0, max: 15 }).map((n) => items[n]);
 
   const typeUrl = (editor: Editor, url: string): string => {
     editor.setContent('<p>' + url + '</p>');
@@ -84,14 +88,18 @@ describe('browser.tinymce.plugins.autolink.AutoLinkPluginTest', () => {
 
   it('TINY-4773: multiple @ characters', () => {
     const editor = hook.editor();
-    fc.assert(fc.property(fc.hexaString(0, 30), fc.hexaString(0, 30), fc.hexaString(0, 30), (s1, s2, s3) => {
-      assertNoLink(editor, `${s1}@@${s2}@.@${s3}`, `${s1}@@${s2}@.@${s3}`);
-    }));
+    fc.assert(fc.property(
+      fc.string({ unit: hexa(), minLength: 0, maxLength: 30 }),
+      fc.string({ unit: hexa(), minLength: 0, maxLength: 30 }),
+      fc.string({ unit: hexa(), minLength: 0, maxLength: 30 }),
+      (s1, s2, s3) => {
+        assertNoLink(editor, `${s1}@@${s2}@.@${s3}`, `${s1}@@${s2}@.@${s3}`);
+      }));
   });
 
   it('TINY-4773: ending in @ character', () => {
     const editor = hook.editor();
-    fc.assert(fc.property(fc.hexaString(0, 100), (s1) => {
+    fc.assert(fc.property(fc.string({ unit: hexa(), minLength: 0, maxLength: 100 }), (s1) => {
       assertNoLink(editor, `${s1}@`, `${s1}@`);
     }));
   });
@@ -201,6 +209,14 @@ describe('browser.tinymce.plugins.autolink.AutoLinkPluginTest', () => {
     TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 23);
     KeyUtils.type(editor, ' ');
     TinyAssertions.assertContent(editor, '<p><a href="https://www.domain.com/"><strong>https://www.domain.com/&nbsp;</strong></a></p>');
+  });
+
+  it('TINY-11836: Should not create links if the content is already a link or part of it.', () => {
+    const editor = hook.editor();
+    editor.setContent('<p><a href="https://www.domain.com/" target="_blank" rel="noopener">www.domain.com</a></p>');
+    TinySelections.setCursor(editor, [ 0 ], 1);
+    KeyUtils.type(editor, '\n');
+    TinyAssertions.assertContent(editor, '<p><a href="https://www.domain.com/" target="_blank" rel="noopener">www.domain.com</a></p><p>&nbsp;</p>');
   });
 
   it('TINY-8091: should trigger when typing in the middle of brackets', () => {

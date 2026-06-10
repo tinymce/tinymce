@@ -1,13 +1,14 @@
 /* eslint-disable no-console */
 import { Merger } from '@ephox/katamari';
 
-import { RawEditorOptions, TinyMCE } from 'tinymce/core/api/PublicApi';
+import type { RawEditorOptions, TinyMCE } from 'tinymce/core/api/PublicApi';
 
 declare let tinymce: TinyMCE;
 
 export default (): void => {
   const settings: RawEditorOptions = {
     selector: 'textarea',
+    license_key: 'gpl',
     setup: (ed) => {
       let isToggled = false;
       let isToggled2 = false;
@@ -34,7 +35,6 @@ export default (): void => {
                 icon: 'copy',
                 borderless: true,
                 onAction: () => {
-                  // eslint-disable-next-line no-console
                   console.log('iconAndText');
                 }
               }
@@ -58,7 +58,6 @@ export default (): void => {
                 type: 'togglebutton',
                 icon: 'plus',
                 onAction: () => {
-                  // eslint-disable-next-line no-console
                   console.log('Plus');
                 }
               },
@@ -67,7 +66,6 @@ export default (): void => {
                 type: 'togglebutton',
                 icon: 'minus',
                 onAction: () => {
-                  // eslint-disable-next-line no-console
                   console.log('Minus');
                 }
               }
@@ -80,7 +78,7 @@ export default (): void => {
                 type: 'button',
                 text: 'Cancel',
                 tooltip: 'Cancel',
-                onAction: () => console.log('Cancel'),
+                onAction: () => ed.execCommand('ToggleView', false, 'myview1'),
                 buttonType: 'secondary'
               },
               {
@@ -107,9 +105,7 @@ export default (): void => {
         }
       });
     },
-    init_instance_callback: (ed) => {
-      ed.execCommand('ToggleView', false, 'myview1');
-    },
+    view_show: 'myview1',
     plugins: [],
     toolbar: 'undo redo customview',
     contextmenu: 'link linkchecker image table lists configurepermanentpen'

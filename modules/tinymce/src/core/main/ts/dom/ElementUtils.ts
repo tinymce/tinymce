@@ -1,8 +1,9 @@
 import { Arr, Obj, Strings, Type } from '@ephox/katamari';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import Tools from '../api/util/Tools';
 import * as Bookmarks from '../bookmark/Bookmarks';
+
 import * as NodeType from './NodeType';
 
 const internalAttributesPrefixes = [

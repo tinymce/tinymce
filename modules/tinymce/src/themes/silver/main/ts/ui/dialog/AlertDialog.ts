@@ -1,9 +1,10 @@
-import { AlloyEvents, Focusing, GuiFactory, Memento, ModalDialog } from '@ephox/alloy';
+import { AlloyEvents, Focusing, GuiFactory, Memento, ModalDialog, AriaDescribe } from '@ephox/alloy';
 import { Optional } from '@ephox/katamari';
 
-import { UiFactoryBackstage } from '../../backstage/Backstage';
+import type { UiFactoryBackstage } from '../../backstage/Backstage';
 import { renderFooterButton } from '../general/Button';
-import { formCancelEvent, FormCancelEvent } from '../general/FormEvents';
+import { formCancelEvent, type FormCancelEvent } from '../general/FormEvents';
+
 import * as Dialogs from './Dialogs';
 
 interface AlertDialogApi {
@@ -22,6 +23,7 @@ export const setup = (backstage: UiFactoryBackstage): AlertDialogApi => {
 
     const memFooterClose = Memento.record(
       renderFooterButton({
+        context: 'any',
         name: 'close-alert',
         text: 'OK',
         primary: true,
@@ -37,6 +39,7 @@ export const setup = (backstage: UiFactoryBackstage): AlertDialogApi => {
 
     const alertDialog = GuiFactory.build(
       Dialogs.renderDialog({
+        role: 'alertdialog',
         lazySink: () => sharedBackstage.getSink(),
         header: Dialogs.hiddenHeader(titleSpec, closeSpec),
         body: Dialogs.pBodyMessage(message, sharedBackstage.providers),
@@ -48,7 +51,11 @@ export const setup = (backstage: UiFactoryBackstage): AlertDialogApi => {
         extraBehaviours: [ ],
         extraStyles: { },
         dialogEvents: [
-          AlloyEvents.run<FormCancelEvent>(formCancelEvent, closeDialog)
+          AlloyEvents.run<FormCancelEvent>(formCancelEvent, closeDialog),
+          AlloyEvents.runOnAttached((c) => {
+            const bodyElm = ModalDialog.getBody(c);
+            AriaDescribe.describedBy(c.element, bodyElm.element);
+          }),
         ],
         eventOrder: { }
       })

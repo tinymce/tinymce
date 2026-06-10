@@ -1,13 +1,13 @@
 import { Fun, Obj, Optional, Optionals } from '@ephox/katamari';
-import { Attribute, Css, DomEvent, EventArgs, Insert, InsertAll, Ready, Replication, SelectorFind, SugarElement, SugarNode } from '@ephox/sugar';
+import { Attribute, Css, DomEvent, type EventArgs, Insert, InsertAll, Ready, Replication, SelectorFind, SugarElement, SugarNode } from '@ephox/sugar';
 
-import { Generators } from 'ephox/snooker/api/Generators';
+import type { Generators } from 'ephox/snooker/api/Generators';
 import * as ResizeBehaviour from 'ephox/snooker/api/ResizeBehaviour';
 import { ResizeWire } from 'ephox/snooker/api/ResizeWire';
 import * as TableOperations from 'ephox/snooker/api/TableOperations';
 import { TableResize } from 'ephox/snooker/api/TableResize';
 import { TableSize } from 'ephox/snooker/api/TableSize';
-import { OperationCallback, TargetElement, TargetSelection } from 'ephox/snooker/model/RunOperation';
+import type { OperationCallback, TargetElement, TargetSelection } from 'ephox/snooker/model/RunOperation';
 
 Ready.document(() => {
 
@@ -131,9 +131,9 @@ Ready.document(() => {
 
   const lazyTableSize = (table: SugarElement<HTMLTableElement>) => TableSize.getTableSize(table);
   const isResizable = Fun.always;
-  const ltrManager = TableResize.create(ResizeWire.body(tester, ltrs, isResizable), ResizeBehaviour.preserveTable(), lazyTableSize);
+  const ltrManager = TableResize.create(ResizeWire.body(tester, isResizable), ResizeBehaviour.preserveTable(), lazyTableSize);
   ltrManager.on();
-  const rtlManager = TableResize.create(ResizeWire.body(subject3, rtls, isResizable), ResizeBehaviour.preserveTable(), lazyTableSize);
+  const rtlManager = TableResize.create(ResizeWire.body(subject3, isResizable), ResizeBehaviour.preserveTable(), lazyTableSize);
   rtlManager.on();
 
   // For firefox.

@@ -1,9 +1,10 @@
 import { Arr, Fun, Obj, Optional, Optionals, Unicode } from '@ephox/katamari';
-import { Css, SugarElement } from '@ephox/sugar';
+import { DomDescent } from '@ephox/phoenix';
+import { Css, Insert, PredicateFind, SugarElement, SugarNode } from '@ephox/sugar';
 
-import DOMUtils from '../api/dom/DOMUtils';
+import type DOMUtils from '../api/dom/DOMUtils';
 import DomTreeWalker from '../api/dom/TreeWalker';
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import * as Options from '../api/Options';
 import * as Bookmarks from '../bookmark/Bookmarks';
 import * as ElementType from '../dom/ElementType';
@@ -11,16 +12,18 @@ import * as NodeType from '../dom/NodeType';
 import * as ScrollIntoView from '../dom/ScrollIntoView';
 import { isCaretNode } from '../fmt/FormatContainer';
 
-const firstNonWhiteSpaceNodeSibling = (node: Node | null): Node | null => {
+import * as ReduceNestedFonts from './ReduceNestedFonts';
+
+const firstNonWhiteSpaceNodeSibling = (node: Node | null): Optional<SugarElement<Node>> => {
   while (node) {
     if (NodeType.isElement(node) || (NodeType.isText(node) && node.data && /[\r\n\s]/.test(node.data))) {
-      return node;
+      return Optional.from(SugarElement.fromDom(node));
     }
 
     node = node.nextSibling;
   }
 
-  return null;
+  return Optional.none();
 };
 
 const moveToCaretPosition = (editor: Editor, root: Node): void => {
@@ -31,12 +34,25 @@ const moveToCaretPosition = (editor: Editor, root: Node): void => {
     return;
   }
 
-  if (/^(LI|DT|DD)$/.test(root.nodeName)) {
-    const firstChild = firstNonWhiteSpaceNodeSibling(root.firstChild);
+  if (ElementType.isListItem(SugarElement.fromDom(root))) {
+    const findFirstList = (e: SugarElement) => ElementType.isList(e) ? Optional.from(e) : PredicateFind.descendant(e, ElementType.isList);
+    const isEmpty = (e: SugarElement) => dom.isEmpty(e.dom);
 
-    if (firstChild && /^(UL|OL|DL)$/.test(firstChild.nodeName)) {
-      root.insertBefore(dom.doc.createTextNode(Unicode.nbsp), root.firstChild);
-    }
+    firstNonWhiteSpaceNodeSibling(root.firstChild).each((firstChild) => {
+      findFirstList(firstChild).fold(
+        () => {
+          if (isEmpty(firstChild)) {
+            const element = DomDescent.toLeaf(firstChild, 0).element;
+            if (SugarNode.isElement(element) && !ElementType.isBr(element)) {
+              Insert.append(element, SugarElement.fromHtml('<br data-mce-bogus="1" />'));
+            }
+          }
+        },
+        (firstList) => {
+          Insert.before(firstList, SugarElement.fromText(Unicode.nbsp));
+        }
+      );
+    });
   }
 
   const rng = dom.createRng();
@@ -215,6 +231,11 @@ const createNewBlock = (
         }
       }
     } while ((node = node.parentNode) && node !== editableRoot);
+
+    // Not omitting font sizes of list items otherwise their font size doesn't match its content
+    if (block.nodeName !== 'LI') {
+      ReduceNestedFonts.reduceFontStyleNesting(block, caretNode);
+    }
   }
 
   setForcedBlockAttrs(editor, block);

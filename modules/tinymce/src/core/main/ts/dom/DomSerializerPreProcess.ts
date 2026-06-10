@@ -1,8 +1,8 @@
 import { Type } from '@ephox/katamari';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import * as Events from '../api/Events';
-import { ParserArgs } from '../api/html/DomParser';
+import type { ParserArgs } from '../api/html/DomParser';
 import Tools from '../api/util/Tools';
 
 const preProcess = (editor: Editor, node: Element, args: ParserArgs): Node => {

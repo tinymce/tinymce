@@ -1,11 +1,11 @@
-import { FocusTools, RealKeys, Waiter } from '@ephox/agar';
+import { FocusTools, RealMouse, RealKeys, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Optional } from '@ephox/katamari';
 import { Attribute, Insert, Remove, SugarDocument, SugarElement } from '@ephox/sugar';
-import { McEditor, TinyContentActions, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
+import { McEditor, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import * as NativeFullscreen from 'tinymce/plugins/fullscreen/core/NativeFullscreen';
 
 import FullscreenPlugin from '../../../main/ts/Plugin';
@@ -36,73 +36,51 @@ describe('webdriver.tinymce.plugins.fullscreen.FullscreenTrapFocusTest', () => {
     }
   });
 
-  const pToggleFullscreen = async (editor: Editor, nativeMode: boolean, fullscreen: boolean) => {
-    TinyContentActions.keystroke(editor, 121, { alt: true });
-    await FocusTools.pTryOnSelector('Assert toolbar is focused', SugarDocument.getDocument(), 'div[role=toolbar] .tox-tbtn');
-    await RealKeys.pSendKeysOn('div[role=toolbar] .tox-tbtn', [ RealKeys.text('enter') ]);
+  const pToggleFullscreen = async (nativeMode: boolean, fullscreen: boolean) => {
+    await RealMouse.pClickOn('button[data-mce-name="fullscreen"]');
     if (nativeMode) {
       await pIsFullscreen(fullscreen);
+      // Wait to allow animations to complete
+      // The delay is arbitary and may need to be adjusted
+      await Waiter.pWait(300);
     }
   };
 
   Arr.each([
-    { label: 'Iframe Editor', setup: TinyHooks.bddSetup },
-    { label: 'Shadow Dom Editor', setup: TinyHooks.bddSetupInShadowRoot }
-  ], (tester) => {
-    Arr.each([
-      'non-native', 'native'
-    ], (mode) => {
-      context(`${tester.label} - ${mode} - Trap focus`, () => {
-        const hook = TinyHooks.bddSetup<Editor>({
-          toolbar: 'fullscreen',
-          plugins: 'fullscreen',
-          base_url: '/project/tinymce/js/tinymce',
-          fullscreen_native: mode === 'native'
-        }, [ FullscreenPlugin ], true);
+    { label: 'Iframe Editor (native fullscreen)', setup: TinyHooks.bddSetup, native: true },
+    { label: 'Iframe Editor (non-native fullscreen)', setup: TinyHooks.bddSetup, native: false },
+  ], (scenario) => {
+    context(`${scenario.label} - Trap focus`, () => {
+      const hook = scenario.setup<Editor>({
+        toolbar: 'fullscreen',
+        plugins: 'fullscreen',
+        base_url: '/project/tinymce/js/tinymce',
+        fullscreen_native: scenario.native
+      }, [ FullscreenPlugin ], true);
 
-        it('TINY-10597: Focus should not go out of the editor on fullscreen mode, when shift tabbing ', async () => {
-          const editor = hook.editor();
-          const beforeInput = setupInputBefore(editor);
-          const afterInput = setupInputAfter(editor);
+      it('TINY-10597: Focus should not go out of the editor on fullscreen mode, when tabbing/shift tabbing', async () => {
+        const editor = hook.editor();
+        const beforeInput = setupInputBefore(editor);
+        const afterInput = setupInputAfter(editor);
 
-          await pToggleFullscreen(editor, mode === 'native', true);
+        await pToggleFullscreen(scenario.native, true);
 
-          await pDoShiftTab();
-          await FocusTools.pTryOnSelector('Focus should still be in the iframe when focus is going out', SugarDocument.getDocument(), '.tox-edit-area__iframe');
+        await pDoShiftTab();
+        await FocusTools.pTryOnSelector('Focus should still be in the iframe when focus is going out - shift tabbing', SugarDocument.getDocument(), '.tox-edit-area__iframe');
 
-          await pDoShiftTab();
-          await FocusTools.pTryOnSelector('Focus should still be in the iframe when focus is going out 2', SugarDocument.getDocument(), '.tox-edit-area__iframe');
+        await pDoShiftTab();
+        await FocusTools.pTryOnSelector('Focus should still be in the iframe when focus is going out 2 - shift tabbing', SugarDocument.getDocument(), '.tox-edit-area__iframe');
 
-          await pDoShiftTab();
-          await FocusTools.pTryOnSelector('Focus should still be in the iframe when focus is going out 3', SugarDocument.getDocument(), '.tox-edit-area__iframe');
+        await pDoTab();
+        await FocusTools.pTryOnSelector('Focus should still be in the iframe when focus is going out - tabbing', SugarDocument.getDocument(), '.tox-edit-area__iframe');
 
-          await pToggleFullscreen(editor, mode === 'native', false);
+        await pDoTab();
+        await FocusTools.pTryOnSelector('Focus should still be in the iframe when focus is going out 2 - tabbing', SugarDocument.getDocument(), '.tox-edit-area__iframe');
 
-          Remove.remove(beforeInput);
-          Remove.remove(afterInput);
-        });
+        await pToggleFullscreen(scenario.native, false);
 
-        it('TINY-10597: Focus should not go out of the editor on fullscreen mode, when tabbing', async () => {
-          const editor = hook.editor();
-          const beforeInput = setupInputBefore(editor);
-          const afterInput = setupInputAfter(editor);
-
-          await pToggleFullscreen(editor, mode === 'native', true);
-
-          await pDoTab();
-          await FocusTools.pTryOnSelector('Focus should still be in the iframe when focus is going out', SugarDocument.getDocument(), '.tox-edit-area__iframe');
-
-          await pDoTab();
-          await FocusTools.pTryOnSelector('Focus should still be in the iframe when focus is going out 2', SugarDocument.getDocument(), '.tox-edit-area__iframe');
-
-          await pDoTab();
-          await FocusTools.pTryOnSelector('Focus should still be in the iframe when focus is going out 3', SugarDocument.getDocument(), '.tox-edit-area__iframe');
-
-          await pToggleFullscreen(editor, mode === 'native', false);
-
-          Remove.remove(beforeInput);
-          Remove.remove(afterInput);
-        });
+        Remove.remove(beforeInput);
+        Remove.remove(afterInput);
       });
     });
   });

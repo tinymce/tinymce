@@ -21,7 +21,10 @@ import { setupShadowRoot, withIframe, withNormalElement, withShadowElement, with
 type RootNode = SugarShadowDom.RootNode;
 
 UnitTest.test('ShadowDom - SelectorFind.descendant', () => {
-  fc.assert(fc.property(htmlBlockTagName(), htmlInlineTagName(), fc.hexaString(), (block, inline, text) => {
+  // https://fast-check.dev/docs/migration-guide/from-3.x-to-4.x/#hexa-or-hexastring
+  const items = '0123456789abcdef';
+  const hexa = () => fc.integer({ min: 0, max: 15 }).map((n) => items[n]);
+  fc.assert(fc.property(htmlBlockTagName(), htmlInlineTagName(), fc.string({ unit: hexa() }), (block, inline, text) => {
     withShadowElement((ss) => {
       const id = 'theid';
       const inner = SugarElement.fromHtml(`<${block}><p>hello<${inline} id="${id}">${text}</${inline}></p></${block}>`);

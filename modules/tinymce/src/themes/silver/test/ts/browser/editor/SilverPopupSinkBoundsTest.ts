@@ -1,12 +1,12 @@
 import { Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
-import { Menu } from '@ephox/bridge';
+import type { Menu } from '@ephox/bridge';
 import { Arr, Fun } from '@ephox/katamari';
 import { Class, Css, Insert, Remove, SugarBody, SugarElement, SugarShadowDom, Traverse } from '@ephox/sugar';
 import { TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 interface Scenario {
   readonly label: string;
@@ -188,6 +188,10 @@ describe('browser.tinymce.themes.silver.editor.SilverPopupSinkBoundsTest', () =>
           teardown: () => {
             Remove.remove(scroller);
             Remove.remove(root);
+            if (shadow !== 'outside') {
+              const shadowHost = SugarElement.fromDom((root.dom as ShadowRoot).host);
+              Remove.remove(shadowHost);
+            }
           }
         };
       };
@@ -222,15 +226,13 @@ describe('browser.tinymce.themes.silver.editor.SilverPopupSinkBoundsTest', () =>
         TinyUiActions.clickOnMenu(editor, 'button:contains("Custom menu")');
         await TinyUiActions.pWaitForUi(editor, '[role=menu]');
 
-        Arr.range(nestedLevel, async (x) => {
+        await Promise.all(Arr.range(nestedLevel, (x) => {
           TinyUiActions.clickOnUi(editor, `[role="menu"] div[aria-label="Nested Item ${x}"]`);
-          await TinyUiActions.pWaitForUi(editor, `[role="menu"] div[aria-label="Nested Item ${x}"]`);
-        });
+          return TinyUiActions.pWaitForUi(editor, `[role="menu"] div[aria-label="Nested Item ${x}"]`);
+        }));
 
         const shadowHost = UiFinder.findIn(SugarBody.body(), '.test-shadow-root').getOrDie();
-        const menuRects = Arr.from(shadowHost.dom.shadowRoot?.querySelectorAll('[role=menu]') || []).map((x) => x.getBoundingClientRect());
-
-        return menuRects;
+        return Arr.from(shadowHost.dom.shadowRoot?.querySelectorAll('[role=menu]') || []).map((x) => x.getBoundingClientRect());
       };
 
       const contextMenuScenarios: Scenario[] = [

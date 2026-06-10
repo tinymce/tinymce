@@ -1,8 +1,8 @@
 import { Obj } from '@ephox/katamari';
 
-import { NodeClientRect } from '../dom/Dimensions';
+import type { NodeClientRect } from '../dom/Dimensions';
 import * as NodeType from '../dom/NodeType';
-import * as ClientRect from '../geom/ClientRect';
+import type * as ClientRect from '../geom/ClientRect';
 import * as ArrUtils from '../util/ArrUtils';
 
 type GeomClientRect = ClientRect.ClientRect;

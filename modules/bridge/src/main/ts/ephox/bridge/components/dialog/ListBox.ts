@@ -1,8 +1,9 @@
-import { FieldProcessor, FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
-import { Result } from '@ephox/katamari';
+import { type FieldProcessor, FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
+import type { Result } from '@ephox/katamari';
 
 import * as ComponentSchema from '../../core/ComponentSchema';
-import { FormComponentWithLabel, formComponentWithLabelFields, FormComponentWithLabelSpec } from './FormComponent';
+
+import { type FormComponentWithLabel, formComponentWithLabelFields, type FormComponentWithLabelSpec } from './FormComponent';
 
 export interface ListBoxSingleItemSpec {
   text: string;
@@ -20,6 +21,7 @@ export interface ListBoxSpec extends FormComponentWithLabelSpec {
   type: 'listbox';
   items: ListBoxItemSpec[];
   disabled?: boolean;
+  context?: string;
 }
 
 interface ListBoxSingleItem {
@@ -38,6 +40,7 @@ export interface ListBox extends FormComponentWithLabel {
   type: 'listbox';
   items: ListBoxItem[];
   enabled: boolean;
+  context: string;
 }
 
 const listBoxSingleItemFields = [
@@ -57,7 +60,8 @@ const listBoxItemSchema = StructureSchema.oneOf([
 
 const listBoxFields: FieldProcessor[] = formComponentWithLabelFields.concat([
   FieldSchema.requiredArrayOf('items', listBoxItemSchema),
-  ComponentSchema.enabled
+  ComponentSchema.enabled,
+  FieldSchema.defaultedString('context', 'mode:design')
 ]);
 
 export const listBoxSchema = StructureSchema.objOf(listBoxFields);

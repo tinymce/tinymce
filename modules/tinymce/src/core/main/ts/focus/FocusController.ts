@@ -2,8 +2,8 @@ import { Fun } from '@ephox/katamari';
 import { Class, Focus, SugarElement, SugarShadowDom } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
-import Editor from '../api/Editor';
-import EditorManager from '../api/EditorManager';
+import type Editor from '../api/Editor';
+import type EditorManager from '../api/EditorManager';
 import FocusManager from '../api/FocusManager';
 import * as Options from '../api/Options';
 import Delay from '../api/util/Delay';
@@ -47,7 +47,7 @@ const getActiveElement = (editor: Editor): Element => {
       () => document.body,
       (x) => x.dom
     );
-  } catch (ex) {
+  } catch {
     // IE sometimes fails to get the activeElement when resizing table
     // TODO: Investigate this
     return document.body;

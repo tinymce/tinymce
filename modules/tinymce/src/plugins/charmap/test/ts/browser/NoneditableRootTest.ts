@@ -3,7 +3,7 @@ import { describe, it } from '@ephox/bedrock-client';
 import { SugarBody } from '@ephox/sugar';
 import { TinyHooks, TinySelections, TinyState, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/charmap/Plugin';
 
 describe('browser.tinymce.plugins.charmap.NoneditableRootTest', () => {
@@ -28,11 +28,11 @@ describe('browser.tinymce.plugins.charmap.NoneditableRootTest', () => {
       editor.setContent('<div>Noneditable content</div><div contenteditable="true">Editable content</div>');
       TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 2);
       TinyUiActions.clickOnMenu(editor, 'button:contains("Insert")');
-      await TinyUiActions.pWaitForUi(editor, '[role="menuitem"][aria-label="Special character..."][aria-disabled="true"]');
+      await TinyUiActions.pWaitForUi(editor, '[role="menuitem"][aria-label="Special character…"][aria-disabled="true"]');
       TinyUiActions.keystroke(editor, Keys.escape());
       TinySelections.setSelection(editor, [ 1, 0 ], 0, [ 1, 0 ], 2);
       TinyUiActions.clickOnMenu(editor, 'button:contains("Insert")');
-      await TinyUiActions.pWaitForUi(editor, '[role="menuitem"][aria-label="Special character..."][aria-disabled="false"]');
+      await TinyUiActions.pWaitForUi(editor, '[role="menuitem"][aria-label="Special character…"][aria-disabled="false"]');
       TinyUiActions.keystroke(editor, Keys.escape());
     });
   });

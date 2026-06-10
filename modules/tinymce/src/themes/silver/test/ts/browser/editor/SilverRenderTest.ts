@@ -1,11 +1,11 @@
 import { UiFinder } from '@ephox/agar';
 import { after, describe, it } from '@ephox/bedrock-client';
-import { Optional } from '@ephox/katamari';
-import { SugarElement, SugarShadowDom } from '@ephox/sugar';
+import type { Optional } from '@ephox/katamari';
+import { type SugarElement, SugarShadowDom } from '@ephox/sugar';
 import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import PluginManager from 'tinymce/core/api/PluginManager';
 
 interface RenderState {

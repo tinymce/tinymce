@@ -3,7 +3,7 @@ import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/lists/Plugin';
 
 interface ListParameters {
@@ -91,20 +91,20 @@ ${listContent}
 
   Arr.each(contentCombinations, (list) =>
     context(list.title, () => {
-      it(`TINY-8920: Pressing backspace key to append to previous list item is disabled when in ${list.title}`, () =>
-        pressKeyInListAndAssertNoChange(list, [ RealKeys.backspace() ])
+      it(`TINY-8920: Pressing backspace key to append to previous list item is disabled when in ${list.title}`, async () =>
+        await pressKeyInListAndAssertNoChange(list, [ RealKeys.backspace() ])
       );
 
-      it(`TINY-8920: Pressing enter key to split into new list item is disabled when in ${list.title}`, () =>
-        pressKeyInListAndAssertNoChange(list, [ RealKeys.combo({}, 'enter') ])
+      it(`TINY-8920: Pressing enter key to split into new list item is disabled when in ${list.title}`, async () =>
+        await pressKeyInListAndAssertNoChange(list, [ RealKeys.combo({}, 'enter') ])
       );
 
-      it(`TINY-8920: Pressing tab key to indent list item is disabled when in ${list.title}`, () =>
-        pressKeyInListAndAssertNoChange(list, [ RealKeys.combo({}, 'tab') ])
+      it(`TINY-8920: Pressing tab key to indent list item is disabled when in ${list.title}`, async () =>
+        await pressKeyInListAndAssertNoChange(list, [ RealKeys.combo({}, 'tab') ])
       );
 
-      it(`TINY-8920: Pressing shift and tab keys to outdent list item is disabled when in ${list.title}`, () =>
-        pressKeyInListAndAssertNoChange(list, [ RealKeys.combo({ shift: true }, 'tab') ])
+      it(`TINY-8920: Pressing shift and tab keys to outdent list item is disabled when in ${list.title}`, async () =>
+        await pressKeyInListAndAssertNoChange(list, [ RealKeys.combo({ shift: true }, 'tab') ])
       );
     })
   );

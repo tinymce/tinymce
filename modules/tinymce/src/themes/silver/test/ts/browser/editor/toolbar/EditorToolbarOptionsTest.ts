@@ -1,11 +1,11 @@
 import { ApproxStructure, Assertions } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { SugarBody, SugarElement } from '@ephox/sugar';
+import { SugarBody, type SugarElement } from '@ephox/sugar';
 import { McEditor } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import { countNumber, extractOnlyOne } from '../../../module/UiUtils';
 
@@ -438,7 +438,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.EditorToolbarOptionsTest'
           s.element('div', {
             classes: [ arr.has('tox-toolbar__group') ],
             attrs: {
-              title: str.is('history')
+              'aria-label': str.is('history')
             },
             children: [
               s.element('button', {}),
@@ -448,7 +448,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.EditorToolbarOptionsTest'
           s.element('div', {
             classes: [ arr.has('tox-toolbar__group') ],
             attrs: {
-              title: str.is('formatting')
+              'aria-label': str.is('formatting')
             },
             children: [
               s.element('button', {}),

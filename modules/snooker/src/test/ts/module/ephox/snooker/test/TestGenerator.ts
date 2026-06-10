@@ -1,7 +1,7 @@
 import { Fun } from '@ephox/katamari';
-import { SugarElement, TextContent } from '@ephox/sugar';
+import { type SugarElement, TextContent } from '@ephox/sugar';
 
-import { SimpleGenerators } from 'ephox/snooker/api/Generators';
+import type { SimpleGenerators } from 'ephox/snooker/api/Generators';
 
 export default (): SimpleGenerators => {
   let cellCounter = 0;

@@ -2,7 +2,7 @@ import { ApproxStructure } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
 
 import * as TableTestUtils from '../module/test/TableTestUtils';
@@ -38,7 +38,7 @@ describe('browser.tinymce.plugins.table.AlignedCellRowStyleChangeTest', () => {
     editor.execCommand('mceTableRowProps');
     await TinyUiActions.pWaitForDialog(editor);
     TableTestUtils.gotoAdvancedTab();
-    TableTestUtils.setInputValue('label.tox-label:contains(Background color) + div>input.tox-textfield', 'red');
+    TableTestUtils.setInputValue('Background color', 'red');
     await TableTestUtils.pClickDialogButton(editor, true);
     TableTestUtils.assertTableStructure(editor, ApproxStructure.build((s, str, _arr) => s.element('table', {
       children: [

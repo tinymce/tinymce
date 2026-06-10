@@ -1,12 +1,12 @@
 import { Arr, Fun, Optional, Result } from '@ephox/katamari';
-import { Class, EventArgs, SugarElement, Value } from '@ephox/sugar';
+import { Class, type EventArgs, SugarElement, Value } from '@ephox/sugar';
 
 import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Keying } from 'ephox/alloy/api/behaviour/Keying';
 import { Positioning } from 'ephox/alloy/api/behaviour/Positioning';
 import { Tooltipping } from 'ephox/alloy/api/behaviour/Tooltipping';
-import { LazySink } from 'ephox/alloy/api/component/CommonTypes';
+import type { LazySink } from 'ephox/alloy/api/component/CommonTypes';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
@@ -19,7 +19,7 @@ import { Input } from 'ephox/alloy/api/ui/Input';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import * as DemoSink from 'ephox/alloy/demo/DemoSink';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
-import { AnchorSpec, SelectionAnchorSpec, SubmenuAnchorSpec } from 'ephox/alloy/positioning/mode/Anchoring';
+import type { AnchorSpec, SelectionAnchorSpec, SubmenuAnchorSpec } from 'ephox/alloy/positioning/mode/Anchoring';
 
 import * as DemoRenders from './forms/DemoRenders';
 

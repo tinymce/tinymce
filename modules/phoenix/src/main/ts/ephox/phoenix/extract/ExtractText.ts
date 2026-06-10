@@ -1,4 +1,4 @@
-import { Universe } from '@ephox/boss';
+import type { Universe } from '@ephox/boss';
 import { Arr, Fun } from '@ephox/katamari';
 
 import * as Extract from './Extract';

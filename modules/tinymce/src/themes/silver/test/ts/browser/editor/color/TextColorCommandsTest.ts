@@ -3,12 +3,12 @@ import { Cell } from '@ephox/katamari';
 import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.themes.silver.editor.color.TextColorCommandsTest', () => {
   const selectors = {
-    backcolorSplitButton: '[aria-label^="Background color"] > .tox-tbtn + .tox-split-button__chevron',
-    forecolorSplitButton: '[aria-label^="Text color"] > .tox-tbtn + .tox-split-button__chevron'
+    backcolorSplitButton: 'button[data-mce-name="backcolor-chevron"][aria-label^="Background color"]',
+    forecolorSplitButton: 'button[data-mce-name="forecolor-chevron"][aria-label^="Text color"]'
   };
 
   const state = Cell<string | null>(null);

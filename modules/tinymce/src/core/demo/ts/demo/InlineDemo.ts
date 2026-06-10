@@ -1,4 +1,4 @@
-import { RawEditorOptions, TinyMCE } from 'tinymce/core/api/PublicApi';
+import type { RawEditorOptions, TinyMCE } from 'tinymce/core/api/PublicApi';
 
 declare let tinymce: TinyMCE;
 
@@ -6,6 +6,7 @@ export default (): void => {
 
   const settings: RawEditorOptions = {
     selector: '.tinymce',
+    license_key: 'gpl',
     inline: true,
     content_css: '../../../../js/tinymce/skins/content/default/content.css',
     images_upload_url: 'd',

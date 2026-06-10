@@ -1,20 +1,23 @@
 import { FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
-import { Result } from '@ephox/katamari';
+import type { Result } from '@ephox/katamari';
 
-import { FormComponentWithLabel, formComponentWithLabelFields, FormComponentWithLabelSpec } from './FormComponent';
+import { type FormComponentWithLabel, formComponentWithLabelFields, type FormComponentWithLabelSpec } from './FormComponent';
 
 export interface ColorInputSpec extends FormComponentWithLabelSpec {
   type: 'colorinput';
   storageKey?: string;
+  context?: string;
 }
 
 export interface ColorInput extends FormComponentWithLabel {
   type: 'colorinput';
   storageKey: string;
+  context: string;
 }
 
 const colorInputFields = formComponentWithLabelFields.concat([
-  FieldSchema.defaultedString('storageKey', 'default')
+  FieldSchema.defaultedString('storageKey', 'default'),
+  FieldSchema.defaultedString('context', 'mode:design'),
 ]);
 
 export const colorInputSchema = StructureSchema.objOf(colorInputFields);

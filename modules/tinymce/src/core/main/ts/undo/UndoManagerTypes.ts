@@ -1,7 +1,7 @@
-import { Cell, Singleton } from '@ephox/katamari';
+import type { Cell, Singleton } from '@ephox/katamari';
 
-import { EditorEvent } from '../api/util/EventDispatcher';
-import { Bookmark } from '../bookmark/BookmarkTypes';
+import type { EditorEvent } from '../api/util/EventDispatcher';
+import type { Bookmark } from '../bookmark/BookmarkTypes';
 
 export type UndoLevelType = 'fragmented' | 'complete';
 
@@ -29,7 +29,7 @@ export type UndoLevel = NewUndoLevel & { bookmark: Bookmark };
 export interface UndoManager {
   data: UndoLevel[];
   typing: boolean;
-  add: (level?: Partial<UndoLevel>, event?: EditorEvent<any>) => UndoLevel | null;
+  add: (level?: Partial<UndoLevel>, event?: EditorEvent<unknown>) => UndoLevel | null;
   dispatchChange: () => void;
   beforeChange: () => void;
   undo: () => UndoLevel | undefined;

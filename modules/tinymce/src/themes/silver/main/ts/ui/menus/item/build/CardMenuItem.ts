@@ -1,14 +1,15 @@
-import { AlloyComponent, AlloySpec, Behaviour, Disabling, ItemTypes } from '@ephox/alloy';
-import { Menu } from '@ephox/bridge';
+import { type AlloyComponent, type AlloySpec, type Behaviour, Disabling, type ItemTypes } from '@ephox/alloy';
+import type { Menu } from '@ephox/bridge';
 import { Arr, Optional } from '@ephox/katamari';
 import { SelectorFilter } from '@ephox/sugar';
 
-import { UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
+import type { UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
 import { renderItemDomStructure } from 'tinymce/themes/silver/ui/menus/item/structure/ItemStructure';
 
 import * as ItemClasses from '../ItemClasses';
-import ItemResponse from '../ItemResponse';
+import type ItemResponse from '../ItemResponse';
 import { renderContainer, renderHtml, renderImage } from '../structure/ItemSlices';
+
 import { replaceText } from './AutocompleteMenuItem';
 import { buildData, renderCommonItem } from './CommonMenuItem';
 
@@ -60,7 +61,7 @@ export const renderCardMenuItem = (
   });
 
   const structure = {
-    dom: renderItemDomStructure(spec.label),
+    dom: renderItemDomStructure(spec.label, []),
     optComponents: [
       Optional.some({
         dom: {
@@ -73,6 +74,7 @@ export const renderCardMenuItem = (
   };
 
   return renderCommonItem({
+    context: 'mode:design',
     data: buildData({ text: Optional.none(), ...spec }),
     enabled: spec.enabled,
     getApi,

@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Logger, Mouse, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
-import { EventArgs, Html, Insert, Remove, SugarBody, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
+import { type EventArgs, Html, Insert, Remove, SugarBody, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Toggling } from 'ephox/alloy/api/behaviour/Toggling';
@@ -9,8 +9,8 @@ import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 import * as ForeignGui from 'ephox/alloy/api/system/ForeignGui';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as Tagger from 'ephox/alloy/registry/Tagger';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('Browser Test: api.ForeignGuiTest', (success, failure) => {
   const root = SugarElement.fromTag('div');
@@ -91,7 +91,7 @@ UnitTest.asynctest('Browser Test: api.ForeignGuiTest', (success, failure) => {
     sAssertChildHasNoUid('First child should have no uid', 0),
     sAssertChildHasRandomUid('Div should have a uid', 3),
 
-    Mouse.sClickOn(root, 'span.clicker:first'),
+    Mouse.sClickOn(root, 'span.clicker:first-child'),
 
     Assertions.sAssertStructure(
       'Checking structure after the first span is clicked',

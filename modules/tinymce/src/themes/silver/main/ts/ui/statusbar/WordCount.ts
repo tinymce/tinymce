@@ -1,11 +1,11 @@
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, Button, GuiFactory, Replacing, Representing, SimpleSpec, SystemEvents, Tabstopping
+  AddEventsBehaviour, type AlloyComponent, AlloyEvents, Behaviour, Button, GuiFactory, Replacing, Representing, type SimpleSpec, SystemEvents, Tabstopping
 } from '@ephox/alloy';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
-import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
-import * as ReadOnly from '../../ReadOnly';
+import type { UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import * as UiState from '../../UiState';
 import { DisablingConfigs } from '../alien/DisablingConfigs';
 
 interface WordCount {
@@ -32,7 +32,7 @@ export const renderWordCount = (editor: Editor, providersBackstage: UiFactoryBac
     components: [ ],
     buttonBehaviours: Behaviour.derive([
       DisablingConfigs.button(providersBackstage.isDisabled),
-      ReadOnly.receivingConfig(),
+      UiState.toggleOnReceive(() => providersBackstage.checkUiComponentContext('any')),
       Tabstopping.config({ }),
       Replacing.config({ }),
       Representing.config({

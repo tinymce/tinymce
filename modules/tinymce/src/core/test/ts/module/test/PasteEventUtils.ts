@@ -1,11 +1,11 @@
 import { Waiter } from '@ephox/agar';
 import { DataTransferMode } from '@ephox/dragster';
-import { Arr, Cell, Singleton, Type } from '@ephox/katamari';
+import { Arr, Cell, type Singleton, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { assert } from 'chai';
 
-import { PastePostProcessEvent, PastePreProcessEvent } from 'tinymce/core/api/EventTypes';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type { PastePostProcessEvent, PastePreProcessEvent } from 'tinymce/core/api/EventTypes';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 import * as SingletonUtils from './SingletonUtils';
 
@@ -70,9 +70,10 @@ const pWaitForAndAssertInputEvents = async (beforeinputEvent: SingletonEvent<Inp
   const assertInputEvent = (): void =>
     inputEvent.on((e) => {
       assert.equal(e.inputType, 'insertFromPaste', 'beforeinput event type should be "insertFromPaste"');
+      // TINY-12342: Chromium > 137, e.data once again null when pasting plain text
       assert.isNull(e.data, 'input event data should be null');
       const dataTransfer = e.dataTransfer;
-      if (isNative && (browser.isFirefox() || browser.isSafari())) {
+      if (isNative && (browser.isFirefox() || browser.isSafari() || (browser.isChromium() && browser.version.major >= 143))) {
         assert.equal(dataTransfer?.getData('text/html'), expectedBeforeinputDataTransferHtml, 'input event dataTransfer should contain expected html data');
       } else {
         assert.isNull(dataTransfer, 'input event dataTransfer should be null');
@@ -87,8 +88,12 @@ const pWaitForAndAssertInputEvents = async (beforeinputEvent: SingletonEvent<Inp
 const pWaitForAndAssertEventsDoNotFire = async (events: SingletonEvent<any>[]): Promise<void> => {
   const thrown = Cell<boolean>(false);
   try {
-    await Waiter.pTryUntilPredicate('Did not fire any paste event',
-      () => Arr.exists(events, (e) => e.isSet()));
+    await Waiter.pTryUntilPredicate(
+      'Did not fire any paste event',
+      () => Arr.exists(events, (e) => e.isSet()),
+      100,
+      500
+    );
   } catch {
     thrown.set(true);
   }

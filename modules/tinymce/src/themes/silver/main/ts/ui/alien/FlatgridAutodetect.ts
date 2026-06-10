@@ -1,4 +1,4 @@
-import { AlloyComponent } from '@ephox/alloy';
+import type { AlloyComponent } from '@ephox/alloy';
 import { Arr, Optional } from '@ephox/katamari';
 import { SelectorFilter } from '@ephox/sugar';
 

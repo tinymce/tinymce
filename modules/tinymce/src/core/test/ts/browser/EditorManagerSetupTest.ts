@@ -33,8 +33,10 @@ describe('browser.tinymce.core.EditorManagerSetupTest', () => {
 
   it('script baseURL and suffix with script in svg', () => {
     viewBlock.update('<svg><script>!function(){}();</script></svg><script src="http://localhost/nonexistant/tinymce.min.js" type="application/javascript"></script>');
+    const pageUid = EditorManager.pageUid;
     EditorManager.setup();
     assert.equal(EditorManager.baseURL, 'http://localhost/nonexistant', 'BaseURL is interpreted from the script src');
     assert.equal(EditorManager.suffix, '.min', 'Suffix is interpreted from the script src');
+    assert.strictEqual(EditorManager.pageUid, pageUid, 'pageUid should not change after calling setup');
   });
 });

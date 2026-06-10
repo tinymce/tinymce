@@ -1,8 +1,8 @@
 import { Optional, Type, Unicode } from '@ephox/katamari';
 
-import { DomParserSettings, ParserArgs } from '../api/html/DomParser';
+import type { DomParserSettings, ParserArgs } from '../api/html/DomParser';
 import AstNode from '../api/html/Node';
-import Schema, { SchemaMap } from '../api/html/Schema';
+import type { SchemaMap, default as Schema } from '../api/html/Schema';
 
 const paddEmptyNode = (settings: DomParserSettings, args: ParserArgs, isBlock: (node: AstNode) => boolean, node: AstNode): void => {
   const brPreferred = settings.pad_empty_with_br || args.insert;
@@ -52,11 +52,22 @@ const findClosestEditingHost = (scope: AstNode): Optional<AstNode> => {
   return Optional.from(editableNode);
 };
 
+const getAllDescendants = (scope: AstNode): AstNode[] => {
+  const collection: AstNode[] = [];
+
+  for (let node = scope.firstChild; Type.isNonNullable(node); node = node.walk()) {
+    collection.push(node);
+  }
+
+  return collection;
+};
+
 export {
   paddEmptyNode,
   isPaddedWithNbsp,
   hasOnlyChild,
   isEmpty,
   isLineBreakNode,
-  findClosestEditingHost
+  findClosestEditingHost,
+  getAllDescendants
 };

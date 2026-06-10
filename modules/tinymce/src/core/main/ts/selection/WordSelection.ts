@@ -1,7 +1,7 @@
 import { Type } from '@ephox/katamari';
 
-import EditorSelection from '../api/dom/Selection';
-import Editor from '../api/Editor';
+import type EditorSelection from '../api/dom/Selection';
+import type Editor from '../api/Editor';
 import * as CaretContainer from '../caret/CaretContainer';
 import CaretPosition from '../caret/CaretPosition';
 

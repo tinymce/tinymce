@@ -1,9 +1,9 @@
-import { ApproxStructure, Assertions, Mouse, StructAssert, UiFinder } from '@ephox/agar';
+import { ApproxStructure, Assertions, Mouse, type StructAssert, UiFinder } from '@ephox/agar';
 import { before, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
-import { SugarBody, SugarElement } from '@ephox/sugar';
+import { SugarBody, type SugarElement } from '@ephox/sugar';
 
-import { WindowManagerImpl } from 'tinymce/core/api/WindowManager';
+import type { WindowManagerImpl } from 'tinymce/core/api/WindowManager';
 import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 
 import * as TestExtras from '../../module/TestExtras';

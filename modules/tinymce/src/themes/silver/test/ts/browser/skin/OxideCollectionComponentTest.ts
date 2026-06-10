@@ -1,12 +1,13 @@
-import { ApproxStructure, Assertions, FocusTools, Keys, Mouse, StructAssert, UiFinder } from '@ephox/agar';
-import { TestHelpers } from '@ephox/alloy';
+import { ApproxStructure, Assertions, FocusTools, Keys, Mouse, type StructAssert, UiFinder } from '@ephox/agar';
 import { before, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Optional, Optionals } from '@ephox/katamari';
-import { Attribute, SugarBody, SugarDocument, SugarElement } from '@ephox/sugar';
+import { Attribute, SugarBody, SugarDocument, type SugarElement } from '@ephox/sugar';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
-import { Dialog } from 'tinymce/core/api/ui/Ui';
+import type Editor from 'tinymce/core/api/Editor';
+import type { Dialog } from 'tinymce/core/api/ui/Ui';
+
+import * as GuiSetup from '../../module/GuiSetup';
 
 describe('browser.tinymce.themes.silver.skin.OxideCollectionComponentTest', () => {
   context('Check structure of collection in a dialog', () => {
@@ -93,7 +94,7 @@ describe('browser.tinymce.themes.silver.skin.OxideCollectionComponentTest', () =
       }
     }, []);
 
-    TestHelpers.GuiSetup.bddAddStyles(SugarDocument.getDocument(), [
+    GuiSetup.bddAddStyles(SugarDocument.getDocument(), [
       ':focus { outline: 2px solid green; }'
     ]);
 
@@ -263,20 +264,32 @@ describe('browser.tinymce.themes.silver.skin.OxideCollectionComponentTest', () =
     });
 
     const openDialog = async (editor: Editor) => {
-      TinyUiActions.clickOnToolbar(editor, '.tox-tbtn.tox-tbtn--select:has(.tox-tbtn__select-label:contains("Collection Dialog"))');
+      TinyUiActions.clickOnToolbar(editor, '.tox-tbtn.tox-tbtn--select:contains("Collection Dialog")');
       return await TinyUiActions.pWaitForDialog(editor);
     };
 
     const chars = [ 'A', '$', '★', '★' ];
     const icons = [ 'delete', ...chars ];
 
-    const buttonSelectors = Arr.map(icons, (label) => `.tox-collection__item[aria-label="${label}"]`);
+    const buttonSelectors = Arr.map(icons, (label) => `.tox-collection__item[data-collection-item-value="${label}"]:not(.tox-collection__item--state-disabled)`);
+    const buttonDisabledSelectors = Arr.map(icons, (label) => `.tox-collection__item[data-collection-item-value="${label}"].tox-collection__item--state-disabled`);
 
     it('TINY-10174: Buttons are rendered', async () => {
       const editor = hook.editor();
       editor.selection.expand();
       const dialog = await openDialog(editor);
-      Arr.each(buttonSelectors, (selector) => UiFinder.findIn(dialog, selector));
+      Arr.each(buttonSelectors, (selector) => UiFinder.exists(dialog, selector));
+      TinyUiActions.closeDialog(editor);
+    });
+
+    it('TINY-11264: Buttons are disabled in readonly mode and enabled when switched to design mode', async () => {
+      const editor = hook.editor();
+      editor.selection.expand();
+      const dialog = await openDialog(editor);
+      editor.mode.set('readonly');
+      Arr.each(buttonDisabledSelectors, (selector) => UiFinder.exists(dialog, selector));
+      editor.mode.set('design');
+      Arr.each(buttonSelectors, (selector) => UiFinder.exists(dialog, selector));
       TinyUiActions.closeDialog(editor);
     });
 

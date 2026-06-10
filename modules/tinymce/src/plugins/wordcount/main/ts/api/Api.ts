@@ -1,6 +1,6 @@
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
-import { countCharacters, countCharactersWithoutSpaces, Counter, countWords } from '../core/Count';
+import { countCharacters, countCharactersWithoutSpaces, type Counter, countWords } from '../core/Count';
 
 export type CountGetter = () => number;
 

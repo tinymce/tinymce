@@ -1,5 +1,5 @@
-import { GuiFactory, ItemTypes } from '@ephox/alloy';
-import { Menu } from '@ephox/bridge';
+import { GuiFactory, type ItemTypes } from '@ephox/alloy';
+import type { Menu } from '@ephox/bridge';
 
 import * as ItemClasses from '../ItemClasses';
 
