@@ -134,21 +134,21 @@ const pasteImage = (editor: Editor, imageItem: FileResult, rng: Range | undefine
 
       const blobUri = blobInfo.blobUri();
 
+      let html: string;
+
       try {
         const dimensions = await ImageSize.getImageSize(blobUri);
-        if (rng) {
-          editor.selection.setRng(rng);
-        }
-        if (!editor.removed) {
-          pasteHtml(editor, `<img src="${blobUri}" width="${dimensions.width}" height="${dimensions.height}">`, false, true);
-        }
+        html = `<img src="${blobUri}" width="${dimensions.width}" height="${dimensions.height}">`;
       } catch (e) {
         // eslint-disable-next-line no-console
         console.error(e);
+        html = `<img src="${blobUri}">`;
+      }
+      if (!editor.removed) {
         if (rng) {
           editor.selection.setRng(rng);
         }
-        pasteHtml(editor, `<img src="${blobUri}">`, false, true);
+        pasteHtml(editor, html, false, true);
       }
     });
 };
