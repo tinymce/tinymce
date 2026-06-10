@@ -46,7 +46,7 @@ describe('browser.tinymce.core.paste.DragDropImageTest', () => {
     await pSetupAndDropImage(editor);
 
     const image = await UiFinder.pWaitFor<HTMLImageElement>(`Wait for image to exist`, TinyDom.body(editor), 'img');
-    TinyAssertions.assertContent(editor, '<p><img src=\"data:image/gif;base64,' + base64ImgSrc + '">a</p>');
+    TinyAssertions.assertContent(editor, '<p><img src=\"data:image/gif;base64,' + base64ImgSrc + '" width="100" height="100">a</p>');
     assert.strictEqual(image.dom.src.indexOf('blob:'), 0);
 
     McEditor.remove(editor);
@@ -63,6 +63,21 @@ describe('browser.tinymce.core.paste.DragDropImageTest', () => {
 
     TinyAssertions.assertContent(editor, '<p>a</p>');
     TinyAssertions.assertCursor(editor, [ 0, 0 ], 0);
+
+    McEditor.remove(editor);
+  });
+
+  it('TINY-14411: Drop an image should add width and height to the image', async () => {
+    const editor = await McEditor.pFromSettings<Editor>({
+      automatic_uploads: false,
+      paste_data_images: true,
+      base_url: '/project/tinymce/js/tinymce'
+    });
+
+    await pSetupAndDropImage(editor);
+
+    await UiFinder.pWaitFor<HTMLImageElement>(`Wait for image to exist`, TinyDom.body(editor), 'img');
+    TinyAssertions.assertContent(editor, '<p><img src=\"data:image/gif;base64,' + base64ImgSrc + '" width="100" height="100">a</p>');
 
     McEditor.remove(editor);
   });
