@@ -138,7 +138,9 @@ const pasteImage = (editor: Editor, imageItem: FileResult, rng: Range | undefine
 
       try {
         const dimensions = await ImageSize.getImageSize(blobUri);
-        html = `<img src="${blobUri}" width="${dimensions.width}" height="${dimensions.height}">`;
+        html = dimensions.width > 0 && dimensions.height > 0
+          ? `<img src="${blobUri}" width="${dimensions.width}" height="${dimensions.height}">`
+          : `<img src="${blobUri}">`;
       } catch (e) {
         // eslint-disable-next-line no-console
         console.error(e);
@@ -191,10 +193,6 @@ const pasteImageData = (editor: Editor, e: ClipboardEvent | DragEvent, rng: Rang
 
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
       readFilesAsDataUris(images).then(async (fileResults) => {
-        if (rng) {
-          editor.selection.setRng(rng);
-        }
-
         await Promise.allSettled(Arr.map(fileResults, (result) => {
           return pasteImage(editor, result, rng);
         }));
