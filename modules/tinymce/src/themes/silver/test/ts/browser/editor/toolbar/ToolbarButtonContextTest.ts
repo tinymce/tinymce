@@ -1,5 +1,5 @@
 import { Keys, UiFinder, Waiter } from '@ephox/agar';
-import { afterEach, context, describe, it } from '@ephox/bedrock-client';
+import { afterEach, before, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun, Type } from '@ephox/katamari';
 import { SugarBody } from '@ephox/sugar';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
@@ -565,8 +565,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
         });
       });
 
-      // Missing enabled property in menu/split toolbar button spec
-      (scenario.label === 'Menu toolbar button' || scenario.label === 'Split toolbar button' ? context.skip : context)('Toolbar button spec enabled: false', () => {
+      context('Toolbar button spec enabled: false', () => {
         const hook = TinyHooks.bddSetup<Editor>({
           base_url: '/project/tinymce/js/tinymce',
           toolbar: 't12',
@@ -575,6 +574,13 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
             scenario.buttonSetupAnyEnabledFalse(ed);
           }
         }, [], true);
+
+        before(function () {
+          // Missing enabled property in menu/split toolbar button spec
+          if (scenario.label === 'Menu toolbar button' || scenario.label === 'Split toolbar button') {
+            this.skip();
+          }
+        });
 
         it(`TINY-11211: Toolbar ${scenario.label} should be stay disabled when enabled: false`, async () => {
           const editor = hook.editor();
