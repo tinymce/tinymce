@@ -102,11 +102,15 @@ const applyFormatAction = (ed: Editor, name: string, vars?: FormatVars, node?: N
     const isMatchingWrappingBlock = (node: Node) =>
       FormatUtils.isWrappingBlockFormat(format) && MatchFormat.matchNode(ed, node, name, vars);
 
+    const canRenameChildBlocks = (node: Node) =>
+      Arr.forall(node.childNodes, (child) => !FormatUtils.isTextBlock(ed.schema, child) || FormatUtils.isValid(ed, wrapName, child.nodeName.toLowerCase()));
+
     const canRenameBlock = (node: Node, parentName: string, isEditableDescendant: boolean) => {
       const isValidBlockFormatForNode =
         FormatUtils.isNonWrappingBlockFormat(format) &&
         FormatUtils.isTextBlock(ed.schema, node) &&
-        FormatUtils.isValid(ed, parentName, wrapName);
+        FormatUtils.isValid(ed, parentName, wrapName) &&
+        canRenameChildBlocks(node);
       return isEditableDescendant && isValidBlockFormatForNode;
     };
 

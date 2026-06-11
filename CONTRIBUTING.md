@@ -79,7 +79,7 @@ bun oxide-icons-build
 
 These commands build the skin and icons but should not normally be required outside of other development scripts.
 
-`bun oxide-start` will set up a watch and rebuild process for creating custom skins.
+`bun oxide-start` will set up a watch and rebuild process for creating custom skins. It requires a local TinyMCE build first — run `bun run build` from the repository root before `bun oxide-start`, otherwise it will exit with an error.
 
 ### Focussed development
 
