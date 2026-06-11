@@ -38,8 +38,12 @@ describe('browser.tinymce.plugins.charmap.DialogHeightTest', () => {
         UiControls.setValue(input, Value.get(input) + text, 'input');
       };
 
-      // Edge is being strange and focusing the body in this test but not when executed in isolation see #TINY-10579 for details
-      (isChromeEdge() ? it.skip : it)('TBA: Search for items, dialog height should not change when fewer items returned', async () => {
+      it('TBA: Search for items, dialog height should not change when fewer items returned', async function () {
+        // Edge is being strange and focusing the body in this test but not when executed in isolation see #TINY-10579 for details
+        if (isChromeEdge()) {
+          this.skip();
+          return;
+        }
         const editor = hook.editor();
         const root = SugarShadowDom.getRootNode(TinyDom.targetElement(editor));
         const body = SugarShadowDom.getContentContainer(root);
