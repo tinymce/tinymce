@@ -120,7 +120,7 @@ const createBlobInfo = (editor: Editor, blobCache: BlobCache, file: File, base64
   return blobInfo;
 };
 
-const pasteImage = (editor: Editor, imageItem: FileResult, rng: Range | undefined): Promise<void> => {
+const pasteImage = (editor: Editor, imageItem: FileResult): Promise<void> => {
   return Conversions.parseDataUri(imageItem.uri).fold(
     () => Promise.resolve(),
     async ({ data, type, base64Encoded }) => {
@@ -145,9 +145,6 @@ const pasteImage = (editor: Editor, imageItem: FileResult, rng: Range | undefine
         html = `<img src="${blobUri}">`;
       }
       if (!editor.removed) {
-        if (rng) {
-          editor.selection.setRng(rng);
-        }
         pasteHtml(editor, html, false, true);
       }
     });
@@ -191,8 +188,11 @@ const pasteImageData = (editor: Editor, e: ClipboardEvent | DragEvent, rng: Rang
 
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
       readFilesAsDataUris(images).then(async (fileResults) => {
+        if (rng) {
+          editor.selection.setRng(rng);
+        }
         for (const result of fileResults) {
-          await pasteImage(editor, result, rng);
+          await pasteImage(editor, result);
         }
       });
 
