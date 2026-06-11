@@ -3,7 +3,6 @@ const path = require('path');
 const connect = require('connect');
 const liveReload = require('connect-livereload');
 const serveStatic = require('serve-static');
-const chalk = require("chalk");
 
 module.exports = function (grunt) {
   grunt.registerTask('buildDemos', function() {
@@ -14,11 +13,7 @@ module.exports = function (grunt) {
     if (fs.existsSync('../tinymce/js/tinymce/tinymce.min.js')) {
       grunt.file.copy('../tinymce/js/tinymce/', './build/tinymce/');
     } else {
-      console.log(chalk.red('Local TinyMCE does not exist. Using cloud version instead'));
-      console.log(chalk.yellow('Run bun run build in the repository root to build a local version of TinyMCE'));
-      const url = 'https://cdn.tiny.cloud/1/qagffr3pkuv17a8on1afax661irst1hbr4e6tbv888sz91jc/tinymce/7-dev/tinymce.min.js';
-      const html = fs.readFileSync('./build/index.html', 'utf8');
-      fs.writeFileSync('./build/index.html', html.replace('/tinymce/tinymce.min.js', url));
+      grunt.fail.fatal('Local TinyMCE build not found. Run `bun run build` in the repository root to build TinyMCE before starting the skin demo.');
     }
   });
 

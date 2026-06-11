@@ -1,4 +1,4 @@
-import { Assertions } from '@ephox/agar';
+import { Assertions, Mouse, UiFinder } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Obj } from '@ephox/katamari';
 import { Hierarchy } from '@ephox/sugar';
@@ -2612,6 +2612,32 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 4);
       editor.formatter.apply('blockquote');
       TinyAssertions.assertContent(editor, '<ul><li><blockquote>a bc d</blockquote></li></ul>');
+    });
+  });
+
+  context('TINY-14385: multiple TD selection formats apply', () => {
+    it('TINY-14385: applying H1 -> Blockquote -> H2 should replace the `H1` with the `H2`', () => {
+      const editor = hook.editor();
+      editor.setContent('<table><tbody><tr>' +
+        '<td class="first">One</td>' +
+        '<td>Two</td>' +
+        '<td class="last">Three</td>' +
+      '</tr></tbody></table>');
+
+      const firstTd = UiFinder.findIn(TinyDom.body(editor), '.first').getOrDie();
+      const lastTd = UiFinder.findIn(TinyDom.body(editor), '.last').getOrDie();
+      Mouse.mouseDown(firstTd, { button: 0 });
+      Mouse.mouseOver(lastTd, { button: 0 });
+      Mouse.mouseUp(lastTd, { button: 0 });
+
+      editor.formatter.apply('h1');
+      editor.formatter.apply('blockquote');
+      editor.formatter.apply('h2');
+      TinyAssertions.assertContent(editor, '<table><tbody><tr>' +
+        '<td class="first"><blockquote><h2>One</h2></blockquote></td>' +
+        '<td><blockquote><h2>Two</h2></blockquote></td>' +
+        '<td class="last"><blockquote><h2>Three</h2></blockquote></td>' +
+      '</tr></tbody></table>');
     });
   });
 });
