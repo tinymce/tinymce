@@ -180,10 +180,11 @@ const pasteImageData = (editor: Editor, e: ClipboardEvent | DragEvent, rng: Rang
       e.preventDefault();
 
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      readFilesAsDataUris(images).then(async (fileResults) => {
+      readFilesAsDataUris(images).then((fileResults) => {
         if (rng) {
           editor.selection.setRng(rng);
         }
+
         Arr.each(fileResults, (result) => {
           pasteImage(editor, result);
         });
