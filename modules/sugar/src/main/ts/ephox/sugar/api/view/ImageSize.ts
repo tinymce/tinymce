@@ -1,6 +1,8 @@
 export interface ImageDimensions {
   readonly width: number;
   readonly height: number;
+  readonly naturalWidth: number;
+  readonly naturalHeight: number;
 }
 
 // TODO: Figure out if these would ever be something other than numbers. This was added in: #TINY-1350
@@ -17,9 +19,12 @@ const getImageSize = (url: string): Promise<ImageDimensions> => new Promise((res
   };
 
   img.addEventListener('load', () => {
-    const width = parseIntAndGetMax(img.width || img.naturalWidth, img.clientWidth);
-    const height = parseIntAndGetMax(img.height || img.naturalHeight, img.clientHeight);
-    const dimensions = { width, height };
+    const width = parseIntAndGetMax(img.width, img.clientWidth);
+    const height = parseIntAndGetMax(img.height, img.clientHeight);
+    const dimensions = { width, height,
+      naturalWidth: img.naturalWidth,
+      naturalHeight: img.naturalHeight,
+    };
     cleanUp();
     resolve(dimensions);
   });

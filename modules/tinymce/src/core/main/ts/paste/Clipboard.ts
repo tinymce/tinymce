@@ -138,9 +138,7 @@ const pasteImage = (editor: Editor, imageItem: FileResult, rng: Range | undefine
 
       try {
         const dimensions = await ImageSize.getImageSize(blobUri);
-        html = dimensions.width > 0 && dimensions.height > 0
-          ? `<img src="${blobUri}" width="${dimensions.width}" height="${dimensions.height}">`
-          : `<img src="${blobUri}">`;
+        html = `<img src="${blobUri}" width="${dimensions.width}" height="${dimensions.height}">`;
       } catch (e) {
         // eslint-disable-next-line no-console
         console.error(e);
