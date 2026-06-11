@@ -1,6 +1,6 @@
 import { DataTransfer, DataTransferContent, DataTransferMode } from '@ephox/dragster';
-import { Arr, type Cell, Strings, Type } from '@ephox/katamari';
-import { ImageSize } from '@ephox/sugar';
+import { Arr, type Cell, Id, Strings, Type } from '@ephox/katamari';
+import { Attribute, DomEvent, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import type Editor from '../api/Editor';
 import Env from '../api/Env';
@@ -120,34 +120,27 @@ const createBlobInfo = (editor: Editor, blobCache: BlobCache, file: File, base64
   return blobInfo;
 };
 
-const pasteImage = (editor: Editor, imageItem: FileResult): Promise<void> => {
-  return Conversions.parseDataUri(imageItem.uri).fold(
-    () => Promise.resolve(),
-    async ({ data, type, base64Encoded }) => {
-      const base64 = base64Encoded ? data : btoa(data);
-      const file = imageItem.file;
+const pasteImage = (editor: Editor, imageItem: FileResult): void => {
+  return Conversions.parseDataUri(imageItem.uri).each(({ data, type, base64Encoded }) => {
+    const base64 = base64Encoded ? data : btoa(data);
+    const file = imageItem.file;
 
-      // TODO: Move the bulk of the cache logic to EditorUpload
-      const blobCache = editor.editorUpload.blobCache;
-      const existingBlobInfo = blobCache.getByData(base64, type);
-      const blobInfo = existingBlobInfo ?? createBlobInfo(editor, blobCache, file, base64);
+    // TODO: Move the bulk of the cache logic to EditorUpload
+    const blobCache = editor.editorUpload.blobCache;
+    const existingBlobInfo = blobCache.getByData(base64, type);
+    const blobInfo = existingBlobInfo ?? createBlobInfo(editor, blobCache, file, base64);
 
-      const blobUri = blobInfo.blobUri();
+    const imageId = Id.generate('pasted_image');
+    pasteHtml(editor, `<img id="${imageId}" src="${blobInfo.blobUri()}">`, false, true);
 
-      let html: string;
-
-      try {
-        const dimensions = await ImageSize.getImageSize(blobUri);
-        html = `<img src="${blobUri}" width="${dimensions.width}" height="${dimensions.height}">`;
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error(e);
-        html = `<img src="${blobUri}">`;
-      }
-      if (!editor.removed) {
-        pasteHtml(editor, html, false, true);
-      }
+    SelectorFind.descendant<HTMLImageElement>(SugarElement.fromDom(editor.getBody()), '#' + imageId).each((img) => {
+      Attribute.remove(img, 'id');
+      const binder = DomEvent.bind(img, 'load', () => {
+        binder.unbind();
+        Attribute.setAll(img, { width: img.dom.naturalWidth, height: img.dom.naturalHeight });
+      });
     });
+  });
 };
 
 const isClipboardEvent = (event: Event): event is ClipboardEvent =>
@@ -191,9 +184,9 @@ const pasteImageData = (editor: Editor, e: ClipboardEvent | DragEvent, rng: Rang
         if (rng) {
           editor.selection.setRng(rng);
         }
-        for (const result of fileResults) {
-          await pasteImage(editor, result);
-        }
+        Arr.each(fileResults, (result) => {
+          pasteImage(editor, result);
+        });
       });
 
       return true;
