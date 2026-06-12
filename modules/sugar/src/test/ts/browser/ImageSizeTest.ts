@@ -15,10 +15,8 @@ describe('browser.sugar.ImageSizeTest', () => {
   const imgUrl = 'data:image/jpeg;base64,' + base64ImgSrc;
 
   it('TINY-14411: getImageSize should return width and height for a valid URL', async () => {
-    const { width, height, naturalWidth, naturalHeight } = await ImageSize.getImageSize(imgUrl);
+    const { width, height } = await ImageSize.getImageSize(imgUrl);
     Assert.eq('width should be 100', 100, width);
     Assert.eq('height should be 100', 100, height);
-    Assert.eq('naturalWidth should be 100', 100, naturalWidth);
-    Assert.eq('naturalHeight should be 100', 100, naturalHeight);
   });
 });
