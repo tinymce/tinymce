@@ -40,16 +40,19 @@ const createPasteDataTransfer = (html: string): DataTransfer => {
   return dataTransfer;
 };
 
-const doPaste = (editor: Editor, content: string, internal: boolean, pasteAsText: boolean, shouldSimulateInputEvent: boolean): void => {
+const doPaste = (editor: Editor, content: string, internal: boolean, pasteAsText: boolean, eventsData: { shouldSimulateInputEvent: boolean; customEventName?: string }): void => {
   const res = ProcessFilters.process(editor, content, internal);
   if (!res.cancelled) {
     const content = res.content;
     const doPasteAction = () => SmartPaste.insertContent(editor, content, pasteAsText);
-    if (shouldSimulateInputEvent) {
+    if (eventsData.shouldSimulateInputEvent) {
       const args = InputEvents.fireBeforeInputEvent(editor, 'insertFromPaste', { dataTransfer: createPasteDataTransfer(content) });
       if (!args.isDefaultPrevented()) {
         doPasteAction();
         InputEvents.fireInputEvent(editor, 'insertFromPaste');
+        if (eventsData.customEventName) {
+          editor.dispatch(eventsData.customEventName);
+        }
       }
     } else {
       doPasteAction();
@@ -62,9 +65,9 @@ const doPaste = (editor: Editor, content: string, internal: boolean, pasteAsText
  * inserted at the current selection in the editor. It will also fire paste events
  * for custom user filtering.
  */
-const pasteHtml = (editor: Editor, html: string, internalFlag: boolean, shouldSimulateInputEvent: boolean): void => {
+const pasteHtml = (editor: Editor, html: string, internalFlag: boolean, eventsData: { shouldSimulateInputEvent: boolean; customEventName?: string }): void => {
   const internal = internalFlag ? internalFlag : InternalHtml.isMarked(html);
-  doPaste(editor, InternalHtml.unmark(html), internal, false, shouldSimulateInputEvent);
+  doPaste(editor, InternalHtml.unmark(html), internal, false, eventsData);
 };
 
 /*
@@ -75,7 +78,7 @@ const pasteText = (editor: Editor, text: string, shouldSimulateInputEvent: boole
   const encodedText = editor.dom.encode(text).replace(/\r\n/g, '\n');
   const normalizedText = Whitespace.normalize(encodedText, Options.getPasteTabSpaces(editor));
   const html = Newlines.toBlockElements(normalizedText, Options.getForcedRootBlock(editor), Options.getForcedRootBlockAttrs(editor));
-  doPaste(editor, html, false, true, shouldSimulateInputEvent);
+  doPaste(editor, html, false, true, { shouldSimulateInputEvent });
 };
 
 /*
@@ -131,15 +134,17 @@ const pasteImage = (editor: Editor, imageItem: FileResult): void => {
     const blobInfo = existingBlobInfo ?? createBlobInfo(editor, blobCache, file, base64);
 
     const imageId = Id.generate('pasted_image');
-    pasteHtml(editor, `<img id="${imageId}" src="${blobInfo.blobUri()}">`, false, true);
-
-    SelectorFind.descendant<HTMLImageElement>(SugarElement.fromDom(editor.getBody()), '#' + imageId).each((img) => {
-      Attribute.remove(img, 'id');
-      const binder = DomEvent.bind(img, 'load', () => {
-        binder.unbind();
-        Attribute.setAll(img, { width: img.dom.naturalWidth, height: img.dom.naturalHeight });
+    const pasteImageEventName = 'pasted_' + imageId;
+    editor.once(pasteImageEventName, () => {
+      SelectorFind.descendant<HTMLImageElement>(SugarElement.fromDom(editor.getBody()), '#' + imageId).each((img) => {
+        Attribute.remove(img, 'id');
+        const binder = DomEvent.bind(img, 'load', () => {
+          binder.unbind();
+          Attribute.setAll(img, { width: img.dom.naturalWidth, height: img.dom.naturalHeight });
+        });
       });
     });
+    pasteHtml(editor, `<img id="${imageId}" src="${blobInfo.blobUri()}">`, false, { shouldSimulateInputEvent: true, customEventName: pasteImageEventName });
   });
 };
 
@@ -238,7 +243,7 @@ const insertClipboardContent = (editor: Editor, clipboardContent: ClipboardConte
   if (plainTextMode) {
     pasteText(editor, content, shouldSimulateInputEvent);
   } else {
-    pasteHtml(editor, content, isInternal, shouldSimulateInputEvent);
+    pasteHtml(editor, content, isInternal, { shouldSimulateInputEvent });
   }
 };
 

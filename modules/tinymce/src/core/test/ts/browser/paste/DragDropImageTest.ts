@@ -47,7 +47,7 @@ describe('browser.tinymce.core.paste.DragDropImageTest', () => {
     await pSetupAndDropImage(editor);
 
     const image = await UiFinder.pWaitFor<HTMLImageElement>(`Wait for image to exist`, TinyDom.body(editor), 'img');
-    await Waiter.pTryUntil('the image should have width and height', () => Attribute.has(image, 'width') && Attribute.has(image, 'height'));
+    await Waiter.pTryUntilPredicate('the image should have width and height', () => Attribute.has(image, 'width') && Attribute.has(image, 'height'));
     TinyAssertions.assertContent(editor, '<p><img src=\"data:image/gif;base64,' + base64ImgSrc + '" width="100" height="100">a</p>');
     assert.strictEqual(image.dom.src.indexOf('blob:'), 0);
 
