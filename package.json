@@ -54,7 +54,6 @@
     "@types/chai-as-promised": "^8.0.2",
     "chai": "^6.2.1",
     "chai-as-promised": "^8.0.2",
-    "chalk": "^5.6.2",
     "changie": "^1.24.0",
     "emojilib": "^2.4.0",
     "eslint-plugin-only-warn": "^1.1.0",

@@ -1,60 +1,26 @@
-import { Id } from '@ephox/katamari';
-import { Attribute, Css, Insert, Remove, SelectorFind, SugarBody, SugarElement } from '@ephox/sugar';
+import * as Announcer from '../../aria/Announcer';
 
 /**
- * Page-wide aria-live announcer used to send messages to screen readers without
- * shifting focus. The aria-live container is created lazily on the first
- * announcement and removed once no tokens remain in flight.
+ * Page-wide aria-live announcer used to send messages to screen readers without shifting focus.
+ *
+ *   Polite messages: appended as child divs to a single persistent live region
+ *   (aria-atomic="false", aria-relevant="additions") so each child is announced
+ *   independently as it is added. Earlier messages remain in the DOM and are
+ *   not re-read. Each message is removed after a delay long enough for screen
+ *   readers to have picked up the mutation, keeping the region bounded over long sessions.
+ *
+ *   Assertive messages: announced through a region that is created fresh per
+ *   message and removed entirely before the next assertive announce, so each
+ *   one interrupts the previous rather than queueing behind it.
  *
  * @class tinymce.dom.AriaAnnouncer
  */
 
-export interface AriaAnnouncerApi {
+interface AriaAnnouncer {
   readonly announce: (message: string, options?: { assertive?: boolean }) => void;
 }
 
-const announcerContainerId = Id.generate('tiny-aria-announcer');
-let activeTokens = 0;
-
-const offscreenStyles = {
-  position: 'absolute',
-  left: '-9999px',
-  width: '1px',
-  height: '1px',
-  overflow: 'hidden'
-};
-
-const getOrCreateContainer = (): SugarElement<HTMLElement> => {
-  return SelectorFind.descendant<HTMLElement>(SugarBody.body(), `#${announcerContainerId}`).getOrThunk(() => {
-    const container = SugarElement.fromTag('div');
-    Attribute.set(container, 'id', announcerContainerId);
-    Css.setAll(container, offscreenStyles);
-    Insert.append(SugarBody.body(), container);
-    return container;
-  });
-};
-
-const createToken = (message: string, assertive: boolean): SugarElement<HTMLSpanElement> => {
-  const span = SugarElement.fromTag('span');
-
-  if (assertive) {
-    Attribute.setAll(span, {
-      'aria-live': 'assertive',
-      'aria-atomic': 'true',
-      'role': 'alert'
-    });
-  } else {
-    Attribute.setAll(span, {
-      'role': 'presentation',
-      'aria-live': 'polite',
-      'aria-atomic': 'true',
-      'aria-label': message
-    });
-  }
-
-  Insert.append(span, SugarElement.fromText(message));
-  return span;
-};
+const announcer = Announcer.createAnnouncer();
 
 /**
  * Announces a message to screen readers via an aria-live region, without shifting focus.
@@ -68,22 +34,15 @@ const createToken = (message: string, assertive: boolean): SugarElement<HTMLSpan
  * tinymce.dom.AriaAnnouncer.announce('Error occurred', { assertive: true });
  */
 const announce = (message: string, options?: { assertive?: boolean }): void => {
-  const container = getOrCreateContainer();
-  const token = createToken(message, options?.assertive === true);
-  Insert.append(container, token);
-  activeTokens++;
-
-  setTimeout(() => {
-    Attribute.remove(token, 'aria-live');
-    Remove.remove(token);
-    activeTokens--;
-    if (activeTokens === 0) {
-      Remove.remove(container);
-    }
-  }, 1000);
+  if (options?.assertive === true) {
+    announcer.assertive(message);
+  } else {
+    announcer.polite(message);
+  }
 };
 
-const AriaAnnouncer: AriaAnnouncerApi = { announce };
+const AriaAnnouncer: AriaAnnouncer = {
+  announce
+};
 
-export { announcerContainerId };
 export default AriaAnnouncer;
