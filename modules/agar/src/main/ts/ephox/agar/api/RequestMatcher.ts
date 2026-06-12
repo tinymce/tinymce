@@ -1,1 +1,1 @@
-export { makeRequestMatcher, get, post, put, del, patch } from '../http/RequestMatcher';
+export { get, post, put, del, patch } from '../http/RequestMatcher';
