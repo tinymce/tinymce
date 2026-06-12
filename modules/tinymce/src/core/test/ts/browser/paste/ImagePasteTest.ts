@@ -242,6 +242,7 @@ describe('browser.tinymce.core.paste.ImagePasteTest', () => {
 
     const imgs = editor.dom.select('img');
     assert.equal(imgs.length, 2, 'Both images should be pasted');
+    await pImageFullLoaded(editor, 'img:nth-child(2)');
     const imgsWithDimensions = imgs.filter((img) => img.hasAttribute('width') && img.hasAttribute('height'));
     assert.equal(imgsWithDimensions.length, 1, 'Only the valid image should have width and height');
   });
