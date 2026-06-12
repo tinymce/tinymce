@@ -138,9 +138,14 @@ const pasteImage = (editor: Editor, imageItem: FileResult): void => {
     editor.once(pasteImageEventName, () => {
       SelectorFind.descendant<HTMLImageElement>(SugarElement.fromDom(editor.getBody()), '#' + imageId).each((img) => {
         Attribute.remove(img, 'id');
-        const binder = DomEvent.bind(img, 'load', () => {
-          binder.unbind();
+        const loadBinder = DomEvent.bind(img, 'load', () => {
+          loadBinder.unbind();
+          errorBinder.unbind();
           Attribute.setAll(img, { width: img.dom.naturalWidth, height: img.dom.naturalHeight });
+        });
+        const errorBinder = DomEvent.bind(img, 'error', () => {
+          loadBinder.unbind();
+          errorBinder.unbind();
         });
       });
     });
