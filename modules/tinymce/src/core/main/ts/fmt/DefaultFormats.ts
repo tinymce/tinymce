@@ -66,7 +66,7 @@ const get = (editor: Editor): Formats => {
         preview: 'font-family font-size'
       },
       {
-        selector: '.mce-preview-object,[data-ephox-embed-iri]',
+        selector: '.mce-preview-object,[data-ephox-embed-iri],.tiny-pageembed',
         ceFalseOverride: true,
         styles: {
           float: 'left'
@@ -119,7 +119,7 @@ const get = (editor: Editor): Formats => {
         preview: 'font-family font-size'
       },
       {
-        selector: '.mce-preview-object',
+        selector: '.mce-preview-object,.tiny-pageembed',
         ceFalseOverride: true,
         styles: {
           display: 'table', // Needs to be `table` to properly render while editing
@@ -184,7 +184,7 @@ const get = (editor: Editor): Formats => {
         preview: 'font-family font-size'
       },
       {
-        selector: '.mce-preview-object,[data-ephox-embed-iri]',
+        selector: '.mce-preview-object,[data-ephox-embed-iri],.tiny-pageembed',
         ceFalseOverride: true,
         styles: {
           float: 'right'
