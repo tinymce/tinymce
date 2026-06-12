@@ -17,8 +17,8 @@ export const makeRequestFilter = (method: HttpMethod, pattern: string) => {
   return (request: Request): boolean => matcher(request).isSome();
 };
 
-export const get = Fun.curry(makeRequestFilter, 'GET');
-export const post = Fun.curry(makeRequestFilter, 'POST');
-export const put = Fun.curry(makeRequestFilter, 'PUT');
-export const del = Fun.curry(makeRequestFilter, 'DELETE');
-export const patch = Fun.curry(makeRequestFilter, 'PATCH');
+export const get = Fun.curry(makeRequestFilter, 'get');
+export const post = Fun.curry(makeRequestFilter, 'post');
+export const put = Fun.curry(makeRequestFilter, 'put');
+export const del = Fun.curry(makeRequestFilter, 'delete');
+export const patch = Fun.curry(makeRequestFilter, 'patch');

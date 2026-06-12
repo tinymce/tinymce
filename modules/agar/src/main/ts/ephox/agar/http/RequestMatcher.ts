@@ -4,7 +4,7 @@ import { PathPattern } from '@ephox/polaris';
 import type { HttpMethod } from './HttpMethod';
 
 const matchMethod = (request: Request, method: HttpMethod): boolean =>
-  request.method.toUpperCase() === method.toUpperCase();
+  request.method.toLowerCase() === method.toLowerCase();
 
 /**
  * Builds a matcher that tests a `Request` against an HTTP method and URL path pattern.
@@ -28,8 +28,8 @@ export const makeRequestMatcher = (method: HttpMethod, pattern: string) => {
   };
 };
 
-export const get = Fun.curry(makeRequestMatcher, 'GET');
-export const post = Fun.curry(makeRequestMatcher, 'POST');
-export const put = Fun.curry(makeRequestMatcher, 'PUT');
-export const del = Fun.curry(makeRequestMatcher, 'DELETE');
-export const patch = Fun.curry(makeRequestMatcher, 'PATCH');
+export const get = Fun.curry(makeRequestMatcher, 'get');
+export const post = Fun.curry(makeRequestMatcher, 'post');
+export const put = Fun.curry(makeRequestMatcher, 'put');
+export const del = Fun.curry(makeRequestMatcher, 'delete');
+export const patch = Fun.curry(makeRequestMatcher, 'patch');

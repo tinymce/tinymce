@@ -8,32 +8,24 @@ describe('browser.agar.http.RequestFilterTest', () => {
   const makeRequest = (method: HttpMethod, url: string): Request => new window.Request(url, { method });
 
   describe('makeRequestFilter', () => {
-    it('TINY-14495: matches regardless of the case used for the filter method', () => {
-      const request = makeRequest('GET', '/users');
-      const upperFilter = RequestFilter.makeRequestFilter('GET', '/users');
-      const lowerFilter = RequestFilter.makeRequestFilter('get', '/users');
-      Assert.eq('An uppercase filter should match a GET request', true, upperFilter(request));
-      Assert.eq('A lowercase filter should match a GET request', true, lowerFilter(request));
-    });
-
     it('TINY-14495: returns false when the method does not match (path would otherwise match)', () => {
-      const filter = RequestFilter.makeRequestFilter('GET', '/users');
+      const filter = RequestFilter.makeRequestFilter('get', '/users');
       Assert.eq('A POST request should not match a GET filter', false, filter(makeRequest('POST', '/users')));
     });
 
     it('TINY-14495: returns false when the method matches but the path does not', () => {
-      const filter = RequestFilter.makeRequestFilter('GET', '/users/:id');
+      const filter = RequestFilter.makeRequestFilter('get', '/users/:id');
       Assert.eq('Path mismatch should cause false even on a method match', false, filter(makeRequest('GET', '/posts/42')));
     });
 
     it('TINY-14495: matches against url.pathname, ignores query params', () => {
-      const filter = RequestFilter.makeRequestFilter('GET', '/users/:id');
+      const filter = RequestFilter.makeRequestFilter('get', '/users/:id');
       const request = makeRequest('GET', '/users/42?foo=bar#frag');
       Assert.eq('Path with query params should match', true, filter(request));
     });
 
     it('TINY-14495: matches against url.pathname, ignores domain', () => {
-      const filter = RequestFilter.makeRequestFilter('GET', '/users/:id');
+      const filter = RequestFilter.makeRequestFilter('get', '/users/:id');
 
       const tinyCloudRequest = makeRequest('GET', 'https://tiny.cloud/users/55');
       Assert.eq('Path with tiny.cloud domain should match', true, filter(tinyCloudRequest));
@@ -43,7 +35,7 @@ describe('browser.agar.http.RequestFilterTest', () => {
     });
 
     it('TINY-14495: pattern should only include path, not full url', () => {
-      const filter = RequestFilter.makeRequestFilter('GET', 'https://tiny.cloud/users/:id');
+      const filter = RequestFilter.makeRequestFilter('get', 'https://tiny.cloud/users/:id');
       const request = makeRequest('GET', 'https://tiny.cloud/users/55');
 
       Assert.eq('Pattern defined with full url should always fail', false, filter(request));

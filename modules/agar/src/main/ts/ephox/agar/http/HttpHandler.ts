@@ -29,11 +29,11 @@ const makeMethodHttpHandler = (method: HttpMethod) => (pathPattern: string, hand
     requestMatcher(request).map((params) => handler({ params, request, abortSignal }));
 };
 
-export const get = makeMethodHttpHandler('GET');
-export const post = makeMethodHttpHandler('POST');
-export const put = makeMethodHttpHandler('PUT');
-export const del = makeMethodHttpHandler('DELETE');
-export const patch = makeMethodHttpHandler('PATCH');
+export const get = makeMethodHttpHandler('get');
+export const post = makeMethodHttpHandler('post');
+export const put = makeMethodHttpHandler('put');
+export const del = makeMethodHttpHandler('delete');
+export const patch = makeMethodHttpHandler('patch');
 
 export const defaultHandler: RawRequestHandler = async (_req, _signal) => new window.Response(null, { status: 501, statusText: 'Handler not implemented' });
 
