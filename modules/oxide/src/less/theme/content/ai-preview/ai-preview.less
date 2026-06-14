@@ -20,6 +20,97 @@
   @tinymceai-selected-box-shadow
 );
 
+.tox-tinymceai__annotation--added__highlight,
+.tox-tinymceai__annotation--modified__highlight,
+.tox-tinymceai__annotation--removed__highlight {
+  cursor: pointer;
+}
+
+// Preview-mode selection styling — only applied when the iframe body opts in via
+// .tox-tinymceai-preview--selectable (review preview). Chat preview omits the class
+// so suggestions remain visible as highlights but show no selection effect on click.
+body.tox-tinymceai-preview--selectable {
+  .tox-tinymceai__annotation--added.tox-tinymceai__annotation--preview-highlight,
+  .tox-tinymceai__annotation--modified.tox-tinymceai__annotation--preview-highlight {
+    cursor: pointer;
+  }
+
+  .tox-tinymceai__annotation--preview-highlight.tox-tinymceai__annotation--added__selected,
+  .tox-tinymceai__annotation--preview-highlight.tox-tinymceai__annotation--modified__selected {
+    background-image: none;
+    background-color: fade(@color-tint, 20%);
+    box-shadow: @tinymceai-selected-box-shadow;
+  }
+
+  // TEMP: Show deleted content when its review card is selected.
+  // Makes deletions visible and scrollable in preview mode.
+  // TODO: Replace with a proper visual marker that doesn't reveal full deleted content.
+  .tox-tinymceai__annotation--preview-highlight.tox-tinymceai__annotation--removed__selected {
+    display: revert;
+    text-decoration: line-through;
+    background-image: none;
+    background-color: fade(@color-error, 20%);
+    box-shadow: @tinymceai-selected-box-shadow;
+  }
+
+  // ins/del elements only contain text and inline formatting, so they can safely use
+  // the 1lh background-image approach for tighter inline selection styling
+  ins, del {
+    &.tox-tinymceai__annotation--preview-highlight.tox-tinymceai__annotation--added__selected,
+    &.tox-tinymceai__annotation--preview-highlight.tox-tinymceai__annotation--modified__selected {
+      background-color: transparent;
+      box-shadow: none;
+      background-position: center;
+      background-size: 100% calc(1lh + 3px);
+      background-image: linear-gradient(
+        @color-tint 3px,
+        fade(@color-tint, 20%) 3px,
+        fade(@color-tint, 20%) calc(100% - 3px),
+        @color-tint calc(100% - 3px)
+      );
+    }
+
+    &.tox-tinymceai__annotation--preview-highlight.tox-tinymceai__annotation--removed__selected {
+      background-color: transparent;
+      box-shadow: none;
+      background-position: center;
+      background-size: 100% calc(1lh + 3px);
+      background-image: linear-gradient(
+        @color-error 3px,
+        fade(@color-error, 20%) 3px,
+        fade(@color-error, 20%) calc(100% - 3px),
+        @color-error calc(100% - 3px)
+      );
+    }
+  }
+
+  img, video, iframe {
+    &.tox-tinymceai__annotation--preview-highlight.tox-tinymceai__annotation--added__selected,
+    &.tox-tinymceai__annotation--preview-highlight.tox-tinymceai__annotation--modified__selected {
+      background-image: none;
+      border: 0.25em solid fade(@color-tint, 20%);
+      outline: 0.125em solid @color-tint;
+      padding: 0;
+    }
+
+    &.tox-tinymceai__annotation--preview-highlight.tox-tinymceai__annotation--removed__selected {
+      display: inline;
+      background-image: none;
+      border: 0.25em solid fade(@color-error, 20%);
+      outline: 0.125em solid @color-error;
+      padding: 0;
+    }
+  }
+}
+
+.tox-tinymceai__annotation--preview-highlight.tox-tinymceai__annotation--added__selected,
+.tox-tinymceai__annotation--preview-highlight.tox-tinymceai__annotation--modified__selected,
+.tox-tinymceai__annotation--preview-highlight.tox-tinymceai__annotation--removed__selected {
+  background-color: transparent;
+  box-shadow: none;
+  border: 0;
+}
+
 .tox-tinymceai {
   // Block class for tinymceai preview - required for Bem type generation
   display: contents;
@@ -28,12 +119,6 @@
 .tox-tinymceai__annotation {
   // Base class for annotations - styling handled by modifier classes
   display: revert;
-}
-
-.tox-tinymceai__annotation--added__highlight,
-.tox-tinymceai__annotation--modified__highlight,
-.tox-tinymceai__annotation--removed__highlight {
-  cursor: pointer;
 }
 
 div[tinymceai-data-pending-diff="true"],
@@ -45,61 +130,11 @@ span[tinymceai-data-pending-diff="true"] {
 
 .tox-tinymceai__annotation--added.tox-tinymceai__annotation--preview-highlight,
 .tox-tinymceai__annotation--modified.tox-tinymceai__annotation--preview-highlight {
-  cursor: pointer;
   background-position: bottom;
   background-image: linear-gradient(
     transparent calc(100% - 3px),
     @color-tint calc(100% - 3px)
   );
-}
-
-.tox-tinymceai__annotation--preview-highlight.tox-tinymceai__annotation--added__selected,
-.tox-tinymceai__annotation--preview-highlight.tox-tinymceai__annotation--modified__selected {
-  background-image: none;
-  background-color: fade(@color-tint, 20%);
-  box-shadow: @tinymceai-selected-box-shadow;
-}
-
-// TEMP: Show deleted content when its review card is selected.
-// Makes deletions visible and scrollable in preview mode.
-// TODO: Replace with a proper visual marker that doesn't reveal full deleted content.
-.tox-tinymceai__annotation--preview-highlight.tox-tinymceai__annotation--removed__selected {
-  display: revert;
-  text-decoration: line-through;
-  background-image: none;
-  background-color: fade(@color-error, 20%);
-  box-shadow: @tinymceai-selected-box-shadow;
-}
-
-// ins/del elements only contain text and inline formatting, so they can safely use
-// the 1lh background-image approach for tighter inline selection styling
-ins, del {
-  &.tox-tinymceai__annotation--preview-highlight.tox-tinymceai__annotation--added__selected,
-  &.tox-tinymceai__annotation--preview-highlight.tox-tinymceai__annotation--modified__selected {
-    background-color: transparent;
-    box-shadow: none;
-    background-position: center;
-    background-size: 100% calc(1lh + 3px);
-    background-image: linear-gradient(
-      @color-tint 3px,
-      fade(@color-tint, 20%) 3px,
-      fade(@color-tint, 20%) calc(100% - 3px),
-      @color-tint calc(100% - 3px)
-    );
-  }
-
-  &.tox-tinymceai__annotation--preview-highlight.tox-tinymceai__annotation--removed__selected {
-    background-color: transparent;
-    box-shadow: none;
-    background-position: center;
-    background-size: 100% calc(1lh + 3px);
-    background-image: linear-gradient(
-      @color-error 3px,
-      fade(@color-error, 20%) 3px,
-      fade(@color-error, 20%) calc(100% - 3px),
-      @color-error calc(100% - 3px)
-    );
-  }
 }
 
 img, video, iframe {
@@ -108,22 +143,6 @@ img, video, iframe {
     background-image: none;
     outline: 0.25em solid fade(@color-tint, 20%);
     padding: 0.25em;
-  }
-
-  &.tox-tinymceai__annotation--preview-highlight.tox-tinymceai__annotation--added__selected,
-  &.tox-tinymceai__annotation--preview-highlight.tox-tinymceai__annotation--modified__selected {
-    background-image: none;
-    border: 0.25em solid fade(@color-tint, 20%);
-    outline: 0.125em solid @color-tint;
-    padding: 0;
-  }
-
-  &.tox-tinymceai__annotation--preview-highlight.tox-tinymceai__annotation--removed__selected {
-    display: inline;
-    background-image: none;
-    border: 0.25em solid fade(@color-error, 20%);
-    outline: 0.125em solid @color-error;
-    padding: 0;
   }
 }
 
