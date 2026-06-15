@@ -285,7 +285,7 @@ const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
     };
   };
 
-  // TINY-14384:we want to restrict the bounds to the host element, rather than the entire window when the sink is attached in a webcomponent. Assume that the editor is also attached in the same webcomponent
+  // TINY-14384: we want to restrict the bounds to the host element, rather than the entire window when the sink is attached in a ShadowDOM (ie: webcomponent)
   const getSinkBounds = (sinkOpt: Optional<SinkAndMothership>) => sinkOpt.bind(
     ({ sink }) => {
       const rootNode = SugarShadowDom.getRootNode(sink.element);
