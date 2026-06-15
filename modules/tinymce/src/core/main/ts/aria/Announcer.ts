@@ -81,7 +81,15 @@ export const createAnnouncer = (): Announcer => {
       createNewPendingState,
       async (existingPromise) => {
         const { container } = await existingPromise;
-        return isConnected(container) ? existingPromise : createNewPendingState();
+
+        if (isConnected(container)) {
+          return existingPromise;
+        } else {
+          // A concurrent caller may have already replaced the stale state while we awaited.
+          // The block after the await runs atomically, so reuse that state if present and
+          // only create a fresh one when the state is still the stale promise we observed.
+          return state.get().filter((current) => current !== existingPromise).getOrThunk(createNewPendingState);
+        }
       }
     );
   };
