@@ -2,6 +2,11 @@
 // Dialog
 //
 
+@dialog-wrap-inset-top: 0;
+@dialog-wrap-inset-right: 0;
+@dialog-wrap-inset-bottom: 0;
+@dialog-wrap-inset-left: 0;
+
 @dialog-backdrop-background-color: fade(@background-color, 75);
 @dialog-backdrop-background-color-opaque: @background-color;
 
@@ -79,13 +84,13 @@
 .tox {
   .tox-dialog-wrap {
     align-items: center;
-    bottom: 0;
     display: flex;
     justify-content: center;
-    left: 0;
     position: fixed;
-    right: 0;
-    top: 0;
+    top: @dialog-wrap-inset-top;
+    right: @dialog-wrap-inset-right;
+    bottom: @dialog-wrap-inset-bottom;
+    left: @dialog-wrap-inset-left;
     z-index: @z-index-dialogs;
   }
 
