@@ -1,5 +1,5 @@
 import { Arr, Id, Singleton, Strings } from '@ephox/katamari';
-import { Attribute, Css, Insert, Remove, SelectorFilter, SugarBody, SugarElement, TextContent } from '@ephox/sugar';
+import { Attribute, Css, Insert, Remove, SelectorFilter, SugarBody, SugarElement } from '@ephox/sugar';
 
 export const announcerContainerId = Id.generate('tiny-aria-announcer');
 
@@ -25,21 +25,12 @@ const OFFSCREEN_STYLES = {
   overflow: 'hidden'
 };
 
-const createPoliteRegion = (): SugarElement<HTMLDivElement> => {
+const createRegion = (live: 'polite' | 'assertive'): SugarElement<HTMLDivElement> => {
   const region = SugarElement.fromTag('div');
   Attribute.setAll(region, {
-    'aria-live': 'polite',
+    'aria-live': live,
     'aria-atomic': 'false',
     'aria-relevant': 'additions'
-  });
-  return region;
-};
-
-const createAssertiveRegion = (): SugarElement<HTMLDivElement> => {
-  const region = SugarElement.fromTag('div');
-  Attribute.setAll(region, {
-    'aria-live': 'assertive',
-    'aria-atomic': 'true'
   });
   return region;
 };
@@ -48,8 +39,8 @@ const isConnected = (element: SugarElement<HTMLElement>): boolean => element.dom
 
 const createNewState = () => {
   const container = SugarElement.fromTag('div');
-  const politeRegion = createPoliteRegion();
-  const assertiveRegion = createAssertiveRegion();
+  const politeRegion = createRegion('polite');
+  const assertiveRegion = createRegion('assertive');
 
   Attribute.set(container, 'id', announcerContainerId);
   Css.setAll(container, OFFSCREEN_STYLES);
@@ -61,7 +52,7 @@ const createNewState = () => {
   return { container, politeRegion, assertiveRegion };
 };
 
-const cleanupExpiredPoliteMessages = (polite: SugarElement<HTMLDivElement>, now: number): void => {
+const cleanupExpiredMessages = (polite: SugarElement<HTMLDivElement>, now: number): void => {
   Arr.each(SelectorFilter.children(polite, `div[${politeTimestampAttr}]`), (messageDiv) => {
     Attribute.getOpt(messageDiv, politeTimestampAttr)
       .bind((value) => Strings.toInt(value))
@@ -81,20 +72,23 @@ export const createAnnouncer = (): Announcer => {
     });
   };
 
-  const polite = (message: string): void => {
-    const { politeRegion } = mountRegions();
+  const addMessage = (region: SugarElement<HTMLDivElement>, message: string): void => {
     const now = Date.now();
 
-    cleanupExpiredPoliteMessages(politeRegion, now);
+    cleanupExpiredMessages(region, now);
 
     const messageDiv = SugarElement.fromTag('div');
     Attribute.set(messageDiv, politeTimestampAttr, String(now));
     Insert.append(messageDiv, SugarElement.fromText(message));
-    Insert.append(politeRegion, messageDiv);
+    Insert.append(region, messageDiv);
+  };
+
+  const polite = (message: string): void => {
+    addMessage(mountRegions().politeRegion, message);
   };
 
   const assertive = (message: string): void => {
-    TextContent.set(mountRegions().assertiveRegion, message);
+    addMessage(mountRegions().assertiveRegion, message);
   };
 
   return { polite, assertive };

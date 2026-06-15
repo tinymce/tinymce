@@ -1,0 +1,6 @@
+project: agar
+kind: Added
+body: Added new `FetchSpy`, `RequestMatcher` and `RequestFilter` utilities.
+time: 2026-06-09T19:25:54.799533967Z
+custom:
+    Issue: TINY-14495
