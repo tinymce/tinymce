@@ -4,11 +4,12 @@ import { Attribute, Css, Insert, Remove, SelectorFilter, SugarBody, SugarElement
 export const announcerContainerId = Id.generate('tiny-aria-announcer');
 
 const POLITE_MESSAGE_TTL_MS = 600000; // 10 minutes
+const CREATE_DELAY_MS = 100; // Delay before creating announcer regions to avoid interfering with screen readers initial announcements.
 const politeTimestampAttr = 'data-mce-announced-at';
 
 export interface Announcer {
-  readonly polite: (message: string) => void;
-  readonly assertive: (message: string) => void;
+  readonly polite: (message: string) => Promise<void>;
+  readonly assertive: (message: string) => Promise<void>;
 }
 
 interface AnnouncerState {
@@ -62,14 +63,27 @@ const cleanupExpiredMessages = (polite: SugarElement<HTMLDivElement>, now: numbe
 };
 
 export const createAnnouncer = (): Announcer => {
-  const state = Singleton.value<AnnouncerState>();
+  const state = Singleton.value<Promise<AnnouncerState>>();
 
-  const mountRegions = () => {
-    return state.get().filter(({ container }) => isConnected(container)).getOrThunk(() => {
-      const newState = createNewState();
-      state.set(newState);
-      return newState;
-    });
+  const mountRegions = async () => {
+    const createNewPendingState = async () => {
+      const promise = new Promise<AnnouncerState>((resolve) => {
+        const newState = createNewState();
+        setTimeout(() => resolve(newState), CREATE_DELAY_MS);
+      });
+
+      state.set(promise);
+
+      return promise;
+    };
+
+    return state.get().fold(
+      createNewPendingState,
+      async (existingPromise) => {
+        const { container } = await existingPromise;
+        return isConnected(container) ? existingPromise : createNewPendingState();
+      }
+    );
   };
 
   const addMessage = (region: SugarElement<HTMLDivElement>, message: string): void => {
@@ -83,12 +97,14 @@ export const createAnnouncer = (): Announcer => {
     Insert.append(region, messageDiv);
   };
 
-  const polite = (message: string): void => {
-    addMessage(mountRegions().politeRegion, message);
+  const polite = async (message: string): Promise<void> => {
+    const { politeRegion } = await mountRegions();
+    addMessage(politeRegion, message);
   };
 
-  const assertive = (message: string): void => {
-    addMessage(mountRegions().assertiveRegion, message);
+  const assertive = async (message: string): Promise<void> => {
+    const { assertiveRegion } = await mountRegions();
+    addMessage(assertiveRegion, message);
   };
 
   return { polite, assertive };

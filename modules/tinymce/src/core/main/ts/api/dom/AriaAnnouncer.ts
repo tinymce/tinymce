@@ -1,3 +1,5 @@
+import { Fun } from '@ephox/katamari';
+
 import * as Announcer from '../../aria/Announcer';
 
 /**
@@ -36,9 +38,9 @@ const announcer = Announcer.createAnnouncer();
  */
 const announce = (message: string, options?: { assertive?: boolean }): void => {
   if (options?.assertive === true) {
-    announcer.assertive(message);
+    announcer.assertive(message).catch(Fun.noop);
   } else {
-    announcer.polite(message);
+    announcer.polite(message).catch(Fun.noop);
   }
 };
 
