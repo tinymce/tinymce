@@ -1,7 +1,7 @@
 import { Assertions, Waiter } from '@ephox/agar';
 import { Boxes } from '@ephox/alloy';
 import { after, before, context, describe, it } from '@ephox/bedrock-client';
-import { Arr, Fun } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 import { Css, Insert, Remove, SugarBody, SugarElement, SugarShadowDom } from '@ephox/sugar';
 import { TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
@@ -43,7 +43,7 @@ describe('browser.tinymce.themes.silver.editor.TooltipInShadowDom', () => {
     }
   ], ({ label, settings }) => {
     context(`UI mode: ${label}`, () => {
-      let containerRef: SugarElement<HTMLElement> | undefined;
+      let rootOpt = Optional.none<SugarElement<HTMLElement>>();
 
       const hook = TinyHooks.bddSetupInShadowRoot<Editor>({
         base_url: '/project/tinymce/js/tinymce',
@@ -68,7 +68,7 @@ describe('browser.tinymce.themes.silver.editor.TooltipInShadowDom', () => {
       before(async () => {
         const shadowRoot = hook.shadowRoot();
         const container = SugarElement.fromTag('div', document);
-        containerRef = container;
+        rootOpt = Optional.from(container);
         Css.setAll(container, { display: 'flex', width: '400px', height: '400px', overflow: 'scroll' });
         const hostContainer = SugarElement.fromTag('div', document);
         Css.setAll(hostContainer, { 'padding-left': '50px', 'overflow': 'auto' });
@@ -82,7 +82,7 @@ describe('browser.tinymce.themes.silver.editor.TooltipInShadowDom', () => {
       });
 
       after(() => {
-        Remove.remove(containerRef as any);
+        rootOpt.each(Remove.remove);
       });
 
       it('TINY-14384: Tooltip should be rendered within the boundary of the shadow dom host', async () => {
