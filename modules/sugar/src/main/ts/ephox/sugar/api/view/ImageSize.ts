@@ -6,14 +6,7 @@ export interface ImageDimensions {
 const getImageSize = (url: string): Promise<ImageDimensions> => new Promise((resolve, reject) => {
   const img = document.createElement('img');
 
-  const cleanUp = (): void => {
-    if (img.parentNode) {
-      img.parentNode.removeChild(img);
-    }
-  };
-
   img.addEventListener('load', () => {
-    cleanUp();
     resolve({
       width: img.naturalWidth,
       height: img.naturalHeight
@@ -21,17 +14,9 @@ const getImageSize = (url: string): Promise<ImageDimensions> => new Promise((res
   });
 
   img.addEventListener('error', () => {
-    cleanUp();
     reject(`Failed to get image dimensions for: ${url}`);
   });
 
-  const style = img.style;
-  style.visibility = 'hidden';
-  style.position = 'fixed';
-  style.bottom = style.left = '0px';
-  style.width = style.height = 'auto';
-
-  document.body.appendChild(img);
   img.src = url;
 });
 
