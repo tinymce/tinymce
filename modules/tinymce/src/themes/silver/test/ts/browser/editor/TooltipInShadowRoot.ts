@@ -2,7 +2,7 @@ import { Assertions, Waiter } from '@ephox/agar';
 import { Boxes } from '@ephox/alloy';
 import { after, before, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun, Optional } from '@ephox/katamari';
-import { Css, Insert, Remove, SugarBody, SugarElement, SugarShadowDom } from '@ephox/sugar';
+import { Insert, Remove, SugarBody, SugarElement, SugarShadowDom } from '@ephox/sugar';
 import { TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import type Editor from 'tinymce/core/api/Editor';
@@ -43,7 +43,7 @@ describe('browser.tinymce.themes.silver.editor.TooltipInShadowDom', () => {
     }
   ], ({ label, settings }) => {
     context(`UI mode: ${label}`, () => {
-      let rootOpt = Optional.none<SugarElement<HTMLElement>>();
+      let rootOpt = Optional.none<SugarElement<Node & ChildNode>>();
 
       const hook = TinyHooks.bddSetupInShadowRoot<Editor>({
         base_url: '/project/tinymce/js/tinymce',
@@ -67,13 +67,13 @@ describe('browser.tinymce.themes.silver.editor.TooltipInShadowDom', () => {
 
       before(async () => {
         const shadowRoot = hook.shadowRoot();
-        const container = SugarElement.fromTag('div', document);
-        rootOpt = Optional.from(container);
-        Css.setAll(container, { display: 'flex', width: '400px', height: '400px', overflow: 'scroll' });
-        const hostContainer = SugarElement.fromTag('div', document);
-        Css.setAll(hostContainer, { 'padding-left': '50px', 'overflow': 'auto' });
-
+        const container = SugarElement.fromHtml('<div style="display: flex; width: 400px; height: 400px;"></div>');
+        const sidePanel = SugarElement.fromHtml('<div style="width: 200px; background-color: red;">Side Panel</div>');
+        const hostContainer = SugarElement.fromHtml('<div style="padding: left; overflow: scroll;"></div>');
         const hostElement = SugarShadowDom.getShadowHost(shadowRoot);
+        rootOpt = Optional.from(container);
+
+        Insert.append(container, sidePanel);
         Insert.append(container, hostContainer);
         Insert.append(SugarBody.body(), container);
         Insert.append(hostContainer, hostElement);
