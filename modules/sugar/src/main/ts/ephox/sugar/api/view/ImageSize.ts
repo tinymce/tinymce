@@ -25,12 +25,6 @@ const getImageSize = (url: string): Promise<ImageDimensions> => new Promise((res
     reject(`Failed to get image dimensions for: ${url}`);
   });
 
-  const style = img.style;
-  style.visibility = 'hidden';
-  style.position = 'fixed';
-  style.bottom = style.left = '0px';
-  style.width = style.height = 'auto';
-
   document.body.appendChild(img);
   img.src = url;
 });

@@ -1,6 +1,6 @@
 import { DataTransfer, DataTransferContent, DataTransferMode } from '@ephox/dragster';
-import { Arr, type Cell, Id, Strings, Type } from '@ephox/katamari';
-import { Attribute, DomEvent, SelectorFind, SugarElement } from '@ephox/sugar';
+import { Arr, type Cell, Strings, Type } from '@ephox/katamari';
+import { ImageSize } from '@ephox/sugar';
 
 import type Editor from '../api/Editor';
 import Env from '../api/Env';
@@ -123,34 +123,25 @@ const createBlobInfo = (editor: Editor, blobCache: BlobCache, file: File, base64
   return blobInfo;
 };
 
-const pasteImage = (editor: Editor, imageItem: FileResult): void => {
-  return Conversions.parseDataUri(imageItem.uri).each(({ data, type, base64Encoded }) => {
-    const base64 = base64Encoded ? data : btoa(data);
-    const file = imageItem.file;
+const pasteImage = async (editor: Editor, imageItem: FileResult): Promise<void> => {
+  return Conversions.parseDataUri(imageItem.uri).fold(
+    () => Promise.reject(),
+    ({ data, type, base64Encoded }) => {
+      const base64 = base64Encoded ? data : btoa(data);
+      const file = imageItem.file;
 
-    // TODO: Move the bulk of the cache logic to EditorUpload
-    const blobCache = editor.editorUpload.blobCache;
-    const existingBlobInfo = blobCache.getByData(base64, type);
-    const blobInfo = existingBlobInfo ?? createBlobInfo(editor, blobCache, file, base64);
+      // TODO: Move the bulk of the cache logic to EditorUpload
+      const blobCache = editor.editorUpload.blobCache;
+      const existingBlobInfo = blobCache.getByData(base64, type);
+      const blobInfo = existingBlobInfo ?? createBlobInfo(editor, blobCache, file, base64);
 
-    const imageId = Id.generate('pasted_image');
-    const pasteImageEventName = 'pasted_' + imageId;
-    editor.once(pasteImageEventName, () => {
-      SelectorFind.descendant<HTMLImageElement>(SugarElement.fromDom(editor.getBody()), '#' + imageId).each((img) => {
-        Attribute.remove(img, 'id');
-        const loadBinder = DomEvent.bind(img, 'load', () => {
-          loadBinder.unbind();
-          errorBinder.unbind();
-          Attribute.setAll(img, { width: img.dom.naturalWidth, height: img.dom.naturalHeight });
-        });
-        const errorBinder = DomEvent.bind(img, 'error', () => {
-          loadBinder.unbind();
-          errorBinder.unbind();
-        });
+      const imgUrl = blobInfo.blobUri();
+      return ImageSize.getImageSize(imgUrl).then(({ width, height }) => {
+        pasteHtml(editor, `<img width="${width}" height="${height}" src="${imgUrl}">`, false, { shouldSimulateInputEvent: true });
+      }).catch(() => {
+        pasteHtml(editor, `<img src="${imgUrl}">`, false, { shouldSimulateInputEvent: true });
       });
     });
-    pasteHtml(editor, `<img id="${imageId}" src="${blobInfo.blobUri()}">`, false, { shouldSimulateInputEvent: true, customEventName: pasteImageEventName });
-  });
 };
 
 const isClipboardEvent = (event: Event): event is ClipboardEvent =>
@@ -190,14 +181,14 @@ const pasteImageData = (editor: Editor, e: ClipboardEvent | DragEvent, rng: Rang
       e.preventDefault();
 
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      readFilesAsDataUris(images).then((fileResults) => {
+      readFilesAsDataUris(images).then(async (fileResults) => {
         if (rng) {
           editor.selection.setRng(rng);
         }
 
-        Arr.each(fileResults, (result) => {
-          pasteImage(editor, result);
-        });
+        for (const result of fileResults) {
+          await pasteImage(editor, result);
+        }
       });
 
       return true;
