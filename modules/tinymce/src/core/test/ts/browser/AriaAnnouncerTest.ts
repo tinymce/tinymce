@@ -1,7 +1,7 @@
 import { UiFinder, Waiter } from '@ephox/agar';
 import { afterEach, describe, it } from '@ephox/bedrock-client';
 import { Arr, Type } from '@ephox/katamari';
-import { Attribute, Css, Insert, Remove, SelectorFind, SugarBody, SugarElement, TextContent } from '@ephox/sugar';
+import { Attribute, Css, Insert, Remove, SelectorFilter, SelectorFind, SugarBody, SugarElement, TextContent } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import AriaAnnouncer from 'tinymce/core/api/dom/AriaAnnouncer';
@@ -70,6 +70,34 @@ describe('browser.tinymce.core.AriaAnnouncerTest', () => {
     await pMessage(container, 'assertive', 'Urgent');
 
     await pMessage(container, 'polite', 'Polite message');
+  });
+
+  describe('Concurrent recreation after disconnect', () => {
+    const countContainers = (): number =>
+      SelectorFilter.descendants(SugarBody.body(), containerSelector).length;
+
+    it('TINY-12791: Concurrent announces after the container is disconnected recreate exactly one container', async () => {
+      const announcer = Announcer.createAnnouncer();
+
+      // Disconnect the container to leave the singleton holding stale state.
+      await announcer.polite('Initial');
+      const container = await pGetContainer();
+      Remove.remove(container);
+      assert.equal(countContainers(), 0, 'stale container should have been removed');
+
+      // Both callers observe the stale state and race to recreate it.
+      await Promise.all([
+        announcer.polite('Concurrent A'),
+        announcer.assertive('Concurrent B')
+      ]);
+
+      assert.equal(countContainers(), 1, 'concurrent recreation should produce exactly one container');
+
+      // The recreated container should be usable for both regions.
+      const recreated = await pGetContainer();
+      await pMessage(recreated, 'polite', 'Concurrent A');
+      await pMessage(recreated, 'assertive', 'Concurrent B');
+    });
   });
 
   describe('Polite region', () => {
