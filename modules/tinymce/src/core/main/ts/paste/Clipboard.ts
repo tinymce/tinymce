@@ -122,7 +122,7 @@ const createBlobInfo = (editor: Editor, blobCache: BlobCache, file: File, base64
 
 const pasteImage = async (editor: Editor, imageItem: FileResult): Promise<void> => {
   return Conversions.parseDataUri(imageItem.uri).fold(
-    () => Promise.reject(),
+    () => Promise.resolve(),
     ({ data, type, base64Encoded }) => {
       const base64 = base64Encoded ? data : btoa(data);
       const file = imageItem.file;
