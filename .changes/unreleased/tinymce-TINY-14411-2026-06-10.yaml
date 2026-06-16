@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Dragging and dropping or copying and pasting an image didn't add `width` and `height` to the tag.
+time: 2026-06-10T16:10:14.019199069+02:00
+custom:
+    Issue: TINY-14411

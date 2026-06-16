@@ -1,4 +1,5 @@
 import { Arr, Merger, Optional, Strings, Type } from '@ephox/katamari';
+import { ImageSize } from '@ephox/sugar';
 
 import type Editor from 'tinymce/core/api/Editor';
 import type { BlobInfo } from 'tinymce/core/api/file/BlobCache';
@@ -320,7 +321,7 @@ const imageSize = (editor: Editor) => (url: string): Promise<Size> => {
   if (!Utils.isSafeImageUrl(editor, url)) {
     return Promise.resolve({ width: '', height: '' });
   } else {
-    return Utils.getImageSize(editor.documentBaseURI.toAbsolute(url)).then((dimensions) => ({
+    return ImageSize.getImageSize(editor.documentBaseURI.toAbsolute(url)).then((dimensions) => ({
       width: String(dimensions.width),
       height: String(dimensions.height)
     }));
