@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Tooltips were clipped when the editor was hosted in a shadow DOM and its parent element had `overflow:scroll`.
+time: 2026-06-11T11:17:55.185451+09:30
+custom:
+    Issue: TINY-14384

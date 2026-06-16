@@ -1,9 +1,9 @@
 import {
-  type AlloyComponent, AlloyEvents, type AlloyParts, type AlloySpec, Behaviour, type Boxes, Disabling, Gui, GuiFactory, Keying, Memento, Positioning, type SimpleSpec, SystemEvents, VerticalDir
+  type AlloyComponent, AlloyEvents, type AlloyParts, type AlloySpec, Behaviour, Boxes, Disabling, Gui, GuiFactory, Keying, Memento, Positioning, type SimpleSpec, SystemEvents, VerticalDir
 } from '@ephox/alloy';
 import { Arr, Merger, Obj, Optional, Result, Singleton } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Compare, Css, SugarBody, type SugarElement } from '@ephox/sugar';
+import { Compare, Css, SugarBody, SugarShadowDom, type SugarElement } from '@ephox/sugar';
 
 import type Editor from 'tinymce/core/api/Editor';
 import type { ExecCommandArgs } from 'tinymce/core/api/EditorCommands';
@@ -285,6 +285,16 @@ const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
     };
   };
 
+  // TINY-14384: we want to restrict the bounds to the host element, rather than the entire window when the sink is attached in a ShadowDOM (ie: webcomponent)
+  const getSinkBounds = (sinkOpt: Optional<SinkAndMothership>) => sinkOpt.bind(
+    ({ sink }) => {
+      const rootNode = SugarShadowDom.getRootNode(sink.element);
+      if (SugarShadowDom.isShadowRoot(rootNode)) {
+        return Optional.some( Boxes.box(SugarShadowDom.getShadowHost(rootNode) as SugarElement<HTMLElement>));
+      }
+      return Optional.none();
+    }).getOr(Boxes.win());
+
   const renderDialogUi = () => {
     const uiContainer = Options.getUiContainer(editor);
 
@@ -301,8 +311,9 @@ const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
       },
       behaviours: Behaviour.derive([
         Positioning.config({
-          useFixed: () => header.isDocked(lazyHeader)
-        })
+          useFixed: () => header.isDocked(lazyHeader),
+          getBounds: () => getSinkBounds(lazyUiRefs.dialogUi.get())
+        }),
       ])
     };
 
