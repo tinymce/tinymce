@@ -238,7 +238,7 @@ describe('browser.tinymce.core.paste.ImagePasteTest', () => {
     const event = mockEvent('paste', [ invalidFile, validFile ]);
     Clipboard.pasteImageData(editor, event, editor.selection.getRng());
 
-    await Waiter.pTryUntilPredicate('Wait for 2 images to be pasted', () => editor.dom.select('img').length >= 2);
+    await Waiter.pTryUntilPredicate('Wait for 2 images to be pasted', () => editor.dom.select('img').length === 2);
 
     const imgs = editor.dom.select('img');
     assert.equal(imgs.length, 2, 'Both images should be pasted');
