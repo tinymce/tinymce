@@ -40,19 +40,16 @@ const createPasteDataTransfer = (html: string): DataTransfer => {
   return dataTransfer;
 };
 
-const doPaste = (editor: Editor, content: string, internal: boolean, pasteAsText: boolean, eventsData: { shouldSimulateInputEvent: boolean; customEventName?: string }): void => {
+const doPaste = (editor: Editor, content: string, internal: boolean, pasteAsText: boolean, shouldSimulateInputEvent: boolean): void => {
   const res = ProcessFilters.process(editor, content, internal);
   if (!res.cancelled) {
     const content = res.content;
     const doPasteAction = () => SmartPaste.insertContent(editor, content, pasteAsText);
-    if (eventsData.shouldSimulateInputEvent) {
+    if (shouldSimulateInputEvent) {
       const args = InputEvents.fireBeforeInputEvent(editor, 'insertFromPaste', { dataTransfer: createPasteDataTransfer(content) });
       if (!args.isDefaultPrevented()) {
         doPasteAction();
         InputEvents.fireInputEvent(editor, 'insertFromPaste');
-        if (eventsData.customEventName) {
-          editor.dispatch(eventsData.customEventName);
-        }
       }
     } else {
       doPasteAction();
@@ -65,9 +62,9 @@ const doPaste = (editor: Editor, content: string, internal: boolean, pasteAsText
  * inserted at the current selection in the editor. It will also fire paste events
  * for custom user filtering.
  */
-const pasteHtml = (editor: Editor, html: string, internalFlag: boolean, eventsData: { shouldSimulateInputEvent: boolean; customEventName?: string }): void => {
+const pasteHtml = (editor: Editor, html: string, internalFlag: boolean, shouldSimulateInputEvent: boolean): void => {
   const internal = internalFlag ? internalFlag : InternalHtml.isMarked(html);
-  doPaste(editor, InternalHtml.unmark(html), internal, false, eventsData);
+  doPaste(editor, InternalHtml.unmark(html), internal, false, shouldSimulateInputEvent);
 };
 
 /*
@@ -78,7 +75,7 @@ const pasteText = (editor: Editor, text: string, shouldSimulateInputEvent: boole
   const encodedText = editor.dom.encode(text).replace(/\r\n/g, '\n');
   const normalizedText = Whitespace.normalize(encodedText, Options.getPasteTabSpaces(editor));
   const html = Newlines.toBlockElements(normalizedText, Options.getForcedRootBlock(editor), Options.getForcedRootBlockAttrs(editor));
-  doPaste(editor, html, false, true, { shouldSimulateInputEvent });
+  doPaste(editor, html, false, true, shouldSimulateInputEvent);
 };
 
 /*
@@ -137,9 +134,9 @@ const pasteImage = async (editor: Editor, imageItem: FileResult): Promise<void> 
 
       const imgUrl = blobInfo.blobUri();
       return ImageSize.getImageSize(imgUrl).then(({ width, height }) => {
-        pasteHtml(editor, `<img width="${width}" height="${height}" src="${imgUrl}">`, false, { shouldSimulateInputEvent: true });
+        pasteHtml(editor, `<img width="${width}" height="${height}" src="${imgUrl}">`, false, true);
       }).catch(() => {
-        pasteHtml(editor, `<img src="${imgUrl}">`, false, { shouldSimulateInputEvent: true });
+        pasteHtml(editor, `<img src="${imgUrl}">`, false, true);
       });
     });
 };
@@ -239,7 +236,7 @@ const insertClipboardContent = (editor: Editor, clipboardContent: ClipboardConte
   if (plainTextMode) {
     pasteText(editor, content, shouldSimulateInputEvent);
   } else {
-    pasteHtml(editor, content, isInternal, { shouldSimulateInputEvent });
+    pasteHtml(editor, content, isInternal, shouldSimulateInputEvent);
   }
 };
 
