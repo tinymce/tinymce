@@ -50,6 +50,19 @@ describe('browser.tinymce.core.paste.ImagePasteTest', () => {
     '71/P759AePwADBxY8KDAhAr9MWyY7yFEgPYmRgxokWK7jEYa2XGcJ/HjgJAfSXI0mRGlRZUTWUJ0',
     '2RCmQpkHaSLEKPKdzYU4c+78VzCo0KFEixo9ijSp0qVMmzp9CjWq1KlUq1q9eqEAADs='
   ].join('');
+  const base64150x100ImgSrc = [
+    'iVBORw0KGgoAAAANSUhEUgAAAJYAAABkCAIAAADrOV6nAAABhWlDQ1BJQ0MgcHJvZmlsZQAAKJF9k',
+    'b9Lw0AcxV9TtSItCnYQcQhYneyiIo61CkWoEGqFVh1MLv0FTRqSFhdHwbXg4I/FqoOLs64OroIg+A',
+    'PEP0CcFF2kxO8lhRYxHhz34d29x907QGiUmWZ1xQBNr5qpRFzMZFfFwCt6MIAQRhGVmWXMSVISnuP',
+    'rHj6+3kV5lve5P0dIzVkM8InEMWaYVeIN4pnNqsF5nzjMirJKfE48YdIFiR+5rrj8xrngsMAzw2Y6',
+    'NU8cJhYLHax0MCuaGvE0cUTVdMoXMi6rnLc4a+Uaa92TvzCY01eWuU5zBAksYgkSRCiooYQyqojSq',
+    'pNiIUX7cQ//sOOXyKWQqwRGjgVUoEF2/OB/8LtbKz816SYF40D3i21/jAGBXaBZt+3vY9tungD+Z+',
+    'BKb/srDWD2k/R6W4scAf3bwMV1W1P2gMsdYOjJkE3Zkfw0hXweeD+jb8oCg7dA35rbW2sfpw9Amrp',
+    'K3gAHh8B4gbLXPd7d29nbv2da/f0AwepyxuBy6bwAAAAJcEhZcwAALiMAAC4jAXilP3YAAAAHdElN',
+    'RQfqBhANKgjNOucyAAAAGXRFWHRDb21tZW50AENyZWF0ZWQgd2l0aCBHSU1QV4EOFwAAAEJJREFUe',
+    'NrtwQENAAAAwqD3T20PBxQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
+    'AAfBmwLAAB/Cm0ZAAAAABJRU5ErkJggg=='
+  ].join('');
   const base64ImgSrc2 = 'R0lGODlhAQABAPAAAP8REf///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==';
 
   const base64ToBlob = (base64: string, type: string, filename: string): File => {
@@ -198,12 +211,12 @@ describe('browser.tinymce.core.paste.ImagePasteTest', () => {
 
     AgarClipboard.pasteDataTransfer(TinyDom.body(editor), (dataTransfer) => {
       dataTransfer.items.add('anything', 'text/ico');
-      dataTransfer.items.add(base64ToBlob(base64ImgSrc, 'image/gif', 'image.gif'));
+      dataTransfer.items.add(base64ToBlob(base64150x100ImgSrc, 'image/gif', 'image.gif'));
     });
 
     await pAssertInputEvents();
     await pWaitForSelector(editor, 'img');
-    TinyAssertions.assertContent(editor, '<p><img src=\"data:image/gif;base64,' + base64ImgSrc + '" width="100" height="100">a</p>');
+    TinyAssertions.assertContent(editor, '<p><img src=\"data:image/gif;base64,' + base64150x100ImgSrc + '" width="150" height="100">a</p>');
   });
 
   it('TINY-14411: Pasting a broken image should still insert it without width and height', async () => {
@@ -227,7 +240,7 @@ describe('browser.tinymce.core.paste.ImagePasteTest', () => {
 
     const invalidBytes = new Uint8Array([ 0x00, 0x01, 0x02, 0x03 ]);
     const invalidFile = new window.File([ invalidBytes ], 'broken.gif', { type: 'image/gif' });
-    const validFile = base64ToBlob(base64ImgSrc, 'image/gif', 'valid.gif');
+    const validFile = base64ToBlob(base64150x100ImgSrc, 'image/gif', 'valid.gif');
 
     const event = mockEvent('paste', [ invalidFile, validFile ]);
     Clipboard.pasteImageData(editor, event, editor.selection.getRng());
