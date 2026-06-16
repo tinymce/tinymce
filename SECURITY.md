@@ -14,14 +14,4 @@ For details on how to report security issues to Tiny, refer to the [Reporting Ti
 
 ## Supported Versions
 
-Tiny Technologies, Inc. supports the following community versions of TinyMCE:
-
-| Version | Supported                      |
-|---------| ------------------------------ |
-| 8.6.x   | &#10004;                       |
-| 7.9.x   | &#10004;                       |
-| 6.8.x   | &#10006;                       |
-| 5.10.x  | &#10006;                       |
-| Other   | &#10006;                       |
-
-Commercial versions of TinyMCE have a longer support schedule than community versions. For the full list of supported TinyMCE versions please refer to the [Supported TinyMCE versions documentation](https://www.tiny.cloud/docs/tinymce/latest/support/#supportedversionsandplatforms).
+Support availability and schedules vary by TinyMCE license and version. For details, refer to the [Supported TinyMCE versions documentation](https://www.tiny.cloud/docs/tinymce/latest/support/#supportedversionsandplatforms).
