@@ -141,16 +141,16 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
       }
     },
     onFocus: (e: React.FocusEvent<HTMLElement>) => {
+      theChild.props.onFocus?.(e);
       if (!e.isDefaultPrevented()) {
-        theChild.props.onFocus?.(e);
         props.onFocus?.(e);
         setIsOpen(true);
         currentTooltipTrigger?.set(elementId);
       }
     },
     onBlur: (e: React.FocusEvent<HTMLElement>) => {
+      theChild.props.onBlur?.(e);
       if (!e.isDefaultPrevented()) {
-        theChild.props.onBlur?.(e);
         props.onBlur?.(e);
         setIsOpen(false);
       }
