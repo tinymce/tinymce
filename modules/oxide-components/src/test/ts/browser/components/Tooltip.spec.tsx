@@ -5,8 +5,8 @@ import * as Bem from 'oxide-components/utils/Bem';
 import * as Browser from 'oxide-components/utils/Browser';
 import { createRef, useState, type FC } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
+import { render } from 'vitest-browser-react';
 
 const currentTooltipTrigger = createTooltipTrigger();
 vi.mock(import('oxide-components/utils/Browser'), () => ({
