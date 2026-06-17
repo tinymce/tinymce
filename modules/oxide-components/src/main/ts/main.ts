@@ -17,6 +17,7 @@ import * as Menu from './components/menu/Menu';
 import * as MenuRenderer from './components/menu/MenuRenderer';
 import * as SegmentedControl from './components/segmentedcontrol/SegmentedControl';
 import { ToolbarInputForm } from './components/toolbarInputForm/ToolbarInputForm';
+import { createTooltipTrigger, type TooltipTriggerRef } from './components/tooltip/internals/Context';
 import * as Tooltip from './components/tooltip/Tooltip';
 import { useUniverse } from './contexts/UniverseContext/Universe';
 import { UniverseProvider } from './contexts/UniverseContext/UniverseProvider';
@@ -50,6 +51,7 @@ export {
   Spinner,
   Tag,
   ToolbarInputForm,
+  createTooltipTrigger,
   Tooltip,
   SegmentedControl,
   UniverseProvider,
@@ -57,4 +59,4 @@ export {
   UserPromptBubble
 };
 
-export type { UniverseResources };
+export type { TooltipTriggerRef, UniverseResources };

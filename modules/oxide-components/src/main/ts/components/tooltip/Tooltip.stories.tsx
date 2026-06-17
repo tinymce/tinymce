@@ -1,6 +1,6 @@
 import { Obj } from '@ephox/katamari';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Tooltip, UniverseProvider } from 'oxide-components/main';
+import { createTooltipTrigger, Tooltip, UniverseProvider } from 'oxide-components/main';
 
 const icons: Record<string, string> = {
   close: '<svg width="24" height="24"><path d="M17.3 8.2 13.4 12l3.9 3.8a1 1 0 0 1-1.5 1.5L12 13.4l-3.8 3.9a1 1 0 0 1-1.5-1.5l3.9-3.8-3.9-3.8a1 1 0 0 1 1.5-1.5l3.8 3.9 3.8-3.9a1 1 0 0 1 1.5 1.5Z" fill-rule="evenodd"></path></svg>'
@@ -11,15 +11,16 @@ const mockUniverse = {
     Obj.get(icons, name).getOrDie('Failed to get icon')
 };
 
+const currentTooltipTrigger = createTooltipTrigger();
+
 const meta = {
   title: 'components/Tooltip',
-  component: (props) =>
-    <Tooltip.Root showCondition={props.alwaysShow ? 'always' : 'overflow'}>
-      <Tooltip.Trigger>
-        <div title='hover' style={{ border: '1px solid #000', maxWidth: '200px', maxHeight: '200px', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{props.oversizeContent ? 'Hover Me, but Big'.repeat(50) : 'Hover Me'}</div>
-      </Tooltip.Trigger>
-      <Tooltip.Content text={props.text} />
-    </Tooltip.Root>,
+  component: (props) => <Tooltip.Root currentTooltipTrigger={currentTooltipTrigger} showCondition={props.alwaysShow ? 'always' : 'overflow'}>
+    <Tooltip.Trigger>
+      <div title='hover' style={{ border: '1px solid #000', maxWidth: '200px', maxHeight: '200px', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{props.oversizeContent ? 'Hover Me, but Big'.repeat(50) : 'Hover Me'}</div>
+    </Tooltip.Trigger>
+    <Tooltip.Content text={props.text} />
+  </Tooltip.Root>,
   parameters: {
     layout: 'centered',
   },

@@ -1,11 +1,12 @@
 /* eslint-disable max-len */
 import { Fun, Id } from '@ephox/katamari';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Dropdown, Icon, IconButton, Tooltip, UniverseProvider } from 'oxide-components/main';
+import { createTooltipTrigger, Dropdown, Icon, IconButton, Tooltip, UniverseProvider } from 'oxide-components/main';
 
 import type { ToggleMenuItemInstanceApi } from './internals/Types';
 import * as Menu from './Menu';
 
+const currentTooltipTrigger = createTooltipTrigger();
 const meta = {
   title: 'components/Menu',
   component: Menu.Root,
@@ -219,7 +220,7 @@ export const MenuInADropdownWithTooltip: Story = {
   render: (): JSX.Element => {
     return (<>
       <Dropdown.Root>
-        <Tooltip.Root>
+        <Tooltip.Root currentTooltipTrigger={currentTooltipTrigger}>
           <Dropdown.Trigger>
             <Tooltip.Trigger>
               <IconButton variant={'secondary'} icon={'item'}></IconButton>

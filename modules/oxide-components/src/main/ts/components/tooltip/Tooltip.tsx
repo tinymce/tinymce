@@ -1,20 +1,22 @@
-import { Arr, Id, Type } from '@ephox/katamari';
+import { Arr, Fun, Id, Type } from '@ephox/katamari';
 import { PredicateExists, SugarElement, SugarNode } from '@ephox/sugar';
 import { Bem } from 'oxide-components/main';
 import {
   Children, cloneElement, forwardRef, isValidElement, useCallback,
   useContext,
-  useLayoutEffect, useMemo, useRef, useState, type FC, type HTMLAttributes,
+  useEffect,
+  useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore, type FC, type HTMLAttributes,
   type PropsWithChildren, type ReactNode
 } from 'react';
 
 import * as Browser from '../../utils/Browser';
 import { DropdownContext } from '../dropdown/internals/Context';
 
-import { TooltipContext, useTooltip } from './internals/Context';
+import { TooltipContext, useTooltip, type TooltipTriggerRef } from './internals/Context';
 
 interface RootProps extends PropsWithChildren {
   readonly showCondition?: 'always' | 'overflow';
+  readonly currentTooltipTrigger?: TooltipTriggerRef | null;
 }
 
 interface TriggerInternalProps extends PropsWithChildren<HTMLAttributes<HTMLElement>> { }
@@ -28,7 +30,19 @@ const isOverflowingDeep = (root: HTMLElement) =>
     (child) => SugarNode.isHTMLElement(child) && isOverflowing(child.dom));
 
 const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, ...props }, ref) => {
-  const { setIsOpen, showCondition, triggerRef, setCanShow, popupAnchor } = useTooltip();
+  const { setIsOpen, showCondition, elementId, triggerRef, setCanShow, popupAnchor, currentTooltipTrigger } = useTooltip();
+
+  const activeTooltipId = useSyncExternalStore(
+    currentTooltipTrigger?.subscribe ?? Fun.constant(Fun.noop),
+    currentTooltipTrigger?.get ?? Fun.constant(null)
+  );
+
+  useEffect(() => {
+    const fake = false;
+    if (fake && activeTooltipId !== null && activeTooltipId !== elementId) {
+      setIsOpen(false);
+    }
+  }, [ activeTooltipId, elementId, setIsOpen ]);
 
   useLayoutEffect(() => {
     if (showCondition === 'always') {
@@ -117,6 +131,7 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
       props.onMouseEnter?.(e);
       if (!e.isDefaultPrevented()) {
         setIsOpen(true);
+        currentTooltipTrigger?.set(elementId);
       }
     },
     onMouseLeave: (e: React.MouseEvent<HTMLElement>) => {
@@ -126,21 +141,21 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
         setIsOpen(false);
       }
     },
-    // TODO: Disabled render on focus for now see #TINY-14178
-    // onFocus: (e: React.FocusEvent<HTMLElement>) => {
-    //   if (!e.isDefaultPrevented()) {
-    //     theChild.props.onFocus?.(e);
-    //     props.onFocus?.(e);
-    //     setIsOpen(true);
-    //   }
-    // },
-    // onBlur: (e: React.FocusEvent<HTMLElement>) => {
-    //   if (!e.isDefaultPrevented()) {
-    //     theChild.props.onBlur?.(e);
-    //     props.onBlur?.(e);
-    //     setIsOpen(false);
-    //   }
-    // },
+    onFocus: (e: React.FocusEvent<HTMLElement>) => {
+      if (!e.isDefaultPrevented()) {
+        theChild.props.onFocus?.(e);
+        props.onFocus?.(e);
+        setIsOpen(true);
+        currentTooltipTrigger?.set(elementId);
+      }
+    },
+    onBlur: (e: React.FocusEvent<HTMLElement>) => {
+      if (!e.isDefaultPrevented()) {
+        theChild.props.onBlur?.(e);
+        props.onBlur?.(e);
+        setIsOpen(false);
+      }
+    },
   });
 });
 
@@ -211,7 +226,8 @@ const Content = forwardRef<HTMLDivElement, ContentProps>(({ text }, ref) => {
   );
 });
 
-const Root: FC<RootProps> = ({ children, showCondition = 'always' }) => {
+const Root: FC<RootProps> = ({ children, currentTooltipTrigger = null, showCondition = 'always' }) => {
+  const [ elementId ] = useState(() => Id.generate('tooltip_trigger'));
   const [ state, setState ] = useState({
     isOpen: false,
     canShow: showCondition === 'always',
@@ -253,14 +269,16 @@ const Root: FC<RootProps> = ({ children, showCondition = 'always' }) => {
   const contextValue = useMemo(() => {
     return ({
       ...state,
+      currentTooltipTrigger,
       setIsOpen,
       setCanShow,
       contentRef,
       triggerRef,
       showCondition,
-      popupAnchor
+      popupAnchor,
+      elementId
     });
-  }, [ state, setIsOpen, setCanShow, popupAnchor, showCondition ]);
+  }, [ state, currentTooltipTrigger, setIsOpen, setCanShow, popupAnchor, showCondition, elementId ]);
 
   return <TooltipContext.Provider value={contextValue}>{children}</TooltipContext.Provider>;
 };
@@ -270,3 +288,5 @@ export {
   Root,
   Trigger
 };
+export type { TooltipTriggerRef };
+
