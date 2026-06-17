@@ -16,7 +16,7 @@ Build tasks
 Lints, compiles, minifies and creates release packages for TinyMCE. This will produce the production ready packages.
 
 `grunt start`
-Starts a rspack dev server that compiles the core, themes, plugins and all demos. Go to `localhost:3000` for a list of links to all the demo pages.
+Starts an rspack dev server that compiles the core, themes, plugins and all demos. Go to `localhost:3000` for a list of links to all the demo pages.
 
 `grunt dev`
 Runs tsc, less. This will only produce the bare essentials for a development build and is a lot faster.

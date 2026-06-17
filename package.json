@@ -18,7 +18,7 @@
     "tsc": "tsc -b",
     "watch": "tsc -b -w",
     "eslint": "lerna exec --stream --no-bail -- eslint --max-warnings=0 src/**/*.ts",
-    "start": "bun --filter tinymce dev",
+    "start": "bun --cwd modules/tinymce dev",
     "dev": "npm-run-all agar-sw-build oxide-icons-build oxide-build -p tsc \"tinymce-grunt dev\"",
     "changie-merge": "changie merge -u '## Unreleased'",
     "changie-batch": "changie batch auto --project",
