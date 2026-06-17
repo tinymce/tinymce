@@ -235,5 +235,44 @@ describe('browser.TooltipTest', () => {
 
       await expect.poll(() => document.querySelector(tooltipSelector)).not.toBeNull();
     });
+
+    it('TINYMCE-14507: opening a tooltip in different Roots should close the previous opened', async () => {
+      vi.mocked(Browser.isSafari).mockReturnValue(true);
+      const childOnMouseEnter = vi.fn();
+
+      const { getByText } = render(
+        <div style={{ display: 'flex', rowGap: '5xp' }}>
+          <Tooltip.Root currentTooltipTrigger={currentTooltipTrigger}>
+            <Tooltip.Trigger>
+              <div id="first" tabIndex={0}>Short</div>
+            </Tooltip.Trigger>
+            <Tooltip.Content text='Tooltip' />
+          </Tooltip.Root>
+          <Tooltip.Root currentTooltipTrigger={currentTooltipTrigger}>
+            <Tooltip.Trigger>
+              <div id="second" onMouseEnter={childOnMouseEnter}>Hover me</div>
+            </Tooltip.Trigger>
+            <Tooltip.Content text='Tooltip2' />
+          </Tooltip.Root>
+        </div>,
+        { wrapper }
+      );
+
+      const firstDiv: HTMLDivElement | null = document.querySelector('#first');
+      const openTooltipSelector = `${tooltipSelector}:popover-open`;
+      await expect.poll(() => document.querySelector(openTooltipSelector)).toBeNull();
+
+      const allTooltipEls = document.querySelectorAll(tooltipSelector);
+      const firstTooltipEl = allTooltipEls[0];
+      const secondTooltipEl = allTooltipEls[1];
+
+      firstDiv?.focus();
+      await expect.poll(() => firstTooltipEl.matches(':popover-open')).toBe(true);
+      await userEvent.hover(getByText('Hover me'));
+      expect(childOnMouseEnter).toHaveBeenCalledOnce();
+
+      await expect.poll(() => secondTooltipEl.matches(':popover-open')).toBe(true);
+      expect(document.querySelectorAll(openTooltipSelector).length).toBe(1);
+    });
   });
 });

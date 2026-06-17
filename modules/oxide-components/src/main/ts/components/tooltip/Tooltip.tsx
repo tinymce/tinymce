@@ -38,8 +38,7 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
   );
 
   useEffect(() => {
-    const fake = false;
-    if (fake && activeTooltipId !== null && activeTooltipId !== elementId) {
+    if (activeTooltipId !== null && activeTooltipId !== elementId) {
       setIsOpen(false);
     }
   }, [ activeTooltipId, elementId, setIsOpen ]);
