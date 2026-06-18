@@ -1,6 +1,5 @@
-import { DragnDrop, UiFinder, Waiter } from '@ephox/agar';
+import { DragnDrop, UiFinder } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { Attribute } from '@ephox/sugar';
 import { McEditor, TinyAssertions, TinyDom, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -47,8 +46,7 @@ describe('browser.tinymce.core.paste.DragDropImageTest', () => {
     await pSetupAndDropImage(editor);
 
     const image = await UiFinder.pWaitFor<HTMLImageElement>(`Wait for image to exist`, TinyDom.body(editor), 'img');
-    await Waiter.pTryUntilPredicate('the image should have width and height', () => Attribute.has(image, 'width') && Attribute.has(image, 'height'));
-    TinyAssertions.assertContent(editor, '<p><img src=\"data:image/gif;base64,' + base64ImgSrc + '" width="100" height="100">a</p>');
+    TinyAssertions.assertContent(editor, '<p><img src=\"data:image/gif;base64,' + base64ImgSrc + '">a</p>');
     assert.strictEqual(image.dom.src.indexOf('blob:'), 0);
 
     McEditor.remove(editor);

@@ -1,6 +1,5 @@
 import { DataTransfer, DataTransferContent, DataTransferMode } from '@ephox/dragster';
 import { Arr, type Cell, Strings, Type } from '@ephox/katamari';
-import { ImageSize } from '@ephox/sugar';
 
 import type Editor from '../api/Editor';
 import Env from '../api/Env';
@@ -120,25 +119,18 @@ const createBlobInfo = (editor: Editor, blobCache: BlobCache, file: File, base64
   return blobInfo;
 };
 
-const pasteImage = async (editor: Editor, imageItem: FileResult): Promise<void> => {
-  return Conversions.parseDataUri(imageItem.uri).fold(
-    () => Promise.resolve(),
-    ({ data, type, base64Encoded }) => {
-      const base64 = base64Encoded ? data : btoa(data);
-      const file = imageItem.file;
+const pasteImage = (editor: Editor, imageItem: FileResult): void => {
+  Conversions.parseDataUri(imageItem.uri).each(({ data, type, base64Encoded }) => {
+    const base64 = base64Encoded ? data : btoa(data);
+    const file = imageItem.file;
 
-      // TODO: Move the bulk of the cache logic to EditorUpload
-      const blobCache = editor.editorUpload.blobCache;
-      const existingBlobInfo = blobCache.getByData(base64, type);
-      const blobInfo = existingBlobInfo ?? createBlobInfo(editor, blobCache, file, base64);
+    // TODO: Move the bulk of the cache logic to EditorUpload
+    const blobCache = editor.editorUpload.blobCache;
+    const existingBlobInfo = blobCache.getByData(base64, type);
+    const blobInfo = existingBlobInfo ?? createBlobInfo(editor, blobCache, file, base64);
 
-      const imgUrl = blobInfo.blobUri();
-      return ImageSize.getImageSize(imgUrl).then(({ width, height }) => {
-        pasteHtml(editor, `<img width="${width}" height="${height}" src="${imgUrl}">`, false, true);
-      }).catch(() => {
-        pasteHtml(editor, `<img src="${imgUrl}">`, false, true);
-      });
-    });
+    pasteHtml(editor, `<img src="${blobInfo.blobUri()}">`, false, true);
+  });
 };
 
 const isClipboardEvent = (event: Event): event is ClipboardEvent =>
@@ -178,14 +170,14 @@ const pasteImageData = (editor: Editor, e: ClipboardEvent | DragEvent, rng: Rang
       e.preventDefault();
 
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      readFilesAsDataUris(images).then(async (fileResults) => {
+      readFilesAsDataUris(images).then((fileResults) => {
         if (rng) {
           editor.selection.setRng(rng);
         }
 
-        for (const result of fileResults) {
-          await pasteImage(editor, result);
-        }
+        Arr.each(fileResults, (result) => {
+          pasteImage(editor, result);
+        });
       });
 
       return true;

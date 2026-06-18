@@ -50,19 +50,6 @@ describe('browser.tinymce.core.paste.ImagePasteTest', () => {
     '71/P759AePwADBxY8KDAhAr9MWyY7yFEgPYmRgxokWK7jEYa2XGcJ/HjgJAfSXI0mRGlRZUTWUJ0',
     '2RCmQpkHaSLEKPKdzYU4c+78VzCo0KFEixo9ijSp0qVMmzp9CjWq1KlUq1q9eqEAADs='
   ].join('');
-  const base64150x100ImgSrc = [
-    'iVBORw0KGgoAAAANSUhEUgAAAJYAAABkCAIAAADrOV6nAAABhWlDQ1BJQ0MgcHJvZmlsZQAAKJF9k',
-    'b9Lw0AcxV9TtSItCnYQcQhYneyiIo61CkWoEGqFVh1MLv0FTRqSFhdHwbXg4I/FqoOLs64OroIg+A',
-    'PEP0CcFF2kxO8lhRYxHhz34d29x907QGiUmWZ1xQBNr5qpRFzMZFfFwCt6MIAQRhGVmWXMSVISnuP',
-    'rHj6+3kV5lve5P0dIzVkM8InEMWaYVeIN4pnNqsF5nzjMirJKfE48YdIFiR+5rrj8xrngsMAzw2Y6',
-    'NU8cJhYLHax0MCuaGvE0cUTVdMoXMi6rnLc4a+Uaa92TvzCY01eWuU5zBAksYgkSRCiooYQyqojSq',
-    'pNiIUX7cQ//sOOXyKWQqwRGjgVUoEF2/OB/8LtbKz816SYF40D3i21/jAGBXaBZt+3vY9tungD+Z+',
-    'BKb/srDWD2k/R6W4scAf3bwMV1W1P2gMsdYOjJkE3Zkfw0hXweeD+jb8oCg7dA35rbW2sfpw9Amrp',
-    'K3gAHh8B4gbLXPd7d29nbv2da/f0AwepyxuBy6bwAAAAJcEhZcwAALiMAAC4jAXilP3YAAAAHdElN',
-    'RQfqBhANKgjNOucyAAAAGXRFWHRDb21tZW50AENyZWF0ZWQgd2l0aCBHSU1QV4EOFwAAAEJJREFUe',
-    'NrtwQENAAAAwqD3T20PBxQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
-    'AAfBmwLAAB/Cm0ZAAAAABJRU5ErkJggg=='
-  ].join('');
   const base64ImgSrc2 = 'R0lGODlhAQABAPAAAP8REf///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==';
 
   const base64ToBlob = (base64: string, type: string, filename: string): File => {
@@ -121,7 +108,7 @@ describe('browser.tinymce.core.paste.ImagePasteTest', () => {
 
     await pAssertInputEvents();
     await pWaitForSelector(editor, 'img');
-    TinyAssertions.assertContent(editor, '<p><img src=\"data:image/gif;base64,' + base64ImgSrc + '" width="100" height="100">a</p>');
+    TinyAssertions.assertContent(editor, '<p><img src=\"data:image/gif;base64,' + base64ImgSrc + '">a</p>');
     assert.strictEqual(editor.dom.select('img')[0].src.indexOf('blob:'), 0);
   });
 
@@ -134,7 +121,7 @@ describe('browser.tinymce.core.paste.ImagePasteTest', () => {
     Clipboard.pasteImageData(editor, event, editor.selection.getRng());
 
     await pWaitForSelector(editor, 'img');
-    TinyAssertions.assertContent(editor, '<p><img src=\"data:image/gif;base64,' + base64ImgSrc + '" width="100" height="100">a</p>');
+    TinyAssertions.assertContent(editor, '<p><img src=\"data:image/gif;base64,' + base64ImgSrc + '">a</p>');
     assert.strictEqual(editor.dom.select('img')[0].src.indexOf('blob:'), 0);
   });
 
@@ -149,7 +136,7 @@ describe('browser.tinymce.core.paste.ImagePasteTest', () => {
 
     await pAssertInputEvents();
     await pWaitForSelector(editor, 'img');
-    TinyAssertions.assertContent(editor, '<p><img src="data:image/jpeg;base64,' + base64ImgSrc + '" width="100" height="100">a</p>');
+    TinyAssertions.assertContent(editor, '<p><img src="data:image/jpeg;base64,' + base64ImgSrc + '">a</p>');
     assert.strictEqual(editor.dom.select('img')[0].src.indexOf('blob:'), 0);
 
     const blobInfo = editor.editorUpload.blobCache.getByData(base64ImgSrc, 'image/jpeg');
@@ -169,7 +156,7 @@ describe('browser.tinymce.core.paste.ImagePasteTest', () => {
 
     await pAssertInputEvents();
     await pWaitForSelector(editor, 'img');
-    TinyAssertions.assertContent(editor, '<p><img src=\"data:image/tiff;base64,' + base64ImgSrc + '" width="100" height="100">a</p>');
+    TinyAssertions.assertContent(editor, '<p><img src=\"data:image/tiff;base64,' + base64ImgSrc + '">a</p>');
     assert.strictEqual(editor.dom.select('img')[0].src.indexOf('blob:'), 0);
 
     editor.options.unset('images_file_types');
@@ -185,7 +172,7 @@ describe('browser.tinymce.core.paste.ImagePasteTest', () => {
 
     await pAssertInputEvents();
     await pWaitForSelector(editor, 'img');
-    TinyAssertions.assertContent(editor, '<p><img src=\"data:image/gif;base64,' + base64ImgSrc + '" width="100" height="100">a</p>');
+    TinyAssertions.assertContent(editor, '<p><img src=\"data:image/gif;base64,' + base64ImgSrc + '">a</p>');
   });
 
   it('TINY-9997: Image urls should be pasted as images', async () => {
@@ -204,53 +191,5 @@ describe('browser.tinymce.core.paste.ImagePasteTest', () => {
 
     editor.undoManager.undo();
     TinyAssertions.assertContent(editor, `<p>${imageUrl}a</p>`);
-  });
-
-  it('TINY-14411: Paste an image should add width and height to the image', async () => {
-    const editor = hook.editor();
-
-    AgarClipboard.pasteDataTransfer(TinyDom.body(editor), (dataTransfer) => {
-      dataTransfer.items.add('anything', 'text/ico');
-      dataTransfer.items.add(base64ToBlob(base64150x100ImgSrc, 'image/gif', 'image.gif'));
-    });
-
-    await pAssertInputEvents();
-    await pWaitForSelector(editor, 'img');
-    TinyAssertions.assertContent(editor, '<p><img src=\"data:image/gif;base64,' + base64150x100ImgSrc + '" width="150" height="100">a</p>');
-  });
-
-  it('TINY-14411: Pasting a broken image should still insert it without width and height', async () => {
-    const editor = hook.editor();
-
-    // Raw bytes that are not valid image data — browser fires error event when loading as img
-    const invalidBytes = new Uint8Array([ 0x00, 0x01, 0x02, 0x03 ]);
-    const invalidFile = new window.File([ invalidBytes ], 'broken.gif', { type: 'image/gif' });
-    const expectedBase64 = btoa(Array.from(invalidBytes).map((b) => String.fromCharCode(b)).join(''));
-
-    const event = mockEvent('paste', [ invalidFile ]);
-    Clipboard.pasteImageData(editor, event, editor.selection.getRng());
-
-    await pAssertInputEvents();
-    await pWaitForSelector(editor, 'img');
-    TinyAssertions.assertContent(editor, `<p><img src="data:image/gif;base64,${expectedBase64}">a</p>`);
-  });
-
-  it('TINY-14411: Pasting multiple images where one is broken should paste all of them', async () => {
-    const editor = hook.editor();
-
-    const invalidBytes = new Uint8Array([ 0x00, 0x01, 0x02, 0x03 ]);
-    const invalidFile = new window.File([ invalidBytes ], 'broken.gif', { type: 'image/gif' });
-    const validFile = base64ToBlob(base64150x100ImgSrc, 'image/gif', 'valid.gif');
-
-    const event = mockEvent('paste', [ invalidFile, validFile ]);
-    Clipboard.pasteImageData(editor, event, editor.selection.getRng());
-
-    await Waiter.pTryUntilPredicate('Wait for 2 images to be pasted', () => editor.dom.select('img').length === 2);
-
-    const imgs = editor.dom.select('img');
-    assert.equal(imgs.length, 2, 'Both images should be pasted');
-    await pWaitForSelector(editor, 'img:nth-child(2)');
-    const imgsWithDimensions = imgs.filter((img) => img.hasAttribute('width') && img.hasAttribute('height'));
-    assert.equal(imgsWithDimensions.length, 1, 'Only the valid image should have width and height');
   });
 });

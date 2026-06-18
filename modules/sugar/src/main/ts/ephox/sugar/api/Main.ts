@@ -71,7 +71,6 @@ import * as OptionTag from './tag/OptionTag';
 import * as SelectTag from './tag/SelectTag';
 import * as Dimension from './view/Dimension';
 import * as Height from './view/Height';
-import * as ImageSize from './view/ImageSize';
 import * as Platform from './view/Platform';
 import * as Scroll from './view/Scroll';
 import * as SugarLocation from './view/SugarLocation';
@@ -131,7 +130,6 @@ export {
   Direction,
   Float,
   Html,
-  ImageSize,
   OnNode,
   TextContent,
   Toggler,
