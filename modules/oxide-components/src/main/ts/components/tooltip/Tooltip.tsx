@@ -4,7 +4,6 @@ import { Bem } from 'oxide-components/main';
 import {
   Children, cloneElement, forwardRef, isValidElement, useCallback,
   useContext,
-  useEffect,
   useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore, type FC, type HTMLAttributes,
   type PropsWithChildren, type ReactNode
 } from 'react';
@@ -37,12 +36,6 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
     currentTooltipTrigger?.get ?? Fun.constant(null)
   );
 
-  useEffect(() => {
-    if (activeTooltipId !== null && activeTooltipId !== elementId && isOpen) {
-      setIsOpen(false);
-    }
-  }, [ activeTooltipId, elementId, setIsOpen, isOpen ]);
-
   useLayoutEffect(() => {
     if (showCondition === 'always') {
       setCanShow(true);
@@ -51,6 +44,11 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
       // Safari draws its own native tooltip when text is ellipsised; suppress
       // the custom one here so the user doesn't see two tooltips stacked.
       setCanShow(false);
+      return;
+    }
+
+    if (activeTooltipId !== null && activeTooltipId !== elementId && isOpen) {
+      setIsOpen(false);
       return;
     }
 
@@ -86,7 +84,7 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
       resizeObserver.disconnect();
       mutationObserver.disconnect();
     };
-  }, [ showCondition, triggerRef, setCanShow ]);
+  }, [ activeTooltipId, elementId, setIsOpen, isOpen, showCondition, triggerRef, setCanShow ]);
 
   const count = Children.count(children);
   if (count === 0) {
