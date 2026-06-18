@@ -8,7 +8,7 @@ interface Request {
   onConfirm: () => Promise<void>;
 }
 
-export const useConfirmation = (container: HTMLElement | null): (text: string, onConfirm: () => Promise<void>) => void => {
+export const useConfirmation = (container: HTMLElement | null): { confirm: (text: string, onConfirm: () => Promise<void>) => void } => {
   const [ root, setRoot ] = useState<Root | null>(null);
   const [ request, setRequest ] = useState<Request | null>(null);
 
@@ -41,7 +41,7 @@ export const useConfirmation = (container: HTMLElement | null): (text: string, o
     }
   }, [ root, request ]);
 
-  return useCallback((text: string, onConfirm: () => Promise<void>) => {
+  return { confirm: useCallback((text: string, onConfirm: () => Promise<void>) => {
     setRequest({ text, onConfirm });
-  }, []);
+  }, []) };
 };

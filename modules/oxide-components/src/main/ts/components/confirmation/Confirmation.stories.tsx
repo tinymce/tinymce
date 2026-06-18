@@ -25,7 +25,7 @@ const render = (args: { text: string; onConfirm: () => Promise<void> }): JSX.Ele
   return <div style={{ width: '480px' }}>
     <div ref={setContainer}></div>
     <button style={{ cursor: 'pointer' }} onClick={() =>
-      confirmationHook(args.text, args.onConfirm)
+      confirmationHook.confirm(args.text, args.onConfirm)
     }>show</button>
   </div>;
 };

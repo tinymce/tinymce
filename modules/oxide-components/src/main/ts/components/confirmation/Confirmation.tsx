@@ -12,7 +12,7 @@ export interface ConfirmationProps {
   readonly onCancel: () => Promise<void>;
 }
 
-export const Confirmation: FC<ConfirmationProps> = (({
+export const Confirmation: FC<ConfirmationProps> = ({
   text,
   buttonName,
   cancelBtnName,
@@ -63,4 +63,4 @@ export const Confirmation: FC<ConfirmationProps> = (({
       </dialog>
     </div>
   </div>;
-});
+};
