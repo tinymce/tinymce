@@ -30,7 +30,7 @@ const isOverflowingDeep = (root: HTMLElement) =>
     (child) => SugarNode.isHTMLElement(child) && isOverflowing(child.dom));
 
 const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, ...props }, ref) => {
-  const { setIsOpen, showCondition, elementId, triggerRef, setCanShow, popupAnchor, currentTooltipTrigger } = useTooltip();
+  const { setIsOpen, isOpen, showCondition, elementId, triggerRef, setCanShow, popupAnchor, currentTooltipTrigger } = useTooltip();
 
   const activeTooltipId = useSyncExternalStore(
     currentTooltipTrigger?.subscribe ?? Fun.constant(Fun.noop),
@@ -38,10 +38,10 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
   );
 
   useEffect(() => {
-    if (activeTooltipId !== null && activeTooltipId !== elementId) {
+    if (activeTooltipId !== null && activeTooltipId !== elementId && isOpen) {
       setIsOpen(false);
     }
-  }, [ activeTooltipId, elementId, setIsOpen ]);
+  }, [ activeTooltipId, elementId, setIsOpen, isOpen ]);
 
   useLayoutEffect(() => {
     if (showCondition === 'always') {
