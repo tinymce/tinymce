@@ -5,8 +5,8 @@ import { useRef, useState } from 'react';
 
 import { UniverseProvider } from '../../main';
 
-import { ConfirmationHost, type ConfirmationHostHandle } from './internals/ConfimrationHost';
 import { useConfirmation } from './internals/ConfirmationHook';
+import { ConfirmationHost, type ConfirmationHostHandle } from './internals/ConfirmationHost';
 
 const allIcons = getAllIcons();
 const icons: Record<string, string> = {
