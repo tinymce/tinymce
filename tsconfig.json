@@ -32,7 +32,7 @@
     "baseUrl": ".",
     "paths": {
       // duplicate paths, copied from each individual tsconfig.json
-      // once there is a webpack path plugin that supports project references this can be deleted
+      // once there is an rspack path plugin that supports project references this can be deleted
       "tinymce": ["modules/tinymce/src/core/main/ts/api/Main"],
       "tinymce/core/*": ["modules/tinymce/src/core/main/ts/*"],
       "tinymce/themes/silver/resources/*": ["modules/tinymce/src/themes/silver/main/resources/*"],
