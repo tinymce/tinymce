@@ -1,11 +1,10 @@
 import { Obj } from '@ephox/katamari';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { getAll as getAllIcons } from '@tinymce/oxide-icons-default';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 
 import { UniverseProvider } from '../../main';
 
-import { useConfirmation } from './internals/ConfirmationHook';
 import { ConfirmationHost, type ConfirmationHostHandle } from './internals/ConfirmationHost';
 
 const allIcons = getAllIcons();
@@ -19,13 +18,12 @@ const mockUniverse = {
 };
 
 const render = (args: { text: string; onConfirm: () => Promise<void> }): JSX.Element => {
-  const [ container, setContainer ] = useState<HTMLDivElement | null>(null);
-  const confirmationHook = useConfirmation(container);
+  const hostRef = useRef<ConfirmationHostHandle>(null);
 
   return <div style={{ width: '480px' }}>
-    <div ref={setContainer}></div>
+    <ConfirmationHost ref={hostRef} />
     <button style={{ cursor: 'pointer' }} onClick={() =>
-      confirmationHook.confirm(args.text, args.onConfirm)
+      hostRef.current?.confirm({ text: args.text, onConfirm: args.onConfirm })
     }>show</button>
   </div>;
 };
@@ -70,41 +68,6 @@ export const ConfirmationDialog: Story = {
 };
 
 export const ConfirmationDialogWithError: Story = {
-  args: {
-    text: 'do you want to confirm it?',
-    onConfirm: () => new Promise((_resolve, reject) => {
-      setTimeout(() => {
-        return reject();
-      }, 2_000);
-    })
-  }
-};
-
-const renderWithHost = (args: { text: string; onConfirm: () => Promise<void> }): JSX.Element => {
-  const hostRef = useRef<ConfirmationHostHandle>(null);
-
-  return <div style={{ width: '480px' }}>
-    <ConfirmationHost ref={hostRef} />
-    <button style={{ cursor: 'pointer' }} onClick={() =>
-      hostRef.current?.confirm({ text: args.text, onConfirm: args.onConfirm })
-    }>show</button>
-  </div>;
-};
-
-export const ConfirmationDialogViaHost: Story = {
-  render: renderWithHost,
-  args: {
-    text: 'do you want to confirm it?',
-    onConfirm: () => new Promise((resolve) => {
-      setTimeout(() => {
-        return resolve();
-      }, 2_000);
-    })
-  }
-};
-
-export const ConfirmationDialogWithErrorViaHost: Story = {
-  render: renderWithHost,
   args: {
     text: 'do you want to confirm it?',
     onConfirm: () => new Promise((_resolve, reject) => {

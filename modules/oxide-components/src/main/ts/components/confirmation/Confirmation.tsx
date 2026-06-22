@@ -42,9 +42,10 @@ export const Confirmation: FC<ConfirmationProps> = ({
           </div>
         </div>
         <div className={Bem.element('tox-dialog', 'footer')}>
+          <div className={Bem.element('tox-dialog', 'footer-start')}></div>
           <div className={Bem.element('tox-dialog', 'footer-end')}>
             <Button
-              variant='secondary'
+              variant='primary'
               disabled={confirming}
               onClick={onClick}
               aria-label={buttonName}
