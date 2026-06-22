@@ -1,4 +1,4 @@
-import { useCallback, useState, type FC, type MouseEventHandler } from 'react';
+import { useCallback, useEffect, useRef, useState, type FC, type MouseEventHandler } from 'react';
 
 import { Spinner } from '../../bespoke/tinymceai/spinner/Spinner';
 import * as Bem from '../../utils/Bem';
@@ -19,7 +19,12 @@ export const Confirmation: FC<ConfirmationProps> = ({
   onConfirm,
   onCancel
 }) => {
+  const confirmButtonRef = useRef<HTMLButtonElement>(null);
   const [ confirming, setConfirming ] = useState(false);
+
+  useEffect(() => {
+    confirmButtonRef.current?.focus();
+  }, [ confirmButtonRef ]);
 
   const onClick: MouseEventHandler<HTMLButtonElement> = useCallback((e) => {
     e.stopPropagation();
@@ -46,6 +51,7 @@ export const Confirmation: FC<ConfirmationProps> = ({
           <div className={Bem.element('tox-dialog', 'footer-end')}>
             <Button
               variant='primary'
+              ref={confirmButtonRef}
               disabled={confirming}
               onClick={onClick}
               aria-label={buttonName}
