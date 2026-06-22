@@ -25,13 +25,11 @@ export const createTooltipTrigger = (): TooltipTriggerRef => {
 };
 
 export interface TooltipContext {
-  readonly isOpen: boolean;
   readonly elementId: string;
-  readonly currentTooltipTrigger: TooltipTriggerRef | null;
+  readonly currentTooltipTrigger: TooltipTriggerRef;
   readonly canShow: boolean;
   readonly delayForShow: number;
   readonly delayForHide: number;
-  readonly setIsOpen: (isOpen: boolean) => void;
   readonly setCanShow: (canShow: boolean) => void;
   readonly contentRef: React.MutableRefObject<HTMLDivElement | null>;
   readonly triggerRef: React.MutableRefObject<HTMLDivElement | null>;

@@ -15,7 +15,7 @@ import { TooltipContext, useTooltip, type TooltipTriggerRef } from './internals/
 
 interface RootProps extends PropsWithChildren {
   readonly showCondition?: 'always' | 'overflow';
-  readonly currentTooltipTrigger?: TooltipTriggerRef | null;
+  readonly currentTooltipTrigger?: TooltipTriggerRef;
 }
 
 interface TriggerInternalProps extends PropsWithChildren<HTMLAttributes<HTMLElement>> { }
@@ -29,12 +29,8 @@ const isOverflowingDeep = (root: HTMLElement) =>
     (child) => SugarNode.isHTMLElement(child) && isOverflowing(child.dom));
 
 const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, ...props }, ref) => {
-  const { setIsOpen, isOpen, showCondition, elementId, triggerRef, setCanShow, popupAnchor, currentTooltipTrigger } = useTooltip();
-
-  const activeTooltipId = useSyncExternalStore(
-    currentTooltipTrigger?.subscribe ?? Fun.constant(Fun.noop),
-    currentTooltipTrigger?.get ?? Fun.constant(null)
-  );
+  const { showCondition, elementId, triggerRef, setCanShow, popupAnchor, currentTooltipTrigger } = useTooltip();
+  const activeTooltipId = useSyncExternalStore(currentTooltipTrigger.subscribe, currentTooltipTrigger.get);
 
   useLayoutEffect(() => {
     if (showCondition === 'always') {
@@ -44,11 +40,6 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
       // Safari draws its own native tooltip when text is ellipsised; suppress
       // the custom one here so the user doesn't see two tooltips stacked.
       setCanShow(false);
-      return;
-    }
-
-    if (activeTooltipId !== null && activeTooltipId !== elementId && isOpen) {
-      setIsOpen(false);
       return;
     }
 
@@ -84,7 +75,7 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
       resizeObserver.disconnect();
       mutationObserver.disconnect();
     };
-  }, [ activeTooltipId, elementId, setIsOpen, isOpen, showCondition, triggerRef, setCanShow ]);
+  }, [ activeTooltipId, elementId, showCondition, triggerRef, setCanShow ]);
 
   const count = Children.count(children);
   if (count === 0) {
@@ -127,7 +118,6 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
       theChild.props.onMouseEnter?.(e);
       props.onMouseEnter?.(e);
       if (!e.isDefaultPrevented()) {
-        setIsOpen(true);
         currentTooltipTrigger?.set(elementId);
       }
     },
@@ -135,14 +125,13 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
       theChild.props.onMouseLeave?.(e);
       props.onMouseLeave?.(e);
       if (!e.isDefaultPrevented()) {
-        setIsOpen(false);
+        currentTooltipTrigger?.set(null);
       }
     },
     onFocus: (e: React.FocusEvent<HTMLElement>) => {
       theChild.props.onFocus?.(e);
       props.onFocus?.(e);
       if (!e.isDefaultPrevented()) {
-        setIsOpen(true);
         currentTooltipTrigger?.set(elementId);
       }
     },
@@ -150,7 +139,7 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
       theChild.props.onBlur?.(e);
       props.onBlur?.(e);
       if (!e.isDefaultPrevented()) {
-        setIsOpen(false);
+        currentTooltipTrigger?.set(null);
       }
     },
   });
@@ -176,7 +165,8 @@ const hideContentPopover = (content: HTMLElement) => {
 };
 
 const Content = forwardRef<HTMLDivElement, ContentProps>(({ text }, ref) => {
-  const { canShow, isOpen, contentRef, delayForShow, delayForHide, popupAnchor } = useTooltip();
+  const { canShow, currentTooltipTrigger, elementId, contentRef, delayForShow, delayForHide, popupAnchor } = useTooltip();
+  const activeTooltipId = useSyncExternalStore(currentTooltipTrigger.subscribe, currentTooltipTrigger.get);
 
   useLayoutEffect(() => {
     if (!canShow) {
@@ -184,7 +174,7 @@ const Content = forwardRef<HTMLDivElement, ContentProps>(({ text }, ref) => {
     }
     if (Type.isNonNullable(contentRef.current)) {
       const content = contentRef.current;
-      if (isOpen) {
+      if (activeTooltipId === elementId) {
         const timeoutId = setTimeout(() => showContentPopover(content), delayForShow);
         return () => {
           clearTimeout(timeoutId);
@@ -196,7 +186,7 @@ const Content = forwardRef<HTMLDivElement, ContentProps>(({ text }, ref) => {
         };
       }
     }
-  }, [ canShow, isOpen, contentRef, delayForShow, delayForHide ]);
+  }, [ canShow, contentRef, delayForShow, delayForHide, activeTooltipId, elementId ]);
 
   if (!canShow) {
     return null;
@@ -223,8 +213,14 @@ const Content = forwardRef<HTMLDivElement, ContentProps>(({ text }, ref) => {
   );
 });
 
-const Root: FC<RootProps> = ({ children, currentTooltipTrigger = null, showCondition = 'always' }) => {
-  const [ elementId ] = useState(() => Id.generate('tooltip_trigger'));
+const defaultCurrentTooltipTrigger: TooltipTriggerRef = {
+  get: Fun.constant(null),
+  subscribe: Fun.constant(Fun.noop),
+  set: Fun.constant(Fun.noop())
+};
+
+const Root: FC<RootProps> = ({ children, currentTooltipTrigger = defaultCurrentTooltipTrigger, showCondition = 'always' }) => {
+  const elementId = useMemo(() => Id.generate('tooltip_trigger'), []);
   const [ state, setState ] = useState({
     isOpen: false,
     canShow: showCondition === 'always',
@@ -233,10 +229,6 @@ const Root: FC<RootProps> = ({ children, currentTooltipTrigger = null, showCondi
   });
   const contentRef = useRef<HTMLDivElement | null>(null);
   const triggerRef = useRef<HTMLDivElement | null>(null);
-
-  const setIsOpen = useCallback((isOpen: boolean) => {
-    setState((prevState) => ({ ...prevState, isOpen }));
-  }, []);
 
   const setCanShow = useCallback((canShow: boolean) => {
     setState((prevState) => {
@@ -267,7 +259,6 @@ const Root: FC<RootProps> = ({ children, currentTooltipTrigger = null, showCondi
     return ({
       ...state,
       currentTooltipTrigger,
-      setIsOpen,
       setCanShow,
       contentRef,
       triggerRef,
@@ -275,7 +266,7 @@ const Root: FC<RootProps> = ({ children, currentTooltipTrigger = null, showCondi
       popupAnchor,
       elementId
     });
-  }, [ state, currentTooltipTrigger, setIsOpen, setCanShow, popupAnchor, showCondition, elementId ]);
+  }, [ state, currentTooltipTrigger, setCanShow, popupAnchor, showCondition, elementId ]);
 
   return <TooltipContext.Provider value={contextValue}>{children}</TooltipContext.Provider>;
 };
