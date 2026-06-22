@@ -1,14 +1,12 @@
 import { Fun } from '@ephox/katamari';
 import * as Menu from 'oxide-components/components/menu/Menu';
-import { createTooltipTrigger } from 'oxide-components/contexts/UniverseContext/UniverseContext';
 import { UniverseProvider } from 'oxide-components/contexts/UniverseContext/UniverseProvider';
 import * as Bem from 'oxide-components/utils/Bem';
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-react';
 
 const mockUniverse = {
-  getIcon: Fun.constant(''),
-  currentTooltipTrigger: createTooltipTrigger()
+  getIcon: Fun.constant('')
 };
 
 describe('browser.MenuDividerTest', () => {

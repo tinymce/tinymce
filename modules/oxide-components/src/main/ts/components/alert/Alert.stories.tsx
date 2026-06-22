@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { getAll as getAllIcons } from '@tinymce/oxide-icons-default';
 import { fn } from 'storybook/test';
 
-import { Button, createTooltipTrigger, UniverseProvider } from '../../main';
+import { Button, UniverseProvider } from '../../main';
 
 import { Alert, type AlertProps } from './Alert';
 
@@ -14,8 +14,7 @@ const icons: Record<string, string> = {
 
 const mockUniverse = {
   getIcon: (name: string) =>
-    Obj.get(icons, name).getOrDie('Failed to get icon'),
-  currentTooltipTrigger: createTooltipTrigger()
+    Obj.get(icons, name).getOrDie('Failed to get icon')
 };
 
 const message = 'The change is not supported by the editor and can\'t be previewed or applied.';

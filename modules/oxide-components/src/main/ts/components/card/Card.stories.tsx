@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { getAll as getAllIcons } from '@tinymce/oxide-icons-default';
 import { useEffect, useState } from 'react';
 
-import { Button, createTooltipTrigger, ExpandableBox, UniverseProvider } from '../../main';
+import { Button, ExpandableBox, UniverseProvider } from '../../main';
 import * as Bem from '../../utils/Bem';
 import { Icon } from '../icon/Icon';
 
@@ -19,8 +19,7 @@ const icons: Record<string, string> = {
 
 const mockUniverse = {
   getIcon: (name: string) =>
-    Obj.get(icons, name).getOr(`<svg id="${name}"></svg>`),
-  currentTooltipTrigger: createTooltipTrigger()
+    Obj.get(icons, name).getOr(`<svg id="${name}"></svg>`)
 };
 
 const meta = {

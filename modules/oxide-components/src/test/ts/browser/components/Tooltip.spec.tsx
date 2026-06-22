@@ -1,6 +1,6 @@
 import { Fun } from '@ephox/katamari';
 import * as Tooltip from 'oxide-components/components/tooltip/Tooltip';
-import { createTooltipTrigger, UniverseProvider } from 'oxide-components/main';
+import { UniverseProvider } from 'oxide-components/main';
 import * as Bem from 'oxide-components/utils/Bem';
 import * as Browser from 'oxide-components/utils/Browser';
 import { createRef, useState, type FC } from 'react';
@@ -19,8 +19,7 @@ beforeEach(() => {
 describe('browser.TooltipTest', () => {
   const getIcon = vi.fn((icon: string) => `<svg id="${icon}"></svg>`);
   const mockUniverse = {
-    getIcon,
-    currentTooltipTrigger: createTooltipTrigger()
+    getIcon
   };
 
   const wrapper = ({ children }: { children: React.ReactNode }) => {

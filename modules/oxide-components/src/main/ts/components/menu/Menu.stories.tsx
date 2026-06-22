@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import { Fun, Id } from '@ephox/katamari';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { createTooltipTrigger, Dropdown, Icon, IconButton, Tooltip, UniverseProvider } from 'oxide-components/main';
+import { Dropdown, Icon, IconButton, Tooltip, UniverseProvider } from 'oxide-components/main';
 
 import type { ToggleMenuItemInstanceApi } from './internals/Types';
 import * as Menu from './Menu';
@@ -70,8 +70,7 @@ const iconResolver = (icon: string): string => {
 };
 
 const mockUniverse = {
-  getIcon: iconResolver,
-  currentTooltipTrigger: createTooltipTrigger()
+  getIcon: iconResolver
 };
 
 const menu: JSX.Element = (

@@ -1,7 +1,7 @@
 import { Button } from 'oxide-components/components/button/Button';
 import * as Dropdown from 'oxide-components/components/dropdown/Dropdown';
 import * as Tooltip from 'oxide-components/components/tooltip/Tooltip';
-import { createTooltipTrigger, UniverseProvider } from 'oxide-components/main';
+import { UniverseProvider } from 'oxide-components/main';
 import * as Bem from 'oxide-components/utils/Bem';
 import { createRef } from 'react';
 import { describe, expect, it, vi } from 'vitest';
@@ -11,8 +11,7 @@ import { render } from 'vitest-browser-react';
 describe('browser.DropdownTest', () => {
   const getIcon = vi.fn((icon: string) => `<svg id="${icon}"></svg>`);
   const mockUniverse = {
-    getIcon,
-    currentTooltipTrigger: createTooltipTrigger()
+    getIcon
   };
 
   const wrapper = ({ children }: { children: React.ReactNode }) => {

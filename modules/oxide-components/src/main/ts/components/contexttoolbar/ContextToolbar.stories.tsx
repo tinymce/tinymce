@@ -1,7 +1,6 @@
 import { Fun } from '@ephox/katamari';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { UniverseProvider } from 'oxide-components/contexts/UniverseContext/UniverseProvider';
-import { createTooltipTrigger } from 'oxide-components/main';
 import React, { useMemo, useRef, useState } from 'react';
 import { fn } from 'storybook/test';
 
@@ -17,8 +16,7 @@ const resolvedIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height=
 /* eslint-enable max-len */
 
 const mockUniverse = {
-  getIcon: Fun.constant(resolvedIcon),
-  currentTooltipTrigger: createTooltipTrigger()
+  getIcon: Fun.constant(resolvedIcon)
 };
 
 const meta = {

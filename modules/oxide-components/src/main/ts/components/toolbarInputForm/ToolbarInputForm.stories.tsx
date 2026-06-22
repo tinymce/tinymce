@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { createTooltipTrigger, UniverseProvider } from 'oxide-components/main';
+import { UniverseProvider } from 'oxide-components/main';
 import { fn } from 'storybook/test';
 
 import { ToolbarInputForm, type ToolbarInputFormProps } from './ToolbarInputForm';
@@ -57,8 +57,7 @@ const iconResolver = (icon: string): string => {
 };
 
 const mockUniverse = {
-  getIcon: iconResolver,
-  currentTooltipTrigger: createTooltipTrigger()
+  getIcon: iconResolver
 };
 
 const render = (args: ToolbarInputFormProps): JSX.Element => {

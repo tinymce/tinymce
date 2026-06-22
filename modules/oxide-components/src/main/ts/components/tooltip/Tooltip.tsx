@@ -4,7 +4,8 @@ import { Bem, useUniverse } from 'oxide-components/main';
 import {
   Children, cloneElement, forwardRef, isValidElement, useCallback,
   useContext,
-  useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore, type FC, type HTMLAttributes,
+  useLayoutEffect, useMemo, useRef, useState,
+  type FC, type HTMLAttributes,
   type PropsWithChildren, type ReactNode
 } from 'react';
 
@@ -29,8 +30,7 @@ const isOverflowingDeep = (root: HTMLElement) =>
 
 const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, ...props }, ref) => {
   const { showCondition, elementId, triggerRef, setCanShow, popupAnchor } = useTooltip();
-  const { currentTooltipTrigger } = useUniverse();
-  const activeTooltipId = useSyncExternalStore(currentTooltipTrigger.subscribe, currentTooltipTrigger.get);
+  const { currentTooltipId, setCurrentTooltipId } = useUniverse();
 
   useLayoutEffect(() => {
     if (showCondition === 'always') {
@@ -75,7 +75,7 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
       resizeObserver.disconnect();
       mutationObserver.disconnect();
     };
-  }, [ activeTooltipId, elementId, showCondition, triggerRef, setCanShow ]);
+  }, [ currentTooltipId, elementId, showCondition, triggerRef, setCanShow ]);
 
   const count = Children.count(children);
   if (count === 0) {
@@ -118,28 +118,28 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
       theChild.props.onMouseEnter?.(e);
       props.onMouseEnter?.(e);
       if (!e.isDefaultPrevented()) {
-        currentTooltipTrigger?.set(elementId);
+        setCurrentTooltipId(elementId);
       }
     },
     onMouseLeave: (e: React.MouseEvent<HTMLElement>) => {
       theChild.props.onMouseLeave?.(e);
       props.onMouseLeave?.(e);
       if (!e.isDefaultPrevented()) {
-        currentTooltipTrigger?.set(null);
+        setCurrentTooltipId(null);
       }
     },
     onFocus: (e: React.FocusEvent<HTMLElement>) => {
       theChild.props.onFocus?.(e);
       props.onFocus?.(e);
       if (!e.isDefaultPrevented()) {
-        currentTooltipTrigger?.set(elementId);
+        setCurrentTooltipId(elementId);
       }
     },
     onBlur: (e: React.FocusEvent<HTMLElement>) => {
       theChild.props.onBlur?.(e);
       props.onBlur?.(e);
       if (!e.isDefaultPrevented()) {
-        currentTooltipTrigger?.set(null);
+        setCurrentTooltipId(null);
       }
     },
   });
@@ -166,8 +166,7 @@ const hideContentPopover = (content: HTMLElement) => {
 
 const Content = forwardRef<HTMLDivElement, ContentProps>(({ text }, ref) => {
   const { canShow, elementId, contentRef, delayForShow, delayForHide, popupAnchor } = useTooltip();
-  const { currentTooltipTrigger } = useUniverse();
-  const activeTooltipId = useSyncExternalStore(currentTooltipTrigger.subscribe, currentTooltipTrigger.get);
+  const { currentTooltipId } = useUniverse();
 
   useLayoutEffect(() => {
     if (!canShow) {
@@ -175,7 +174,7 @@ const Content = forwardRef<HTMLDivElement, ContentProps>(({ text }, ref) => {
     }
     if (Type.isNonNullable(contentRef.current)) {
       const content = contentRef.current;
-      if (activeTooltipId === elementId) {
+      if (currentTooltipId === elementId) {
         const timeoutId = setTimeout(() => showContentPopover(content), delayForShow);
         return () => {
           clearTimeout(timeoutId);
@@ -187,7 +186,7 @@ const Content = forwardRef<HTMLDivElement, ContentProps>(({ text }, ref) => {
         };
       }
     }
-  }, [ canShow, contentRef, delayForShow, delayForHide, activeTooltipId, elementId ]);
+  }, [ canShow, contentRef, delayForShow, delayForHide, currentTooltipId, elementId ]);
 
   if (!canShow) {
     return null;

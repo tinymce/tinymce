@@ -1,6 +1,6 @@
 import { Fun } from '@ephox/katamari';
 import { ExpandableBox, type ExpandableBoxProps } from 'oxide-components/components/expandablebox/ExpandableBox';
-import { createTooltipTrigger, UniverseProvider } from 'oxide-components/main';
+import { UniverseProvider } from 'oxide-components/main';
 import * as Bem from 'oxide-components/utils/Bem';
 import { useState } from 'react';
 import { describe, expect, it, vi } from 'vitest';
@@ -10,8 +10,7 @@ import { render } from 'vitest-browser-react';
 describe('browser.components.ExpandableBoxTest', () => {
   const getIcon = vi.fn((icon: string) => `<svg id="${icon}"></svg>`);
   const mockUniverse = {
-    getIcon,
-    currentTooltipTrigger: createTooltipTrigger()
+    getIcon
   };
 
   const wrapper = ({ children }: { children: React.ReactNode }) => {

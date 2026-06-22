@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { UniverseContext } from './UniverseContext';
-import type { UniverseResources } from './UniverseTypes';
+import type { Universe, UniverseResources } from './UniverseTypes';
 
 interface UniverseContextProvider {
   readonly resources: UniverseResources;
@@ -12,8 +12,13 @@ export const UniverseProvider = ({
   resources,
   children
 }: UniverseContextProvider): React.ReactElement => {
+  const [ currentTooltipId, setCurrentTooltipId ] = React.useState<string | null>(null);
+  const value = React.useMemo<Universe>(
+    () => ({ ...resources, currentTooltipId, setCurrentTooltipId }),
+    [ resources, currentTooltipId ]
+  );
   return (
-    <UniverseContext.Provider value={resources}>
+    <UniverseContext.Provider value={value}>
       {children}
     </UniverseContext.Provider>
   );
