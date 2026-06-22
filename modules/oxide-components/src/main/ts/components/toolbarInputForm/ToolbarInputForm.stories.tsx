@@ -57,7 +57,7 @@ const iconResolver = (icon: string): string => {
 };
 
 const mockUniverse = {
-  getIcon: iconResolver
+  getIcon: iconResolver,
 };
 
 const render = (args: ToolbarInputFormProps): JSX.Element => {

@@ -18,7 +18,7 @@ const icons: Record<string, string> = {
 describe('browser.components.AccordionTest', () => {
   const getIcon = vi.fn((icon: string) => icons[icon] || `<svg id="${icon}"></svg>`);
   const mockUniverse = {
-    getIcon
+    getIcon,
   };
 
   const wrapper = ({ children }: { children: React.ReactNode }) => {

@@ -35,7 +35,7 @@ const iconResolver = (icon: string): string => {
 };
 
 const mockUniverse = {
-  getIcon: iconResolver
+  getIcon: iconResolver,
 };
 
 const waitForElementText = async (getByText: (text: string) => Locator, text: string) => {

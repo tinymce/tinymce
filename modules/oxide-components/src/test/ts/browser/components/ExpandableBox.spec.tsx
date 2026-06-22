@@ -10,7 +10,7 @@ import { render } from 'vitest-browser-react';
 describe('browser.components.ExpandableBoxTest', () => {
   const getIcon = vi.fn((icon: string) => `<svg id="${icon}"></svg>`);
   const mockUniverse = {
-    getIcon
+    getIcon,
   };
 
   const wrapper = ({ children }: { children: React.ReactNode }) => {

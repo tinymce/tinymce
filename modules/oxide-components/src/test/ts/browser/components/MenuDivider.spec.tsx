@@ -6,7 +6,7 @@ import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-react';
 
 const mockUniverse = {
-  getIcon: Fun.constant('')
+  getIcon: Fun.constant(''),
 };
 
 describe('browser.MenuDividerTest', () => {

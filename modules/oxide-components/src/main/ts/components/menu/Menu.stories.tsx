@@ -70,7 +70,7 @@ const iconResolver = (icon: string): string => {
 };
 
 const mockUniverse = {
-  getIcon: iconResolver
+  getIcon: iconResolver,
 };
 
 const menu: JSX.Element = (

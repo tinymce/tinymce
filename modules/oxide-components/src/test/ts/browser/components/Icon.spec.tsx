@@ -11,7 +11,7 @@ describe('browser.components.Icon', () => {
   it('TINY-13316: should render icons using universe context', async () => {
     const getIcon = vi.fn((icon: string) => `<svg id="${icon}"></svg>`);
     const mockUniverse = {
-      getIcon
+      getIcon,
     };
 
     const { getByTestId } = render(
