@@ -6,8 +6,8 @@ import { fn } from 'storybook/test';
 
 import { IconButton } from '../iconbutton/IconButton';
 
-import type { FloatingSidebarProps } from './FloatingSidebar';
 import * as FloatingSidebar from './FloatingSidebar';
+import type { FloatingSidebarProps } from './FloatingSidebar';
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta = {

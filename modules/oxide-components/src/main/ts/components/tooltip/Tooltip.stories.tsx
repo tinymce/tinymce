@@ -14,12 +14,13 @@ const mockUniverse = {
 
 const meta = {
   title: 'components/Tooltip',
-  component: (props) => <Tooltip.Root showCondition={props.alwaysShow ? 'always' : 'overflow'}>
-    <Tooltip.Trigger>
-      <div title='hover' style={{ border: '1px solid #000', maxWidth: '200px', maxHeight: '200px', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{props.oversizeContent ? 'Hover Me, but Big'.repeat(50) : 'Hover Me'}</div>
-    </Tooltip.Trigger>
-    <Tooltip.Content text={props.text} />
-  </Tooltip.Root>,
+  component: (props) =>
+    <Tooltip.Root showCondition={props.alwaysShow ? 'always' : 'overflow'}>
+      <Tooltip.Trigger>
+        <div title='hover' style={{ border: '1px solid #000', maxWidth: '200px', maxHeight: '200px', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{props.oversizeContent ? 'Hover Me, but Big'.repeat(50) : 'Hover Me'}</div>
+      </Tooltip.Trigger>
+      <Tooltip.Content text={props.text} />
+    </Tooltip.Root>,
   parameters: {
     layout: 'centered',
   },
