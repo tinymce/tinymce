@@ -1,32 +1,7 @@
 import { createContext, useContext } from 'react';
 
-export interface TooltipTriggerRef {
-  readonly get: () => string | null;
-  readonly set: (value: string | null) => void;
-  readonly subscribe: (callback: () => void) => () => void;
-}
-
-export const createTooltipTrigger = (): TooltipTriggerRef => {
-  let value: string | null = null;
-  const subscribers = new Set<() => void>();
-  return {
-    get: () => value,
-    set: (newValue) => {
-      value = newValue;
-      subscribers.forEach((sub) => sub());
-    },
-    subscribe: (callback) => {
-      subscribers.add(callback);
-      return () => {
-        subscribers.delete(callback);
-      };
-    }
-  };
-};
-
 export interface TooltipContext {
   readonly elementId: string;
-  readonly currentTooltipTrigger: TooltipTriggerRef;
   readonly canShow: boolean;
   readonly delayForShow: number;
   readonly delayForHide: number;

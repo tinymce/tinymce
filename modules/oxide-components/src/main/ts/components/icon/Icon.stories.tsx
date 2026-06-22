@@ -1,6 +1,6 @@
 import { Obj } from '@ephox/katamari';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { UniverseProvider } from 'oxide-components/main';
+import { createTooltipTrigger, UniverseProvider } from 'oxide-components/main';
 
 import { Icon } from './Icon';
 import type { IconProps } from './IconTypes';
@@ -12,7 +12,8 @@ const icons: Record<string, string> = {
 
 const mockUniverse = {
   getIcon: (name: string) =>
-    Obj.get(icons, name).getOrDie('Failed to get icon')
+    Obj.get(icons, name).getOrDie('Failed to get icon'),
+  currentTooltipTrigger: createTooltipTrigger()
 };
 
 const meta = {

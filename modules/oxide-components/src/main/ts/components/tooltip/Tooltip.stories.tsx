@@ -8,14 +8,13 @@ const icons: Record<string, string> = {
 
 const mockUniverse = {
   getIcon: (name: string) =>
-    Obj.get(icons, name).getOrDie('Failed to get icon')
+    Obj.get(icons, name).getOrDie('Failed to get icon'),
+  currentTooltipTrigger: createTooltipTrigger()
 };
-
-const currentTooltipTrigger = createTooltipTrigger();
 
 const meta = {
   title: 'components/Tooltip',
-  component: (props) => <Tooltip.Root currentTooltipTrigger={currentTooltipTrigger} showCondition={props.alwaysShow ? 'always' : 'overflow'}>
+  component: (props) => <Tooltip.Root showCondition={props.alwaysShow ? 'always' : 'overflow'}>
     <Tooltip.Trigger>
       <div title='hover' style={{ border: '1px solid #000', maxWidth: '200px', maxHeight: '200px', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{props.oversizeContent ? 'Hover Me, but Big'.repeat(50) : 'Hover Me'}</div>
     </Tooltip.Trigger>

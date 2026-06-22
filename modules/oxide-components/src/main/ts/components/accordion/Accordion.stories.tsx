@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { getAll as getAllIcons } from '@tinymce/oxide-icons-default';
 import { useState } from 'react';
 
-import { AutoResizingTextarea, Button, UniverseProvider } from '../../main';
+import { AutoResizingTextarea, Button, createTooltipTrigger, UniverseProvider } from '../../main';
 import * as Dropdown from '../dropdown/Dropdown';
 import { Icon } from '../icon/Icon';
 import * as Menu from '../menu/Menu';
@@ -18,7 +18,8 @@ const icons: Record<string, string> = {
 
 const mockUniverse = {
   getIcon: (name: string) =>
-    Obj.get(icons, name).getOrDie('Failed to get icon')
+    Obj.get(icons, name).getOrDie('Failed to get icon'),
+  currentTooltipTrigger: createTooltipTrigger()
 };
 
 const meta = {

@@ -2,6 +2,7 @@
 import type { ToggleMenuItemInstanceApi } from 'oxide-components/components/menu/internals/Types';
 import * as Menu from 'oxide-components/components/menu/Menu';
 import * as MenuRenderer from 'oxide-components/components/menu/MenuRenderer';
+import { createTooltipTrigger } from 'oxide-components/contexts/UniverseContext/UniverseContext';
 import { UniverseProvider } from 'oxide-components/contexts/UniverseContext/UniverseProvider';
 import * as Bem from 'oxide-components/utils/Bem';
 import { describe, expect, it, vi } from 'vitest';
@@ -36,6 +37,7 @@ const iconResolver = (icon: string): string => {
 
 const mockUniverse = {
   getIcon: iconResolver,
+  currentTooltipTrigger: createTooltipTrigger()
 };
 
 const waitForElementText = async (getByText: (text: string) => Locator, text: string) => {

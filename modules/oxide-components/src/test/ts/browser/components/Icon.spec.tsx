@@ -1,6 +1,6 @@
 import { Arr } from '@ephox/katamari';
 import { Icon } from 'oxide-components/components/icon/Icon';
-import { UniverseProvider } from 'oxide-components/main';
+import { createTooltipTrigger, UniverseProvider } from 'oxide-components/main';
 import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 
@@ -12,6 +12,7 @@ describe('browser.components.Icon', () => {
     const getIcon = vi.fn((icon: string) => `<svg id="${icon}"></svg>`);
     const mockUniverse = {
       getIcon,
+      currentTooltipTrigger: createTooltipTrigger()
     };
 
     const { getByTestId } = render(

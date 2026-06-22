@@ -1,6 +1,5 @@
 import { Fun } from '@ephox/katamari';
 import * as Tooltip from 'oxide-components/components/tooltip/Tooltip';
-import { createTooltipTrigger } from 'oxide-components/main';
 import * as Bem from 'oxide-components/utils/Bem';
 import * as Browser from 'oxide-components/utils/Browser';
 import { createRef, useState, type FC } from 'react';
@@ -8,7 +7,6 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 
-const currentTooltipTrigger = createTooltipTrigger();
 vi.mock(import('oxide-components/utils/Browser'), () => ({
   isSafari: vi.fn(Fun.never)
 }));
@@ -31,7 +29,7 @@ describe('browser.TooltipTest', () => {
       const triggerRef = createRef<HTMLElement>();
 
       render(
-        <Tooltip.Root currentTooltipTrigger={currentTooltipTrigger}>
+        <Tooltip.Root>
           <Tooltip.Trigger ref={triggerRef}>
             <button>Hover me</button>
           </Tooltip.Trigger>
@@ -48,7 +46,7 @@ describe('browser.TooltipTest', () => {
       const contentRef = createRef<HTMLDivElement>();
 
       render(
-        <Tooltip.Root currentTooltipTrigger={currentTooltipTrigger}>
+        <Tooltip.Root>
           <Tooltip.Trigger>
             <button>Hover me</button>
           </Tooltip.Trigger>
@@ -68,7 +66,7 @@ describe('browser.TooltipTest', () => {
       const childOnMouseLeave = vi.fn();
 
       const { getByText } = render(
-        <Tooltip.Root currentTooltipTrigger={currentTooltipTrigger}>
+        <Tooltip.Root>
           <Tooltip.Trigger>
             <button onMouseEnter={childOnMouseEnter} onMouseLeave={childOnMouseLeave}>Hover me</button>
           </Tooltip.Trigger>
@@ -90,7 +88,7 @@ describe('browser.TooltipTest', () => {
 
     it('should render Content by default (showCondition defaults to "always")', async () => {
       render(
-        <Tooltip.Root currentTooltipTrigger={currentTooltipTrigger}>
+        <Tooltip.Root>
           <Tooltip.Trigger>
             <div style={{ width: '200px', overflow: 'hidden', whiteSpace: 'nowrap' }}>Short</div>
           </Tooltip.Trigger>
@@ -104,7 +102,7 @@ describe('browser.TooltipTest', () => {
 
     it('should not mount Content when showCondition is "overflow" and trigger does not overflow', async () => {
       render(
-        <Tooltip.Root currentTooltipTrigger={currentTooltipTrigger} showCondition='overflow'>
+        <Tooltip.Root showCondition='overflow'>
           <Tooltip.Trigger>
             <div style={{ width: '200px', overflow: 'hidden', whiteSpace: 'nowrap' }}>Short</div>
           </Tooltip.Trigger>
@@ -118,7 +116,7 @@ describe('browser.TooltipTest', () => {
 
     it('should mount Content when showCondition is "overflow" and trigger overflows', async () => {
       render(
-        <Tooltip.Root currentTooltipTrigger={currentTooltipTrigger} showCondition='overflow'>
+        <Tooltip.Root showCondition='overflow'>
           <Tooltip.Trigger>
             <div style={{ width: '50px', overflow: 'hidden', whiteSpace: 'nowrap' }}>
               This text is much longer than the trigger width
@@ -141,7 +139,7 @@ describe('browser.TooltipTest', () => {
       return (
         <>
           <button data-testid='swap' onClick={() => setText(nextText)}>swap</button>
-          <Tooltip.Root currentTooltipTrigger={currentTooltipTrigger} showCondition='overflow'>
+          <Tooltip.Root showCondition='overflow'>
             <Tooltip.Trigger>
               <div style={{ width: '50px', overflow: 'hidden', whiteSpace: 'nowrap' }}>{text}</div>
             </Tooltip.Trigger>
@@ -188,7 +186,7 @@ describe('browser.TooltipTest', () => {
       vi.mocked(Browser.isSafari).mockReturnValue(true);
 
       render(
-        <Tooltip.Root currentTooltipTrigger={currentTooltipTrigger} showCondition='overflow'>
+        <Tooltip.Root showCondition='overflow'>
           <Tooltip.Trigger>
             <div style={{ width: '50px', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
               This text is much longer than the trigger width
@@ -206,7 +204,7 @@ describe('browser.TooltipTest', () => {
       vi.mocked(Browser.isSafari).mockReturnValue(false);
 
       render(
-        <Tooltip.Root currentTooltipTrigger={currentTooltipTrigger} showCondition='overflow'>
+        <Tooltip.Root showCondition='overflow'>
           <Tooltip.Trigger>
             <div style={{ width: '50px', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
               This text is much longer than the trigger width
@@ -224,7 +222,7 @@ describe('browser.TooltipTest', () => {
       vi.mocked(Browser.isSafari).mockReturnValue(true);
 
       render(
-        <Tooltip.Root currentTooltipTrigger={currentTooltipTrigger}>
+        <Tooltip.Root>
           <Tooltip.Trigger>
             <div>Short</div>
           </Tooltip.Trigger>
@@ -242,13 +240,13 @@ describe('browser.TooltipTest', () => {
 
       const { getByText } = render(
         <div style={{ display: 'flex', rowGap: '5xp' }}>
-          <Tooltip.Root currentTooltipTrigger={currentTooltipTrigger}>
+          <Tooltip.Root>
             <Tooltip.Trigger>
               <div id="first" tabIndex={0}>Short</div>
             </Tooltip.Trigger>
             <Tooltip.Content text='Tooltip' />
           </Tooltip.Root>
-          <Tooltip.Root currentTooltipTrigger={currentTooltipTrigger}>
+          <Tooltip.Root>
             <Tooltip.Trigger>
               <div id="second" onMouseEnter={childOnMouseEnter}>Hover me</div>
             </Tooltip.Trigger>

@@ -1,7 +1,6 @@
 import { Button } from 'oxide-components/components/button/Button';
 import * as Dropdown from 'oxide-components/components/dropdown/Dropdown';
 import * as Tooltip from 'oxide-components/components/tooltip/Tooltip';
-import { createTooltipTrigger } from 'oxide-components/main';
 import * as Bem from 'oxide-components/utils/Bem';
 import { createRef } from 'react';
 import { describe, expect, it, vi } from 'vitest';
@@ -16,7 +15,6 @@ describe('browser.DropdownTest', () => {
       </div>
     );
   };
-  const currentTooltipTrigger = createTooltipTrigger();
 
   describe('Ref forwarding', () => {
     it('Dropdown.Trigger should forward ref to the child element', async () => {
@@ -42,7 +40,7 @@ describe('browser.DropdownTest', () => {
       const dropdownTriggerRef = createRef<HTMLElement>();
 
       render(
-        <Tooltip.Root currentTooltipTrigger={currentTooltipTrigger}>
+        <Tooltip.Root>
           <Dropdown.Root>
             <Dropdown.Trigger ref={dropdownTriggerRef}>
               <Tooltip.Trigger>
@@ -109,7 +107,7 @@ describe('browser.DropdownTest', () => {
   describe('Dropdown + Tooltip composition', () => {
     it('Should open dropdown on click when Tooltip.Trigger wraps the child', async () => {
       const { getByText } = render(
-        <Tooltip.Root currentTooltipTrigger={currentTooltipTrigger}>
+        <Tooltip.Root>
           <Dropdown.Root side='bottom' align='start'>
             <Dropdown.Trigger>
               <Tooltip.Trigger>
@@ -135,7 +133,7 @@ describe('browser.DropdownTest', () => {
       const buttonRef = createRef<HTMLButtonElement>();
 
       render(
-        <Tooltip.Root currentTooltipTrigger={currentTooltipTrigger}>
+        <Tooltip.Root>
           <Dropdown.Root>
             <Dropdown.Trigger ref={outerRef}>
               <Tooltip.Trigger>
@@ -158,7 +156,7 @@ describe('browser.DropdownTest', () => {
 
     it('Should fire both dropdown click and tooltip mouse handlers on the composed trigger', async () => {
       const { getByText } = render(
-        <Tooltip.Root currentTooltipTrigger={currentTooltipTrigger}>
+        <Tooltip.Root>
           <Dropdown.Root side='bottom' align='start'>
             <Dropdown.Trigger>
               <Tooltip.Trigger>

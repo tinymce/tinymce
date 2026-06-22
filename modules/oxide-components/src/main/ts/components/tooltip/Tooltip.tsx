@@ -1,6 +1,6 @@
-import { Arr, Fun, Id, Type } from '@ephox/katamari';
+import { Arr, Id, Type } from '@ephox/katamari';
 import { PredicateExists, SugarElement, SugarNode } from '@ephox/sugar';
-import { Bem } from 'oxide-components/main';
+import { Bem, useUniverse } from 'oxide-components/main';
 import {
   Children, cloneElement, forwardRef, isValidElement, useCallback,
   useContext,
@@ -11,11 +11,10 @@ import {
 import * as Browser from '../../utils/Browser';
 import { DropdownContext } from '../dropdown/internals/Context';
 
-import { TooltipContext, useTooltip, type TooltipTriggerRef } from './internals/Context';
+import { TooltipContext, useTooltip } from './internals/Context';
 
 interface RootProps extends PropsWithChildren {
   readonly showCondition?: 'always' | 'overflow';
-  readonly currentTooltipTrigger?: TooltipTriggerRef;
 }
 
 interface TriggerInternalProps extends PropsWithChildren<HTMLAttributes<HTMLElement>> { }
@@ -29,7 +28,8 @@ const isOverflowingDeep = (root: HTMLElement) =>
     (child) => SugarNode.isHTMLElement(child) && isOverflowing(child.dom));
 
 const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, ...props }, ref) => {
-  const { showCondition, elementId, triggerRef, setCanShow, popupAnchor, currentTooltipTrigger } = useTooltip();
+  const { showCondition, elementId, triggerRef, setCanShow, popupAnchor } = useTooltip();
+  const { currentTooltipTrigger } = useUniverse();
   const activeTooltipId = useSyncExternalStore(currentTooltipTrigger.subscribe, currentTooltipTrigger.get);
 
   useLayoutEffect(() => {
@@ -165,7 +165,8 @@ const hideContentPopover = (content: HTMLElement) => {
 };
 
 const Content = forwardRef<HTMLDivElement, ContentProps>(({ text }, ref) => {
-  const { canShow, currentTooltipTrigger, elementId, contentRef, delayForShow, delayForHide, popupAnchor } = useTooltip();
+  const { canShow, elementId, contentRef, delayForShow, delayForHide, popupAnchor } = useTooltip();
+  const { currentTooltipTrigger } = useUniverse();
   const activeTooltipId = useSyncExternalStore(currentTooltipTrigger.subscribe, currentTooltipTrigger.get);
 
   useLayoutEffect(() => {
@@ -213,13 +214,7 @@ const Content = forwardRef<HTMLDivElement, ContentProps>(({ text }, ref) => {
   );
 });
 
-const defaultCurrentTooltipTrigger: TooltipTriggerRef = {
-  get: Fun.constant(null),
-  subscribe: Fun.constant(Fun.noop),
-  set: Fun.constant(Fun.noop())
-};
-
-const Root: FC<RootProps> = ({ children, currentTooltipTrigger = defaultCurrentTooltipTrigger, showCondition = 'always' }) => {
+const Root: FC<RootProps> = ({ children, showCondition = 'always' }) => {
   const elementId = useMemo(() => Id.generate('tooltip_trigger'), []);
   const [ state, setState ] = useState({
     isOpen: false,
@@ -258,7 +253,6 @@ const Root: FC<RootProps> = ({ children, currentTooltipTrigger = defaultCurrentT
   const contextValue = useMemo(() => {
     return ({
       ...state,
-      currentTooltipTrigger,
       setCanShow,
       contentRef,
       triggerRef,
@@ -266,7 +260,7 @@ const Root: FC<RootProps> = ({ children, currentTooltipTrigger = defaultCurrentT
       popupAnchor,
       elementId
     });
-  }, [ state, currentTooltipTrigger, setCanShow, popupAnchor, showCondition, elementId ]);
+  }, [ state, setCanShow, popupAnchor, showCondition, elementId ]);
 
   return <TooltipContext.Provider value={contextValue}>{children}</TooltipContext.Provider>;
 };
@@ -276,5 +270,4 @@ export {
   Root,
   Trigger
 };
-export type { TooltipTriggerRef };
 

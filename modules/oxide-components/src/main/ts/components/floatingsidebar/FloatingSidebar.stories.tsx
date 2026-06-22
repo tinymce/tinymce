@@ -1,12 +1,13 @@
 import { Fun } from '@ephox/katamari';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { UniverseProvider } from 'oxide-components/contexts/UniverseContext/UniverseProvider';
+import { createTooltipTrigger } from 'oxide-components/main';
 import { fn } from 'storybook/test';
 
 import { IconButton } from '../iconbutton/IconButton';
 
-import * as FloatingSidebar from './FloatingSidebar';
 import type { FloatingSidebarProps } from './FloatingSidebar';
+import * as FloatingSidebar from './FloatingSidebar';
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta = {
@@ -48,7 +49,7 @@ When dragged, the sidebar can be moved freely and may partially extend beyond th
       }
     },
     origin: {
-      description: `Determines which CSS coordinate system is used to position the sidebar. 
+      description: `Determines which CSS coordinate system is used to position the sidebar.
 For example, \`top-left\` uses the \`top\` and \`left\` CSS properties, while \`bottom-right\` uses \`bottom\` and \`right\`.
 The \`x\` and \`y\` values in \`initialPosition\` correspond to these CSS properties.`,
       control: {
@@ -113,6 +114,7 @@ const resolvedIcon = `<svg width="24" height="24">
 
 const mockUniverse = {
   getIcon: Fun.constant(resolvedIcon),
+  currentTooltipTrigger: createTooltipTrigger()
 };
 
 export const ButtonInHeader: Story = {

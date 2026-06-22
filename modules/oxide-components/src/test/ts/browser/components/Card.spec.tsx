@@ -1,5 +1,5 @@
 import * as Card from 'oxide-components/components/card/Card';
-import { Button, ExpandableBox, UniverseProvider } from 'oxide-components/main';
+import { Button, createTooltipTrigger, ExpandableBox, UniverseProvider } from 'oxide-components/main';
 import * as Bem from 'oxide-components/utils/Bem';
 import { describe, expect, it, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
@@ -9,6 +9,7 @@ describe('browser.components.CardTest', () => {
   const getIcon = vi.fn((icon: string) => `<svg id="${icon}"></svg>`);
   const mockUniverse = {
     getIcon,
+    currentTooltipTrigger: createTooltipTrigger()
   };
 
   const wrapper = ({ children }: { children: React.ReactNode }) => {

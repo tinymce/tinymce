@@ -3,7 +3,7 @@ import { SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 import { getAll as getAllIcons } from '@tinymce/oxide-icons-default';
 import { userEvent } from '@vitest/browser/context';
 import * as Accordion from 'oxide-components/components/accordion/Accordion';
-import { UniverseProvider } from 'oxide-components/main';
+import { createTooltipTrigger, UniverseProvider } from 'oxide-components/main';
 import * as Bem from 'oxide-components/utils/Bem';
 import { useState } from 'react';
 import { describe, expect, it, vi } from 'vitest';
@@ -19,6 +19,7 @@ describe('browser.components.AccordionTest', () => {
   const getIcon = vi.fn((icon: string) => icons[icon] || `<svg id="${icon}"></svg>`);
   const mockUniverse = {
     getIcon,
+    currentTooltipTrigger: createTooltipTrigger()
   };
 
   const wrapper = ({ children }: { children: React.ReactNode }) => {

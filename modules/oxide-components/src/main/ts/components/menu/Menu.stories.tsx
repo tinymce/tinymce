@@ -6,7 +6,6 @@ import { createTooltipTrigger, Dropdown, Icon, IconButton, Tooltip, UniverseProv
 import type { ToggleMenuItemInstanceApi } from './internals/Types';
 import * as Menu from './Menu';
 
-const currentTooltipTrigger = createTooltipTrigger();
 const meta = {
   title: 'components/Menu',
   component: Menu.Root,
@@ -72,6 +71,7 @@ const iconResolver = (icon: string): string => {
 
 const mockUniverse = {
   getIcon: iconResolver,
+  currentTooltipTrigger: createTooltipTrigger()
 };
 
 const menu: JSX.Element = (
@@ -220,7 +220,7 @@ export const MenuInADropdownWithTooltip: Story = {
   render: (): JSX.Element => {
     return (<>
       <Dropdown.Root>
-        <Tooltip.Root currentTooltipTrigger={currentTooltipTrigger}>
+        <Tooltip.Root>
           <Dropdown.Trigger>
             <Tooltip.Trigger>
               <IconButton variant={'secondary'} icon={'item'}></IconButton>

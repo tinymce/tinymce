@@ -1,4 +1,5 @@
 import { useUniverse } from 'oxide-components/contexts/UniverseContext/Universe';
+import { createTooltipTrigger } from 'oxide-components/contexts/UniverseContext/UniverseContext';
 import { UniverseProvider } from 'oxide-components/contexts/UniverseContext/UniverseProvider';
 import type { UniverseResources } from 'oxide-components/contexts/UniverseContext/UniverseTypes';
 import React from 'react';
@@ -7,6 +8,7 @@ import { render } from 'vitest-browser-react';
 
 const createMockUniverse = (overrides?: Partial<UniverseResources>): UniverseResources => ({
   getIcon: (name: string) => `<svg data-icon="${name}">mock-${name}</svg>`,
+  currentTooltipTrigger: createTooltipTrigger(),
   ...overrides
 });
 
