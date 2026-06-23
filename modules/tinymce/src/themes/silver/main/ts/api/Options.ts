@@ -282,6 +282,16 @@ const register = (editor: Editor): void => {
     processor: 'string'
   });
 
+  registerOption('sidebar_min_width', {
+    processor: 'number',
+    default: 300
+  });
+
+  registerOption('sidebar_max_width', {
+    processor: 'number',
+    default: 480
+  });
+
   registerOption('view_show', {
     processor: 'string'
   });
@@ -334,6 +344,8 @@ const useBranding = option('branding');
 const getResize = option('resize');
 const getPasteAsText = option('paste_as_text');
 const getSidebarShow = option('sidebar_show');
+const getSidebarMinWidth = option('sidebar_min_width');
+const getSidebarMaxWidth = option('sidebar_max_width');
 const getViewShow = option('view_show');
 const promotionEnabled = option('promotion');
 const useHelpAccessibility = option('help_accessibility');
@@ -495,6 +507,8 @@ export {
   getResize,
   getPasteAsText,
   getSidebarShow,
+  getSidebarMinWidth,
+  getSidebarMaxWidth,
   getViewShow,
   useHelpAccessibility,
   getDefaultFontStack

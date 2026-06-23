@@ -19,8 +19,12 @@
     // overflow: auto.
     min-height: 0;
   }
-
+  
   .tox-sidebar {
+    --tox-private-sidebar-width: 300px;
+    &:has(.tox-sidebar-content--wide) {
+      --tox-private-sidebar-width: 440px;
+    }
     background-color: var(--tox-private-sidebar-background-color, @sidebar-background-color);
     display: flex;
     flex-direction: row;
@@ -32,12 +36,77 @@
     overflow: hidden;
   }
 
+  &:not(.tox-edit-focus) {
+   .tox-sidebar__pane-container  {
+    .tox-sidebar__resize-handle {
+      &:active::before,
+      &:focus-visible::before {
+        width: 3px;
+        background-color: #b3b3b3;
+      }
+
+      &:hover::before {
+        width: 3px;
+        background-color: @color-tint;
+      }
+    } 
+   }
+  }
+
   .tox-sidebar__pane-container {
     display: flex;
+    flex-direction: row-reverse;
+    position: relative;
+
+    // phone
+    @container editor (width <= 800px) {
+      width: 100cqw;
+    }
+
+    // tablet
+    @container editor (width > 800px) and (width <= 1024px) {
+      width: 300px;
+    }
+
+    // desktop
+    @container editor (width > 1024px) {
+      // Whatever is set, there has to be at least 280px for content of the editor
+      width: min(var(--tox-private-sidebar-width), calc(100cqw - 280px));
+    }
+
+
+    .tox-sidebar__resize-handle {
+      cursor: ew-resize;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 8px;
+      height: 100%;
+      background-color: transparent;
+      z-index: 1;
+
+      // The visible 1px line. Widening on hover gives a clearer affordance
+      // without shifting layout, since the parent flex track stays fixed.
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 1px;
+        height: 100%;
+        background-color: #e3e3e3;
+        transition: width .15s ease, background-color .15s ease;
+      }
+
+      @container editor (width <= 1024px) {
+        display: none;
+      }
+    }
   }
 
   .tox-sidebar__pane {
     display: flex;
+    width: 100%;
   }
 
   .tox-sidebar--sliding-closed {

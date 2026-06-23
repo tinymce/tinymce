@@ -220,6 +220,8 @@ interface BaseEditorOptions {
   selector?: string;
   setup?: SetupCallback;
   sidebar_show?: string;
+  sidebar_min_width?: number;
+  sidebar_max_width?: number;
   skin?: boolean | string;
   skin_url?: string;
   smart_paste?: boolean;
@@ -370,6 +372,8 @@ export interface EditorOptions extends NormalizedEditorOptions {
   toolbar_persist: boolean;
   toolbar_sticky: boolean;
   toolbar_sticky_offset: number;
+  sidebar_min_width: number;
+  sidebar_max_width: number;
   text_patterns: Pattern[];
   text_patterns_lookup: DynamicPatternsLookup;
   user_id: string;

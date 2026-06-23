@@ -11,16 +11,24 @@
     flex-direction: column;
     position: relative;
     height: 100%;
-    min-width: 300px;
-    max-width: 300px;
-    width: 300px;
-    border-left: 1px solid var(--tox-private-separator-color, @tinymce-separator-color);
+    // min-width: 300px;
+    // max-width: 300px;
+    // width: 300px;
+    // tablet
+    @container editor (width > 800px) and (width <= 1024px) {
+      border-left: 1px solid var(--tox-private-separator-color, @tinymce-separator-color);
+    }
 
     &--wide {
-      min-width: 440px;
-      max-width: 440px;
-      width: 440px;
+      // noop, only there for this class to be available in typescript
+      width: 100%;
+    //   min-width: 440px;
+    //   max-width: 440px;
+    //   width: 440px;
     }
+
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .tox-sidebar-content__header {
