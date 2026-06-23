@@ -1,5 +1,5 @@
 import { AddEventsBehaviour, type AlloyComponent, AlloyEvents, Dragging, Focusing, Keying, type SimpleSpec, SystemEvents, Tabstopping, Tooltipping } from '@ephox/alloy';
-import { Optional } from '@ephox/katamari';
+import { Optional, Optionals } from '@ephox/katamari';
 import { Attribute, SugarPosition } from '@ephox/sugar';
 
 import type Editor from 'tinymce/core/api/Editor';
@@ -27,8 +27,26 @@ const getAriaValuetext = (dimensions: Resize.ResizeEditorDimensions, resizeType:
     : I18n.translate([ `Editor's height: {0} pixels`, dimensions.height ]);
 };
 
-const setAriaValuetext = (comp: AlloyComponent, dimensions: Resize.ResizeEditorDimensions, resizeType: Resize.ResizeTypes) => {
+const setAriaDimensions = (comp: AlloyComponent, dimensions: Resize.ResizeEditorDimensions, resizeType: Resize.ResizeTypes) => {
   Attribute.set(comp.element, 'aria-valuetext', getAriaValuetext(dimensions, resizeType));
+  // No standard single-value representation exists for the 2-D 'both' mode, so only
+  // the vertical resize exposes a numeric aria-valuenow (the current container height).
+  if (resizeType === Resize.ResizeTypes.Vertical) {
+    Attribute.set(comp.element, 'aria-valuenow', dimensions.height);
+  }
+};
+
+const getAriaRangeAttributes = (editor: Editor, resizeType: Resize.ResizeTypes): Record<string, number> => {
+  // aria-valuemin/max are only meaningful for the vertical resize, and only when both a
+  // min and max height value are available (lift2 yields nothing unless both resolve).
+  if (resizeType === Resize.ResizeTypes.Vertical) {
+    return Optionals.lift2(
+      Options.getMinHeightOption(editor),
+      Options.getMaxHeightOption(editor),
+      (min, max) => ({ 'aria-valuemin': min, 'aria-valuemax': max })
+    ).getOr({});
+  }
+  return {};
 };
 
 const keyboardHandler = (editor: Editor, comp: AlloyComponent, resizeType: Resize.ResizeTypes, x: number, y: number): Optional<boolean> => {
@@ -36,7 +54,7 @@ const keyboardHandler = (editor: Editor, comp: AlloyComponent, resizeType: Resiz
   const delta = SugarPosition(x * scale, y * scale);
 
   const newDimentions = Resize.resize(editor, delta, resizeType);
-  setAriaValuetext(comp, newDimentions, resizeType);
+  setAriaDimensions(comp, newDimentions, resizeType);
 
   return Optional.some(true);
 };
@@ -61,7 +79,8 @@ export const renderResizeHandler = (editor: Editor, providersBackstage: UiFactor
     attributes: {
       'aria-label': providersBackstage.translate(resizeLabel),
       'data-mce-name': 'resize-handle',
-      'role': 'separator'
+      'role': 'separator',
+      ...getAriaRangeAttributes(editor, resizeType)
     },
     behaviours: [
       Dragging.config({
@@ -73,7 +92,7 @@ export const renderResizeHandler = (editor: Editor, providersBackstage: UiFactor
         },
         onDrag: (comp, _target, delta) => {
           const newDimentions = Resize.resize(editor, delta, resizeType);
-          setAriaValuetext(comp, newDimentions, resizeType);
+          setAriaDimensions(comp, newDimentions, resizeType);
         },
         onDrop: (comp) => {
           Tooltipping.setEnabled(comp, true);
@@ -96,7 +115,7 @@ export const renderResizeHandler = (editor: Editor, providersBackstage: UiFactor
       AddEventsBehaviour.config('set-aria-valuetext', [
         AlloyEvents.runOnAttached((comp) => {
           const setInitialValuetext = () => {
-            setAriaValuetext(comp, Resize.getOriginalDimensions(editor), resizeType);
+            setAriaDimensions(comp, Resize.getOriginalDimensions(editor), resizeType);
           };
           if (editor._skinLoaded) {
             setInitialValuetext();
