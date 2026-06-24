@@ -1,6 +1,6 @@
 import { Optional } from '@ephox/katamari';
 import { useSpecialKeyNavigation } from 'oxide-components/keynav/KeyboardNavigationHooks';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { describe, expect, it } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
@@ -70,6 +70,63 @@ describe('KeynavSpecialTypeTest', () => {
     await press('down', '{ArrowDown}');
     await press('right', '{ArrowRight}');
     await press('escape', '{Escape}');
+
+  });
+
+  it('Should call updated callbacks without re-subscribing', async () => {
+
+    const Container = () => {
+      const ref = useRef<HTMLDivElement>(null);
+      const [ count, setCount ] = useState(0);
+
+      useSpecialKeyNavigation({
+        containerRef: ref,
+        onEnter: () => {
+          store.push(`enter-${count}`);
+        },
+        onSpace: () => {
+          setCount((c) => c + 1);
+        }
+      });
+
+      return (
+        <div
+          ref={ref}
+          className="special-keying"
+          data-testid="container"
+          tabIndex={-1}
+          style={{
+            width: '100px',
+            height: '100px',
+            border: '1px solid black'
+          }}
+        >
+          Count: {count}
+        </div>
+      );
+    };
+
+    const { getByTestId } = render(<Container />, {
+      wrapper: ({ children }) => <div className='tox'>{children}</div>
+    });
+
+    const container = getByTestId('container');
+    await userEvent.click(container);
+    await expect.element(container).toHaveFocus();
+
+    clearStore();
+    await userEvent.keyboard('{Enter}');
+    expect(store, 'Initial enter should log count 0').toEqual([ 'enter-0' ]);
+
+    clearStore();
+    await userEvent.keyboard(' ');
+    await userEvent.keyboard('{Enter}');
+    expect(store, 'After incrementing, enter should log count 1').toEqual([ 'enter-1' ]);
+
+    clearStore();
+    await userEvent.keyboard(' ');
+    await userEvent.keyboard('{Enter}');
+    expect(store, 'After incrementing again, enter should log count 2').toEqual([ 'enter-2' ]);
 
   });
 });
