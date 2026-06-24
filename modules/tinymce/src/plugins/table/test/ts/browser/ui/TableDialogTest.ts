@@ -1,5 +1,5 @@
 import { ApproxStructure, UiFinder } from '@ephox/agar';
-import { after, before, context, describe, it } from '@ephox/bedrock-client';
+import { after, Assert, before, context, describe, it } from '@ephox/bedrock-client';
 import { PlatformDetection } from '@ephox/sand';
 import { SugarBody } from '@ephox/sugar';
 import { TinyAssertions, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
@@ -54,457 +54,459 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
     align: ''
   };
 
-  it('TBA: Table properties dialog standard ok', async () => {
-    const editor = hook.editor();
-    setTable(editor);
-    setCursor(editor);
-    await TableTestUtils.pOpenTableDialog(editor);
-    TableTestUtils.assertDialogValues(emptyStandardData, false, generalLabels);
-    await TableTestUtils.pClickDialogButton(editor, true);
-    TableTestUtils.assertElementStructure(editor, 'table', htmlEmptyTable);
-    await TableTestUtils.pOpenTableDialog(editor);
-    TableTestUtils.assertDialogValues(emptyStandardData, false, generalLabels);
-    await TableTestUtils.pClickDialogButton(editor, false);
-  });
+  context('General', () => {
+    it('TBA: Table properties dialog standard ok', async () => {
+      const editor = hook.editor();
+      setTable(editor);
+      setCursor(editor);
+      await TableTestUtils.pOpenTableDialog(editor);
+      TableTestUtils.assertDialogValues(emptyStandardData, false, generalLabels);
+      await TableTestUtils.pClickDialogButton(editor, true);
+      TableTestUtils.assertElementStructure(editor, 'table', htmlEmptyTable);
+      await TableTestUtils.pOpenTableDialog(editor);
+      TableTestUtils.assertDialogValues(emptyStandardData, false, generalLabels);
+      await TableTestUtils.pClickDialogButton(editor, false);
+    });
 
-  it('TBA: Table properties dialog standard fill ok', async () => {
-    const htmlFilledEmptyTable = ApproxStructure.build((s, str/* , arr*/) => {
-      return s.element('table', {
+    it('TBA: Table properties dialog standard fill ok', async () => {
+      const htmlFilledEmptyTable = ApproxStructure.build((s, str/* , arr*/) => {
+        return s.element('table', {
+          attrs: {
+            border: str.is('1'),
+          },
+          styles: {
+            'height': str.is('500px'),
+            'width': str.is('500px'),
+            'margin-left': str.is('0px'),
+            'margin-right': str.is('auto'),
+            'border-spacing': str.is('5px')
+          },
+          children: [
+            s.element('caption', { }),
+            s.element('tbody', {
+              children: [
+                s.element('tr', {
+                  children: [
+                    s.element('td', {
+                      styles: {
+                        'border-width': str.is('1px'),
+                        'padding': str.is('5px')
+                      },
+                      children: [
+                        s.text(str.is('X'))
+                      ]
+                    })
+                  ]
+                })
+              ]
+            })
+          ]
+        });
+      });
+
+      const fullStandardData = {
+        width: '500px',
+        height: '500px',
+        cellspacing: '5px',
+        cellpadding: '5px',
+        border: '1px',
+        caption: true,
+        align: 'left'
+      };
+
+      const editor = hook.editor();
+      setTable(editor);
+      setCursor(editor);
+      await TableTestUtils.pOpenTableDialog(editor);
+      TableTestUtils.assertDialogValues(emptyStandardData, false, generalLabels);
+      TableTestUtils.setDialogValues(fullStandardData, false, generalLabels);
+      await TableTestUtils.pClickDialogButton(editor, true);
+      TableTestUtils.assertApproxElementStructure(editor, 'table', htmlFilledEmptyTable);
+      await TableTestUtils.pOpenTableDialog(editor);
+      TableTestUtils.assertDialogValues(fullStandardData, false, generalLabels);
+      await TableTestUtils.pClickDialogButton(editor, false);
+    });
+
+    it('TBA: Table properties dialog all ui off fill ok', async () => {
+      const htmlFilledAllOffTable = '<table style="height: 500px; width: 500px; margin-left: auto; margin-right: 0px;"><tbody><tr><td>X</td></tr></tbody></table>';
+
+      const emptyAllOffData = {
+        width: '',
+        height: '',
+        align: ''
+      };
+
+      const fullAllOffData = {
+        width: '500px',
+        height: '500px',
+        align: 'right'
+      };
+
+      const editor = hook.editor();
+      editor.options.set('table_appearance_options', false);
+      setTable(editor);
+      setCursor(editor);
+      await TableTestUtils.pOpenTableDialog(editor);
+      TableTestUtils.assertDialogValues(emptyAllOffData, false, generalLabels);
+      TableTestUtils.setDialogValues(fullAllOffData, false, generalLabels);
+      await TableTestUtils.pClickDialogButton(editor, true);
+      TableTestUtils.assertElementStructure(editor, 'table', htmlFilledAllOffTable);
+      await TableTestUtils.pOpenTableDialog(editor);
+      TableTestUtils.assertDialogValues(fullAllOffData, false, generalLabels);
+      await TableTestUtils.pClickDialogButton(editor, false);
+      editor.options.unset('table_appearance_options');
+    });
+
+    it('TBA: Table properties dialog all ui on fill ok', async () => {
+      const htmlFilledAllOnTable = ApproxStructure.build((s, str/* , arr*/) => {
+        return s.element('table', {
+          styles: {
+            'height': str.is('500px'),
+            'width': str.is('500px'),
+            'margin-left': str.is('0px'),
+            'margin-right': str.is('auto'),
+            'border-width': str.is('1px'),
+            'border-spacing': str.is('5px'),
+            'background-color': str.startsWith(''), // need to check presence but it can be #ff0000 or #ff0000
+            'border-color': str.startsWith('') // need to check presence but it can be #ff0000 or #ff0000
+          },
+          children: [
+            s.element('caption', { }),
+            s.element('tbody', {
+              children: [
+                s.element('tr', {
+                  children: [
+                    s.element('td', {
+                      children: [
+                        s.text(str.is('X'))
+                      ]
+                    })
+                  ]
+                })
+              ]
+            })
+          ]
+        });
+      });
+
+      const emptyAllOnData = {
+        width: '',
+        height: '',
+        cellspacing: '',
+        cellpadding: '',
+        border: '',
+        caption: false,
+        align: '',
+        class: '',
+        borderstyle: '',
+        bordercolor: '',
+        backgroundcolor: ''
+      };
+
+      const fullAllOnData = {
+        width: '500px',
+        height: '500px',
+        cellspacing: '5px',
+        cellpadding: '5px',
+        border: '1px',
+        caption: true,
+        align: 'left',
+        class: 'dog',
+        borderstyle: 'dotted',
+        bordercolor: '#FF0000',
+        backgroundcolor: '#0000FF'
+      };
+
+      const editor = hook.editor();
+      editor.options.set('table_class_list', [
+        { title: 'None', value: '' },
+        { title: 'Dog', value: 'dog' },
+        { title: 'Cat', value: 'cat' }
+      ]);
+      editor.options.set('table_advtab', true);
+      setTable(editor);
+      setCursor(editor);
+      await TableTestUtils.pOpenTableDialog(editor);
+      TableTestUtils.assertDialogValues(emptyAllOnData, true, generalLabels);
+      TableTestUtils.setDialogValues(fullAllOnData, true, generalLabels);
+      await TableTestUtils.pClickDialogButton(editor, true);
+      TableTestUtils.assertApproxElementStructure(editor, 'table', htmlFilledAllOnTable);
+      await TableTestUtils.pOpenTableDialog(editor);
+      TableTestUtils.assertDialogValues(fullAllOnData, true, generalLabels);
+      TableTestUtils.setDialogValues(emptyAllOnData, true, generalLabels);
+      await TableTestUtils.pClickDialogButton(editor, true);
+      TableTestUtils.assertElementStructure(editor, 'table', htmlEmptyTable);
+
+      editor.options.unset('table_class_list');
+      editor.options.unset('table_advtab');
+    });
+
+    it('TBA: Open dialog via execCommand', async () => {
+      const baseHtml =
+      '<table style="height: 500px; width: 500px; border-width: 1px; ' +
+      'border-spacing: 5px; background-color: #0000ff; ' +
+      'border-color: #ff0000; border-style: dotted; ' +
+      'margin-left: 0px; margin-right: auto;">' +
+      '<caption><br></caption>' +
+      '<tbody><tr><td>X</td></tr></tbody>' +
+      '</table>';
+
+      const baseData = {
+        width: '500px',
+        height: '500px',
+        cellspacing: '5px',
+        cellpadding: '',
+        border: '1px',
+        caption: true,
+        align: 'left',
+        borderstyle: 'dotted',
+        bordercolor: '#FF0000',
+        backgroundcolor: '#0000FF'
+      };
+
+      const editor = hook.editor();
+      editor.options.set('table_advtab', true);
+      editor.setContent(baseHtml);
+      setCursor(editor);
+      editor.execCommand('mceTableProps');
+      TableTestUtils.assertDialogValues(baseData, true, generalLabels);
+      await TableTestUtils.pClickDialogButton(editor, false);
+
+      editor.options.unset('table_advtab');
+    });
+
+    it('TBA: Test cancel changes nothing and save does', async () => {
+      const baseHtml = '<table><tbody><tr><td>X</td></tr></tbody></table>';
+
+      const baseData = {
+        width: '',
+        height: '',
+        cellspacing: '',
+        cellpadding: '',
+        border: '',
+        caption: false,
+        align: '',
+        class: '',
+        borderstyle: '',
+        bordercolor: '',
+        backgroundcolor: ''
+      };
+
+      const newHtml =
+      '<table class="dog" style="width: 500px; height: 500px; margin-left: 0px; margin-right: auto; ' +
+      `background-color: #0000ff; border: 1px dotted ${isSafari15 ? 'rgb(255, 0, 0)' : '#ff0000'}; ` +
+      'border-spacing: 5px; border-collapse: collapse;" border="1">' +
+      '<caption>Caption</caption>' +
+      '<tbody>' +
+      '<tr><td style="border-color: #ff0000; border-width: 1px; padding: 5px;">X</td></tr>' +
+
+      '</tbody>' +
+      '</table>';
+
+      const newData = {
+        width: '500px',
+        height: '500px',
+        cellspacing: '5px',
+        cellpadding: '5px',
+        border: '1px',
+        caption: true,
+        align: 'left',
+        class: 'dog',
+        borderstyle: 'dotted',
+        bordercolor: '#FF0000',
+        backgroundcolor: '#0000FF'
+      };
+
+      const editor = hook.editor();
+      editor.options.set('table_class_list', [
+        { title: 'None', value: '' },
+        { title: 'Dog', value: 'dog' },
+        { title: 'Cat', value: 'cat' }
+      ]);
+      editor.options.set('table_advtab', true);
+      editor.setContent(baseHtml);
+      setCursor(editor);
+      await TableTestUtils.pOpenTableDialog(editor);
+      TableTestUtils.assertDialogValues(baseData, true, generalLabels);
+      await TableTestUtils.pClickDialogButton(editor, false);
+      TinyAssertions.assertContent(editor, baseHtml);
+
+      await TableTestUtils.pOpenTableDialog(editor);
+      TableTestUtils.assertDialogValues(baseData, true, generalLabels);
+      TableTestUtils.setDialogValues(newData, true, generalLabels);
+      await TableTestUtils.pClickDialogButton(editor, true);
+      TinyAssertions.assertContent(editor, newHtml);
+
+      await TableTestUtils.pOpenTableDialog(editor);
+      TableTestUtils.assertDialogValues(newData, true, generalLabels);
+      await TableTestUtils.pClickDialogButton(editor, false);
+
+      editor.options.unset('table_class_list');
+      editor.options.unset('table_advtab');
+    });
+
+    it('TINY-6558: float style should not be recognised as a valid table alignment and is cleared when setting an alignment', async () => {
+      const floatTableHtml = '<table style="height: 500px; width: 500px; float: right;"><tbody><tr><td>X</td></tr></tbody></table>';
+      const marginTableHtml = '<table style="height: 500px; width: 500px; margin-left: auto; margin-right: 0px;"><tbody><tr><td>X</td></tr></tbody></table>';
+
+      const initialData = {
+        width: '500px',
+        height: '500px',
+        align: ''
+      };
+
+      const newData = {
+        width: '500px',
+        height: '500px',
+        align: 'right'
+      };
+
+      const editor = hook.editor();
+      editor.options.set('table_appearance_options', false);
+      editor.setContent(floatTableHtml);
+      setCursor(editor);
+      await TableTestUtils.pOpenTableDialog(editor);
+      TableTestUtils.assertDialogValues(initialData, false, generalLabels);
+      TableTestUtils.setDialogValues(newData, false, generalLabels);
+      await TableTestUtils.pClickDialogButton(editor, true);
+      TableTestUtils.assertElementStructure(editor, 'table', marginTableHtml);
+      await TableTestUtils.pOpenTableDialog(editor);
+      TableTestUtils.assertDialogValues(newData, false, generalLabels);
+      await TableTestUtils.pClickDialogButton(editor, false);
+      editor.options.unset('table_appearance_options');
+    });
+
+    it('TINY-8758: width should be retained when changing the border width', async () => {
+      const getExpectedData = (borderWidth: number) => ({
+        width: '60%',
+        height: '',
+        cellspacing: '',
+        cellpadding: '',
+        border: borderWidth + 'px',
+        caption: false,
+        align: ''
+      });
+
+      const editor = hook.editor();
+      editor.setContent('<table style="border-collapse: collapse;" border="1px" width="60%"><tbody><tr><td>&nbsp;</td></tr></tbody></table>');
+      setCursor(editor);
+      await TableTestUtils.pOpenTableDialog(editor);
+      TableTestUtils.assertDialogValues(getExpectedData(1), false, generalLabels);
+      TableTestUtils.setDialogValues({ border: '2px' }, false, generalLabels);
+      await TableTestUtils.pClickDialogButton(editor, true);
+      TinyAssertions.assertContent(editor, '<table style="width: 60%; border-width: 2px; border-collapse: collapse;" border="1"><tbody><tr><td style="border-width: 2px;">&nbsp;</td></tr></tbody></table>');
+      await TableTestUtils.pOpenTableDialog(editor);
+      TableTestUtils.assertDialogValues(getExpectedData(2), false, generalLabels);
+      await TableTestUtils.pClickDialogButton(editor, false);
+    });
+
+    it('TINY-8758: Default width should be added as style', async () => {
+      const getExpectedData = (borderWidth: string, width: string) => ({
+        width,
+        height: '',
+        cellspacing: '',
+        cellpadding: '',
+        border: borderWidth,
+        caption: false,
+        align: ''
+      });
+
+      const editor = hook.editor();
+      editor.setContent('<p></p>');
+      await TableTestUtils.pOpenTableDialog(editor);
+      TableTestUtils.assertDialogValues(getExpectedData('1', '100%'), false, generalLabels);
+      TableTestUtils.setDialogValues({ border: '2px' }, false, generalLabels);
+      await TableTestUtils.pClickDialogButton(editor, true);
+      TableTestUtils.assertTableStructure(editor, ApproxStructure.build((s, str, _arr) => s.element('table', {
+        styles: {
+          'width': str.is('100%'),
+          'border-collapse': str.is('collapse'),
+          'border-width': str.is('2px')
+        },
         attrs: {
-          border: str.is('1'),
-        },
-        styles: {
-          'height': str.is('500px'),
-          'width': str.is('500px'),
-          'margin-left': str.is('0px'),
-          'margin-right': str.is('auto'),
-          'border-spacing': str.is('5px')
-        },
-        children: [
-          s.element('caption', { }),
-          s.element('tbody', {
-            children: [
-              s.element('tr', {
-                children: [
-                  s.element('td', {
-                    styles: {
-                      'border-width': str.is('1px'),
-                      'padding': str.is('5px')
-                    },
-                    children: [
-                      s.text(str.is('X'))
-                    ]
-                  })
-                ]
-              })
-            ]
-          })
-        ]
+          border: str.is('1')
+        }
+      })));
+      await TableTestUtils.pOpenTableDialog(editor);
+      TableTestUtils.assertDialogValues(getExpectedData('2px', '100%'), false, generalLabels);
+      await TableTestUtils.pClickDialogButton(editor, false);
+    });
+
+    it('TINY-9843: Should accept border in shorthand form', async () => {
+      const getExpectedData = (borderWidth: number, width: string) => ({
+        width,
+        height: '',
+        cellspacing: '',
+        cellpadding: '',
+        border: borderWidth + 'px',
+        caption: false,
+        align: ''
       });
+
+      const inputHtml = '<table style="border: 1px dotted #ff0000; border-collapse: collapse;" border="1px"><tbody><tr><td>&nbsp;</td></tr></tbody></table>';
+
+      const editor = hook.editor();
+      editor.setContent(inputHtml);
+      // No change to the table html
+      TinyAssertions.assertContent(editor, inputHtml);
+      setCursor(editor);
+      await TableTestUtils.pOpenTableDialog(editor);
+      TableTestUtils.assertDialogValues(getExpectedData(1, ''), false, generalLabels);
+      TableTestUtils.setDialogValues({ border: '3px' }, false, generalLabels);
+      await TableTestUtils.pClickDialogButton(editor, true);
+      // shorthand form is retained
+      TinyAssertions.assertContent(editor, '<table style="border: 3px dotted rgb(255, 0, 0); border-collapse: collapse;" border="1"><tbody><tr><td style="border-width: 3px;">&nbsp;</td></tr></tbody></table>');
+      await TableTestUtils.pOpenTableDialog(editor);
+      TableTestUtils.assertDialogValues(getExpectedData(3, ''), false, generalLabels);
+      await TableTestUtils.pClickDialogButton(editor, false);
     });
 
-    const fullStandardData = {
-      width: '500px',
-      height: '500px',
-      cellspacing: '5px',
-      cellpadding: '5px',
-      border: '1px',
-      caption: true,
-      align: 'left'
-    };
-
-    const editor = hook.editor();
-    setTable(editor);
-    setCursor(editor);
-    await TableTestUtils.pOpenTableDialog(editor);
-    TableTestUtils.assertDialogValues(emptyStandardData, false, generalLabels);
-    TableTestUtils.setDialogValues(fullStandardData, false, generalLabels);
-    await TableTestUtils.pClickDialogButton(editor, true);
-    TableTestUtils.assertApproxElementStructure(editor, 'table', htmlFilledEmptyTable);
-    await TableTestUtils.pOpenTableDialog(editor);
-    TableTestUtils.assertDialogValues(fullStandardData, false, generalLabels);
-    await TableTestUtils.pClickDialogButton(editor, false);
-  });
-
-  it('TBA: Table properties dialog all ui off fill ok', async () => {
-    const htmlFilledAllOffTable = '<table style="height: 500px; width: 500px; margin-left: auto; margin-right: 0px;"><tbody><tr><td>X</td></tr></tbody></table>';
-
-    const emptyAllOffData = {
-      width: '',
-      height: '',
-      align: ''
-    };
-
-    const fullAllOffData = {
-      width: '500px',
-      height: '500px',
-      align: 'right'
-    };
-
-    const editor = hook.editor();
-    editor.options.set('table_appearance_options', false);
-    setTable(editor);
-    setCursor(editor);
-    await TableTestUtils.pOpenTableDialog(editor);
-    TableTestUtils.assertDialogValues(emptyAllOffData, false, generalLabels);
-    TableTestUtils.setDialogValues(fullAllOffData, false, generalLabels);
-    await TableTestUtils.pClickDialogButton(editor, true);
-    TableTestUtils.assertElementStructure(editor, 'table', htmlFilledAllOffTable);
-    await TableTestUtils.pOpenTableDialog(editor);
-    TableTestUtils.assertDialogValues(fullAllOffData, false, generalLabels);
-    await TableTestUtils.pClickDialogButton(editor, false);
-    editor.options.unset('table_appearance_options');
-  });
-
-  it('TBA: Table properties dialog all ui on fill ok', async () => {
-    const htmlFilledAllOnTable = ApproxStructure.build((s, str/* , arr*/) => {
-      return s.element('table', {
-        styles: {
-          'height': str.is('500px'),
-          'width': str.is('500px'),
-          'margin-left': str.is('0px'),
-          'margin-right': str.is('auto'),
-          'border-width': str.is('1px'),
-          'border-spacing': str.is('5px'),
-          'background-color': str.startsWith(''), // need to check presence but it can be #ff0000 or #ff0000
-          'border-color': str.startsWith('') // need to check presence but it can be #ff0000 or #ff0000
-        },
-        children: [
-          s.element('caption', { }),
-          s.element('tbody', {
-            children: [
-              s.element('tr', {
-                children: [
-                  s.element('td', {
-                    children: [
-                      s.text(str.is('X'))
-                    ]
-                  })
-                ]
-              })
-            ]
-          })
-        ]
-      });
-    });
-
-    const emptyAllOnData = {
-      width: '',
-      height: '',
-      cellspacing: '',
-      cellpadding: '',
-      border: '',
-      caption: false,
-      align: '',
-      class: '',
-      borderstyle: '',
-      bordercolor: '',
-      backgroundcolor: ''
-    };
-
-    const fullAllOnData = {
-      width: '500px',
-      height: '500px',
-      cellspacing: '5px',
-      cellpadding: '5px',
-      border: '1px',
-      caption: true,
-      align: 'left',
-      class: 'dog',
-      borderstyle: 'dotted',
-      bordercolor: '#FF0000',
-      backgroundcolor: '#0000FF'
-    };
-
-    const editor = hook.editor();
-    editor.options.set('table_class_list', [
-      { title: 'None', value: '' },
-      { title: 'Dog', value: 'dog' },
-      { title: 'Cat', value: 'cat' }
-    ]);
-    editor.options.set('table_advtab', true);
-    setTable(editor);
-    setCursor(editor);
-    await TableTestUtils.pOpenTableDialog(editor);
-    TableTestUtils.assertDialogValues(emptyAllOnData, true, generalLabels);
-    TableTestUtils.setDialogValues(fullAllOnData, true, generalLabels);
-    await TableTestUtils.pClickDialogButton(editor, true);
-    TableTestUtils.assertApproxElementStructure(editor, 'table', htmlFilledAllOnTable);
-    await TableTestUtils.pOpenTableDialog(editor);
-    TableTestUtils.assertDialogValues(fullAllOnData, true, generalLabels);
-    TableTestUtils.setDialogValues(emptyAllOnData, true, generalLabels);
-    await TableTestUtils.pClickDialogButton(editor, true);
-    TableTestUtils.assertElementStructure(editor, 'table', htmlEmptyTable);
-
-    editor.options.unset('table_class_list');
-    editor.options.unset('table_advtab');
-  });
-
-  it('TBA: Open dialog via execCommand', async () => {
-    const baseHtml =
-    '<table style="height: 500px; width: 500px; border-width: 1px; ' +
-    'border-spacing: 5px; background-color: #0000ff; ' +
-    'border-color: #ff0000; border-style: dotted; ' +
-    'margin-left: 0px; margin-right: auto;">' +
-    '<caption><br></caption>' +
-    '<tbody><tr><td>X</td></tr></tbody>' +
-    '</table>';
-
-    const baseData = {
-      width: '500px',
-      height: '500px',
-      cellspacing: '5px',
-      cellpadding: '',
-      border: '1px',
-      caption: true,
-      align: 'left',
-      borderstyle: 'dotted',
-      bordercolor: '#FF0000',
-      backgroundcolor: '#0000FF'
-    };
-
-    const editor = hook.editor();
-    editor.options.set('table_advtab', true);
-    editor.setContent(baseHtml);
-    setCursor(editor);
-    editor.execCommand('mceTableProps');
-    TableTestUtils.assertDialogValues(baseData, true, generalLabels);
-    await TableTestUtils.pClickDialogButton(editor, false);
-
-    editor.options.unset('table_advtab');
-  });
-
-  it('TBA: Test cancel changes nothing and save does', async () => {
-    const baseHtml = '<table><tbody><tr><td>X</td></tr></tbody></table>';
-
-    const baseData = {
-      width: '',
-      height: '',
-      cellspacing: '',
-      cellpadding: '',
-      border: '',
-      caption: false,
-      align: '',
-      class: '',
-      borderstyle: '',
-      bordercolor: '',
-      backgroundcolor: ''
-    };
-
-    const newHtml =
-    '<table class="dog" style="width: 500px; height: 500px; margin-left: 0px; margin-right: auto; ' +
-    `background-color: #0000ff; border: 1px dotted ${isSafari15 ? 'rgb(255, 0, 0)' : '#ff0000'}; ` +
-    'border-spacing: 5px; border-collapse: collapse;" border="1">' +
-    '<caption>Caption</caption>' +
-    '<tbody>' +
-    '<tr><td style="border-color: #ff0000; border-width: 1px; padding: 5px;">X</td></tr>' +
-
-    '</tbody>' +
-    '</table>';
-
-    const newData = {
-      width: '500px',
-      height: '500px',
-      cellspacing: '5px',
-      cellpadding: '5px',
-      border: '1px',
-      caption: true,
-      align: 'left',
-      class: 'dog',
-      borderstyle: 'dotted',
-      bordercolor: '#FF0000',
-      backgroundcolor: '#0000FF'
-    };
-
-    const editor = hook.editor();
-    editor.options.set('table_class_list', [
-      { title: 'None', value: '' },
-      { title: 'Dog', value: 'dog' },
-      { title: 'Cat', value: 'cat' }
-    ]);
-    editor.options.set('table_advtab', true);
-    editor.setContent(baseHtml);
-    setCursor(editor);
-    await TableTestUtils.pOpenTableDialog(editor);
-    TableTestUtils.assertDialogValues(baseData, true, generalLabels);
-    await TableTestUtils.pClickDialogButton(editor, false);
-    TinyAssertions.assertContent(editor, baseHtml);
-
-    await TableTestUtils.pOpenTableDialog(editor);
-    TableTestUtils.assertDialogValues(baseData, true, generalLabels);
-    TableTestUtils.setDialogValues(newData, true, generalLabels);
-    await TableTestUtils.pClickDialogButton(editor, true);
-    TinyAssertions.assertContent(editor, newHtml);
-
-    await TableTestUtils.pOpenTableDialog(editor);
-    TableTestUtils.assertDialogValues(newData, true, generalLabels);
-    await TableTestUtils.pClickDialogButton(editor, false);
-
-    editor.options.unset('table_class_list');
-    editor.options.unset('table_advtab');
-  });
-
-  it('TINY-6558: float style should not be recognised as a valid table alignment and is cleared when setting an alignment', async () => {
-    const floatTableHtml = '<table style="height: 500px; width: 500px; float: right;"><tbody><tr><td>X</td></tr></tbody></table>';
-    const marginTableHtml = '<table style="height: 500px; width: 500px; margin-left: auto; margin-right: 0px;"><tbody><tr><td>X</td></tr></tbody></table>';
-
-    const initialData = {
-      width: '500px',
-      height: '500px',
-      align: ''
-    };
-
-    const newData = {
-      width: '500px',
-      height: '500px',
-      align: 'right'
-    };
-
-    const editor = hook.editor();
-    editor.options.set('table_appearance_options', false);
-    editor.setContent(floatTableHtml);
-    setCursor(editor);
-    await TableTestUtils.pOpenTableDialog(editor);
-    TableTestUtils.assertDialogValues(initialData, false, generalLabels);
-    TableTestUtils.setDialogValues(newData, false, generalLabels);
-    await TableTestUtils.pClickDialogButton(editor, true);
-    TableTestUtils.assertElementStructure(editor, 'table', marginTableHtml);
-    await TableTestUtils.pOpenTableDialog(editor);
-    TableTestUtils.assertDialogValues(newData, false, generalLabels);
-    await TableTestUtils.pClickDialogButton(editor, false);
-    editor.options.unset('table_appearance_options');
-  });
-
-  it('TINY-8758: width should be retained when changing the border width', async () => {
-    const getExpectedData = (borderWidth: number) => ({
-      width: '60%',
-      height: '',
-      cellspacing: '',
-      cellpadding: '',
-      border: borderWidth + 'px',
-      caption: false,
-      align: ''
-    });
-
-    const editor = hook.editor();
-    editor.setContent('<table style="border-collapse: collapse;" border="1px" width="60%"><tbody><tr><td>&nbsp;</td></tr></tbody></table>');
-    setCursor(editor);
-    await TableTestUtils.pOpenTableDialog(editor);
-    TableTestUtils.assertDialogValues(getExpectedData(1), false, generalLabels);
-    TableTestUtils.setDialogValues({ border: '2px' }, false, generalLabels);
-    await TableTestUtils.pClickDialogButton(editor, true);
-    TinyAssertions.assertContent(editor, '<table style="width: 60%; border-width: 2px; border-collapse: collapse;" border="1"><tbody><tr><td style="border-width: 2px;">&nbsp;</td></tr></tbody></table>');
-    await TableTestUtils.pOpenTableDialog(editor);
-    TableTestUtils.assertDialogValues(getExpectedData(2), false, generalLabels);
-    await TableTestUtils.pClickDialogButton(editor, false);
-  });
-
-  it('TINY-8758: Default width should be added as style', async () => {
-    const getExpectedData = (borderWidth: string, width: string) => ({
-      width,
-      height: '',
-      cellspacing: '',
-      cellpadding: '',
-      border: borderWidth,
-      caption: false,
-      align: ''
-    });
-
-    const editor = hook.editor();
-    editor.setContent('<p></p>');
-    await TableTestUtils.pOpenTableDialog(editor);
-    TableTestUtils.assertDialogValues(getExpectedData('1', '100%'), false, generalLabels);
-    TableTestUtils.setDialogValues({ border: '2px' }, false, generalLabels);
-    await TableTestUtils.pClickDialogButton(editor, true);
-    TableTestUtils.assertTableStructure(editor, ApproxStructure.build((s, str, _arr) => s.element('table', {
-      styles: {
-        'width': str.is('100%'),
-        'border-collapse': str.is('collapse'),
-        'border-width': str.is('2px')
-      },
-      attrs: {
-        border: str.is('1')
-      }
-    })));
-    await TableTestUtils.pOpenTableDialog(editor);
-    TableTestUtils.assertDialogValues(getExpectedData('2px', '100%'), false, generalLabels);
-    await TableTestUtils.pClickDialogButton(editor, false);
-  });
-
-  it('TINY-9843: Should accept border in shorthand form', async () => {
-    const getExpectedData = (borderWidth: number, width: string) => ({
-      width,
-      height: '',
-      cellspacing: '',
-      cellpadding: '',
-      border: borderWidth + 'px',
-      caption: false,
-      align: ''
-    });
-
-    const inputHtml = '<table style="border: 1px dotted #ff0000; border-collapse: collapse;" border="1px"><tbody><tr><td>&nbsp;</td></tr></tbody></table>';
-
-    const editor = hook.editor();
-    editor.setContent(inputHtml);
-    // No change to the table html
-    TinyAssertions.assertContent(editor, inputHtml);
-    setCursor(editor);
-    await TableTestUtils.pOpenTableDialog(editor);
-    TableTestUtils.assertDialogValues(getExpectedData(1, ''), false, generalLabels);
-    TableTestUtils.setDialogValues({ border: '3px' }, false, generalLabels);
-    await TableTestUtils.pClickDialogButton(editor, true);
-    // shorthand form is retained
-    TinyAssertions.assertContent(editor, '<table style="border: 3px dotted rgb(255, 0, 0); border-collapse: collapse;" border="1"><tbody><tr><td style="border-width: 3px;">&nbsp;</td></tr></tbody></table>');
-    await TableTestUtils.pOpenTableDialog(editor);
-    TableTestUtils.assertDialogValues(getExpectedData(3, ''), false, generalLabels);
-    await TableTestUtils.pClickDialogButton(editor, false);
-  });
-
-  it('TINY-9459: Should not open table properties dialog on noneditable table', () => {
-    const editor = hook.editor();
-    editor.setContent('<table contenteditable="false"><tbody><tr><td>x</td></tr></tbody></table>');
-    TinySelections.setCursor(editor, [ 1, 0, 0, 0, 0 ], 0); // Index offset off by one due to cef fake caret
-    editor.execCommand('mceTableProps');
-    UiFinder.notExists(SugarBody.body(), '.tox-dialog');
-  });
-
-  it('TINY-9459: Should not open table properties dialog on noneditable root', () => {
-    TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
-      editor.setContent('<table><tbody><tr><td>x</td></tr></tbody></table>');
-      TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
+    it('TINY-9459: Should not open table properties dialog on noneditable table', () => {
+      const editor = hook.editor();
+      editor.setContent('<table contenteditable="false"><tbody><tr><td>x</td></tr></tbody></table>');
+      TinySelections.setCursor(editor, [ 1, 0, 0, 0, 0 ], 0); // Index offset off by one due to cef fake caret
       editor.execCommand('mceTableProps');
       UiFinder.notExists(SugarBody.body(), '.tox-dialog');
     });
-  });
 
-  it('TINY-9459: Should not open table insert dialog on noneditable root', () => {
-    TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
-      editor.setContent('<table><tbody><tr><td>x</td></tr></tbody></table>');
-      TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
-      editor.execCommand('mceInsertTableDialog');
-      UiFinder.notExists(SugarBody.body(), '.tox-dialog');
-    });
-  });
-
-  it('TINY-12797: CSS style width should be applied when updating values in table dialog', async () => {
-    const getExpectedData = (width: string) => ({
-      width,
-      height: '',
-      cellspacing: '',
-      cellpadding: '',
-      border: 1 + 'px',
-      caption: false,
-      align: ''
+    it('TINY-9459: Should not open table properties dialog on noneditable root', () => {
+      TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
+        editor.setContent('<table><tbody><tr><td>x</td></tr></tbody></table>');
+        TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
+        editor.execCommand('mceTableProps');
+        UiFinder.notExists(SugarBody.body(), '.tox-dialog');
+      });
     });
 
-    const editor = hook.editor();
-    editor.setContent('<table style="border-collapse: collapse;" border="1px" width="100%"><tbody><tr><td>&nbsp;</td></tr></tbody></table>');
-    setCursor(editor);
-    await TableTestUtils.pOpenTableDialog(editor);
-    TableTestUtils.assertDialogValues(getExpectedData('100%'), false, generalLabels);
-    TableTestUtils.setDialogValues({ width: '50%' }, false, generalLabels);
-    await TableTestUtils.pClickDialogButton(editor, true);
-    TinyAssertions.assertContent(editor, '<table style="width: 50%; border-width: 1px; border-collapse: collapse;" border="1"><tbody><tr><td>&nbsp;</td></tr></tbody></table>');
+    it('TINY-9459: Should not open table insert dialog on noneditable root', () => {
+      TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
+        editor.setContent('<table><tbody><tr><td>x</td></tr></tbody></table>');
+        TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
+        editor.execCommand('mceInsertTableDialog');
+        UiFinder.notExists(SugarBody.body(), '.tox-dialog');
+      });
+    });
+
+    it('TINY-12797: CSS style width should be applied when updating values in table dialog', async () => {
+      const getExpectedData = (width: string) => ({
+        width,
+        height: '',
+        cellspacing: '',
+        cellpadding: '',
+        border: 1 + 'px',
+        caption: false,
+        align: ''
+      });
+
+      const editor = hook.editor();
+      editor.setContent('<table style="border-collapse: collapse;" border="1px" width="100%"><tbody><tr><td>&nbsp;</td></tr></tbody></table>');
+      setCursor(editor);
+      await TableTestUtils.pOpenTableDialog(editor);
+      TableTestUtils.assertDialogValues(getExpectedData('100%'), false, generalLabels);
+      TableTestUtils.setDialogValues({ width: '50%' }, false, generalLabels);
+      await TableTestUtils.pClickDialogButton(editor, true);
+      TinyAssertions.assertContent(editor, '<table style="width: 50%; border-width: 1px; border-collapse: collapse;" border="1"><tbody><tr><td>&nbsp;</td></tr></tbody></table>');
+    });
   });
 
   context('Applying data to cells (TD/TH)', () => {
@@ -542,7 +544,7 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
     const testApplyDataToCells = async (newData: Record<string, string | boolean>, expectedHtml: string): Promise<void> => {
       const editor = hook.editor();
       editor.setContent(baseHtml);
-      setCursor(editor);
+      TinySelections.setCursor(editor, [ 0, 1, 0, 0 ], 0);
       editor.execCommand('mceTableProps');
       TableTestUtils.assertDialogValues(baseData, true, generalLabels);
       TableTestUtils.setDialogValues({ ...baseData, ...newData }, true, generalLabels);
@@ -551,7 +553,20 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
     };
 
     it('TINY-9837: Should not apply border, cellpadding or bordercolor data to cells if none of them has been modified',
-      () => testApplyDataToCells({ caption: true }, baseHtml));
+      () => testApplyDataToCells({ caption: true }, [
+        '<table style="width: 500px; height: 500px; border-width: 2px; border-collapse: collapse; border-style: dotted;" border="1"><caption>Caption</caption><colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>',
+        '<tbody>',
+        '<tr>',
+        '<td style="border: 5px double rgb(224, 62, 45);">&nbsp;</td>',
+        '<td style="border-width: 2px;">&nbsp;</td>',
+        '</tr>',
+        '<tr>',
+        '<td style="border-width: 2px;">&nbsp;</td>',
+        '<td style="border-width: 2px;">&nbsp;</td>',
+        '</tr>',
+        '</tbody>',
+        '</table>'
+      ].join('')));
 
     it('TINY-9837: Should apply border to cells if it has been modified',
       () => testApplyDataToCells({ border: '3px' }, [
@@ -664,5 +679,127 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
         '</tbody>',
         '</table>'
       ].join('')));
+  });
+
+  context('Caption resolution', () => {
+    it('TINY-13767: Caret in the table caption resolves the enclosing table', async () => {
+      const editor = hook.editor();
+      editor.setContent('<table style="width: 40%; border-collapse: collapse;" border="1"><caption>Caption</caption><tbody><tr><td>X</td></tr></tbody></table>');
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
+      await TableTestUtils.pOpenTableDialog(editor);
+      TableTestUtils.assertDialogValues({ width: '40%', caption: true }, false, generalLabels);
+      await TableTestUtils.pClickDialogButton(editor, false);
+    });
+
+    const nestedCaptionHtml =
+      '<table style="width: 40%; border-collapse: collapse;" border="1"><caption>Outer caption</caption><tbody><tr><td>' +
+        '<table style="width: 200px; border-collapse: collapse;" border="1"><caption>Inner caption</caption><tbody><tr><td>X</td></tr></tbody></table>' +
+      '</td></tr></tbody></table>';
+
+    it('TINY-13767: Caret in the outer caption resolves the outer table even when a nested table is present', async () => {
+      const editor = hook.editor();
+      editor.setContent(nestedCaptionHtml);
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
+      await TableTestUtils.pOpenTableDialog(editor);
+      TableTestUtils.assertDialogValues({ width: '40%', caption: true }, false, generalLabels);
+      await TableTestUtils.pClickDialogButton(editor, false);
+    });
+
+    it('TINY-13767: Caret in a nested table caption resolves that nested table', async () => {
+      const editor = hook.editor();
+      editor.setContent(nestedCaptionHtml);
+      TinySelections.setCursor(editor, [ 0, 1, 0, 0, 0, 0, 0 ], 0);
+      await TableTestUtils.pOpenTableDialog(editor);
+      TableTestUtils.assertDialogValues({ width: '200px', caption: true }, false, generalLabels);
+      await TableTestUtils.pClickDialogButton(editor, false);
+    });
+  });
+
+  context('Nested tables', () => {
+    const nestedTablesHtml = (
+      '<table style="width: 80%; background-color: #00ffff;" border="1"><tbody><tr><td>Table A' +
+        '<table style="width: 600px; background-color: #fbeeb8;" border="1"><tbody><tr><td>Table B' +
+          '<table style="width: 200px; background-color: #e03e2d;" border="1"><tbody><tr><td>Table C</td></tr></tbody></table>' +
+        '</td></tr></tbody></table>' +
+      '</td></tr></tbody></table>'
+    );
+
+    const tableA = { width: '80%', backgroundcolor: '#00FFFF' };
+    const tableB = { width: '600px', backgroundcolor: '#FBEEB8' };
+    const tableC = { width: '200px', backgroundcolor: '#E03E2D' };
+
+    before(() => hook.editor().options.set('table_advtab', true));
+    after(() => hook.editor().options.unset('table_advtab'));
+
+    const pAssertTableProps = async (content: string, path: number[], offset: number, expected: { width: string; backgroundcolor: string }): Promise<void> => {
+      const editor = hook.editor();
+      editor.setContent(content);
+      TinySelections.setCursor(editor, path, offset);
+      await TableTestUtils.pOpenTableDialog(editor);
+      TableTestUtils.assertDialogValues(expected, true, generalLabels);
+      await TableTestUtils.pClickDialogButton(editor, false);
+    };
+
+    it('TINY-13767: Caret at the outer cell boundary (before table B) resolves table A', () =>
+      pAssertTableProps(nestedTablesHtml, [ 0, 0, 0, 0 ], 1, tableA));
+
+    it('TINY-13767: Caret at the start of the outer cell (in the text) resolves table A', () =>
+      pAssertTableProps(nestedTablesHtml, [ 0, 0, 0, 0 ], 0, tableA));
+
+    it('TINY-13767: Caret at the middle cell boundary (before table C) resolves table B', () =>
+      pAssertTableProps(nestedTablesHtml, [ 0, 0, 0, 0, 1, 0, 0, 0 ], 1, tableB));
+
+    it('TINY-13767: Caret inside the innermost cell resolves table C', () =>
+      pAssertTableProps(nestedTablesHtml, [ 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 ], 0, tableC));
+
+    it('TINY-13767: Nested table as the only first child of the cell still resolves the outer table', async () => {
+      const html =
+        '<table style="width: 70%; background-color: #00ffff;" border="1"><tbody><tr><td>' +
+          '<table style="width: 300px; background-color: #fbeeb8;" border="1"><tbody><tr><td>Inner</td></tr></tbody></table>' +
+        '</td></tr></tbody></table>';
+      await pAssertTableProps(html, [ 0, 0, 0, 0 ], 0, { width: '70%', backgroundcolor: '#00FFFF' });
+    });
+
+    it('TINY-13767: Nested table in a multi column row resolves the outer table', async () => {
+      const html =
+        '<table style="width: 100%; background-color: #00ffff;" border="1"><tbody><tr>' +
+          '<td>Cell 1</td>' +
+          '<td>Cell 2' +
+            '<table style="width: 150px; background-color: #fbeeb8;" border="1"><tbody><tr><td>Nested</td></tr></tbody></table>' +
+          '</td>' +
+          '<td>Cell 3</td>' +
+        '</tr></tbody></table>';
+      await pAssertTableProps(html, [ 0, 0, 0, 1 ], 1, { width: '100%', backgroundcolor: '#00FFFF' });
+    });
+
+    it('TINY-13767: Nested table inside a merged (colspan/rowspan) cell resolves the outer table', async () => {
+      const html =
+        '<table style="width: 100%; background-color: #00ffff;" border="1"><tbody>' +
+          '<tr>' +
+            '<td colspan="2" rowspan="2">Merged' +
+              '<table style="width: 120px; background-color: #fbeeb8;" border="1"><tbody><tr><td>Nested</td></tr></tbody></table>' +
+            '</td>' +
+            '<td>Top 1</td><td>Top 2</td>' +
+          '</tr>' +
+          '<tr><td>Mid 1</td><td>Mid 2</td></tr>' +
+        '</tbody></table>';
+      await pAssertTableProps(html, [ 0, 0, 0, 0 ], 1, { width: '100%', backgroundcolor: '#00FFFF' });
+    });
+
+    it('TINY-13767: Submitting changes are applied to the resolved table only', async () => {
+      const editor = hook.editor();
+      editor.setContent(nestedTablesHtml);
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 1);
+      await TableTestUtils.pOpenTableDialog(editor);
+      TableTestUtils.assertDialogValues(tableA, true, generalLabels);
+      TableTestUtils.setDialogValues({ ...tableA, width: '55%' }, true, generalLabels);
+      await TableTestUtils.pClickDialogButton(editor, true);
+
+      const tables = editor.dom.select('table');
+      Assert.eq('All three tables should remain', 3, tables.length);
+      Assert.eq('Outer table A should have updated width', '55%', tables[0].style.width);
+      Assert.eq('Nested table B should have untouched width', '600px', tables[1].style.width);
+      Assert.eq('Nested table C should have untouched width', '200px', tables[2].style.width);
+    });
   });
 });
