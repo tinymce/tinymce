@@ -2,9 +2,9 @@ import { Type } from '@ephox/katamari';
 import { useContext } from 'react';
 
 import { UniverseContext } from './UniverseContext';
-import type { Universe } from './UniverseTypes';
+import type { UniverseResources } from './UniverseTypes';
 
-export const useUniverse = (): Universe => {
+export const useUniverse = (): UniverseResources => {
   const context = useContext(UniverseContext);
   if (Type.isNullable(context)) {
     throw new Error('useUniverse must be used within a UniverseProvider');

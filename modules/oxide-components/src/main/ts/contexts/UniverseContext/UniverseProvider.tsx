@@ -1,7 +1,9 @@
 import * as React from 'react';
 
+import { GlobalTooltipContext } from '../../components/tooltip/internals/Context';
+
 import { UniverseContext } from './UniverseContext';
-import type { Universe, UniverseResources } from './UniverseTypes';
+import type { UniverseResources } from './UniverseTypes';
 
 interface UniverseContextProvider {
   readonly resources: UniverseResources;
@@ -13,13 +15,12 @@ export const UniverseProvider = ({
   children
 }: UniverseContextProvider): React.ReactElement => {
   const [ currentTooltipId, setCurrentTooltipId ] = React.useState<string | null>(null);
-  const value = React.useMemo<Universe>(
-    () => ({ ...resources, currentTooltipId, setCurrentTooltipId }),
-    [ resources, currentTooltipId ]
-  );
+
   return (
-    <UniverseContext.Provider value={value}>
-      {children}
+    <UniverseContext.Provider value={resources}>
+      <GlobalTooltipContext.Provider value={{ currentTooltipId, setCurrentTooltipId }}>
+        {children}
+      </GlobalTooltipContext.Provider>
     </UniverseContext.Provider>
   );
 };

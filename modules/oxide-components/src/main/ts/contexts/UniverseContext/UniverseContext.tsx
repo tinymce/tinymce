@@ -1,5 +1,5 @@
 import { createContext } from 'react';
 
-import type { Universe } from './UniverseTypes';
+import type { UniverseResources } from './UniverseTypes';
 
-export const UniverseContext = createContext<Universe | null>(null);
+export const UniverseContext = createContext<UniverseResources | null>(null);

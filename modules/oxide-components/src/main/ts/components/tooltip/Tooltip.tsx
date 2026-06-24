@@ -1,6 +1,6 @@
 import { Arr, Id, Type } from '@ephox/katamari';
 import { PredicateExists, SugarElement, SugarNode } from '@ephox/sugar';
-import { Bem, useUniverse } from 'oxide-components/main';
+import { Bem } from 'oxide-components/main';
 import {
   Children, cloneElement, forwardRef, isValidElement, useCallback,
   useContext,
@@ -12,7 +12,7 @@ import {
 import * as Browser from '../../utils/Browser';
 import { DropdownContext } from '../dropdown/internals/Context';
 
-import { TooltipContext, useTooltip } from './internals/Context';
+import { TooltipContext, useGlobalTooltip, useTooltip } from './internals/Context';
 
 interface RootProps extends PropsWithChildren {
   readonly showCondition?: 'always' | 'overflow';
@@ -30,7 +30,7 @@ const isOverflowingDeep = (root: HTMLElement) =>
 
 const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, ...props }, ref) => {
   const { showCondition, elementId, triggerRef, setCanShow, popupAnchor } = useTooltip();
-  const { currentTooltipId, setCurrentTooltipId } = useUniverse();
+  const { setCurrentTooltipId } = useGlobalTooltip();
 
   useLayoutEffect(() => {
     if (showCondition === 'always') {
@@ -75,7 +75,7 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
       resizeObserver.disconnect();
       mutationObserver.disconnect();
     };
-  }, [ currentTooltipId, elementId, showCondition, triggerRef, setCanShow ]);
+  }, [ showCondition, triggerRef, setCanShow ]);
 
   const count = Children.count(children);
   if (count === 0) {
@@ -166,7 +166,7 @@ const hideContentPopover = (content: HTMLElement) => {
 
 const Content = forwardRef<HTMLDivElement, ContentProps>(({ text }, ref) => {
   const { canShow, elementId, contentRef, delayForShow, delayForHide, popupAnchor } = useTooltip();
-  const { currentTooltipId } = useUniverse();
+  const { currentTooltipId } = useGlobalTooltip();
 
   useLayoutEffect(() => {
     if (!canShow) {

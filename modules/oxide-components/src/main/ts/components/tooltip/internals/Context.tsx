@@ -21,3 +21,18 @@ export const useTooltip = (): TooltipContext => {
   }
   return context;
 };
+
+interface TooltipContextData {
+  readonly currentTooltipId: string | null;
+  readonly setCurrentTooltipId: (id: string | null) => void;
+};
+
+export const GlobalTooltipContext = createContext<TooltipContextData | null>(null);
+
+export const useGlobalTooltip = (): TooltipContextData => {
+  const context = useContext(GlobalTooltipContext);
+  if (context === null) {
+    throw new Error('Tooltip compound components must be rendered within the Tooltip component');
+  }
+  return context;
+};
