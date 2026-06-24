@@ -29,16 +29,14 @@ const getAriaValuetext = (dimensions: Resize.ResizeEditorDimensions, resizeType:
 
 const setAriaDimensions = (comp: AlloyComponent, dimensions: Resize.ResizeEditorDimensions, resizeType: Resize.ResizeTypes) => {
   Attribute.set(comp.element, 'aria-valuetext', getAriaValuetext(dimensions, resizeType));
-  // No standard single-value representation exists for the 2-D 'both' mode, so only
-  // the vertical resize exposes a numeric aria-valuenow (the current container height).
+  // There's no single-value representation for 'both' mode resize that make sense.
+  // So we only define that prop for vertical resizing
   if (resizeType === Resize.ResizeTypes.Vertical) {
     Attribute.set(comp.element, 'aria-valuenow', dimensions.height);
   }
 };
 
 const getAriaRangeAttributes = (editor: Editor, resizeType: Resize.ResizeTypes): Record<string, number> => {
-  // aria-valuemin/max are only meaningful for the vertical resize, and only when both a
-  // min and max height value are available (lift2 yields nothing unless both resolve).
   if (resizeType === Resize.ResizeTypes.Vertical) {
     return Optionals.lift2(
       Options.getMinHeightOption(editor),
