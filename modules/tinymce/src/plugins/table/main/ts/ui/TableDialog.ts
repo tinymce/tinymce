@@ -165,7 +165,6 @@ const onSubmitTableForm = (editor: Editor, tableElm: HTMLTableElement | null | u
 };
 
 const open = (editor: Editor, insertNewTable: boolean): void => {
-  const dom = editor.dom;
   let tableElm: HTMLTableElement | null | undefined;
   let data = Helpers.extractDataFromSettings(editor, Options.hasAdvancedTableTab(editor));
 
@@ -185,7 +184,10 @@ const open = (editor: Editor, insertNewTable: boolean): void => {
       data.backgroundcolor = '';
     }
   } else {
-    tableElm = dom.getParent<HTMLTableElement>(editor.selection.getStart(), 'table', editor.getBody());
+    tableElm = TableSelection.getSelectionCellOrCaption(Utils.getSelectionStart(editor), Utils.getIsRoot(editor))
+      .bind((cellOrCaption) => TableLookup.table(cellOrCaption, Utils.getIsRoot(editor)))
+      .map((table) => table.dom)
+      .getOrNull();
     if (tableElm) {
       // Case 2 - isNew == false && table parent
       data = Helpers.extractDataFromTableElement(editor, tableElm, Options.hasAdvancedTableTab(editor));

@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Opening table properties on a nested table could edit the wrong table.
+time: 2026-06-24T14:14:05.246089+08:00
+custom:
+    Issue: TINY-13767
