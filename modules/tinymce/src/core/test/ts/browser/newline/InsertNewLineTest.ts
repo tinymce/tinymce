@@ -115,6 +115,44 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
         );
         TinyAssertions.assertSelection(editor, [ 1 ], 0, [ 1 ], 0);
       });
+
+      it('Insert block after annotation', async () => {
+        const editor = hook.editor();
+        const misspelledWord = 'barrking';
+        const toAnnotation = (text: string) => `<span class="mce-annotation" data-mce-annotation-uid="mce-annotation_94269650211529705226881" data-mce-annotation="alpha" data-mce-comment="abc">${text}</span>`;
+
+        editor.setContent(`<p>A dog is ${toAnnotation(misspelledWord)}<br data-mce-bogus="1"></p>`, { format: 'raw' });
+        TinySelections.setCursor(editor, [ 0, 1, 0 ], 'barrking'.length);
+        insertNewline(editor, {});
+        TinyAssertions.assertContentStructure(editor,
+          ApproxStructure.build((s, str) => s.element('body', {
+            children: [
+              s.element('p', {
+                children: [
+                  s.text(str.is('A dog is ')),
+                  ApproxStructure.fromHtml(toAnnotation(misspelledWord + '\ufeff')),
+                  s.element('br', {
+                    attrs: {
+                      'data-mce-bogus': str.is('1')
+                    }
+                  })
+                ]
+              }),
+              s.element('p', {
+                children: [
+                  s.element('br', {
+                    attrs: {
+                      'data-mce-bogus': str.is('1')
+                    }
+                  })
+                ]
+              })
+            ]
+          }))
+        );
+        TinyAssertions.assertSelection(editor, [ 1 ], 0, [ 1 ], 0);
+      });
+
     });
 
     context('CEF', () => {

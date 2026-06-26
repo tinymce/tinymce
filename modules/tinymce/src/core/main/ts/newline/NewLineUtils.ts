@@ -2,6 +2,7 @@ import { Arr, Fun, Obj, Optional, Optionals, Unicode } from '@ephox/katamari';
 import { DomDescent } from '@ephox/phoenix';
 import { Css, Insert, PredicateFind, SugarElement, SugarNode } from '@ephox/sugar';
 
+import * as AnnotationIdentification from '../annotate/Identification';
 import type DOMUtils from '../api/dom/DOMUtils';
 import DomTreeWalker from '../api/dom/TreeWalker';
 import type Editor from '../api/Editor';
@@ -213,8 +214,8 @@ const createNewBlock = (
   } else {
     // Clone any parent styles
     do {
-      if (textInlineElements[node.nodeName]) {
-        // Ignore caret or bookmark nodes when cloning
+      if (textInlineElements[node.nodeName] && !AnnotationIdentification.isAnnotation(SugarElement.fromDom(node))) {
+        // Ignore caret, annotation or bookmark nodes when cloning
         if (isCaretNode(node) || Bookmarks.isBookmarkNode(node)) {
           continue;
         }
