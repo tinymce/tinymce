@@ -14,6 +14,7 @@ import { onControlAttached, onControlDetached } from 'tinymce/themes/silver/ui/c
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { SimpleBehaviours } from '../alien/SimpleBehaviours';
+import { numToPx } from '../sizing/Utils';
 
 import * as SidebarResize from './SidebarResize';
 import { makeSidebarResizeHandle } from './SidebarResizeHandle';
@@ -189,7 +190,7 @@ const renderSidebar = (spec: SketchSpec): AlloySpec => {
       tag: 'div',
       classes: [ 'tox-sidebar' ],
       styles: {
-        [SidebarResize.requestedWidthProperty]: '300px'
+        [SidebarResize.requestedWidthProperty]: numToPx(SidebarResize.initialWidth)
       },
       attributes: {
         role: SidebarStateRoleAttr.Shrunk
