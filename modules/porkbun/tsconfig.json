@@ -3,12 +3,11 @@
   "compilerOptions": {
     "outDir": "lib",
     "rootDir": "src",
-    "baseUrl": ".",
     "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo",
     "paths": {
-      "ephox/porkbun/test/*": ["src/test/ts/module/ephox/porkbun/test/*"],
-      "ephox/porkbun/demo/*": ["src/demo/ts/ephox/porkbun/demo/*"],
-      "ephox/porkbun/*": ["src/main/ts/ephox/porkbun/*"]
+      "ephox/porkbun/test/*": ["./src/test/ts/module/ephox/porkbun/test/*"],
+      "ephox/porkbun/demo/*": ["./src/demo/ts/ephox/porkbun/demo/*"],
+      "ephox/porkbun/*": ["./src/main/ts/ephox/porkbun/*"]
     }
   },
   "include": [

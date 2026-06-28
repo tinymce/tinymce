@@ -4,11 +4,9 @@
     "target": "ES2020",
     "useDefineForClassFields": true,
     "rootDir": "src",
-    "baseUrl": ".",
     "lib": [
       "ES2020",
-      "DOM",
-      "DOM.Iterable"
+      "DOM"
     ],
     "module": "ESNext",
     "skipLibCheck": true,
@@ -24,7 +22,7 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
     "paths": {
-      "oxide-components/*": ["src/main/ts/*"]
+      "oxide-components/*": ["./src/main/ts/*"]
     }
   },
   "include": [

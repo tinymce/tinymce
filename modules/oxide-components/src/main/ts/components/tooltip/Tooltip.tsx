@@ -199,10 +199,10 @@ const Content = forwardRef<HTMLDivElement, ContentProps>(({ text }, ref) => {
         ref.current = el;
       }
     }}
+    // @ts-expect-error We should remove this expect error once we've migrated to React 19 and can use the new popover API types
     popover='manual'
     className={Bem.block('tox-tooltip', { up: true, anchor: true })}
     style={{
-      // @ts-expect-error We should remove this expect error once we've migrated to React 19 and can use the new popover API types
       positionAnchor: popupAnchor
     }}
     >

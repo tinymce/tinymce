@@ -68,6 +68,7 @@
     "eslint-plugin-storybook": "10.2.3",
     "gh-pages": "^6.3.0",
     "globals": "^16.0.0",
+    "http-server": "14.1.1",
     "playwright": "1.58.2",
     "postcss": "^8.4.39",
     "react": "^18.3.1",

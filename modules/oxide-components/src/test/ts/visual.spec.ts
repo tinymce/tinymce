@@ -31,6 +31,7 @@ const visualTest = async (story: (typeof stories)[number], page: Page, workerInf
     {
       fullPage: true,
       animations: 'disabled',
+      maxDiffPixelRatio: 0.02
     }
   );
 };

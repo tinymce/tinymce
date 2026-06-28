@@ -3,12 +3,11 @@
   "compilerOptions": {
     "outDir": "lib",
     "rootDir": "src",
-    "baseUrl": ".",
     "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo",
     "paths": {
-      "ephox/phoenix/test/*": ["src/test/ts/module/ephox/phoenix/test/*"],
-      "ephox/phoenix/demo/*": ["src/demo/ts/ephox/phoenix/demo/*"],
-      "ephox/phoenix/*": ["src/main/ts/ephox/phoenix/*"]
+      "ephox/phoenix/test/*": ["./src/test/ts/module/ephox/phoenix/test/*"],
+      "ephox/phoenix/demo/*": ["./src/demo/ts/ephox/phoenix/demo/*"],
+      "ephox/phoenix/*": ["./src/main/ts/ephox/phoenix/*"]
     }
   },
   "include": [
