@@ -9,6 +9,11 @@
   --tox-private-tinymceai-focus-border-width: 2px;
   --tox-private-tinymceai-context-more-max-width: 320px;
   --tox-private-tinymceai-response-status-icon-height: max(24px, calc(var(--tox-private-font-size-sm) + 4px));
+  --tox-private-tinymceai-chat-action-button-icon-color: light-dark(
+    var(--tox-private-color-tint), 
+    var(--tox-private-text-color)
+  );
+
 }
 
 .tox .tox-ai {
@@ -237,6 +242,8 @@
     font-style: normal;
     font-weight: var(--tox-private-font-weight-normal, @font-weight-normal);
     line-height: var(--tox-private-line-height, 18px);
+    display: flex;
+    flex-direction: column;
   }
 
   .tox-ai__response.tox-ai__response-streaming {
@@ -518,5 +525,50 @@
     justify-content: center;
     align-items: center;
     align-self: stretch;
+  }
+
+  .tox-ai-chat-action-button {
+    line-height: var(--tox-private-base-value, @base-value);
+    font-size: var(--tox-private-font-size-xs, @font-size-xs);
+    padding: 6px var(--tox-private-pad-sm, @pad-sm);
+    margin: var(--tox-private-pad-xs, @pad-xs) 0;
+    font-weight: var(--tox-private-font-weight-normal, @font-weight-normal);
+    width: min-content;
+
+    .tox-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 16px;
+      width: 16px;
+      overflow: hidden;
+
+      svg {
+        display: block;
+        flex: none;
+        fill: var(
+          --tox-private-tinymceai-chat-action-button-icon-color,
+          .bg-luma-checker(@color-tint, @text-color)[@result]
+        );
+      }
+
+      // scale down bigger icons to fit the 16px icon size of the action button. 
+      // This is a temporary solution until we have a proper icon size system in place
+      svg[width='24'] {
+        transform: scale(calc(16 / 24));
+      }
+
+      svg[width="20"] {
+        transform: scale(calc(16 / 20));
+      }
+      
+      svg[width="18"] {
+        transform: scale(calc(16 / 18));
+      }
+    }
+  }
+
+  .tox-ai-chat-action-button:not(:has(+ .tox-ai-chat-action-button)) {
+    margin-bottom: var(--tox-private-pad-sm, @pad-sm);
   }
 }
