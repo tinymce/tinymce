@@ -12,7 +12,7 @@ import {
 import * as Browser from '../../utils/Browser';
 import { DropdownContext } from '../dropdown/internals/Context';
 
-import { TooltipContext, useTooltip } from './internals/Context';
+import { closeActiveTooltips, TooltipContext, useTooltip } from './internals/Context';
 
 interface RootProps extends PropsWithChildren {
   readonly showCondition?: 'always' | 'overflow';
@@ -33,8 +33,8 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
 
   useLayoutEffect(() => {
     const handler = () => setIsOpen(false);
-    window.document.addEventListener('CloseActiveTooltips', handler);
-    return () => window.document.removeEventListener('CloseActiveTooltips', handler);
+    closeActiveTooltips.addEventListener('CloseActiveTooltips', handler);
+    return () => closeActiveTooltips.removeEventListener('CloseActiveTooltips', handler);
   }, [ setIsOpen ]);
 
   useLayoutEffect(() => {
@@ -123,7 +123,7 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
       theChild.props.onMouseEnter?.(e);
       props.onMouseEnter?.(e);
       if (!e.isDefaultPrevented()) {
-        window.document.dispatchEvent(new window.CustomEvent('CloseActiveTooltips', { bubbles: true, cancelable: true }));
+        closeActiveTooltips.dispatchEvent(new window.CustomEvent('CloseActiveTooltips', { bubbles: true, cancelable: true }));
         setIsOpen(true);
       }
     },
@@ -138,7 +138,7 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
       theChild.props.onFocus?.(e);
       props.onFocus?.(e);
       if (!e.isDefaultPrevented()) {
-        window.document.dispatchEvent(new window.CustomEvent('CloseActiveTooltips', { bubbles: true, cancelable: true }));
+        closeActiveTooltips.dispatchEvent(new window.CustomEvent('CloseActiveTooltips', { bubbles: true, cancelable: true }));
         setIsOpen(true);
       }
     },
