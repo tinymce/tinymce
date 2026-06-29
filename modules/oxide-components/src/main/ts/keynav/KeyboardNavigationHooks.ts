@@ -70,8 +70,8 @@ export const useFlowKeyNavigation = (props: FlowKeyingProps): void => {
     if (containerRef.current) {
       const wrappedProps: FlowType.FlowConfig = {
         ...propsRef.current,
-        execute: (focused) => Optional.from(propsRef.current.execute).map((f) => f(focused)).getOr(Optional.none()),
-        escape: (focused) => Optional.from(propsRef.current.escape).map((f) => f(focused)).getOr(Optional.none()),
+        ...(propsRef.current.execute && { execute: (focused) => Optional.from(propsRef.current.execute).map((f) => f(focused)).getOr(Optional.none()) }),
+        ...(propsRef.current.escape && { escape: (focused) => Optional.from(propsRef.current.escape).map((f) => f(focused)).getOr(Optional.none()) }),
       };
       const handlers = FlowType.create(SugarElement.fromDom(containerRef.current), wrappedProps);
       return bindEvents(containerRef.current, handlers);
