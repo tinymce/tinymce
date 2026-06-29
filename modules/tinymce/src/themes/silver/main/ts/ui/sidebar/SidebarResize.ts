@@ -1,4 +1,3 @@
-import { Num } from '@ephox/katamari';
 import { Css, type SugarElement } from '@ephox/sugar';
 
 import { numToPx } from '../sizing/Utils';
@@ -13,10 +12,7 @@ export const maxWidth = 600;
 // The width (in pixels) the sidebar starts at before the user has resized it.
 export const initialWidth = 300;
 
-// Applies a horizontal drag delta to the sidebar, records the requested width as a
-// CSS custom property on the sidebar element, and returns the new width in pixels.
-export const resize = (sidebar: SugarElement<HTMLElement>, originalWidth: number, delta: number): number => {
-  const newWidth = Num.clamp(originalWidth - delta, minWidth, maxWidth);
-  Css.set(sidebar, requestedWidthProperty, numToPx(newWidth));
-  return newWidth;
+// Records the requested sidebar width as a CSS custom property on the sidebar element.
+export const applyWidth = (sidebar: SugarElement<HTMLElement>, width: number): void => {
+  Css.set(sidebar, requestedWidthProperty, numToPx(width));
 };
