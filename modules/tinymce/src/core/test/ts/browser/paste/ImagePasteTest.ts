@@ -111,6 +111,7 @@ describe('browser.tinymce.core.paste.ImagePasteTest', () => {
     assert.equal(cachedBlob2?.base64(), base64ImgSrc2);
   });
 
+  // eslint-disable-next-line mocha/no-exclusive-tests
   Arr.range(100, () => it.only('TBA: dropImages', async () => {
     const editor = hook.editor();
 
