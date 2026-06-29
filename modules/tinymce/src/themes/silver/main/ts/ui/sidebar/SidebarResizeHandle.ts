@@ -1,9 +1,14 @@
 import { type AlloySpec, Behaviour, Dragging } from '@ephox/alloy';
-import { SelectorFind } from '@ephox/sugar';
+import { Optional, Optionals } from '@ephox/katamari';
+import { SelectorFind, type SugarElement, Width } from '@ephox/sugar';
 
 import * as SidebarResize from './SidebarResize';
 
 export const makeSidebarResizeHandle = (): AlloySpec => {
+  let originalSidebarWidthOpt = Optional.none<number>();
+  let sidebarOpt = Optional.none<SugarElement<HTMLElement>>();
+  let accumulatedDelta = 0;
+
   return {
     dom: {
       tag: 'div',
@@ -13,12 +18,19 @@ export const makeSidebarResizeHandle = (): AlloySpec => {
       Dragging.config({
         mode: 'pointer',
         repositionTarget: false,
-        onDrag: (handle, _target, delta) =>
-          // TODO: this has to change as we're calculating real width of the sidebar on each drag
-          // and it is expensive
+        onDragStart: (handle) => {
           SelectorFind.ancestor<HTMLElement>(handle.element, '.tox-sidebar').each((sidebar) => {
-            SidebarResize.resize(sidebar, delta.left);
-          })
+            sidebarOpt = Optional.some(sidebar);
+            originalSidebarWidthOpt = Optional.some(Width.get(sidebar));
+            accumulatedDelta = 0;
+          });
+        },
+        onDrag: (_handle, _target, delta) => {
+          Optionals.lift2(sidebarOpt, originalSidebarWidthOpt, (sidebar, originalSidebarWidth) => {
+            accumulatedDelta += delta.left;
+            SidebarResize.resize(sidebar, originalSidebarWidth, accumulatedDelta);
+          });
+        }
       })
     ])
   };
