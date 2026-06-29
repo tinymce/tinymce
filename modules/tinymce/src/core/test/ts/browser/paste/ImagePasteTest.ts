@@ -112,7 +112,7 @@ describe('browser.tinymce.core.paste.ImagePasteTest', () => {
   });
 
   // eslint-disable-next-line mocha/no-exclusive-tests
-  Arr.range(100, () => it.only('TBA: dropImages', async () => {
+  Arr.range(3000, () => it.only('TBA: dropImages', async () => {
     const editor = hook.editor();
 
     const event = mockEvent('drop', [
