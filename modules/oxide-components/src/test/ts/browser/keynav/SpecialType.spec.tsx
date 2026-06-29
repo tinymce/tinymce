@@ -73,7 +73,7 @@ describe('KeynavSpecialTypeTest', () => {
 
   });
 
-  it('Should call updated callbacks without re-subscribing', async () => {
+  it('TINYMCE-14489: Should call updated callbacks without re-subscribing', async () => {
 
     const Container = () => {
       const ref = useRef<HTMLDivElement>(null);
