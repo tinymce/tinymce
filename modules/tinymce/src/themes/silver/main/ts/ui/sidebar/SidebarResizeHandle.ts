@@ -1,12 +1,16 @@
-import { type AlloyComponent, type AlloySpec, Behaviour, Dragging } from '@ephox/alloy';
+import { type AlloyComponent, type AlloySpec, Behaviour, Dragging, Resizing } from '@ephox/alloy';
 import type { Optional } from '@ephox/katamari';
 import { Height, SelectorFind, type SugarElement, SugarPosition, Width } from '@ephox/sugar';
 
-import { Resizing } from './Resizing';
 import * as SidebarResize from './SidebarResize';
 
 const findSidebar = (handle: AlloyComponent): Optional<SugarElement<HTMLElement>> =>
   SelectorFind.ancestor<HTMLElement>(handle.element, '.tox-sidebar');
+
+const sizeConstraints = {
+  minWidth: SidebarResize.minWidth,
+  maxWidth: SidebarResize.maxWidth
+};
 
 export const makeSidebarResizeHandle = (): AlloySpec => ({
   dom: {
@@ -19,10 +23,7 @@ export const makeSidebarResizeHandle = (): AlloySpec => ({
       repositionTarget: false,
       onDragStart: (handle) => {
         findSidebar(handle).each((sidebar) => {
-          Resizing.start(handle, Width.get(sidebar), Height.get(sidebar), {
-            minWidth: SidebarResize.minWidth,
-            maxWidth: SidebarResize.maxWidth
-          });
+          Resizing.start(handle, Width.get(sidebar), Height.get(sidebar), sizeConstraints);
         });
       },
       onDrag: (handle, _target, delta) => {
@@ -31,7 +32,7 @@ export const makeSidebarResizeHandle = (): AlloySpec => ({
       }
     }),
     Resizing.config({
-      resize: (handle, width, _height) => {
+      resize: (handle, width) => {
         findSidebar(handle).each((sidebar) => {
           SidebarResize.applyWidth(sidebar, width);
         });
