@@ -367,6 +367,7 @@ describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
       ))
     ));
 
+    // 14493
     it('TINYMCE-14493: Vertical resize with min_height and max_height set exposes aria-valuenow, aria-valuemin and aria-valuemax', makeTest(
       { resize: true, height: 400, min_height: 200, max_height: 600 },
       'Vertical resize with explicit min/max height',
@@ -378,23 +379,23 @@ describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
       }))
     ));
 
-    it('TINYMCE-14493: Vertical resize without max_height does not expose aria-valuemin or aria-valuemax', makeTest(
+    it('TINYMCE-14493: Vertical resize without max_height sets aria-valuemax to current height plus the keyboard resize step', makeTest(
       { resize: true, height: 400 },
       'Vertical resize without explicit max height',
       ApproxStructure.build(statusbarResizeHandleAttrsSpec({
-        'aria-valuemin': Optional.none(),
-        'aria-valuemax': Optional.none(),
+        'aria-valuemin': Optional.some('100'),
+        'aria-valuemax': Optional.some('420'),
         'aria-valuenow': Optional.some('400'),
         'aria-valuetext': Optional.some(`Editor's height: 400 pixels`)
       }))
     ));
 
-    it('TINYMCE-14493: Vertical resize with only min_height set does not expose aria-valuemin or aria-valuemax', makeTest(
+    it('TINYMCE-14493: Vertical resize with only min_height set sets aria-valuemax to current height plus the keyboard resize step', makeTest(
       { resize: true, height: 400, min_height: 200 },
       'Vertical resize with only min height',
       ApproxStructure.build(statusbarResizeHandleAttrsSpec({
-        'aria-valuemin': Optional.none(),
-        'aria-valuemax': Optional.none(),
+        'aria-valuemin': Optional.some('200'),
+        'aria-valuemax': Optional.some('420'),
         'aria-valuenow': Optional.some('400'),
         'aria-valuetext': Optional.some(`Editor's height: 400 pixels`)
       }))
