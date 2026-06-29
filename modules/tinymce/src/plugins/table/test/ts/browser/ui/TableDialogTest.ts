@@ -411,7 +411,9 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
     });
 
     const editor = hook.editor();
-    editor.setContent('<p></p>');
+    editor.undoManager.ignore(() =>
+      editor.setContent('<p></p>')
+    );
     await TableTestUtils.pOpenTableDialog(editor);
     TableTestUtils.assertDialogValues(getExpectedData('1', '100%'), false, generalLabels);
     TableTestUtils.setDialogValues({ border: '2px' }, false, generalLabels);

@@ -27,7 +27,9 @@ describe('browser.tinymce.core.content.insert.MergeInsertedInlineElementsTest', 
     Arr.foldr(elements, (acc, styles) => `<${elementType} style="${buildInlineStyles(styles).join(' ')}">${acc}</${elementType}>`, text);
   const testMergeNestedElements = (initial: string, inserted: string, expected: string, path: number[], offset: number) => {
     const editor = hook.editor();
-    editor.setContent(`<p>${initial}</p>`);
+    editor.undoManager.ignore(() => {
+      editor.setContent(`<p>${initial}</p>`);
+    });
     TinySelections.setCursor(editor, path, offset);
     InsertContent.insertAtCaret(editor, {
       content: inserted,

@@ -2270,7 +2270,9 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
 
   it('Apply format to node outside fake table selection', () => {
     const editor = hook.editor();
-    editor.setContent('<p>test</p><table><tbody><tr><td data-mce-selected="1">cell 1</td><td>cell 2</td></tr><tr><td data-mce-selected="1">cell 3</td><td>cell 4</td></tr></tbody></table>');
+    editor.undoManager.ignore(() =>
+      editor.setContent('<p>test</p><table><tbody><tr><td data-mce-selected="1">cell 1</td><td>cell 2</td></tr><tr><td data-mce-selected="1">cell 3</td><td>cell 4</td></tr></tbody></table>')
+    );
     LegacyUnit.setSelection(editor, 'td', 0, 'td', 0);
     const para = editor.dom.select('p')[0];
     // Apply to custom node
