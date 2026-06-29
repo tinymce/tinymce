@@ -1,6 +1,6 @@
 import { Clipboard as AgarClipboard, Waiter } from '@ephox/agar';
 import { afterEach, beforeEach, describe, it } from '@ephox/bedrock-client';
-import { Fun, Singleton } from '@ephox/katamari';
+import { Arr, Fun, Singleton } from '@ephox/katamari';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -111,7 +111,7 @@ describe('browser.tinymce.core.paste.ImagePasteTest', () => {
     assert.equal(cachedBlob2?.base64(), base64ImgSrc2);
   });
 
-  it('TBA: dropImages', async () => {
+  Arr.range(100, () => it.only('TBA: dropImages', async () => {
     const editor = hook.editor();
 
     const event = mockEvent('drop', [
@@ -123,7 +123,7 @@ describe('browser.tinymce.core.paste.ImagePasteTest', () => {
     await pWaitForSelector(editor, 'img');
     TinyAssertions.assertContent(editor, '<p><img src=\"data:image/gif;base64,' + base64ImgSrc + '" width="100" height="100">a</p>');
     assert.strictEqual(editor.dom.select('img')[0].src.indexOf('blob:'), 0);
-  });
+  }));
 
   it('TBA: pasteImages', async () => {
     const editor = hook.editor();
