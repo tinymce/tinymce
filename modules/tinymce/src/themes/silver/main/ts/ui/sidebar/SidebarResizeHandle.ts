@@ -1,37 +1,41 @@
-import { type AlloySpec, Behaviour, Dragging } from '@ephox/alloy';
-import { Optional, Optionals } from '@ephox/katamari';
-import { SelectorFind, type SugarElement, Width } from '@ephox/sugar';
+import { type AlloyComponent, type AlloySpec, Behaviour, Dragging } from '@ephox/alloy';
+import type { Optional } from '@ephox/katamari';
+import { Height, SelectorFind, type SugarElement, SugarPosition, Width } from '@ephox/sugar';
 
+import { Resizing } from './Resizing';
 import * as SidebarResize from './SidebarResize';
 
-export const makeSidebarResizeHandle = (): AlloySpec => {
-  let originalSidebarWidthOpt = Optional.none<number>();
-  let sidebarOpt = Optional.none<SugarElement<HTMLElement>>();
-  let accumulatedDelta = 0;
+const findSidebar = (handle: AlloyComponent): Optional<SugarElement<HTMLElement>> =>
+  SelectorFind.ancestor<HTMLElement>(handle.element, '.tox-sidebar');
 
-  return {
-    dom: {
-      tag: 'div',
-      classes: [ 'tox-sidebar__resize-handle' ]
-    },
-    behaviours: Behaviour.derive([
-      Dragging.config({
-        mode: 'pointer',
-        repositionTarget: false,
-        onDragStart: (handle) => {
-          SelectorFind.ancestor<HTMLElement>(handle.element, '.tox-sidebar').each((sidebar) => {
-            sidebarOpt = Optional.some(sidebar);
-            originalSidebarWidthOpt = Optional.some(Width.get(sidebar));
-            accumulatedDelta = 0;
+export const makeSidebarResizeHandle = (): AlloySpec => ({
+  dom: {
+    tag: 'div',
+    classes: [ 'tox-sidebar__resize-handle' ]
+  },
+  behaviours: Behaviour.derive([
+    Dragging.config({
+      mode: 'pointer',
+      repositionTarget: false,
+      onDragStart: (handle) => {
+        findSidebar(handle).each((sidebar) => {
+          Resizing.start(handle, Width.get(sidebar), Height.get(sidebar), {
+            minWidth: SidebarResize.minWidth,
+            maxWidth: SidebarResize.maxWidth
           });
-        },
-        onDrag: (_handle, _target, delta) => {
-          Optionals.lift2(sidebarOpt, originalSidebarWidthOpt, (sidebar, originalSidebarWidth) => {
-            accumulatedDelta += delta.left;
-            SidebarResize.resize(sidebar, originalSidebarWidth, accumulatedDelta);
-          });
-        }
-      })
-    ])
-  };
-};
+        });
+      },
+      onDrag: (handle, _target, delta) => {
+        // The handle sits on the sidebar's left edge, so dragging left should grow it: invert the horizontal delta.
+        Resizing.drag(handle, SugarPosition(delta.left * -1, 0));
+      }
+    }),
+    Resizing.config({
+      resize: (handle, width, _height) => {
+        findSidebar(handle).each((sidebar) => {
+          SidebarResize.applyWidth(sidebar, width);
+        });
+      }
+    })
+  ])
+});
