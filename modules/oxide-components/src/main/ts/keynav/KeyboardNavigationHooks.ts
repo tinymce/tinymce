@@ -41,14 +41,10 @@ export const useTabKeyNavigation = (props: TabKeyingProps): TabKeyNavigationApi 
   useEffect(() => {
     if (containerRef.current) {
       const wrappedProps: TabbingType.TabbingConfig = {
-        selector: propsRef.current.selector,
-        ...(propsRef.current.execute && { execute: (focused) => propsRef.current.execute?.(focused) ?? Optional.none() }),
-        ...(propsRef.current.escape && { escape: (focused) => propsRef.current.escape?.(focused) ?? Optional.none() }),
-        ...(propsRef.current.firstTabstop !== undefined && { firstTabstop: propsRef.current.firstTabstop }),
-        ...(propsRef.current.useTabstopAt && { useTabstopAt: (elem) => propsRef.current.useTabstopAt?.(elem) ?? true }),
-        ...(propsRef.current.cyclic !== undefined && { cyclic: propsRef.current.cyclic }),
-        ...(propsRef.current.focusIn !== undefined && { focusIn: propsRef.current.focusIn }),
-        ...(propsRef.current.closest !== undefined && { closest: propsRef.current.closest }),
+        ...propsRef.current,
+        execute: (focused) => Optional.from(propsRef.current.execute).map((f) => f(focused)).getOr(Optional.none()),
+        escape: (focused) => Optional.from(propsRef.current.escape).map((f) => f(focused)).getOr(Optional.none()),
+        useTabstopAt: (elem) => Optional.from(propsRef.current.useTabstopAt).map((f) => f(elem)).getOr(true),
       };
       const handlers = TabbingType.create(SugarElement.fromDom(containerRef.current), wrappedProps);
       goBackwardsRef.current = handlers.goBackwards;
@@ -73,14 +69,9 @@ export const useFlowKeyNavigation = (props: FlowKeyingProps): void => {
   useEffect(() => {
     if (containerRef.current) {
       const wrappedProps: FlowType.FlowConfig = {
-        selector: propsRef.current.selector,
-        ...(propsRef.current.execute && { execute: (focused) => propsRef.current.execute?.(focused) ?? Optional.none() }),
-        ...(propsRef.current.escape && { escape: (focused) => propsRef.current.escape?.(focused) ?? Optional.none() }),
-        ...(propsRef.current.allowVertical !== undefined && { allowVertical: propsRef.current.allowVertical }),
-        ...(propsRef.current.allowHorizontal !== undefined && { allowHorizontal: propsRef.current.allowHorizontal }),
-        ...(propsRef.current.cycles !== undefined && { cycles: propsRef.current.cycles }),
-        ...(propsRef.current.focusIn !== undefined && { focusIn: propsRef.current.focusIn }),
-        ...(propsRef.current.closest !== undefined && { closest: propsRef.current.closest }),
+        ...propsRef.current,
+        execute: (focused) => Optional.from(propsRef.current.execute).map((f) => f(focused)).getOr(Optional.none()),
+        escape: (focused) => Optional.from(propsRef.current.escape).map((f) => f(focused)).getOr(Optional.none()),
       };
       const handlers = FlowType.create(SugarElement.fromDom(containerRef.current), wrappedProps);
       return bindEvents(containerRef.current, handlers);
