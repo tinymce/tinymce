@@ -19,7 +19,7 @@ const extractOnlyOne = (container: SugarElement<Node>, selector: string): SugarE
   }
 };
 
-const resizeEditorBy = async (vector: [ number, number ], editor?: Editor, delta = 10): Promise<void> => {
+const resizeEditorBy = async (vector: [ number, number ], delta = 10): Promise<void> => {
   // Simulate moving the mouse, by making a number of movements
   const numMoves = vector[1] === 0 ? Math.abs(vector[0]) / delta : Math.abs(vector[1]) / delta;
 
@@ -27,8 +27,7 @@ const resizeEditorBy = async (vector: [ number, number ], editor?: Editor, delta
   const deltaX = vector[0] / numMoves;
   const deltaY = vector[1] / numMoves;
 
-  const scope = editor ? TinyDom.container(editor) : SugarBody.body();
-  const resizeHandle = UiFinder.findIn(scope, '.tox-statusbar__resize-handle').getOrDie();
+  const resizeHandle = UiFinder.findIn(SugarBody.body(), '.tox-statusbar__resize-handle').getOrDie();
 
   await Pointer.pWithMockPointerCapture(resizeHandle, {}, () => {
     Pointer.pointerDown(resizeHandle);
