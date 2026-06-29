@@ -126,14 +126,14 @@ export interface TabbingHandlers extends KeyingType.Handlers {
 
 const create = (source: SugarElement<HTMLElement>, config: TabbingConfig): TabbingHandlers => {
   const partialConfig: Required<TabbingConfig> = {
-    execute: Fun.constant(Optional.none()),
-    escape: Fun.constant(Optional.none()),
-    firstTabstop: 0,
-    useTabstopAt: Fun.always,
-    cyclic: true,
-    focusIn: false,
-    closest: true,
-    ...config
+    selector: config.selector,
+    execute: config.execute ?? Fun.constant(Optional.none()),
+    escape: config.escape ?? Fun.constant(Optional.none()),
+    firstTabstop: config.firstTabstop ?? 0,
+    useTabstopAt: config.useTabstopAt ?? Fun.always,
+    cyclic: config.cyclic ?? true,
+    focusIn: config.focusIn ?? false,
+    closest: config.closest ?? true
   };
 
   const fullConfig: FullTabbingConfig = {
