@@ -12,7 +12,7 @@ import {
 import * as Browser from '../../utils/Browser';
 import { DropdownContext } from '../dropdown/internals/Context';
 
-import { TooltipContext, useGlobalTooltip, useTooltip } from './internals/Context';
+import { TooltipContext, useTooltip } from './internals/Context';
 
 interface RootProps extends PropsWithChildren {
   readonly showCondition?: 'always' | 'overflow';
@@ -29,8 +29,13 @@ const isOverflowingDeep = (root: HTMLElement) =>
     (child) => SugarNode.isHTMLElement(child) && isOverflowing(child.dom));
 
 const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, ...props }, ref) => {
-  const { showCondition, elementId, triggerRef, setCanShow, popupAnchor } = useTooltip();
-  const { setCurrentTooltipId } = useGlobalTooltip();
+  const { setIsOpen, showCondition, triggerRef, setCanShow, popupAnchor } = useTooltip();
+
+  useLayoutEffect(() => {
+    const handler = () => setIsOpen(false);
+    window.document.addEventListener('CloseActiveTooltips', handler);
+    return () => window.document.removeEventListener('CloseActiveTooltips', handler);
+  }, [ setIsOpen ]);
 
   useLayoutEffect(() => {
     if (showCondition === 'always') {
@@ -118,28 +123,30 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
       theChild.props.onMouseEnter?.(e);
       props.onMouseEnter?.(e);
       if (!e.isDefaultPrevented()) {
-        setCurrentTooltipId(elementId);
+        window.document.dispatchEvent(new window.CustomEvent('CloseActiveTooltips', { bubbles: true, cancelable: true }));
+        setIsOpen(true);
       }
     },
     onMouseLeave: (e: React.MouseEvent<HTMLElement>) => {
       theChild.props.onMouseLeave?.(e);
       props.onMouseLeave?.(e);
       if (!e.isDefaultPrevented()) {
-        setCurrentTooltipId(null);
+        setIsOpen(false);
       }
     },
     onFocus: (e: React.FocusEvent<HTMLElement>) => {
       theChild.props.onFocus?.(e);
       props.onFocus?.(e);
       if (!e.isDefaultPrevented()) {
-        setCurrentTooltipId(elementId);
+        window.document.dispatchEvent(new window.CustomEvent('CloseActiveTooltips', { bubbles: true, cancelable: true }));
+        setIsOpen(true);
       }
     },
     onBlur: (e: React.FocusEvent<HTMLElement>) => {
       theChild.props.onBlur?.(e);
       props.onBlur?.(e);
       if (!e.isDefaultPrevented()) {
-        setCurrentTooltipId(null);
+        setIsOpen(false);
       }
     },
   });
@@ -165,8 +172,7 @@ const hideContentPopover = (content: HTMLElement) => {
 };
 
 const Content = forwardRef<HTMLDivElement, ContentProps>(({ text }, ref) => {
-  const { canShow, elementId, contentRef, delayForShow, delayForHide, popupAnchor } = useTooltip();
-  const { currentTooltipId } = useGlobalTooltip();
+  const { canShow, isOpen, contentRef, delayForShow, delayForHide, popupAnchor } = useTooltip();
 
   useLayoutEffect(() => {
     if (!canShow) {
@@ -174,7 +180,7 @@ const Content = forwardRef<HTMLDivElement, ContentProps>(({ text }, ref) => {
     }
     if (Type.isNonNullable(contentRef.current)) {
       const content = contentRef.current;
-      if (currentTooltipId === elementId) {
+      if (isOpen) {
         const timeoutId = setTimeout(() => showContentPopover(content), delayForShow);
         return () => {
           clearTimeout(timeoutId);
@@ -186,7 +192,7 @@ const Content = forwardRef<HTMLDivElement, ContentProps>(({ text }, ref) => {
         };
       }
     }
-  }, [ canShow, contentRef, delayForShow, delayForHide, currentTooltipId, elementId ]);
+  }, [ canShow, isOpen, contentRef, delayForShow, delayForHide ]);
 
   if (!canShow) {
     return null;
@@ -214,7 +220,6 @@ const Content = forwardRef<HTMLDivElement, ContentProps>(({ text }, ref) => {
 });
 
 const Root: FC<RootProps> = ({ children, showCondition = 'always' }) => {
-  const elementId = useMemo(() => Id.generate('tooltip_trigger'), []);
   const [ state, setState ] = useState({
     isOpen: false,
     canShow: showCondition === 'always',
@@ -223,6 +228,10 @@ const Root: FC<RootProps> = ({ children, showCondition = 'always' }) => {
   });
   const contentRef = useRef<HTMLDivElement | null>(null);
   const triggerRef = useRef<HTMLDivElement | null>(null);
+
+  const setIsOpen = useCallback((isOpen: boolean) => {
+    setState((prevState) => ({ ...prevState, isOpen }));
+  }, []);
 
   const setCanShow = useCallback((canShow: boolean) => {
     setState((prevState) => {
@@ -252,14 +261,14 @@ const Root: FC<RootProps> = ({ children, showCondition = 'always' }) => {
   const contextValue = useMemo(() => {
     return ({
       ...state,
+      setIsOpen,
       setCanShow,
       contentRef,
       triggerRef,
       showCondition,
-      popupAnchor,
-      elementId
+      popupAnchor
     });
-  }, [ state, setCanShow, popupAnchor, showCondition, elementId ]);
+  }, [ state, setIsOpen, setCanShow, popupAnchor, showCondition ]);
 
   return <TooltipContext.Provider value={contextValue}>{children}</TooltipContext.Provider>;
 };

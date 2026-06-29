@@ -1,6 +1,5 @@
 import { Fun } from '@ephox/katamari';
 import * as Tooltip from 'oxide-components/components/tooltip/Tooltip';
-import { UniverseProvider } from 'oxide-components/main';
 import * as Bem from 'oxide-components/utils/Bem';
 import * as Browser from 'oxide-components/utils/Browser';
 import { createRef, useState, type FC } from 'react';
@@ -17,17 +16,10 @@ beforeEach(() => {
 });
 
 describe('browser.TooltipTest', () => {
-  const getIcon = vi.fn((icon: string) => `<svg id="${icon}"></svg>`);
-  const mockUniverse = {
-    getIcon
-  };
-
   const wrapper = ({ children }: { children: React.ReactNode }) => {
     return (
       <div className={Bem.block('tox')}>
-        <UniverseProvider resources={mockUniverse}>
-          {children}
-        </UniverseProvider>
+        {children}
       </div>
     );
   };
