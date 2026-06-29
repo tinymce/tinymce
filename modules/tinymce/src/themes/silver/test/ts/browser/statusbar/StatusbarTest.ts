@@ -367,7 +367,6 @@ describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
       ))
     ));
 
-    // 14493
     it('TINYMCE-14493: Vertical resize with min_height and max_height set exposes aria-valuenow, aria-valuemin and aria-valuemax', makeTest(
       { resize: true, height: 400, min_height: 200, max_height: 600 },
       'Vertical resize with explicit min/max height',

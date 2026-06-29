@@ -1,5 +1,5 @@
 import { AddEventsBehaviour, type AlloyComponent, AlloyEvents, Dragging, Focusing, Keying, type SimpleSpec, SystemEvents, Tabstopping, Tooltipping } from '@ephox/alloy';
-import { Optional, Optionals } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { Attribute, SugarPosition } from '@ephox/sugar';
 
 import type Editor from 'tinymce/core/api/Editor';
@@ -9,6 +9,8 @@ import * as Options from '../../api/Options';
 import type { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as Icons from '../icons/Icons';
 import * as Resize from '../sizing/Resize';
+
+const keyboardResizeStepInPx = 20;
 
 const getResizeType = (editor: Editor): Resize.ResizeTypes => {
   const resize = Options.getResize(editor);
@@ -27,32 +29,24 @@ const getAriaValuetext = (dimensions: Resize.ResizeEditorDimensions, resizeType:
     : I18n.translate([ `Editor's height: {0} pixels`, dimensions.height ]);
 };
 
-const setAriaDimensions = (comp: AlloyComponent, dimensions: Resize.ResizeEditorDimensions, resizeType: Resize.ResizeTypes) => {
+const setAriaDimensions = (comp: AlloyComponent, dimensions: Resize.ResizeEditorDimensions, resizeType: Resize.ResizeTypes, minHeight: Optional<number>, maxHeight: Optional<number>) => {
   Attribute.set(comp.element, 'aria-valuetext', getAriaValuetext(dimensions, resizeType));
-  // There's no single-value representation for 'both' mode resize that make sense.
-  // So we only define that prop for vertical resizing
+  // aria-valuenow/valuemin/valuemax are single numeric values, so they can only
+  // meaningfully represent one dimension. In 'both' mode the handle resizes both
+  // width and height, which has no sensible single-value representation, so we only
+  // set these attributes for vertical resizing and rely on aria-valuetext otherwise.
   if (resizeType === Resize.ResizeTypes.Vertical) {
     Attribute.set(comp.element, 'aria-valuenow', dimensions.height);
+    Attribute.set(comp.element, 'aria-valuemin', minHeight.getOr(0));
+    Attribute.set(comp.element, 'aria-valuemax', maxHeight.getOr(dimensions.height + keyboardResizeStepInPx));
   }
 };
 
-const getAriaRangeAttributes = (editor: Editor, resizeType: Resize.ResizeTypes): Record<string, number> => {
-  if (resizeType === Resize.ResizeTypes.Vertical) {
-    return Optionals.lift2(
-      Options.getMinHeightOption(editor),
-      Options.getMaxHeightOption(editor),
-      (min, max) => ({ 'aria-valuemin': min, 'aria-valuemax': max })
-    ).getOr({});
-  }
-  return {};
-};
-
-const keyboardHandler = (editor: Editor, comp: AlloyComponent, resizeType: Resize.ResizeTypes, x: number, y: number): Optional<boolean> => {
-  const scale = 20;
-  const delta = SugarPosition(x * scale, y * scale);
+const keyboardHandler = (editor: Editor, comp: AlloyComponent, resizeType: Resize.ResizeTypes, x: number, y: number, minHeight: Optional<number>, maxHeight: Optional<number>): Optional<boolean> => {
+  const delta = SugarPosition(x * keyboardResizeStepInPx, y * keyboardResizeStepInPx);
 
   const newDimentions = Resize.resize(editor, delta, resizeType);
-  setAriaDimensions(comp, newDimentions, resizeType);
+  setAriaDimensions(comp, newDimentions, resizeType, minHeight, maxHeight);
 
   return Optional.some(true);
 };
@@ -62,6 +56,9 @@ export const renderResizeHandler = (editor: Editor, providersBackstage: UiFactor
   if (resizeType === Resize.ResizeTypes.None) {
     return Optional.none();
   }
+
+  const minHeight = Options.getMinHeightOption(editor);
+  const maxHeight = Options.getMaxHeightOption(editor);
 
   const resizeLabel = resizeType === Resize.ResizeTypes.Both
     ? I18n.translate('Press the arrow keys to resize the editor.')
@@ -77,8 +74,7 @@ export const renderResizeHandler = (editor: Editor, providersBackstage: UiFactor
     attributes: {
       'aria-label': providersBackstage.translate(resizeLabel),
       'data-mce-name': 'resize-handle',
-      'role': 'separator',
-      ...getAriaRangeAttributes(editor, resizeType)
+      'role': 'separator'
     },
     behaviours: [
       Dragging.config({
@@ -90,7 +86,7 @@ export const renderResizeHandler = (editor: Editor, providersBackstage: UiFactor
         },
         onDrag: (comp, _target, delta) => {
           const newDimentions = Resize.resize(editor, delta, resizeType);
-          setAriaDimensions(comp, newDimentions, resizeType);
+          setAriaDimensions(comp, newDimentions, resizeType, minHeight, maxHeight);
         },
         onDrop: (comp) => {
           Tooltipping.setEnabled(comp, true);
@@ -98,10 +94,10 @@ export const renderResizeHandler = (editor: Editor, providersBackstage: UiFactor
       }),
       Keying.config({
         mode: 'special',
-        onLeft: (comp) => keyboardHandler(editor, comp, resizeType, -1, 0),
-        onRight: (comp) => keyboardHandler(editor, comp, resizeType, 1, 0),
-        onUp: (comp) => keyboardHandler(editor, comp, resizeType, 0, -1),
-        onDown: (comp) => keyboardHandler(editor, comp, resizeType, 0, 1),
+        onLeft: (comp) => keyboardHandler(editor, comp, resizeType, -1, 0, minHeight, maxHeight),
+        onRight: (comp) => keyboardHandler(editor, comp, resizeType, 1, 0, minHeight, maxHeight),
+        onUp: (comp) => keyboardHandler(editor, comp, resizeType, 0, -1, minHeight, maxHeight),
+        onDown: (comp) => keyboardHandler(editor, comp, resizeType, 0, 1, minHeight, maxHeight),
       }),
       Tabstopping.config({}),
       Focusing.config({}),
@@ -113,7 +109,7 @@ export const renderResizeHandler = (editor: Editor, providersBackstage: UiFactor
       AddEventsBehaviour.config('set-aria-valuetext', [
         AlloyEvents.runOnAttached((comp) => {
           const setInitialValuetext = () => {
-            setAriaDimensions(comp, Resize.getOriginalDimensions(editor), resizeType);
+            setAriaDimensions(comp, Resize.getOriginalDimensions(editor), resizeType, minHeight, maxHeight);
           };
           if (editor._skinLoaded) {
             setInitialValuetext();
