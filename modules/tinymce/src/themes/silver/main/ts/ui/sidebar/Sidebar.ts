@@ -183,77 +183,75 @@ interface FixSizeEvent extends CustomEvent {
 const fixSize = Id.generate('FixSizeEvent');
 const autoSize = Id.generate('AutoSizeEvent');
 
-const renderSidebar = (spec: SketchSpec): AlloySpec => {
-  return {
-    uid: spec.uid,
-    dom: {
-      tag: 'div',
-      classes: [ 'tox-sidebar' ],
-      styles: {
-        [SidebarResize.requestedWidthProperty]: numToPx(SidebarResize.initialWidth)
-      },
-      attributes: {
-        role: SidebarStateRoleAttr.Shrunk
-      }
+const renderSidebar = (spec: SketchSpec): AlloySpec => ({
+  uid: spec.uid,
+  dom: {
+    tag: 'div',
+    classes: [ 'tox-sidebar' ],
+    styles: {
+      [SidebarResize.requestedWidthProperty]: numToPx(SidebarResize.initialWidth)
     },
-    components: [
-      {
-        dom: {
-          tag: 'div',
-          classes: [ 'tox-sidebar__slider' ]
-        },
-        components: [
-          // this will be replaced on setSidebar
-        ],
-        behaviours: Behaviour.derive([
-          Tabstopping.config({ }),
-          Focusing.config({ }), // TODO use Keying and use focusIn, but need to handle if sidebar contains nothing
-          Sliding.config({
-            dimension: {
-              property: 'width'
-            },
-            closedClass: 'tox-sidebar--sliding-closed',
-            openClass: 'tox-sidebar--sliding-open',
-            shrinkingClass: 'tox-sidebar--sliding-shrinking',
-            growingClass: 'tox-sidebar--sliding-growing',
-            onShrunk: (slider: AlloyComponent) => {
-              const optSlotContainer = Composing.getCurrent(slider);
-              optSlotContainer.each(SlotContainer.hideAllSlots);
-              AlloyTriggers.emit(slider, autoSize);
-            },
-            onGrown: (slider: AlloyComponent) => {
-              AlloyTriggers.emit(slider, autoSize);
-            },
-            onStartGrow: (slider: AlloyComponent) => {
-              AlloyTriggers.emitWith(slider, fixSize, { width: Css.getRaw(slider.element, 'width').getOr('') });
-            },
-            onStartShrink: (slider: AlloyComponent) => {
-              AlloyTriggers.emitWith(slider, fixSize, { width: Width.get(slider.element) + 'px' });
-            }
-          }),
-          Replacing.config({}),
-          Composing.config({
-            find: (comp: AlloyComponent) => {
-              const children = Replacing.contents(comp);
-              return Arr.head(children);
-            }
-          })
-        ])
-      }
-    ],
-    behaviours: Behaviour.derive([
-      ComposingConfigs.childAt(0),
-      AddEventsBehaviour.config('sidebar-sliding-events', [
-        AlloyEvents.run<FixSizeEvent>(fixSize, (comp, se) => {
-          Css.set(comp.element, 'width', se.event.width);
+    attributes: {
+      role: SidebarStateRoleAttr.Shrunk
+    }
+  },
+  components: [
+    {
+      dom: {
+        tag: 'div',
+        classes: [ 'tox-sidebar__slider' ]
+      },
+      components: [
+        // this will be replaced on setSidebar
+      ],
+      behaviours: Behaviour.derive([
+        Tabstopping.config({ }),
+        Focusing.config({ }), // TODO use Keying and use focusIn, but need to handle if sidebar contains nothing
+        Sliding.config({
+          dimension: {
+            property: 'width'
+          },
+          closedClass: 'tox-sidebar--sliding-closed',
+          openClass: 'tox-sidebar--sliding-open',
+          shrinkingClass: 'tox-sidebar--sliding-shrinking',
+          growingClass: 'tox-sidebar--sliding-growing',
+          onShrunk: (slider: AlloyComponent) => {
+            const optSlotContainer = Composing.getCurrent(slider);
+            optSlotContainer.each(SlotContainer.hideAllSlots);
+            AlloyTriggers.emit(slider, autoSize);
+          },
+          onGrown: (slider: AlloyComponent) => {
+            AlloyTriggers.emit(slider, autoSize);
+          },
+          onStartGrow: (slider: AlloyComponent) => {
+            AlloyTriggers.emitWith(slider, fixSize, { width: Css.getRaw(slider.element, 'width').getOr('') });
+          },
+          onStartShrink: (slider: AlloyComponent) => {
+            AlloyTriggers.emitWith(slider, fixSize, { width: Width.get(slider.element) + 'px' });
+          }
         }),
-        AlloyEvents.run(autoSize, (comp, _se) => {
-          Css.remove(comp.element, 'width');
+        Replacing.config({}),
+        Composing.config({
+          find: (comp: AlloyComponent) => {
+            const children = Replacing.contents(comp);
+            return Arr.head(children);
+          }
         })
       ])
+    }
+  ],
+  behaviours: Behaviour.derive([
+    ComposingConfigs.childAt(0),
+    AddEventsBehaviour.config('sidebar-sliding-events', [
+      AlloyEvents.run<FixSizeEvent>(fixSize, (comp, se) => {
+        Css.set(comp.element, 'width', se.event.width);
+      }),
+      AlloyEvents.run(autoSize, (comp, _se) => {
+        Css.remove(comp.element, 'width');
+      })
     ])
-  };
-};
+  ])
+});
 
 export {
   setSidebar,
