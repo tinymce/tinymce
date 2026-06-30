@@ -21,7 +21,7 @@ export interface ResizeBoundsOptional {
 
 export interface ResizingBehaviour extends Behaviour.AlloyBehaviour<ResizingConfigSpec, ResizingConfig> {
   config: (config: ResizingConfigSpec) => Behaviour.NamedConfiguredBehaviour<ResizingConfigSpec, ResizingConfig>;
-  start: (component: AlloyComponent, width: number, height: number, bounds: ResizeBounds) => void;
+  start: (component: AlloyComponent, width: number, height: number, bounds?: ResizeBounds) => void;
   drag: (component: AlloyComponent, delta: SugarPosition) => void;
 }
 
@@ -34,7 +34,7 @@ export interface ResizingConfig extends Behaviour.BehaviourConfigDetail {
 }
 
 export interface ResizingState extends BehaviourState {
-  start: (width: number, height: number, bounds: ResizeBounds) => void;
+  start: (width: number, height: number, bounds?: ResizeBounds) => void;
   drag: (delta: SugarPosition) => SugarPosition;
   getOriginalWidth: () => number;
   getOriginalHeight: () => number;
