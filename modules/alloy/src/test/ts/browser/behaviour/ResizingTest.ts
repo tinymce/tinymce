@@ -103,6 +103,36 @@ describe('browser.alloy.behaviour.ResizingTest', () => {
 
       store.assertEq('width is clamped at 0', [{ width: 0, height: 400 }]);
     });
+
+    it('TINYMCE-14527: should keep accumulating past the bounds so an over-drag must be made up before the width changes again', () => {
+      const comp = hook.component();
+      const store = hook.store();
+
+      Resizing.start(comp, 300, 400, { minWidth: 200, maxWidth: 600 });
+
+      Resizing.drag(comp, SugarPosition(400, 0));
+      store.assertEq('over-dragging past the max clamps the width', [{ width: 600, height: 400 }]);
+      store.clear();
+
+      Resizing.drag(comp, SugarPosition(-100, 0));
+      store.assertEq('making up part of the over-drag stays clamped at the max', [{ width: 600, height: 400 }]);
+      store.clear();
+
+      Resizing.drag(comp, SugarPosition(-100, 0));
+      store.assertEq('once the over-drag is made up the width tracks the delta again', [{ width: 500, height: 400 }]);
+      store.clear();
+
+      Resizing.drag(comp, SugarPosition(-400, 0));
+      store.assertEq('over-dragging past the min clamps the width', [{ width: 200, height: 400 }]);
+      store.clear();
+
+      Resizing.drag(comp, SugarPosition(100, 0));
+      store.assertEq('making up part of the over-drag stays clamped at the min', [{ width: 200, height: 400 }]);
+      store.clear();
+
+      Resizing.drag(comp, SugarPosition(100, 0));
+      store.assertEq('once the over-drag is made up the width tracks the delta again', [{ width: 300, height: 400 }]);
+    });
   });
 
   context('TINYMCE-14527: Height constraints', () => {
@@ -134,6 +164,36 @@ describe('browser.alloy.behaviour.ResizingTest', () => {
       Resizing.drag(comp, SugarPosition(0, -1000));
 
       store.assertEq('height is clamped at 0', [{ width: 300, height: 0 }]);
+    });
+
+    it('TINYMCE-14527: should keep accumulating past the bounds so an over-drag must be made up before the height changes again', () => {
+      const comp = hook.component();
+      const store = hook.store();
+
+      Resizing.start(comp, 300, 400, { minHeight: 300, maxHeight: 600 });
+
+      Resizing.drag(comp, SugarPosition(0, 300));
+      store.assertEq('over-dragging past the max clamps the height', [{ width: 300, height: 600 }]);
+      store.clear();
+
+      Resizing.drag(comp, SugarPosition(0, -100));
+      store.assertEq('making up part of the over-drag stays clamped at the max', [{ width: 300, height: 600 }]);
+      store.clear();
+
+      Resizing.drag(comp, SugarPosition(0, -100));
+      store.assertEq('once the over-drag is made up the height tracks the delta again', [{ width: 300, height: 500 }]);
+      store.clear();
+
+      Resizing.drag(comp, SugarPosition(0, -300));
+      store.assertEq('over-dragging past the min clamps the height', [{ width: 300, height: 300 }]);
+      store.clear();
+
+      Resizing.drag(comp, SugarPosition(0, 100));
+      store.assertEq('making up part of the over-drag stays clamped at the min', [{ width: 300, height: 300 }]);
+      store.clear();
+
+      Resizing.drag(comp, SugarPosition(0, 100));
+      store.assertEq('once the over-drag is made up the height tracks the delta again', [{ width: 300, height: 400 }]);
     });
   });
 });
