@@ -1,0 +1,6 @@
+project: alloy
+kind: Added
+body: Added resizing behaviour.
+time: 2026-06-30T20:16:17.22202077Z
+custom:
+  Issue: TINYMCE-14527
