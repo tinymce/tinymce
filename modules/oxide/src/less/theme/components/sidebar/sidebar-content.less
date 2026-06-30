@@ -10,17 +10,8 @@
     display: flex;
     flex-direction: column;
     position: relative;
+    width: 100%;
     height: 100%;
-    min-width: 300px;
-    max-width: 300px;
-    width: 300px;
-    border-left: 1px solid var(--tox-private-separator-color, @tinymce-separator-color);
-
-    &--wide {
-      min-width: 440px;
-      max-width: 440px;
-      width: 440px;
-    }
   }
 
   .tox-sidebar-content__header {
@@ -30,7 +21,6 @@
     border-bottom: var(--tox-private-tinymceai-border-width, @tinymceai-border-width) solid var(--tox-private-neutral-20, darken(@background-color, 11%));
     padding: var(--tox-private-pad-sm, @pad-sm) 12px;
     background: var(--tox-private-background-color, @background-color);
-    z-index: 1;
     .tox-sidebar-content__header-close-button {
       margin-left: auto;
     }
