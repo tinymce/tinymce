@@ -70,12 +70,12 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarTest', () => {
 
     it('TBA: Sidebar initial events test', async () => {
       await Waiter.pTryUntil('Checking initial events', () => store.assertEq('Asserting initial render and hide of sidebar', [
-        { name: 'mysidebar1:render', index: 0 },
-        { name: 'mysidebar2:render', index: 1 },
-        { name: 'mysidebar3:render', index: 2 },
-        { name: 'mysidebar1:hide', index: 0 },
-        { name: 'mysidebar2:hide', index: 1 },
-        { name: 'mysidebar3:hide', index: 2 }
+        { name: 'mysidebar1:render', index: 1 },
+        { name: 'mysidebar2:render', index: 2 },
+        { name: 'mysidebar3:render', index: 3 },
+        { name: 'mysidebar1:hide', index: 1 },
+        { name: 'mysidebar2:hide', index: 2 },
+        { name: 'mysidebar3:hide', index: 3 }
       ]));
     });
 
@@ -90,6 +90,9 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarTest', () => {
               s.element('div', {
                 classes: [ arr.has('tox-sidebar__pane-container') ],
                 children: [
+                  s.element('div', {
+                    classes: [ arr.has('tox-sidebar__resize-handle') ]
+                  }),
                   s.element('div', {
                     classes: [ arr.has('tox-sidebar__pane') ],
                     styles: { display: str.is('none') },
@@ -115,18 +118,18 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarTest', () => {
 
     it('TBA: Sidebar actions test', async () => {
       const editor = hook.editor();
-      await pClickAndAssertEvents(editor, 'My sidebar 1', [{ name: 'mysidebar1:show', index: 0 }]);
-      await pClickAndAssertEvents(editor, 'My sidebar 2', [{ name: 'mysidebar1:hide', index: 0 }, { name: 'mysidebar2:show', index: 1 }]);
-      await pClickAndAssertEvents(editor, 'My sidebar 3', [{ name: 'mysidebar2:hide', index: 1 }, { name: 'mysidebar3:show', index: 2 }]);
-      await pClickAndAssertEvents(editor, 'My sidebar 3', [{ name: 'mysidebar3:hide', index: 2 }]);
+      await pClickAndAssertEvents(editor, 'My sidebar 1', [{ name: 'mysidebar1:show', index: 1 }]);
+      await pClickAndAssertEvents(editor, 'My sidebar 2', [{ name: 'mysidebar1:hide', index: 1 }, { name: 'mysidebar2:show', index: 2 }]);
+      await pClickAndAssertEvents(editor, 'My sidebar 3', [{ name: 'mysidebar2:hide', index: 2 }, { name: 'mysidebar3:show', index: 3 }]);
+      await pClickAndAssertEvents(editor, 'My sidebar 3', [{ name: 'mysidebar3:hide', index: 3 }]);
     });
 
     it('TINY-11178: Toggle sidebar command test', async () => {
       const editor = hook.editor();
-      await pExecCommandAndAssertEvents(editor, 'mysidebar1', [{ name: 'mysidebar1:show', index: 0 }]);
-      await pExecCommandAndAssertEvents(editor, 'mysidebar2', [{ name: 'mysidebar1:hide', index: 0 }, { name: 'mysidebar2:show', index: 1 }]);
-      await pExecCommandAndAssertEvents(editor, 'mysidebar3', [{ name: 'mysidebar2:hide', index: 1 }, { name: 'mysidebar3:show', index: 2 }]);
-      await pExecCommandAndAssertEvents(editor, 'mysidebar3', [{ name: 'mysidebar3:hide', index: 2 }]);
+      await pExecCommandAndAssertEvents(editor, 'mysidebar1', [{ name: 'mysidebar1:show', index: 1 }]);
+      await pExecCommandAndAssertEvents(editor, 'mysidebar2', [{ name: 'mysidebar1:hide', index: 1 }, { name: 'mysidebar2:show', index: 2 }]);
+      await pExecCommandAndAssertEvents(editor, 'mysidebar3', [{ name: 'mysidebar2:hide', index: 2 }, { name: 'mysidebar3:show', index: 3 }]);
+      await pExecCommandAndAssertEvents(editor, 'mysidebar3', [{ name: 'mysidebar3:hide', index: 3 }]);
     });
   });
 
@@ -162,11 +165,11 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarTest', () => {
     it('TINY-11178: Toggle sidebar command on init event test', async () => {
       const editor = hook.editor();
       await Waiter.pTryUntil('Checking sidebar callbacks', () => store.assertEq('Asserting sidebar callbacks', [
-        { name: 'mysidebar1:render', index: 0 },
-        { name: 'mysidebar1:hide', index: 0 },
-        { name: 'mysidebar1:show', index: 0 }
+        { name: 'mysidebar1:render', index: 1 },
+        { name: 'mysidebar1:hide', index: 1 },
+        { name: 'mysidebar1:show', index: 1 }
       ]));
-      await pExecCommandAndAssertEvents(editor, 'mysidebar1', [{ name: 'mysidebar1:hide', index: 0 }]);
+      await pExecCommandAndAssertEvents(editor, 'mysidebar1', [{ name: 'mysidebar1:hide', index: 1 }]);
     });
   });
 
@@ -203,20 +206,20 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarTest', () => {
       assertButtonEnabled('mysidebar1');
       editor.execCommand('ToggleSidebar', false, 'mysidebar1');
       await Waiter.pTryUntil('Checking sidebar callbacks', () => store.assertEq('Asserting sidebar callbacks', [
-        { name: 'mysidebar1:render', index: 0 },
-        { name: 'mysidebar1:hide', index: 0 },
-        { name: 'mysidebar1:show', index: 0 }
+        { name: 'mysidebar1:render', index: 1 },
+        { name: 'mysidebar1:hide', index: 1 },
+        { name: 'mysidebar1:show', index: 1 }
       ]));
-      await pExecCommandAndAssertEvents(editor, 'mysidebar1', [{ name: 'mysidebar1:hide', index: 0 }]);
+      await pExecCommandAndAssertEvents(editor, 'mysidebar1', [{ name: 'mysidebar1:hide', index: 1 }]);
 
       editor.mode.set('readonly');
       assertButtonEnabled('mysidebar1');
       editor.execCommand('ToggleSidebar', false, 'mysidebar1');
       await Waiter.pTryUntil('Checking sidebar callbacks', () => store.assertEq('Asserting sidebar callbacks', [
-        { name: 'mysidebar1:hide', index: 0 },
-        { name: 'mysidebar1:show', index: 0 }
+        { name: 'mysidebar1:hide', index: 1 },
+        { name: 'mysidebar1:show', index: 1 }
       ]));
-      await pExecCommandAndAssertEvents(editor, 'mysidebar1', [{ name: 'mysidebar1:hide', index: 0 }]);
+      await pExecCommandAndAssertEvents(editor, 'mysidebar1', [{ name: 'mysidebar1:hide', index: 1 }]);
 
       editor.mode.set('readonly');
       assertButtonEnabled('mysidebar1');
