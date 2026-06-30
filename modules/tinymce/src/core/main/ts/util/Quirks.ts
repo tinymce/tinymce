@@ -744,19 +744,27 @@ const Quirks = (editor: Editor): Quirks => {
     editor.on('mousedown', (e) => {
       const target = SugarElement.fromDom(e.target);
       if (isListItem(target)) {
-        firstBlockChildOrNewLine(target).each((firstBlock) => {
-          const prevSiblings = Traverse.prevSiblings(firstBlock);
+        firstBlockChildOrNewLine(target).fold(
+          () => {
+            CaretFinder.lastPositionIn(target.dom).each((pos) => {
+              e.preventDefault();
+              editor.focus();
+              editor.selection.setRng(pos.toRange());
+            });
+          },
+          (firstBlock) => {
+            const prevSiblings = Traverse.prevSiblings(firstBlock);
 
-          Arr.findLast(prevSiblings, isValidSibling).each((lastInlineBeforeBlock) => {
-            if (Arr.get(getClientRects([ lastInlineBeforeBlock.dom ]), 0).exists((rect) => clickAfterEl(e.clientX, e.clientY, rect))) {
-              CaretFinder.prevPosition(target.dom, CaretPosition(firstBlock.dom, 0)).each((pos) => {
-                e.preventDefault();
-                editor.focus();
-                editor.selection.setRng(pos.toRange());
-              });
-            }
+            Arr.findLast(prevSiblings, isValidSibling).each((lastInlineBeforeBlock) => {
+              if (Arr.get(getClientRects([ lastInlineBeforeBlock.dom ]), 0).exists((rect) => clickAfterEl(e.clientX, e.clientY, rect))) {
+                CaretFinder.prevPosition(target.dom, CaretPosition(firstBlock.dom, 0)).each((pos) => {
+                  e.preventDefault();
+                  editor.focus();
+                  editor.selection.setRng(pos.toRange());
+                });
+              }
+            });
           });
-        });
       }
     });
   };

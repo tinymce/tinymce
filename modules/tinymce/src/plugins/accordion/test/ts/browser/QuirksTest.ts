@@ -1,8 +1,9 @@
+import { Keys } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { PredicateFind, SugarElement, SugarNode } from '@ephox/sugar';
-import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/accordion/Plugin';
@@ -35,8 +36,6 @@ describe('browser.tinymce.plugins.accordion.QuirksTest', () => {
   });
 
   const testClickOnRightSideOfLI = async (editor: Editor, { content, path, offset }: { content: string; path: number[]; offset: number }) => {
-    editor.setContent(content);
-
     const li = editor.dom.select('li')[0];
     const firstChild = SugarElement.fromDom(li.firstChild as Node);
     const textNode = SugarNode.isText(firstChild) ? firstChild.dom : PredicateFind.descendant(firstChild, SugarNode.isText).getOrDie().dom;
@@ -101,7 +100,26 @@ describe('browser.tinymce.plugins.accordion.QuirksTest', () => {
     )(`TINY-13886: clicking on the right of the first element (which must be an inline element) of li that also have a block element inside should place the caret at the end of the first element (${i}, ${content})`,
       async () => {
         const editor = hook.editor();
+        editor.setContent(content);
         await testClickOnRightSideOfLI(editor, { content, path, offset });
       });
+  });
+
+  it(`TINYMCE-14490: inserting a new li pressing enter in an li that also has a block element inside and clicking on the right of the first li the caret should be at the end of the element`, async () => {
+    const editor = hook.editor();
+    const content = [ '<ol>' +
+      '<li>abc' +
+        '<ol>' +
+          '<li>first</li>' +
+          '<li>second</li>' +
+        '</ol>' +
+      '</li>' +
+    '</ol>' ].join('');
+    editor.setContent(content);
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 3);
+    TinyContentActions.keystroke(editor, Keys.enter());
+    await TinyContentActions.pType(editor, 'def');
+
+    await testClickOnRightSideOfLI(editor, { content, path: [ 0, 0, 0 ], offset: 3 });
   });
 });
