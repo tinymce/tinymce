@@ -16,7 +16,7 @@ const init = (): ResizingState => {
     maxHeight: Optional.none()
   });
 
-  const start = (width: number, height: number, newBounds: ResizeBounds): void => {
+  const start = (width: number, height: number, newBounds: ResizeBounds = {}): void => {
     originalWidth.set(width);
     originalHeight.set(height);
     accumulatedDelta.set(SugarPosition(0, 0));

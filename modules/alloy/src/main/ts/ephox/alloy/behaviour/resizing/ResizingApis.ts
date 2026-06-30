@@ -5,7 +5,7 @@ import type { AlloyComponent } from '../../api/component/ComponentApi';
 
 import type { ResizeBounds, ResizingConfig, ResizingState } from './ResizingTypes';
 
-const start = (_component: AlloyComponent, _config: ResizingConfig, state: ResizingState, width: number, height: number, bounds: ResizeBounds): void => {
+const start = (_component: AlloyComponent, _config: ResizingConfig, state: ResizingState, width: number, height: number, bounds?: ResizeBounds): void => {
   state.start(width, height, bounds);
 };
 
