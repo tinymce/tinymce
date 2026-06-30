@@ -52,7 +52,8 @@
     width: var(--tox-private-sidebar-resize-handle-width, @sidebar-resize-handle-width);
     height: 100%;
     cursor: col-resize;
-    background-color: @border-color-light;
+    background-color: var(--tox-private-separator-color, @tinymce-separator-color);
+    z-index: 1;
 
     &::before {
       content: '';
