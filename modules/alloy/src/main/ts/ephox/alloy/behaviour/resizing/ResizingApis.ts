@@ -9,7 +9,7 @@ const start = (_component: AlloyComponent, _config: ResizingConfig, state: Resiz
   state.start(width, height, bounds);
 };
 
-const drag = (component: AlloyComponent, config: ResizingConfig, state: ResizingState, delta: SugarPosition): void => {
+const moveBy = (component: AlloyComponent, config: ResizingConfig, state: ResizingState, delta: SugarPosition): void => {
   const accumulatedDelta = state.drag(delta);
   const bounds = state.getBounds();
 
@@ -21,5 +21,5 @@ const drag = (component: AlloyComponent, config: ResizingConfig, state: Resizing
 
 export {
   start,
-  drag
+  moveBy
 };
