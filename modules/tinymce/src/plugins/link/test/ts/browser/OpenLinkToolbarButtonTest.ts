@@ -121,4 +121,22 @@ describe('browser.tinymce.plugins.link.OpenLinkToolbarButtonTest', () => {
       'https://www.exampleone.com/'
     ]);
   });
+
+  describe('Anchor links with special characters should not throw querySelectorAll errors', () => {
+    it('TINYMCE-8784: Should handle anchor link with one semicolon from toolbar button', async () => {
+      const editor = hook.editor();
+      editor.setContent('<p><a href="#someBookmark;somekey=somevalue">internal bookmark</a></p><div style="padding-top: 2000px;"></div><p><a id="someBookmark;somekey=somevalue"></a></p>');
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 4);
+      TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Open link"]');
+      store.assertEq('Should not throw an error and should not attempt to open external link', []);
+    });
+
+    it('TINYMCE-8784: Should handle anchor link with multiple semicolons from toolbar button', async () => {
+      const editor = hook.editor();
+      editor.setContent('<p><a href="#someBookmark;somekey=somevalue;somekey2=somevalue2">internal bookmark</a></p><div style="padding-top: 2000px;"></div><p><a id="someBookmark;somekey=somevalue;somekey2=somevalue2"></a></p>');
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 4);
+      TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Open link"]');
+      store.assertEq('Should not throw an error and should not attempt to open external link', []);
+    });
+  });
 });
