@@ -33,7 +33,7 @@ describe('browser.alloy.behaviour.ResizingTest', () => {
       const store = hook.store();
 
       Resizing.start(comp, 300, 400);
-      Resizing.drag(comp, SugarPosition(10, 20));
+      Resizing.moveBy(comp, SugarPosition(10, 20));
 
       store.assertEq('resize fires once with the drag delta', [{ width: 310, height: 420 }]);
     });
@@ -44,15 +44,15 @@ describe('browser.alloy.behaviour.ResizingTest', () => {
 
       Resizing.start(comp, 300, 400);
 
-      Resizing.drag(comp, SugarPosition(10, 5));
+      Resizing.moveBy(comp, SugarPosition(10, 5));
       store.assertEq('first drag', [{ width: 310, height: 405 }]);
       store.clear();
 
-      Resizing.drag(comp, SugarPosition(20, 5));
+      Resizing.moveBy(comp, SugarPosition(20, 5));
       store.assertEq('second drag accumulates', [{ width: 330, height: 410 }]);
       store.clear();
 
-      Resizing.drag(comp, SugarPosition(15, 0));
+      Resizing.moveBy(comp, SugarPosition(15, 0));
       store.assertEq('third drag accumulates', [{ width: 345, height: 410 }]);
     });
 
@@ -62,12 +62,12 @@ describe('browser.alloy.behaviour.ResizingTest', () => {
 
       Resizing.start(comp, 300, 400);
 
-      Resizing.drag(comp, SugarPosition(50, 50));
+      Resizing.moveBy(comp, SugarPosition(50, 50));
       store.assertEq('drag before reset', [{ width: 350, height: 450 }]);
       store.clear();
 
       Resizing.start(comp, 300, 400);
-      Resizing.drag(comp, SugarPosition(10, 10));
+      Resizing.moveBy(comp, SugarPosition(10, 10));
 
       store.assertEq('drag after reset uses the new baseline', [{ width: 310, height: 410 }]);
     });
@@ -79,7 +79,7 @@ describe('browser.alloy.behaviour.ResizingTest', () => {
       const store = hook.store();
 
       Resizing.start(comp, 300, 400, { minWidth: 200, maxWidth: 600 });
-      Resizing.drag(comp, SugarPosition(400, 0));
+      Resizing.moveBy(comp, SugarPosition(400, 0));
 
       store.assertEq('width is clamped at the max', [{ width: 600, height: 400 }]);
     });
@@ -89,7 +89,7 @@ describe('browser.alloy.behaviour.ResizingTest', () => {
       const store = hook.store();
 
       Resizing.start(comp, 300, 400, { minWidth: 200, maxWidth: 600 });
-      Resizing.drag(comp, SugarPosition(-300, 0));
+      Resizing.moveBy(comp, SugarPosition(-300, 0));
 
       store.assertEq('width is clamped at the min', [{ width: 200, height: 400 }]);
     });
@@ -99,7 +99,7 @@ describe('browser.alloy.behaviour.ResizingTest', () => {
       const store = hook.store();
 
       Resizing.start(comp, 300, 400, { maxWidth: 600 });
-      Resizing.drag(comp, SugarPosition(-1000, 0));
+      Resizing.moveBy(comp, SugarPosition(-1000, 0));
 
       store.assertEq('width is clamped at 0', [{ width: 0, height: 400 }]);
     });
@@ -110,27 +110,27 @@ describe('browser.alloy.behaviour.ResizingTest', () => {
 
       Resizing.start(comp, 300, 400, { minWidth: 200, maxWidth: 600 });
 
-      Resizing.drag(comp, SugarPosition(400, 0));
+      Resizing.moveBy(comp, SugarPosition(400, 0));
       store.assertEq('over-dragging past the max clamps the width', [{ width: 600, height: 400 }]);
       store.clear();
 
-      Resizing.drag(comp, SugarPosition(-100, 0));
+      Resizing.moveBy(comp, SugarPosition(-100, 0));
       store.assertEq('making up part of the over-drag stays clamped at the max', [{ width: 600, height: 400 }]);
       store.clear();
 
-      Resizing.drag(comp, SugarPosition(-100, 0));
+      Resizing.moveBy(comp, SugarPosition(-100, 0));
       store.assertEq('once the over-drag is made up the width tracks the delta again', [{ width: 500, height: 400 }]);
       store.clear();
 
-      Resizing.drag(comp, SugarPosition(-400, 0));
+      Resizing.moveBy(comp, SugarPosition(-400, 0));
       store.assertEq('over-dragging past the min clamps the width', [{ width: 200, height: 400 }]);
       store.clear();
 
-      Resizing.drag(comp, SugarPosition(100, 0));
+      Resizing.moveBy(comp, SugarPosition(100, 0));
       store.assertEq('making up part of the over-drag stays clamped at the min', [{ width: 200, height: 400 }]);
       store.clear();
 
-      Resizing.drag(comp, SugarPosition(100, 0));
+      Resizing.moveBy(comp, SugarPosition(100, 0));
       store.assertEq('once the over-drag is made up the width tracks the delta again', [{ width: 300, height: 400 }]);
     });
   });
@@ -141,7 +141,7 @@ describe('browser.alloy.behaviour.ResizingTest', () => {
       const store = hook.store();
 
       Resizing.start(comp, 300, 400, { minHeight: 300, maxHeight: 600 });
-      Resizing.drag(comp, SugarPosition(0, 400));
+      Resizing.moveBy(comp, SugarPosition(0, 400));
 
       store.assertEq('height is clamped at the max', [{ width: 300, height: 600 }]);
     });
@@ -151,7 +151,7 @@ describe('browser.alloy.behaviour.ResizingTest', () => {
       const store = hook.store();
 
       Resizing.start(comp, 300, 400, { minHeight: 300, maxHeight: 600 });
-      Resizing.drag(comp, SugarPosition(0, -300));
+      Resizing.moveBy(comp, SugarPosition(0, -300));
 
       store.assertEq('height is clamped at the min', [{ width: 300, height: 300 }]);
     });
@@ -161,7 +161,7 @@ describe('browser.alloy.behaviour.ResizingTest', () => {
       const store = hook.store();
 
       Resizing.start(comp, 300, 400, { maxHeight: 600 });
-      Resizing.drag(comp, SugarPosition(0, -1000));
+      Resizing.moveBy(comp, SugarPosition(0, -1000));
 
       store.assertEq('height is clamped at 0', [{ width: 300, height: 0 }]);
     });
@@ -172,27 +172,27 @@ describe('browser.alloy.behaviour.ResizingTest', () => {
 
       Resizing.start(comp, 300, 400, { minHeight: 300, maxHeight: 600 });
 
-      Resizing.drag(comp, SugarPosition(0, 300));
+      Resizing.moveBy(comp, SugarPosition(0, 300));
       store.assertEq('over-dragging past the max clamps the height', [{ width: 300, height: 600 }]);
       store.clear();
 
-      Resizing.drag(comp, SugarPosition(0, -100));
+      Resizing.moveBy(comp, SugarPosition(0, -100));
       store.assertEq('making up part of the over-drag stays clamped at the max', [{ width: 300, height: 600 }]);
       store.clear();
 
-      Resizing.drag(comp, SugarPosition(0, -100));
+      Resizing.moveBy(comp, SugarPosition(0, -100));
       store.assertEq('once the over-drag is made up the height tracks the delta again', [{ width: 300, height: 500 }]);
       store.clear();
 
-      Resizing.drag(comp, SugarPosition(0, -300));
+      Resizing.moveBy(comp, SugarPosition(0, -300));
       store.assertEq('over-dragging past the min clamps the height', [{ width: 300, height: 300 }]);
       store.clear();
 
-      Resizing.drag(comp, SugarPosition(0, 100));
+      Resizing.moveBy(comp, SugarPosition(0, 100));
       store.assertEq('making up part of the over-drag stays clamped at the min', [{ width: 300, height: 300 }]);
       store.clear();
 
-      Resizing.drag(comp, SugarPosition(0, 100));
+      Resizing.moveBy(comp, SugarPosition(0, 100));
       store.assertEq('once the over-drag is made up the height tracks the delta again', [{ width: 300, height: 400 }]);
     });
   });
