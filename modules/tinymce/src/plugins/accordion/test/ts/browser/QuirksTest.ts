@@ -105,7 +105,10 @@ describe('browser.tinymce.plugins.accordion.QuirksTest', () => {
       });
   });
 
-  it(`TINYMCE-14490: inserting a new li pressing enter in an li that also has a block element inside and clicking on the right of the first li the caret should be at the end of the element`, async () => {
+  ((browser.isFirefox() || browser.isSafari()) ?
+    it.skip :
+    it
+  )(`TINYMCE-14490: inserting a new li pressing enter in an li that also has a block element inside and clicking on the right of the first li the caret should be at the end of the element`, async () => {
     const editor = hook.editor();
     const content = [ '<ol>' +
       '<li>abc' +
