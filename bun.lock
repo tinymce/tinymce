@@ -221,8 +221,9 @@
       "name": "@tinymce/oxide-components",
       "version": "0.0.2",
       "dependencies": {
-        "@ephox/katamari": "^10.0.0",
-        "@ephox/sugar": "^10.0.0",
+        "@ephox/katamari": "^11.0.0",
+        "@ephox/sand": "^8.0.0",
+        "@ephox/sugar": "^11.0.0",
       },
       "devDependencies": {
         "@eslint/js": "^9.25.0",
@@ -231,7 +232,7 @@
         "@storybook/addon-docs": "10.2.3",
         "@storybook/addon-onboarding": "10.2.3",
         "@storybook/react-vite": "10.2.3",
-        "@tinymce/oxide": "^3.0.0",
+        "@tinymce/oxide": "^4.0.0",
         "@types/node": "^22.15.19",
         "@types/react": "^18.3.1",
         "@types/react-dom": "^18.3.1",
@@ -350,7 +351,7 @@
     },
     "modules/tinymce": {
       "name": "tinymce",
-      "version": "8.6.0",
+      "version": "8.7.0",
       "dependencies": {
         "@ephox/acid": "^8.0.0",
         "@ephox/agar": "^10.0.0",
@@ -361,7 +362,7 @@
         "@tinymce/oxide-icons-default": "^4.0.0",
         "@tinymce/persona": "^1.0.0",
         "@types/prismjs": "^1.16.6",
-        "dompurify": "3.4.5",
+        "dompurify": "3.4.11",
         "prismjs": "^1.27.0",
       },
       "devDependencies": {
@@ -1859,7 +1860,7 @@
 
     "domhandler": ["domhandler@4.3.1", "", { "dependencies": { "domelementtype": "^2.2.0" } }, "sha512-GrwoxYN+uWlzO8uhUXRl0P+kHE4GtVPfYzVLcUxPL7KNdHKj66vvlhiweIHqYYXWlw+T8iLMp42Lm67ghw4WMQ=="],
 
-    "dompurify": ["dompurify@3.4.5", "", { "optionalDependencies": { "@types/trusted-types": "^2.0.7" } }, "sha512-OrwIBKsdNSVEeubdJ1HBv/wNENRM9ytAVCv7YXt//A3vPdVMNuACRqK9mXCGCBW2ln7BT/A4X0jXHo2Gu89miA=="],
+    "dompurify": ["dompurify@3.4.11", "", { "optionalDependencies": { "@types/trusted-types": "^2.0.7" } }, "sha512-zhlUV12GsaRzMsf9q5M254YhA4+VuF0fG+QFqu6aYpoGlKtz+w8//jBcGVYBgQkR5GHjUomejY84AV+/uPbWdw=="],
 
     "domutils": ["domutils@2.8.0", "", { "dependencies": { "dom-serializer": "^1.0.1", "domelementtype": "^2.2.0", "domhandler": "^4.2.0" } }, "sha512-w96Cjofp72M5IIhpjgobBimYEfoPjx1Vx0BSX9P30WBdZW2WIKU0T1Bd0kz2eNZ9ikjKgHbEyKx8BB6H1L3h3A=="],
 
