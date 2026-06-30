@@ -746,10 +746,14 @@ const Quirks = (editor: Editor): Quirks => {
       if (isListItem(target)) {
         firstBlockChildOrNewLine(target).fold(
           () => {
-            CaretFinder.lastPositionIn(target.dom).each((pos) => {
-              e.preventDefault();
-              editor.focus();
-              editor.selection.setRng(pos.toRange());
+            Traverse.lastChild(target).each((lastChild) => {
+              if (Arr.get(getClientRects([ lastChild.dom ]), 0).exists((rect) => clickAfterEl(e.clientX, e.clientY, rect))) {
+                CaretFinder.lastPositionIn(target.dom).each((pos) => {
+                  e.preventDefault();
+                  editor.focus();
+                  editor.selection.setRng(pos.toRange());
+                });
+              }
             });
           },
           (firstBlock) => {
