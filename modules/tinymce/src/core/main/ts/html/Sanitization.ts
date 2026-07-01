@@ -81,6 +81,11 @@ const processNode = (node: Node, settings: DomParserSettings, schema: Schema, sc
     } else {
       Remove.unwrap(element);
     }
+    // DOMPurify 3.4.11 throws if _forceRemove() is called on a parentless node. Marking the tag
+    // as allowed here prevents DOMPurify from attempting a second removal on the already-detached node.
+    if (Type.isNonNullable(evt)) {
+      evt.allowedTags[lcTagName] = true;
+    }
     return;
   }
 
@@ -92,6 +97,11 @@ const processNode = (node: Node, settings: DomParserSettings, schema: Schema, sc
       Remove.remove(element);
     } else {
       Remove.unwrap(element);
+    }
+    // DOMPurify 3.4.11 throws if _forceRemove() is called on a parentless node. Marking the tag
+    // as allowed here prevents DOMPurify from attempting a second removal on the already-detached node.
+    if (Type.isNonNullable(evt)) {
+      evt.allowedTags[lcTagName] = true;
     }
     return;
   } else {
