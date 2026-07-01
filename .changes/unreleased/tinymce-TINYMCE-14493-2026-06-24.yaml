@@ -1,0 +1,6 @@
+project: tinymce
+kind: Improved
+body: Added the `aria-valuenow`, `aria-valuemin`, and `aria-valuemax` attributes to the editor resize handle when resizing vertically.
+time: 2026-06-24T11:26:05.041588049Z
+custom:
+    Issue: TINYMCE-14493
