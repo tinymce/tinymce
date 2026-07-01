@@ -8,6 +8,7 @@ import { Button } from './components/button/Button';
 import * as Card from './components/card/Card';
 import { Confirmation, type ConfirmationProps } from './components/confirmation/Confirmation';
 import { ConfirmationHost, type ConfirmationHostHandle } from './components/confirmation/internals/ConfirmationHost';
+import { type ConfirmationApi, useConfirmationApi } from './components/confirmation/internals/useConfirmationApi';
 import * as ContextToolbar from './components/contexttoolbar/ContextToolbar';
 import * as Draggable from './components/draggable/Draggable';
 import * as Dropdown from './components/dropdown/Dropdown';
@@ -57,8 +58,9 @@ export {
   Tooltip,
   SegmentedControl,
   UniverseProvider,
+  useConfirmationApi,
   useUniverse,
   UserPromptBubble
 };
 
-export type { ConfirmationProps, ConfirmationHostHandle, UniverseResources };
+export type { ConfirmationApi, ConfirmationProps, ConfirmationHostHandle, UniverseResources };

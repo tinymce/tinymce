@@ -55,7 +55,7 @@ export const Confirmation: FC<ConfirmationProps> = ({
               disabled={confirming}
               onClick={onClick}
               aria-label={buttonName}
-            >{confirming ? <Spinner type="circle" /> : buttonName}</Button>
+            >{confirming ? <Spinner type="circle" color='lightgray' /> : buttonName}</Button>
             <Button
               variant='secondary'
               disabled={confirming}

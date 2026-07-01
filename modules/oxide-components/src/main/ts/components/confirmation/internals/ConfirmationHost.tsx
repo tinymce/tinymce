@@ -2,7 +2,7 @@ import { forwardRef, useImperativeHandle, useState } from 'react';
 
 import { Confirmation } from '../Confirmation';
 
-interface ConfirmOptions {
+export interface ConfirmOptions {
   readonly text: string;
   readonly onConfirm: () => Promise<void>;
 }
