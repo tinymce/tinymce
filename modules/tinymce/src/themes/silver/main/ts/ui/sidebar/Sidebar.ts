@@ -183,7 +183,11 @@ interface FixSizeEvent extends CustomEvent {
 const fixSize = Id.generate('FixSizeEvent');
 const autoSize = Id.generate('AutoSizeEvent');
 
-const renderSidebar = (spec: SketchSpec): AlloySpec => ({
+interface SidebarSpec extends SketchSpec {
+  readonly editor: Editor;
+}
+
+const renderSidebar = (spec: SidebarSpec): AlloySpec => ({
   uid: spec.uid,
   dom: {
     tag: 'div',
@@ -254,6 +258,7 @@ const renderSidebar = (spec: SketchSpec): AlloySpec => ({
 });
 
 export {
+  type SidebarSpec,
   setSidebar,
   toggleSidebar,
   whichSidebar,

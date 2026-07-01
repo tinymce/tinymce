@@ -352,7 +352,7 @@ const partSocket = Composite.partType.optional({
   ]
 });
 
-const partSidebar = Composite.partType.optional({
+const partSidebar = Composite.partType.optional<OuterContainerSketchDetail, Sidebar.SidebarSpec>({
   factory: {
     sketch: Sidebar.renderSidebar
   },
