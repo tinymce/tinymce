@@ -759,9 +759,7 @@ const Quirks = (editor: Editor): Quirks => {
             });
           },
           (firstBlock) => {
-            const prevSiblings = Traverse.prevSiblings(firstBlock);
-
-            Arr.findLast(prevSiblings, isValidSibling).each((lastInlineBeforeBlock) => {
+            Arr.findLast(Traverse.prevSiblings(firstBlock), isValidSibling).each((lastInlineBeforeBlock) => {
               if (clickAfterEl(e.clientX, e.clientY, lastInlineBeforeBlock)) {
                 CaretFinder.prevPosition(target.dom, CaretPosition(firstBlock.dom, 0)).each((pos) => selectPos(editor, e, pos));
               }
