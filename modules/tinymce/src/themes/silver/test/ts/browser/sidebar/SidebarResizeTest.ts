@@ -37,7 +37,7 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
   };
 
   const resetSidebarWidth = async () => {
-    const initialWidth = 300;
+    const initialWidth = 440;
     const sidebar = SidebarUtils.getSidebar();
     await SidebarUtils.resizeSidebarBy([ Width.get(sidebar) - initialWidth, 0 ]);
   };
@@ -54,21 +54,21 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
         Pointer.pointerMoveBy(resizeHandle, 0, 0);
 
         Pointer.pointerMoveBy(resizeHandle, -40, 0);
-        assertSidebarWidth(340, 'Dragging the handle left should grow the sidebar');
+        assertSidebarWidth(480, 'Dragging the handle left should grow the sidebar');
 
         Pointer.pointerMoveBy(resizeHandle, -40, 0);
         Pointer.pointerUp(resizeHandle);
-        assertSidebarWidth(380, 'Releasing the handle should keep the grown width');
+        assertSidebarWidth(520, 'Releasing the handle should keep the grown width');
 
         Pointer.pointerDown(resizeHandle);
         Pointer.pointerMoveBy(resizeHandle, 0, 0);
 
         Pointer.pointerMoveBy(resizeHandle, 80, 0);
-        assertSidebarWidth(300, 'Dragging the handle right should shrink the sidebar');
+        assertSidebarWidth(440, 'Dragging the handle right should shrink the sidebar');
 
         Pointer.pointerMoveBy(resizeHandle, 40, 0);
         Pointer.pointerUp(resizeHandle);
-        assertSidebarWidth(260, 'Releasing the handle should keep the shrunk width');
+        assertSidebarWidth(400, 'Releasing the handle should keep the shrunk width');
       });
     });
 
@@ -79,23 +79,23 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
         Pointer.pointerDown(resizeHandle);
         Pointer.pointerMoveBy(resizeHandle, 0, 0);
 
-        Pointer.pointerMoveBy(resizeHandle, -300, 0);
-        assertSidebarWidth(600, 'Dragging left should grow the sidebar up to its max width');
+        Pointer.pointerMoveBy(resizeHandle, -360, 0);
+        assertSidebarWidth(800, 'Dragging left should grow the sidebar up to its max width');
 
         Pointer.pointerMoveBy(resizeHandle, -150, 0);
-        assertSidebarWidth(600, 'Over-dragging past the max should keep the sidebar clamped at the max width');
+        assertSidebarWidth(800, 'Over-dragging past the max should keep the sidebar clamped at the max width');
 
         Pointer.pointerMoveBy(resizeHandle, 0, 0);
-        assertSidebarWidth(600, 'Dragging back towards the handle should be ignored until the pointer reaches it, so the sidebar stays at the max width');
+        assertSidebarWidth(800, 'Dragging back towards the handle should be ignored until the pointer reaches it, so the sidebar stays at the max width');
 
-        Pointer.pointerMoveBy(resizeHandle, 400, 0);
-        assertSidebarWidth(200, 'Dragging right past the handle should shrink the sidebar down to its min width');
+        Pointer.pointerMoveBy(resizeHandle, 500, 0);
+        assertSidebarWidth(300, 'Dragging right past the handle should shrink the sidebar down to its min width');
 
         Pointer.pointerMoveBy(resizeHandle, 150, 0);
-        assertSidebarWidth(200, 'Over-dragging past the min should keep the sidebar clamped at the min width');
+        assertSidebarWidth(300, 'Over-dragging past the min should keep the sidebar clamped at the min width');
 
         Pointer.pointerMoveBy(resizeHandle, 0, 0);
-        assertSidebarWidth(200, 'Dragging back towards the handle should be ignored until the pointer reaches it, so the sidebar stays at the min width');
+        assertSidebarWidth(300, 'Dragging back towards the handle should be ignored until the pointer reaches it, so the sidebar stays at the min width');
 
         Pointer.pointerUp(resizeHandle);
       });
@@ -106,13 +106,13 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
     setupEditorHook({ sidebar_show: 'sidebarone' });
 
     it('TINYMCE-14527: should respect initial and the min and max width constraints', async () => {
-      assertSidebarWidth(300, 'The sidebar should start at the initial width');
+      assertSidebarWidth(440, 'The sidebar should start at the initial width');
 
-      await SidebarUtils.resizeSidebarBy([ -400, 0 ]);
-      assertSidebarWidth(600, 'The sidebar should be capped at the max width');
+      await SidebarUtils.resizeSidebarBy([ -1000, 0 ]);
+      assertSidebarWidth(800, 'The sidebar should be capped at the max width');
 
-      await SidebarUtils.resizeSidebarBy([ 500, 0 ]);
-      assertSidebarWidth(200, 'The sidebar should be capped at the min width');
+      await SidebarUtils.resizeSidebarBy([ 1000, 0 ]);
+      assertSidebarWidth(300, 'The sidebar should be capped at the min width');
     });
   });
 
@@ -125,6 +125,7 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
       if (currentSidebar) {
         await resetSidebarWidth();
         editor.execCommand('ToggleSidebar', false, editor.queryCommandValue('ToggleSidebar'));
+        await SidebarUtils.pWaitForSidebarClosed();
       } else {
         editor.execCommand('ToggleSidebar', false, 'sidebarone');
         await SidebarUtils.pWaitForSidebarOpen();
@@ -139,17 +140,17 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
 
       editor.execCommand('ToggleSidebar', false, 'sidebarone');
       await SidebarUtils.pWaitForSidebarOpen();
-      assertSidebarWidth(300, 'The sidebar should start at the initial width');
+      assertSidebarWidth(440, 'The sidebar should start at the initial width');
 
       await SidebarUtils.resizeSidebarBy([ -50, 0 ]);
-      assertSidebarWidth(350, 'Dragging the handle left should grow the sidebar');
+      assertSidebarWidth(490, 'Dragging the handle left should grow the sidebar');
 
       editor.execCommand('ToggleSidebar', false, 'sidebarone');
       await SidebarUtils.pWaitForSidebarClosed();
 
       editor.execCommand('ToggleSidebar', false, 'sidebarone');
       await SidebarUtils.pWaitForSidebarOpen();
-      assertSidebarWidth(350, 'The resized width should survive hiding and showing the sidebar');
+      assertSidebarWidth(490, 'The resized width should survive hiding and showing the sidebar');
     });
 
     it('TINYMCE-14527: should keep the resized width when switching between sidebar panels', async () => {
@@ -157,14 +158,14 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
 
       editor.execCommand('ToggleSidebar', false, 'sidebarone');
       await SidebarUtils.pWaitForSidebarOpen();
-      assertSidebarWidth(300, 'The sidebar should start at the initial width');
+      assertSidebarWidth(440, 'The sidebar should start at the initial width');
 
       await SidebarUtils.resizeSidebarBy([ -50, 0 ]);
-      assertSidebarWidth(350, 'Dragging the handle left should grow the sidebar');
+      assertSidebarWidth(490, 'Dragging the handle left should grow the sidebar');
 
       editor.execCommand('ToggleSidebar', false, 'sidebartwo');
       await SidebarUtils.pWaitForSidebarOpen();
-      assertSidebarWidth(350, 'The resized width should survive switching between panels');
+      assertSidebarWidth(490, 'The resized width should survive switching between panels');
     });
   });
 });
