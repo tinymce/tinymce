@@ -5,6 +5,8 @@ import { FieldSchema } from '@ephox/boulder';
 import { Arr, Id, Obj, Optional, Optionals, Type, type Result } from '@ephox/katamari';
 import { Attribute, Css, SelectorFind, type SugarElement } from '@ephox/sugar';
 
+import type Editor from 'tinymce/core/api/Editor';
+
 import { ToolbarMode } from '../../api/Options';
 import type { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { type HeaderSpec, renderHeader } from '../header/CommonHeader';
@@ -57,7 +59,7 @@ interface ToolbarSketchSpec extends MoreDrawerData {
 interface OuterContainerApis {
   readonly getHeader: (comp: AlloyComponent) => Optional<AlloyComponent>;
   readonly getSocket: (comp: AlloyComponent) => Optional<AlloyComponent>;
-  readonly setSidebar: (comp: AlloyComponent, panelConfigs: Sidebar.SidebarConfig, showSidebar?: string) => void;
+  readonly setSidebar: (comp: AlloyComponent, panelConfigs: Sidebar.SidebarConfig, editor: Editor) => void;
   readonly toggleSidebar: (comp: AlloyComponent, name: string) => void;
   readonly whichSidebar: (comp: AlloyComponent) => string | null;
   // Maybe just change to ToolbarAnchor.
@@ -106,9 +108,9 @@ const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, Out
     getSocket: (comp) => {
       return Composite.parts.getPart(comp, detail, 'socket');
     },
-    setSidebar: (comp, panelConfigs, showSidebar) => {
+    setSidebar: (comp, panelConfigs, editor) => {
       Composite.parts.getPart(comp, detail, 'sidebar').each(
-        (sidebar) => Sidebar.setSidebar(sidebar, panelConfigs, showSidebar)
+        (sidebar) => Sidebar.setSidebar(sidebar, panelConfigs, editor)
       );
     },
     toggleSidebar: (comp, name) => {
@@ -352,7 +354,7 @@ const partSocket = Composite.partType.optional({
   ]
 });
 
-const partSidebar = Composite.partType.optional<OuterContainerSketchDetail, Sidebar.SidebarSpec>({
+const partSidebar = Composite.partType.optional({
   factory: {
     sketch: Sidebar.renderSidebar
   },
