@@ -220,6 +220,9 @@ interface BaseEditorOptions {
   selector?: string;
   setup?: SetupCallback;
   sidebar_show?: string;
+  sidebar_width?: number;
+  sidebar_min_width?: number;
+  sidebar_max_width?: number;
   skin?: boolean | string;
   skin_url?: string;
   smart_paste?: boolean;
@@ -363,6 +366,9 @@ export interface EditorOptions extends NormalizedEditorOptions {
   removed_menuitems: string;
   sandbox_iframes: boolean;
   sandbox_iframes_exclusions: string[];
+  sidebar_width: number;
+  sidebar_min_width: number;
+  sidebar_max_width: number;
   toolbar: boolean | string | string[] | Array<ToolbarGroup>;
   toolbar_groups: Record<string, Toolbar.GroupToolbarButtonSpec>;
   toolbar_location: ToolbarLocation;

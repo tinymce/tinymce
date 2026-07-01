@@ -11,12 +11,10 @@ import * as SidebarResize from './SidebarResize';
 const findSidebar = (handle: AlloyComponent): Optional<SugarElement<HTMLElement>> =>
   SelectorFind.ancestor<HTMLElement>(handle.element, '.tox-sidebar');
 
-const sizeConstraints = {
-  minWidth: SidebarResize.minWidth,
-  maxWidth: SidebarResize.maxWidth
-};
-
 export const makeSidebarResizeHandle = (editor: Editor): AlloySpec => {
+  const minWidth = Options.getSidebarMinWidth(editor);
+  const maxWidth = Options.getSidebarMaxWidth(editor);
+
   return {
     dom: {
       tag: 'div',
@@ -28,11 +26,11 @@ export const makeSidebarResizeHandle = (editor: Editor): AlloySpec => {
         repositionTarget: false,
         onDragStart: (handle) => {
           findSidebar(handle).each((sidebar) => {
-            Resizing.start(handle, Width.get(sidebar), Height.get(sidebar), sizeConstraints);
+            Resizing.start(handle, Width.get(sidebar), Height.get(sidebar), { minWidth, maxWidth });
           });
         },
         onDrag: (handle, _target, delta) => {
-        // The handle sits on the sidebar's left edge, so dragging left should grow it: invert the horizontal delta.
+          // The handle sits on the sidebar's left edge, so dragging left should grow it: invert the horizontal delta.
           Resizing.moveBy(handle, SugarPosition(delta.left * -1, 0));
         }
       }),
