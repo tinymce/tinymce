@@ -113,7 +113,7 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
     OuterContainer.setSidebar(
       outerContainer,
       rawUiConfig.sidebar,
-      Options.getSidebarShow(editor)
+      editor
     );
 
     OuterContainer.setViews(
