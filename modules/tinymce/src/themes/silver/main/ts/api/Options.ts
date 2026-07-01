@@ -286,6 +286,21 @@ const register = (editor: Editor): void => {
     processor: 'string'
   });
 
+  registerOption('sidebar_width', {
+    processor: 'number',
+    default: 440
+  });
+
+  registerOption('sidebar_min_width', {
+    processor: 'number',
+    default: 300
+  });
+
+  registerOption('sidebar_max_width', {
+    processor: 'number',
+    default: 800
+  });
+
   registerOption('view_show', {
     processor: 'string'
   });
@@ -338,6 +353,9 @@ const useBranding = option('branding');
 const getResize = option('resize');
 const getPasteAsText = option('paste_as_text');
 const getSidebarShow = option('sidebar_show');
+const getSidebarWidth = option('sidebar_width');
+const getSidebarMinWidth = option('sidebar_min_width');
+const getSidebarMaxWidth = option('sidebar_max_width');
 const getViewShow = option('view_show');
 const promotionEnabled = option('promotion');
 const useHelpAccessibility = option('help_accessibility');
@@ -468,6 +486,9 @@ export {
   getRemovedMenuItems,
   getResize,
   getSidebarShow,
+  getSidebarWidth,
+  getSidebarMinWidth,
+  getSidebarMaxWidth,
   getSkin,
   getSkinUrl,
   getSkinUrlOption,

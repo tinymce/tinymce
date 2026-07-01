@@ -12,6 +12,7 @@ import { Attribute, Css, type SugarElement, Width } from '@ephox/sugar';
 import type Editor from 'tinymce/core/api/Editor';
 import { onControlAttached, onControlDetached } from 'tinymce/themes/silver/ui/controls/Controls';
 
+import * as Options from '../../api/Options';
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { SimpleBehaviours } from '../alien/SimpleBehaviours';
 import { numToPx } from '../sizing/Utils';
@@ -96,13 +97,13 @@ const makePanels = (parts: SlotContainerTypes.SlotContainerParts, panelConfigs: 
   });
 };
 
-const makeSidebar = (panelConfigs: SidebarConfig) => SlotContainer.sketch((parts) => ({
+const makeSidebar = (panelConfigs: SidebarConfig, editor: Editor) => SlotContainer.sketch((parts) => ({
   dom: {
     tag: 'div',
     classes: [ 'tox-sidebar__pane-container' ]
   },
   components: [
-    makeSidebarResizeHandle(),
+    makeSidebarResizeHandle(editor),
     ...makePanels(parts, panelConfigs)
   ],
   slotBehaviours: SimpleBehaviours.unnamedEvents([
@@ -110,11 +111,12 @@ const makeSidebar = (panelConfigs: SidebarConfig) => SlotContainer.sketch((parts
   ])
 }));
 
-const setSidebar = (sidebar: AlloyComponent, panelConfigs: SidebarConfig, showSidebar: string | undefined): void => {
+const setSidebar = (sidebar: AlloyComponent, panelConfigs: SidebarConfig, editor: Editor): void => {
+  const showSidebar = Options.getSidebarShow(editor);
   const optSlider = Composing.getCurrent(sidebar);
 
   optSlider.each((slider) => {
-    Replacing.set(slider, [ makeSidebar(panelConfigs) ]);
+    Replacing.set(slider, [ makeSidebar(panelConfigs, editor) ]);
 
     // Show the default sidebar
     const configKey = showSidebar?.toLowerCase();
@@ -183,13 +185,17 @@ interface FixSizeEvent extends CustomEvent {
 const fixSize = Id.generate('FixSizeEvent');
 const autoSize = Id.generate('AutoSizeEvent');
 
-const renderSidebar = (spec: SketchSpec): AlloySpec => ({
+interface SidebarSpec extends SketchSpec {
+  readonly editor: Editor;
+}
+
+const renderSidebar = (spec: SidebarSpec): AlloySpec => ({
   uid: spec.uid,
   dom: {
     tag: 'div',
     classes: [ 'tox-sidebar' ],
     styles: {
-      [SidebarResize.requestedWidthProperty]: numToPx(SidebarResize.initialWidth)
+      [SidebarResize.requestedWidthProperty]: numToPx(Options.getSidebarWidth(spec.editor))
     },
     attributes: {
       role: SidebarStateRoleAttr.Shrunk
@@ -254,6 +260,7 @@ const renderSidebar = (spec: SketchSpec): AlloySpec => ({
 });
 
 export {
+  type SidebarSpec,
   setSidebar,
   toggleSidebar,
   whichSidebar,
