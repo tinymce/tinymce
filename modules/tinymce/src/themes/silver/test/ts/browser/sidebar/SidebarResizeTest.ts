@@ -17,7 +17,16 @@ const editorBorderLeft = 2;
 const editorBorderRight = 2;
 
 describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
-  const setupEditorHook = (configOverrides: { sidebar_show?: string; sidebar_min_width?: number; sidebar_max_width?: number; sidebar_width?: number; width?: number; resize?: boolean | 'both'; setupElement?: () => TinyHooks.SetupElement } = {}) => {
+  const setupEditorHook = (configOverrides: {
+    sidebar_show?: string;
+    sidebar_min_width?: number;
+    sidebar_max_width?: number;
+    sidebar_width?: number;
+    width?: number;
+    resize?: boolean | 'both';
+    statusbar?: boolean;
+    setupElement?: () => TinyHooks.SetupElement;
+  } = {}) => {
     const { setupElement, ...settings } = configOverrides;
     const config = {
       base_url: '/project/tinymce/js/tinymce',
@@ -258,11 +267,10 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
       });
     });
 
-    // TODO: I think I should group these tests?
     context('TINYMCE-14530: Editing area minimum width when the editor is resized', () => {
       const editorInitialWidth = 1500;
       const sidebarInitialWidth = 1000;
-      const hook = setupEditorHook({ sidebar_show: 'sidebarone', sidebar_width: sidebarInitialWidth, sidebar_max_width: 1000, resize: 'both', width: editorInitialWidth });
+      const hook = setupEditorHook({ sidebar_show: 'sidebarone', sidebar_width: sidebarInitialWidth, sidebar_max_width: 1000, resize: 'both', statusbar: true, width: editorInitialWidth });
 
       afterEach(async () => {
         const editor = hook.editor();
@@ -313,7 +321,7 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
     });
 
     context('TINYMCE-14530: Growing the sidebar while the editing area is clamped', () => {
-      const hook = setupEditorHook({ sidebar_show: 'sidebarone', sidebar_width: 1000, sidebar_max_width: 5000, resize: 'both', width: 1500 });
+      const hook = setupEditorHook({ sidebar_show: 'sidebarone', sidebar_width: 1000, sidebar_max_width: 5000, resize: 'both', statusbar: true, width: 1500 });
 
       it('TINYMCE-14530: should cap the sidebar at the editing area minimum when dragging to grow it while the editing area is clamped', async () => {
         const editor = hook.editor();
