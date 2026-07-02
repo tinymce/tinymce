@@ -41,7 +41,7 @@
   }
 
   .tox-sidebar-wrap--resizable .tox-sidebar__pane-container {
-    width: var(--tox-private-requested-sidebar-width);
+    width: min(calc(100cqw - 280px), var(--tox-private-requested-sidebar-width));
   }
 
   .tox-sidebar__pane-container {
