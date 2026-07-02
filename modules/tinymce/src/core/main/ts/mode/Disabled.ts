@@ -102,8 +102,8 @@ const processDisabledEvents = (editor: Editor, e: Event): void => {
       (href) => {
         e.preventDefault();
         if (/^#/.test(href)) {
-          const escapedId = CSS.escape(Strings.removeLeading(href, '#'));
-          const targetEl = editor.dom.select(`#${escapedId},[name="${escapedId}"]`);
+          const id = Strings.removeLeading(href, '#');
+          const targetEl = editor.dom.select(`[id="${id}"],[name="${id}"]`);
           if (targetEl.length) {
             editor.selection.scrollIntoView(targetEl[0], true);
           }

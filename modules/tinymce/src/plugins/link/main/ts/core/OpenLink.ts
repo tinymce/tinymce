@@ -39,8 +39,8 @@ const gotoLink = (editor: Editor, a: HTMLAnchorElement | undefined): void => {
   if (a) {
     const href = Utils.getHref(a);
     if (/^#/.test(href)) {
-      const escapedId = CSS.escape(Strings.removeLeading(href, '#'));
-      const targetEl = editor.dom.select(`#${escapedId},[name="${escapedId}"]`);
+      const id = Strings.removeLeading(href, '#');
+      const targetEl = editor.dom.select(`[id="${id}"],[name="${id}"]`);
       if (targetEl.length) {
         editor.selection.scrollIntoView(targetEl[0], true);
       }

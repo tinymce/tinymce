@@ -291,7 +291,7 @@ describe('browser.tinymce.core.ReadOnlyModeTest', () => {
     assert.notEqual(newPos, yPos, 'assert yPos has changed i.e. has scrolled');
   });
 
-  describe('TINYMCE-8784: Clicking anchor links with special characters should scroll to target', () => {
+  describe('TINYMCE-8784: Clicking anchor links with special characters should scroll to target with cmd/ctrl', () => {
     it('with one semicolon', () => {
       const editor = hook.editor();
       setMode(editor, 'design');
@@ -303,7 +303,7 @@ describe('browser.tinymce.core.ReadOnlyModeTest', () => {
       const doc = TinyDom.document(editor);
       const yPos = Scroll.get(doc).top;
       const anchor = UiFinder.findIn(body, 'a[href="#someBookmark;somekey=somevalue"]').getOrDie();
-      Mouse.click(anchor);
+      Mouse.click(anchor, metaKey);
       const newPos = Scroll.get(doc).top;
       assert.notEqual(newPos, yPos, 'assert yPos has changed i.e. has scrolled');
     });
@@ -319,7 +319,7 @@ describe('browser.tinymce.core.ReadOnlyModeTest', () => {
       const doc = TinyDom.document(editor);
       const yPos = Scroll.get(doc).top;
       const anchor = UiFinder.findIn(body, 'a[href="#someBookmark;somekey=somevalue;somekey2=somevalue2"]').getOrDie();
-      Mouse.click(anchor);
+      Mouse.click(anchor, metaKey);
       const newPos = Scroll.get(doc).top;
       assert.notEqual(newPos, yPos, 'assert yPos has changed i.e. has scrolled');
     });
