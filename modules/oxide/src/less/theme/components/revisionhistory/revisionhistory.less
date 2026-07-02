@@ -156,6 +156,20 @@
         align-items: center;
       }
 
+      .tox-revisionhistory__card-attribution {
+        align-items: center;
+        display: flex;
+
+        .tox-revisionhistory__avatar {
+          position: relative;   
+          z-index: 1;
+        }
+
+        .tox-revisionhistory__avatar + .tox-revisionhistory__card-ai-icon {
+          margin-left: -4px;
+        }
+      }
+
       .tox-revisionhistory__card-info {
         display: flex;
         flex-direction: column;
@@ -180,6 +194,12 @@
         height: @revisionhistory-avatar-height;
         object-fit: cover;
         vertical-align: middle;
+        width: @revisionhistory-avatar-height;
+      }
+
+      .tox-revisionhistory__card-ai-icon {
+        display: flex;
+        height: @revisionhistory-avatar-height;
         width: @revisionhistory-avatar-height;
       }
 

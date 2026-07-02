@@ -1,60 +1,29 @@
-import { Id } from '@ephox/katamari';
-import { Attribute, Css, Insert, Remove, SelectorFind, SugarBody, SugarElement } from '@ephox/sugar';
+import { Fun } from '@ephox/katamari';
+
+import * as Announcer from '../../aria/Announcer';
 
 /**
- * Page-wide aria-live announcer used to send messages to screen readers without
- * shifting focus. The aria-live container is created lazily on the first
- * announcement and removed once no tokens remain in flight.
+ * Page-wide aria-live announcer used to send messages to screen readers without shifting focus.
+ *
+ * Messages are appended as child divs to one of two persistent live regions,
+ * polite or assertive (both aria-atomic="false", aria-relevant="additions"), so
+ * each child is announced independently as it is added. Earlier messages remain
+ * in the DOM and are not re-read. Each message is removed after a delay long
+ * enough for screen readers to have picked up the mutation, keeping the regions
+ * bounded over long sessions.
+ *
+ * The polite and assertive regions differ only in their aria-live politeness:
+ * assertive announcements interrupt the screen reader's current speech, while
+ * polite ones wait for it to finish.
  *
  * @class tinymce.dom.AriaAnnouncer
  */
 
-export interface AriaAnnouncerApi {
+interface AriaAnnouncer {
   readonly announce: (message: string, options?: { assertive?: boolean }) => void;
 }
 
-const announcerContainerId = Id.generate('tiny-aria-announcer');
-let activeTokens = 0;
-
-const offscreenStyles = {
-  position: 'absolute',
-  left: '-9999px',
-  width: '1px',
-  height: '1px',
-  overflow: 'hidden'
-};
-
-const getOrCreateContainer = (): SugarElement<HTMLElement> => {
-  return SelectorFind.descendant<HTMLElement>(SugarBody.body(), `#${announcerContainerId}`).getOrThunk(() => {
-    const container = SugarElement.fromTag('div');
-    Attribute.set(container, 'id', announcerContainerId);
-    Css.setAll(container, offscreenStyles);
-    Insert.append(SugarBody.body(), container);
-    return container;
-  });
-};
-
-const createToken = (message: string, assertive: boolean): SugarElement<HTMLSpanElement> => {
-  const span = SugarElement.fromTag('span');
-
-  if (assertive) {
-    Attribute.setAll(span, {
-      'aria-live': 'assertive',
-      'aria-atomic': 'true',
-      'role': 'alert'
-    });
-  } else {
-    Attribute.setAll(span, {
-      'role': 'presentation',
-      'aria-live': 'polite',
-      'aria-atomic': 'true',
-      'aria-label': message
-    });
-  }
-
-  Insert.append(span, SugarElement.fromText(message));
-  return span;
-};
+const announcer = Announcer.createAnnouncer();
 
 /**
  * Announces a message to screen readers via an aria-live region, without shifting focus.
@@ -62,28 +31,21 @@ const createToken = (message: string, assertive: boolean): SugarElement<HTMLSpan
  * @method announce
  * @param {String} message The message to announce to screen readers.
  * @param {Object} options Optional settings.
- * @param {Boolean} options.assertive If true, uses aria-live="assertive" (role="alert") instead of polite.
+ * @param {Boolean} options.assertive If true, uses aria-live="assertive" instead of polite.
  * @example
  * tinymce.dom.AriaAnnouncer.announce('Bold on');
  * tinymce.dom.AriaAnnouncer.announce('Error occurred', { assertive: true });
  */
 const announce = (message: string, options?: { assertive?: boolean }): void => {
-  const container = getOrCreateContainer();
-  const token = createToken(message, options?.assertive === true);
-  Insert.append(container, token);
-  activeTokens++;
-
-  setTimeout(() => {
-    Attribute.remove(token, 'aria-live');
-    Remove.remove(token);
-    activeTokens--;
-    if (activeTokens === 0) {
-      Remove.remove(container);
-    }
-  }, 1000);
+  if (options?.assertive === true) {
+    announcer.assertive(message).catch(Fun.noop);
+  } else {
+    announcer.polite(message).catch(Fun.noop);
+  }
 };
 
-const AriaAnnouncer: AriaAnnouncerApi = { announce };
+const AriaAnnouncer: AriaAnnouncer = {
+  announce
+};
 
-export { announcerContainerId };
 export default AriaAnnouncer;

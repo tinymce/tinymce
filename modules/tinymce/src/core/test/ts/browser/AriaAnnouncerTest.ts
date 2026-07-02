@@ -1,117 +1,192 @@
 import { UiFinder, Waiter } from '@ephox/agar';
 import { afterEach, describe, it } from '@ephox/bedrock-client';
-import { SugarBody, type SugarElement } from '@ephox/sugar';
-import { TinyHooks } from '@ephox/wrap-mcagar';
+import { Arr, Type } from '@ephox/katamari';
+import { Attribute, Css, Insert, Remove, SelectorFilter, SelectorFind, SugarBody, SugarElement, TextContent } from '@ephox/sugar';
 import { assert } from 'chai';
 
-import AriaAnnouncer, { announcerContainerId } from 'tinymce/core/api/dom/AriaAnnouncer';
-import type Editor from 'tinymce/core/api/Editor';
+import AriaAnnouncer from 'tinymce/core/api/dom/AriaAnnouncer';
+import * as Announcer from 'tinymce/core/aria/Announcer';
+
+type Live = 'polite' | 'assertive';
 
 describe('browser.tinymce.core.AriaAnnouncerTest', () => {
-  const hook = TinyHooks.bddSetupLight<Editor>({
-    base_url: '/project/tinymce/js/tinymce'
-  }, []);
-
-  const containerSelector = `#${announcerContainerId}`;
+  const containerSelector = `#${Announcer.announcerContainerId}`;
 
   const pGetContainer = (): Promise<SugarElement<HTMLElement>> =>
     UiFinder.pWaitFor<HTMLElement>('aria announcer container should exist on the body', SugarBody.body(), containerSelector);
 
-  afterEach(async () => {
-    await Waiter.pTryUntil(
-      'Announcer container should be cleaned up between tests',
-      () => UiFinder.notExists(SugarBody.body(), containerSelector),
-      100,
-      3000
-    );
+  const getRegion = (container: SugarElement<HTMLElement>, live: Live): SugarElement<HTMLElement> => {
+    const regions = UiFinder.findAllIn<HTMLElement>(container, `div[aria-live="${live}"]`);
+    assert.lengthOf(regions, 1, `there should be exactly one ${live} region`);
+    return regions[0];
+  };
+
+  const messagesOf = (container: SugarElement<HTMLElement>, live: Live): string[] =>
+    Arr.bind(UiFinder.findAllIn<HTMLElement>(getRegion(container, live), 'div'), (el) => {
+      const content = TextContent.get(el);
+      return Type.isString(content) ? [ content ] : [];
+    });
+
+  const pMessage = (container: SugarElement<HTMLElement>, live: Live, text: string): Promise<void> =>
+    Waiter.pTryUntil(`${live} region should contain a message "${text}"`, () => {
+      assert.isTrue(Arr.contains(messagesOf(container, live), text), `message "${text}" not present in ${live} region`);
+    });
+
+  const assertLiveAttributes = (region: SugarElement<HTMLElement>, live: Live): void => {
+    assert.equal(Attribute.get(region, 'aria-live'), live);
+    assert.equal(Attribute.get(region, 'aria-atomic'), 'false');
+    assert.equal(Attribute.get(region, 'aria-relevant'), 'additions');
+  };
+
+  const addExpiredMessages = (region: SugarElement<HTMLElement>, texts: string[]): void => {
+    const expiredTimestamp = String(Date.now() - (10 * 60 * 1000 + 1000));
+    Arr.each(texts, (text) => {
+      const messageDiv = SugarElement.fromTag('div');
+      Attribute.set(messageDiv, 'data-mce-announced-at', expiredTimestamp);
+      TextContent.set(messageDiv, text);
+      Insert.prepend(region, messageDiv);
+    });
+  };
+
+  afterEach(() => {
+    SelectorFind.descendant(SugarBody.body(), containerSelector).each(Remove.remove);
   });
 
-  it('Container is created lazily on first announce with offscreen styles', async () => {
-    const editor = hook.editor();
-
-    editor.announce('Setup');
-    const container = (await pGetContainer()).dom;
-
-    assert.equal(container.style.position, 'absolute');
-    assert.equal(container.style.left, '-9999px');
-    assert.equal(container.style.overflow, 'hidden');
-  });
-
-  it('Announce creates a polite token with correct attributes', async () => {
-    const editor = hook.editor();
-
-    editor.announce('Bold on');
+  it('TINY-12791: Container is created lazily on first announce with offscreen styles', async () => {
+    AriaAnnouncer.announce('Setup');
     const container = await pGetContainer();
 
-    const token = (await UiFinder.pWaitFor<HTMLElement>('polite token should exist', container, 'span[aria-live="polite"][aria-label="Bold on"]')).dom;
-    assert.equal(token.getAttribute('aria-atomic'), 'true');
-    assert.equal(token.getAttribute('role'), 'presentation');
-    assert.equal(token.textContent, 'Bold on');
+    assert.equal(Css.get(container, 'position'), 'absolute');
+    assert.equal(Css.get(container, 'left'), '-9999px');
+    assert.equal(Css.get(container, 'overflow'), 'hidden');
   });
 
-  it('Assertive announce creates an assertive token with correct attributes', async () => {
-    const editor = hook.editor();
-
-    editor.announce('Error occurred', { assertive: true });
+  it('TINY-12791: Assertive announce does not affect polite messages already in the region', async () => {
+    AriaAnnouncer.announce('Polite message');
     const container = await pGetContainer();
+    await pMessage(container, 'polite', 'Polite message');
 
-    const token = (await UiFinder.pWaitFor<HTMLElement>('assertive token should exist', container, 'span[aria-live="assertive"]')).dom;
-    assert.equal(token.getAttribute('aria-atomic'), 'true');
-    assert.equal(token.getAttribute('role'), 'alert');
-    assert.equal(token.textContent, 'Error occurred');
+    AriaAnnouncer.announce('Urgent', { assertive: true });
+    await pMessage(container, 'assertive', 'Urgent');
+
+    await pMessage(container, 'polite', 'Polite message');
   });
 
-  it('Token is removed after timeout', async () => {
-    const editor = hook.editor();
+  describe('Concurrent recreation after disconnect', () => {
+    const countContainers = (): number =>
+      SelectorFilter.descendants(SugarBody.body(), containerSelector).length;
 
-    editor.announce('Italic on');
-    const container = await pGetContainer();
-    const tokenSelector = 'span[aria-label="Italic on"]';
+    it('TINY-12791: Concurrent announces after the container is disconnected recreate exactly one container', async () => {
+      const announcer = Announcer.createAnnouncer();
 
-    await UiFinder.pWaitFor('token "Italic on" should exist immediately', container, tokenSelector);
+      // Disconnect the container to leave the singleton holding stale state.
+      await announcer.polite('Initial');
+      const container = await pGetContainer();
+      Remove.remove(container);
+      assert.equal(countContainers(), 0, 'stale container should have been removed');
 
-    await Waiter.pTryUntil(
-      'Token should be removed after timeout',
-      () => UiFinder.notExists(container, tokenSelector),
-      100,
-      2000
-    );
+      // Both callers observe the stale state and race to recreate it.
+      await Promise.all([
+        announcer.polite('Concurrent A'),
+        announcer.assertive('Concurrent B')
+      ]);
+
+      assert.equal(countContainers(), 1, 'concurrent recreation should produce exactly one container');
+
+      // The recreated container should be usable for both regions.
+      const recreated = await pGetContainer();
+      await pMessage(recreated, 'polite', 'Concurrent A');
+      await pMessage(recreated, 'assertive', 'Concurrent B');
+    });
   });
 
-  it('Container is removed once all tokens have been cleaned up', async () => {
-    const editor = hook.editor();
+  describe('Polite region', () => {
+    const announce = (message: string): void => AriaAnnouncer.announce(message);
 
-    editor.announce('Cleanup');
-    await pGetContainer();
+    it('TINY-12791: Polite region has the expected live attributes', async () => {
+      announce('Setup');
+      const container = await pGetContainer();
 
-    await Waiter.pTryUntil(
-      'Container should be removed once all tokens have been cleaned up',
-      () => UiFinder.notExists(SugarBody.body(), containerSelector),
-      100,
-      3000
-    );
+      assertLiveAttributes(getRegion(container, 'polite'), 'polite');
+    });
+
+    it('TINY-12791: Polite announce appends a message div to the polite region only', async () => {
+      announce('Bold on');
+      const container = await pGetContainer();
+
+      await pMessage(container, 'polite', 'Bold on');
+      assert.isFalse(Arr.contains(messagesOf(container, 'assertive'), 'Bold on'), 'message should not be present in the assertive region');
+    });
+
+    it('TINY-12791: Subsequent polite announces append additional message divs and keep prior ones', async () => {
+      announce('First');
+      const container = await pGetContainer();
+      await pMessage(container, 'polite', 'First');
+
+      announce('Second');
+      await pMessage(container, 'polite', 'Second');
+
+      assert.deepEqual(messagesOf(container, 'polite'), [ 'First', 'Second' ], 'both messages should be present in order');
+    });
+
+    it('TINY-12791: Polite messages older than 10 minutes are cleaned up on the next announce', async () => {
+      announce('Setup');
+      const container = await pGetContainer();
+      await pMessage(container, 'polite', 'Setup');
+
+      addExpiredMessages(getRegion(container, 'polite'), [ 'Old 1', 'Old 2', 'Old 3' ]);
+
+      announce('Fresh');
+      await pMessage(container, 'polite', 'Fresh');
+
+      await Waiter.pTryUntil('expired polite messages should be removed', () => {
+        assert.deepEqual(messagesOf(container, 'polite'), [ 'Setup', 'Fresh' ], 'only the non-expired messages should remain, in order');
+      });
+    });
   });
 
-  it('Rapid calls create separate tokens for each message', async () => {
-    const editor = hook.editor();
+  describe('Assertive region', () => {
+    const announce = (message: string): void => AriaAnnouncer.announce(message, { assertive: true });
 
-    editor.announce('First');
-    editor.announce('Second');
-    editor.announce('Third');
-    const container = await pGetContainer();
+    it('TINY-12791: Assertive region has the expected live attributes', async () => {
+      announce('Setup');
+      const container = await pGetContainer();
 
-    await UiFinder.pWaitFor('all three tokens should be present', container, 'span[aria-label="Third"]');
-    const tokens = UiFinder.findAllIn<HTMLElement>(container, 'span[aria-live="polite"]');
-    const labels = tokens.map((t) => t.dom.getAttribute('aria-label'));
-    assert.include(labels, 'First');
-    assert.include(labels, 'Second');
-    assert.include(labels, 'Third');
-  });
+      assertLiveAttributes(getRegion(container, 'assertive'), 'assertive');
+    });
 
-  it('Announcer is accessible via the tinymce.dom.AriaAnnouncer', async () => {
-    AriaAnnouncer.announce('Global announce');
-    const container = await pGetContainer();
+    it('TINY-12791: Assertive announce appends a message div to the assertive region only', async () => {
+      announce('Error A');
+      const container = await pGetContainer();
 
-    await UiFinder.pWaitFor('token should be created via the global singleton', container, 'span[aria-label="Global announce"]');
+      await pMessage(container, 'assertive', 'Error A');
+      assert.isFalse(Arr.contains(messagesOf(container, 'polite'), 'Error A'), 'message should not be present in the polite region');
+    });
+
+    it('TINY-12791: Subsequent assertive announces append additional message divs and keep prior ones', async () => {
+      announce('Error A');
+      const container = await pGetContainer();
+      await pMessage(container, 'assertive', 'Error A');
+
+      announce('Error B');
+      await pMessage(container, 'assertive', 'Error B');
+
+      assert.deepEqual(messagesOf(container, 'assertive'), [ 'Error A', 'Error B' ], 'both messages should be present in order');
+    });
+
+    it('TINY-12791: Assertive messages older than 10 minutes are cleaned up on the next announce', async () => {
+      announce('Setup');
+      const container = await pGetContainer();
+      await pMessage(container, 'assertive', 'Setup');
+
+      addExpiredMessages(getRegion(container, 'assertive'), [ 'Old 1', 'Old 2', 'Old 3' ]);
+
+      announce('Fresh');
+      await pMessage(container, 'assertive', 'Fresh');
+
+      await Waiter.pTryUntil('expired assertive messages should be removed', () => {
+        assert.deepEqual(messagesOf(container, 'assertive'), [ 'Setup', 'Fresh' ], 'only the non-expired messages should remain, in order');
+      });
+    });
   });
 });
