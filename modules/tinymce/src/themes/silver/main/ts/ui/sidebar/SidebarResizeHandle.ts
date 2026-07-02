@@ -8,6 +8,9 @@ import * as SidebarResize from './SidebarResize';
 const findSidebar = (handle: AlloyComponent): Optional<SugarElement<HTMLElement>> =>
   SelectorFind.ancestor<HTMLElement>(handle.element, '.tox-sidebar');
 
+const findSidebarWrap = (handle: AlloyComponent): Optional<SugarElement<HTMLElement>> =>
+  SelectorFind.ancestor<HTMLElement>(handle.element, '.tox-sidebar-wrap');
+
 export const makeSidebarResizeHandle = (sizeConstraints: SidebarSizeConstraints): AlloySpec => {
   const { minWidth, maxWidth } = sizeConstraints;
 
@@ -22,7 +25,11 @@ export const makeSidebarResizeHandle = (sizeConstraints: SidebarSizeConstraints)
         repositionTarget: false,
         onDragStart: (handle) => {
           findSidebar(handle).each((sidebar) => {
-            Resizing.start(handle, Width.get(sidebar), Height.get(sidebar), { minWidth, maxWidth });
+            const availableMax = findSidebarWrap(handle)
+              .map((wrap) => Math.floor(Width.get(wrap)) - SidebarResize.minEditingAreaWidth)
+              .getOr(maxWidth);
+            const effectiveMax = Math.min(maxWidth, availableMax);
+            Resizing.start(handle, Width.get(sidebar), Height.get(sidebar), { minWidth, maxWidth: effectiveMax });
           });
         },
         onDrag: (handle, _target, delta) => {

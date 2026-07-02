@@ -19,6 +19,9 @@ const getSidebarResizeHandle = (): SugarElement<HTMLElement> =>
 const getEditArea = (): SugarElement<HTMLElement> =>
   UiFinder.findIn<HTMLElement>(SugarBody.body(), '.tox-edit-area').getOrDie();
 
+const getSidebarWrap = (): SugarElement<HTMLElement> =>
+  UiFinder.findIn<HTMLElement>(SugarBody.body(), '.tox-sidebar-wrap').getOrDie();
+
 const pWaitForSidebarOpen = (): Promise<void> =>
   Waiter.pTryUntil('Waiting for the sidebar to finish opening', () => {
     UiFinder.exists(SugarBody.body(), '.tox-sidebar--sliding-open');
@@ -56,6 +59,7 @@ export {
   getSidebarRequestedWidth,
   getSidebarResizeHandle,
   getEditArea,
+  getSidebarWrap,
   pWaitForSidebarOpen,
   pWaitForSidebarClosed,
   resizeSidebarBy
