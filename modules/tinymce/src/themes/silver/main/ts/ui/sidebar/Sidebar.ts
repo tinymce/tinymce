@@ -14,6 +14,10 @@ import { onControlAttached, onControlDetached } from 'tinymce/themes/silver/ui/c
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { SimpleBehaviours } from '../alien/SimpleBehaviours';
+import { numToPx } from '../sizing/Utils';
+
+import * as SidebarResize from './SidebarResize';
+import { makeSidebarResizeHandle } from './SidebarResizeHandle';
 
 export type SidebarConfig = Record<string, BridgeSidebar.SidebarSpec>;
 
@@ -97,7 +101,10 @@ const makeSidebar = (panelConfigs: SidebarConfig) => SlotContainer.sketch((parts
     tag: 'div',
     classes: [ 'tox-sidebar__pane-container' ]
   },
-  components: makePanels(parts, panelConfigs),
+  components: [
+    makeSidebarResizeHandle(),
+    ...makePanels(parts, panelConfigs)
+  ],
   slotBehaviours: SimpleBehaviours.unnamedEvents([
     AlloyEvents.runOnAttached((slotContainer) => SlotContainer.hideAllSlots(slotContainer))
   ])
@@ -181,6 +188,9 @@ const renderSidebar = (spec: SketchSpec): AlloySpec => ({
   dom: {
     tag: 'div',
     classes: [ 'tox-sidebar' ],
+    styles: {
+      [SidebarResize.requestedWidthProperty]: numToPx(SidebarResize.initialWidth)
+    },
     attributes: {
       role: SidebarStateRoleAttr.Shrunk
     }

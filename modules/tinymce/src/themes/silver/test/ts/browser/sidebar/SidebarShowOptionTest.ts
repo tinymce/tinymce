@@ -74,7 +74,7 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarShowOptionTest', () => {
     store.assertEq('Asserting initial show of sidebars', [
       {
         name: 'sidebarone:show',
-        index: 0
+        index: 1
       },
     ]);
     McEditor.remove(editor);
@@ -91,7 +91,7 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarShowOptionTest', () => {
     store.assertEq('Asserting initial show of sidebars', [
       {
         name: 'SideBarTwo:show',
-        index: 1
+        index: 2
       }
     ]);
     McEditor.remove(editor);
@@ -107,7 +107,7 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarShowOptionTest', () => {
     store.assertEq('Asserting initial show of sidebars', [
       {
         name: 'SideBarTwo:show',
-        index: 1
+        index: 2
       }
     ]);
     McEditor.remove(editor);

@@ -4,9 +4,19 @@
 
 .tox-sidebar when (@custom-properties-enabled = true) {
   --tox-private-sidebar-background-color: light-dark(hsl( from var(--tox-private-background-color) h s calc(l - 6)), hsl( from var(--tox-private-background-color) h s calc(l + 10)));
+  --tox-private-sidebar-resize-handle-width: 1px;
 }
 
 @sidebar-background-color: contrast(@background-color, darken(@background-color, 6%), lighten(@background-color, 10%));
+@sidebar-resize-handle-width: 1px;
+
+// We add blue outline to the editing area if it's focused.
+// Two blue lines next to each other do not look good, so we remove one from the sidebar.
+.tox.tox-edit-focus .tox-sidebar__resize-handle {
+  &:hover::before {
+    border-left: 0px solid transparent; 
+  }
+}
 
 .tox {
   .tox-sidebar-wrap {
@@ -33,10 +43,36 @@
   }
 
   .tox-sidebar__pane-container {
+    width: var(--tox-private-requested-sidebar-width);
     display: flex;
   }
 
+  .tox-sidebar__resize-handle {
+    position: relative;
+    width: var(--tox-private-sidebar-resize-handle-width, @sidebar-resize-handle-width);
+    height: 100%;
+    cursor: col-resize;
+    background-color: var(--tox-private-separator-color, @tinymce-separator-color);
+    z-index: 1;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 8px;
+      box-sizing: border-box;
+      border-left: 0px solid transparent;
+      transition: border-left-width .15s ease, border-left-color .15s ease;
+    }
+
+    &:hover::before {
+      border-left: 3px solid @color-tint;
+    }
+  }
+
   .tox-sidebar__pane {
+    width: calc(100% - var(--tox-private-sidebar-resize-handle-width, @sidebar-resize-handle-width));
     display: flex;
   }
 
