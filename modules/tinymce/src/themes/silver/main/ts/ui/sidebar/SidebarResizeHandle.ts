@@ -11,6 +11,9 @@ import * as SidebarResize from './SidebarResize';
 const findSidebar = (handle: AlloyComponent): Optional<SugarElement<HTMLElement>> =>
   SelectorFind.ancestor<HTMLElement>(handle.element, '.tox-sidebar');
 
+const findSidebarWrap = (handle: AlloyComponent): Optional<SugarElement<HTMLElement>> =>
+  SelectorFind.ancestor<HTMLElement>(handle.element, '.tox-sidebar-wrap');
+
 export const makeSidebarResizeHandle = (editor: Editor): AlloySpec => {
   const minWidth = Options.getSidebarMinWidth(editor);
   const maxWidth = Options.getSidebarMaxWidth(editor);
@@ -26,7 +29,12 @@ export const makeSidebarResizeHandle = (editor: Editor): AlloySpec => {
         repositionTarget: false,
         onDragStart: (handle) => {
           findSidebar(handle).each((sidebar) => {
-            Resizing.start(handle, Width.get(sidebar), Height.get(sidebar), { minWidth, maxWidth });
+            const availableMax = findSidebarWrap(handle)
+              .map((wrap) => Math.floor(Width.get(wrap)) - SidebarResize.minEditingAreaWidth)
+              .getOr(maxWidth);
+            const effectiveMax = Math.min(maxWidth, availableMax);
+            // TODO, effectiveMax can be now smaller than minWidth - handle that and test it
+            Resizing.start(handle, Width.get(sidebar), Height.get(sidebar), { minWidth, maxWidth: effectiveMax });
           });
         },
         onDrag: (handle, _target, delta) => {
