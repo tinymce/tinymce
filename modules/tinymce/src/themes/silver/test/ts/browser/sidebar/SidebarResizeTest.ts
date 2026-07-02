@@ -143,71 +143,6 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
     });
   });
 
-  context('TINYMCE-14530: Editing area minimum width constraint', () => {
-    setupEditorHook({ sidebar_show: 'sidebarone', sidebar_width: 200, sidebar_min_width: 100, sidebar_max_width: 5000, width: 1200 });
-
-    it('TINYMCE-14530: should not let the sidebar grow to the point where the editing area shrinks below its minimum width', async () => {
-      const remainingSpace = 1200 - (editorBorderLeft + editorBorderRight) - 280;
-      await SidebarUtils.resizeSidebarBy([ -1000, 0 ]);
-      assertSidebarWidth(remainingSpace, 'The sidebar should be capped so the editing area keeps its minimum width');
-      assert.equal(SidebarUtils.getSidebarRequestedWidth(), remainingSpace, 'The requested width should also be capped, since the drag logic clamps it directly rather than relying on the CSS clamp');
-      assert.equal(Width.get(SidebarUtils.getEditArea()), 280, 'The editing area must not shrink below its minimum width');
-    });
-  });
-
-  context('TINYMCE-14530: Fractional available width rounding', () => {
-    const editorParentElementWidth = 420.5;
-
-    const setupElement = () => {
-      const editorParentElement = SugarElement.fromTag('div');
-      Css.set(editorParentElement, 'width', `${editorParentElementWidth}px`);
-      const target = SugarElement.fromTag('textarea');
-      Insert.append(editorParentElement, target);
-      Insert.append(SugarBody.body(), editorParentElement);
-      return {
-        element: target,
-        teardown: () => Remove.remove(editorParentElement)
-      };
-    };
-
-    const hook = setupEditorHook({
-      sidebar_show: 'sidebarone',
-      sidebar_width: 100,
-      sidebar_min_width: 100,
-      sidebar_max_width: 5000,
-      setupElement
-    });
-
-    it('TINYMCE-14530: should floor the fractional available width so the editing area never drops below its minimum', async () => {
-      const editor = hook.editor();
-
-      const editorWidth = Width.get(TinyDom.container(editor));
-      assert.equal(editorWidth, editorParentElementWidth, 'The editor should take 100% of its fractional-width container');
-
-      const wrapWidth = Width.get(SidebarUtils.getSidebarWrap());
-      assert.equal(wrapWidth, editorParentElementWidth - editorBorderLeft - editorBorderRight, 'The sidebar-wrap width should be fractional');
-
-      await SidebarUtils.resizeSidebarBy([ -1000, 0 ]);
-
-      // The sidebar caps at an integer width and leaves the fractional remainder to the editing area.
-      assertSidebarWidth(136, 'The sidebar should be capped at the floored available width');
-      assert.equal(SidebarUtils.getSidebarRequestedWidth(), 136, 'The requested width should match the actual width of the sidebar');
-      const editAreaWidth = Width.get(SidebarUtils.getEditArea());
-      assert.equal(editAreaWidth, 280.5, 'The editing area should keep the fractional remainder');
-    });
-  });
-
-  // TODO: The same situation can happen not on init, but once the editor will be resized, add test
-  context.skip('TINYMCE-14530: Editing area minimum width on init', () => {
-    setupEditorHook({ sidebar_show: 'sidebarone', sidebar_width: 1000, sidebar_min_width: 1000, sidebar_max_width: 5000, width: 1200 });
-
-    it('TINYMCE-14530: should not render the sidebar so wide on init that the editing area shrinks below its minimum width', () => {
-      assert.equal(Width.get(SidebarUtils.getEditArea()), 280, 'The editing area must not shrink below its minimum width on init');
-      assertSidebarWidth(920, 'The sidebar should be capped below its configured minimum so the editing area keeps its minimum width');
-      assert.equal(SidebarUtils.getSidebarRequestedWidth(), 1000, 'The requested width should stay at the configured initial width; only the rendered width is reduced by the CSS clamp');
-    });
-  });
-
   context('TINYMCE-14527: Persistence', () => {
     const initialWidth = 440;
     const hook = setupEditorHook({ sidebar_width: 440, sidebar_min_width: 300, sidebar_max_width: 800 });
@@ -259,6 +194,75 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
       editor.execCommand('ToggleSidebar', false, 'sidebartwo');
       await SidebarUtils.pWaitForSidebarOpen();
       assertSidebarWidth(490, 'The resized width should survive switching between panels');
+    });
+  });
+
+  context('TINYMCE-14530: Editing area minimum width protection', () => {
+    context('TINYMCE-14530: Editing area minimum width constraint', () => {
+      setupEditorHook({ sidebar_show: 'sidebarone', sidebar_width: 200, sidebar_min_width: 100, sidebar_max_width: 5000, width: 1200 });
+
+      it('TINYMCE-14530: should not let the sidebar grow to the point where the editing area shrinks below its minimum width', async () => {
+        const remainingSpace = 1200 - (editorBorderLeft + editorBorderRight) - 280;
+        await SidebarUtils.resizeSidebarBy([ -1000, 0 ]);
+        assertSidebarWidth(remainingSpace, 'The sidebar should be capped so the editing area keeps its minimum width');
+        assert.equal(SidebarUtils.getSidebarRequestedWidth(), remainingSpace, 'The requested width should also be capped, since the drag logic clamps it directly rather than relying on the CSS clamp');
+        assert.equal(Width.get(SidebarUtils.getEditArea()), 280, 'The editing area must not shrink below its minimum width');
+      });
+    });
+
+    context('TINYMCE-14530: Fractional available width rounding', () => {
+      const editorParentElementWidth = 420.5;
+
+      const setupElement = () => {
+        const editorParentElement = SugarElement.fromTag('div');
+        Css.set(editorParentElement, 'width', `${editorParentElementWidth}px`);
+        const target = SugarElement.fromTag('textarea');
+        Insert.append(editorParentElement, target);
+        Insert.append(SugarBody.body(), editorParentElement);
+        return {
+          element: target,
+          teardown: () => Remove.remove(editorParentElement)
+        };
+      };
+
+      const hook = setupEditorHook({
+        sidebar_show: 'sidebarone',
+        sidebar_width: 100,
+        sidebar_min_width: 100,
+        sidebar_max_width: 5000,
+        setupElement
+      });
+
+      it('TINYMCE-14530: should floor the fractional available width so the editing area never drops below its minimum', async () => {
+        const editor = hook.editor();
+
+        const editorWidth = Width.get(TinyDom.container(editor));
+        assert.equal(editorWidth, editorParentElementWidth, 'The editor should take 100% of its fractional-width container');
+
+        const wrapWidth = Width.get(SidebarUtils.getSidebarWrap());
+        assert.equal(wrapWidth, editorParentElementWidth - editorBorderLeft - editorBorderRight, 'The sidebar-wrap width should be fractional');
+
+        await SidebarUtils.resizeSidebarBy([ -1000, 0 ]);
+
+        // The sidebar caps at an integer width and leaves the fractional remainder to the editing area.
+        assertSidebarWidth(136, 'The sidebar should be capped at the floored available width');
+        assert.equal(SidebarUtils.getSidebarRequestedWidth(), 136, 'The requested width should match the actual width of the sidebar');
+        const editAreaWidth = Width.get(SidebarUtils.getEditArea());
+        assert.equal(editAreaWidth, 280.5, 'The editing area should keep the fractional remainder');
+      });
+    });
+
+    // TODO: start working on it
+
+    // TODO: The same situation can happen not on init, but once the editor will be resized, add test
+    context.skip('TINYMCE-14530: Editing area minimum width on init', () => {
+      setupEditorHook({ sidebar_show: 'sidebarone', sidebar_width: 1000, sidebar_min_width: 1000, sidebar_max_width: 5000, width: 1200 });
+
+      it('TINYMCE-14530: should not render the sidebar so wide on init that the editing area shrinks below its minimum width', () => {
+        assert.equal(Width.get(SidebarUtils.getEditArea()), 280, 'The editing area must not shrink below its minimum width on init');
+        assertSidebarWidth(920, 'The sidebar should be capped below its configured minimum so the editing area keeps its minimum width');
+        assert.equal(SidebarUtils.getSidebarRequestedWidth(), 1000, 'The requested width should stay at the configured initial width; only the rendered width is reduced by the CSS clamp');
+      });
     });
   });
 });
