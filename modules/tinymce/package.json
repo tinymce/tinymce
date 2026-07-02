@@ -36,7 +36,7 @@
     "@tinymce/oxide-icons-default": "^4.0.0",
     "@tinymce/persona": "^1.0.0",
     "@types/prismjs": "^1.16.6",
-    "dompurify": "3.4.5",
+    "dompurify": "3.4.11",
     "prismjs": "^1.27.0"
   },
   "devDependencies": {
