@@ -9,6 +9,7 @@ import { assert } from 'chai';
 import type Editor from 'tinymce/core/api/Editor';
 
 import * as SidebarUtils from '../../module/SidebarUtils';
+import { resizeEditorBy } from '../../module/UiUtils';
 
 // When setting editor width, `width: 1200` the whole editor width is 1200px
 // but there's a border on the left and on the right, so the inner width is 1194px.
@@ -16,7 +17,7 @@ const editorBorderLeft = 2;
 const editorBorderRight = 2;
 
 describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
-  const setupEditorHook = (configOverrides: { sidebar_show?: string; sidebar_min_width?: number; sidebar_max_width?: number; sidebar_width?: number; width?: number; setupElement?: () => TinyHooks.SetupElement } = {}) => {
+  const setupEditorHook = (configOverrides: { sidebar_show?: string; sidebar_min_width?: number; sidebar_max_width?: number; sidebar_width?: number; width?: number; resize?: boolean | 'both'; setupElement?: () => TinyHooks.SetupElement } = {}) => {
     const { setupElement, ...settings } = configOverrides;
     const config = {
       base_url: '/project/tinymce/js/tinymce',
@@ -50,6 +51,11 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
   const resetSidebarWidth = async (initialWidth: number) => {
     const sidebar = SidebarUtils.getSidebar();
     await SidebarUtils.resizeSidebarBy([ Width.get(sidebar) - initialWidth, 0 ]);
+  };
+
+  const resetEditorWidth = async (editor: Editor, initialWidth: number) => {
+    const container = TinyDom.container(editor);
+    await resizeEditorBy([ initialWidth - Width.get(container), 0 ]);
   };
 
   context('TINYMCE-14527: Resizing the sidebar', () => {
@@ -252,7 +258,84 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
       });
     });
 
-    // TODO: start working on it
+    // TODO: I think I should group these tests?
+    context('TINYMCE-14530: Editing area minimum width when the editor is resized', () => {
+      const editorInitialWidth = 1500;
+      const sidebarInitialWidth = 1000;
+      const hook = setupEditorHook({ sidebar_show: 'sidebarone', sidebar_width: sidebarInitialWidth, sidebar_max_width: 1000, resize: 'both', width: editorInitialWidth });
+
+      afterEach(async () => {
+        const editor = hook.editor();
+        await resetEditorWidth(editor, editorInitialWidth);
+        await resetSidebarWidth(sidebarInitialWidth);
+      });
+
+      it('TINYMCE-14530: should clamp the sidebar when the editor shrinks and restore it when the editor grows back', async () => {
+        const editor = hook.editor();
+
+        assert.equal(Width.get(TinyDom.container(editor)), 1500, 'The editor should start at its configured width');
+        assertSidebarWidth(1000, 'The sidebar should start at its configured width');
+        assert.equal(SidebarUtils.getSidebarRequestedWidth(), 1000, 'The requested width should match the configured width');
+
+        await resizeEditorBy([ -400, 0 ]);
+
+        assert.equal(Width.get(TinyDom.container(editor)), 1100, 'The editor should shrink');
+        assert.equal(Width.get(SidebarUtils.getEditArea()), 280, 'The editing area must not shrink below its minimum width');
+        assertSidebarWidth(820 - editorBorderLeft - editorBorderRight, 'The sidebar should be clamped so the editing area keeps its minimum width');
+        assert.equal(SidebarUtils.getSidebarRequestedWidth(), 1000, 'The requested width should be preserved while the rendered width is clamped');
+
+        await resizeEditorBy([ 400, 0 ]);
+
+        assert.equal(Width.get(TinyDom.container(editor)), 1500, 'The editor should grow back');
+        assertSidebarWidth(1000, 'The sidebar should return to its requested width once there is room again');
+        assert.equal(SidebarUtils.getSidebarRequestedWidth(), 1000, 'The requested width should have been preserved throughout');
+      });
+
+      it('TINYMCE-14530: should still resize the sidebar by dragging while the editing area is clamped at its minimum', async () => {
+        const editor = hook.editor();
+
+        assert.equal(Width.get(TinyDom.container(editor)), 1500, 'The editor should start at its configured width');
+        assertSidebarWidth(1000, 'The sidebar should start at its configured width');
+        assert.equal(SidebarUtils.getSidebarRequestedWidth(), 1000, 'The requested width should match the configured width');
+
+        await resizeEditorBy([ -400, 0 ]);
+
+        assert.equal(Width.get(TinyDom.container(editor)), 1100, 'The editor should shrink to 1100px');
+        assert.equal(Width.get(SidebarUtils.getEditArea()), 280, 'The editing area must not shrink below its minimum width');
+        assertSidebarWidth(820 - editorBorderLeft - editorBorderRight, 'The sidebar should be clamped so the editing area keeps its minimum width');
+        assert.equal(SidebarUtils.getSidebarRequestedWidth(), 1000, 'The requested width should be preserved while the rendered width is clamped');
+
+        await SidebarUtils.resizeSidebarBy([ 40, 0 ]);
+
+        assertSidebarWidth(820 - editorBorderLeft - editorBorderRight - 40, 'Dragging the handle should shrink the rendered sidebar');
+        assert.equal(SidebarUtils.getSidebarRequestedWidth(), 820 - editorBorderLeft - editorBorderRight - 40, 'Dragging the handle should update the requested width even while the editing area was clamped');
+      });
+    });
+
+    context('TINYMCE-14530: Growing the sidebar while the editing area is clamped', () => {
+      const hook = setupEditorHook({ sidebar_show: 'sidebarone', sidebar_width: 1000, sidebar_max_width: 5000, resize: 'both', width: 1500 });
+
+      it('TINYMCE-14530: should cap the sidebar at the editing area minimum when dragging to grow it while the editing area is clamped', async () => {
+        const editor = hook.editor();
+
+        assert.equal(Width.get(TinyDom.container(editor)), 1500, 'The editor should start at its configured width');
+        assertSidebarWidth(1000, 'The sidebar should start at its configured width');
+        assert.equal(SidebarUtils.getSidebarRequestedWidth(), 1000, 'The requested width should match the configured width');
+
+        await resizeEditorBy([ -400, 0 ]);
+
+        assert.equal(Width.get(TinyDom.container(editor)), 1100, 'The editor should shrink to 1100px');
+        assertSidebarWidth(820 - editorBorderLeft - editorBorderRight, 'The sidebar should be clamped so the editing area keeps its minimum width');
+        assert.equal(SidebarUtils.getSidebarRequestedWidth(), 1000, 'The requested width should be preserved while the rendered width is clamped');
+        assert.equal(Width.get(SidebarUtils.getEditArea()), 280, 'The editing area must not shrink below its minimum width');
+
+        await SidebarUtils.resizeSidebarBy([ -100, 0 ]);
+
+        assertSidebarWidth(820 - editorBorderLeft - editorBorderRight, 'Dragging to grow should be capped at the editing area minimum, using the recomputed limit for the shrunk editor');
+        assert.equal(SidebarUtils.getSidebarRequestedWidth(), 820 - editorBorderLeft - editorBorderRight, 'The requested width should update to the capped width when dragging to grow');
+        assert.equal(Width.get(SidebarUtils.getEditArea()), 280, 'The editing area must still be kept at its minimum width');
+      });
+    });
 
     // TODO: The same situation can happen not on init, but once the editor will be resized, add test
     context.skip('TINYMCE-14530: Editing area minimum width on init', () => {
