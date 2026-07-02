@@ -33,6 +33,7 @@ export const makeSidebarResizeHandle = (editor: Editor): AlloySpec => {
               .map((wrap) => Math.floor(Width.get(wrap)) - SidebarResize.minEditingAreaWidth)
               .getOr(maxWidth);
             const effectiveMax = Math.min(maxWidth, availableMax);
+            // TODO, effectiveMax can be now smaller than minWidth - handle that and test it
             Resizing.start(handle, Width.get(sidebar), Height.get(sidebar), { minWidth, maxWidth: effectiveMax });
           });
         },
