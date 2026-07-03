@@ -29,6 +29,9 @@ export const makeSidebarResizeHandle = (): AlloySpec => ({
       onDrag: (handle, _target, delta) => {
         // The handle sits on the sidebar's left edge, so dragging left should grow it: invert the horizontal delta.
         Resizing.moveBy(handle, SugarPosition(delta.left * -1, 0));
+      },
+      onDrop: (handle) => {
+        Resizing.stop(handle);
       }
     }),
     Resizing.config({

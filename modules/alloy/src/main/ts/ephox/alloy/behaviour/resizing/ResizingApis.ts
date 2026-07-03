@@ -10,6 +10,10 @@ const start = (_component: AlloyComponent, _config: ResizingConfig, state: Resiz
 };
 
 const moveBy = (component: AlloyComponent, config: ResizingConfig, state: ResizingState, delta: SugarPosition): void => {
+  if (!state.isActive()) {
+    return;
+  }
+
   const accumulatedDelta = state.drag(delta);
   const bounds = state.getBounds();
 
@@ -19,7 +23,8 @@ const moveBy = (component: AlloyComponent, config: ResizingConfig, state: Resizi
   config.resize(component, width, height);
 };
 
-const stop = (_component: AlloyComponent, _config: ResizingConfig, _state: ResizingState): void => {
+const stop = (_component: AlloyComponent, _config: ResizingConfig, state: ResizingState): void => {
+  state.stop();
 };
 
 export {

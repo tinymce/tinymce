@@ -36,6 +36,8 @@ export interface ResizingConfig extends Behaviour.BehaviourConfigDetail {
 
 export interface ResizingState extends BehaviourState {
   start: (width: number, height: number, bounds?: ResizeBounds) => void;
+  stop: () => void;
+  isActive: () => boolean;
   drag: (delta: SugarPosition) => SugarPosition;
   getOriginalWidth: () => number;
   getOriginalHeight: () => number;
