@@ -186,12 +186,13 @@
     .tox-icon {
       display: contents;
     }
-  }
 
-  :nth-child(2 of .tox-ai__response-status-icon){
-    margin-left: calc((var(--tox-private-pad-sm, @pad-sm) + var(--tox-private-pad-xs, @pad-xs)) * -1);
+    // This selects every .tox-ai__response-status-icon that follows another .tox-ai__response-status-icon.
+    // It applies the negative margin-left to create the desired spacing between consecutive status icons.
+    & + .tox-ai__response-status-icon {
+      margin-left: calc((var(--tox-private-pad-sm, @pad-sm) + var(--tox-private-pad-xs, @pad-xs)) * -1);
+    }
   }
-
 
   .tox-ai__icon {
     display: flex;
