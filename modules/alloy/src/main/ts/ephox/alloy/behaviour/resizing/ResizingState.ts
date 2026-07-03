@@ -9,6 +9,7 @@ const init = (): ResizingState => {
   const originalWidth = Cell(0);
   const originalHeight = Cell(0);
   const accumulatedDelta = Cell<SugarPosition>(SugarPosition(0, 0));
+  const active = Cell(false);
   const bounds = Cell<ResizeBoundsOptional>({
     minWidth: Optional.none(),
     maxWidth: Optional.none(),
@@ -26,7 +27,14 @@ const init = (): ResizingState => {
       minHeight: Optional.from(newBounds.minHeight),
       maxHeight: Optional.from(newBounds.maxHeight)
     });
+    active.set(true);
   };
+
+  const stop = (): void => {
+    active.set(false);
+  };
+
+  const isActive = (): boolean => active.get();
 
   const drag = (delta: SugarPosition): SugarPosition => {
     const acc = accumulatedDelta.get().translate(delta.left, delta.top);
@@ -44,11 +52,14 @@ const init = (): ResizingState => {
     originalWidth: originalWidth.get(),
     originalHeight: originalHeight.get(),
     accumulatedDelta: accumulatedDelta.get(),
+    active: active.get(),
     bounds: bounds.get()
   });
 
   return nuState({
     start,
+    stop,
+    isActive,
     drag,
     getOriginalWidth,
     getOriginalHeight,
