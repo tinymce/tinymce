@@ -1,4 +1,4 @@
-import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
+import { afterEach, beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { SugarPosition } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -23,8 +23,10 @@ describe('browser.alloy.behaviour.ResizingTest', () => {
     ])
   }));
 
-  beforeEach(() => {
+  afterEach(() => {
+    const comp = hook.component();
     hook.store().clear();
+    Resizing.stop(comp);
   });
 
   context('TINYMCE-14527: Resizing behaviour', () => {
@@ -68,8 +70,26 @@ describe('browser.alloy.behaviour.ResizingTest', () => {
 
       Resizing.start(comp, 300, 400);
       Resizing.moveBy(comp, SugarPosition(10, 10));
-
       store.assertEq('drag after reset uses the new baseline', [{ width: 310, height: 410 }]);
+    });
+
+    it('TINYMCE-14527: should capture moveBy again after start is called following a stop', () => {
+      const comp = hook.component();
+      const store = hook.store();
+
+      Resizing.start(comp, 300, 400);
+      Resizing.moveBy(comp, SugarPosition(10, 20));
+      store.assertEq('first drag is captured', [{ width: 310, height: 420 }]);
+      store.clear();
+
+      Resizing.stop(comp);
+      Resizing.moveBy(comp, SugarPosition(50, 50));
+      store.assertEq('drag while stopped is ignored', []);
+      store.clear();
+
+      Resizing.start(comp, 300, 400);
+      Resizing.moveBy(comp, SugarPosition(15, 25));
+      store.assertEq('drag after restart uses a fresh baseline', [{ width: 315, height: 425 }]);
     });
   });
 
