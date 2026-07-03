@@ -19,7 +19,11 @@ const moveBy = (component: AlloyComponent, config: ResizingConfig, state: Resizi
   config.resize(component, width, height);
 };
 
+const stop = (_component: AlloyComponent, _config: ResizingConfig, _state: ResizingState): void => {
+};
+
 export {
   start,
-  moveBy
+  moveBy,
+  stop
 };

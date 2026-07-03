@@ -23,6 +23,7 @@ export interface ResizingBehaviour extends Behaviour.AlloyBehaviour<ResizingConf
   config: (config: ResizingConfigSpec) => Behaviour.NamedConfiguredBehaviour<ResizingConfigSpec, ResizingConfig>;
   start: (component: AlloyComponent, width: number, height: number, bounds?: ResizeBounds) => void;
   moveBy: (component: AlloyComponent, delta: SugarPosition) => void;
+  stop: (component: AlloyComponent) => void;
 }
 
 export interface ResizingConfigSpec extends Behaviour.BehaviourConfigSpec {
