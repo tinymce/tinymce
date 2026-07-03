@@ -17,8 +17,8 @@ const moveBy = (component: AlloyComponent, config: ResizingConfig, state: Resizi
   const accumulatedDelta = state.drag(delta);
   const bounds = state.getBounds();
 
-  const width = Num.clamp(state.getOriginalWidth() + accumulatedDelta.left, bounds.minWidth.getOr(0), bounds.maxWidth.getOr(Number.MAX_VALUE));
-  const height = Num.clamp(state.getOriginalHeight() + accumulatedDelta.top, bounds.minHeight.getOr(0), bounds.maxHeight.getOr(Number.MAX_VALUE));
+  const width = Num.clamp(Math.round(state.getOriginalWidth() + accumulatedDelta.left), bounds.minWidth.getOr(0), bounds.maxWidth.getOr(Number.MAX_VALUE));
+  const height = Num.clamp(Math.round(state.getOriginalHeight() + accumulatedDelta.top), bounds.minHeight.getOr(0), bounds.maxHeight.getOr(Number.MAX_VALUE));
 
   config.resize(component, width, height);
 };
