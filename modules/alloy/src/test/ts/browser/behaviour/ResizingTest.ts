@@ -155,6 +155,56 @@ describe('browser.alloy.behaviour.ResizingTest', () => {
     });
   });
 
+  context('TINYMCE-14527: Rounding', () => {
+    it('TINYMCE-14527: should round a fractional delta to an integer output on both axes', () => {
+      const comp = hook.component();
+      const store = hook.store();
+
+      Resizing.start(comp, 300, 400);
+      Resizing.moveBy(comp, SugarPosition(10.4, 20.6));
+
+      store.assertEq('fractional delta is rounded', [{ width: 310, height: 421 }]);
+    });
+
+    it('TINYMCE-14527: should not accumulate rounding error (drift) across repeated fractional drags', () => {
+      const comp = hook.component();
+      const store = hook.store();
+
+      Resizing.start(comp, 300, 400);
+
+      Resizing.moveBy(comp, SugarPosition(0.6, 0.6));
+      store.assertEq('drag 1', [{ width: 301, height: 401 }]);
+      store.clear();
+
+      Resizing.moveBy(comp, SugarPosition(0.6, 0.6));
+      store.assertEq('drag 2 (no drift)', [{ width: 301, height: 401 }]);
+      store.clear();
+
+      Resizing.moveBy(comp, SugarPosition(0.6, 0.6));
+      store.assertEq('drag 3 (no drift)', [{ width: 302, height: 402 }]);
+    });
+
+    it('TINYMCE-14527: should keep a fractional max authoritative when the rounded value would exceed it', () => {
+      const comp = hook.component();
+      const store = hook.store();
+
+      Resizing.start(comp, 300, 300, { minWidth: 200, maxWidth: 440.5, minHeight: 200, maxHeight: 440.5 });
+      Resizing.moveBy(comp, SugarPosition(200, 200));
+
+      store.assertEq('never exceeds a fractional max', [{ width: 440.5, height: 440.5 }]);
+    });
+
+    it('TINYMCE-14527: should keep a fractional min authoritative when the rounded value would drop below it', () => {
+      const comp = hook.component();
+      const store = hook.store();
+
+      Resizing.start(comp, 300, 300, { minWidth: 200.25, maxWidth: 600, minHeight: 200.25, maxHeight: 600 });
+      Resizing.moveBy(comp, SugarPosition(-200, -200));
+
+      store.assertEq('never drops below a fractional min', [{ width: 200.25, height: 200.25 }]);
+    });
+  });
+
   context('TINYMCE-14527: Height constraints', () => {
     it('TINYMCE-14527: should not resize past the max height', () => {
       const comp = hook.component();
