@@ -346,13 +346,19 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
     });
 
     // TODO: The same situation can happen not on init, but once the editor will be resized, add test
-    context.skip('TINYMCE-14530: Editing area minimum width on init', () => {
+    // TODO: I should write that test so it handles editor resizing as it'll be more real-world
+    context.only('TINYMCE-14530: Editing area minimum width on init', () => {
       setupEditorHook({ sidebar_show: 'sidebarone', sidebar_width: 1000, sidebar_min_width: 1000, sidebar_max_width: 5000, width: 1200 });
 
-      it('TINYMCE-14530: should not render the sidebar so wide on init that the editing area shrinks below its minimum width', () => {
+      it('TINYMCE-14530: should not render the sidebar so wide on init that the editing area shrinks below its minimum width', async () => {
         assert.equal(Width.get(SidebarUtils.getEditArea()), 280, 'The editing area must not shrink below its minimum width on init');
-        assertSidebarWidth(920, 'The sidebar should be capped below its configured minimum so the editing area keeps its minimum width');
+        assertSidebarWidth(920 - editorBorderLeft - editorBorderRight, 'The sidebar should be capped below its configured minimum so the editing area keeps its minimum width');
         assert.equal(SidebarUtils.getSidebarRequestedWidth(), 1000, 'The requested width should stay at the configured initial width; only the rendered width is reduced by the CSS clamp');
+
+        await SidebarUtils.resizeSidebarBy([ 10, 0 ]);
+
+        assertSidebarWidth(920 - editorBorderLeft - editorBorderRight, 'TODO');
+        assert.equal(SidebarUtils.getSidebarRequestedWidth(), 1000, 'TODO'); // requested should never be set below sidebar_min_width
       });
     });
   });

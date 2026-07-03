@@ -25,12 +25,14 @@ export const makeSidebarResizeHandle = (sizeConstraints: SidebarSizeConstraints)
         repositionTarget: false,
         onDragStart: (handle) => {
           findSidebar(handle).each((sidebar) => {
+            const sidebarWidth = Width.get(sidebar);
             const availableMax = findSidebarWrap(handle)
               .map((wrap) => Math.floor(Width.get(wrap)) - SidebarResize.minEditingAreaWidth)
               .getOr(maxWidth);
             const effectiveMax = Math.min(maxWidth, availableMax);
-            // TODO, effectiveMax can be now smaller than minWidth - handle that and test it
-            Resizing.start(handle, Width.get(sidebar), Height.get(sidebar), { minWidth, maxWidth: effectiveMax });
+            if (sidebarWidth >= minWidth) {
+              Resizing.start(handle, Width.get(sidebar), Height.get(sidebar), { minWidth, maxWidth: effectiveMax });
+            }
           });
         },
         onDrag: (handle, _target, delta) => {
