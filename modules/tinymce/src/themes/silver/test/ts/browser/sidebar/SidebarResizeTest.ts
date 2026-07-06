@@ -213,15 +213,17 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
   });
 
   context('TINYMCE-14530: Editing area minimum width protection', () => {
+    const minEditingAreaWidth = 280;
+
     context('TINYMCE-14530: Editing area minimum width constraint', () => {
       setupEditorHook({ sidebar_show: 'sidebarone', sidebar_width: 200, sidebar_min_width: 100, sidebar_max_width: 5000, width: 1200 });
 
       it('TINYMCE-14530: should not let the sidebar grow to the point where the editing area shrinks below its minimum width', async () => {
-        const remainingSpace = 1200 - (editorBorderLeft + editorBorderRight) - 280;
+        const remainingSpace = 1200 - (editorBorderLeft + editorBorderRight) - minEditingAreaWidth;
         await SidebarUtils.resizeSidebarBy([ -1000, 0 ]);
         assertSidebarWidth(remainingSpace, 'The sidebar should be capped so the editing area keeps its minimum width');
         assert.equal(SidebarUtils.getSidebarRequestedWidth(), remainingSpace, 'The requested width should also be capped, since the drag logic clamps it directly rather than relying on the CSS clamp');
-        assert.equal(Width.get(SidebarUtils.getEditArea()), 280, 'The editing area must not shrink below its minimum width');
+        assert.equal(Width.get(SidebarUtils.getEditArea()), minEditingAreaWidth, 'The editing area must not shrink below its minimum width');
       });
     });
 
@@ -288,8 +290,8 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
         await resizeEditorBy([ -400, 0 ]);
 
         assert.equal(Width.get(TinyDom.container(editor)), 1100, 'The editor should shrink');
-        assert.equal(Width.get(SidebarUtils.getEditArea()), 280, 'The editing area must not shrink below its minimum width');
-        assertSidebarWidth(820 - editorBorderLeft - editorBorderRight, 'The sidebar should be clamped so the editing area keeps its minimum width');
+        assert.equal(Width.get(SidebarUtils.getEditArea()), minEditingAreaWidth, 'The editing area must not shrink below its minimum width');
+        assertSidebarWidth(1100 - minEditingAreaWidth - editorBorderLeft - editorBorderRight, 'The sidebar should be clamped so the editing area keeps its minimum width');
         assert.equal(SidebarUtils.getSidebarRequestedWidth(), 1000, 'The requested width should be preserved while the rendered width is clamped');
 
         await resizeEditorBy([ 400, 0 ]);
@@ -308,15 +310,15 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
 
         await resizeEditorBy([ -400, 0 ]);
 
-        assert.equal(Width.get(TinyDom.container(editor)), 1100, 'The editor should shrink to 1100px');
-        assert.equal(Width.get(SidebarUtils.getEditArea()), 280, 'The editing area must not shrink below its minimum width');
-        assertSidebarWidth(820 - editorBorderLeft - editorBorderRight, 'The sidebar should be clamped so the editing area keeps its minimum width');
+        assert.equal(Width.get(TinyDom.container(editor)), 1100, 'The editor should shrink');
+        assert.equal(Width.get(SidebarUtils.getEditArea()), minEditingAreaWidth, 'The editing area must not shrink below its minimum width');
+        assertSidebarWidth(1100 - minEditingAreaWidth - editorBorderLeft - editorBorderRight, 'The sidebar should be clamped so the editing area keeps its minimum width');
         assert.equal(SidebarUtils.getSidebarRequestedWidth(), 1000, 'The requested width should be preserved while the rendered width is clamped');
 
         await SidebarUtils.resizeSidebarBy([ 40, 0 ]);
 
-        assertSidebarWidth(820 - editorBorderLeft - editorBorderRight - 40, 'Dragging the handle should shrink the rendered sidebar');
-        assert.equal(SidebarUtils.getSidebarRequestedWidth(), 820 - editorBorderLeft - editorBorderRight - 40, 'Dragging the handle should update the requested width even while the editing area was clamped');
+        assertSidebarWidth(1100 - minEditingAreaWidth - editorBorderLeft - editorBorderRight - 40, 'Dragging the handle should shrink the rendered sidebar');
+        assert.equal(SidebarUtils.getSidebarRequestedWidth(), 1100 - minEditingAreaWidth - editorBorderLeft - editorBorderRight - 40, 'Dragging the handle should update the requested width even while the editing area was clamped');
       });
     });
 
@@ -332,16 +334,16 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
 
         await resizeEditorBy([ -400, 0 ]);
 
-        assert.equal(Width.get(TinyDom.container(editor)), 1100, 'The editor should shrink to 1100px');
-        assertSidebarWidth(820 - editorBorderLeft - editorBorderRight, 'The sidebar should be clamped so the editing area keeps its minimum width');
+        assert.equal(Width.get(TinyDom.container(editor)), 1100, 'The editor should shrink');
+        assertSidebarWidth(1100 - minEditingAreaWidth - editorBorderLeft - editorBorderRight, 'The sidebar should be clamped so the editing area keeps its minimum width');
         assert.equal(SidebarUtils.getSidebarRequestedWidth(), 1000, 'The requested width should be preserved while the rendered width is clamped');
-        assert.equal(Width.get(SidebarUtils.getEditArea()), 280, 'The editing area must not shrink below its minimum width');
+        assert.equal(Width.get(SidebarUtils.getEditArea()), minEditingAreaWidth, 'The editing area must not shrink below its minimum width');
 
         await SidebarUtils.resizeSidebarBy([ -100, 0 ]);
 
-        assertSidebarWidth(820 - editorBorderLeft - editorBorderRight, 'Dragging to grow should be capped at the editing area minimum, using the recomputed limit for the shrunk editor');
-        assert.equal(SidebarUtils.getSidebarRequestedWidth(), 820 - editorBorderLeft - editorBorderRight, 'The requested width should update to the capped width when dragging to grow');
-        assert.equal(Width.get(SidebarUtils.getEditArea()), 280, 'The editing area must still be kept at its minimum width');
+        assertSidebarWidth(1100 - minEditingAreaWidth - editorBorderLeft - editorBorderRight, 'Dragging to grow should be capped at the editing area minimum, using the recomputed limit for the shrunk editor');
+        assert.equal(SidebarUtils.getSidebarRequestedWidth(), 1100 - minEditingAreaWidth - editorBorderLeft - editorBorderRight, 'The requested width should update to the capped width when dragging to grow');
+        assert.equal(Width.get(SidebarUtils.getEditArea()), minEditingAreaWidth, 'The editing area must still be kept at its minimum width');
       });
     });
 
@@ -358,12 +360,12 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
         await resizeEditorBy([ -500, 0 ]);
 
         assert.equal(Width.get(TinyDom.container(editor)), 1000, 'The editor should shrink');
-        assert.equal(Width.get(SidebarUtils.getEditArea()), 280, 'The editing area must not shrink below its minimum width');
-        assertSidebarWidth(720 - editorBorderLeft - editorBorderRight, 'The sidebar should be clamped so the editing area keeps its minimum width, even though that leaves it narrower than its configured minimum width');
+        assert.equal(Width.get(SidebarUtils.getEditArea()), minEditingAreaWidth, 'The editing area must not shrink below its minimum width');
+        assertSidebarWidth(1000 - minEditingAreaWidth - editorBorderLeft - editorBorderRight, 'The sidebar should be clamped so the editing area keeps its minimum width, even though that leaves it narrower than its configured minimum width');
         assert.equal(SidebarUtils.getSidebarRequestedWidth(), 1000, 'The requested width should be preserved while the rendered width is clamped');
 
         await SidebarUtils.resizeSidebarBy([ 10, 0 ]);
-        assertSidebarWidth(720 - editorBorderLeft - editorBorderRight, 'Dragging should not move the sidebar, since the editing area minimum leaves no room and the configured minimum width cannot be honoured');
+        assertSidebarWidth(1000 - minEditingAreaWidth - editorBorderLeft - editorBorderRight, 'Dragging should not move the sidebar');
         assert.equal(SidebarUtils.getSidebarRequestedWidth(), 1000, 'The requested width should be preserved because the drag cannot change the clamped width');
       });
     });
