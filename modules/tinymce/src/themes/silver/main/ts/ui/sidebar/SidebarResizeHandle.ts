@@ -30,8 +30,11 @@ export const makeSidebarResizeHandle = (sizeConstraints: SidebarSizeConstraints)
               .map((wrap) => Math.floor(Width.get(wrap)) - SidebarResize.minEditingAreaWidth)
               .getOr(maxWidth);
             const effectiveMax = Math.min(maxWidth, availableMax);
-            if (sidebarWidth >= minWidth) {
-              Resizing.start(handle, Width.get(sidebar), Height.get(sidebar), { minWidth, maxWidth: effectiveMax });
+            // When the editor is too narrow to honour both the sidebar's configured minimum
+            // and the editing area's minimum, the range is unsatisfiable. Skip the resize so a
+            // drag can't clobber the preserved requested width with the clamped value.
+            if (effectiveMax >= minWidth) {
+              Resizing.start(handle, sidebarWidth, Height.get(sidebar), { minWidth, maxWidth: effectiveMax });
             }
           });
         },
