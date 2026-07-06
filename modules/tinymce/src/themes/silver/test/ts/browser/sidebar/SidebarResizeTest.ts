@@ -345,20 +345,26 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
       });
     });
 
-    // TODO: The same situation can happen not on init, but once the editor will be resized, add test
-    // TODO: I should write that test so it handles editor resizing as it'll be more real-world
-    context.only('TINYMCE-14530: Editing area minimum width on init', () => {
-      setupEditorHook({ sidebar_show: 'sidebarone', sidebar_width: 1000, sidebar_min_width: 1000, sidebar_max_width: 5000, width: 1200 });
+    context('TINYMCE-14530: Dragging the sidebar while it is clamped below its configured minimum width', () => {
+      const hook = setupEditorHook({ sidebar_show: 'sidebarone', sidebar_width: 1000, sidebar_min_width: 900, sidebar_max_width: 1200, width: 1500, resize: 'both', statusbar: true });
 
-      it('TINYMCE-14530: should not render the sidebar so wide on init that the editing area shrinks below its minimum width', async () => {
-        assert.equal(Width.get(SidebarUtils.getEditArea()), 280, 'The editing area must not shrink below its minimum width on init');
-        assertSidebarWidth(920 - editorBorderLeft - editorBorderRight, 'The sidebar should be capped below its configured minimum so the editing area keeps its minimum width');
-        assert.equal(SidebarUtils.getSidebarRequestedWidth(), 1000, 'The requested width should stay at the configured initial width; only the rendered width is reduced by the CSS clamp');
+      it('TINYMCE-14530: should leave the sidebar untouched when dragging it while it is already clamped below its configured minimum width', async () => {
+        const editor = hook.editor();
+
+        assert.equal(Width.get(SidebarUtils.getEditArea()), 500 - editorBorderLeft - editorBorderRight, 'The editing area should start at the space left over after the configured sidebar width');
+        assertSidebarWidth(1000, 'The sidebar should start at its configured width');
+        assert.equal(SidebarUtils.getSidebarRequestedWidth(), 1000, 'The requested width should match the configured width');
+
+        await resizeEditorBy([ -500, 0 ]);
+
+        assert.equal(Width.get(TinyDom.container(editor)), 1000, 'The editor should shrink');
+        assert.equal(Width.get(SidebarUtils.getEditArea()), 280, 'The editing area must not shrink below its minimum width');
+        assertSidebarWidth(720 - editorBorderLeft - editorBorderRight, 'The sidebar should be clamped so the editing area keeps its minimum width, even though that leaves it narrower than its configured minimum width');
+        assert.equal(SidebarUtils.getSidebarRequestedWidth(), 1000, 'The requested width should be preserved while the rendered width is clamped');
 
         await SidebarUtils.resizeSidebarBy([ 10, 0 ]);
-
-        assertSidebarWidth(920 - editorBorderLeft - editorBorderRight, 'TODO');
-        assert.equal(SidebarUtils.getSidebarRequestedWidth(), 1000, 'TODO'); // requested should never be set below sidebar_min_width
+        assertSidebarWidth(720 - editorBorderLeft - editorBorderRight, 'Dragging should not move the sidebar, since the editing area minimum leaves no room and the configured minimum width cannot be honoured');
+        assert.equal(SidebarUtils.getSidebarRequestedWidth(), 1000, 'The requested width should be preserved because the drag cannot change the clamped width');
       });
     });
   });
