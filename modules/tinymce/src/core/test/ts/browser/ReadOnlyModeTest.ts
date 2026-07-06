@@ -291,8 +291,8 @@ describe('browser.tinymce.core.ReadOnlyModeTest', () => {
     assert.notEqual(newPos, yPos, 'assert yPos has changed i.e. has scrolled');
   });
 
-  describe('TINYMCE-8784: Clicking anchor links with special characters should scroll to target with cmd/ctrl', () => {
-    it('TINYMCE-8784: Should scroll to anchor with one semicolon when cmd/ctrl is pressed', () => {
+  describe('Clicking anchor links with special characters should scroll to target', () => {
+    it('TINYMCE-8784: Should scroll to anchor with one semicolon', () => {
       const editor = hook.editor();
       setMode(editor, 'design');
       editor.resetContent();
@@ -308,7 +308,7 @@ describe('browser.tinymce.core.ReadOnlyModeTest', () => {
       assert.notEqual(newPos, yPos, 'assert yPos has changed i.e. has scrolled');
     });
 
-    it('TINYMCE-8784: Should scroll to anchor with multiple semicolons when cmd/ctrl is pressed', () => {
+    it('TINYMCE-8784: Should scroll to anchor with multiple semicolons', () => {
       const editor = hook.editor();
       setMode(editor, 'design');
       editor.resetContent();
@@ -325,8 +325,8 @@ describe('browser.tinymce.core.ReadOnlyModeTest', () => {
     });
   });
 
-  describe('TINYMCE-8784: getAnchorHrefOpt should return an Optional of the href of the closest anchor tag', () => {
-    it('without anchor', () => {
+  describe('getAnchorHrefOpt should return an Optional of the href of the closest anchor tag', () => {
+    it('TINYMCE-8784: Should return href for external links and none for links without href', () => {
       const editor = hook.editor();
       editor.setContent('<p><a href="https://tiny.cloud">external link</a></p>');
       assertHrefOpt(editor, 'a', Optional.some('https://tiny.cloud'));
@@ -337,19 +337,19 @@ describe('browser.tinymce.core.ReadOnlyModeTest', () => {
     });
 
     describe('with anchor', () => {
-      it('without semicolon', () => {
+      it('TINYMCE-8784: Should return href for anchor without semicolon', () => {
         const editor = hook.editor();
         editor.setContent('<p><a href="#myanchor">external link</a></p>');
         assertHrefOpt(editor, 'a', Optional.some('#myanchor'));
       });
 
-      it('with one semicolon', () => {
+      it('TINYMCE-8784: Should return href for anchor with one semicolon', () => {
         const editor = hook.editor();
         editor.setContent('<p><a href="#myanchor;somekey=somevalue">external link anchor href with semicolon</a></p>');
         assertHrefOpt(editor, 'a', Optional.some('#myanchor;somekey=somevalue'));
       });
 
-      it('with multiple semicolons', () => {
+      it('TINYMCE-8784: Should return href for anchor with multiple semicolons', () => {
         const editor = hook.editor();
         editor.setContent('<p><a href="#myanchor;somekey=somevalue;somekey2=somevalue2">external link anchor href with semicolon</a></p>');
         assertHrefOpt(editor, 'a', Optional.some('#myanchor;somekey=somevalue;somekey2=somevalue2'));
