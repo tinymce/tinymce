@@ -18,9 +18,9 @@
 
 .tox {
   .tox-sidebar-wrap {
-    display: flex;
-    flex-direction: row;
     flex-grow: 1;
+    display: grid;
+    grid-template-columns: minmax(var(--tox-private-min-editing-area-width), 1fr) minmax(0, max-content);
     // TC-310: Without the min-height setting, browsers like Firefox default to
     // min-height: auto, and the sidebar-wrap will grow in height as soon
     // as the sidebar contents does. This happens even if the sidebar contents has
@@ -41,7 +41,7 @@
   }
 
   .tox-sidebar-wrap--resizable .tox-sidebar__pane-container {
-    width: min(calc(100cqw - var(--tox-private-min-editing-area-width)), var(--tox-private-requested-sidebar-width));
+    width: var(--tox-private-requested-sidebar-width);
   }
 
   .tox-sidebar__pane-container {
