@@ -34,6 +34,7 @@ tinymce.init({
   plugins: 'table lists image accordion code',
   toolbar: 'table | numlist bullist | image | accordion | code | sidebar1 sidebar2',
   menu: { insert: { title: 'Insert', items: 'table | image | accordion' }},
+  resize: 'both',
   details_initial_state: 'inherited',
   details_serialize_state: 'inherited',
   setup: (ed) => {
