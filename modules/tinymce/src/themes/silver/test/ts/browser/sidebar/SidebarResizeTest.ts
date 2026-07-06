@@ -226,7 +226,7 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
     });
 
     context('TINYMCE-14530: Fractional available width rounding', () => {
-      const editorParentElementWidth = 420.5;
+      const editorParentElementWidth = 1420.5;
 
       const setupElement = () => {
         const editorParentElement = SugarElement.fromTag('div');
@@ -257,11 +257,11 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
         const wrapWidth = Width.get(SidebarUtils.getSidebarWrap());
         assert.equal(wrapWidth, editorParentElementWidth - editorBorderLeft - editorBorderRight, 'The sidebar-wrap width should be fractional');
 
-        await SidebarUtils.resizeSidebarBy([ -1000, 0 ]);
+        await SidebarUtils.resizeSidebarBy([ -1500, 0 ]);
 
         // The sidebar caps at an integer width and leaves the fractional remainder to the editing area.
-        assertSidebarWidth(136, 'The sidebar should be capped at the floored available width');
-        assert.equal(SidebarUtils.getSidebarRequestedWidth(), 136, 'The requested width should match the actual width of the sidebar');
+        assertSidebarWidth(1136, 'The sidebar should be capped at the floored available width');
+        assert.equal(SidebarUtils.getSidebarRequestedWidth(), 1136, 'The requested width should match the actual width of the sidebar');
         const editAreaWidth = Width.get(SidebarUtils.getEditArea());
         assert.equal(editAreaWidth, 280.5, 'The editing area should keep the fractional remainder');
       });
