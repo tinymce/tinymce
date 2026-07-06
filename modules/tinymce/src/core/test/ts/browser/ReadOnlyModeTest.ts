@@ -292,7 +292,7 @@ describe('browser.tinymce.core.ReadOnlyModeTest', () => {
   });
 
   describe('TINYMCE-8784: Clicking anchor links with special characters should scroll to target with cmd/ctrl', () => {
-    it('with one semicolon', () => {
+    it('TINYMCE-8784: Should scroll to anchor with one semicolon when cmd/ctrl is pressed', () => {
       const editor = hook.editor();
       setMode(editor, 'design');
       editor.resetContent();
@@ -308,7 +308,7 @@ describe('browser.tinymce.core.ReadOnlyModeTest', () => {
       assert.notEqual(newPos, yPos, 'assert yPos has changed i.e. has scrolled');
     });
 
-    it('with multiple semicolons', () => {
+    it('TINYMCE-8784: Should scroll to anchor with multiple semicolons when cmd/ctrl is pressed', () => {
       const editor = hook.editor();
       setMode(editor, 'design');
       editor.resetContent();
