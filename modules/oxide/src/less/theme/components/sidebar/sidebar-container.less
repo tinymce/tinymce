@@ -36,7 +36,9 @@
     // overflow: auto.
     min-height: 0;
 
-    // TODO: add some smart comment
+    // Toggled from JS (SidebarResize.setupCompactObserver) via a ResizeObserver on
+    // the wrap element: when its rendered border-box width is <= 1024px the sidebar
+    // switches to a fixed 300px pane and the resize handle is disabled.
     &--compact {
       grid-template-columns: 1fr max-content;
 

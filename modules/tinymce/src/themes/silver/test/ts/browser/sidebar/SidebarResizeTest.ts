@@ -392,7 +392,7 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
     it('TINYMCE-14533: should shrink the editing area, not the fixed sidebar, when the editor is resized narrower', async () => {
       const editor = hook.editor();
 
-      await resizeEditorBy([ 500 - 1024, 0 ]);
+      await resizeEditorBy([ 500 - 1024, 0 ], 1);
 
       assert.equal(Width.get(TinyDom.container(editor)), 500, 'The editor should shrink');
       assert.equal(SidebarUtils.getSidebarRequestedWidth(), 500, 'The requested sidebar width should be preserved');
