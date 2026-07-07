@@ -370,4 +370,34 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
       });
     });
   });
+
+  context('TINYMCE-14533: Sidebar resizing should be turned off when the editor is narrow', () => {
+    const fixedSidebarWidth = 300;
+    const editorInitialWidth = 1024;
+
+    const hook = setupEditorHook({ sidebar_show: 'sidebarone', width: editorInitialWidth, sidebar_width: 500, statusbar: true, resize: 'both' });
+
+    afterEach(async () => resetEditorWidth(hook.editor(), editorInitialWidth));
+
+    it('TINYMCE-14533: should fix the sidebar at 300px and ignore attempts to shrink it when the editor is narrow', async () => {
+      assert.equal(SidebarUtils.getSidebarRequestedWidth(), 500, 'The requested width should match the configured sidebar width');
+      assertSidebarWidth(fixedSidebarWidth, 'The sidebar should be clamped to 300px because the editor is narrow');
+
+      await SidebarUtils.resizeSidebarBy([ 100, 0 ]);
+
+      assertSidebarWidth(fixedSidebarWidth, 'The rendered width should be unchanged because resizing is disabled while the editor is narrow');
+      assert.equal(SidebarUtils.getSidebarRequestedWidth(), 500, 'The requested width should be unchanged because resizing is disabled while the editor is narrow');
+    });
+
+    it('TINYMCE-14533: should shrink the editing area, not the fixed sidebar, when the editor is resized narrower', async () => {
+      const editor = hook.editor();
+
+      await resizeEditorBy([ 500 - 1024, 0 ]);
+
+      assert.equal(Width.get(TinyDom.container(editor)), 500, 'The editor should shrink');
+      assert.equal(SidebarUtils.getSidebarRequestedWidth(), 500, 'The requested sidebar width should be preserved');
+      assertSidebarWidth(fixedSidebarWidth, 'The sidebar should stay fixed');
+      assert.equal(Width.get(SidebarUtils.getEditArea()), 500 - fixedSidebarWidth - editorBorderLeft - editorBorderRight, 'The editing area should shrink');
+    });
+  });
 });
