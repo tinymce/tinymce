@@ -36,9 +36,7 @@
     // overflow: auto.
     min-height: 0;
 
-    // Toggled from JS (SidebarResize.setupCompactObserver) via a ResizeObserver on
-    // the wrap element: when its rendered border-box width is <= 1024px the sidebar
-    // switches to a fixed 300px pane and the resize handle is disabled.
+    // Toggled from by ResizeObserver on the wrap element when the editor is narrow
     &--compact {
       grid-template-columns: 1fr max-content;
 
@@ -49,9 +47,8 @@
       .tox-sidebar__resize-handle {
         cursor: inherit;
 
-        // If I do it like that then the element is still there and can hijack click events, I need to address that
-        &:hover::before {
-          border-left: 0px solid transparent; 
+        &::before {
+          display: none;
         }        
       }
     }
