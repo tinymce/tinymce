@@ -8,7 +8,12 @@ import { numToPx } from '../sizing/Utils';
 export const requestedWidthProperty = '--tox-private-requested-sidebar-width';
 export const minEditingAreaWidthProperty = '--tox-private-min-editing-area-width';
 export const minEditingAreaWidth = 280;
-export const compactBreakpoint = 1024;
+// The compact breakpoint is defined as a total editor width of 1024px. However, we measure
+// against `.tox-sidebar-wrapper`, whose width excludes the editor's border (2px on each side,
+// 4px total). We subtract that border width here so the breakpoint still triggers at an overall
+// editor width of 1024px.
+const editorBorderWidth = 4;
+export const compactBreakpoint = 1024 - editorBorderWidth;
 export const compactClass = 'tox-sidebar-wrap--compact';
 
 export const applyWidth = (sidebar: SugarElement<HTMLElement>, width: number): void => {
@@ -29,13 +34,12 @@ export const setupCompactObserver = (): Behaviour.AlloyBehaviourRecord => {
       };
       const observer = new window.ResizeObserver((entries) => {
         Arr.each(entries, (entry) => {
-          // borderBoxSize reflects the element's real box (border-box), matching Width.get
           update(entry.borderBoxSize[0].inlineSize);
         });
       });
       observer.observe(comp.element.dom);
       observerSingleton.set(observer);
-      // initial state
+
       update(Width.get(comp.element));
     }),
     AlloyEvents.runOnDetached(() => {

@@ -1,8 +1,8 @@
-import { Pointer } from '@ephox/agar';
+import { Pointer, Waiter } from '@ephox/agar';
 import { afterEach, context, describe, it } from '@ephox/bedrock-client';
 import type { Sidebar } from '@ephox/bridge';
 import { Fun } from '@ephox/katamari';
-import { Css, Insert, Remove, SugarBody, SugarElement, Width } from '@ephox/sugar';
+import { Class, Css, Insert, Remove, SugarBody, SugarElement, Width } from '@ephox/sugar';
 import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -64,7 +64,7 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
 
   const resetEditorWidth = async (editor: Editor, initialWidth: number) => {
     const container = TinyDom.container(editor);
-    await resizeEditorBy([ initialWidth - Width.get(container), 0 ]);
+    await resizeEditorBy([ initialWidth - Width.get(container), 0 ], 1);
   };
 
   context('TINYMCE-14527: Resizing the sidebar', () => {
@@ -374,10 +374,15 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
   context('TINYMCE-14533: Sidebar resizing should be turned off when the editor is narrow', () => {
     const fixedSidebarWidth = 300;
     const editorInitialWidth = 1024;
+    const compactClass = 'tox-sidebar-wrap--compact';
 
     const hook = setupEditorHook({ sidebar_show: 'sidebarone', width: editorInitialWidth, sidebar_width: 500, statusbar: true, resize: 'both' });
 
-    afterEach(async () => resetEditorWidth(hook.editor(), editorInitialWidth));
+    afterEach(async () => {
+      await resetEditorWidth(hook.editor(), editorInitialWidth);
+      const wrap = SidebarUtils.getSidebarWrap();
+      await Waiter.pTryUntilPredicate('The sidebar-wrap should be compact', () => Class.has(wrap, compactClass));
+    });
 
     it('TINYMCE-14533: should fix the sidebar at 300px and ignore attempts to shrink it when the editor is narrow', async () => {
       assert.equal(SidebarUtils.getSidebarRequestedWidth(), 500, 'The requested width should match the configured sidebar width');
@@ -398,6 +403,25 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
       assert.equal(SidebarUtils.getSidebarRequestedWidth(), 500, 'The requested sidebar width should be preserved');
       assertSidebarWidth(fixedSidebarWidth, 'The sidebar should stay fixed');
       assert.equal(Width.get(SidebarUtils.getEditArea()), 500 - fixedSidebarWidth - editorBorderLeft - editorBorderRight, 'The editing area should shrink');
+    });
+
+    it('TINYMCE-14533: should toggle the compact class at the breakpoint', async () => {
+      const editor = hook.editor();
+      const wrap = SidebarUtils.getSidebarWrap();
+
+      await resizeEditorBy([ 1, 0 ], 1);
+      assert.equal(Width.get(TinyDom.container(editor)), 1025, 'The editor should grow');
+      await Waiter.pTryUntilPredicate(
+        'The sidebar-wrap should not be compact above the breakpoint',
+        () => !Class.has(wrap, compactClass)
+      );
+
+      await resizeEditorBy([ -1, 0 ], 1);
+      assert.equal(Width.get(TinyDom.container(editor)), 1024, 'The editor should shrink');
+      await Waiter.pTryUntilPredicate(
+        'The sidebar-wrap should be compact at the breakpoint',
+        () => Class.has(wrap, compactClass)
+      );
     });
   });
 });
