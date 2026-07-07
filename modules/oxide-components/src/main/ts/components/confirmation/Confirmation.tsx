@@ -30,12 +30,10 @@ export const Confirmation: FC<ConfirmationProps> = ({
     e.stopPropagation();
     e.preventDefault();
     setConfirming(true);
-    void onConfirm()
-      // eslint-disable-next-line no-console
-      .catch(console.error)
-      .finally(() => {
-        setConfirming(false);
-      });
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    onConfirm().finally(() => {
+      setConfirming(false);
+    });
   }, [ onConfirm ]);
 
   return <div className={Bem.block('tox-dialog-wrap')}>
