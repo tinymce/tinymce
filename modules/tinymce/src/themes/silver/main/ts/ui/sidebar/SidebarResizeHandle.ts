@@ -1,6 +1,6 @@
 import { type AlloyComponent, type AlloySpec, Behaviour, Dragging, Resizing } from '@ephox/alloy';
-import type { Optional } from '@ephox/katamari';
-import { Height, SelectorFind, type SugarElement, SugarPosition, Width } from '@ephox/sugar';
+import { type Optional, Optionals } from '@ephox/katamari';
+import { Class, Height, SelectorFind, type SugarElement, SugarPosition, Width } from '@ephox/sugar';
 
 import type { SidebarSizeConstraints } from './Sidebar';
 import * as SidebarResize from './SidebarResize';
@@ -24,16 +24,14 @@ export const makeSidebarResizeHandle = (sizeConstraints: SidebarSizeConstraints)
         mode: 'pointer',
         repositionTarget: false,
         onDragStart: (handle) => {
-          findSidebar(handle).each((sidebar) => {
+          Optionals.lift2(findSidebar(handle), findSidebarWrap(handle), (sidebar, wrap) => {
             const sidebarWidth = Width.get(sidebar);
-            const availableMax = findSidebarWrap(handle)
-              .map((wrap) => Math.floor(Width.get(wrap)) - SidebarResize.minEditingAreaWidth)
-              .getOr(maxWidth);
+            const availableMax = Math.floor(Width.get(wrap)) - SidebarResize.minEditingAreaWidth;
             const effectiveMax = Math.min(maxWidth, availableMax);
             // When the editor is too narrow to honour both the sidebar's configured minimum
             // and the editing area's minimum, the range is unsatisfiable. Skip the resize so a
             // drag can't clobber the preserved requested width with the clamped value.
-            if (effectiveMax >= minWidth) {
+            if (effectiveMax >= minWidth && !Class.has(wrap, SidebarResize.compactClass)) {
               Resizing.start(handle, sidebarWidth, Height.get(sidebar), { minWidth, maxWidth: effectiveMax });
             }
           });
