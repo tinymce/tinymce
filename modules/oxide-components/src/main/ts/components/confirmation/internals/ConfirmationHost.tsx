@@ -1,4 +1,4 @@
-import { forwardRef, useImperativeHandle, useState } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 
 import { Confirmation } from '../Confirmation';
 
@@ -13,6 +13,13 @@ export interface ConfirmationHostHandle {
 
 export const ConfirmationHost = forwardRef<ConfirmationHostHandle>((_props, ref) => {
   const [ request, setRequest ] = useState<ConfirmOptions | null>(null);
+  const mountedRef = useRef(true);
+
+  useEffect(() => {
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
 
   useImperativeHandle(ref, () => ({
     confirm: (options) => setRequest(options),
@@ -22,7 +29,10 @@ export const ConfirmationHost = forwardRef<ConfirmationHostHandle>((_props, ref)
     text={request.text}
     buttonName='Yes'
     cancelBtnName='No'
-    onConfirm={() => request.onConfirm().finally(() => setRequest(null))}
+    onConfirm={() => mountedRef.current ?
+      request.onConfirm().finally(() => setRequest(null)) :
+      Promise.resolve()
+    }
     onCancel={() => {
       setRequest(null);
       return Promise.resolve();
