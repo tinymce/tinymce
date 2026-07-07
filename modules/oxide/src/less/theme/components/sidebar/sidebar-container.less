@@ -35,6 +35,24 @@
     // as the sidebar contents does. This happens even if the sidebar contents has
     // overflow: auto.
     min-height: 0;
+
+    // TODO: add some smart comment
+    &--compact {
+      grid-template-columns: 1fr max-content;
+
+      .tox-sidebar__pane-container {
+        width: 300px;
+      }
+
+      .tox-sidebar__resize-handle {
+        cursor: inherit;
+
+        // If I do it like that then the element is still there and can hijack click events, I need to address that
+        &:hover::before {
+          border-left: 0px solid transparent; 
+        }        
+      }
+    }
   }
 
   .tox-sidebar {
