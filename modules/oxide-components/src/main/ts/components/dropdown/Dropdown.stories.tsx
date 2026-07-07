@@ -42,8 +42,7 @@ const meta = {
       }
     }
   },
-  // This component has custom visual tests as the trigger button needs to be clicked before the screenshot
-  tags: [ 'autodocs', 'skip-visual-testing', 'dropdown-visual-testing' ],
+  tags: [ 'autodocs' ],
 } satisfies Meta<typeof Dropdown.Root>;
 
 export default meta;

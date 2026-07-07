@@ -48,8 +48,7 @@ Once you have the system requirements installed, follow these steps to set up th
 - `package.json` - Dependencies, scripts, and project metadata
 - `tsconfig.json` - Main TypeScript configuration (references other configs)
 - `vite.config.ts` - Build configuration for the library
-- `vitest.config.ts` - Test configuration for unit and browser tests
-- `playwright.config.ts` - Visual regression test configuration
+- `vitest.config.ts` - Test configuration for unit, browser, and visual regression tests
 - `eslint.config.ts` - Linting rules and configuration
 
 ### Source Code (`src/`)
@@ -90,9 +89,8 @@ If needed, the developer can use this folder to test and develop the component h
 
 #### Tests (`src/test/`)
 - `ts/browser/` - Browser-based tests
-  - `components/` - Component tests
+  - `components/` - Component behavior tests and colocated `*.visual.spec.tsx` visual regression tests (baselines in `__screenshots__/`)
   - `keynav/` - Keyboard navigation hooks tests
-- `ts/visual.spec.ts` - Visual regression tests using Playwright
 
 ### Configuration Files
 
@@ -104,7 +102,7 @@ If needed, the developer can use this folder to test and develop the component h
 #### TypeScript Configurations
 - `tsconfig.app.json`: Main library build configuration. Used to build the library.
 - `tsconfig.demo.json`: Demo application configuration. Used when starting the dev server that serves the demo application in `src/demo/`.
-- `tsconfig.node.json`: Node.js tools configuration. Used to get type checking and linting for Node.js scripts and config files such as `vite.config.ts` and `playwright.config.ts`.
+- `tsconfig.node.json`: Node.js tools configuration. Used to get type checking and linting for Node.js scripts and config files such as `vite.config.ts` and `vitest.config.ts`.
 - `tsconfig.test.json`: Test files configuration. Used for type checking and building test files by `vitest`.
 
 ## Architecture
@@ -146,7 +144,7 @@ Components integrate with TinyMCE's Oxide design system:
 
 1. **Atomic Tests**: These tests do not exist yet. We will configure them using vitest running in nodejs when needed.
 2. **Browser Tests**: Real browser interaction testing with vitest and Playwright under the hood.
-3. **Visual Regression**: Done directly using Playwright. The tests exist in the `src/test/ts/visual.spec.ts` file. The playwright configuration is in `playwright.config.ts`.
+3. **Visual Regression**: Done with Vitest browser mode. Each component has a `ComponentName.visual.spec.tsx` next to its behavior spec that renders the component explicitly (real props, wrappers, and interactions via the `renderVisual` helper) and compares screenshots with `toMatchScreenshot`.
 
 ## Development Workflow
 
@@ -176,8 +174,8 @@ Components integrate with TinyMCE's Oxide design system:
 - `bun test-watch` - Run all tests in watch mode
 - `bun test-browser-headless` - Run browser tests in headless mode
 - `bun test-browser-manual` - Run browser tests in a browser
-- `bun test-visual-local` - Run visual regression tests
-- `bun test-visual-local-update` - Updates screenshots for visual regression tests
+- `bun test-visual-local` - Run visual regression tests through a Docker Playwright browser server
+- `bun test-visual-local-update` - Updates visual regression screenshots through the Docker Playwright browser server
 
 ### Creating New Components
 
@@ -199,7 +197,7 @@ Components integrate with TinyMCE's Oxide design system:
 ### Testing Guidelines
 
 - Write browser tests for complex interactions
-- Visual regression tests are included in all stories by default. When visual regression tests are not needed, use the `skip-visual-regression` tag in the main story configuration.
+- Every component should have a `ComponentName.visual.spec.tsx` covering its visual states; new components without one need an explicit reason.
 - Use Storybook for documentation and manual testing
 
 ### Code Style

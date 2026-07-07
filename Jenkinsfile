@@ -306,7 +306,7 @@ timestamps { notifyStatusChange(
               }
               junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results-visual.xml'
               exec('find modules/oxide-components -name "*.png" -type f || echo "No PNG files found"')
-              archiveArtifacts artifacts: 'modules/oxide-components/test-results/**/*.png', allowEmptyArchive: true, fingerprint: true
+              archiveArtifacts artifacts: 'modules/oxide-components/.vitest-attachments/**/*.png', allowEmptyArchive: true, fingerprint: true
             }
           }
         }

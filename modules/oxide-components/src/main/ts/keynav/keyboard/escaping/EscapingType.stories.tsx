@@ -50,7 +50,7 @@ const meta = {
       }
     }
   },
-  tags: [ 'autodocs', 'skip-visual-testing' ],
+  tags: [ 'autodocs' ],
   args: {
   },
   argTypes: {
