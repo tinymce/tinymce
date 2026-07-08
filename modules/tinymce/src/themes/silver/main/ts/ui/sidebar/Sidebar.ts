@@ -10,6 +10,8 @@ import { Arr, Cell, Fun, Id, Obj, Optional, Optionals, Type } from '@ephox/katam
 import { Attribute, Css, type SugarElement, Width } from '@ephox/sugar';
 
 import type Editor from 'tinymce/core/api/Editor';
+import type { EditorEventMap } from 'tinymce/core/api/EventTypes';
+import type Observable from 'tinymce/core/api/util/Observable';
 import { onControlAttached, onControlDetached } from 'tinymce/themes/silver/ui/controls/Controls';
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
@@ -101,13 +103,13 @@ const makePanels = (parts: SlotContainerTypes.SlotContainerParts, panelConfigs: 
   });
 };
 
-const makeSidebar = (panelConfigs: SidebarConfig, sizeConstraints: SidebarSizeConstraints) => SlotContainer.sketch((parts) => ({
+const makeSidebar = (panelConfigs: SidebarConfig, sizeConstraints: SidebarSizeConstraints, eventDispatcher: Observable<EditorEventMap>) => SlotContainer.sketch((parts) => ({
   dom: {
     tag: 'div',
     classes: [ 'tox-sidebar__pane-container' ]
   },
   components: [
-    makeSidebarResizeHandle(sizeConstraints),
+    makeSidebarResizeHandle(sizeConstraints, eventDispatcher),
     ...makePanels(parts, panelConfigs)
   ],
   slotBehaviours: SimpleBehaviours.unnamedEvents([
@@ -115,11 +117,11 @@ const makeSidebar = (panelConfigs: SidebarConfig, sizeConstraints: SidebarSizeCo
   ])
 }));
 
-const setSidebar = (sidebar: AlloyComponent, panelConfigs: SidebarConfig, showSidebar: string | undefined, sizeConstraints: SidebarSizeConstraints): void => {
+const setSidebar = (sidebar: AlloyComponent, panelConfigs: SidebarConfig, showSidebar: string | undefined, sizeConstraints: SidebarSizeConstraints, eventDispatcher: Observable<EditorEventMap>): void => {
   const optSlider = Composing.getCurrent(sidebar);
 
   optSlider.each((slider) => {
-    Replacing.set(slider, [ makeSidebar(panelConfigs, sizeConstraints) ]);
+    Replacing.set(slider, [ makeSidebar(panelConfigs, sizeConstraints, eventDispatcher) ]);
 
     // Show the default sidebar
     const configKey = showSidebar?.toLowerCase();
