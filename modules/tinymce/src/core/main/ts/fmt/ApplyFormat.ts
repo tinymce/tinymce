@@ -347,7 +347,7 @@ const applyFormatAction = (ed: Editor, name: string, vars?: FormatVars, node?: N
       }
 
       ListItemFormat.getExpandedListItemFormat(ed.formatter, name).each((liFmt) => {
-        const list = ListItemFormat.getFullySelectedListItems(ed.selection);
+        const list = ListItemFormat.getFullySelectedListItems(ed);
         Arr.each(list, (li) => ApplyElementFormat.applyStyles(dom, li, liFmt as ApplyFormat, vars));
       });
     }

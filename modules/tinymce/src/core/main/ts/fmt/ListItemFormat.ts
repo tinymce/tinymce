@@ -1,11 +1,14 @@
 import { Arr, Obj, Optional, Type } from '@ephox/katamari';
+import { SelectorFilter } from '@ephox/sugar';
 
 import type DOMUtils from '../api/dom/DOMUtils';
 import type EditorSelection from '../api/dom/Selection';
+import type Editor from '../api/Editor';
 import type Formatter from '../api/Formatter';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import * as NodeType from '../dom/NodeType';
+import * as TableCellSelection from '../selection/TableCellSelection';
 
 import type { Format, InlineFormat } from './FormatTypes';
 import * as FormatUtils from './FormatUtils';
@@ -43,6 +46,19 @@ const getAndOnlyNormalizeFirstBlockIf = (selection: EditorSelection, pred: (bloc
     }
   });
 
+// When a fake (multi-cell table) selection is active, the DOM range spans from the first to the
+// last selected cell and would sweep in list items from unselected cells in between. Resolve list
+// items from the actually selected cells instead, matching how SelectionUtils.runOnRanges works.
+const getCellSelectionListItems = (editor: Editor): Optional<Element[]> => {
+  const fakeSelectionNodes = TableCellSelection.getCellsFromEditor(editor);
+  if (fakeSelectionNodes.length > 0) {
+    const listItems = Arr.bind(fakeSelectionNodes, (cell) => SelectorFilter.descendants(cell, 'li'));
+    return Optional.some(Arr.map(listItems, (item) => item.dom));
+  } else {
+    return Optional.none();
+  }
+};
+
 const getFullySelectedBlocks = (selection: EditorSelection) => {
   if (selection.isCollapsed()) {
     return [];
@@ -64,10 +80,13 @@ const getFullySelectedBlocks = (selection: EditorSelection) => {
   }
 };
 
-export const getFullySelectedListItems = (selection: EditorSelection): Element[] =>
-  Arr.filter(getFullySelectedBlocks(selection), isEditableListItem(selection.dom));
+export const getFullySelectedListItems = (editor: Editor): Element[] => {
+  const items = getCellSelectionListItems(editor).getOrThunk(() => getFullySelectedBlocks(editor.selection));
+  return Arr.filter(items, isEditableListItem(editor.selection.dom));
+};
 
-export const getPartiallySelectedListItems = (selection: EditorSelection): Element[] => Arr.filter(
-  getAndOnlyNormalizeFirstBlockIf(selection, (el) => !NodeType.isListItem(el)),
-  isEditableListItem(selection.dom)
-);
+export const getPartiallySelectedListItems = (editor: Editor): Element[] => {
+  const items = getCellSelectionListItems(editor)
+    .getOrThunk(() => getAndOnlyNormalizeFirstBlockIf(editor.selection, (el) => !NodeType.isListItem(el)));
+  return Arr.filter(items, isEditableListItem(editor.selection.dom));
+};

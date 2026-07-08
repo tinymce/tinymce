@@ -523,4 +523,81 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
       );
     });
   });
+
+  context('Inline formats on LIs within a table cell selection', () => {
+    // data-mce-selected marks the fake (multi-cell) selection; the internal attribute is stripped from getContent output.
+    const cell = (contents: string, selected: boolean) =>
+      `<td${selected ? ' data-mce-selected="1"' : ''}>${contents}</td>`;
+    const list = (styleAttr: string = '') =>
+      `<ul><li${styleAttr}>Item 1</li><li${styleAttr}>Item 2</li></ul>`;
+    const table = (cells: string[]) =>
+      `<table><tbody><tr>${cells.join('')}</tr></tbody></table>`;
+
+    it('TINYMCE-13235: applying bold to a table cell selection only styles the LIs in selected cells', () => {
+      const editor = hook.editor();
+      editor.setContent(table([
+        cell(list(), true),
+        cell(list(), false)
+      ]));
+      editor.formatter.apply('bold');
+      TinyAssertions.assertContent(editor, table([
+        cell('<ul><li style="font-weight: bold;"><strong>Item 1</strong></li><li style="font-weight: bold;"><strong>Item 2</strong></li></ul>', false),
+        cell(list(), false)
+      ]));
+    });
+
+    it('TINYMCE-13235: applying text color to a table cell selection only colors the LIs (and their markers) in selected cells', () => {
+      const editor = hook.editor();
+      editor.setContent(table([
+        cell(list(), true),
+        cell(list(), false)
+      ]));
+      editor.formatter.apply('forecolor', { value: 'red' });
+      TinyAssertions.assertContent(editor, table([
+        cell('<ul><li style="color: red;"><span style="color: red;">Item 1</span></li><li style="color: red;"><span style="color: red;">Item 2</span></li></ul>', false),
+        cell(list(), false)
+      ]));
+    });
+
+    it('TINYMCE-13235: applying bold to a cell that also contains a paragraph before the list only styles the selected cells', () => {
+      const editor = hook.editor();
+      editor.setContent(table([
+        cell(`<p>hello</p>${list()}`, true),
+        cell(list(), false)
+      ]));
+      editor.formatter.apply('bold');
+      TinyAssertions.assertContent(editor, table([
+        cell('<p><strong>hello</strong></p><ul><li style="font-weight: bold;"><strong>Item 1</strong></li><li style="font-weight: bold;"><strong>Item 2</strong></li></ul>', false),
+        cell(list(), false)
+      ]));
+    });
+
+    it('TINYMCE-13235: removing formats from a table cell selection only clears the LIs in selected cells', () => {
+      const editor = hook.editor();
+      const styled = ' style="font-weight: bold;"';
+      editor.setContent(table([
+        cell(`<ul><li${styled}><strong>Item 1</strong></li><li${styled}><strong>Item 2</strong></li></ul>`, true),
+        cell(`<ul><li${styled}><strong>Item 1</strong></li><li${styled}><strong>Item 2</strong></li></ul>`, false)
+      ]));
+      editor.formatter.remove('bold');
+      TinyAssertions.assertContent(editor, table([
+        cell('<ul><li>Item 1</li><li>Item 2</li></ul>', false),
+        cell(`<ul><li${styled}><strong>Item 1</strong></li><li${styled}><strong>Item 2</strong></li></ul>`, false)
+      ]));
+    });
+
+    it('TINYMCE-13235: clearing formats (removeformat) from a table cell selection only clears the LIs in selected cells', () => {
+      const editor = hook.editor();
+      const styled = ' style="font-weight: bold;"';
+      editor.setContent(table([
+        cell(`<ul><li${styled}><strong>Item 1</strong></li><li${styled}><strong>Item 2</strong></li></ul>`, true),
+        cell(`<ul><li${styled}><strong>Item 1</strong></li><li${styled}><strong>Item 2</strong></li></ul>`, false)
+      ]));
+      editor.formatter.remove('removeformat');
+      TinyAssertions.assertContent(editor, table([
+        cell('<ul><li>Item 1</li><li>Item 2</li></ul>', false),
+        cell(`<ul><li${styled}><strong>Item 1</strong></li><li${styled}><strong>Item 2</strong></li></ul>`, false)
+      ]));
+    });
+  });
 });
