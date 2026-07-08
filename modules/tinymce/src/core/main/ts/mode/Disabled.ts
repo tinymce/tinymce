@@ -102,7 +102,8 @@ const processDisabledEvents = (editor: Editor, e: Event): void => {
       (href) => {
         e.preventDefault();
         if (/^#/.test(href)) {
-          const targetEl = editor.dom.select(`${href},[name="${Strings.removeLeading(href, '#')}"]`);
+          const id = Strings.removeLeading(href, '#');
+          const targetEl = editor.dom.select(`[id="${id}"],[name="${id}"]`);
           if (targetEl.length) {
             editor.selection.scrollIntoView(targetEl[0], true);
           }

@@ -1913,6 +1913,36 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     });
   });
 
+  context('Nodes removed during sanitization must not throw', () => {
+    it('TINYMCE-14556: a data-mce-bogus="all" raw-text element with markup-like content is removed', () => {
+      const localSchema = Schema();
+      const input = '<p>keep</p><script data-mce-bogus="all">-></body></script>';
+      const serializedHtml = HtmlSerializer({}, localSchema).serialize(DomParser({}, localSchema).parse(input));
+      assert.equal(serializedHtml, '<p>keep</p>');
+    });
+
+    it('TINYMCE-14556: a data-mce-bogus="all" element is removed when sanitization is disabled', () => {
+      const localSchema = Schema();
+      const input = '<p>keep</p><script data-mce-bogus="all">-></body></script>';
+      const serializedHtml = HtmlSerializer({}, localSchema).serialize(DomParser({ sanitize: false }, localSchema).parse(input));
+      assert.equal(serializedHtml, '<p>keep</p>');
+    });
+
+    it('TINYMCE-14556: an invalid special element with markup-like content is removed', () => {
+      const localSchema = Schema();
+      const input = '<p>keep</p><script>-></body></script>';
+      const serializedHtml = HtmlSerializer({}, localSchema).serialize(DomParser({}, localSchema).parse(input));
+      assert.equal(serializedHtml, '<p>keep</p>');
+    });
+
+    it('TINYMCE-14556: a disallowed non-HTML-namespace element and its contents are removed', () => {
+      const localSchema = Schema();
+      const input = '<p>keep</p><svg><circle r="1"><script>alert(1)</script></circle></svg>';
+      const serializedHtml = HtmlSerializer({}, localSchema).serialize(DomParser({}, localSchema).parse(input));
+      assert.equal(serializedHtml, '<p>keep</p>');
+    });
+  });
+
   context('Special elements', () => {
     const schema = Schema({ extended_valid_elements: 'script,noembed,xmp', valid_children: '+body[style]' });
 

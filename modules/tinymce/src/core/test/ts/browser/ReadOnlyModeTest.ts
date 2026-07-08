@@ -1,14 +1,18 @@
 import { ApproxStructure, Mouse, UiFinder, Clipboard } from '@ephox/agar';
-import { describe, it } from '@ephox/bedrock-client';
+import { Assert, describe, it } from '@ephox/bedrock-client';
+import { Optional, OptionalInstances } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Attribute, Class, Css, Scroll, SelectorFind, SugarBody, Traverse } from '@ephox/sugar';
+import { Attribute, Class, Css, Scroll, SelectorFind, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
 import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import type Editor from 'tinymce/core/api/Editor';
+import * as Disabled from 'tinymce/core/mode/Disabled';
 import AnchorPlugin from 'tinymce/plugins/anchor/Plugin';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
+
+const tOptional = OptionalInstances.tOptional;
 
 describe('browser.tinymce.core.ReadOnlyModeTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
@@ -88,6 +92,12 @@ describe('browser.tinymce.core.ReadOnlyModeTest', () => {
     const elm = UiFinder.findIn(SugarBody.body(), '.tox-toolbar-overlord').getOrDie();
     assert.equal(Class.has(elm, 'tox-tbtn--disabled'), expectedState, 'Toolbar should have expected disabled state');
     assert.equal(Attribute.get(elm, 'aria-disabled'), expectedState.toString(), 'Toolbar should have expected disabled state');
+  };
+
+  const assertHrefOpt = (editor: Editor, selector: string, expectedHref: Optional<string>) => {
+    const elm = SugarElement.fromDom(editor.dom.select(selector)[0]);
+    const hrefOpt = Disabled.getAnchorHrefOpt(editor, elm);
+    Assert.eq('href options match', expectedHref, hrefOpt, tOptional());
   };
 
   const pSimulateIMEInput = async (editor: Editor, events: Array<{ type: string; data?: string; key?: string; code?: string; keyCode?: number }>) => {
@@ -279,6 +289,72 @@ describe('browser.tinymce.core.ReadOnlyModeTest', () => {
     Mouse.click(anchor, metaKey);
     const newPos = Scroll.get(doc).top;
     assert.notEqual(newPos, yPos, 'assert yPos has changed i.e. has scrolled');
+  });
+
+  describe('Clicking anchor links with special characters should scroll to target', () => {
+    it('TINYMCE-8784: Should scroll to anchor with one semicolon', () => {
+      const editor = hook.editor();
+      setMode(editor, 'design');
+      editor.resetContent();
+      setMode(editor, 'readonly');
+      editor.setContent('<p><a href="#someBookmark;somekey=somevalue">internal bookmark</a></p><div style="padding-top: 2000px;"></div><p><a id="someBookmark;somekey=somevalue"></a></p>');
+
+      const body = TinyDom.body(editor);
+      const doc = TinyDom.document(editor);
+      const yPos = Scroll.get(doc).top;
+      const anchor = UiFinder.findIn(body, 'a[href="#someBookmark;somekey=somevalue"]').getOrDie();
+      Mouse.click(anchor, metaKey);
+      const newPos = Scroll.get(doc).top;
+      assert.notEqual(newPos, yPos, 'assert yPos has changed i.e. has scrolled');
+    });
+
+    it('TINYMCE-8784: Should scroll to anchor with multiple semicolons', () => {
+      const editor = hook.editor();
+      setMode(editor, 'design');
+      editor.resetContent();
+      setMode(editor, 'readonly');
+      editor.setContent('<p><a href="#someBookmark;somekey=somevalue;somekey2=somevalue2">internal bookmark</a></p><div style="padding-top: 2000px;"></div><p><a id="someBookmark;somekey=somevalue;somekey2=somevalue2"></a></p>');
+
+      const body = TinyDom.body(editor);
+      const doc = TinyDom.document(editor);
+      const yPos = Scroll.get(doc).top;
+      const anchor = UiFinder.findIn(body, 'a[href="#someBookmark;somekey=somevalue;somekey2=somevalue2"]').getOrDie();
+      Mouse.click(anchor, metaKey);
+      const newPos = Scroll.get(doc).top;
+      assert.notEqual(newPos, yPos, 'assert yPos has changed i.e. has scrolled');
+    });
+  });
+
+  describe('getAnchorHrefOpt should return an Optional of the href of the closest anchor tag', () => {
+    it('TINYMCE-8784: Should return href for external links and none for links without href', () => {
+      const editor = hook.editor();
+      editor.setContent('<p><a href="https://tiny.cloud">external link</a></p>');
+      assertHrefOpt(editor, 'a', Optional.some('https://tiny.cloud'));
+      editor.setContent('<p><a>external link with no href</a></p>');
+      assertHrefOpt(editor, 'a', Optional.none());
+      editor.setContent('<p><a href="https://tiny.cloud"><img src="">nested image </img>inside anchor</a></p>');
+      assertHrefOpt(editor, 'img', Optional.some('https://tiny.cloud'));
+    });
+
+    describe('with anchor', () => {
+      it('TINYMCE-8784: Should return href for anchor without semicolon', () => {
+        const editor = hook.editor();
+        editor.setContent('<p><a href="#myanchor">external link</a></p>');
+        assertHrefOpt(editor, 'a', Optional.some('#myanchor'));
+      });
+
+      it('TINYMCE-8784: Should return href for anchor with one semicolon', () => {
+        const editor = hook.editor();
+        editor.setContent('<p><a href="#myanchor;somekey=somevalue">external link anchor href with semicolon</a></p>');
+        assertHrefOpt(editor, 'a', Optional.some('#myanchor;somekey=somevalue'));
+      });
+
+      it('TINYMCE-8784: Should return href for anchor with multiple semicolons', () => {
+        const editor = hook.editor();
+        editor.setContent('<p><a href="#myanchor;somekey=somevalue;somekey2=somevalue2">external link anchor href with semicolon</a></p>');
+        assertHrefOpt(editor, 'a', Optional.some('#myanchor;somekey=somevalue;somekey2=somevalue2'));
+      });
+    });
   });
 
   it('TINY-6248: processReadonlyEvents should scroll to bookmark with name', () => {
