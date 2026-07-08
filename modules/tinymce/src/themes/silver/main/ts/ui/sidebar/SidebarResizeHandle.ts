@@ -35,6 +35,7 @@ export const makeSidebarResizeHandle = (sizeConstraints: SidebarSizeConstraints)
             // drag can't clobber the preserved requested width with the clamped value.
             if (effectiveMax >= minWidth) {
               Resizing.start(handle, sidebarWidth, Height.get(sidebar), { minWidth, maxWidth: effectiveMax });
+              // TODO: Emit SidebarResizeStart event with no payload
             }
           });
         },
@@ -45,7 +46,9 @@ export const makeSidebarResizeHandle = (sizeConstraints: SidebarSizeConstraints)
           });
         },
         onDrop: (handle) => {
-          Resizing.stop(handle);
+          Resizing.stop(handle).each(({ width }) => {
+            // TODO: Emit SidebarResized event with width as a payload
+          });
         }
       }),
       Resizing.config({})
