@@ -19,19 +19,22 @@ export interface ResizeBoundsOptional {
   readonly maxHeight: Optional<number>;
 }
 
+export interface ResizeSize {
+  readonly width: number;
+  readonly height: number;
+}
+
 export interface ResizingBehaviour extends Behaviour.AlloyBehaviour<ResizingConfigSpec, ResizingConfig> {
   config: (config: ResizingConfigSpec) => Behaviour.NamedConfiguredBehaviour<ResizingConfigSpec, ResizingConfig>;
   start: (component: AlloyComponent, width: number, height: number, bounds?: ResizeBounds) => void;
-  moveBy: (component: AlloyComponent, delta: SugarPosition) => void;
-  stop: (component: AlloyComponent) => void;
+  moveBy: (component: AlloyComponent, delta: SugarPosition) => Optional<ResizeSize>;
+  stop: (component: AlloyComponent) => Optional<ResizeSize>;
 }
 
 export interface ResizingConfigSpec extends Behaviour.BehaviourConfigSpec {
-  resize: (component: AlloyComponent, width: number, height: number) => void;
 }
 
 export interface ResizingConfig extends Behaviour.BehaviourConfigDetail {
-  resize: (component: AlloyComponent, width: number, height: number) => void;
 }
 
 export interface ResizingState extends BehaviourState {
@@ -39,6 +42,7 @@ export interface ResizingState extends BehaviourState {
   stop: () => void;
   isActive: () => boolean;
   drag: (delta: SugarPosition) => SugarPosition;
+  getAccumulatedDelta: () => SugarPosition;
   getOriginalWidth: () => number;
   getOriginalHeight: () => number;
   getBounds: () => ResizeBoundsOptional;
