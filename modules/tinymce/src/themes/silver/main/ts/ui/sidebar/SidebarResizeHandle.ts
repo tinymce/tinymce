@@ -2,6 +2,11 @@ import { type AlloyComponent, type AlloySpec, Behaviour, Dragging, Resizing } fr
 import type { Optional } from '@ephox/katamari';
 import { Height, SelectorFind, type SugarElement, SugarPosition, Width } from '@ephox/sugar';
 
+import type { EditorEventMap } from 'tinymce/core/api/EventTypes';
+import type Observable from 'tinymce/core/api/util/Observable';
+
+import * as Events from '../../api/Events';
+
 import type { SidebarSizeConstraints } from './Sidebar';
 import * as SidebarResize from './SidebarResize';
 
@@ -11,7 +16,7 @@ const findSidebar = (handle: AlloyComponent): Optional<SugarElement<HTMLElement>
 const findSidebarWrap = (handle: AlloyComponent): Optional<SugarElement<HTMLElement>> =>
   SelectorFind.ancestor<HTMLElement>(handle.element, '.tox-sidebar-wrap');
 
-export const makeSidebarResizeHandle = (sizeConstraints: SidebarSizeConstraints): AlloySpec => {
+export const makeSidebarResizeHandle = (sizeConstraints: SidebarSizeConstraints, eventDispatcher: Observable<EditorEventMap>): AlloySpec => {
   const { minWidth, maxWidth } = sizeConstraints;
 
   return {
@@ -35,7 +40,7 @@ export const makeSidebarResizeHandle = (sizeConstraints: SidebarSizeConstraints)
             // drag can't clobber the preserved requested width with the clamped value.
             if (effectiveMax >= minWidth) {
               Resizing.start(handle, sidebarWidth, Height.get(sidebar), { minWidth, maxWidth: effectiveMax });
-              // TODO: Emit SidebarResizeStart event with no payload
+              Events.fireSidebarResizeStart(eventDispatcher);
             }
           });
         },
@@ -47,7 +52,7 @@ export const makeSidebarResizeHandle = (sizeConstraints: SidebarSizeConstraints)
         },
         onDrop: (handle) => {
           Resizing.stop(handle).each(({ width }) => {
-            // TODO: Emit SidebarResized event with width as a payload
+            Events.fireSidebarResized(eventDispatcher, width);
           });
         }
       }),
