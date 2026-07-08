@@ -1,5 +1,3 @@
-import { type FieldProcessor, FieldSchema } from '@ephox/boulder';
+import type { FieldProcessor } from '@ephox/boulder';
 
-export default [
-  FieldSchema.requiredFunction('resize')
-] as FieldProcessor[];
+export default [] as FieldProcessor[];
