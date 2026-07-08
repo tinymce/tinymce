@@ -42,6 +42,8 @@ const init = (): ResizingState => {
     return acc;
   };
 
+  const getAccumulatedDelta = (): SugarPosition => accumulatedDelta.get();
+
   const getOriginalWidth = (): number => originalWidth.get();
 
   const getOriginalHeight = (): number => originalHeight.get();
@@ -61,6 +63,7 @@ const init = (): ResizingState => {
     stop,
     isActive,
     drag,
+    getAccumulatedDelta,
     getOriginalWidth,
     getOriginalHeight,
     getBounds,
