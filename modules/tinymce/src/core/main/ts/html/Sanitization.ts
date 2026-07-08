@@ -77,9 +77,18 @@ const processNode = (node: Node, settings: DomParserSettings, schema: Schema, sc
   const bogus = Attribute.get(element, 'data-mce-bogus');
   if (!isInternalElement && Type.isString(bogus)) {
     if (bogus === 'all') {
+      // Empty before removing so a detached raw-text element (e.g. script/style) can't carry
+      // markup-like content into DOMPurify's unsafe-node check, which would then throw trying
+      // to _forceRemove the now-parentless node.
+      Remove.empty(element);
       Remove.remove(element);
     } else {
       Remove.unwrap(element);
+    }
+    // We detach the element above; DOMPurify throws if it then tries to _forceRemove the
+    // now-parentless node, so mark the tag allowed to stop that second removal.
+    if (Type.isNonNullable(evt)) {
+      evt.allowedTags[lcTagName] = true;
     }
     return;
   }
@@ -87,11 +96,23 @@ const processNode = (node: Node, settings: DomParserSettings, schema: Schema, sc
   // Determine if the schema allows the element and either add it or remove it
   const rule = schema.getElementRule(lcTagName);
   if (validate && !rule) {
-    // If a special element is invalid, then remove the entire element instead of unwrapping
-    if (Obj.has(specialElements, lcTagName)) {
-      Remove.remove(element);
+    // Don't detach invalid special / non-HTML-namespace elements: DOMPurify throws if it later
+    // _forceRemoves a parentless node (its unsafe-content and namespace checks do this regardless
+    // of allowedTags). Empty and leave attached instead, so DOMPurify removes it without hoisting content.
+    if (settings.sanitize && (Obj.has(specialElements, lcTagName) || scope !== 'html')) {
+      Remove.empty(element);
     } else {
-      Remove.unwrap(element);
+      // No DOMPurify to remove it (sanitize disabled), or a plain invalid HTML element: detach it ourselves.
+      if (Obj.has(specialElements, lcTagName)) {
+        Remove.remove(element);
+      } else {
+        Remove.unwrap(element);
+      }
+      // The element is now detached; mark the tag allowed so DOMPurify won't _forceRemove the
+      // parentless node and throw. Safe here: it's empty and HTML-namespaced, so no earlier check fires.
+      if (Type.isNonNullable(evt)) {
+        evt.allowedTags[lcTagName] = true;
+      }
     }
     return;
   } else {
@@ -300,7 +321,9 @@ const sanitizeMathmlElement = (node: Element, settings: DomParserSettings) => {
       evt.allowedTags[lcTagName] = keepElement;
       if (!keepElement && settings.sanitize) {
         if (NodeType.isElement(node)) {
-          node.remove();
+          // Empty the node and leave it attached so DOMPurify removes it (allowedTags is false).
+          // Detaching it would make DOMPurify throw when it _forceRemoves the parentless node.
+          Remove.empty(SugarElement.fromDom(node));
         }
       }
     });
