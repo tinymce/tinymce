@@ -1,5 +1,7 @@
 import { Pointer } from '@ephox/agar';
 import { afterEach, context, describe, it } from '@ephox/bedrock-client';
+import { TestStore } from '@ephox/agar';
+import { beforeEach } from '@ephox/bedrock-client';
 import type { Sidebar } from '@ephox/bridge';
 import { Fun } from '@ephox/katamari';
 import { Css, Insert, Remove, SugarBody, SugarElement, Width } from '@ephox/sugar';
@@ -16,7 +18,18 @@ import { resizeEditorBy } from '../../module/UiUtils';
 const editorBorderLeft = 2;
 const editorBorderRight = 2;
 
+type SidebarResizeEvent =
+  | { type: 'SidebarResizeStart' }
+  | { type: 'SidebarResized'; width: number };
+
 describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
+  const resizeStartEvent = (): SidebarResizeEvent => ({ type: 'SidebarResizeStart' });
+  const resizedEvent = (width: number): SidebarResizeEvent => ({ type: 'SidebarResized', width });
+
+  const store = TestStore<SidebarResizeEvent>();
+
+  beforeEach(() => store.clear());
+
   const setupEditorHook = (configOverrides: {
     sidebar_show?: string;
     sidebar_min_width?: number;
@@ -43,6 +56,8 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
           });
         register('sidebarone', 'side bar one');
         register('sidebartwo', 'side bar two');
+        editor.on('SidebarResizeStart', () => store.add(resizeStartEvent()));
+        editor.on('SidebarResized', (e) => store.add(resizedEvent(e.width)));
       },
       ...settings
     };
@@ -137,9 +152,12 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
 
         await SidebarUtils.resizeSidebarBy([ -1000, 0 ]);
         assertSidebarWidth(800, 'The sidebar should be capped at the max width');
+        store.assertEq('Dragging to the max should emit start and resized with the max-clamped width', [ resizeStartEvent(), resizedEvent(800) ]);
+        store.clear();
 
         await SidebarUtils.resizeSidebarBy([ 1000, 0 ]);
         assertSidebarWidth(300, 'The sidebar should be capped at the min width');
+        store.assertEq('Dragging to the min should emit start and resized with the min-clamped width', [ resizeStartEvent(), resizedEvent(300) ]);
       });
     });
 
@@ -151,9 +169,12 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
 
         await SidebarUtils.resizeSidebarBy([ -1000, 0 ]);
         assertSidebarWidth(600, 'The sidebar should be capped at the max width');
+        store.assertEq('Dragging to the max should emit start and resized with the max-clamped width', [ resizeStartEvent(), resizedEvent(600) ]);
+        store.clear();
 
         await SidebarUtils.resizeSidebarBy([ 1000, 0 ]);
         assertSidebarWidth(100, 'The sidebar should be capped at the min width');
+        store.assertEq('Dragging to the min should emit start and resized with the min-clamped width', [ resizeStartEvent(), resizedEvent(100) ]);
       });
     });
   });
@@ -223,6 +244,7 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
         await SidebarUtils.resizeSidebarBy([ -1000, 0 ]);
         assertSidebarWidth(remainingSpace, 'The sidebar should be capped so the editing area keeps its minimum width');
         assert.equal(SidebarUtils.getSidebarRequestedWidth(), remainingSpace, 'The requested width should also be capped, since the drag logic clamps it directly rather than relying on the CSS clamp');
+        store.assertEq('Dragging past the editing-area limit should emit start and resized with the effective-max-clamped width', [ resizeStartEvent(), resizedEvent(remainingSpace) ]);
         assert.equal(Width.get(SidebarUtils.getEditArea()), minEditingAreaWidth, 'The editing area must not shrink below its minimum width');
       });
     });
@@ -367,7 +389,33 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
         await SidebarUtils.resizeSidebarBy([ 10, 0 ]);
         assertSidebarWidth(1000 - minEditingAreaWidth - editorBorderLeft - editorBorderRight, 'Dragging should not move the sidebar');
         assert.equal(SidebarUtils.getSidebarRequestedWidth(), 1000, 'The requested width should be preserved because the drag cannot change the clamped width');
+        store.assertEq('No resize events should be emitted while the sidebar is clamped below its configured min width', []);
       });
+    });
+  });
+
+  context('TINYMCE-14529: Sidebar resize events', () => {
+    setupEditorHook({ sidebar_show: 'sidebarone', sidebar_width: 440, sidebar_min_width: 300, sidebar_max_width: 800 });
+
+    it('TINYMCE-14529: should emit SidebarResizeStart on drag start and SidebarResized with the final width on drag stop', async () => {
+      const resizeHandle = SidebarUtils.getSidebarResizeHandle();
+
+      await Pointer.pWithMockPointerCapture(resizeHandle, {}, async () => {
+        Pointer.pointerDown(resizeHandle);
+        Pointer.pointerMoveBy(resizeHandle, 0, 0);
+        store.assertEq('SidebarResizeStart should be emitted when dragging starts', [ resizeStartEvent() ]);
+
+        Pointer.pointerMoveBy(resizeHandle, -40, 0);
+        assertSidebarWidth(480, 'Dragging the handle left should grow the sidebar');
+        store.assertEq('SidebarResized should not be emitted mid-drag', [ resizeStartEvent() ]);
+
+        Pointer.pointerUp(resizeHandle);
+      });
+
+      store.assertEq(
+        'SidebarResized should be emitted once with the final width when dragging stops',
+        [ resizeStartEvent(), resizedEvent(480) ]
+      );
     });
   });
 });
