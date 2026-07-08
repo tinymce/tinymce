@@ -6,10 +6,10 @@ import type { AlloyComponent } from '../../api/component/ComponentApi';
 import type { ResizeBounds, ResizeSize, ResizingConfig, ResizingState } from './ResizingTypes';
 
 const computeSize = (state: ResizingState): ResizeSize => {
-  const acc = state.getAccumulatedDelta();
+  const accumulatedDelta = state.getAccumulatedDelta();
   const bounds = state.getBounds();
-  const width = Num.clamp(Math.round(state.getOriginalWidth() + acc.left), bounds.minWidth.getOr(0), bounds.maxWidth.getOr(Number.MAX_VALUE));
-  const height = Num.clamp(Math.round(state.getOriginalHeight() + acc.top), bounds.minHeight.getOr(0), bounds.maxHeight.getOr(Number.MAX_VALUE));
+  const width = Num.clamp(Math.round(state.getOriginalWidth() + accumulatedDelta.left), bounds.minWidth.getOr(0), bounds.maxWidth.getOr(Number.MAX_VALUE));
+  const height = Num.clamp(Math.round(state.getOriginalHeight() + accumulatedDelta.top), bounds.minHeight.getOr(0), bounds.maxHeight.getOr(Number.MAX_VALUE));
   return { width, height };
 };
 
@@ -31,9 +31,8 @@ const stop = (_component: AlloyComponent, _config: ResizingConfig, state: Resizi
     return Optional.none();
   }
 
-  const size = computeSize(state);
   state.stop();
-  return Optional.some(size);
+  return Optional.some(computeSize(state));
 };
 
 export {
