@@ -31,26 +31,39 @@ const isOverflowingDeep = (root: HTMLElement) =>
 const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, ...props }, ref) => {
   const { setIsOpen, isOpen, showCondition, triggerRef, setCanShow, popupAnchor } = useTooltip();
 
-  const onKeyUp = useCallback((e: Event) => {
-    const keyboardEvent = e as KeyboardEvent;
-    if (keyboardEvent.code === 'Escape' && isOpen) {
-      e.preventDefault();
-      e.stopPropagation();
-      setIsOpen(false);
-      tooltipsEventTarget.dispatchEvent(new window.CustomEvent('CloseActiveTooltips', { bubbles: true, cancelable: true }));
-    }
-  }, [ isOpen, setIsOpen ]);
-
+  // this is needed to avoid that navigation move the focus
   useLayoutEffect(() => {
     if (!isOpen) {
       return;
     }
+    const onKeyUp = (e: Event) => {
+      const keyboardEvent = e as KeyboardEvent;
+      if (keyboardEvent.code === 'Escape' && isOpen) {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsOpen(false);
+        tooltipsEventTarget.dispatchEvent(new window.CustomEvent('CloseActiveTooltips', { bubbles: true, cancelable: true }));
+      }
+    };
 
     window.document.addEventListener('keydown', onKeyUp, { capture: true });
     return () => {
       window.document.removeEventListener('keydown', onKeyUp, { capture: true });
     };
-  }, [ isOpen, onKeyUp ]);
+  }, [ isOpen, setIsOpen ]);
+
+  useLayoutEffect(() => {
+    const closeTooltipHandler = (e: Event) => {
+      if (isOpen) {
+        e.preventDefault();
+        setIsOpen(false);
+      }
+    };
+    tooltipsEventTarget.addEventListener('CloseActiveTooltips', closeTooltipHandler);
+    return () => {
+      tooltipsEventTarget.removeEventListener('CloseActiveTooltips', closeTooltipHandler);
+    };
+  }, [ isOpen, setIsOpen ]);
 
   useLayoutEffect(() => {
     if (showCondition === 'always') {

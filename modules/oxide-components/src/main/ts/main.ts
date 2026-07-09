@@ -20,6 +20,7 @@ import * as Menu from './components/menu/Menu';
 import * as MenuRenderer from './components/menu/MenuRenderer';
 import * as SegmentedControl from './components/segmentedcontrol/SegmentedControl';
 import { ToolbarInputForm } from './components/toolbarInputForm/ToolbarInputForm';
+import { tooltipsEventTarget } from './components/tooltip/internals/Context';
 import * as Tooltip from './components/tooltip/Tooltip';
 import { useUniverse } from './contexts/UniverseContext/Universe';
 import { UniverseProvider } from './contexts/UniverseContext/UniverseProvider';
@@ -56,6 +57,7 @@ export {
   Tag,
   ToolbarInputForm,
   Tooltip,
+  tooltipsEventTarget,
   SegmentedControl,
   UniverseProvider,
   useConfirmationApi,
