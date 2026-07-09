@@ -12,7 +12,7 @@ import {
 import * as Browser from '../../utils/Browser';
 import { DropdownContext } from '../dropdown/internals/Context';
 
-import { closeActiveTooltips, TooltipContext, useTooltip } from './internals/Context';
+import { TooltipContext, tooltipsEventTarget, useTooltip } from './internals/Context';
 
 interface RootProps extends PropsWithChildren {
   readonly showCondition?: 'always' | 'overflow';
@@ -29,13 +29,28 @@ const isOverflowingDeep = (root: HTMLElement) =>
     (child) => SugarNode.isHTMLElement(child) && isOverflowing(child.dom));
 
 const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, ...props }, ref) => {
-  const { setIsOpen, showCondition, triggerRef, setCanShow, popupAnchor } = useTooltip();
+  const { setIsOpen, isOpen, showCondition, triggerRef, setCanShow, popupAnchor } = useTooltip();
+
+  const onKeyUp = useCallback((e: Event) => {
+    const keyboardEvent = e as KeyboardEvent;
+    if (keyboardEvent.code === 'Escape' && isOpen) {
+      e.preventDefault();
+      e.stopPropagation();
+      setIsOpen(false);
+      tooltipsEventTarget.dispatchEvent(new window.CustomEvent('CloseActiveTooltips', { bubbles: true, cancelable: true }));
+    }
+  }, [ isOpen, setIsOpen ]);
 
   useLayoutEffect(() => {
-    const handler = () => setIsOpen(false);
-    closeActiveTooltips.addEventListener('CloseActiveTooltips', handler);
-    return () => closeActiveTooltips.removeEventListener('CloseActiveTooltips', handler);
-  }, [ setIsOpen ]);
+    if (!isOpen) {
+      return;
+    }
+
+    window.document.addEventListener('keydown', onKeyUp, { capture: true });
+    return () => {
+      window.document.removeEventListener('keydown', onKeyUp, { capture: true });
+    };
+  }, [ isOpen, onKeyUp ]);
 
   useLayoutEffect(() => {
     if (showCondition === 'always') {
@@ -123,7 +138,7 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
       theChild.props.onMouseEnter?.(e);
       props.onMouseEnter?.(e);
       if (!e.isDefaultPrevented()) {
-        closeActiveTooltips.dispatchEvent(new window.CustomEvent('CloseActiveTooltips', { bubbles: true, cancelable: true }));
+        tooltipsEventTarget.dispatchEvent(new window.CustomEvent('CloseActiveTooltips', { bubbles: true, cancelable: true }));
         setIsOpen(true);
       }
     },
@@ -138,7 +153,7 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
       theChild.props.onFocus?.(e);
       props.onFocus?.(e);
       if (!e.isDefaultPrevented()) {
-        closeActiveTooltips.dispatchEvent(new window.CustomEvent('CloseActiveTooltips', { bubbles: true, cancelable: true }));
+        tooltipsEventTarget.dispatchEvent(new window.CustomEvent('CloseActiveTooltips', { bubbles: true, cancelable: true }));
         setIsOpen(true);
       }
     },
