@@ -52,6 +52,7 @@ export interface ToolbarGroup {
 
 export type ToolbarMode = 'floating' | 'sliding' | 'scrolling' | 'wrap';
 export type ToolbarLocation = 'top' | 'bottom' | 'auto';
+export type SidebarType = 'static' | 'floating';
 
 export type CrossOrigin = (url: string, resourceType: 'script' | 'stylesheet') => 'anonymous' | 'use-credentials' | undefined;
 
@@ -223,6 +224,7 @@ interface BaseEditorOptions {
   sidebar_width?: number;
   sidebar_min_width?: number;
   sidebar_max_width?: number;
+  sidebar_type?: SidebarType;
   skin?: boolean | string;
   skin_url?: string;
   smart_paste?: boolean;
@@ -369,6 +371,7 @@ export interface EditorOptions extends NormalizedEditorOptions {
   sidebar_width: number;
   sidebar_min_width: number;
   sidebar_max_width: number;
+  sidebar_type: SidebarType;
   toolbar: boolean | string | string[] | Array<ToolbarGroup>;
   toolbar_groups: Record<string, Toolbar.GroupToolbarButtonSpec>;
   toolbar_location: ToolbarLocation;

@@ -13,6 +13,7 @@ import type { ModeRenderInfo, RenderArgs, RenderUiConfig } from '../Render';
 import OuterContainer from '../ui/general/OuterContainer';
 import { InlineHeader } from '../ui/header/InlineHeader';
 import { identifyMenus } from '../ui/menus/menubar/Integration';
+import type { SidebarStrategy } from '../ui/sidebar/SidebarStrategy';
 import { inline as loadInlineSkin } from '../ui/skin/Loader';
 import * as UiState from '../UiState';
 
@@ -106,7 +107,7 @@ const setupEvents = (editor: Editor, targetElm: SugarElement, ui: InlineHeader, 
     elementLoad.clear();
   });
 };
-const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): ModeRenderInfo => {
+const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs, sidebarStrategy: SidebarStrategy): ModeRenderInfo => {
   const { mainUi } = uiRefs;
 
   // This is used to store the reference to the header part of OuterContainer, which is
@@ -121,6 +122,14 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
 
   // eslint-disable-next-line @typescript-eslint/no-floating-promises
   loadInlineSkin(editor);
+
+  editor.on('PostRender', () => {
+    // This is where the sidebar is rendered for the first time
+    sidebarStrategy.setSidebar(
+      rawUiConfig.sidebar,
+      Options.getSidebarShow(editor)
+    );
+  }, true);
 
   const render = () => {
     // Because we set the floatContainer immediately afterwards, this is just telling us

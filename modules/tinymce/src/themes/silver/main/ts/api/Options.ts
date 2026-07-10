@@ -26,6 +26,13 @@ export const ToolbarLocation = {
   bottom: 'bottom'
 } as const;
 
+export type SidebarType = typeof SidebarType[keyof typeof SidebarType];
+
+export const SidebarType = {
+  static: 'static',
+  floating: 'floating'
+} as const;
+
 const option: {
   <K extends keyof EditorOptions>(name: K): (editor: Editor) => EditorOptions[K];
   <T>(name: string): (editor: Editor) => T | undefined;
@@ -301,6 +308,11 @@ const register = (editor: Editor): void => {
     default: 800
   });
 
+  registerOption('sidebar_type', {
+    processor: 'string',
+    default: SidebarType.static
+  });
+
   registerOption('view_show', {
     processor: 'string'
   });
@@ -356,6 +368,7 @@ const getSidebarShow = option('sidebar_show');
 const getSidebarWidth = option('sidebar_width');
 const getSidebarMinWidth = option('sidebar_min_width');
 const getSidebarMaxWidth = option('sidebar_max_width');
+const getSidebarType = option('sidebar_type');
 const getViewShow = option('view_show');
 const promotionEnabled = option('promotion');
 const useHelpAccessibility = option('help_accessibility');
@@ -489,6 +502,7 @@ export {
   getSidebarWidth,
   getSidebarMinWidth,
   getSidebarMaxWidth,
+  getSidebarType,
   getSkin,
   getSkinUrl,
   getSkinUrlOption,

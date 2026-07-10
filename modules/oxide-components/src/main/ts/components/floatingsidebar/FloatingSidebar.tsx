@@ -29,7 +29,8 @@ const Root = forwardRef<HTMLDivElement, FloatingSidebarProps>(({ isOpen = true, 
       style={style}
       ref={ref}
     >
-      <aside className={Bem.element('tox-floating-sidebar', 'content-wrapper')}>
+      {/* <aside className={Bem.element('tox-floating-sidebar', 'content-wrapper')}> */}
+      <aside>
         {children}
       </aside>
     </Draggable.Root>
@@ -49,7 +50,8 @@ const Header = forwardRef<HTMLDivElement, HeaderProps>(({ children }, ref) => {
 
   return (
     <Draggable.Handle>
-      <header ref={refCallback} className={`${Bem.element('tox-sidebar-content', 'header')} ${Bem.element('tox-floating-sidebar', 'header')}`}>{ children }</header>
+      <header ref={refCallback}>{ children }</header>
+      {/* <header ref={refCallback} className={`${Bem.element('tox-sidebar-content', 'header')} ${Bem.element('tox-floating-sidebar', 'header')}`}>{ children }</header> */}
     </Draggable.Handle>
   );
 });
