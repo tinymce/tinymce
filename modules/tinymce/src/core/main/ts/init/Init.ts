@@ -55,6 +55,11 @@ const initTooltipClosing = (editor: Editor) => {
       if (Events.fireCloseTooltips(editor).isDefaultPrevented()) {
         event.preventDefault();
       }
+      Arr.each(editor.editorManager.get(), (otherEditor) => {
+        if (otherEditor !== editor) {
+          Events.fireCloseTooltips(otherEditor);
+        }
+      });
     }
   };
 
