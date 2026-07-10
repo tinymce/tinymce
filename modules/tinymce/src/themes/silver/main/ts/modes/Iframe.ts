@@ -13,6 +13,7 @@ import type { UiFactoryBackstage } from '../backstage/Backstage';
 import type { ModeRenderInfo, RenderArgs, RenderUiConfig } from '../Render';
 import OuterContainer from '../ui/general/OuterContainer';
 import { identifyMenus } from '../ui/menus/menubar/Integration';
+import type { SidebarStrategy } from '../ui/sidebar/SidebarStrategy';
 import { iframe as loadIframeSkin } from '../ui/skin/Loader';
 import * as UiState from '../UiState';
 
@@ -95,7 +96,7 @@ const attachUiMotherships = (editor: Editor, uiRoot: SugarElement<HTMLElement | 
   Attachment.attachSystem(uiRoot, uiRefs.dialogUi.mothership);
 };
 
-const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): ModeRenderInfo => {
+const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs, sidebarStrategy: SidebarStrategy): ModeRenderInfo => {
   const { mainUi, uiMotherships } = uiRefs;
   const lastToolbarWidth = Cell(0);
   const outerContainer = mainUi.outerContainer;
@@ -110,8 +111,8 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
   attachUiMotherships(editor, uiRoot, uiRefs);
 
   editor.on('PostRender', () => {
-    OuterContainer.setSidebar(
-      outerContainer,
+    // This is where the sidebar is rendered for the first time
+    sidebarStrategy.setSidebar(
       rawUiConfig.sidebar,
       Options.getSidebarShow(editor)
     );
@@ -157,13 +158,6 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
   }
 
   UiState.setupEventsForUi(editor, uiRefs);
-
-  editor.addCommand('ToggleSidebar', (_ui: boolean, value: string) => {
-    OuterContainer.toggleSidebar(outerContainer, value);
-    Events.fireToggleSidebar(editor);
-  });
-
-  editor.addQueryValueHandler('ToggleSidebar', () => OuterContainer.whichSidebar(outerContainer) ?? '');
 
   editor.addCommand('ToggleView', (_ui: boolean, value: string) => {
     if (OuterContainer.toggleView(outerContainer, value)) {

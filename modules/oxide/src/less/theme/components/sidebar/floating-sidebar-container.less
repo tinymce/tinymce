@@ -1,0 +1,41 @@
+//
+// Floating sidebar
+//
+
+.tox {
+  .tox-floating-sidebar {
+    // This is our internal variable, it's not meant to be a part of an external skinning API. It is not behind a feature flag on purpose.
+    --tox-private-floating-sidebar-width: min(380px, 90vw);
+    --tox-private-floating-sidebar-height: 80vh;
+
+    position: fixed;
+    z-index: var(--tox-private-z-index-floatingsidebar, @z-index-floatingsidebar);
+    width: var(--tox-private-floating-sidebar-width);
+    height: var(--tox-private-floating-sidebar-height);
+
+    // Closed sidebars must be removed from the layout entirely. Otherwise, being
+    // position: fixed at a shared location, a closed container overlaps other
+    // editors' sidebars and hijacks their pointer events (breaking dragging).
+    display: none;
+
+    &--open {
+      display: flex;
+    }
+
+    [data-mce-floating-sidebar-handle] {
+      cursor: grab;
+      user-select: none;
+      -webkit-user-select: none
+    }
+  }
+
+  .tox-floating-sidebar__pane-container {
+    display: flex;
+    flex: 1;
+  }
+
+  .tox-floating-sidebar__pane {
+    display: flex;
+    flex: 1;
+  }
+}
