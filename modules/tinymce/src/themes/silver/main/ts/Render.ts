@@ -283,7 +283,7 @@ const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
           [SidebarResize.minEditingAreaWidthProperty]: Utils.numToPx(SidebarResize.minEditingAreaWidth)
         }
       },
-      behaviours: SidebarResize.setupCompactObserver(),
+      // behaviours: SidebarResize.setupCompactObserver(), // TODO: Temporarily commented breakpoint for demo purposes
       components: [
         partSocket,
         partSidebar
