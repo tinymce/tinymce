@@ -6,12 +6,9 @@
 
 ## Prerequisites
 
-A webserver to run demos, npm, webpack is required to run and develop alloy
-
 `alloy` is available as an `npm` package. You can install it via the npm package `@ephox/alloy`
 
 Run `bun install` to install the dependencies.
-Run `webpack` to compile the src code.
 
 # Usage
 

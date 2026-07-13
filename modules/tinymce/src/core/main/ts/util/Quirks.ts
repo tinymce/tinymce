@@ -12,7 +12,7 @@ import * as CaretContainer from '../caret/CaretContainer';
 import * as CaretFinder from '../caret/CaretFinder';
 import { CaretPosition } from '../caret/CaretPosition';
 import * as SymulateDelete from '../delete/SymulateDelete';
-import { getClientRects, type NodeClientRect } from '../dom/Dimensions';
+import { getClientRects } from '../dom/Dimensions';
 import * as ElementType from '../dom/ElementType';
 import { isListItem } from '../dom/ElementType';
 import * as Empty from '../dom/Empty';
@@ -731,8 +731,14 @@ const Quirks = (editor: Editor): Quirks => {
   const firstBlockChildOrNewLine = (target: SugarElement<Node>) =>
     PredicateFind.child(target, (child) => ElementType.isBr(child) || SugarNode.isElement(child) && Css.get(child, 'display') === 'block');
 
-  const clickAfterEl = (clientX: number, clientY: number, rect: NodeClientRect): boolean =>
-    clientX >= rect.right && clientY >= rect.top && clientY <= rect.bottom;
+  const clickAfterEl = (clientX: number, clientY: number, el: SugarElement<Node>): boolean =>
+    Arr.get(getClientRects([ el.dom ]), 0).exists((rect) => clientX >= rect.right && clientY >= rect.top && clientY <= rect.bottom);
+
+  const selectPos = (editor: Editor, e: EditorEvent<MouseEvent>, pos: CaretPosition): void => {
+    e.preventDefault();
+    editor.focus();
+    editor.selection.setRng(pos.toRange());
+  };
 
   /**
    * In Chrome in a `LI` that contains a block element and where the first child is an inline element
@@ -744,19 +750,21 @@ const Quirks = (editor: Editor): Quirks => {
     editor.on('mousedown', (e) => {
       const target = SugarElement.fromDom(e.target);
       if (isListItem(target)) {
-        firstBlockChildOrNewLine(target).each((firstBlock) => {
-          const prevSiblings = Traverse.prevSiblings(firstBlock);
-
-          Arr.findLast(prevSiblings, isValidSibling).each((lastInlineBeforeBlock) => {
-            if (Arr.get(getClientRects([ lastInlineBeforeBlock.dom ]), 0).exists((rect) => clickAfterEl(e.clientX, e.clientY, rect))) {
-              CaretFinder.prevPosition(target.dom, CaretPosition(firstBlock.dom, 0)).each((pos) => {
-                e.preventDefault();
-                editor.focus();
-                editor.selection.setRng(pos.toRange());
-              });
-            }
+        firstBlockChildOrNewLine(target).fold(
+          () => {
+            Traverse.lastChild(target).each((lastChild) => {
+              if (clickAfterEl(e.clientX, e.clientY, lastChild)) {
+                CaretFinder.lastPositionIn(target.dom).each((pos) => selectPos(editor, e, pos));
+              }
+            });
+          },
+          (firstBlock) => {
+            Arr.findLast(Traverse.prevSiblings(firstBlock), isValidSibling).each((lastInlineBeforeBlock) => {
+              if (clickAfterEl(e.clientX, e.clientY, lastInlineBeforeBlock)) {
+                CaretFinder.prevPosition(target.dom, CaretPosition(firstBlock.dom, 0)).each((pos) => selectPos(editor, e, pos));
+              }
+            });
           });
-        });
       }
     });
   };

@@ -3,12 +3,11 @@
   "compilerOptions": {
     "outDir": "lib",
     "rootDir": "src",
-    "baseUrl": ".",
     "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo",
     "paths": {
-      "ephox/snooker/test/*": ["src/test/ts/module/ephox/snooker/test/*"],
-      "ephox/snooker/demo/*": ["src/demo/ts/ephox/snooker/demo/*"],
-      "ephox/snooker/*": ["src/main/ts/ephox/snooker/*"]
+      "ephox/snooker/test/*": ["./src/test/ts/module/ephox/snooker/test/*"],
+      "ephox/snooker/demo/*": ["./src/demo/ts/ephox/snooker/demo/*"],
+      "ephox/snooker/*": ["./src/main/ts/ephox/snooker/*"]
     }
   },
   "include": [

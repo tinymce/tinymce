@@ -4,14 +4,15 @@ import { Bem } from 'oxide-components/main';
 import {
   Children, cloneElement, forwardRef, isValidElement, useCallback,
   useContext,
-  useLayoutEffect, useMemo, useRef, useState, type FC, type HTMLAttributes,
+  useLayoutEffect, useMemo, useRef, useState,
+  type FC, type HTMLAttributes,
   type PropsWithChildren, type ReactNode
 } from 'react';
 
 import * as Browser from '../../utils/Browser';
 import { DropdownContext } from '../dropdown/internals/Context';
 
-import { TooltipContext, useTooltip } from './internals/Context';
+import { closeActiveTooltips, TooltipContext, useTooltip } from './internals/Context';
 
 interface RootProps extends PropsWithChildren {
   readonly showCondition?: 'always' | 'overflow';
@@ -29,6 +30,12 @@ const isOverflowingDeep = (root: HTMLElement) =>
 
 const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, ...props }, ref) => {
   const { setIsOpen, showCondition, triggerRef, setCanShow, popupAnchor } = useTooltip();
+
+  useLayoutEffect(() => {
+    const handler = () => setIsOpen(false);
+    closeActiveTooltips.addEventListener('CloseActiveTooltips', handler);
+    return () => closeActiveTooltips.removeEventListener('CloseActiveTooltips', handler);
+  }, [ setIsOpen ]);
 
   useLayoutEffect(() => {
     if (showCondition === 'always') {
@@ -116,6 +123,7 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
       theChild.props.onMouseEnter?.(e);
       props.onMouseEnter?.(e);
       if (!e.isDefaultPrevented()) {
+        closeActiveTooltips.dispatchEvent(new window.CustomEvent('CloseActiveTooltips', { bubbles: true, cancelable: true }));
         setIsOpen(true);
       }
     },
@@ -126,21 +134,21 @@ const TriggerImpl = forwardRef<HTMLElement, TriggerInternalProps>(({ children, .
         setIsOpen(false);
       }
     },
-    // TODO: Disabled render on focus for now see #TINY-14178
-    // onFocus: (e: React.FocusEvent<HTMLElement>) => {
-    //   if (!e.isDefaultPrevented()) {
-    //     theChild.props.onFocus?.(e);
-    //     props.onFocus?.(e);
-    //     setIsOpen(true);
-    //   }
-    // },
-    // onBlur: (e: React.FocusEvent<HTMLElement>) => {
-    //   if (!e.isDefaultPrevented()) {
-    //     theChild.props.onBlur?.(e);
-    //     props.onBlur?.(e);
-    //     setIsOpen(false);
-    //   }
-    // },
+    onFocus: (e: React.FocusEvent<HTMLElement>) => {
+      theChild.props.onFocus?.(e);
+      props.onFocus?.(e);
+      if (!e.isDefaultPrevented()) {
+        closeActiveTooltips.dispatchEvent(new window.CustomEvent('CloseActiveTooltips', { bubbles: true, cancelable: true }));
+        setIsOpen(true);
+      }
+    },
+    onBlur: (e: React.FocusEvent<HTMLElement>) => {
+      theChild.props.onBlur?.(e);
+      props.onBlur?.(e);
+      if (!e.isDefaultPrevented()) {
+        setIsOpen(false);
+      }
+    },
   });
 });
 
@@ -199,10 +207,10 @@ const Content = forwardRef<HTMLDivElement, ContentProps>(({ text }, ref) => {
         ref.current = el;
       }
     }}
+    // @ts-expect-error We should remove this expect error once we've migrated to React 19 and can use the new popover API types
     popover='manual'
     className={Bem.block('tox-tooltip', { up: true, anchor: true })}
     style={{
-      // @ts-expect-error We should remove this expect error once we've migrated to React 19 and can use the new popover API types
       positionAnchor: popupAnchor
     }}
     >
@@ -270,3 +278,4 @@ export {
   Root,
   Trigger
 };
+
