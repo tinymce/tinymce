@@ -113,7 +113,11 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
     OuterContainer.setSidebar(
       outerContainer,
       rawUiConfig.sidebar,
-      editor
+      Options.getSidebarShow(editor),
+      {
+        minWidth: Options.getSidebarMinWidth(editor),
+        maxWidth: Options.getSidebarMaxWidth(editor)
+      }
     );
 
     OuterContainer.setViews(

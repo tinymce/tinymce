@@ -5,8 +5,6 @@ import { FieldSchema } from '@ephox/boulder';
 import { Arr, Id, Obj, Optional, Optionals, Type, type Result } from '@ephox/katamari';
 import { Attribute, Css, SelectorFind, type SugarElement } from '@ephox/sugar';
 
-import type Editor from 'tinymce/core/api/Editor';
-
 import { ToolbarMode } from '../../api/Options';
 import type { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { type HeaderSpec, renderHeader } from '../header/CommonHeader';
@@ -59,7 +57,7 @@ interface ToolbarSketchSpec extends MoreDrawerData {
 interface OuterContainerApis {
   readonly getHeader: (comp: AlloyComponent) => Optional<AlloyComponent>;
   readonly getSocket: (comp: AlloyComponent) => Optional<AlloyComponent>;
-  readonly setSidebar: (comp: AlloyComponent, panelConfigs: Sidebar.SidebarConfig, editor: Editor) => void;
+  readonly setSidebar: (comp: AlloyComponent, panelConfigs: Sidebar.SidebarConfig, showSidebar: string | undefined, sizeConstraints: Sidebar.SidebarSizeConstraints) => void;
   readonly toggleSidebar: (comp: AlloyComponent, name: string) => void;
   readonly whichSidebar: (comp: AlloyComponent) => string | null;
   // Maybe just change to ToolbarAnchor.
@@ -108,9 +106,9 @@ const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, Out
     getSocket: (comp) => {
       return Composite.parts.getPart(comp, detail, 'socket');
     },
-    setSidebar: (comp, panelConfigs, editor) => {
+    setSidebar: (comp, panelConfigs, showSidebar, sizeConstraints) => {
       Composite.parts.getPart(comp, detail, 'sidebar').each(
-        (sidebar) => Sidebar.setSidebar(sidebar, panelConfigs, editor)
+        (sidebar) => Sidebar.setSidebar(sidebar, panelConfigs, showSidebar, sizeConstraints)
       );
     },
     toggleSidebar: (comp, name) => {
@@ -423,8 +421,8 @@ export default Sketcher.composite<OuterContainerSketchSpec, OuterContainerSketch
     getSocket: (apis, comp) => {
       return apis.getSocket(comp);
     },
-    setSidebar: (apis, comp, panelConfigs, showSidebar) => {
-      apis.setSidebar(comp, panelConfigs, showSidebar);
+    setSidebar: (apis, comp, panelConfigs, showSidebar, sizeConstraints) => {
+      apis.setSidebar(comp, panelConfigs, showSidebar, sizeConstraints);
     },
     toggleSidebar: (apis, comp, name) => {
       apis.toggleSidebar(comp, name);

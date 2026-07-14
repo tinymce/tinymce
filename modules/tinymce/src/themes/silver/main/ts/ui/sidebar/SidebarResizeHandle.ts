@@ -2,18 +2,14 @@ import { type AlloyComponent, type AlloySpec, Behaviour, Dragging, Resizing } fr
 import type { Optional } from '@ephox/katamari';
 import { Height, SelectorFind, type SugarElement, SugarPosition, Width } from '@ephox/sugar';
 
-import type Editor from 'tinymce/core/api/Editor';
-
-import * as Options from '../../api/Options';
-
+import type { SidebarSizeConstraints } from './Sidebar';
 import * as SidebarResize from './SidebarResize';
 
 const findSidebar = (handle: AlloyComponent): Optional<SugarElement<HTMLElement>> =>
   SelectorFind.ancestor<HTMLElement>(handle.element, '.tox-sidebar');
 
-export const makeSidebarResizeHandle = (editor: Editor): AlloySpec => {
-  const minWidth = Options.getSidebarMinWidth(editor);
-  const maxWidth = Options.getSidebarMaxWidth(editor);
+export const makeSidebarResizeHandle = (sizeConstraints: SidebarSizeConstraints): AlloySpec => {
+  const { minWidth, maxWidth } = sizeConstraints;
 
   return {
     dom: {
