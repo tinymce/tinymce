@@ -22,6 +22,11 @@ import { makeSidebarResizeHandle } from './SidebarResizeHandle';
 
 export type SidebarConfig = Record<string, BridgeSidebar.SidebarSpec>;
 
+export interface SidebarSizeConstraints {
+  readonly minWidth: number;
+  readonly maxWidth: number;
+}
+
 const enum SidebarStateRoleAttr {
   Grown = 'region',
   Shrunk = 'presentation'
@@ -97,13 +102,13 @@ const makePanels = (parts: SlotContainerTypes.SlotContainerParts, panelConfigs: 
   });
 };
 
-const makeSidebar = (panelConfigs: SidebarConfig, editor: Editor) => SlotContainer.sketch((parts) => ({
+const makeSidebar = (panelConfigs: SidebarConfig, sizeConstraints: SidebarSizeConstraints) => SlotContainer.sketch((parts) => ({
   dom: {
     tag: 'div',
     classes: [ 'tox-sidebar__pane-container' ]
   },
   components: [
-    makeSidebarResizeHandle(editor),
+    makeSidebarResizeHandle(sizeConstraints),
     ...makePanels(parts, panelConfigs)
   ],
   slotBehaviours: SimpleBehaviours.unnamedEvents([
@@ -111,12 +116,11 @@ const makeSidebar = (panelConfigs: SidebarConfig, editor: Editor) => SlotContain
   ])
 }));
 
-const setSidebar = (sidebar: AlloyComponent, panelConfigs: SidebarConfig, editor: Editor): void => {
-  const showSidebar = Options.getSidebarShow(editor);
+const setSidebar = (sidebar: AlloyComponent, panelConfigs: SidebarConfig, showSidebar: string | undefined, sizeConstraints: SidebarSizeConstraints): void => {
   const optSlider = Composing.getCurrent(sidebar);
 
   optSlider.each((slider) => {
-    Replacing.set(slider, [ makeSidebar(panelConfigs, editor) ]);
+    Replacing.set(slider, [ makeSidebar(panelConfigs, sizeConstraints) ]);
 
     // Show the default sidebar
     const configKey = showSidebar?.toLowerCase();
