@@ -12,7 +12,6 @@ import { Attribute, Css, type SugarElement, Width } from '@ephox/sugar';
 import type Editor from 'tinymce/core/api/Editor';
 import { onControlAttached, onControlDetached } from 'tinymce/themes/silver/ui/controls/Controls';
 
-import * as Options from '../../api/Options';
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { SimpleBehaviours } from '../alien/SimpleBehaviours';
 import { numToPx } from '../sizing/Utils';
