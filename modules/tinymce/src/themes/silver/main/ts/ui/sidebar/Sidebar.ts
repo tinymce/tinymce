@@ -190,7 +190,7 @@ const fixSize = Id.generate('FixSizeEvent');
 const autoSize = Id.generate('AutoSizeEvent');
 
 interface SidebarSpec extends SketchSpec {
-  readonly editor: Editor;
+  readonly configuredSidebarWidth: number;
 }
 
 const renderSidebar = (spec: SidebarSpec): AlloySpec => ({
@@ -199,7 +199,7 @@ const renderSidebar = (spec: SidebarSpec): AlloySpec => ({
     tag: 'div',
     classes: [ 'tox-sidebar' ],
     styles: {
-      [SidebarResize.requestedWidthProperty]: numToPx(Options.getSidebarWidth(spec.editor))
+      [SidebarResize.requestedWidthProperty]: numToPx(spec.configuredSidebarWidth)
     },
     attributes: {
       role: SidebarStateRoleAttr.Shrunk
