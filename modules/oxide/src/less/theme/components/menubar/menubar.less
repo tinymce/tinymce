@@ -28,3 +28,13 @@
     grid-column: 1;
   }
 }
+
+@media (max-width: 480px) {
+  .tox:not(.tox-tinymce-inline) .tox-menubar {
+    flex-wrap: nowrap;
+    min-width: 0;
+    min-height: @_menubar-height;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+}
