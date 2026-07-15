@@ -27,7 +27,7 @@
     "test": "bedrock-auto -b chrome-headless --testdirs src/test/ts/atomic src/test/ts/browser src/test/ts/webdriver",
     "test-manual": "bedrock --testdirs src/test/ts/atomic src/test/ts/browser",
     "lint": "eslint --max-warnings=0 src/**/*.ts",
-    "start": "grunt dev",
+    "dev": "rspack serve",
     "prepublishOnly": "tsc -b",
     "build": "tsc"
   },

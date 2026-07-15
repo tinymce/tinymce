@@ -87,16 +87,15 @@ export const create = (source: SugarElement<HTMLElement>, config: FlowConfig): K
 
   const getKeyupRules: () => Array<KeyRules.KeyRule<FlowConfig>> = Fun.constant([]);
 
-  // Default to whatever needed for this task
   const partialConfig: Required<FlowConfig> = {
-    execute: defaultExecute,
-    escape: Fun.constant(Optional.none()),
-    allowVertical: true,
-    allowHorizontal: true,
-    cycles: true,
-    focusIn: false,
-    closest: true,
-    ...config
+    selector: config.selector,
+    execute: config.execute ?? defaultExecute,
+    escape: config.escape ?? Fun.constant(Optional.none()),
+    allowVertical: config.allowVertical ?? true,
+    allowHorizontal: config.allowHorizontal ?? true,
+    cycles: config.cycles ?? true,
+    focusIn: config.focusIn ?? false,
+    closest: config.closest ?? true
   };
 
   const keyingHandlers = KeyingType.typical<FullFlowConfig>(partialConfig, getKeydownRules, getKeyupRules, () => Optionals.someIf(partialConfig.focusIn, focusIn));

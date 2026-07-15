@@ -1,4 +1,4 @@
-import { Menu as AlloyMenu, type RawDomSchema, type TieredMenuTypes } from '@ephox/alloy';
+import { Menu as AlloyMenu, type AlloyParts, type RawDomSchema, type TieredMenuTypes } from '@ephox/alloy';
 import type { Toolbar } from '@ephox/bridge';
 import { Arr } from '@ephox/katamari';
 
@@ -29,7 +29,7 @@ const dom = (hasIcons: boolean, columns: Toolbar.ColumnTypes, presets: Toolbar.P
   };
 };
 
-const components = [
+const components: AlloyParts.ConfiguredPart[] = [
   AlloyMenu.parts.items({ })
 ];
 

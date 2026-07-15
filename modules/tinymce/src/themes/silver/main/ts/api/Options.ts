@@ -9,18 +9,22 @@ import type { EditorOptions, ToolbarGroup } from 'tinymce/core/api/OptionTypes';
 
 export type ToolbarGroupOption = ToolbarGroup;
 
-export enum ToolbarMode {
-  default = 'wrap',
-  floating = 'floating',
-  sliding = 'sliding',
-  scrolling = 'scrolling'
-}
+export type ToolbarMode = typeof ToolbarMode[keyof typeof ToolbarMode];
 
-export enum ToolbarLocation {
-  auto = 'auto',
-  top = 'top',
-  bottom = 'bottom'
-}
+export const ToolbarMode = {
+  default: 'wrap',
+  floating: 'floating',
+  sliding: 'sliding',
+  scrolling: 'scrolling'
+} as const;
+
+export type ToolbarLocation = typeof ToolbarLocation[keyof typeof ToolbarLocation];
+
+export const ToolbarLocation = {
+  auto: 'auto',
+  top: 'top',
+  bottom: 'bottom'
+} as const;
 
 const option: {
   <K extends keyof EditorOptions>(name: K): (editor: Editor) => EditorOptions[K];
@@ -312,7 +316,7 @@ const shouldAutoHideStyleFormats = option('style_formats_autohide');
 const getContentLanguages = option('content_langs');
 const getRemovedMenuItems = option('removed_menuitems');
 const getToolbarMode = option('toolbar_mode');
-const getToolbarGroups = option('toolbar_groups');
+const getToolbarGroups: (editor: Editor) => EditorOptions['toolbar_groups'] = option('toolbar_groups');
 const getToolbarLocation = option('toolbar_location');
 const fixedContainerSelector = option('fixed_toolbar_container');
 const fixedToolbarContainerTarget = option('fixed_toolbar_container_target');
@@ -443,59 +447,59 @@ const getMenus = (editor: Editor): Record<string, { title: string; items: string
 };
 
 export {
-  register,
-  getSkinUrl,
-  getSkinUrlOption,
-  isReadOnly,
-  isDisabled,
-  getSkin,
-  isSkinDisabled,
-  getHeightOption,
-  getWidthOption,
-  getMinWidthOption,
-  getMinHeightOption,
-  getMaxWidthOption,
-  getMaxHeightOption,
-  getUserStyleFormats,
-  shouldMergeStyleFormats,
-  shouldAutoHideStyleFormats,
-  getLineHeightFormats,
+  getAnchorBottom,
+  getAnchorTop,
   getContentLanguages,
-  getRemovedMenuItems,
-  isMenubarEnabled,
-  isMultipleToolbars,
-  isToolbarEnabled,
-  isToolbarPersist,
-  getMultipleToolbarsOption,
-  getUiContainer,
-  useFixedContainer,
-  isSplitUiMode,
-  getToolbarMode,
-  isDraggableModal,
-  isDistractionFree,
-  isStickyToolbar,
-  getStickyToolbarOffset,
-  getToolbarLocation,
-  isToolbarLocationBottom,
-  getToolbarGroups,
-  getMenus,
-  getMenubar,
-  getToolbar,
+  getDefaultFontStack,
   getFilePickerCallback,
   getFilePickerTypes,
-  useTypeaheadUrls,
-  getAnchorTop,
-  getAnchorBottom,
   getFilePickerValidatorHandler,
   getFontSizeInputDefaultUnit,
-  useStatusBar,
-  useElementPath,
-  promotionEnabled,
-  useBranding,
-  getResize,
+  getHeightOption,
+  getLineHeightFormats,
+  getMaxHeightOption,
+  getMaxWidthOption,
+  getMenubar,
+  getMenus,
+  getMinHeightOption,
+  getMinWidthOption,
+  getMultipleToolbarsOption,
   getPasteAsText,
+  getRemovedMenuItems,
+  getResize,
   getSidebarShow,
+  getSkin,
+  getSkinUrl,
+  getSkinUrlOption,
+  getStickyToolbarOffset,
+  getToolbar,
+  getToolbarGroups,
+  getToolbarLocation,
+  getToolbarMode,
+  getUiContainer,
+  getUserStyleFormats,
   getViewShow,
+  getWidthOption,
+  isDisabled,
+  isDistractionFree,
+  isDraggableModal,
+  isMenubarEnabled,
+  isMultipleToolbars,
+  isReadOnly,
+  isSkinDisabled,
+  isSplitUiMode,
+  isStickyToolbar,
+  isToolbarEnabled,
+  isToolbarLocationBottom,
+  isToolbarPersist,
+  promotionEnabled,
+  register,
+  shouldAutoHideStyleFormats,
+  shouldMergeStyleFormats,
+  useBranding,
+  useElementPath,
+  useFixedContainer,
   useHelpAccessibility,
-  getDefaultFontStack
+  useStatusBar,
+  useTypeaheadUrls
 };

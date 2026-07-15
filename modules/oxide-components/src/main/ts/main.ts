@@ -6,6 +6,9 @@ import { Alert } from './components/alert/Alert';
 import { AutoResizingTextarea } from './components/autoresizingtextarea/AutoResizingTextarea';
 import { Button } from './components/button/Button';
 import * as Card from './components/card/Card';
+import { Confirmation, type ConfirmationProps } from './components/confirmation/Confirmation';
+import { ConfirmationHost, type ConfirmationHostHandle } from './components/confirmation/internals/ConfirmationHost';
+import { type ConfirmationApi, useConfirmationApi } from './components/confirmation/internals/useConfirmationApi';
 import * as ContextToolbar from './components/contexttoolbar/ContextToolbar';
 import * as Draggable from './components/draggable/Draggable';
 import * as Dropdown from './components/dropdown/Dropdown';
@@ -34,6 +37,8 @@ export {
   Bem,
   Button,
   Card,
+  Confirmation,
+  ConfirmationHost,
   ContentUiBem,
   ContextToolbar,
   Draggable,
@@ -53,8 +58,9 @@ export {
   Tooltip,
   SegmentedControl,
   UniverseProvider,
+  useConfirmationApi,
   useUniverse,
   UserPromptBubble
 };
 
-export type { UniverseResources };
+export type { ConfirmationApi, ConfirmationProps, ConfirmationHostHandle, UniverseResources };

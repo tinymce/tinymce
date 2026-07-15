@@ -1,6 +1,6 @@
 import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Mouse, type StructAssert, UiFinder, Waiter } from '@ephox/agar';
 import { afterEach, Assert, before, context, describe, it } from '@ephox/bedrock-client';
-import { Arr, Type } from '@ephox/katamari';
+import { Arr, Obj, Optional, Type } from '@ephox/katamari';
 import { Attribute, SugarBody, SugarDocument, type SugarElement } from '@ephox/sugar';
 import { McEditor, TinyContentActions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
@@ -136,6 +136,28 @@ describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
                 classes: [ arr.has('tox-statusbar__resize-handle') ],
                 attrs: {
                   'aria-label': str.is(label)
+                }
+              })
+            ]
+          }),
+          s.theRest()
+        ]
+      });
+
+    const statusbarResizeHandleAttrsSpec = (ariaAttrs: Record<string, Optional<string>>): ApproxStructure.Builder<StructAssert> =>
+      (s, str, arr) => s.element('div', {
+        classes: [ arr.has('tox-tinymce') ],
+        children: [
+          s.anything(),
+          s.anything(),
+          s.element('div', {
+            classes: [ arr.has('tox-statusbar') ],
+            children: [
+              s.anything(),
+              s.element('div', {
+                classes: [ arr.has('tox-statusbar__resize-handle') ],
+                attrs: {
+                  ...Obj.map(ariaAttrs, (v) => v.fold(str.none, str.is))
                 }
               })
             ]
@@ -343,6 +365,61 @@ describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
       ApproxStructure.build(statusbarResizeHandleLabelSpec(
         'Press the arrow keys to resize the editor.'
       ))
+    ));
+
+    it('TINYMCE-14493: Vertical resize with min_height and max_height set exposes aria-valuenow, aria-valuemin and aria-valuemax', makeTest(
+      { resize: true, height: 400, min_height: 200, max_height: 600 },
+      'Vertical resize with explicit min/max height',
+      ApproxStructure.build(statusbarResizeHandleAttrsSpec({
+        'aria-valuemin': Optional.some('200'),
+        'aria-valuemax': Optional.some('600'),
+        'aria-valuenow': Optional.some('400'),
+        'aria-valuetext': Optional.some(`Editor's height: 400 pixels`)
+      }))
+    ));
+
+    it('TINYMCE-14493: Vertical resize without max_height sets aria-valuemax to current height plus the keyboard resize step', makeTest(
+      { resize: true, height: 400 },
+      'Vertical resize without explicit max height',
+      ApproxStructure.build(statusbarResizeHandleAttrsSpec({
+        'aria-valuemin': Optional.some('100'),
+        'aria-valuemax': Optional.some('420'),
+        'aria-valuenow': Optional.some('400'),
+        'aria-valuetext': Optional.some(`Editor's height: 400 pixels`)
+      }))
+    ));
+
+    it('TINYMCE-14493: Vertical resize with only min_height set sets aria-valuemax to current height plus the keyboard resize step', makeTest(
+      { resize: true, height: 400, min_height: 200 },
+      'Vertical resize with only min height',
+      ApproxStructure.build(statusbarResizeHandleAttrsSpec({
+        'aria-valuemin': Optional.some('200'),
+        'aria-valuemax': Optional.some('420'),
+        'aria-valuenow': Optional.some('400'),
+        'aria-valuetext': Optional.some(`Editor's height: 400 pixels`)
+      }))
+    ));
+
+    it('TINYMCE-14493: Vertical resize with only max_height set exposes aria-valuemin (defaulted) and aria-valuemax', makeTest(
+      { resize: true, height: 400, max_height: 600 },
+      'Vertical resize with only max height uses the default min_height',
+      ApproxStructure.build(statusbarResizeHandleAttrsSpec({
+        'aria-valuemin': Optional.some('100'),
+        'aria-valuemax': Optional.some('600'),
+        'aria-valuenow': Optional.some('400'),
+        'aria-valuetext': Optional.some(`Editor's height: 400 pixels`)
+      }))
+    ));
+
+    it('TINYMCE-14493: Both resize does not expose aria-valuenow, aria-valuemin or aria-valuemax', makeTest(
+      { resize: 'both', height: 400, width: 400, min_height: 200, max_height: 600 },
+      'Both resize has no range semantics',
+      ApproxStructure.build(statusbarResizeHandleAttrsSpec({
+        'aria-valuenow': Optional.none(),
+        'aria-valuemin': Optional.none(),
+        'aria-valuemax': Optional.none(),
+        'aria-valuetext': Optional.some(`Editor's height: 400 pixels, Editor's width: 400 pixels`)
+      }))
     ));
   });
 

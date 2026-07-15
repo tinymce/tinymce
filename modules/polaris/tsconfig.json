@@ -3,12 +3,11 @@
   "compilerOptions": {
     "outDir": "lib",
     "rootDir": "src",
-    "baseUrl": ".",
     "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo",
     "paths": {
-      "ephox/polaris/test/*": ["src/test/ts/module/ephox/polaris/test/*"],
-      "ephox/polaris/demo/*": ["src/demo/ts/ephox/polaris/demo/*"],
-      "ephox/polaris/*": ["src/main/ts/ephox/polaris/*"]
+      "ephox/polaris/test/*": ["./src/test/ts/module/ephox/polaris/test/*"],
+      "ephox/polaris/demo/*": ["./src/demo/ts/ephox/polaris/demo/*"],
+      "ephox/polaris/*": ["./src/main/ts/ephox/polaris/*"]
     }
   },
   "include": [

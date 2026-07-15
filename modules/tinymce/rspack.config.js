@@ -2,7 +2,7 @@ const path = require("path");
 const fs = require("fs");
 const fg = require("fast-glob");
 const packageData = require("./package.json");
-const { TsCheckerRspackPlugin } = require('ts-checker-rspack-plugin');
+const { createDemoConfig } = require("../../rspack.shared.config");
 
 const escapeHtml = (str) => str.replace(/[&<>"']/g, (m) => ({
   '&': '&amp;',
@@ -52,100 +52,6 @@ const generateDemoIndex = (app) => {
   app.get('/', (_, res) => res.send(html))
 };
 
-function create(entries, tsConfig, outDir = ".") {
-  const resolvedEntries = Object.fromEntries(Object.entries(entries).map(([k, v]) => [k, path.resolve(__dirname, v)]));
-  return {
-    context: __dirname,
-    entry: resolvedEntries,
-    mode: "development",
-    devtool: "inline-source-map",
-    target: "web",
-    plugins: [
-      new TsCheckerRspackPlugin({
-        async: true,
-        devServer: true,
-        typescript: {
-          build: true,
-          configFile: path.resolve(tsConfig),
-        }
-      })
-    ],
-    optimization: {
-      removeAvailableModules: false,
-      removeEmptyChunks: false,
-      splitChunks: false,
-    },
-    infrastructureLogging: { level: "log" },
-    ignoreWarnings: [/export .* was not found in/],
-
-    resolve: {
-      conditionNames: [ 'tiny:source', '...' ],
-      extensions: [".ts", ".js"],
-      tsConfig: {
-        configFile: path.resolve(tsConfig),
-        references: "auto",
-      },
-    },
-    watchOptions: {
-      ignored: ["**/node_modules/**"]
-    },
-    module: {
-      rules: [
-        {
-          test: /\.js$/,
-          resolve: { fullySpecified: false },
-        },
-        { test: /\.(js|mjs)$/, use: ["source-map-loader"], enforce: "pre" },
-        { test: /\.svg$/i, type: "asset/source" },
-        { resourceQuery: /raw/, type: "asset/source" },
-        {
-          test: /\.ts$/,
-          use: [
-            {
-              loader: "string-replace-loader",
-              options: {
-                test: /EditorManager.ts/,
-                multiple: [
-                  {
-                    search: "@@majorVersion@@",
-                    replace: packageData.version.split(".")[0],
-                  },
-                  {
-                    search: "@@minorVersion@@",
-                    replace: packageData.version.split(".").slice(1).join("."),
-                  },
-                  { search: "@@releaseDate@@", replace: packageData.date },
-                ],
-              },
-            },
-            {
-              loader: "builtin:swc-loader",
-              options: {
-                jsc: {
-                  parser: { syntax: "typescript" },
-                  target: 'es2022',
-                },
-                sourceMaps: true
-              },
-            },
-          ],
-        },
-      ],
-    },
-
-    output: {
-      filename: "[name]",
-      path: path.resolve(outDir),
-      publicPath: "/",
-    },
-
-    stats: {
-      assets: false,
-      modulesSpace: 5,
-    }
-  };
-}
-
 const buildDemoEntries = (typeNames, type, demo, pathPrefix = '') => typeNames.reduce(
   (acc, name) => {
     const tsfile = `src/${type}/${name}/demo/ts/demo/${demo}`;
@@ -170,13 +76,54 @@ function findDemos(baseDir, type, demoFile) {
   });
 }
 
+// Injects the package version/date into EditorManager.ts at build time.
+const versionReplaceLoader = {
+  loader: "string-replace-loader",
+  options: {
+    test: /EditorManager.ts/,
+    multiple: [
+      { search: "@@majorVersion@@", replace: packageData.version.split(".")[0] },
+      { search: "@@minorVersion@@", replace: packageData.version.split(".").slice(1).join(".") },
+      { search: "@@releaseDate@@", replace: packageData.date },
+    ],
+  },
+};
+
+// Options shared by both the demo bundle and the core tinymce.js bundle. These
+// generalize the shared `createDemoConfig` factory to tinymce's needs: named
+// output chunks, the version-replace loader, svg/raw asset handling, and the
+// extra build tuning the large tinymce graph relies on.
+const tinymceOptions = {
+  pkgDir: __dirname,
+  devtool: "inline-source-map",
+  outputFilename: "[name]",
+  outDir: __dirname,
+  publicPath: "/",
+  optimization: {
+    removeAvailableModules: false,
+    removeEmptyChunks: false,
+    splitChunks: false,
+  },
+  moduleRules: [
+    { test: /\.svg$/i, type: "asset/source" },
+    { resourceQuery: /raw/, type: "asset/source" },
+  ],
+  tsPreLoaders: [versionReplaceLoader],
+  infrastructureLogging: { level: "log" },
+  ignoreWarnings: [/export .* was not found in/],
+  watchOptions: { ignored: ["**/node_modules/**"] },
+  stats: { assets: false, modulesSpace: 5 },
+};
+
 const plugins = findDemos(__dirname, "plugins", "Demo.ts");
 const themes = findDemos(__dirname, "themes", "Demos.ts");
 const models = findDemos(__dirname, "models", "Demo.ts");
 
 const config = [
-  create(
-    {
+  createDemoConfig({
+    ...tinymceOptions,
+    tsConfig: "../../tsconfig.demo.json",
+    entry: {
       "scratch/demos/core/demo.js": "src/core/demo/ts/demo/Demos.ts",
       "scratch/demos/core/cspdemo.js": "src/core/demo/ts/demo/ContentSecurityPolicyDemo.ts",
       ...buildDemoEntries(plugins, "plugins", "Demo.ts", "scratch/demos/"),
@@ -186,31 +133,24 @@ const config = [
       ...buildDemoEntries(themes, "themes", "Demos.ts", "scratch/demos/"),
       ...buildEntries(themes, "themes", "Main.ts", "js/tinymce/"),
     },
-    "../../tsconfig.demo.json"
-  ),
-  create(
-    {
+    devServer: {
+      liveReload: false,
+      static: { publicPath: "/", directory: __dirname },
+      client: { overlay: { errors: true, warnings: true } },
+      setupMiddlewares: (middlewares, devServer) => {
+        generateDemoIndex(devServer.app);
+        return middlewares;
+      },
+    },
+  }),
+  createDemoConfig({
+    ...tinymceOptions,
+    tsConfig: "../../tsconfig.json",
+    entry: {
       "js/tinymce/tinymce.js": "src/core/main/ts/api/Main.ts",
     },
-    "../../tsconfig.json"
-  )
+    devServer: false,
+  }),
 ];
-
-config[0].devServer = {
-  port: '3000',
-  host: "0.0.0.0",
-  allowedHosts: "all",
-  static: {
-    publicPath: "/",
-    directory: __dirname,
-  },
-  hot: false,
-  liveReload: false,
-  client: { overlay: { errors: true, warnings: true } },
-  setupMiddlewares: (middlewares, devServer) => {
-    generateDemoIndex(devServer.app);
-    return middlewares;
-  },
-};
 
 module.exports = config;

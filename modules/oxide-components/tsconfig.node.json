@@ -22,9 +22,8 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
     "resolveJsonModule": true,
-    "baseUrl": ".",
     "paths": {
-      "oxide-components/*": ["src/main/ts/*"]
+      "oxide-components/*": ["./src/main/ts/*"]
     }
   },
   "include": [

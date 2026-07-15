@@ -6,8 +6,7 @@
     "useDefineForClassFields": true,
     "lib": [
       "ES2022",
-      "DOM",
-      "DOM.Iterable"
+      "DOM"
     ],
     "module": "ESNext",
     "skipLibCheck": true,
@@ -22,9 +21,8 @@
     "strict": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
-    "baseUrl": ".",
     "paths": {
-      "oxide-components/*": ["src/main/ts/*"]
+      "oxide-components/*": ["./src/main/ts/*"]
     }
   },
   "include": [

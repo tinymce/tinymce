@@ -3,12 +3,11 @@
   "compilerOptions": {
     "outDir": "lib",
     "rootDir": "src",
-    "baseUrl": ".",
     "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo",
     "paths": {
-      "ephox/boss/test/*": ["src/test/ts/module/ephox/boss/test/*"],
-      "ephox/boss/demo/*": ["src/demo/ts/ephox/boss/demo/*"],
-      "ephox/boss/*": ["src/main/ts/ephox/boss/*"]
+      "ephox/boss/test/*": ["./src/test/ts/module/ephox/boss/test/*"],
+      "ephox/boss/demo/*": ["./src/demo/ts/ephox/boss/demo/*"],
+      "ephox/boss/*": ["./src/main/ts/ephox/boss/*"]
     }
   },
   "include": [

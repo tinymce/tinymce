@@ -109,7 +109,7 @@ const getAllRaw = (element: SugarElement<Node>): Record<string, string> => {
 
   if (Style.isSupported(dom)) {
     for (let i = 0; i < dom.style.length; i++) {
-      const ruleName = dom.style.item(i) as keyof CSSStyleDeclaration;
+      const ruleName = dom.style.item(i) as Exclude<keyof CSSStyleDeclaration, symbol>;
       css[ruleName] = dom.style[ruleName] as string;
     }
   }

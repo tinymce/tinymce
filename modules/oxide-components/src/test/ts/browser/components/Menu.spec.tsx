@@ -51,17 +51,13 @@ const pAssertActiveElementText = async (text: string) => {
 const resetPostioningStyles = (fragment: DocumentFragment): DocumentFragment => {
   fragment.querySelectorAll('.tox-dropdown-content').forEach((dropdownContent) => {
     const styles = (dropdownContent as HTMLElement).style;
-    // @ts-expect-error - TODO: Remove this expect error once we've upgraded to React 19+
     if (styles.positionAnchor) {
-      // @ts-expect-error - TODO: Remove this expect error once we've upgraded to React 19+
       styles.positionAnchor = '--test-anchor';
     }
   });
   fragment.querySelectorAll('[role="menuitem"]').forEach((menuItem) => {
     const styles = (menuItem as HTMLElement).style;
-    // @ts-expect-error - TODO: Remove this expect error once we've upgraded to React 19+
     if (styles.anchorName) {
-      // @ts-expect-error - TODO: Remove this expect error once we've upgraded to React 19+
       styles.anchorName = '--test-anchor';
     }
   });
