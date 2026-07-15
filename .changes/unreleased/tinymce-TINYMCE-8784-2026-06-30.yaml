@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Clicking anchor links with special characters like semicolons in readonly mode or using the link plugin was throwing a querySelectorAll syntax error.
-time: 2026-06-30T11:30:27.842199+10:00
-custom:
-  Issue: TINYMCE-8784
