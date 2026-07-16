@@ -198,8 +198,7 @@ const renderSidebar = (spec: SidebarSpec): AlloySpec => ({
     tag: 'div',
     classes: [ 'tox-sidebar' ],
     styles: {
-      [SidebarResize.requestedWidthProperty]: numToPx(spec.configuredSidebarWidth),
-      [SidebarResize.minEditingAreaWidthProperty]: numToPx(SidebarResize.minEditingAreaWidth)
+      [SidebarResize.requestedWidthProperty]: numToPx(spec.configuredSidebarWidth)
     },
     attributes: {
       role: SidebarStateRoleAttr.Shrunk
