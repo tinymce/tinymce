@@ -263,7 +263,6 @@ const renderSidebar = (spec: SidebarSpec): AlloySpec => ({
 });
 
 export {
-  type SidebarSpec,
   setSidebar,
   toggleSidebar,
   whichSidebar,
