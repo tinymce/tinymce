@@ -276,7 +276,7 @@ const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
     return {
       dom: {
         tag: 'div',
-        classes: [ 'tox-sidebar-wrap' ]
+        classes: [ 'tox-sidebar-wrap', 'tox-sidebar-wrap--resizable' ]
       },
       components: [
         partSocket,
