@@ -4,11 +4,9 @@
 
 .tox-sidebar when (@custom-properties-enabled = true) {
   --tox-private-sidebar-background-color: light-dark(hsl( from var(--tox-private-background-color) h s calc(l - 6)), hsl( from var(--tox-private-background-color) h s calc(l + 10)));
-  --tox-private-sidebar-resize-handle-width: 1px;
 }
 
 @sidebar-background-color: contrast(@background-color, darken(@background-color, 6%), lighten(@background-color, 10%));
-@sidebar-resize-handle-width: 1px;
 
 // We add blue outline to the editing area if it's focused.
 // Two blue lines next to each other do not look good, so we remove one from the sidebar.
@@ -42,14 +40,22 @@
     overflow: hidden;
   }
 
-  .tox-sidebar__pane-container {
+  .tox-sidebar-wrap--resizable .tox-sidebar__pane-container {
     width: var(--tox-private-requested-sidebar-width);
+  }
+
+  .tox-sidebar__pane-container {
     display: flex;
   }
 
+  .tox-sidebar-wrap--resizable .tox-sidebar__resize-handle {
+    display: block;
+  }
+
   .tox-sidebar__resize-handle {
+    display: none;
     position: relative;
-    width: var(--tox-private-sidebar-resize-handle-width, @sidebar-resize-handle-width);
+    width: 1px;
     height: 100%;
     cursor: col-resize;
     background-color: var(--tox-private-separator-color, @tinymce-separator-color);
@@ -71,8 +77,11 @@
     }
   }
 
+  .tox-sidebar-wrap--resizable .tox-sidebar__pane {
+    flex: 1; 
+  }
+
   .tox-sidebar__pane {
-    width: calc(100% - var(--tox-private-sidebar-resize-handle-width, @sidebar-resize-handle-width));
     display: flex;
   }
 
