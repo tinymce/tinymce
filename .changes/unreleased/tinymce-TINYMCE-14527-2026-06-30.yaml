@@ -1,6 +1,6 @@
 project: tinymce
 kind: Improved
-body: Sidebars can now be resized by dragging their edge.
+body: Sidebars can now be resized by dragging their edge, and their width can be configured with the new `sidebar_width` option.
 time: 2026-06-30T20:16:56.784348336Z
 custom:
   Issue: TINYMCE-14527
