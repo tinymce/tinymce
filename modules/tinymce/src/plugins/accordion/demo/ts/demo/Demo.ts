@@ -1,4 +1,4 @@
-import type { TinyMCE } from 'tinymce/core/api/PublicApi';
+import type { Editor, TinyMCE } from 'tinymce/core/api/PublicApi';
 
 declare let tinymce: TinyMCE;
 
@@ -42,6 +42,29 @@ const createPanel = (title: string, content: HTMLElement): HTMLElement => {
   return panel;
 };
 
+// Turns an editor id like `editor1` into a friendly label like `Editor 1`.
+const editorLabel = (editor: Editor): string => editor.id.replace(/^editor/, 'Editor ');
+
+const addSidebar1 = (editor: Editor): void => {
+  const owner = editorLabel(editor);
+  editor.ui.registry.addSidebar('mysidebar1', {
+    tooltip: 'My sidebar 1',
+    icon: 'comment',
+    onSetup: (api) => {
+      const box = document.createElement('div');
+      box.style.padding = '10px';
+      // box.style.width = '400px';
+      box.style.flex = '1';
+      box.style.background = 'lightgreen';
+      box.textContent = `Sidebar 1 content — ${owner}`;
+
+      const panel = createPanel(`Sidebar 1 (${owner})`, box);
+      api.element().appendChild(panel);
+      return () => api.element().removeChild(panel);
+    }
+  });
+};
+
 tinymce.init({
   selector: 'textarea.tinymce',
   license_key: 'gpl',
@@ -52,22 +75,8 @@ tinymce.init({
   details_serialize_state: 'inherited',
   sidebar_type: 'floating',
   setup: (editor) => {
-    editor.ui.registry.addSidebar('mysidebar1', {
-      tooltip: 'My sidebar 1',
-      icon: 'comment',
-      onSetup: (api) => {
-        const box = document.createElement('div');
-        box.style.padding = '10px';
-        // box.style.width = '400px';
-        box.style.flex = '1';
-        box.style.background = 'lightgreen';
-        box.textContent = 'Sidebar 1 content';
-
-        const panel = createPanel('Sidebar 1', box);
-        api.element().appendChild(panel);
-        return () => api.element().removeChild(panel);
-      }
-    });
+    const owner = editorLabel(editor);
+    addSidebar1(editor);
 
     editor.ui.registry.addSidebar('mysidebar2', {
       tooltip: 'My sidebar 2',
@@ -78,9 +87,9 @@ tinymce.init({
         // box.style.width = '500px';
         box.style.flex = '1';
         box.style.background = 'lightblue';
-        box.textContent = 'Sidebar 2 content';
+        box.textContent = `Sidebar 2 content — ${owner}`;
 
-        const panel = createPanel('Sidebar 2', box);
+        const panel = createPanel(`Sidebar 2 (${owner})`, box);
         api.element().appendChild(panel);
         return () => api.element().removeChild(panel);
       }
@@ -90,11 +99,25 @@ tinymce.init({
       tooltip: 'Blank sidebar',
       icon: 'help',
       onSetup: (api) => {
-        const text = document.createTextNode('blank sidebar');
+        const text = document.createTextNode(`blank sidebar — ${owner}`);
         api.element().appendChild(text);
         return () => api.element().removeChild(text);
       }
     });
+  }
+});
+
+tinymce.init({
+  selector: 'textarea.tinymce-extra',
+  license_key: 'gpl',
+  plugins: 'table lists image accordion code',
+  toolbar: 'table | numlist bullist | image | accordion | code | mysidebar1',
+  menu: { insert: { title: 'Insert', items: 'table | image | accordion' }},
+  details_initial_state: 'inherited',
+  details_serialize_state: 'inherited',
+  sidebar_type: 'floating',
+  setup: (editor) => {
+    addSidebar1(editor);
   }
 });
 
