@@ -358,7 +358,8 @@ const partSidebar = Composite.partType.optional({
   },
   name: 'sidebar',
   schema: [
-    FieldSchema.required('dom')
+    FieldSchema.required('dom'),
+    FieldSchema.required('configuredSidebarWidth')
   ]
 });
 
