@@ -1,11 +1,12 @@
-import { type AlloyComponent, AlloyEvents, Attachment, Behaviour, Composing, GuiFactory, Replacing, type SimpleSpec, SlotContainer, type SlotContainerTypes, SystemEvents, Toggling } from '@ephox/alloy';
+import { type AlloyComponent, AlloyEvents, Behaviour, Composing, Replacing, type SimpleSpec, SlotContainer, type SlotContainerTypes, SystemEvents, Toggling } from '@ephox/alloy';
 import { StructureSchema } from '@ephox/boulder';
 import { Sidebar as BridgeSidebar } from '@ephox/bridge';
-import { Arr, Cell, Fun, Obj, type Optional, Type } from '@ephox/katamari';
+import { Arr, Cell, Fun, Obj, type Optional } from '@ephox/katamari';
+import { Attribute } from '@ephox/sugar';
 
-import type Editor from 'tinymce/core/api/Editor';
 import { onControlAttached, onControlDetached } from 'tinymce/themes/silver/ui/controls/Controls';
 
+import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { SimpleBehaviours } from '../alien/SimpleBehaviours';
 
 import { setupSidebarDragging } from './dragging/SidebarDragging';
@@ -17,7 +18,7 @@ const renderFloatingSidebar = (): SimpleSpec => ({
     classes: [ 'tox-floating-sidebar' ]
   },
   components: [
-    // this will be replaced on setSidebar
+    // one block per editor, appended by createSlots
   ],
   behaviours: Behaviour.derive([
     Replacing.config({}),
@@ -25,21 +26,9 @@ const renderFloatingSidebar = (): SimpleSpec => ({
       toggleClass: 'tox-floating-sidebar--open',
       toggleOnExecute: false
     }),
-    Composing.config({
-      find: (comp: AlloyComponent) => {
-        const children = Replacing.contents(comp);
-        return Arr.head(children);
-      }
-    }),
     setupSidebarDragging()
   ])
 });
-
-const setup = (editor: Editor, sink: AlloyComponent): AlloyComponent => {
-  const floatingSidebar = GuiFactory.build(renderFloatingSidebar());
-  Attachment.attach(sink, floatingSidebar);
-  return floatingSidebar;
-};
 
 const getApi = (comp: AlloyComponent): BridgeSidebar.SidebarInstanceApi => ({
   element: (): HTMLElement => comp.element.dom
@@ -97,49 +86,76 @@ const makeSidebar = (panelConfigs: SidebarConfig) => SlotContainer.sketch((parts
   ])
 }));
 
-const setSidebar = (sidebar: AlloyComponent, panelConfigs: SidebarConfig, showSidebar: string | undefined): void => {
-  Replacing.set(sidebar, [ makeSidebar(panelConfigs) ]);
-
-  // Show the default sidebar
-  const configKey = showSidebar?.toLowerCase();
-  if (Type.isString(configKey) && Obj.has(panelConfigs, configKey)) {
-    Composing.getCurrent(sidebar).each((slotContainer) => {
-      SlotContainer.showSlot(slotContainer, configKey);
-      Toggling.on(sidebar);
-    });
-  }
+const createSlots = (floatingSidebar: AlloyComponent, editorId: string, panelConfigs: SidebarConfig): void => {
+  // Append (never replace) an editor-keyed block holding a per-editor SlotContainer.
+  Replacing.append(floatingSidebar, {
+    dom: {
+      tag: 'div',
+      classes: [ 'tox-floating-sidebar__editor' ],
+      attributes: { 'data-mce-editor-id': editorId }
+    },
+    components: [ makeSidebar(panelConfigs) ],
+    behaviours: Behaviour.derive([
+      Toggling.config({
+        toggleClass: 'tox-floating-sidebar__editor--active',
+        toggleOnExecute: false
+      }),
+      ComposingConfigs.childAt(0)
+    ])
+  });
 };
 
-const toggleSidebar = (sidebar: AlloyComponent, name: string): void => {
-  const optSlotContainer = Composing.getCurrent(sidebar);
+const findEditorContainer = (floatingSidebar: AlloyComponent, editorId: string): Optional<AlloyComponent> =>
+  Arr.find(Replacing.contents(floatingSidebar), (container) =>
+    Attribute.get(container.element, 'data-mce-editor-id') === editorId
+  );
 
-  optSlotContainer.each((slotContainer) => {
-    // In Sidebar.ts we also update aria-labels, so perhaps we should
-    // do that here as well
-    if (SlotContainer.isShowing(slotContainer, name)) {
+const toggleEditorSidebar = (floatingSidebar: AlloyComponent, editorId: string, name: string): void => {
+  findEditorContainer(floatingSidebar, editorId).each((editorContainer) => {
+    Composing.getCurrent(editorContainer).each((slotContainer) => {
+      const isClosing = SlotContainer.isShowing(slotContainer, name);
       SlotContainer.hideAllSlots(slotContainer);
-      Toggling.off(sidebar);
-    } else {
-      SlotContainer.hideAllSlots(slotContainer);
-      SlotContainer.showSlot(slotContainer, name);
-      Toggling.on(sidebar);
+
+      if (isClosing) {
+        Toggling.off(editorContainer);
+        Toggling.off(floatingSidebar);
+      } else {
+        SlotContainer.showSlot(slotContainer, name);
+        Toggling.on(editorContainer);
+        Toggling.on(floatingSidebar);
+      }
+    });
+  });
+};
+
+const removeEditorSlots = (floatingSidebar: AlloyComponent, editorId: string): void => {
+  findEditorContainer(floatingSidebar, editorId).each((editorContainer) => {
+    const wasVisible = Toggling.isOn(editorContainer);
+    Replacing.remove(floatingSidebar, editorContainer);
+
+    if (wasVisible) {
+      Toggling.off(floatingSidebar);
     }
   });
 };
 
-const whichSidebar = (sidebar: AlloyComponent): Optional<string> => {
-  const optSlotContainer = Composing.getCurrent(sidebar);
+const isAnySidebarOpen = (floatingSidebar: AlloyComponent): boolean =>
+  Toggling.isOn(floatingSidebar);
 
-  return optSlotContainer.bind((slotContainer) =>
-    Arr.find(SlotContainer.getSlotNames(slotContainer), (name) =>
-      SlotContainer.isShowing(slotContainer, name)
+const whichEditorSidebar = (floatingSidebar: AlloyComponent, editorId: string): Optional<string> =>
+  findEditorContainer(floatingSidebar, editorId).bind((editorContainer) =>
+    Composing.getCurrent(editorContainer).bind((slotContainer) =>
+      Arr.find(SlotContainer.getSlotNames(slotContainer), (name) =>
+        SlotContainer.isShowing(slotContainer, name)
+      )
     )
   );
-};
 
 export {
-  setup,
-  setSidebar,
-  toggleSidebar,
-  whichSidebar
+  renderFloatingSidebar,
+  createSlots,
+  toggleEditorSidebar,
+  removeEditorSlots,
+  isAnySidebarOpen,
+  whichEditorSidebar
 };

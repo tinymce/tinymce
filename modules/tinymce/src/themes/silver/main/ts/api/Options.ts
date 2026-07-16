@@ -382,6 +382,10 @@ const isSkinDisabled = (editor: Editor): boolean =>
 const isMenubarEnabled = (editor: Editor): boolean =>
   editor.options.get('menubar') !== false;
 
+// Inline editors have nowhere to dock a sidebar, so they always use the floating one.
+const isFloatingSidebar = (editor: Editor): boolean =>
+  editor.inline || getSidebarType(editor) === SidebarType.floating;
+
 const getSkinUrl = (editor: Editor): string | undefined => {
   const skinUrl = editor.options.get('skin_url');
 
@@ -518,6 +522,7 @@ export {
   isDisabled,
   isDistractionFree,
   isDraggableModal,
+  isFloatingSidebar,
   isMenubarEnabled,
   isMultipleToolbars,
   isReadOnly,

@@ -8,7 +8,32 @@
     <h2>Plugin: accordion Demo Page</h2>
 
     <div id="ephox-ui">
-      <textarea cols="30" rows="10" class="tinymce">
+      <h1>Editor 1</h1>
+      <textarea id="editor1" cols="30" rows="10" class="tinymce">
+        <details class="mce-accordion" open="open">
+          <summary class="mce-accordion-summary">Expanded accordion</summary>
+          <p>Accordion body...</p>
+        </details>
+        <details class="mce-accordion">
+          <summary class="mce-accordion-summary">Closed accordion</summary>
+          <p>Accordion body...</p>
+        </details>
+      </textarea>
+
+      <h1>Editor 2</h1>
+      <textarea id="editor2" cols="30" rows="10" class="tinymce-extra">
+        <details class="mce-accordion" open="open">
+          <summary class="mce-accordion-summary">Expanded accordion</summary>
+          <p>Accordion body...</p>
+        </details>
+        <details class="mce-accordion">
+          <summary class="mce-accordion-summary">Closed accordion</summary>
+          <p>Accordion body...</p>
+        </details>
+      </textarea>
+
+      <h1>Editor 3</h1>
+      <textarea id="editor3" cols="30" rows="10" class="tinymce-extra">
         <details class="mce-accordion" open="open">
           <summary class="mce-accordion-summary">Expanded accordion</summary>
           <p>Accordion body...</p>
