@@ -13,12 +13,11 @@ declare let tinymce: TinyMCE;
 interface PluginEntry {
   readonly name: string;
   readonly html: string;
-  readonly isPremium: boolean;
 }
 
 const pricingUrl = 'https://www.tiny.cloud/pricing/?utm_campaign=help_dialog_plugin_tab&utm_source=tiny&utm_medium=referral&utm_term=read_more&utm_content=premium_plugin_heading';
 
-const renderPremiumName = (name: string): string => I18n.translate([ `${name}{0}`, '<sup>*</sup>' ]);
+const renderPremiumName = (name: string): string => `${name}<sup>*</sup>`;
 
 const makeLink = (name: string, url: string): string =>
   `<a data-alloy-tabstop="true" tabindex="-1" href="${url}" target="_blank" rel="noopener">${name}</a>`;
@@ -35,18 +34,17 @@ const getMetadata = (editor: Editor, key: string): PluginMetadata | undefined =>
 const entryForPlugin = (editor: Editor, key: string): PluginEntry | undefined => {
   const metadata = getMetadata(editor, key);
   if (Type.isUndefined(metadata)) {
-    return { name: key, html: key, isPremium: false };
+    return { name: key, html: key };
   }
   if (metadata.hidden === true) {
     return undefined;
   }
   if ('type' in metadata) {
-    const isPremium = metadata.type === 'premium';
-    const displayName = isPremium ? renderPremiumName(metadata.name) : metadata.name;
+    const displayName = metadata.type === 'premium' ? renderPremiumName(metadata.name) : metadata.name;
     const url = buildDocsUrl(metadata.slug ?? key);
-    return { name: metadata.name, html: makeLink(displayName, url), isPremium };
+    return { name: metadata.name, html: makeLink(displayName, url) };
   }
-  return { name: metadata.name, html: makeLink(metadata.name, metadata.url), isPremium: false };
+  return { name: metadata.name, html: makeLink(metadata.name, metadata.url) };
 };
 
 const getVisiblePluginKeys = (editor: Editor): string[] => {
@@ -72,10 +70,9 @@ const pluginLister = (editor: Editor): string => {
   const sorted = Arr.sort(entries, (a, b) => a.name.localeCompare(b.name));
 
   const pluginLis = Arr.map(sorted, (entry) => '<li>' + entry.html + '</li>').join('');
-  const heading = '<p><b>' + I18n.translate([ 'Plugins installed ({0}):', sorted.length ]) + '</b></p>';
-  const hasPremium = Arr.exists(sorted, (entry) => entry.isPremium);
+  const heading = '<h1>' + I18n.translate([ 'Plugins installed ({0}):', sorted.length ]) + '</h1>';
 
-  return heading + '<ul>' + pluginLis + '</ul>' + (hasPremium ? renderPremiumFooter() : '');
+  return heading + '<ul>' + pluginLis + '</ul>' + renderPremiumFooter();
 };
 
 const tab = (editor: Editor): Dialog.TabSpec & { name: string } => {
