@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: The caret could be positioned incorrectly in some cases when scrolling while a context toolbar was open.
+time: 2026-07-17T14:12:52.679079558+02:00
+custom:
+  Issue: TINYMCE-14415
