@@ -46,9 +46,8 @@ const getAndOnlyNormalizeFirstBlockIf = (selection: EditorSelection, pred: (bloc
     }
   });
 
-// When a fake (multi-cell table) selection is active, the DOM range spans from the first to the
-// last selected cell and would sweep in list items from unselected cells in between. Resolve list
-// items from the actually selected cells instead, matching how SelectionUtils.runOnRanges works.
+// Resolve list items from the
+// selected cells directly instead, matching how SelectionUtils.runOnRanges resolves fake selections.
 const getCellSelectionListItems = (editor: Editor): Optional<Element[]> => {
   const fakeSelectionNodes = TableCellSelection.getCellsFromEditor(editor);
   if (fakeSelectionNodes.length > 0) {
