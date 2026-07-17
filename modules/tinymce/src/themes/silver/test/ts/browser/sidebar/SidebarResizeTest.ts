@@ -1,7 +1,5 @@
-import { Pointer } from '@ephox/agar';
-import { afterEach, context, describe, it } from '@ephox/bedrock-client';
-import { TestStore } from '@ephox/agar';
-import { beforeEach } from '@ephox/bedrock-client';
+import { Pointer, TestStore } from '@ephox/agar';
+import { afterEach, beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import type { Sidebar } from '@ephox/bridge';
 import { Fun } from '@ephox/katamari';
 import { Css, Insert, Remove, SugarBody, SugarElement, Width } from '@ephox/sugar';
