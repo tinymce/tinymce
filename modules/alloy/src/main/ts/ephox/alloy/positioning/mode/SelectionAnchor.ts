@@ -43,10 +43,12 @@ const placement = (component: AlloyComponent, anchorInfo: SelectionAnchor, origi
     if (isSimRange(sel)) {
       const optRect = WindowSelection.getBounds(win, SimSelection.exactFromRange(sel)).orThunk(() => {
         const zeroWidth = SugarElement.fromText(Unicode.zeroWidth);
+        const beforeMutation = WindowSelection.getExact(win);
         Insert.before(sel.start, zeroWidth);
         // Certain things like <p><br/></p> with (p, 0) or <br>) as collapsed selection do not return a client rectangle
         const rect = WindowSelection.getFirstRect(win, SimSelection.exact(zeroWidth, 0, zeroWidth, 1));
         Remove.remove(zeroWidth);
+        beforeMutation.each((range) => WindowSelection.setExact(win, range.start, range.soffset, range.finish, range.foffset));
         return rect;
       });
 
