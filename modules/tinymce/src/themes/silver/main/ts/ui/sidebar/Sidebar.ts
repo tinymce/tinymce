@@ -96,7 +96,7 @@ const makePanels = (parts: SlotContainerTypes.SlotContainerParts, panelConfigs: 
             optSidePanelSpec.each((sidePanelSpec) => {
               AlloyTriggers.emitWith(
                 sidepanel,
-                sidebarContentChanged, 
+                sidebarContentChanged,
                 data.visible ? { visible: true, resizable: sidePanelSpec.resizable } : { visible: false }
               );
               const handler = data.visible ? sidePanelSpec.onShow : sidePanelSpec.onHide;

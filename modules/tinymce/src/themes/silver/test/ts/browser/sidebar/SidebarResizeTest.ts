@@ -38,7 +38,7 @@ const registerNotResizable = (editor: Editor, name: string, tooltip: string, col
     icon: 'comment',
     onSetup: (api: Sidebar.SidebarInstanceApi) => {
       const div = SugarElement.fromTag('div');
-      Css.setAll(div, { width: `${width}px`, 'background-color': color });
+      Css.setAll(div, { 'width': `${width}px`, 'background-color': color });
       api.element().appendChild(div.dom);
       return Fun.noop;
     },
@@ -81,7 +81,7 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
           icon: 'comment',
           onSetup: (api: Sidebar.SidebarInstanceApi) => {
             const div = SugarElement.fromTag('div');
-            Css.setAll(div, { width: '600px', 'background-color': 'green' });
+            Css.setAll(div, { 'width': '600px', 'background-color': 'green' });
             api.element().appendChild(div.dom);
             return Fun.noop;
           }
@@ -518,7 +518,7 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
 
         await SidebarUtils.resizeSidebarBy([ -40, 0 ]);
         assertSidebarWidth(480, 'Dragging the handle should resize a resizable sidebar');
-        store.assertEq('Resizing a resizable sidebar should emit the resize start and resized events', [resizeStartEvent(), resizedEvent(480)]);
+        store.assertEq('Resizing a resizable sidebar should emit the resize start and resized events', [ resizeStartEvent(), resizedEvent(480) ]);
       });
 
       it('TINYMCE-14678: should toggle the resizable class when switching between resizable and non-resizable panels', async () => {
