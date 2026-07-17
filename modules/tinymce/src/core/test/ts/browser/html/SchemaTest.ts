@@ -1,13 +1,17 @@
-import { context, describe, it } from '@ephox/bedrock-client';
+import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Obj, Type } from '@ephox/katamari';
 import { SugarElement, SugarNode } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import DomParser from 'tinymce/core/api/html/DomParser';
-import Schema, { type AttributePattern, type SchemaElement } from 'tinymce/core/api/html/Schema';
+import Schema, { type AttributePattern, type SchemaElement, _clearCache } from 'tinymce/core/api/html/Schema';
 import HtmlSerializer from 'tinymce/core/api/html/Serializer';
 
 describe('browser.tinymce.core.html.SchemaTest', () => {
+  beforeEach(() => {
+    _clearCache();
+  });
+
   const getElementRule = (schema: Schema, name: string) =>
     schema.getElementRule(name) as SchemaElement;
 

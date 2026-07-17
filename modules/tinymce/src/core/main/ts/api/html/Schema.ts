@@ -59,7 +59,7 @@ interface Schema {
  * }
  */
 
-const mapCache: Record<string, SchemaMap> = {};
+let mapCache: Record<string, SchemaMap> = {};
 const makeMap = Tools.makeMap, each = Tools.each, extend = Tools.extend, explode = Tools.explode;
 
 const createMap = (defaultValue: string, extendWith: SchemaMap = {}): SchemaMap => {
@@ -782,6 +782,11 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
     addCustomElements,
     addValidChildren,
   };
+};
+
+// Internal function for testing
+export const _clearCache = (): void => {
+  mapCache = {};
 };
 
 export default Schema;

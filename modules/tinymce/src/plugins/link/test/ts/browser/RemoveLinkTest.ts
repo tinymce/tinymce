@@ -1,3 +1,4 @@
+import { Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
@@ -12,13 +13,18 @@ describe('browser.tinymce.plugins.link.RemoveLinkTest', () => {
     indent: false
   }, [ Plugin ]);
 
+  const pAssertLinkPresence = (editor: Editor, expected: Record<string, number>) =>
+    Waiter.pTryUntil('check link presence', () => {
+      TinyAssertions.assertContentPresence(editor, expected);
+    });
+
   it('TBA: Removing a link with a collapsed selection', async () => {
     const editor = hook.editor();
     editor.setContent('<p><a href="http://tiny.cloud">tiny</a></p>');
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 2);
     await TinyUiActions.pTriggerContextMenu(editor, 'a[href="http://tiny.cloud"]', '.tox-silver-sink [role="menuitem"]');
     TinyUiActions.clickOnUi(editor, 'div[aria-label="Remove link"]');
-    TinyAssertions.assertContentPresence(editor, { 'a[href="http://tiny.cloud"]': 0 });
+    await pAssertLinkPresence(editor, { 'a[href="http://tiny.cloud"]': 0 });
   });
 
   it('TBA: Removing a link with some text selected', async () => {
@@ -27,7 +33,7 @@ describe('browser.tinymce.plugins.link.RemoveLinkTest', () => {
     TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 2);
     await TinyUiActions.pTriggerContextMenu(editor, 'a[href="http://tiny.cloud"]', '.tox-silver-sink [role="menuitem"]');
     TinyUiActions.clickOnUi(editor, 'div[aria-label="Remove link"]');
-    TinyAssertions.assertContentPresence(editor, { 'a[href="http://tiny.cloud"]': 0 });
+    await pAssertLinkPresence(editor, { 'a[href="http://tiny.cloud"]': 0 });
   });
 
   it('TBA: Removing a link from an image', async () => {
@@ -36,69 +42,78 @@ describe('browser.tinymce.plugins.link.RemoveLinkTest', () => {
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 1);
     await TinyUiActions.pTriggerContextMenu(editor, 'a[href="http://tiny.cloud"]', '.tox-silver-sink [role="menuitem"]');
     TinyUiActions.clickOnUi(editor, 'div[aria-label="Remove link"]');
-    TinyAssertions.assertContentPresence(editor, { 'a[href="http://tiny.cloud"]': 0 });
+    await pAssertLinkPresence(editor, { 'a[href="http://tiny.cloud"]': 0 });
   });
 
-  it('TINY-4867: Removing multiple links in the selection', () => {
+  it('TINY-4867: Removing multiple links in the selection', async () => {
     const editor = hook.editor();
     editor.setContent('<p><a href="http://tiny.cloud">tiny</a> content <a href="http://tiny.cloud">link</a> with <a href="http://tiny.cloud">other</a></p>');
     TinySelections.setSelection(editor, [ 0, 0, 0 ], 1, [ 0, 4, 0 ], 2);
+    await TinyUiActions.pWaitForUi(editor, '[data-mce-name="unlink"][aria-disabled="false"]');
     TinyUiActions.clickOnUi(editor, 'button[data-mce-name="unlink"]');
-    TinyAssertions.assertContentPresence(editor, { a: 0 });
+    await pAssertLinkPresence(editor, { a: 0 });
     TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 4 ], 2);
   });
 
   context('Near other CET/CEF elements', () => {
-    it('TINY-13108: CET element before link', () => {
+    it('TINY-13108: CET element before link', async () => {
       const editor = hook.editor();
       editor.setContent('<p><span data-keep-span="YES">Content</span><a href="Link">Link</a></p>');
       TinySelections.setCursor(editor, [ 0, 1, 0 ], 1);
       TinyUiActions.clickOnUi(editor, 'button[data-mce-name="unlink"]');
-      TinyAssertions.assertContentPresence(editor, { a: 0 });
+      await pAssertLinkPresence(editor, { a: 0 });
       TinyAssertions.assertSelection(editor, [ 0, 1 ], 1, [ 0, 1 ], 1);
     });
 
-    it('TINY-13108: CEF element before link', () => {
+    it('TINY-13108: CEF element before link', async () => {
       const editor = hook.editor();
-      editor.setContent('<p><span data-keep-span="YES" contenteditable="false">Content</span><a href="Link">Link</a></p>');
-      TinySelections.setCursor(editor, [ 0, 1, 0 ], 1);
+      // Prevent fake cursor showing for CEF element which skews setCursor path
+      editor.setContent('<p>before<span data-keep-span="YES" contenteditable="false">Content</span><a href="Link">Link</a></p>');
+      TinySelections.setCursor(editor, [ 0, 2, 0 ], 1);
+      await TinyUiActions.pWaitForUi(editor, '[data-mce-name="unlink"][aria-disabled="false"]');
       TinyUiActions.clickOnUi(editor, 'button[data-mce-name="unlink"]');
-      TinyAssertions.assertContentPresence(editor, { a: 0 });
-      TinyAssertions.assertSelection(editor, [ 0, 1 ], 1, [ 0, 1 ], 1);
+      await pAssertLinkPresence(editor, { a: 0 });
+      TinyAssertions.assertSelection(editor, [ 0, 2 ], 1, [ 0, 2 ], 1);
     });
 
-    it('TINY-13108: CEF NBSP element before link', () => {
+    it('TINY-13108: CEF NBSP element before link', async () => {
       const editor = hook.editor();
-      editor.setContent('<p><span data-keep-span="YES" contenteditable="false">&nbsp;</span><a href="Link">Link</a></p>');
-      TinySelections.setCursor(editor, [ 0, 1, 0 ], 1);
+      // Prevent fake cursor showing for CEF element which skews setCursor path
+      editor.setContent('<p>before<span data-keep-span="YES" contenteditable="false">&nbsp;</span><a href="Link">Link</a></p>');
+      TinySelections.setCursor(editor, [ 0, 2, 0 ], 1);
+      await TinyUiActions.pWaitForUi(editor, '[data-mce-name="unlink"][aria-disabled="false"]');
       TinyUiActions.clickOnUi(editor, 'button[data-mce-name="unlink"]');
-      TinyAssertions.assertContentPresence(editor, { a: 0 });
-      TinyAssertions.assertSelection(editor, [ 0, 1 ], 1, [ 0, 1 ], 1);
+      await pAssertLinkPresence(editor, { a: 0 });
+      TinyAssertions.assertSelection(editor, [ 0, 2 ], 1, [ 0, 2 ], 1);
     });
-    it('TINY-13108: CET element after link', () => {
+
+    it('TINY-13108: CET element after link', async () => {
       const editor = hook.editor();
       editor.setContent('<p><a href="Link">Link</a><span data-keep-span="YES">Content</span></p>');
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
+      await TinyUiActions.pWaitForUi(editor, '[data-mce-name="unlink"][aria-disabled="false"]');
       TinyUiActions.clickOnUi(editor, 'button[data-mce-name="unlink"]');
-      TinyAssertions.assertContentPresence(editor, { a: 0 });
+      await pAssertLinkPresence(editor, { a: 0 });
       TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 1);
     });
 
-    it('TINY-13108: CEF element after link', () => {
+    it('TINY-13108: CEF element after link', async () => {
       const editor = hook.editor();
       editor.setContent('<p><a href="Link">Link</a><span data-keep-span="YES" contenteditable="false">Content</span></p>');
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
+      await TinyUiActions.pWaitForUi(editor, '[data-mce-name="unlink"][aria-disabled="false"]');
       TinyUiActions.clickOnUi(editor, 'button[data-mce-name="unlink"]');
-      TinyAssertions.assertContentPresence(editor, { a: 0 });
+      await pAssertLinkPresence(editor, { a: 0 });
       TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 1);
     });
 
-    it('TINY-13108: CEF NBSP element after link', () => {
+    it('TINY-13108: CEF NBSP element after link', async () => {
       const editor = hook.editor();
       editor.setContent('<p><a href="Link">Link</a><span data-keep-span="YES" contenteditable="false">&nbsp;</span></p>');
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
+      await TinyUiActions.pWaitForUi(editor, '[data-mce-name="unlink"][aria-disabled="false"]');
       TinyUiActions.clickOnUi(editor, 'button[data-mce-name="unlink"]');
-      TinyAssertions.assertContentPresence(editor, { a: 0 });
+      await pAssertLinkPresence(editor, { a: 0 });
       TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 1);
     });
   });
