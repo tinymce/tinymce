@@ -14,7 +14,7 @@ export default (delay: number = 300): void => {
     Wordcounter.setup(editor, api, delay);
     return {
       ...api,
-      getMetadata: () => ({ name: 'Word Count', type: 'opensource' as const })
+      getMetadata: () => ({ name: 'Word Count', type: 'opensource' })
     };
   });
 };

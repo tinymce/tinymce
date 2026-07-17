@@ -15,7 +15,7 @@ export default (): void => {
     Quirks.setup(editor);
 
     return {
-      getMetadata: () => ({ name: 'Accordion', type: 'opensource' as const })
+      getMetadata: () => ({ name: 'Accordion', type: 'opensource' })
     };
   });
 };

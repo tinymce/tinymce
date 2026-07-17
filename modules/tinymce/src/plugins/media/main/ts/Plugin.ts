@@ -18,7 +18,7 @@ export default (): void => {
     Selection.setup(editor);
     return {
       ...Api.get(editor),
-      getMetadata: () => ({ name: 'Media', type: 'opensource' as const })
+      getMetadata: () => ({ name: 'Media', type: 'opensource' })
     };
   });
 };

@@ -27,7 +27,7 @@ export default (): void => {
 
     return {
       ...api,
-      getMetadata: () => ({ name: 'Help', type: 'opensource' as const })
+      getMetadata: () => ({ name: 'Help', type: 'opensource' })
     };
   });
 };

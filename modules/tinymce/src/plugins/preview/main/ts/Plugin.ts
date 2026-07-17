@@ -23,7 +23,7 @@ export default (): void => {
     Buttons.register(editor);
 
     return {
-      getMetadata: () => ({ name: 'Preview', type: 'opensource' as const })
+      getMetadata: () => ({ name: 'Preview', type: 'opensource' })
     };
   });
 };

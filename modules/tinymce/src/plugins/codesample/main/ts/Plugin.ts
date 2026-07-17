@@ -21,7 +21,7 @@ export default (): void => {
     });
 
     return {
-      getMetadata: () => ({ name: 'Code Sample', type: 'opensource' as const })
+      getMetadata: () => ({ name: 'Code Sample', type: 'opensource' })
     };
   });
 };

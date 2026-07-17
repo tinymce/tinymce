@@ -18,7 +18,7 @@ export default (): void => {
     });
 
     return {
-      getMetadata: () => ({ name: 'Anchor', type: 'opensource' as const })
+      getMetadata: () => ({ name: 'Anchor', type: 'opensource' })
     };
   });
 };

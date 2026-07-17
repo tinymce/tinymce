@@ -17,7 +17,7 @@ export default (): void => {
     Bindings.setup(editor, pluginUrl, enabledState);
 
     return {
-      getMetadata: () => ({ name: 'Visual Blocks', type: 'opensource' as const })
+      getMetadata: () => ({ name: 'Visual Blocks', type: 'opensource' })
     };
   });
 };

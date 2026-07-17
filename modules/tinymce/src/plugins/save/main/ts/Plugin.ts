@@ -11,7 +11,7 @@ export default (): void => {
     Commands.register(editor);
 
     return {
-      getMetadata: () => ({ name: 'Save', type: 'opensource' as const })
+      getMetadata: () => ({ name: 'Save', type: 'opensource' })
     };
   });
 };

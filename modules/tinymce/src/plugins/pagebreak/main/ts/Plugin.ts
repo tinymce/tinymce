@@ -15,7 +15,7 @@ export default (): void => {
     ResolveName.setup(editor);
 
     return {
-      getMetadata: () => ({ name: 'Page Break', type: 'opensource' as const })
+      getMetadata: () => ({ name: 'Page Break', type: 'opensource' })
     };
   });
 };

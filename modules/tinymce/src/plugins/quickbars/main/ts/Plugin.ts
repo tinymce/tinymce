@@ -16,7 +16,7 @@ export default (): void => {
     SelectionToolbars.addToEditor(editor);
 
     return {
-      getMetadata: () => ({ name: 'Quick Toolbars', type: 'opensource' as const })
+      getMetadata: () => ({ name: 'Quick Toolbars', type: 'opensource' })
     };
   });
 };

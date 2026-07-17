@@ -16,7 +16,7 @@ export default (): void => {
     if (editor.inline) {
       return {
         ...Api.get(fullscreenState),
-        getMetadata: () => ({ name: 'Full Screen', type: 'opensource' as const })
+        getMetadata: () => ({ name: 'Full Screen', type: 'opensource' })
       };
     }
 
@@ -29,7 +29,7 @@ export default (): void => {
 
     return {
       ...Api.get(fullscreenState),
-      getMetadata: () => ({ name: 'Full Screen', type: 'opensource' as const })
+      getMetadata: () => ({ name: 'Full Screen', type: 'opensource' })
     };
   });
 };

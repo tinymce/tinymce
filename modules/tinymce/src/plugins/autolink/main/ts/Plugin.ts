@@ -9,7 +9,7 @@ export default (): void => {
     Keys.setup(editor);
 
     return {
-      getMetadata: () => ({ name: 'Autolink', type: 'opensource' as const })
+      getMetadata: () => ({ name: 'Autolink', type: 'opensource' })
     };
   });
 };

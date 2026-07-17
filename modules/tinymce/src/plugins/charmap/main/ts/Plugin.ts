@@ -18,7 +18,7 @@ export default (): void => {
 
     return {
       ...Api.get(editor),
-      getMetadata: () => ({ name: 'Character Map', type: 'opensource' as const })
+      getMetadata: () => ({ name: 'Character Map', type: 'opensource' })
     };
   });
 };

@@ -23,7 +23,7 @@ export default (): void => {
 
     return {
       ...Api.get(editor, currentSearchState),
-      getMetadata: () => ({ name: 'Search and Replace', type: 'opensource' as const })
+      getMetadata: () => ({ name: 'Search and Replace', type: 'opensource' })
     };
   });
 };

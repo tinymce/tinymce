@@ -16,7 +16,7 @@ export default (): void => {
     }
 
     return {
-      getMetadata: () => ({ name: 'List Styles', type: 'opensource' as const })
+      getMetadata: () => ({ name: 'List Styles', type: 'opensource' })
     };
   });
 };

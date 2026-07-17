@@ -1,9 +1,21 @@
 import AddOnManager from './AddOnManager';
 import type Editor from './Editor';
 
-export type PluginMetadata =
-  | { name: string; url: string; hidden?: boolean }
-  | { name: string; type: 'premium' | 'opensource'; slug?: string; hidden?: boolean };
+interface BasePluginMetadata {
+  name: string;
+  hidden?: boolean;
+}
+
+export interface UrlPluginMetadata extends BasePluginMetadata {
+  url: string;
+}
+
+export interface TypedPluginMetadata extends BasePluginMetadata {
+  type: 'premium' | 'opensource';
+  slug?: string;
+}
+
+export type PluginMetadata = UrlPluginMetadata | TypedPluginMetadata;
 
 export interface Plugin {
   getMetadata?: () => PluginMetadata;
