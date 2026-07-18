@@ -29,8 +29,5 @@ storybook-static
 
 test-results.xml
 
-# Playwright
-/test-results/
-/playwright-report/
-/blob-report/
-/playwright/.cache/
+# Vitest browser visual failure attachments
+/.vitest-attachments/

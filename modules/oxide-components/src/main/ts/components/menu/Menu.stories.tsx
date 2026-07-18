@@ -27,7 +27,7 @@ const meta = {
       }
     }
   },
-  tags: [ 'autodocs', 'skip-visual-testing' ],
+  tags: [ 'autodocs' ],
 } satisfies Meta<typeof Menu.Root>;
 
 export default meta;

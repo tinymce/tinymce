@@ -52,7 +52,7 @@ The \`Icon\` component uses the underlying UniverseContext state to fetch the SV
       </UniverseProvider>
     )
   ],
-  tags: [ 'autodocs', 'skip-visual-testing' ],
+  tags: [ 'autodocs' ],
 } satisfies Meta<typeof Icon>;
 
 export default meta;

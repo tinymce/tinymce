@@ -23,7 +23,7 @@ const meta = {
   parameters: {
     layout: 'centered',
   },
-  tags: [ 'autodocs', 'hover-visual-testing', 'skip-visual-testing' ],
+  tags: [ 'autodocs' ],
   decorators: [
     (Story) => (
       <div className='tox-ai'>

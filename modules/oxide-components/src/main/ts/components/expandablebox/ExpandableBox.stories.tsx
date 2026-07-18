@@ -29,7 +29,7 @@ const meta = {
   parameters: {
     layout: 'centered',
   },
-  tags: [ 'autodocs', 'skip-visual-testing' ],
+  tags: [ 'autodocs' ],
   args: { },
 } satisfies Meta<typeof ExpandableBox>;
 
