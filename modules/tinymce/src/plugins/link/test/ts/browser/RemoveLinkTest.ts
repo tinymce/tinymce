@@ -60,6 +60,7 @@ describe('browser.tinymce.plugins.link.RemoveLinkTest', () => {
       const editor = hook.editor();
       editor.setContent('<p><span data-keep-span="YES">Content</span><a href="Link">Link</a></p>');
       TinySelections.setCursor(editor, [ 0, 1, 0 ], 1);
+      await TinyUiActions.pWaitForUi(editor, '[data-mce-name="unlink"][aria-disabled="false"]');
       TinyUiActions.clickOnUi(editor, 'button[data-mce-name="unlink"]');
       await pAssertLinkPresence(editor, { a: 0 });
       TinyAssertions.assertSelection(editor, [ 0, 1 ], 1, [ 0, 1 ], 1);
