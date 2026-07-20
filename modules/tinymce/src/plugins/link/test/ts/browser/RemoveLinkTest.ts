@@ -67,7 +67,7 @@ describe('browser.tinymce.plugins.link.RemoveLinkTest', () => {
 
     it('TINY-13108: CEF element before link', async () => {
       const editor = hook.editor();
-      // Prevent fake cursor showing for CEF element which skews setCursor path
+      // Prevent fake cursor showing for CEF element which skews setCursor path by adding normal text before
       editor.setContent('<p>before<span data-keep-span="YES" contenteditable="false">Content</span><a href="Link">Link</a></p>');
       TinySelections.setCursor(editor, [ 0, 2, 0 ], 1);
       await TinyUiActions.pWaitForUi(editor, '[data-mce-name="unlink"][aria-disabled="false"]');
@@ -78,7 +78,7 @@ describe('browser.tinymce.plugins.link.RemoveLinkTest', () => {
 
     it('TINY-13108: CEF NBSP element before link', async () => {
       const editor = hook.editor();
-      // Prevent fake cursor showing for CEF element which skews setCursor path
+      // Prevent fake cursor showing for CEF element which skews setCursor path by adding normal text before
       editor.setContent('<p>before<span data-keep-span="YES" contenteditable="false">&nbsp;</span><a href="Link">Link</a></p>');
       TinySelections.setCursor(editor, [ 0, 2, 0 ], 1);
       await TinyUiActions.pWaitForUi(editor, '[data-mce-name="unlink"][aria-disabled="false"]');

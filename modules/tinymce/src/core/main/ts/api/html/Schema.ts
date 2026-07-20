@@ -784,7 +784,7 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
   };
 };
 
-// Internal function for testing
+// Internal function for testing to able to clear global schema cache between test cases
 export const _clearCache = (): void => {
   mapCache = {};
 };
