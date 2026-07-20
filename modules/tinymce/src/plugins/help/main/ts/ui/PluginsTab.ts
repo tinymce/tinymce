@@ -52,12 +52,15 @@ const getVisiblePluginKeys = (editor: Editor): string[] => {
   return Arr.filter(keys, (k) => !Arr.contains(forced, k));
 };
 
-const renderPremiumFooter = (): string =>
-  '<p class="tox-help__more-link">' +
-  I18n.translate('* indicates a premium plugin.') + ' ' +
-  `<a href="${pricingUrl}" rel="noopener" target="_blank" data-alloy-tabstop="true" tabindex="-1">` +
-  I18n.translate('Learn more...') + '</a>' +
-  '</p>';
+const renderPremiumFooter = (): string => {
+  const learnMoreLink =
+    `<a href="${pricingUrl}" rel="noopener" target="_blank" data-alloy-tabstop="true" tabindex="-1">` +
+    I18n.translate('Learn more...') +
+    '</a>';
+  return '<p class="tox-help__more-link">' +
+    I18n.translate([ '* indicates a premium plugin. {0}', learnMoreLink ]) +
+    '</p>';
+};
 
 const renderPluginList = (editor: Editor): string => {
   const keys = getVisiblePluginKeys(editor);
