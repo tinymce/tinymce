@@ -91,6 +91,6 @@ newlines:
 envPrefix: CHANGIE_
 custom:
   - key: Issue
-    label: Issue (TINY-XXXX+)
+    label: Issue (TINYMCE-XXXX+)
     type: string
-    minLength: 7
+    minLength: 10
