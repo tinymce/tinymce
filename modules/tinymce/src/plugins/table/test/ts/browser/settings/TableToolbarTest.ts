@@ -1,14 +1,24 @@
 import { UiFinder, Waiter } from '@ephox/agar';
-import { before, describe, it } from '@ephox/bedrock-client';
+import { before, beforeEach, describe, it } from '@ephox/bedrock-client';
 import { SugarBody } from '@ephox/sugar';
 import { McEditor, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import type Editor from 'tinymce/core/api/Editor';
+import * as FakeClipboard from 'tinymce/plugins/table/api/Clipboard';
 import Plugin from 'tinymce/plugins/table/Plugin';
 
 describe('browser.tinymce.plugins.table.TableToolbarTest', () => {
   before(() => {
     Plugin();
+  });
+
+  beforeEach(() => {
+    // The paste row/column toolbar buttons derive their disabled state from a
+    // process-wide FakeClipboard singleton that persists across the whole bundle.
+    // Clear it so the disabled-state assertions below hold regardless of whether an
+    // earlier test in the realm copied a row or column.
+    FakeClipboard.clearRows();
+    FakeClipboard.clearColumns();
   });
 
   const tableHtml = '<table><tbody><tr><td>x</td></tr></tbody></table>';
@@ -34,7 +44,7 @@ describe('browser.tinymce.plugins.table.TableToolbarTest', () => {
     const editor = await pCreateEditor('tablecopyrow tablepasterowafter tablepasterowbefore');
     editor.focus();
     editor.setContent(tableWithCaptionHtml);
-    TinySelections.setSelection(editor, [ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1);
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
     // Ensure the copy/paste row buttons are disabled
     await TinyUiActions.pWaitForUi(editor, '.tox-pop .tox-tbtn--disabled[data-mce-name="tablecopyrow"]');
     await TinyUiActions.pWaitForUi(editor, '.tox-pop .tox-tbtn--disabled[data-mce-name="tablepasterowbefore"]');
