@@ -318,8 +318,7 @@ describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
         it('should have blue outline for nested editable region and blue outline for noneditable ancestor (editable region selected)', async () => {
           const editor = hook.editor();
           modeTestSetContent(editor, figureImageHtml);
-          // The selected (blue) CEF outline only renders while the editor is focused; ambient focus isn't
-          // guaranteed in a shared realm, so focus explicitly.
+          // The selected (blue) CEF outline only renders while the editor is focused
           editor.focus();
           // When in design mode, the bogus element is placed so the cursor location is correct, when we switched to cursor mode, we need to put the cursor in the correct location
           if (modeScenario.mode === 'normal') {
@@ -334,7 +333,7 @@ describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
         it('TINY-8698: should have blue outline for nested editable region when selected noneditable ancestor has a comment', async () => {
           const editor = hook.editor();
           modeTestSetContent(editor, figureImageHtml);
-          // The selected (blue) CEF outline only renders while the editor is focused.
+          // The selected (blue) CEF outline only renders while the editor is focused
           editor.focus();
           TinySelections.select(editor, 'figure.image', []);
           editor.annotator.annotate('test-comment', {});

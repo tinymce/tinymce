@@ -1,6 +1,6 @@
 import { Clipboard as AgarClipboard, Waiter } from '@ephox/agar';
 import { afterEach, beforeEach, describe, it } from '@ephox/bedrock-client';
-import { Arr, Fun, Singleton } from '@ephox/katamari';
+import { Arr, Fun, Singleton, Type } from '@ephox/katamari';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -114,7 +114,7 @@ describe('browser.tinymce.core.paste.ImagePasteTest', () => {
     await pAssertInputEvents();
     await pWaitForSelector(editor, 'img');
     await Waiter.pTryUntilPredicate('Wait for images to be cached', () =>
-      !!getCachedByData(base64ImgSrc) && !!getCachedByData(base64ImgSrc2));
+      Type.isNonNullable(getCachedByData(base64ImgSrc)) && Type.isNonNullable(getCachedByData(base64ImgSrc2)));
 
     const cachedBlob1 = getCachedByData(base64ImgSrc);
     const cachedBlob2 = getCachedByData(base64ImgSrc2);
