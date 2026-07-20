@@ -1,4 +1,4 @@
-import { Arr, Obj, Type } from '@ephox/katamari';
+import { Arr, Obj, Optional, Optionals, Type } from '@ephox/katamari';
 
 import type Editor from 'tinymce/core/api/Editor';
 import type { PluginMetadata } from 'tinymce/core/api/PluginManager';
@@ -17,40 +17,38 @@ interface PluginEntry {
 
 const pricingUrl = 'https://www.tiny.cloud/pricing/?utm_campaign=help_dialog_plugin_tab&utm_source=tiny&utm_medium=referral&utm_term=read_more&utm_content=premium_plugin_heading';
 
-const renderPremiumName = (name: string): string => `${name}<sup>*</sup>`;
+const withPremiumMarker = (name: string): string => `${name}<sup>*</sup>`;
 
-const makeLink = (name: string, url: string): string =>
+const buildLink = (name: string, url: string): string =>
   `<a data-alloy-tabstop="true" tabindex="-1" href="${url}" target="_blank" rel="noopener">${name}</a>`;
 
 const buildDocsUrl = (slug: string): string =>
   `https://www.tiny.cloud/docs/tinymce/${tinymce.majorVersion}/${slug}/`;
 
-const getMetadata = (editor: Editor, key: string): PluginMetadata | undefined => {
-  const plugin = editor.plugins[key];
-  const fn = plugin?.getMetadata;
-  return Type.isFunction(fn) ? fn() : undefined;
+const readPluginMetadata = (editor: Editor, key: string): Optional<PluginMetadata> =>
+  Obj.get(editor.plugins, key)
+    .bind((plugin) => Optional.from(plugin.getMetadata))
+    .filter(Type.isFunction)
+    .map((fn) => fn());
+
+const toEntry = (metadata: PluginMetadata, key: string): PluginEntry => {
+  if ('type' in metadata) {
+    const displayName = metadata.type === 'premium' ? withPremiumMarker(metadata.name) : metadata.name;
+    const url = buildDocsUrl(metadata.slug ?? key);
+    return { name: metadata.name, html: buildLink(displayName, url) };
+  }
+  return { name: metadata.name, html: buildLink(metadata.name, metadata.url) };
 };
 
-const entryForPlugin = (editor: Editor, key: string): PluginEntry | undefined => {
-  const metadata = getMetadata(editor, key);
-  if (Type.isUndefined(metadata)) {
-    return { name: key, html: key };
-  }
-  if (metadata.hidden === true) {
-    return undefined;
-  }
-  if ('type' in metadata) {
-    const displayName = metadata.type === 'premium' ? renderPremiumName(metadata.name) : metadata.name;
-    const url = buildDocsUrl(metadata.slug ?? key);
-    return { name: metadata.name, html: makeLink(displayName, url) };
-  }
-  return { name: metadata.name, html: makeLink(metadata.name, metadata.url) };
-};
+const buildPluginEntry = (editor: Editor, key: string): Optional<PluginEntry> =>
+  readPluginMetadata(editor, key).fold(
+    () => Optional.some({ name: key, html: key }),
+    (metadata) => metadata.hidden === true ? Optional.none<PluginEntry>() : Optional.some(toEntry(metadata, key))
+  );
 
 const getVisiblePluginKeys = (editor: Editor): string[] => {
   const keys = Obj.keys(editor.plugins);
-  const forcedPlugins = Options.getForcedPlugins(editor);
-  const forced = Type.isUndefined(forcedPlugins) ? [] : forcedPlugins;
+  const forced = Optional.from(Options.getForcedPlugins(editor)).getOr([]);
   return Arr.filter(keys, (k) => !Arr.contains(forced, k));
 };
 
@@ -61,12 +59,9 @@ const renderPremiumFooter = (): string =>
   I18n.translate('Learn more...') + '</a>' +
   '</p>';
 
-const pluginLister = (editor: Editor): string => {
+const renderPluginList = (editor: Editor): string => {
   const keys = getVisiblePluginKeys(editor);
-  const entries = Arr.filter(
-    Arr.map(keys, (k) => entryForPlugin(editor, k)),
-    (entry): entry is PluginEntry => Type.isNonNullable(entry)
-  );
+  const entries = Optionals.cat(Arr.map(keys, (k) => buildPluginEntry(editor, k)));
   const sorted = Arr.sort(entries, (a, b) => a.name.localeCompare(b.name));
 
   const pluginLis = Arr.map(sorted, (entry) => '<li>' + entry.html + '</li>').join('');
@@ -79,7 +74,7 @@ const tab = (editor: Editor): Dialog.TabSpec & { name: string } => {
   const htmlPanel: Dialog.HtmlPanelSpec = {
     type: 'htmlpanel',
     presets: 'document',
-    html: editor == null ? '' : '<div>' + pluginLister(editor) + '</div>'
+    html: editor == null ? '' : '<div>' + renderPluginList(editor) + '</div>'
   };
   return {
     name: 'plugins',
