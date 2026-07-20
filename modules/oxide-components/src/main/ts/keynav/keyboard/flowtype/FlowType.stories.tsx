@@ -27,7 +27,7 @@ const meta = {
       }
     }
   },
-  tags: [ 'autodocs', 'skip-visual-testing' ],
+  tags: [ 'autodocs' ],
   decorators: [
     (Story: PartialStoryFn<ReactRenderer>): ReactElement => (
       <>

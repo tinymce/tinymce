@@ -99,7 +99,7 @@ If you do care about it, but don't know the exact size of the element you'll hav
     },
   },
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
-  tags: [ 'autodocs', 'skip-visual-testing' ],
+  tags: [ 'autodocs' ],
   // Use `fn` to spy on the callback args, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
   args: { onDragStart: fn(), onDragEnd: fn() },
 } satisfies Meta<typeof Draggable.Root>;

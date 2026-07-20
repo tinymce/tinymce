@@ -65,7 +65,7 @@ Works seamlessly with other oxide-components:
       }
     }
   },
-  tags: [ 'autodocs', 'skip-visual-testing' ],
+  tags: [ 'autodocs' ],
   args: {},
 } satisfies Meta<typeof Card.Root>;
 

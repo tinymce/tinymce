@@ -31,11 +31,12 @@ bun run test-ci                     # CI test suite with JUnit output
 
 ## Test Structure
 
-Two Vitest projects configured in `vitest.config.ts`:
+Three Vitest projects are configured in `vitest.config.ts`:
 - **atomic**: Node.js environment (`src/test/ts/atomic/**/*.spec.ts`)
-- **browser**: Playwright-based (`src/test/ts/browser/**/*.spec.{ts,tsx}`)
+- **browser**: Playwright-based (`src/test/ts/browser/**/*.spec.{ts,tsx}`, excluding `*.visual.spec.*`)
+- **visual**: Vitest browser-mode visual regression tests (`src/test/ts/**/*.visual.spec.{ts,tsx}`)
 
-Visual regression tests use Playwright directly via `src/test/ts/visual.spec.ts` and `playwright.config.ts`.
+Visual regression tests are per-component `ComponentName.visual.spec.tsx` files colocated with the behavior specs in `src/test/ts/browser/components/`. They render components explicitly (real props, real wrapper classes, real hover/press/focus interactions) via the `renderVisual` helper in `src/test/ts/browser/components/utils/VisualTestUtils.tsx` and compare screenshots with `toMatchScreenshot`. Baselines live in `__screenshots__/` next to the specs and are always Linux-rendered: local runs use `bun run test-visual-local` (append a file filter to run a subset, e.g. `bun run test-visual-local Button.visual`); baseline updates use `bun run test-visual-local-update`, which starts a Docker Playwright browser server. Never run the visual project directly on a dev machine — host-rendered screenshots pollute the Linux baselines.
 
 ## Architecture
 
@@ -53,7 +54,7 @@ Visual regression tests use Playwright directly via `src/test/ts/visual.spec.ts`
 - `Bem.element('tox-form', 'group', { error: true })` → `'tox-form__group tox-form__group--error'`
 - Type safety is enforced on the **inputs** (block/element/modifier arguments), not the return value — all Bem functions return plain `string`. You cannot use Bem output to type-restrict a prop to valid Oxide classes.
 
-**Storybook**: Every component needs a `.stories.tsx` file. Visual regression tests auto-generate from stories; use `skip-visual-regression` tag to opt out.
+**Storybook**: Every component needs a `.stories.tsx` file for documentation and manual testing. Visual regression coverage is NOT derived from stories — it lives in the component's `ComponentName.visual.spec.tsx`.
 
 **Keyboard Navigation**: The `keynav/` system provides multiple navigation patterns (flow, tabbing, special). Check `KeyboardNavigationHooks.ts` for the React hooks API.
 
@@ -146,4 +147,4 @@ When selecting menu items by position in tests, scope to the menu element to avo
 
 ## Code Review Instructions
 
-@coderabbitai: When reviewing PRs, if you see the `skip-visual-regression` tag being used in any story file, always warn the user and ask whether skipping visual regression testing is intentional.
+@coderabbitai: When reviewing PRs, if a new component is added (or an existing component gains new visual states) without a corresponding `ComponentName.visual.spec.tsx` covering it, always warn the user and ask whether shipping without visual regression coverage is intentional.

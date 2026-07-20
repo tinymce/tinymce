@@ -8,6 +8,7 @@
     ],
     "types": [
       "node",
+      "vite/client",
       "vitest/browser"
     ],
     "rootDir": "src",
@@ -31,10 +32,6 @@
   },
   "include": [
     "src/test/**/*.ts",
-    "src/test/**/*.spec.ts",
-    "src/test/**/*.spec.tsx"
-  ],
-  "exclude": [
-    "src/test/ts/visual.spec.ts"
+    "src/test/**/*.tsx"
   ]
 }

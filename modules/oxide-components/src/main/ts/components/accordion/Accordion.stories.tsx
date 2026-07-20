@@ -62,7 +62,7 @@ Each accordion item includes:
       }
     }
   },
-  tags: [ 'autodocs', 'skip-visual-testing' ],
+  tags: [ 'autodocs' ],
   args: { },
 } satisfies Meta<typeof Accordion.Root>;
 
