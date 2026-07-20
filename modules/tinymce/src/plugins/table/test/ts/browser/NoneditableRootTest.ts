@@ -1,5 +1,5 @@
 import { Keys, UiFinder } from '@ephox/agar';
-import { context, describe, it } from '@ephox/bedrock-client';
+import { afterEach, context, describe, it } from '@ephox/bedrock-client';
 import { Obj, Optional } from '@ephox/katamari';
 import { SugarBody } from '@ephox/sugar';
 import { TinyHooks, TinySelections, TinyState, TinyUiActions } from '@ephox/wrap-mcagar';
@@ -84,6 +84,14 @@ describe('browser.tinymce.plugins.table.NoneditableRootTest', () => {
     },
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin ], true);
+
+  // Several tests here populate the process-wide FakeClipboard singleton, which persists
+  // across every test file in the bundle. Clear it so a leftover row/column does not alter
+  // paste-button state in later files sharing the realm.
+  afterEach(() => {
+    FakeClipboard.clearRows();
+    FakeClipboard.clearColumns();
+  });
 
   context('Noneditable root buttons', () => {
     const testDisableButtonOnNoneditable = (title: string, ariaDisabled = true) => () => {
