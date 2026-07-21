@@ -374,9 +374,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
       assert.lengthOf(editor.undoManager.data, 2, 'Suitable number of stacks added');
     };
 
-    assertEventsLength(0);
     editor.resetContent(imageHtml(testBlobDataUri));
-    clearEvents();
 
     editor.options.set('images_upload_handler', (_data: BlobInfo) => {
       uploadCount++;

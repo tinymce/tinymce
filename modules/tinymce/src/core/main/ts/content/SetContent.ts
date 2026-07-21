@@ -25,8 +25,9 @@ export const setContent = (editor: Editor, content: Content, args: Partial<SetCo
         * Not removed, see above
         * Have a body, see above.
       The check for getBody returns undefined in the case the editor is in the invalid state, which is why it is used here.
+      Skip when `initial` is set, since that marks internal calls (e.g. resetContent) that aren't user edits.
     */
-    if (editor.initialized && !editor.removed && editor.getBody()) {
+    if (!updatedArgs.initial && editor.initialized && !editor.removed && editor.getBody()) {
       editor.undoManager.add();
     }
   });
