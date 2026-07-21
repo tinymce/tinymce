@@ -1,8 +1,7 @@
-import { RealKeys } from '@ephox/agar';
+import { Keys } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
-import { Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import type Editor from 'tinymce/core/api/Editor';
 
@@ -17,12 +16,7 @@ interface AccordionSpec {
   body?: string;
 }
 
-interface BackspaceDeleteModifier {
-  ctrlKey?: boolean;
-  altKey?: boolean;
-}
-
-describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () => {
+describe('browser.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () => {
   const settings = {
     plugins: 'accordion',
     base_url: '/project/tinymce/js/tinymce',
@@ -32,15 +26,17 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
 
   const platform = PlatformDetection.detect();
   const isFirefox = platform.browser.isFirefox();
-  const isSafari = platform.browser.isSafari();
-  const isMacOS = platform.os.isMacOS();
-  const isWindows = platform.os.isWindows();
 
-  const pDoBackspaceDelete = async (key: DeletionKey, modifier?: BackspaceDeleteModifier): Promise<void> => {
-    await RealKeys.pSendKeysOn('iframe => body', [ Type.isUndefined(modifier) ? RealKeys.text(key) : RealKeys.combo(modifier, key) ]);
+  // Synthetic keydown drives TinyMCE's own Backspace/Delete overrides (the accordion
+  // delete handling under test), the same way the core browser delete tests do. Native
+  // Ctrl/Alt word-deletion is NOT handled by TinyMCE, so those cases stay in the
+  // webdriver AccordionCtrlWordDeleteTest.
+  const pDoBackspaceDelete = (key: DeletionKey): Promise<void> => {
+    TinyContentActions.keystroke(hook.editor(), key === 'Backspace' ? Keys.backspace() : Keys.delete());
+    return Promise.resolve();
   };
-  const pDoBackspace = (modifier?: BackspaceDeleteModifier) => pDoBackspaceDelete('Backspace', modifier);
-  const pDoDelete = (modifier?: BackspaceDeleteModifier) => pDoBackspaceDelete('Delete', modifier);
+  const pDoBackspace = () => pDoBackspaceDelete('Backspace');
+  const pDoDelete = () => pDoBackspaceDelete('Delete');
 
   const getAccordionContent = ({ summary, body }: AccordionSpec = { summary: 'summary', body: '<p>body</p>' }): string =>
     `${AccordionUtils.createAccordion({ summary, body })}`;
@@ -386,55 +382,6 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
 
       it('TINY-9951: Can select content from end in body and delete it using Backspace', testDeleteSelectionFromEndInBody('Backspace'));
       it('TINY-9951: Can select content from end in body and delete it using Delete', testDeleteSelectionFromEndInBody('Delete'));
-    });
-
-    context('Using ranged deletion keyboard shortcuts', () => {
-      const pDoCtrlBackspaceDelete = (deletionKey: DeletionKey) => pDoBackspaceDelete(deletionKey, isMacOS ? { altKey: true } : { ctrlKey: true });
-
-      const testCtrlDeletion = (deletionKey: DeletionKey, location: ContentLocation) => async () => {
-        const editor = hook.editor();
-        const isBackspace = deletionKey === 'Backspace';
-        const isSummary = location === 'summary';
-        const initialContent = 'word1 word2';
-        const getSummarySpec = (content: string): AccordionSpec => isSummary ? { summary: content, body: '<p>body</p>' } : { summary: 'summary', body: `<p>${content}</p>` };
-        createAccordion(editor, getSummarySpec(initialContent));
-        TinySelections.setCursor(editor, isSummary ? [ 0, 0, 0 ] : [ 0, 1, 0, 0 ], isBackspace ? 'word1 wo'.length : 'wo'.length);
-        await pDoCtrlBackspaceDelete(deletionKey);
-
-        let expectedContent: string;
-        if (isBackspace) {
-          expectedContent = 'word1 rd2';
-        } else if (isWindows) {
-          // Difference in native behavior for Ctrl + Delete on Windows
-          expectedContent = 'woword2';
-        } else {
-          expectedContent = 'wo word2';
-        }
-        assertAccordionContent(editor, getSummarySpec(expectedContent));
-
-        if (isSafari) {
-          // Safari positions selection around format caret
-          const expectedPath = isSummary ? [ 0, 0, 0 ] : [ 0, 1, 0, 0 ];
-          const expectedOffset = isBackspace ? 6 : 2;
-
-          TinyAssertions.assertCursor(editor, expectedPath, expectedOffset);
-        } else {
-          // 0 offset as selection positioned within format caret
-          const expectedPath = isSummary ? [ 0, 0, 1, 0 ] : [ 0, 1, 0, 1, 0 ];
-          const expectedOffset = 0;
-
-          TinyAssertions.assertCursor(editor, expectedPath, expectedOffset);
-        }
-
-      };
-
-      const testCtrlDeletionInSummary = (deletionKey: DeletionKey) => testCtrlDeletion(deletionKey, 'summary');
-      it('TINY-9951: Can delete summary using Ctrl+Backspace', testCtrlDeletionInSummary('Backspace'));
-      it('TINY-9951: Can delete summary using Ctrl+Delete', testCtrlDeletionInSummary('Delete'));
-
-      const testCtrlDeletionInBody = (deletionKey: DeletionKey) => testCtrlDeletion(deletionKey, 'body');
-      it('TINY-9951: Can delete body using Ctrl+Backspace', testCtrlDeletionInBody('Backspace'));
-      it('TINY-9951: Can delete body using Ctrl+Delete', testCtrlDeletionInBody('Delete'));
     });
   });
 
