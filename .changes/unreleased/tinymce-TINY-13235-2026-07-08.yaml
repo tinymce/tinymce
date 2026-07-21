@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Applying or removing formatting on a multi-cell table selection incorrectly styled list items in cells that were not selected.
-time: 2026-07-08T16:20:32.989688+10:00
-custom:
-    Issue: TINY-13235
