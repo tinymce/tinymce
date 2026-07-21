@@ -11,6 +11,13 @@
       inset: 0;
       display: flex;
       flex-direction: column;
+
+      &--loading {
+        .tox-ai__iframe {
+          visibility: hidden;
+          pointer-events: none;
+        }
+      }
     }
 
     .tox-ai__preview-frame-wrap {
