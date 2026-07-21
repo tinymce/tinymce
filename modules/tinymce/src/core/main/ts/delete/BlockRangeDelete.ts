@@ -50,7 +50,7 @@ const isEverythingSelected = (root: SugarElement<Node>, rng: Range): boolean => 
 
 const emptyEditor = (editor: Editor): Optional<() => void> => {
   return Optional.some(() => {
-    editor.setContent('');
+    editor.undoManager.ignore(() => editor.setContent(''));
     editor.selection.setCursorLocation();
   });
 };

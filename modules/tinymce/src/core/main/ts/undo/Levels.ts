@@ -48,14 +48,16 @@ const applyToEditor = (editor: Editor, level: UndoLevel, before: boolean): void 
   if (level.type === 'fragmented') {
     Fragments.write(level.fragments, editor.getBody());
   } else {
-    editor.setContent(level.content, {
-      format: 'raw',
-      // If we have a path bookmark, we need to check if the bookmark location was a fake caret.
-      // If the bookmark was not a fake caret, then we need to ensure that setContent does not move the selection
-      // as this can create a new fake caret - particularly if the first element in the body is contenteditable=false.
-      // The creation of this new fake caret will cause our path offset to be off by one when restoring the original selection.
-      no_selection: Type.isNonNullable(bookmark) && isPathBookmark(bookmark) ? !bookmark.isFakeCaret : true
-    });
+    editor.undoManager.ignore(() =>
+      editor.setContent(level.content, {
+        format: 'raw',
+        // If we have a path bookmark, we need to check if the bookmark location was a fake caret.
+        // If the bookmark was not a fake caret, then we need to ensure that setContent does not move the selection
+        // as this can create a new fake caret - particularly if the first element in the body is contenteditable=false.
+        // The creation of this new fake caret will cause our path offset to be off by one when restoring the original selection.
+        no_selection: Type.isNonNullable(bookmark) && isPathBookmark(bookmark) ? !bookmark.isFakeCaret : true
+      })
+    );
   }
 
   if (bookmark) {

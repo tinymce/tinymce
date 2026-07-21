@@ -46,7 +46,7 @@ const getParentBlock = (rootNode: SugarElement<Node>, elm: SugarElement<Node>): 
 
 const paddEmptyBody = (editor: Editor, moveSelection: boolean = true): void => {
   if (editor.dom.isEmpty(editor.getBody())) {
-    editor.setContent('', { no_selection: !moveSelection });
+    editor.undoManager.ignore(() => editor.setContent('', { no_selection: !moveSelection }));
   }
 };
 

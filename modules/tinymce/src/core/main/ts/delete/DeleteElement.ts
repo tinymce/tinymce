@@ -146,7 +146,7 @@ const deleteElement = (
   const normalizedAfterDeletePos = deleteNormalized(elm, afterDeletePos, editor.schema, isInlineElement(editor, elm));
 
   if (editor.dom.isEmpty(editor.getBody())) {
-    editor.setContent('');
+    editor.undoManager.ignore(() => editor.setContent(''));
     editor.selection.setCursorLocation();
   } else {
     parentBlock.bind((elm) => paddEmptyBlock(editor.schema, elm, preserveEmptyCaret)).fold(
