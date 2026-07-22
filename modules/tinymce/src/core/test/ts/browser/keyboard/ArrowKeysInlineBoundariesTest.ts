@@ -41,9 +41,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest', () => {
     if (browser.isFirefox()) {
       editor.getBody().innerHTML = content;
     } else {
-      editor.undoManager.ignore(() =>
-        editor.setContent(content, { format: 'raw' })
-      );
+      editor.setContent(content, { format: 'raw' });
     }
   };
 

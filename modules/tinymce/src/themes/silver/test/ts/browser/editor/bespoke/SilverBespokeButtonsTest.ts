@@ -112,9 +112,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
 
     it('TBA: Checking alignment ticks and updating',
       testWithEvents('AlignTextUpdate', async (editor) => {
-        editor.undoManager.ignore(() =>
-          editor.setContent('<p>First paragraph</p><p>Second paragraph</p>')
-        );
+        editor.setContent('<p>First paragraph</p><p>Second paragraph</p>');
         assertNoEvent();
         TinySelections.setCursor(editor, [ 0, 0 ], 'Fi'.length);
         assertEvent(1, 'left');
@@ -155,9 +153,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
 
     it('TBA: Checking fontfamily ticks and updating',
       testWithEvents('FontFamilyTextUpdate', async (editor) => {
-        editor.undoManager.ignore(() =>
-          editor.setContent('<p>First paragraph</p><p>Second paragraph</p>')
-        );
+        editor.setContent('<p>First paragraph</p><p>Second paragraph</p>');
         assertNoEvent();
         TinySelections.setCursor(editor, [ 0, 0 ], 'Fi'.length);
         assertEvent(1, 'Verdana');
@@ -196,9 +192,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
 
     it('TBA: Checking fontsize ticks and updating',
       testWithEvents('FontSizeTextUpdate', async (editor) => {
-        editor.undoManager.ignore(() =>
-          editor.setContent('<p>First paragraph</p><p>Second paragraph</p>')
-        );
+        editor.setContent('<p>First paragraph</p><p>Second paragraph</p>');
         assertNoEvent();
         TinySelections.setCursor(editor, [ 0, 0 ], 'Fi'.length);
         assertEvent(1, '12pt');
@@ -237,9 +231,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
 
     it('TBA: Checking format ticks and updating',
       testWithEvents('BlocksTextUpdate', async (editor) => {
-        editor.undoManager.ignore(() =>
-          editor.setContent('<p>First paragraph</p><p>Second paragraph</p>')
-        );
+        editor.setContent('<p>First paragraph</p><p>Second paragraph</p>');
         assertNoEvent();
         TinySelections.setCursor(editor, [ 0, 0 ], 'Fi'.length);
         assertEvent(1, 'Paragraph');
@@ -305,9 +297,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
 
     it('TBA: Checking style ticks and updating',
       testWithEvents('StylesTextUpdate', async (editor) => {
-        editor.undoManager.ignore(() =>
-          editor.setContent('<p>First paragraph</p><p>Second paragraph</p>')
-        );
+        editor.setContent('<p>First paragraph</p><p>Second paragraph</p>');
         assertNoEvent();
         TinySelections.setCursor(editor, [ 0, 0 ], 'Fi'.length);
         assertEvent(1, 'Paragraph');

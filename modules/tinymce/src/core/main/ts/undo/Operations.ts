@@ -22,7 +22,8 @@ export const addUndoLevel = (
   locks: Locks,
   beforeBookmark: UndoBookmark,
   level?: Partial<UndoLevel>,
-  event?: EditorEvent<unknown>
+  event?: EditorEvent<unknown>,
+  silent = false
 ): UndoLevel | null => {
   const currentLevel = Levels.createFromEditor(editor);
 
@@ -74,12 +75,14 @@ export const addUndoLevel = (
   undoManager.data.push(newLevel);
   index.set(undoManager.data.length - 1);
 
-  const args = { level: newLevel, lastLevel, originalEvent: event };
+  const args = { level: newLevel, lastLevel, originalEvent: event, silent };
 
   if (index.get() > 0) {
     editor.setDirty(true);
     editor.dispatch('AddUndo', args);
-    editor.dispatch('change', args);
+    if (!silent) {
+      editor.dispatch('change', args);
+    }
   } else {
     editor.dispatch('AddUndo', args);
   }

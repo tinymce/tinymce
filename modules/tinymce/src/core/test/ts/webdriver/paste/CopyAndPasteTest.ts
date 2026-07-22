@@ -184,12 +184,10 @@ describe('webdriver.tinymce.core.paste.CopyAndPasteTest', () => {
   const pTestInlineTags = (tagName: string) => {
     it(`TINY-7719: Wrapped elements are preserved in copy and paste (inline element: ${tagName})`, async () => {
       const editor = hook.editor();
-      editor.undoManager.ignore(() =>
-        editor.setContent(
-          `<p><${tagName} class="someclass">abc</${tagName}></p>` +
-          '<h1>something</h1>' +
-          '<p>abc def</p>'
-        )
+      editor.setContent(
+        `<p><${tagName} class="someclass">abc</${tagName}></p>` +
+        '<h1>something</h1>' +
+        '<p>abc def</p>'
       );
       await pCopyAndPaste(
         editor,

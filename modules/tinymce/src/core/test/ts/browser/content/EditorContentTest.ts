@@ -215,7 +215,11 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
           const editor = hook.editor();
           editor.setContent('<p>tree</p>');
           editor.setContent(getFontTree());
-          assert.equal(editor.getContent(), '<p><span style="font-size: 300%;">x</span></p>', 'Should be expected filtered html');
+          if (options.inline) {
+            assert.equal(editor.getContent(), '<span style="font-size: 300%;">x</span>', 'Should be expected filtered html');
+          } else {
+            assert.equal(editor.getContent(), '<p><span style="font-size: 300%;">x</span></p>', 'Should be expected filtered html');
+          }
           assertEventsFiredInOrder([
             'beforesetcontent',
             'setcontent',
@@ -231,7 +235,11 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
           const editor = hook.editor();
           editor.setContent('<p>tree</p>');
           editor.setContent(getFontTree());
-          assert.equal(editor.getContent(), '<p><span style="font-size: 300%;">x</span></p>', 'Should be expected filtered html');
+          if (options.inline) {
+            assert.equal(editor.getContent(), '<span style="font-size: 300%;">x</span>', 'Should be expected filtered html');
+          } else {
+            assert.equal(editor.getContent(), '<p><span style="font-size: 300%;">x</span></p>', 'Should be expected filtered html');
+          }
           assertEventsFiredInOrder([
             'beforesetcontent',
             'setcontent',

@@ -82,7 +82,8 @@ interface RtcAdaptor {
       locks: Locks,
       beforeBookmark: UndoBookmark,
       level?: Partial<UndoLevel>,
-      event?: EditorEvent<unknown>
+      event?: EditorEvent<unknown>,
+      silent?: boolean
     ) => UndoLevel | null;
     undo: (undoManager: UndoManager, locks: Locks, index: Index) => UndoLevel | undefined;
     redo: (index: Index, data: UndoLevel[]) => UndoLevel | undefined;
@@ -138,8 +139,8 @@ const makePlainAdaptor = (editor: Editor): RtcAdaptor => ({
   },
   undoManager: {
     beforeChange: (locks, beforeBookmark) => Operations.beforeChange(editor, locks, beforeBookmark),
-    add: (undoManager, index, locks, beforeBookmark, level, event) =>
-      Operations.addUndoLevel(editor, undoManager, index, locks, beforeBookmark, level, event),
+    add: (undoManager, index, locks, beforeBookmark, level, event, silent) =>
+      Operations.addUndoLevel(editor, undoManager, index, locks, beforeBookmark, level, event, silent),
     undo: (undoManager, locks, index) => Operations.undo(editor, undoManager, locks, index),
     redo: (index, data) => Operations.redo(editor, index, data),
     clear: (undoManager, index) => Operations.clear(editor, undoManager, index),
@@ -342,9 +343,10 @@ export const addUndoLevel = (
   locks: Locks,
   beforeBookmark: UndoBookmark,
   level?: Partial<UndoLevel>,
-  event?: EditorEvent<unknown>
+  event?: EditorEvent<unknown>,
+  silent?: boolean
 ): UndoLevel | null =>
-  getRtcInstanceWithError(editor).undoManager.add(undoManager, index, locks, beforeBookmark, level, event);
+  getRtcInstanceWithError(editor).undoManager.add(undoManager, index, locks, beforeBookmark, level, event, silent);
 
 export const undo = (editor: Editor, undoManager: UndoManager, locks: Locks, index: Index): UndoLevel | undefined =>
   getRtcInstanceWithError(editor).undoManager.undo(undoManager, locks, index);

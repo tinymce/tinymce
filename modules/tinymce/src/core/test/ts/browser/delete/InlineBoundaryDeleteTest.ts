@@ -48,9 +48,7 @@ describe('browser.tinymce.core.delete.InlineBoundaryDeleteTest', () => {
     };
 
     editor.on('input', collect);
-    editor.undoManager.ignore(() =>
-      editor.setContent(setupHtml)
-    );
+    editor.setContent(setupHtml);
     TinySelections.setCursor(editor, setupPath, setupOffset);
     editor.nodeChanged();
     TinyContentActions.keydown(editor, key);

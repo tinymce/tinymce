@@ -29,7 +29,7 @@ export type UndoLevel = NewUndoLevel & { bookmark: Bookmark };
 export interface UndoManager {
   data: UndoLevel[];
   typing: boolean;
-  add: (level?: Partial<UndoLevel>, event?: EditorEvent<unknown>) => UndoLevel | null;
+  add: (level?: Partial<UndoLevel>, event?: EditorEvent<unknown>, silent?: boolean) => UndoLevel | null;
   dispatchChange: () => void;
   beforeChange: () => void;
   undo: () => UndoLevel | undefined;

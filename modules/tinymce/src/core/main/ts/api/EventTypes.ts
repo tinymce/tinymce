@@ -96,6 +96,7 @@ export interface ChangeEvent {
 
 export interface AddUndoEvent extends ChangeEvent {
   originalEvent: EditorEvent<unknown> | undefined;
+  silent?: boolean;
 }
 
 export interface UndoRedoEvent {

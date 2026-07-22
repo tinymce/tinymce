@@ -27,7 +27,7 @@ export const setContent = (editor: Editor, content: Content, args: Partial<SetCo
       The check for getBody returns undefined in the case the editor is in the invalid state, which is why it is used here.
     */
     if (editor.initialized && !editor.removed && editor.getBody()) {
-      editor.undoManager.add();
+      editor.undoManager.add(undefined, undefined, true);
     }
   });
 };
