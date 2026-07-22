@@ -95,6 +95,43 @@ tinymce.init({
         return () => api.element().removeChild(text);
       }
     });
+
+    // Follow-the-focus behaviour, implemented purely from the integration layer (no editor
+    // source changes). When the user interacts with an editor, move the currently-open floating
+    // sidebar to it - but only if this editor actually has that sidebar registered. Otherwise do
+    // nothing and leave the sidebar where it is.
+    editor.on('focus', () => {
+      // Defer to the next macrotask. `focus` fires on mousedown, BEFORE a clicked sidebar button's
+      // own click handler runs. If we switched synchronously here, clicking a sidebar button on this
+      // editor would open the panel via focus and then the button's toggle would immediately close
+      // it. Deferring lets any button handler run first, and we then re-read state and only act if
+      // there is still something to switch.
+      setTimeout(() => {
+        if (editor.removed) {
+          return;
+        }
+
+        // The theme guarantees at most one floating sidebar is open across all editors, so scan the
+        // others to find whichever one (if any) currently has a sidebar open. Because only one can be
+        // open globally, a non-blank result also means THIS editor has nothing open.
+        const openName = tinymce.get()
+          .filter((other) => other.id !== editor.id)
+          .reduce<string>((found, other) => found || other.queryCommandValue('ToggleSidebar'), '');
+
+        if (openName === '') {
+          return; // Nothing open elsewhere (a button here may have already switched it) - do nothing.
+        }
+
+        // getAll() is an internal registry method; an integrator could instead track their own
+        // set of registered sidebar names per editor.
+        const hasSidebar = Object.prototype.hasOwnProperty.call(editor.ui.registry.getAll().sidebars, openName);
+
+        if (hasSidebar) {
+          // Opening here makes the theme close the other editor's sidebar - the panel "moves".
+          editor.execCommand('ToggleSidebar', false, openName);
+        }
+      }, 0);
+    });
   }
 });
 

@@ -8,10 +8,12 @@ import { onControlAttached, onControlDetached } from 'tinymce/themes/silver/ui/c
 
 import { SimpleBehaviours } from '../alien/SimpleBehaviours';
 
+import type { CssPosition, Position } from './dragging/DragTypes';
 import { setupSidebarDragging } from './dragging/SidebarDragging';
 import type { SidebarConfig } from './Sidebar';
+import * as SidebarOrchestrator from './SidebarOrchestrator';
 
-const renderFloatingSidebar = (): SimpleSpec => ({
+const renderFloatingSidebar = (positionState: Cell<CssPosition | Position>, onDragEnd: () => void): SimpleSpec => ({
   dom: {
     tag: 'div',
     classes: [ 'tox-floating-sidebar' ]
@@ -31,13 +33,17 @@ const renderFloatingSidebar = (): SimpleSpec => ({
         return Arr.head(children);
       }
     }),
-    setupSidebarDragging()
+    setupSidebarDragging(positionState, onDragEnd)
   ])
 });
 
 const setup = (editor: Editor, sink: AlloyComponent): AlloyComponent => {
-  const floatingSidebar = GuiFactory.build(renderFloatingSidebar());
+  // All floating sidebars share one resting position, and broadcast it on drag end.
+  const positionState = SidebarOrchestrator.getSharedPositionCell();
+  const floatingSidebar = GuiFactory.build(renderFloatingSidebar(positionState, SidebarOrchestrator.broadcastPosition));
   Attachment.attach(sink, floatingSidebar);
+  SidebarOrchestrator.register(editor, floatingSidebar);
+  editor.on('remove', () => SidebarOrchestrator.unregister(editor.id));
   return floatingSidebar;
 };
 

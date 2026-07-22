@@ -7,7 +7,7 @@ import type { AllowedOverflow, Boundaries, CssPosition, CssSize, Origin, Positio
 import { getPositioningStyles } from './Styles';
 
 const ORIGIN: Origin = 'top-right';
-const INITIAL_POSITION = {
+const INITIAL_POSITION: CssPosition = {
   x: 'var(--tox-private-pad-lg, 24px)',
   y: 'var(--tox-private-pad-lg, 24px)'
 };
@@ -17,22 +17,29 @@ const DECLARED_SIZE: Optional<CssSize> = Optional.some({
   height: 'var(--tox-private-floating-sidebar-height)'
 });
 
-const setupSidebarDragging = (): Behaviour.NamedConfiguredBehaviour<any, any> => {
+const applyStylesFor = (comp: AlloyComponent, shift: Shift, position: CssPosition | Position, isDragging: boolean): void => {
+  const styles = getPositioningStyles(shift, position, ORIGIN, ALLOWED_OVERFLOW, isDragging, DECLARED_SIZE);
+  Css.setOptions(comp.element, {
+    transform: Optional.from(styles.transform),
+    top: Optional.from(styles.top),
+    bottom: Optional.from(styles.bottom),
+    left: Optional.from(styles.left),
+    right: Optional.from(styles.right)
+  });
+};
+
+// Apply a resting (not-dragging) position. Used by the orchestrator to sync all sidebars.
+const applyPositionStyles = (comp: AlloyComponent, position: CssPosition | Position): void =>
+  applyStylesFor(comp, { x: 0, y: 0 }, position, false);
+
+const setupSidebarDragging = (positionState: Cell<CssPosition | Position>, onDragEnd: () => void): Behaviour.NamedConfiguredBehaviour<any, any> => {
   const shift = Cell<Shift>({ x: 0, y: 0 });
-  const positionState = Cell<CssPosition | Position>(INITIAL_POSITION);
   const isDragging = Cell<boolean>(false);
   const dragBoundaries = Cell<Boundaries>({ x: { min: 0, max: 0 }, y: { min: 0, max: 0 }});
   const lastMousePosition = Cell<Position>({ x: 0, y: 0 });
 
   const applyStyles = (comp: AlloyComponent): void => {
-    const styles = getPositioningStyles(shift.get(), positionState.get(), ORIGIN, ALLOWED_OVERFLOW, isDragging.get(), DECLARED_SIZE);
-    Css.setOptions(comp.element, {
-      transform: Optional.from(styles.transform),
-      top: Optional.from(styles.top),
-      bottom: Optional.from(styles.bottom),
-      left: Optional.from(styles.left),
-      right: Optional.from(styles.right)
-    });
+    applyStylesFor(comp, shift.get(), positionState.get(), isDragging.get());
   };
 
   const stopDragging = (comp: AlloyComponent): void => {
@@ -42,6 +49,8 @@ const setupSidebarDragging = (): Behaviour.NamedConfiguredBehaviour<any, any> =>
     const viewport = { width: document.documentElement.clientWidth, height: document.documentElement.clientHeight };
     positionState.set(position(rect, viewport, ORIGIN));
     applyStyles(comp);
+    // Broadcast the new resting position to every other floating sidebar.
+    onDragEnd();
   };
 
   return AddEventsBehaviour.config('floating-sidebar-drag', [
@@ -105,4 +114,4 @@ const setupSidebarDragging = (): Behaviour.NamedConfiguredBehaviour<any, any> =>
   ]);
 };
 
-export { setupSidebarDragging };
+export { setupSidebarDragging, applyPositionStyles, INITIAL_POSITION };
