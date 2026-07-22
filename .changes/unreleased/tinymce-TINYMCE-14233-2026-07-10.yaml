@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: The menubar could wrap over multiple rows on narrow viewports, such as at high browser zoom levels, leaving little or no visible space for the editable area. The menubar now scrolls horizontally instead.
-time: 2026-07-10T14:34:33.941877+10:00
-custom:
-  Issue: TINYMCE-14233
