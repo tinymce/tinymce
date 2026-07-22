@@ -140,28 +140,28 @@ const matchNode = (ed: Editor, node: Node | null, name: string, vars?: FormatVar
   return undefined;
 };
 
-const containsFormat = (editor: Editor, root: Node, name: string, vars?: FormatVars, similar?: boolean): boolean =>
+const containsFormatDeep = (editor: Editor, root: Node, name: string, vars?: FormatVars, similar?: boolean): boolean =>
   Type.isNonNullable(matchNode(editor, root, name, vars, similar)) ||
-  Arr.exists(Arr.from(root.childNodes), (child) => containsFormat(editor, child, name, vars, similar));
+  Arr.exists(Arr.from(root.childNodes), (child) => containsFormatDeep(editor, child, name, vars, similar));
 
-const matchDescendants = (editor: Editor, node: Node, name: string, vars?: FormatVars, similar?: boolean): boolean => {
+const matchEditableDescendants = (editor: Editor, node: Node, name: string, vars?: FormatVars, similar?: boolean): boolean => {
   const dom = editor.dom;
   if (!NodeType.isElement(node) || dom.getContentEditable(node) !== 'false' || FormatUtils.isWrappableNoneditable(editor, node)) {
     return false;
   }
 
-  return Arr.exists(FormatUtils.getEditableDescendants(dom, node), (descendant) => containsFormat(editor, descendant, name, vars, similar));
+  return Arr.exists(FormatUtils.getEditableDescendants(dom, node), (descendant) => containsFormatDeep(editor, descendant, name, vars, similar));
 };
 
 const match = (editor: Editor, name: string, vars?: FormatVars, node?: Node, similar?: boolean): boolean => {
   // Check specified node
   if (node) {
-    return matchParents(editor, node, name, vars, similar) || matchDescendants(editor, node, name, vars, similar);
+    return matchParents(editor, node, name, vars, similar) || matchEditableDescendants(editor, node, name, vars, similar);
   }
 
   // Check selected node
   node = editor.selection.getNode();
-  if (matchParents(editor, node, name, vars, similar) || matchDescendants(editor, node, name, vars, similar)) {
+  if (matchParents(editor, node, name, vars, similar) || matchEditableDescendants(editor, node, name, vars, similar)) {
     return true;
   }
 

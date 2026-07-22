@@ -1,7 +1,7 @@
 project: tinymce
 kind: Fixed
-body: Format could not be applied to editable child elements when noneditable element
-  is selected.
+body: Formatting could not be applied to and removed from editable child elements when a noneditable element
+  was selected.
 time: 2026-07-20T13:39:21.803395+10:00
 custom:
   Issue: TINYMCE-9142

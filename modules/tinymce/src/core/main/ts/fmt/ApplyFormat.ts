@@ -1,4 +1,4 @@
-import { Arr, Fun, Obj, Type } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optional, Type } from '@ephox/katamari';
 import { PredicateExists, SugarElement, SugarElements } from '@ephox/sugar';
 
 import type DOMUtils from '../api/dom/DOMUtils';
@@ -317,12 +317,12 @@ const applyFormatAction = (ed: Editor, name: string, vars?: FormatVars, node?: N
           ApplyElementFormat.setElementFormat(ed, elm, format, vars, node);
         }
       }
-    } else if (Arr.exists(formatList, FormatUtils.isSelectorFormat)) {
-      const parentMatch = dom.getParent(node, (candidate) =>
-        Arr.exists(formatList, (fmt) => FormatUtils.isSelectorFormat(fmt) && dom.is(candidate, fmt.selector)));
-      if (dom.isEditable(parentMatch)) {
-        applyNodeStyle(formatList, parentMatch);
-      }
+    } else {
+      const selectorFormats = Arr.filter(formatList, FormatUtils.isSelectorFormat);
+      Optional.from(dom.getParent(node, (candidate) =>
+        Arr.exists(selectorFormats, (fmt) => dom.is(candidate, fmt.selector))))
+        .filter(dom.isEditable)
+        .each((parent) => applyNodeStyle(formatList, parent));
     }
     Events.fireFormatApply(ed, name, node, vars);
     return;
