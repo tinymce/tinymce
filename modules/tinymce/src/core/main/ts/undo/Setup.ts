@@ -146,7 +146,7 @@ export const registerEvents = (editor: Editor, undoManager: UndoManager, locks: 
   });
 
   editor.on('AddUndo Undo Redo ClearUndos', (e) => {
-    if (!e.isDefaultPrevented()) {
+    if (!e.isDefaultPrevented() && !(e as { silent?: boolean }).silent) {
       editor.nodeChanged();
     }
   });

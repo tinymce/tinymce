@@ -50,8 +50,8 @@ const UndoManager = (editor: Editor): UndoManagerType => {
      * @param {EditorEvent} event Optional event responsible for the creation of the undo level.
      * @return {Object} Undo level that got added or null if a level wasn't needed.
      */
-    add: (level?: Partial<UndoLevel>, event?: EditorEvent<unknown>): UndoLevel | null => {
-      return Rtc.addUndoLevel(editor, undoManager, index, locks, beforeBookmark, level, event);
+    add: (level?: Partial<UndoLevel>, event?: EditorEvent<unknown>, silent?: boolean): UndoLevel | null => {
+      return Rtc.addUndoLevel(editor, undoManager, index, locks, beforeBookmark, level, event, silent);
     },
 
     /**
