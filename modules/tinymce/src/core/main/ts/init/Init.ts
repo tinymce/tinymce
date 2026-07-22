@@ -52,9 +52,11 @@ const initPlugin = (editor: Editor, initializedPlugins: string[], plugin: string
 const initTooltipClosing = (editor: Editor) => {
   const closeTooltipsListener = (event: KeyboardEvent | EditorEvent<KeyboardEvent>) => {
     if (event.keyCode === VK.ESC && !event.defaultPrevented) {
-      if (Events.fireCloseTooltips(editor).isDefaultPrevented()) {
-        event.preventDefault();
-      }
+      Arr.each(editor.editorManager.get(), (ed) => {
+        if (Events.fireCloseTooltips(ed).isDefaultPrevented()) {
+          event.preventDefault();
+        }
+      });
     }
   };
 
