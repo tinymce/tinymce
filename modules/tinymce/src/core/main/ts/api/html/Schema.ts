@@ -59,7 +59,7 @@ interface Schema {
  * }
  */
 
-let mapCache: Record<string, SchemaMap> = {};
+const mapCache: Record<string, SchemaMap> = {};
 const makeMap = Tools.makeMap, each = Tools.each, extend = Tools.extend, explode = Tools.explode;
 
 const createMap = (defaultValue: string, extendWith: SchemaMap = {}): SchemaMap => {
@@ -786,7 +786,9 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
 
 // Internal function for testing to able to clear global schema cache between test cases
 export const _clearCache = (): void => {
-  mapCache = {};
+  Arr.each(Obj.keys(mapCache), (key) => {
+    delete mapCache[key];
+  });
 };
 
 export default Schema;
