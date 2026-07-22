@@ -1,5 +1,5 @@
 import { after, before, context, describe, it } from '@ephox/bedrock-client';
-import { Arr, Fun } from '@ephox/katamari';
+import { Arr, Fun, Strings } from '@ephox/katamari';
 import { Insert, Remove, SelectorFilter, SugarBody, SugarElement, SugarHead, SugarShadowDom } from '@ephox/sugar';
 import { McEditor, TinyDom } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -42,8 +42,11 @@ describe('browser.tinymce.core.dom.BundledCssTest', () => {
         container,
         'style'
       );
-    // An unrelated style tag is included in Firefox so fitler it out
-    const filterKeys = new Set([ 'mceDefaultStyles' ]);
+    // Only TinyMCE's keyed skin/content <style> tags are under test. Unkeyed <style> elements are
+    // injected by unrelated paths — browser quirks via editor.contentStyles, the content_style
+    // option, and an unrelated Firefox default style tag (mceDefaultStyles) — so exclude them to
+    // keep the assertions independent of what else has run in the shared realm.
+    const filterKeys = new Set([ 'mceDefaultStyles', '' ]);
     const style = Arr.filter(styleTags, (tag) => {
       const key = styleTagToKey(tag);
       return !filterKeys.has(key);
@@ -54,10 +57,12 @@ describe('browser.tinymce.core.dom.BundledCssTest', () => {
         container,
         'link'
       );
-    const filterHrefs = new Set([ '/css/bedrock.css', 'data:;base64,iVBORw0KGgo=' ]);
+    // Only TinyMCE skin/content stylesheet links (under the skins/ path) are under test. Bedrock's
+    // own stylesheet, the favicon, and stylesheets leaked into document.head by sibling tests (e.g.
+    // StyleSheetLoader tests loading test.css) are not, so keep only skins/ links.
     const link = Arr.filter(linkTags, (tag) => {
       const key = linkTagToKey(tag, basePath);
-      return !filterHrefs.has(key);
+      return Strings.contains(key, 'skins/');
     });
 
     return {

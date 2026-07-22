@@ -784,4 +784,11 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
   };
 };
 
+// Internal function for testing to able to clear global schema cache between test cases
+export const _clearCache = (): void => {
+  Arr.each(Obj.keys(mapCache), (key) => {
+    delete mapCache[key];
+  });
+};
+
 export default Schema;
