@@ -545,7 +545,7 @@ const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
     let sidebarStrategy: SidebarStrategy.SidebarStrategy;
     if (editor.inline || Options.getSidebarType(editor) === Options.SidebarType.floating) {
       const floatingSidebar = FloatingSidebar.setup(editor, popupUi.sink);
-      sidebarStrategy = SidebarStrategy.createFloatingSidebarStrategy(floatingSidebar);
+      sidebarStrategy = SidebarStrategy.createFloatingSidebarStrategy(editor, floatingSidebar);
     } else {
       sidebarStrategy = SidebarStrategy.createStaticSidebarStrategy(mainUi.outerContainer);
     }
