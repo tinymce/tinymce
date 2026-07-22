@@ -26,9 +26,10 @@ import * as StickyHeader from './ui/header/StickyHeader';
 import * as SilverContextMenu from './ui/menus/contextmenu/SilverContextMenu';
 import type { MenuRegistry } from './ui/menus/menubar/Integration';
 import * as TableSelectorHandles from './ui/selector/TableSelectorHandles';
-import * as FloatingSidebar from './ui/sidebar/FloatingSidebar';
 import type { SidebarConfig } from './ui/sidebar/Sidebar';
 import * as SidebarButtons from './ui/sidebar/SidebarButtons';
+import { getSidebarManager } from './ui/sidebar/SidebarManagerSingleton';
+import { getSidebarSink } from './ui/sidebar/SidebarSink';
 import * as SidebarStrategy from './ui/sidebar/SidebarStrategy';
 import * as EditorSize from './ui/sizing/EditorSize';
 import * as Utils from './ui/sizing/Utils';
@@ -544,8 +545,11 @@ const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
 
     let sidebarStrategy: SidebarStrategy.SidebarStrategy;
     if (editor.inline || Options.getSidebarType(editor) === Options.SidebarType.floating) {
-      const floatingSidebar = FloatingSidebar.setup(editor, popupUi.sink);
-      sidebarStrategy = SidebarStrategy.createFloatingSidebarStrategy(floatingSidebar);
+      // All floating editors share a single page-level sidebar sink and a single manager.
+      const sidebarSink = getSidebarSink();
+      const manager = getSidebarManager(sidebarSink);
+      manager.setup();
+      sidebarStrategy = SidebarStrategy.createFloatingSidebarStrategy(manager, editor);
     } else {
       sidebarStrategy = SidebarStrategy.createStaticSidebarStrategy(mainUi.outerContainer);
     }

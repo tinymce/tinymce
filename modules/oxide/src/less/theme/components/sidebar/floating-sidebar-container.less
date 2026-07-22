@@ -29,6 +29,17 @@
     }
   }
 
+  .tox-floating-sidebar__editor {
+    // Only the active editor's block is shown, so that when several editors share the one
+    // floating sidebar only a single sidebar is ever visible at a time.
+    display: none;
+
+    &--active {
+      display: flex;
+      flex: 1;
+    }
+  }
+
   .tox-floating-sidebar__pane-container {
     display: flex;
     flex: 1;
