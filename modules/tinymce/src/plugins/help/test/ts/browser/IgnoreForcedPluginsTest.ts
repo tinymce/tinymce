@@ -11,7 +11,7 @@ import { selectors } from '../module/Selectors';
 describe('browser.tinymce.plugins.help.IgnoreForcedPluginsTest', () => {
   before(() => {
     tinymce.PluginManager.add('onboarding', () => ({
-      getMetadata: () => ({ name: 'Onboarding', type: 'premium', hidden: true })
+      getMetadata: () => ({ name: 'Onboarding', type: 'premium', slug: 'onboarding', hidden: true })
     }));
   });
 

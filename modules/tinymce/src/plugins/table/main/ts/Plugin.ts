@@ -18,7 +18,7 @@ export default (): void => {
     Buttons.addToolbars(editor);
 
     return {
-      getMetadata: () => ({ name: 'Table', type: 'opensource' })
+      getMetadata: () => ({ name: 'Table', type: 'opensource', slug: 'table' })
     };
   });
 };

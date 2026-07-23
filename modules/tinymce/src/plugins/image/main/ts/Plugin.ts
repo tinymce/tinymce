@@ -13,7 +13,7 @@ export default (): void => {
     Commands.register(editor);
 
     return {
-      getMetadata: () => ({ name: 'Image', type: 'opensource' })
+      getMetadata: () => ({ name: 'Image', type: 'opensource', slug: 'image' })
     };
   });
 };

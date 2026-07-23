@@ -13,7 +13,7 @@ export default (): void => {
     Keyboard.setup(editor);
 
     return {
-      getMetadata: () => ({ name: 'Link', type: 'opensource' })
+      getMetadata: () => ({ name: 'Link', type: 'opensource', slug: 'link' })
     };
   });
 };

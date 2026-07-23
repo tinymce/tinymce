@@ -10,7 +10,7 @@ export default (): void => {
     ImportCss.setup(editor);
     return {
       ...Api.get(editor),
-      getMetadata: () => ({ name: 'Import CSS', type: 'opensource' })
+      getMetadata: () => ({ name: 'Import CSS', type: 'opensource', slug: 'importcss' })
     };
   });
 };

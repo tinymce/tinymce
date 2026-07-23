@@ -32,7 +32,7 @@ export default (): void => {
     }
 
     return {
-      getMetadata: () => ({ name: 'Autoresize', type: 'opensource' })
+      getMetadata: () => ({ name: 'Autoresize', type: 'opensource', slug: 'autoresize' })
     };
   });
 };

@@ -21,7 +21,7 @@ export default (): void => {
 
     return {
       ...Api.get(toggleState),
-      getMetadata: () => ({ name: 'Visual Characters', type: 'opensource' })
+      getMetadata: () => ({ name: 'Visual Characters', type: 'opensource', slug: 'visualchars' })
     };
   });
 };

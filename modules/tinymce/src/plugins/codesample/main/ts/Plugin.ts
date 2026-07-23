@@ -21,7 +21,7 @@ export default (): void => {
     });
 
     return {
-      getMetadata: () => ({ name: 'Code Sample', type: 'opensource' })
+      getMetadata: () => ({ name: 'Code Sample', type: 'opensource', slug: 'codesample' })
     };
   });
 };

@@ -20,7 +20,7 @@ export default (): void => {
     Keyboard.setup(editor);
 
     return {
-      getMetadata: () => ({ name: 'Nonbreaking', type: 'opensource' })
+      getMetadata: () => ({ name: 'Nonbreaking', type: 'opensource', slug: 'nonbreaking' })
     };
   });
 };

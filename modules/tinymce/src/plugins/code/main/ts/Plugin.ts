@@ -9,7 +9,7 @@ export default (): void => {
     Buttons.register(editor);
 
     return {
-      getMetadata: () => ({ name: 'Code', type: 'opensource' })
+      getMetadata: () => ({ name: 'Code', type: 'opensource', slug: 'code' })
     };
   });
 };

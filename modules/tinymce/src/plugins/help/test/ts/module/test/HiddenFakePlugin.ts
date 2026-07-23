@@ -9,6 +9,7 @@ export default (): void => {
       getMetadata: Fun.constant<PluginMetadata>({
         name: 'Hidden Fake',
         type: 'opensource',
+        slug: 'hiddenfake',
         hidden: true
       })
     };

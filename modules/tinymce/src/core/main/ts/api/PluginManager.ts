@@ -12,7 +12,7 @@ export interface UrlPluginMetadata extends BasePluginMetadata {
 
 export interface TypedPluginMetadata extends BasePluginMetadata {
   type: 'premium' | 'opensource';
-  slug?: string;
+  slug: string;
 }
 
 export type PluginMetadata = UrlPluginMetadata | TypedPluginMetadata;

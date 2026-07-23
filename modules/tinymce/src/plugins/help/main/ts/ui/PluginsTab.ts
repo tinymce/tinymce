@@ -1,4 +1,4 @@
-import { Arr, Obj, Optional, Optionals, Type } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optional, Optionals, Type } from '@ephox/katamari';
 
 import type Editor from 'tinymce/core/api/Editor';
 import type { PluginMetadata } from 'tinymce/core/api/PluginManager';
@@ -29,12 +29,12 @@ const readPluginMetadata = (editor: Editor, key: string): Optional<PluginMetadat
   Obj.get(editor.plugins, key)
     .bind((plugin) => Optional.from(plugin.getMetadata))
     .filter(Type.isFunction)
-    .map((fn) => fn());
+    .map(Fun.apply);
 
-const toEntry = (metadata: PluginMetadata, key: string): PluginEntry => {
+const toEntry = (metadata: PluginMetadata): PluginEntry => {
   if ('type' in metadata) {
     const displayName = metadata.type === 'premium' ? withPremiumMarker(metadata.name) : metadata.name;
-    const url = buildDocsUrl(metadata.slug ?? key);
+    const url = buildDocsUrl(metadata.slug);
     return { name: metadata.name, html: buildLink(displayName, url) };
   }
   return { name: metadata.name, html: buildLink(metadata.name, metadata.url) };
@@ -43,7 +43,7 @@ const toEntry = (metadata: PluginMetadata, key: string): PluginEntry => {
 const buildPluginEntry = (editor: Editor, key: string): Optional<PluginEntry> =>
   readPluginMetadata(editor, key).fold(
     () => Optional.some({ name: key, html: key }),
-    (metadata) => metadata.hidden === true ? Optional.none<PluginEntry>() : Optional.some(toEntry(metadata, key))
+    (metadata) => metadata.hidden === true ? Optional.none<PluginEntry>() : Optional.some(toEntry(metadata))
   );
 
 const getVisiblePluginKeys = (editor: Editor): string[] => {

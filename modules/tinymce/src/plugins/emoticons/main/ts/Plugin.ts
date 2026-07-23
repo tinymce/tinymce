@@ -29,7 +29,7 @@ export default (): void => {
 
     return {
       getAllEmojis: () => database.waitForLoad().then(() => database.listAll()),
-      getMetadata: () => ({ name: 'Emoticons', type: 'opensource' })
+      getMetadata: () => ({ name: 'Emoticons', type: 'opensource', slug: 'emoticons' })
     };
   });
 };

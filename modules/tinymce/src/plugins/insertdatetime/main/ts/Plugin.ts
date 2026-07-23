@@ -11,7 +11,7 @@ export default (): void => {
     Buttons.register(editor);
 
     return {
-      getMetadata: () => ({ name: 'Insert Date/Time', type: 'opensource' })
+      getMetadata: () => ({ name: 'Insert Date/Time', type: 'opensource', slug: 'insertdatetime' })
     };
   });
 };

@@ -8,7 +8,8 @@ export default (): void => {
     return {
       getMetadata: Fun.constant<PluginMetadata>({
         name: 'Premium Fake',
-        type: 'premium'
+        type: 'premium',
+        slug: 'premiumfake'
       })
     };
   };

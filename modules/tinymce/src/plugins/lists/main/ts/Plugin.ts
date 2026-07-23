@@ -13,7 +13,7 @@ export default (): void => {
 
     return {
       ...Api.get(editor),
-      getMetadata: () => ({ name: 'Lists', type: 'opensource' })
+      getMetadata: () => ({ name: 'Lists', type: 'opensource', slug: 'lists' })
     };
   });
 };
