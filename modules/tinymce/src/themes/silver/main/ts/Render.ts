@@ -26,7 +26,10 @@ import * as StickyHeader from './ui/header/StickyHeader';
 import * as SilverContextMenu from './ui/menus/contextmenu/SilverContextMenu';
 import type { MenuRegistry } from './ui/menus/menubar/Integration';
 import * as TableSelectorHandles from './ui/selector/TableSelectorHandles';
-import * as Sidebar from './ui/sidebar/Sidebar';
+import * as FloatingSidebar from './ui/sidebar/FloatingSidebar';
+import type { SidebarConfig } from './ui/sidebar/Sidebar';
+import * as SidebarButtons from './ui/sidebar/SidebarButtons';
+import * as SidebarStrategy from './ui/sidebar/SidebarStrategy';
 import * as EditorSize from './ui/sizing/EditorSize';
 import * as Utils from './ui/sizing/Utils';
 import { renderStatusbar } from './ui/statusbar/Statusbar';
@@ -56,7 +59,7 @@ export interface RenderInfo {
 export type ToolbarConfig = Array<string | Options.ToolbarGroupOption> | string | boolean;
 
 export interface RenderUiConfig extends RenderToolbarConfig, MenuRegistry {
-  readonly sidebar: Sidebar.SidebarConfig;
+  readonly sidebar: SidebarConfig;
   readonly views: ViewConfig;
 }
 
@@ -266,6 +269,7 @@ const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
       }
     });
 
+    // TODO: we should not render that if the sidebar is floating
     const partSidebar: AlloySpec = OuterContainer.parts.sidebar({
       dom: {
         tag: 'div',
@@ -372,6 +376,7 @@ const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
 
   const renderMainUi = () => {
     const partHeader = makeHeaderPart();
+    // This will need to change if we'll change floating
     const sidebarContainer = makeSidebarDefinition();
 
     const partThrobber: AlloySpec = OuterContainer.parts.throbber({
@@ -479,7 +484,7 @@ const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
     return parsedHeight;
   };
 
-  const setupShortcutsAndCommands = (outerContainer: AlloyComponent): void => {
+  const setupShortcutsAndCommands = (outerContainer: AlloyComponent, sidebarStrategy: SidebarStrategy.SidebarStrategy): void => {
     editor.addShortcut('alt+F9', 'focus menubar', () => {
       OuterContainer.focusMenubar(outerContainer);
     });
@@ -506,6 +511,15 @@ const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
         OuterContainer.toggleToolbarDrawerWithoutFocusing(outerContainer);
       }
     });
+
+    editor.addCommand('ToggleSidebar', (_ui: boolean, value: string) => {
+      // This is where the sidebar opens/closes
+      sidebarStrategy.toggleSidebar(value);
+      Events.fireToggleSidebar(editor);
+    });
+
+    // This is what returns currently open sidebar
+    editor.addQueryValueHandler('ToggleSidebar', () => sidebarStrategy.whichSidebar() ?? '');
   };
 
   const renderUIWithRefs = (uiRefs: ReadyUiReferences): ModeRenderInfo => {
@@ -528,7 +542,15 @@ const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
       views
     };
 
-    setupShortcutsAndCommands(mainUi.outerContainer);
+    let sidebarStrategy: SidebarStrategy.SidebarStrategy;
+    if (editor.inline || Options.getSidebarType(editor) === Options.SidebarType.floating) {
+      const floatingSidebar = FloatingSidebar.setup(editor, popupUi.sink);
+      sidebarStrategy = SidebarStrategy.createFloatingSidebarStrategy(floatingSidebar);
+    } else {
+      sidebarStrategy = SidebarStrategy.createStaticSidebarStrategy(mainUi.outerContainer);
+    }
+
+    setupShortcutsAndCommands(mainUi.outerContainer, sidebarStrategy);
     DomEvents.setup(editor, mainUi.mothership, uiMotherships);
 
     // This backstage needs to kept in sync with the one passed to the Header part.
@@ -536,7 +558,9 @@ const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
     // This backstage is probably needed for just the bespoke dropdowns
     FormatControls.setup(editor, backstages.popup);
     SilverContextMenu.setup(editor, backstages.popup.shared.getSink, backstages.popup);
-    Sidebar.setup(editor);
+    // The setup function only registers buttons
+    // This can be reused honestly, it will work for floating as well
+    SidebarButtons.setup(editor);
     Throbber.setup(editor, lazyThrobber, backstages.popup.shared);
     ContextToolbar.register(editor, contextToolbars, popupUi.sink, { backstage: backstages.popup });
     TableSelectorHandles.setup(editor, popupUi.sink);
@@ -546,7 +570,7 @@ const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
 
     const args: RenderArgs = { targetNode: elm, height };
     // The only components that use backstages.dialog currently are the Modal dialogs.
-    return mode.render(editor, uiRefs, rawUiConfig, backstages.popup, args);
+    return mode.render(editor, uiRefs, rawUiConfig, backstages.popup, args, sidebarStrategy);
   };
 
   const reuseDialogUiForPopuUi = (dialogUi: SinkAndMothership) => {

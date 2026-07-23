@@ -6,10 +6,9 @@ import {
 } from '@ephox/alloy';
 import { StructureSchema } from '@ephox/boulder';
 import { Sidebar as BridgeSidebar } from '@ephox/bridge';
-import { Arr, Cell, Fun, Id, Obj, Optional, Optionals, Type } from '@ephox/katamari';
+import { Arr, Cell, Fun, Id, Obj, Optional, Type } from '@ephox/katamari';
 import { Attribute, Css, type SugarElement, Width } from '@ephox/sugar';
 
-import type Editor from 'tinymce/core/api/Editor';
 import { onControlAttached, onControlDetached } from 'tinymce/themes/silver/ui/controls/Controls';
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
@@ -21,33 +20,6 @@ const enum SidebarStateRoleAttr {
   Grown = 'region',
   Shrunk = 'presentation'
 }
-
-const setup = (editor: Editor): void => {
-  const { sidebars } = editor.ui.registry.getAll();
-
-  // Setup each registered sidebar
-  Arr.each(Obj.keys(sidebars), (name) => {
-    const spec = sidebars[name];
-    const isActive = () => Optionals.is(Optional.from(editor.queryCommandValue('ToggleSidebar')), name);
-    editor.ui.registry.addToggleButton(name, {
-      icon: spec.icon,
-      tooltip: spec.tooltip,
-      onAction: (buttonApi) => {
-        editor.execCommand('ToggleSidebar', false, name);
-        buttonApi.setActive(isActive());
-      },
-      onSetup: (buttonApi) => {
-        buttonApi.setActive(isActive());
-        const handleToggle = () => buttonApi.setActive(isActive());
-        editor.on('ToggleSidebar', handleToggle);
-        return () => {
-          editor.off('ToggleSidebar', handleToggle);
-        };
-      },
-      context: 'any'
-    });
-  });
-};
 
 const getApi = (comp: AlloyComponent): BridgeSidebar.SidebarInstanceApi => ({
   element: (): HTMLElement => comp.element.dom
@@ -247,6 +219,5 @@ export {
   setSidebar,
   toggleSidebar,
   whichSidebar,
-  renderSidebar,
-  setup
+  renderSidebar
 };
