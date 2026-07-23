@@ -24,7 +24,8 @@ const makeSidebar = (ed: Editor, name: string, icon: string, background: string,
     onHide: (_api) => {
       // eslint-disable-next-line no-console
       console.log('onHide ' + name);
-    }
+    },
+    resizable: true
   });
 };
 

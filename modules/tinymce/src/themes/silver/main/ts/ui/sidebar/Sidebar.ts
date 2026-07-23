@@ -73,7 +73,8 @@ const makePanels = (parts: SlotContainerTypes.SlotContainerParts, panelConfigs: 
       getApi,
       onSetup: bridged.onSetup,
       onShow: bridged.onShow,
-      onHide: bridged.onHide
+      onHide: bridged.onHide,
+      resizable: bridged.resizable
     };
   });
 
@@ -93,6 +94,11 @@ const makePanels = (parts: SlotContainerTypes.SlotContainerParts, panelConfigs: 
             const data = se.event;
             const optSidePanelSpec = Arr.find(specs, (config) => config.name === data.name);
             optSidePanelSpec.each((sidePanelSpec) => {
+              AlloyTriggers.emitWith(
+                sidepanel,
+                sidebarContentChanged,
+                data.visible ? { visible: true, resizable: sidePanelSpec.resizable } : { visible: false }
+              );
               const handler = data.visible ? sidePanelSpec.onShow : sidePanelSpec.onHide;
               handler(sidePanelSpec.getApi(sidepanel));
             });
@@ -189,6 +195,12 @@ interface FixSizeEvent extends CustomEvent {
 }
 const fixSize = Id.generate('FixSizeEvent');
 const autoSize = Id.generate('AutoSizeEvent');
+
+export type SidebarContentChangedEvent = CustomEvent & (
+  | { readonly visible: true; readonly resizable: boolean }
+  | { readonly visible: false }
+);
+export const sidebarContentChanged = Id.generate('SidebarContentChanged');
 
 interface SidebarSpec extends SketchSpec {
   readonly configuredSidebarWidth: number;

@@ -2,7 +2,7 @@ import { Pointer, TestStore } from '@ephox/agar';
 import { afterEach, beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import type { Sidebar } from '@ephox/bridge';
 import { Fun } from '@ephox/katamari';
-import { Css, Insert, Remove, SugarBody, SugarElement, Width } from '@ephox/sugar';
+import { Class, Css, Insert, Remove, SugarBody, SugarElement, Visibility, Width } from '@ephox/sugar';
 import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -19,6 +19,32 @@ const editorBorderRight = 2;
 type SidebarResizeEvent =
   | { type: 'SidebarResizeStart' }
   | { type: 'SidebarResized'; width: number };
+
+const registerResizable = (editor: Editor, name: string, tooltip: string): void => {
+  editor.ui.registry.addSidebar(name, {
+    tooltip,
+    icon: 'comment',
+    onSetup: (api: Sidebar.SidebarInstanceApi) => {
+      api.element().appendChild(SugarElement.fromText(name).dom);
+      return Fun.noop;
+    },
+    resizable: true
+  });
+};
+
+const registerNotResizable = (editor: Editor, name: string, tooltip: string, color: string, width: number): void => {
+  editor.ui.registry.addSidebar(name, {
+    tooltip,
+    icon: 'comment',
+    onSetup: (api: Sidebar.SidebarInstanceApi) => {
+      const div = SugarElement.fromTag('div');
+      Css.setAll(div, { 'width': `${width}px`, 'background-color': color });
+      api.element().appendChild(div.dom);
+      return Fun.noop;
+    },
+    resizable: false
+  });
+};
 
 describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
   const resizeStartEvent = (): SidebarResizeEvent => ({ type: 'SidebarResizeStart' });
@@ -41,19 +67,25 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
     const { setupElement, ...settings } = configOverrides;
     const config = {
       base_url: '/project/tinymce/js/tinymce',
-      toolbar: 'sidebarone sidebartwo',
+      toolbar: 'sidebarone sidebartwo resizable-unset resizable-false w800-resizable-false w1000-resizable-false',
       setup: (editor: Editor) => {
-        const register = (name: string, tooltip: string) =>
-          editor.ui.registry.addSidebar(name, {
-            tooltip,
-            icon: 'comment',
-            onSetup: (api: Sidebar.SidebarInstanceApi) => {
-              api.element().appendChild(SugarElement.fromText(name).dom);
-              return Fun.noop;
-            }
-          });
-        register('sidebarone', 'side bar one');
-        register('sidebartwo', 'side bar two');
+        registerResizable(editor, 'sidebarone', 'side bar one');
+        registerResizable(editor, 'sidebartwo', 'side bar two');
+        registerNotResizable(editor, 'resizable-false', 'resizable false', 'yellow', 600);
+        registerNotResizable(editor, 'w800-resizable-false', 'w800 resizable false', 'orange', 800);
+        registerNotResizable(editor, 'w1000-resizable-false', 'w1000 resizable false', 'pink', 1000);
+
+        // Registered with the raw API and no resizable flag, to cover the "flag omitted" default case.
+        editor.ui.registry.addSidebar('resizable-unset', {
+          tooltip: 'resizable unset',
+          icon: 'comment',
+          onSetup: (api: Sidebar.SidebarInstanceApi) => {
+            const div = SugarElement.fromTag('div');
+            Css.setAll(div, { 'width': '600px', 'background-color': 'green' });
+            api.element().appendChild(div.dom);
+            return Fun.noop;
+          }
+        });
         editor.on('SidebarResizeStart', () => store.add(resizeStartEvent()));
         editor.on('SidebarResized', (e) => store.add(resizedEvent(e.width)));
       },
@@ -414,6 +446,159 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
         'SidebarResized should be emitted once with the final width when dragging stops',
         [ resizeStartEvent(), resizedEvent(480) ]
       );
+    });
+  });
+
+  context('TINYMCE-14678: Per-sidebar resizable flag', () => {
+    const resizableClass = 'tox-sidebar-wrap--resizable';
+
+    const assertWrapResizable = (message: string) =>
+      assert.isTrue(Class.has(SidebarUtils.getSidebarWrap(), resizableClass), message);
+
+    const assertWrapNotResizable = (message: string) =>
+      assert.isFalse(Class.has(SidebarUtils.getSidebarWrap(), resizableClass), message);
+
+    const assertHandleVisible = (message: string) =>
+      assert.isTrue(Visibility.isVisible(SidebarUtils.getSidebarResizeHandle()), message);
+
+    const assertHandleNotVisible = (message: string) =>
+      assert.isFalse(Visibility.isVisible(SidebarUtils.getSidebarResizeHandle()), message);
+
+    context('TINYMCE-14678: The resizable state follows the shown sidebar', () => {
+      const initialWidth = 440;
+      const hook = setupEditorHook({ sidebar_width: initialWidth, sidebar_min_width: 300, sidebar_max_width: 800 });
+
+      beforeEach(async () => {
+        const editor = hook.editor();
+        if (editor.queryCommandValue('ToggleSidebar') !== 'sidebarone') {
+          editor.execCommand('ToggleSidebar', false, 'sidebarone');
+          await SidebarUtils.pWaitForSidebarOpen();
+        }
+        await resetSidebarWidth(initialWidth);
+        editor.execCommand('ToggleSidebar', false, 'sidebarone');
+        await SidebarUtils.pWaitForSidebarClosed();
+        store.clear();
+      });
+
+      it('TINYMCE-14678: should not be resizable when the shown sidebar has resizable: false', async () => {
+        const editor = hook.editor();
+        assertWrapNotResizable('The wrap should not have the resizable class while no sidebar is shown');
+
+        editor.execCommand('ToggleSidebar', false, 'resizable-false');
+        assertWrapNotResizable('A resizable: false sidebar should not add the resizable class to the wrap');
+
+        await SidebarUtils.pWaitForSidebarOpen();
+        assertWrapNotResizable('The resizable class should still be absent once the resizable: false sidebar has finished opening');
+        assertHandleNotVisible('The resize handle should not be rendered when the sidebar is not resizable');
+      });
+
+      it('TINYMCE-14678: should not be resizable when the shown sidebar omits the resizable flag', async () => {
+        const editor = hook.editor();
+        assertWrapNotResizable('The wrap should not have the resizable class while no sidebar is shown');
+
+        editor.execCommand('ToggleSidebar', false, 'resizable-unset');
+        assertWrapNotResizable('A sidebar that omits the resizable flag should default to non-resizable and not add the resizable class');
+
+        await SidebarUtils.pWaitForSidebarOpen();
+        assertWrapNotResizable('The resizable class should still be absent once the sidebar that omits the flag has finished opening');
+        assertHandleNotVisible('The resize handle should not be rendered when the sidebar omits the resizable flag');
+      });
+
+      it('TINYMCE-14678: should be resizable when the shown sidebar has resizable: true', async () => {
+        const editor = hook.editor();
+        assertWrapNotResizable('The wrap should not have the resizable class while no sidebar is shown');
+
+        editor.execCommand('ToggleSidebar', false, 'sidebarone');
+        assertWrapResizable('A resizable: true sidebar should add the resizable class to the wrap');
+
+        await SidebarUtils.pWaitForSidebarOpen();
+        assertWrapResizable('The resizable class should still be present once the resizable sidebar has finished opening');
+        assertHandleVisible('The resize handle should be rendered when the sidebar is resizable');
+        assertSidebarWidth(440, 'The sidebar should start at its configured width');
+
+        await SidebarUtils.resizeSidebarBy([ -40, 0 ]);
+        assertSidebarWidth(480, 'Dragging the handle should resize a resizable sidebar');
+        store.assertEq('Resizing a resizable sidebar should emit the resize start and resized events', [ resizeStartEvent(), resizedEvent(480) ]);
+      });
+
+      it('TINYMCE-14678: should toggle the resizable class when switching between resizable and non-resizable panels', async () => {
+        const editor = hook.editor();
+        assertWrapNotResizable('The wrap should not have the resizable class while no sidebar is shown');
+
+        editor.execCommand('ToggleSidebar', false, 'sidebarone');
+        assertWrapResizable('A resizable: true sidebar should add the resizable class to the wrap');
+
+        await SidebarUtils.pWaitForSidebarOpen();
+        assertWrapResizable('The resizable class should still be present once the resizable sidebar has finished opening');
+        assertHandleVisible('The resize handle should be rendered while a resizable panel is shown');
+
+        editor.execCommand('ToggleSidebar', false, 'resizable-false');
+        assertWrapNotResizable('Switching to a non-resizable panel should remove the resizable class');
+        assertHandleNotVisible('The resize handle should not be rendered while a non-resizable panel is shown');
+
+        editor.execCommand('ToggleSidebar', false, 'sidebarone');
+        assertWrapResizable('Switching back to a resizable panel should restore the resizable class');
+        assertHandleVisible('The resize handle should be rendered again once the resizable panel is shown');
+      });
+
+      it('TINYMCE-14678: should remove the resizable class when a resizable sidebar is hidden', async () => {
+        const editor = hook.editor();
+
+        editor.execCommand('ToggleSidebar', false, 'sidebarone');
+        assertWrapResizable('Showing a resizable panel should add the resizable class immediately after toggling');
+
+        await SidebarUtils.pWaitForSidebarOpen();
+        assertWrapResizable('The resizable class should still be present once the resizable panel has finished opening');
+
+        // The slot is only hidden once the shrink animation finishes, so the class is removed after animation.
+        editor.execCommand('ToggleSidebar', false, 'sidebarone');
+        await SidebarUtils.pWaitForSidebarClosed();
+        assertWrapNotResizable('Hiding a resizable panel should remove the resizable class, since visibility wins over the panel being resizable');
+      });
+    });
+
+    context('TINYMCE-14678: A non-resizable sidebar shown on load via sidebar_show', () => {
+      setupEditorHook({ sidebar_show: 'resizable-false' });
+
+      it('TINYMCE-14678: should not be resizable when a non-resizable sidebar is shown on initial render', () => {
+        assertWrapNotResizable('A non-resizable sidebar shown via sidebar_show should not add the resizable class on initial render');
+        assertHandleNotVisible('The resize handle should not be rendered for a non-resizable sidebar shown on load');
+      });
+    });
+
+    context('TINYMCE-14678: Non-resizable sidebars ignore the width constraints', () => {
+      context('TINYMCE-14678: the configured sidebar_width and sidebar_max_width', () => {
+        const hook = setupEditorHook({ sidebar_width: 500, sidebar_min_width: 300, sidebar_max_width: 600, width: 1200 });
+
+        it('TINYMCE-14678: should render a non-resizable sidebar at its content width, ignoring sidebar_width and sidebar_max_width', async () => {
+          const editor = hook.editor();
+
+          editor.execCommand('ToggleSidebar', false, 'w800-resizable-false');
+          await SidebarUtils.pWaitForSidebarOpen();
+
+          assertSidebarWidth(800, 'A non-resizable sidebar should render at its content width, ignoring the configured sidebar_width and sidebar_max_width');
+        });
+      });
+
+      context('TINYMCE-14678: the editing area minimum width', () => {
+        const hook = setupEditorHook({ sidebar_max_width: 5000, width: 1200 });
+
+        it('TINYMCE-14678: should let a non-resizable sidebar shrink the editing area below its minimum width', async () => {
+          const editor = hook.editor();
+
+          editor.execCommand('ToggleSidebar', false, 'w1000-resizable-false');
+          await SidebarUtils.pWaitForSidebarOpen();
+
+          // The editing-area minimum width is enforced only for resizable sidebars, so a
+          // non-resizable sidebar keeps its full content width and lets the editing area take whatever is left.
+          assertSidebarWidth(1000, 'A non-resizable sidebar should render at its full content width');
+          assert.equal(
+            Width.get(SidebarUtils.getEditArea()),
+            1200 - editorBorderLeft - editorBorderRight - 1000,
+            'The editing area should keep the leftover space even though it drops below the minimum, since that protection only applies to resizable sidebars'
+          );
+        });
+      });
     });
   });
 });
