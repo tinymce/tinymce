@@ -5,8 +5,10 @@ import * as Commands from './api/Commands';
 import * as Wordcounter from './core/WordCounter';
 import * as Buttons from './ui/Buttons';
 
+const PLUGIN_CODE = 'wordcount';
+
 export default (delay: number = 300): void => {
-  PluginManager.add('wordcount', (editor) => {
+  PluginManager.add(PLUGIN_CODE, (editor) => {
     const api = Api.get(editor);
 
     Commands.register(editor, api);
@@ -14,7 +16,7 @@ export default (delay: number = 300): void => {
     Wordcounter.setup(editor, api, delay);
     return {
       ...api,
-      getMetadata: () => ({ name: 'Word Count', type: 'opensource', slug: 'wordcount' })
+      getMetadata: () => ({ name: 'Word Count', type: 'opensource', slug: PLUGIN_CODE })
     };
   });
 };

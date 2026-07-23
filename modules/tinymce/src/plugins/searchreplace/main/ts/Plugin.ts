@@ -7,8 +7,10 @@ import * as Commands from './api/Commands';
 import type { SearchState } from './core/Actions';
 import * as Buttons from './ui/Buttons';
 
+const PLUGIN_CODE = 'searchreplace';
+
 export default (): void => {
-  PluginManager.add('searchreplace', (editor) => {
+  PluginManager.add(PLUGIN_CODE, (editor) => {
     const currentSearchState = Cell<SearchState>({
       index: -1,
       count: 0,
@@ -23,7 +25,7 @@ export default (): void => {
 
     return {
       ...Api.get(editor, currentSearchState),
-      getMetadata: () => ({ name: 'Search and Replace', type: 'opensource', slug: 'searchreplace' })
+      getMetadata: () => ({ name: 'Search and Replace', type: 'opensource', slug: PLUGIN_CODE })
     };
   });
 };

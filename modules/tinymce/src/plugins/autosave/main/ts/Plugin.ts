@@ -13,8 +13,10 @@ import * as Buttons from './ui/Buttons';
  * @private
  */
 
+const PLUGIN_CODE = 'autosave';
+
 export default (): void => {
-  PluginManager.add('autosave', (editor) => {
+  PluginManager.add(PLUGIN_CODE, (editor) => {
     Options.register(editor);
     BeforeUnload.setup(editor);
     Buttons.register(editor);
@@ -27,7 +29,7 @@ export default (): void => {
 
     return {
       ...Api.get(editor),
-      getMetadata: () => ({ name: 'Autosave', type: 'opensource', slug: 'autosave' })
+      getMetadata: () => ({ name: 'Autosave', type: 'opensource', slug: PLUGIN_CODE })
     };
   });
 };

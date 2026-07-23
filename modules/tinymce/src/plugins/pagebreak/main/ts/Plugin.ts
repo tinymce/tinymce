@@ -6,8 +6,10 @@ import * as FilterContent from './core/FilterContent';
 import * as ResolveName from './core/ResolveName';
 import * as Buttons from './ui/Buttons';
 
+const PLUGIN_CODE = 'pagebreak';
+
 export default (): void => {
-  PluginManager.add('pagebreak', (editor) => {
+  PluginManager.add(PLUGIN_CODE, (editor) => {
     Options.register(editor);
     Commands.register(editor);
     Buttons.register(editor);
@@ -15,7 +17,7 @@ export default (): void => {
     ResolveName.setup(editor);
 
     return {
-      getMetadata: () => ({ name: 'Page Break', type: 'opensource', slug: 'pagebreak' })
+      getMetadata: () => ({ name: 'Page Break', type: 'opensource', slug: PLUGIN_CODE })
     };
   });
 };

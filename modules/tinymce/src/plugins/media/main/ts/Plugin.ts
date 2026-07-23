@@ -8,8 +8,10 @@ import * as ResolveName from './core/ResolveName';
 import * as Selection from './core/Selection';
 import * as Buttons from './ui/Buttons';
 
+const PLUGIN_CODE = 'media';
+
 export default (): void => {
-  PluginManager.add('media', (editor) => {
+  PluginManager.add(PLUGIN_CODE, (editor) => {
     Options.register(editor);
     Commands.register(editor);
     Buttons.register(editor);
@@ -18,7 +20,7 @@ export default (): void => {
     Selection.setup(editor);
     return {
       ...Api.get(editor),
-      getMetadata: () => ({ name: 'Media', type: 'opensource', slug: 'media' })
+      getMetadata: () => ({ name: 'Media', type: 'opensource', slug: PLUGIN_CODE })
     };
   });
 };

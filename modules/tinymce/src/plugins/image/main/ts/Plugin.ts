@@ -5,15 +5,17 @@ import * as Options from './api/Options';
 import * as FilterContent from './core/FilterContent';
 import * as Buttons from './ui/Buttons';
 
+const PLUGIN_CODE = 'image';
+
 export default (): void => {
-  PluginManager.add('image', (editor) => {
+  PluginManager.add(PLUGIN_CODE, (editor) => {
     Options.register(editor);
     FilterContent.setup(editor);
     Buttons.register(editor);
     Commands.register(editor);
 
     return {
-      getMetadata: () => ({ name: 'Image', type: 'opensource', slug: 'image' })
+      getMetadata: () => ({ name: 'Image', type: 'opensource', slug: PLUGIN_CODE })
     };
   });
 };

@@ -7,8 +7,10 @@ import * as Options from './api/Options';
 import * as Bindings from './core/Bindings';
 import * as Buttons from './ui/Buttons';
 
+const PLUGIN_CODE = 'visualblocks';
+
 export default (): void => {
-  PluginManager.add('visualblocks', (editor, pluginUrl) => {
+  PluginManager.add(PLUGIN_CODE, (editor, pluginUrl) => {
     Options.register(editor);
 
     const enabledState = Cell(false);
@@ -17,7 +19,7 @@ export default (): void => {
     Bindings.setup(editor, pluginUrl, enabledState);
 
     return {
-      getMetadata: () => ({ name: 'Visual Blocks', type: 'opensource', slug: 'visualblocks' })
+      getMetadata: () => ({ name: 'Visual Blocks', type: 'opensource', slug: PLUGIN_CODE })
     };
   });
 };

@@ -7,8 +7,10 @@ import * as CharMap from './core/CharMap';
 import * as Autocompletion from './ui/Autocompletion';
 import * as Buttons from './ui/Buttons';
 
+const PLUGIN_CODE = 'charmap';
+
 export default (): void => {
-  PluginManager.add('charmap', (editor) => {
+  PluginManager.add(PLUGIN_CODE, (editor) => {
     Options.register(editor);
     const charMap = CharMap.getCharMap(editor);
     Commands.register(editor, charMap);
@@ -18,7 +20,7 @@ export default (): void => {
 
     return {
       ...Api.get(editor),
-      getMetadata: () => ({ name: 'Character Map', type: 'opensource', slug: 'charmap' })
+      getMetadata: () => ({ name: 'Character Map', type: 'opensource', slug: PLUGIN_CODE })
     };
   });
 };
