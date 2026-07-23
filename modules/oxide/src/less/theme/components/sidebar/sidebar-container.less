@@ -18,9 +18,18 @@
 
 .tox {
   .tox-sidebar-wrap {
-    display: flex;
-    flex-direction: row;
     flex-grow: 1;
+
+    &:not(&--resizable) {
+      display: flex;
+      flex-direction: row;
+    }
+
+    &--resizable {
+      display: grid;
+      grid-template-columns: minmax(var(--tox-private-min-editing-area-width), 1fr) minmax(0, max-content);
+    }
+
     // TC-310: Without the min-height setting, browsers like Firefox default to
     // min-height: auto, and the sidebar-wrap will grow in height as soon
     // as the sidebar contents does. This happens even if the sidebar contents has

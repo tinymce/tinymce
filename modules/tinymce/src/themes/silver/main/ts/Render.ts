@@ -27,6 +27,7 @@ import * as SilverContextMenu from './ui/menus/contextmenu/SilverContextMenu';
 import type { MenuRegistry } from './ui/menus/menubar/Integration';
 import * as TableSelectorHandles from './ui/selector/TableSelectorHandles';
 import * as Sidebar from './ui/sidebar/Sidebar';
+import * as SidebarResize from './ui/sidebar/SidebarResize';
 import * as EditorSize from './ui/sizing/EditorSize';
 import * as Utils from './ui/sizing/Utils';
 import { renderStatusbar } from './ui/statusbar/Statusbar';
@@ -277,7 +278,10 @@ const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
     return {
       dom: {
         tag: 'div',
-        classes: [ 'tox-sidebar-wrap', 'tox-sidebar-wrap--resizable' ]
+        classes: [ 'tox-sidebar-wrap', 'tox-sidebar-wrap--resizable' ],
+        styles: {
+          [SidebarResize.minEditingAreaWidthProperty]: Utils.numToPx(SidebarResize.minEditingAreaWidth)
+        }
       },
       components: [
         partSocket,
