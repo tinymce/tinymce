@@ -64,6 +64,10 @@ export interface ObjectResizeEvent {
   origin: string;
 }
 
+export interface SidebarResizedEvent {
+  width: number;
+}
+
 export interface ObjectSelectedEvent {
   target: Node;
   targetClone?: Node;
@@ -194,6 +198,8 @@ export interface EditorEventMap extends Omit<NativeEventMap, 'blur' | 'focus'> {
   AfterScrollIntoView: ScrollIntoViewEvent;
   ObjectResized: ObjectResizeEvent;
   ObjectResizeStart: ObjectResizeEvent;
+  SidebarResizeStart: { };
+  SidebarResized: SidebarResizedEvent;
   SwitchMode: SwitchModeEvent;
   ScrollWindow: Event;
   ResizeWindow: UIEvent;
