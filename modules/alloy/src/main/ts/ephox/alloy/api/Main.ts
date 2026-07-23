@@ -57,6 +57,7 @@ import { Receiving } from './behaviour/Receiving';
 import { Reflecting } from './behaviour/Reflecting';
 import { Replacing } from './behaviour/Replacing';
 import { Representing } from './behaviour/Representing';
+import { Resizing } from './behaviour/Resizing';
 import { Sandboxing } from './behaviour/Sandboxing';
 import { Sliding } from './behaviour/Sliding';
 import { Streaming } from './behaviour/Streaming';
@@ -181,6 +182,7 @@ export {
   Reflecting,
   Replacing,
   Representing,
+  Resizing,
   Sandboxing,
   Sliding,
   Streaming,
