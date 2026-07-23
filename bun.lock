@@ -345,7 +345,7 @@
     },
     "modules/tinymce": {
       "name": "tinymce",
-      "version": "8.7.0",
+      "version": "8.8.1",
       "dependencies": {
         "@ephox/acid": "^8.0.0",
         "@ephox/agar": "^10.0.0",
@@ -356,7 +356,7 @@
         "@tinymce/oxide-icons-default": "^4.0.0",
         "@tinymce/persona": "^1.0.0",
         "@types/prismjs": "^1.16.6",
-        "dompurify": "3.4.11",
+        "dompurify": "3.4.12",
         "prismjs": "^1.27.0",
       },
       "devDependencies": {
@@ -1798,7 +1798,7 @@
 
     "domhandler": ["domhandler@4.3.1", "", { "dependencies": { "domelementtype": "^2.2.0" } }, "sha512-GrwoxYN+uWlzO8uhUXRl0P+kHE4GtVPfYzVLcUxPL7KNdHKj66vvlhiweIHqYYXWlw+T8iLMp42Lm67ghw4WMQ=="],
 
-    "dompurify": ["dompurify@3.4.11", "", { "optionalDependencies": { "@types/trusted-types": "^2.0.7" } }, "sha512-zhlUV12GsaRzMsf9q5M254YhA4+VuF0fG+QFqu6aYpoGlKtz+w8//jBcGVYBgQkR5GHjUomejY84AV+/uPbWdw=="],
+    "dompurify": ["dompurify@3.4.12", "", { "optionalDependencies": { "@types/trusted-types": "^2.0.7" } }, "sha512-zQvGet8Z2sWbQhCmfFz/T5QWH2oBmjnqK3qvOjaqaNLrLEF912WamU+ohnTp0TCep/MFVHpdJuCZEdFOdTnEFg=="],
 
     "domutils": ["domutils@2.8.0", "", { "dependencies": { "dom-serializer": "^1.0.1", "domelementtype": "^2.2.0", "domhandler": "^4.2.0" } }, "sha512-w96Cjofp72M5IIhpjgobBimYEfoPjx1Vx0BSX9P30WBdZW2WIKU0T1Bd0kz2eNZ9ikjKgHbEyKx8BB6H1L3h3A=="],
 

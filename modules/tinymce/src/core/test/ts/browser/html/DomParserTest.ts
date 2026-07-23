@@ -535,6 +535,12 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
         );
       });
 
+      it('TINYMCE-14701: Remove broken elements', () => {
+        const parser = DomParser(scenario.settings, Schema());
+        const root = parser.parse('<p>ab<c</p><p>ab<bc</p>');
+        assert.equal(serializer.serialize(root), '<p>ab</p><p>ab</p>', 'Remove broken element');
+      });
+
       it('Self closing list elements', () => {
         const schema = Schema();
 
