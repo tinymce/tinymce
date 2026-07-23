@@ -1,4 +1,4 @@
-import { Arr, Fun, Obj, Type } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optional, Type } from '@ephox/katamari';
 import { PredicateExists, SugarElement, SugarElements } from '@ephox/sugar';
 
 import type DOMUtils from '../api/dom/DOMUtils';
@@ -291,14 +291,23 @@ const applyFormatAction = (ed: Editor, name: string, vars?: FormatVars, node?: N
     });
   };
 
-  // TODO: TINY-9142: Remove this to make nested noneditable formatting work
   const targetNode = FormatUtils.isNode(node) ? node : selection.getNode();
   if (dom.getContentEditable(targetNode) === 'false' && !FormatUtils.isWrappableNoneditable(ed, targetNode)) {
     // node variable is used by other functions above in the same scope so need to set it here
     node = targetNode;
     applyNodeStyle(formatList, node);
-    if (FormatUtils.isBlockFormat(format) && !dom.isBlock(targetNode)) {
-      const parentBlock = dom.getParent(targetNode, dom.isBlock);
+
+    if (FormatUtils.hasEditableDescendants(dom, node)) {
+      Arr.each(FormatUtils.getEditableDescendants(dom, node), (island) => {
+        const rng = dom.createRng();
+        rng.selectNodeContents(island);
+        applyRngStyle(dom, rng, true);
+      });
+      return;
+    }
+
+    if (FormatUtils.isBlockFormat(format) && !dom.isBlock(node)) {
+      const parentBlock = dom.getParent(node, dom.isBlock);
       if (dom.isEditable(parentBlock)) {
         const wrapperElementName = format.block;
         if (parentBlock.nodeName.toLowerCase() === wrapperElementName.toLowerCase()) {
@@ -308,6 +317,12 @@ const applyFormatAction = (ed: Editor, name: string, vars?: FormatVars, node?: N
           ApplyElementFormat.setElementFormat(ed, elm, format, vars, node);
         }
       }
+    } else {
+      const selectorFormats = Arr.filter(formatList, FormatUtils.isSelectorFormat);
+      Optional.from(dom.getParent(node, (candidate) =>
+        Arr.exists(selectorFormats, (fmt) => dom.is(candidate, fmt.selector))))
+        .filter(dom.isEditable)
+        .each((parent) => applyNodeStyle(formatList, parent));
     }
     Events.fireFormatApply(ed, name, node, vars);
     return;
@@ -363,4 +378,3 @@ export const applyFormat = (editor: Editor, name: string, vars?: FormatVars, nod
     applyFormatAction(editor, name, vars, node);
   }
 };
-

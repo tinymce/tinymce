@@ -149,6 +149,16 @@ const isWrapNoneditableTarget = (editor: Editor, node: Node): boolean => {
   return Selectors.is(SugarElement.fromDom(node), selector);
 };
 
+const hasEditableDescendants = (dom: DOMUtils, node: Node): boolean =>
+  dom.select('[contenteditable="true"]', node).length > 0;
+
+const getEditableDescendants = (dom: DOMUtils, parent: Node): Node[] => Arr.foldl(Arr.from(parent.childNodes), (editableDescendants, child) => [
+  ...editableDescendants,
+  ...(NodeType.isElement(child) && dom.getContentEditable(child) === 'true'
+    ? [ child ]
+    : getEditableDescendants(dom, child))
+], [] as Node[]);
+
 // A noneditable element is wrappable if it:
 // - is valid target (has data-mce-cef-wrappable attribute or matches selector from option)
 // - has no editable descendants - removing formats in the editable region can result in the wrapped noneditable being split which is undesirable
@@ -159,7 +169,7 @@ const isWrappableNoneditable = (editor: Editor, node: Node): boolean => {
     isElementNode(node) &&
     dom.getContentEditable(node) === 'false' &&
     isWrapNoneditableTarget(editor, node) &&
-    dom.select('[contenteditable="true"]', node).length === 0
+    !hasEditableDescendants(dom, node)
   );
 };
 
@@ -347,6 +357,8 @@ export {
   isWhiteSpaceNode,
   isEmptyTextNode,
   isWrappableNoneditable,
+  hasEditableDescendants,
+  getEditableDescendants,
   replaceVars,
   isEq,
   normalizeStyleValue,

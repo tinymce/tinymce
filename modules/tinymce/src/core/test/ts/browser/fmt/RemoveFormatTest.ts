@@ -263,6 +263,47 @@ describe('browser.tinymce.core.fmt.RemoveFormatTest', () => {
     });
   });
 
+  context('Remove format with noneditable content', () => {
+    it('TINY-9142: should remove an inline format from a nested editable island, once, from its outermost editable node', () => {
+      const editor = hook.editor();
+      editor.setContent(
+        `<p>a<span contenteditable="false">CEF-<span contenteditable="true"><strong>bold</strong> <em>me</em> please</span>-text</span>b</p>`
+      );
+      TinySelections.select(editor, 'span[contenteditable="false"]', []);
+      editor.formatter.remove('bold');
+      TinyAssertions.assertContent(
+        editor,
+        `<p>a<span contenteditable="false">CEF-<span contenteditable="true">bold <em>me</em> please</span>-text</span>b</p>`
+      );
+    });
+
+    it('TINY-9142: should leave a noneditable element untouched when removing an inline format and it has no editable descendants', () => {
+      const editor = hook.editor();
+      const initialContent = `<p>a<span contenteditable="false"><strong>CEF</strong></span>b</p>`;
+      editor.setContent(initialContent);
+      TinySelections.select(editor, 'span[contenteditable="false"]', []);
+      editor.formatter.remove('bold');
+      TinyAssertions.assertContent(editor, initialContent);
+    });
+
+    it('TINY-8687: should remove a selector format from the matching parent block when a noneditable inline element is selected', () => {
+      const editor = hook.editor();
+      editor.setContent(`<p style="text-align: right;">a<span contenteditable="false">CEF</span>b</p>`);
+      TinySelections.select(editor, 'span[contenteditable="false"]', []);
+      editor.formatter.remove('alignright');
+      TinyAssertions.assertContent(editor, `<p>a<span contenteditable="false">CEF</span>b</p>`);
+    });
+
+    it('TINY-9142: should not remove a selector format from an editable ancestor outside a doubly-nested noneditable region', () => {
+      const editor = hook.editor();
+      const initialContent = `<div contenteditable="false"><p style="text-align: right;">a<span contenteditable="false">CEF</span>b</p></div>`;
+      editor.setContent(initialContent);
+      TinySelections.select(editor, 'div[contenteditable="false"] span[contenteditable="false"]', []);
+      editor.formatter.remove('alignright');
+      TinyAssertions.assertContent(editor, initialContent);
+    });
+  });
+
   it('TINY-9678: Should be a noop if selection is not in an editable context', () => {
     TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
       const initialContent = '<p><strong>test</strong></p><p contenteditable="true"><strong>editable</strong></p>';
