@@ -270,7 +270,8 @@ const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
       dom: {
         tag: 'div',
         classes: [ 'tox-sidebar' ]
-      }
+      },
+      configuredSidebarWidth: Options.getSidebarWidth(editor)
     });
 
     return {

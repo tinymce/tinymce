@@ -11,7 +11,7 @@ import type Editor from 'tinymce/core/api/Editor';
 import * as SidebarUtils from '../../module/SidebarUtils';
 
 describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
-  const setupEditorHook = (configOverrides: { sidebar_show?: string } = {}) =>
+  const setupEditorHook = (configOverrides: { sidebar_show?: string; sidebar_min_width?: number; sidebar_max_width?: number; sidebar_width?: number } = {}) =>
     TinyHooks.bddSetupLight<Editor>({
       base_url: '/project/tinymce/js/tinymce',
       toolbar: 'sidebarone sidebartwo',
@@ -36,15 +36,15 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
     assert.equal(Width.get(sidebar), expectedWidth, message);
   };
 
-  const resetSidebarWidth = async () => {
-    const initialWidth = 440;
+  const resetSidebarWidth = async (initialWidth: number) => {
     const sidebar = SidebarUtils.getSidebar();
     await SidebarUtils.resizeSidebarBy([ Width.get(sidebar) - initialWidth, 0 ]);
   };
 
   context('TINYMCE-14527: Resizing the sidebar', () => {
-    setupEditorHook({ sidebar_show: 'sidebarone' });
-    afterEach(resetSidebarWidth);
+    const initialWidth = 440;
+    setupEditorHook({ sidebar_show: 'sidebarone', sidebar_width: initialWidth, sidebar_min_width: 300, sidebar_max_width: 800 });
+    afterEach(async () => resetSidebarWidth(initialWidth));
 
     it('TINYMCE-14527: should resize the sidebar by dragging the handle', async () => {
       const resizeHandle = SidebarUtils.getSidebarResizeHandle();
@@ -103,33 +103,50 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
   });
 
   context('TINYMCE-14527: Constraints', () => {
-    setupEditorHook({ sidebar_show: 'sidebarone' });
+    context('defaults', () => {
+      setupEditorHook({ sidebar_show: 'sidebarone' });
 
-    it('TINYMCE-14527: should respect initial and the min and max width constraints', async () => {
-      assertSidebarWidth(440, 'The sidebar should start at the initial width');
+      it('TINYMCE-14527: should respect initial and the min and max width constraints', async () => {
+        assertSidebarWidth(440, 'The sidebar should start at the initial width');
 
-      await SidebarUtils.resizeSidebarBy([ -1000, 0 ]);
-      assertSidebarWidth(800, 'The sidebar should be capped at the max width');
+        await SidebarUtils.resizeSidebarBy([ -1000, 0 ]);
+        assertSidebarWidth(800, 'The sidebar should be capped at the max width');
 
-      await SidebarUtils.resizeSidebarBy([ 1000, 0 ]);
-      assertSidebarWidth(300, 'The sidebar should be capped at the min width');
+        await SidebarUtils.resizeSidebarBy([ 1000, 0 ]);
+        assertSidebarWidth(300, 'The sidebar should be capped at the min width');
+      });
+    });
+
+    context('set options', () => {
+      setupEditorHook({ sidebar_show: 'sidebarone', sidebar_min_width: 100, sidebar_max_width: 600, sidebar_width: 200 });
+
+      it('TINYMCE-14527: should respect initial and the min and max width constraints', async () => {
+        assertSidebarWidth(200, 'The sidebar should start at the initial width');
+
+        await SidebarUtils.resizeSidebarBy([ -1000, 0 ]);
+        assertSidebarWidth(600, 'The sidebar should be capped at the max width');
+
+        await SidebarUtils.resizeSidebarBy([ 1000, 0 ]);
+        assertSidebarWidth(100, 'The sidebar should be capped at the min width');
+      });
     });
   });
 
   context('TINYMCE-14527: Persistence', () => {
-    const hook = setupEditorHook();
+    const initialWidth = 440;
+    const hook = setupEditorHook({ sidebar_width: 440, sidebar_min_width: 300, sidebar_max_width: 800 });
 
     afterEach(async () => {
       const editor = hook.editor();
       const currentSidebar = editor.queryCommandValue('ToggleSidebar');
       if (currentSidebar) {
-        await resetSidebarWidth();
+        await resetSidebarWidth(initialWidth);
         editor.execCommand('ToggleSidebar', false, editor.queryCommandValue('ToggleSidebar'));
         await SidebarUtils.pWaitForSidebarClosed();
       } else {
         editor.execCommand('ToggleSidebar', false, 'sidebarone');
         await SidebarUtils.pWaitForSidebarOpen();
-        await resetSidebarWidth();
+        await resetSidebarWidth(initialWidth);
         editor.execCommand('ToggleSidebar', false, 'sidebarone');
         await SidebarUtils.pWaitForSidebarClosed();
       }
