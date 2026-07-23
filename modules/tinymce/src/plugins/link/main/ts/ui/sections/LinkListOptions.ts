@@ -31,12 +31,8 @@ const getLinks = (editor: Editor): Promise<Optional<ListItem[]>> => {
       resolve(Optional.from(linkList));
     }
   }).then((optItems) => optItems.bind(ListOptions.sanitizeWith(extractor)).map((items) => {
-    if (items.length > 0) {
-      const noneItem: ListItem[] = [{ text: 'None', value: '' }];
-      return noneItem.concat(items);
-    } else {
-      return items;
-    }
+    const noneItem: ListItem[] = [{ text: 'None', value: '' }];
+    return noneItem.concat(items);
   }));
 };
 
