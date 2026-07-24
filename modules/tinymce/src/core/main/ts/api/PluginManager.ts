@@ -6,11 +6,11 @@ interface BasePluginMetadata {
   hidden?: boolean;
 }
 
-export interface UrlPluginMetadata extends BasePluginMetadata {
+interface UrlPluginMetadata extends BasePluginMetadata {
   url: string;
 }
 
-export interface TypedPluginMetadata extends BasePluginMetadata {
+interface TypedPluginMetadata extends BasePluginMetadata {
   type: 'premium' | 'opensource';
   slug: string;
 }
