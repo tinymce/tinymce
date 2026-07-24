@@ -35,7 +35,7 @@ const Image: FC<ProfileImageProps> = ({ src, alt }) => {
   return (
     <div className={Bem.element('tox-profile', 'image')}>
       <div className="tox-user-avatar">
-        <img src={src} alt={alt} role="presentation" />
+        <img src={src} alt={alt} />
       </div>
     </div>
   );

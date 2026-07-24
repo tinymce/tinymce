@@ -359,7 +359,7 @@ Common use case: Activity feeds, comment threads, revision history.
               <Profile.Body>
                 <Profile.Heading>John Mac Giolla Phádraig</Profile.Heading>
                 <Profile.Subheading>
-                  {timestamp} • {count} <Icon icon="feedback" />
+                  {timestamp} • {count} <Icon icon="feedback" aria-label="comments" />
                 </Profile.Subheading>
               </Profile.Body>
             </Profile.Root>
@@ -367,7 +367,7 @@ Common use case: Activity feeds, comment threads, revision history.
           <Card.Body>
             <div>
               <p style={{ margin: '0 0 8px 0', fontWeight: 'bold' }}>Deleted text</p>
-              <p style={{ margin: 0 }}>"In many ways"</p>
+              <p style={{ margin: 0 }}>In many ways</p>
             </div>
           </Card.Body>
         </Card.Root>
@@ -402,7 +402,7 @@ Demonstrates consistent layout across multiple items.
         timestamp: 'May 18, 9:12 AM',
         count: 2,
         title: 'Deleted text',
-        content: '"In many ways"'
+        content: 'In many ways'
       },
       {
         user: 'Jane Smith',
@@ -436,7 +436,7 @@ Demonstrates consistent layout across multiple items.
                       ? `${card.timestamp} • ${card.count} `
                       : card.timestamp
                     }
-                    {card.count > 0 && <Icon icon="feedback" />}
+                    {card.count > 0 && <Icon icon="feedback" aria-label="comments" />}
                   </Profile.Subheading>
                 </Profile.Body>
               </Profile.Root>

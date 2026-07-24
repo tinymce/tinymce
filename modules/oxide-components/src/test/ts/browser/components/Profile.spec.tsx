@@ -1,6 +1,7 @@
 import * as Profile from 'oxide-components/components/profile/Profile';
 import { UniverseProvider } from 'oxide-components/main';
 import * as Bem from 'oxide-components/utils/Bem';
+import type { ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 
@@ -10,7 +11,7 @@ describe('browser.components.ProfileTest', () => {
     getIcon,
   };
 
-  const wrapper = ({ children }: { children: React.ReactNode }) => {
+  const wrapper = ({ children }: { children: ReactNode }) => {
     return (
       <div className={Bem.block('tox')}>
         <UniverseProvider resources={mockUniverse}>
@@ -53,6 +54,8 @@ describe('browser.components.ProfileTest', () => {
       expect(getByText('2 hours ago').element()).toBeTruthy();
       expect(container.querySelector('.tox-profile__image')).toBeTruthy();
       expect(container.querySelector('.tox-profile__body')).toBeTruthy();
+      expect(container.querySelector('.tox-profile__heading')).toBeTruthy();
+      expect(container.querySelector('.tox-profile__subheading')).toBeTruthy();
     });
 
     it('Should render Profile.Image with correct attributes', async () => {
@@ -67,7 +70,6 @@ describe('browser.components.ProfileTest', () => {
       expect(img).toBeTruthy();
       expect(img?.getAttribute('src')).toBe(AVATAR_URL);
       expect(img?.getAttribute('alt')).toBe('John Doe');
-      expect(img?.getAttribute('role')).toBe('presentation');
     });
 
     it('Should render Profile without Image', async () => {
