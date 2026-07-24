@@ -7,11 +7,12 @@ export default (): void => {
   const Plugin = (_editor: Editor, _url: string) => {
     return {
       getMetadata: Fun.constant<PluginMetadata>({
-        name: 'Fake',
-        url: 'http://www.fake.com'
+        name: 'Opensource Fake',
+        type: 'opensource',
+        slug: 'opensource-fake-docs'
       })
     };
   };
 
-  PluginManager.add('fake', Plugin);
+  PluginManager.add('opensourcefake', Plugin);
 };

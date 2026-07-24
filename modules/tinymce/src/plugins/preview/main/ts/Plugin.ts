@@ -9,9 +9,11 @@ import * as Buttons from './ui/Buttons';
 
 declare const tinymce: TinyMCE;
 
+const PLUGIN_CODE = 'preview';
+
 export default (): void => {
 
-  PluginManager.add('preview', (editor) => {
+  PluginManager.add(PLUGIN_CODE, (editor) => {
     const getContentCssResources = (): ContentCssResource[] =>
       Arr.map(editor.contentCSS, (key) =>
         Optional.from(tinymce.Resource.get(key))
@@ -21,5 +23,9 @@ export default (): void => {
 
     Commands.register(editor, getContentCssResources);
     Buttons.register(editor);
+
+    return {
+      getMetadata: () => ({ name: 'Preview', type: 'opensource', slug: PLUGIN_CODE })
+    };
   });
 };

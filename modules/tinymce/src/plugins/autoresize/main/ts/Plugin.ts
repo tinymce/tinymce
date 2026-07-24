@@ -13,8 +13,10 @@ import * as Resize from './core/Resize';
  * @private
  */
 
+const PLUGIN_CODE = 'autoresize';
+
 export default (): void => {
-  PluginManager.add('autoresize', (editor) => {
+  PluginManager.add(PLUGIN_CODE, (editor) => {
     Options.register(editor);
     // If autoresize is enabled, disable resize if the user hasn't explicitly enabled it
     // TINY-8288: This currently does nothing because of a bug in the theme
@@ -30,5 +32,9 @@ export default (): void => {
       Commands.register(editor, oldSize);
       Resize.setup(editor, oldSize);
     }
+
+    return {
+      getMetadata: () => ({ name: 'Autoresize', type: 'opensource', slug: PLUGIN_CODE })
+    };
   });
 };

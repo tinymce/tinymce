@@ -7,8 +7,10 @@ import * as Buttons from './ui/Buttons';
 import * as Dialog from './ui/Dialog';
 import * as Utils from './util/Utils';
 
+const PLUGIN_CODE = 'codesample';
+
 export default (): void => {
-  PluginManager.add('codesample', (editor) => {
+  PluginManager.add(PLUGIN_CODE, (editor) => {
     Options.register(editor);
     FilterContent.setup(editor);
     Buttons.register(editor);
@@ -19,5 +21,9 @@ export default (): void => {
         Dialog.open(editor);
       }
     });
+
+    return {
+      getMetadata: () => ({ name: 'Code Sample', type: 'opensource', slug: PLUGIN_CODE })
+    };
   });
 };

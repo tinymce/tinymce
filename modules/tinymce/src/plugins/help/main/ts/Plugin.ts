@@ -13,8 +13,10 @@ import * as KeyboardNavTabI18n from './ui/KeyboardNavTabI18n';
 export type TabSpecs = Record<string, DialogType.TabSpec>;
 export type CustomTabSpecs = Cell<TabSpecs>;
 
+const PLUGIN_CODE = 'help';
+
 export default (): void => {
-  PluginManager.add('help', (editor, pluginUrl) => {
+  PluginManager.add(PLUGIN_CODE, (editor, pluginUrl) => {
     const customTabs: CustomTabSpecs = Cell({});
     const api = Api.get(customTabs);
 
@@ -25,6 +27,9 @@ export default (): void => {
     editor.shortcuts.add('Alt+0', 'Open help dialog', 'mceHelp');
     KeyboardNavTabI18n.initI18nLoad(editor, pluginUrl);
 
-    return api;
+    return {
+      ...api,
+      getMetadata: () => ({ name: 'Help', type: 'opensource', slug: PLUGIN_CODE })
+    };
   });
 };

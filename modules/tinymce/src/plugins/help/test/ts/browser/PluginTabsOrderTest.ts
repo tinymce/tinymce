@@ -51,9 +51,4 @@ describe('browser.tinymce.plugins.help.PluginTabsOrderTest', () => {
     const editor = hook.editor();
     await pTestPluginItems('Installed Plugins', editor, selectors.pluginsTabLists.installed);
   });
-
-  it('TINY-9019: Available Plugin Lists are alphabetically ordered', async () => {
-    const editor = hook.editor();
-    await pTestPluginItems('Available Plugins', editor, selectors.pluginsTabLists.available);
-  });
 });

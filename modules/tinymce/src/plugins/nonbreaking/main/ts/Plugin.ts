@@ -12,11 +12,17 @@ import * as Buttons from './ui/Buttons';
  * @private
  */
 
+const PLUGIN_CODE = 'nonbreaking';
+
 export default (): void => {
-  PluginManager.add('nonbreaking', (editor) => {
+  PluginManager.add(PLUGIN_CODE, (editor) => {
     Options.register(editor);
     Commands.register(editor);
     Buttons.register(editor);
     Keyboard.setup(editor);
+
+    return {
+      getMetadata: () => ({ name: 'Nonbreaking', type: 'opensource', slug: PLUGIN_CODE })
+    };
   });
 };
