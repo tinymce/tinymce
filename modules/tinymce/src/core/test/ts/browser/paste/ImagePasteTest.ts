@@ -1,6 +1,6 @@
 import { Clipboard as AgarClipboard, Waiter } from '@ephox/agar';
 import { afterEach, beforeEach, describe, it } from '@ephox/bedrock-client';
-import { Fun, Singleton } from '@ephox/katamari';
+import { Arr, Fun, Singleton, Type } from '@ephox/katamari';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -90,10 +90,20 @@ describe('browser.tinymce.core.paste.ImagePasteTest', () => {
 
   const pAssertInputEvents = () => PasteEventUtils.pWaitForAndAssertInputEvents(lastBeforeInputEvent, lastInputEvent);
 
+  // Pasted images load asynchronously; wait for the img elements to finish loading
+  // so their load handlers don't settle after teardown and corrupt a later test.
+  const pWaitForImagesLoaded = (editor: Editor, count: number) =>
+    Waiter.pTryUntilPredicate('Wait for images to finish loading', () => {
+      const imgs = editor.dom.select('img') as HTMLImageElement[];
+      return imgs.length === count && Arr.forall(imgs, (img) => img.complete && img.naturalWidth > 0);
+    });
+
   it('TBA: pasteImages should set unique id in blobcache', async () => {
     const editor = hook.editor();
 
-    const hasCachedItem = (name: string) => !!editor.editorUpload.blobCache.get(name);
+    // The mceclip blob-id counter is module-level and advanced by any earlier image
+    // paste, so look entries up by data rather than asserting literal mceclipN ids.
+    const getCachedByData = (base64: string) => editor.editorUpload.blobCache.getByData(base64, 'image/gif');
 
     const event = mockEvent('paste', [
       base64ToBlob(base64ImgSrc, 'image/gif', 'image.gif'),
@@ -103,12 +113,18 @@ describe('browser.tinymce.core.paste.ImagePasteTest', () => {
 
     await pAssertInputEvents();
     await pWaitForSelector(editor, 'img');
-    await Waiter.pTryUntilPredicate('Wait for image to be cached', () => hasCachedItem('mceclip0') && hasCachedItem('mceclip1'));
+    await Waiter.pTryUntilPredicate('Wait for images to be cached', () =>
+      Type.isNonNullable(getCachedByData(base64ImgSrc)) && Type.isNonNullable(getCachedByData(base64ImgSrc2)));
 
-    const cachedBlob1 = editor.editorUpload.blobCache.get('mceclip0');
-    const cachedBlob2 = editor.editorUpload.blobCache.get('mceclip1');
+    const cachedBlob1 = getCachedByData(base64ImgSrc);
+    const cachedBlob2 = getCachedByData(base64ImgSrc2);
     assert.equal(cachedBlob1?.base64(), base64ImgSrc);
     assert.equal(cachedBlob2?.base64(), base64ImgSrc2);
+    assert.match(cachedBlob1?.id() ?? '', /^mceclip\d+$/, 'first image should have an mceclip id');
+    assert.match(cachedBlob2?.id() ?? '', /^mceclip\d+$/, 'second image should have an mceclip id');
+    assert.notEqual(cachedBlob1?.id(), cachedBlob2?.id(), 'pasted images should have unique ids');
+
+    await pWaitForImagesLoaded(editor, 2);
   });
 
   it('TBA: dropImages', async () => {
@@ -119,8 +135,9 @@ describe('browser.tinymce.core.paste.ImagePasteTest', () => {
     ]);
     Clipboard.pasteImageData(editor, event, editor.selection.getRng());
 
-    await pAssertInputEvents();
     await pWaitForSelector(editor, 'img');
+    await pWaitForImagesLoaded(editor, 1);
+    await pAssertInputEvents();
     TinyAssertions.assertContent(editor, '<p><img src=\"data:image/gif;base64,' + base64ImgSrc + '" width="100" height="100">a</p>');
     assert.strictEqual(editor.dom.select('img')[0].src.indexOf('blob:'), 0);
   });
