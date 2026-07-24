@@ -1,0 +1,50 @@
+@profile-heading-font-weight: 700;
+@profile-heading-font-size: @font-size-sm;
+@profile-heading-line-height: 18px;
+@profile-heading-text-color: @text-color;
+@profile-subheading-font-weight: normal;
+@profile-subheading-font-size: @font-size-xs;
+@profile-subheading-text-color: @text-color;
+@profile-gap: @pad-sm;
+
+.tox {
+  .tox-profile {
+    align-items: center;
+    display: flex;
+    gap: @profile-gap;
+  }
+
+  .tox-profile__image {
+    flex-shrink: 0;
+  }
+
+  .tox-profile__body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    flex: 1;
+  }
+
+  .tox-profile__heading {
+    color: @profile-heading-text-color;
+    font-size: @profile-heading-font-size;
+    font-weight: @profile-heading-font-weight;
+    line-height: @profile-heading-line-height;
+    text-transform: none;
+  }
+
+  .tox-profile__subheading {
+    color: @profile-subheading-text-color;
+    font-size: @profile-subheading-font-size;
+    font-weight: @profile-subheading-font-weight;
+    line-height: 1.5;
+    text-transform: none;
+
+    .tox-icon svg {
+      fill: contrast(@background-color, #222F3E80, #FFFFFF80);
+      transform: translate(0px, 8px);
+      margin-top: -10px;
+    }
+  }
+}
