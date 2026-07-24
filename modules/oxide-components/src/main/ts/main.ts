@@ -27,6 +27,7 @@ import { UniverseProvider } from './contexts/UniverseContext/UniverseProvider';
 import type { UniverseResources } from './contexts/UniverseContext/UniverseTypes';
 import * as KeyboardNavigationTypes from './keynav/keyboard/NavigationTypes';
 import * as KeyboardNavigationHooks from './keynav/KeyboardNavigationHooks';
+import * as KeyboardShortcuts from './shortcuts/UseKeyboardShortcuts';
 import * as Bem from './utils/Bem';
 import * as ContentUiBem from './utils/ContentUiBem';
 import * as FocusHelpers from './utils/FocusHelpers';
@@ -51,6 +52,7 @@ export {
   IconButton,
   KeyboardNavigationHooks,
   KeyboardNavigationTypes,
+  KeyboardShortcuts,
   Menu,
   MenuRenderer,
   Spinner,
