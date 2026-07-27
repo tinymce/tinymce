@@ -44,6 +44,21 @@
     width: var(--tox-private-requested-sidebar-width);
   }
 
+  // Freeze the pane content at its resolved width for the duration of the slide.
+  // The outer .tox-sidebar animates its own width, but the requested width can be
+  // clamped by the wrap's grid (the editing area has a minimum), so the pane's real
+  // width is only known once measured. We pin width, min-width to that measured value so
+  // the content box stays fixed while the container animates — otherwise text re-wraps,
+  // the height jumps, and it scrolls/flickers mid-animation. The pins are removed after
+  // the animation so the grid constraints can take over again.
+  .tox-sidebar-wrap--resizable .tox-sidebar--sliding-growing,
+  .tox-sidebar-wrap--resizable .tox-sidebar--sliding-shrinking {
+    .tox-sidebar__pane-container {
+      width: var(--tox-private-resolved-sidebar-width);
+      min-width: var(--tox-private-resolved-sidebar-width);
+    }
+  }
+
   .tox-sidebar__pane-container {
     display: flex;
   }

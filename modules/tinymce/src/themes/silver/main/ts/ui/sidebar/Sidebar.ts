@@ -245,9 +245,11 @@ const renderSidebar = (spec: SketchSpec): AlloySpec => ({
     AddEventsBehaviour.config('sidebar-sliding-events', [
       AlloyEvents.run<FixSizeEvent>(fixSize, (comp, se) => {
         Css.set(comp.element, 'width', se.event.width);
+        Css.set(comp.element, SidebarResize.resolvedWidthProperty, se.event.width);
       }),
       AlloyEvents.run(autoSize, (comp, _se) => {
         Css.remove(comp.element, 'width');
+        Css.remove(comp.element, SidebarResize.resolvedWidthProperty);
       })
     ])
   ])

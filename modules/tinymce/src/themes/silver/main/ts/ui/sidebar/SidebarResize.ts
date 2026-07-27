@@ -3,6 +3,7 @@ import { Css, type SugarElement } from '@ephox/sugar';
 import { numToPx } from '../sizing/Utils';
 
 export const requestedWidthProperty = '--tox-private-requested-sidebar-width';
+export const resolvedWidthProperty = '--tox-private-resolved-sidebar-width';
 
 export const minWidth = 300;
 export const maxWidth = 800;
