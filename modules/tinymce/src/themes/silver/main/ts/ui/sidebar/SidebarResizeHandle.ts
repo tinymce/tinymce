@@ -1,5 +1,5 @@
 import { type AlloyComponent, type AlloySpec, Behaviour, Dragging, Resizing } from '@ephox/alloy';
-import type { Optional } from '@ephox/katamari';
+import { Optionals, type Optional } from '@ephox/katamari';
 import { Height, SelectorFind, type SugarElement, SugarPosition, Width } from '@ephox/sugar';
 
 import type { SidebarSizeConstraints } from './Sidebar';
@@ -26,9 +26,11 @@ export const makeSidebarResizeHandle = (sizeConstraints: SidebarSizeConstraints)
         onDragStart: (handle) => {
           findSidebar(handle).each((sidebar) => {
             const sidebarWidth = Width.get(sidebar);
-            const availableMax = findSidebarWrap(handle)
-              .map((wrap) => Math.floor(Width.get(wrap)) - SidebarResize.minEditingAreaWidth)
-              .getOr(maxWidth);
+            const availableMax = Optionals.lift2(
+              findSidebarWrap(handle),
+              SidebarResize.getMinEditingAreaWidth(sidebar),
+              (wrap, minEditingAreaWidth) => Math.floor(Width.get(wrap)) - minEditingAreaWidth
+            ).getOr(maxWidth);
             const effectiveMax = Math.min(maxWidth, availableMax);
             // When the editor is too narrow to honour both the sidebar's configured minimum
             // and the editing area's minimum, the range is unsatisfiable. Skip the resize so a
