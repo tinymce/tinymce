@@ -324,7 +324,7 @@ describe('browser.tinymce.core.fmt.FormatNoneditableTest', () => {
               await pTest(editor, [
                 {
                   select: selectNoneditableSpan,
-                  expectedHtml: initialHtml,
+                  expectedHtml: `<p>first ${noneditableBeforeHtml}<span contenteditable="true"><${format.html}>editable</${format.tag}></span>${noneditableAfterHtml} third</p>`,
                   pAssertAfter: async () => {
                     await pAssertToolbar(false)(editor);
                     TinyAssertions.assertContentPresence(editor, { 'span[contenteditable="false"][data-mce-selected]': 1 });
@@ -379,8 +379,8 @@ describe('browser.tinymce.core.fmt.FormatNoneditableTest', () => {
                 },
                 {
                   select: selectNoneditableSpan,
-                  // Should remain the same
-                  expectedHtml: `<p>first ${noneditableBeforeHtml}<span contenteditable="true"><${format.html}>editable</${format.tag}></span>${noneditableAfterHtml} third</p>`,
+                  // Should toggle off
+                  expectedHtml: `<p>first ${noneditableBeforeHtml}<span contenteditable="true">editable</span>${noneditableAfterHtml} third</p>`,
                   pAssertAfter: pAssertToolbar(false)
                 },
               ]);
@@ -743,13 +743,20 @@ describe('browser.tinymce.core.fmt.FormatNoneditableTest', () => {
     });
 
     context('noneditable inline elements with selector formats', () => {
-      // TODO: TINY-9142 Reenable when Jira is done
-      it.skip('TINY-8687: should apply selector format to matching parent block when a noneditable inline element is selected', () => {
+      it('TINY-8687: should apply selector format to matching parent block when a noneditable inline element is selected', () => {
         const editor = hook.editor();
         editor.setContent(`<p>a<span contenteditable="false">CEF</span>b</p>`);
         TinySelections.select(editor, 'span', []);
         editor.formatter.apply('alignright');
         TinyAssertions.assertContent(editor, `<p style="text-align: right;">a<span contenteditable="false">CEF</span>b</p>`);
+      });
+
+      it('TINY-9142: should not apply selector format to an editable ancestor outside a doubly-nested noneditable region', () => {
+        const editor = hook.editor();
+        editor.setContent(`<div contenteditable="false"><p>a<span contenteditable="false">CEF</span>b</p></div>`);
+        TinySelections.select(editor, 'div[contenteditable="false"] span', []);
+        editor.formatter.apply('alignright');
+        TinyAssertions.assertContent(editor, `<div contenteditable="false">\n<p>a<span contenteditable="false">CEF</span>b</p>\n</div>`);
       });
 
       it('TINY-8687: should apply selector format to matching parent block when selection is within a nested noneditable inline element', () => {
@@ -816,6 +823,66 @@ describe('browser.tinymce.core.fmt.FormatNoneditableTest', () => {
         TinySelections.select(editor, 'span[contenteditable="false"]', []);
         editor.formatter.apply('h1');
         TinyAssertions.assertContent(editor, `<h1>a<span contenteditable="false">CEF</span>b</h1>`);
+      });
+    });
+
+    context('noneditable inline elements with nested editable islands and inline formats', () => {
+      it('TINY-9142: should apply an inline format to a nested editable island once, from its outermost editable node', () => {
+        const editor = hook.editor();
+        editor.setContent(`<p>a<span contenteditable="false">CEF-<span contenteditable="true">bold <em>me</em> please</span>-text</span>b</p>`);
+        TinySelections.select(editor, 'span[contenteditable="false"]', []);
+        editor.formatter.apply('bold');
+        TinyAssertions.assertContent(
+          editor,
+          `<p>a<span contenteditable="false">CEF-<span contenteditable="true"><strong>bold <em>me</em> please</strong></span>-text</span>b</p>`
+        );
+      });
+
+      it('TINY-9142: should leave a noneditable element untouched when it has no editable descendants', () => {
+        const editor = hook.editor();
+        editor.setContent(`<p>a<span contenteditable="false">CEF</span>b</p>`);
+        TinySelections.select(editor, 'span[contenteditable="false"]', []);
+        editor.formatter.apply('bold');
+        TinyAssertions.assertContent(editor, `<p>a<span contenteditable="false">CEF</span>b</p>`);
+      });
+
+      it('TINY-9142: should not apply an inline format past an outer noneditable boundary when the island is doubly nested', () => {
+        const editor = hook.editor();
+        editor.setContent(`<div contenteditable="false"><p>a<span contenteditable="false">CEF-<span contenteditable="true">you can't bold me</span>-text</span>b</p></div>`);
+        TinySelections.select(editor, 'div[contenteditable="false"] span[contenteditable="false"]', []);
+        editor.formatter.apply('bold');
+        TinyAssertions.assertContent(
+          editor,
+          `<div contenteditable="false">\n<p>a<span contenteditable="false">CEF-<span contenteditable="true">you can't bold me</span>-text</span>b</p>\n</div>`
+        );
+      });
+    });
+
+    context('toggling formats on a noneditable target with an already-formatted editable island', () => {
+      it('TINY-9142: should toggle an inline format off when the nested editable island already has it applied', () => {
+        const editor = hook.editor();
+        editor.setContent(
+          `<p>a<span contenteditable="false">CEF-<span contenteditable="true"><strong>bold me</strong></span>-text</span>b</p>`
+        );
+        TinySelections.select(editor, 'span[contenteditable="false"]', []);
+        editor.formatter.toggle('bold');
+        TinyAssertions.assertContent(
+          editor,
+          `<p>a<span contenteditable="false">CEF-<span contenteditable="true">bold me</span>-text</span>b</p>`
+        );
+      });
+
+      it('TINY-9142: should toggle an inline format on when the nested editable island does not have it applied', () => {
+        const editor = hook.editor();
+        editor.setContent(
+          `<p>a<span contenteditable="false">CEF-<span contenteditable="true">bold me</span>-text</span>b</p>`
+        );
+        TinySelections.select(editor, 'span[contenteditable="false"]', []);
+        editor.formatter.toggle('bold');
+        TinyAssertions.assertContent(
+          editor,
+          `<p>a<span contenteditable="false">CEF-<span contenteditable="true"><strong>bold me</strong></span>-text</span>b</p>`
+        );
       });
     });
   });
