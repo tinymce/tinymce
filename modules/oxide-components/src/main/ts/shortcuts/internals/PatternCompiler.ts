@@ -20,7 +20,7 @@ const compile = (pattern: string, isMac = false): ShortcutPredicate => {
   const parts = Arr.map(Utils.explode(pattern, PATTERN_DELIMITER), Utils.lowercase);
   const decodedShortcut = decodeShortcut(parts, isMac);
 
-  if (decodedShortcut.key.length !== 1) {
+  if (decodedShortcut.key.length !== 1 || decodedShortcut.key[0] === '') {
     // eslint-disable-next-line no-console
     console.warn(`Invalid shortcut pattern "${pattern}": valid pattern includes one key and zero or more modifiers`);
     return Fun.never;

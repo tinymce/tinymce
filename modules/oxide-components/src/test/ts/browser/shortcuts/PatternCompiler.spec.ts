@@ -186,5 +186,14 @@ describe('browser.shortcuts.PatternCompilerTest', () => {
 
     it('should warn and return never-matching function for "Space+Enter" (two keys)', () =>
       testInvalidPattern('Space+Enter', { key: ' ' }));
+
+    it('should warn and return never-matching function for empty pattern', () =>
+      testInvalidPattern('', { key: '' }));
+
+    it('should warn and return never-matching function for "Ctrl+" (trailing delimiter)', () =>
+      testInvalidPattern('Ctrl+', { key: '', ctrlKey: true }));
+
+    it('should warn and return never-matching function for "Ctrl+ " (trailing delimiter and whitespace)', () =>
+      testInvalidPattern('Ctrl+ ', { key: '', ctrlKey: true }));
   });
 });
