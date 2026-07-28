@@ -1,12 +1,26 @@
 import { Pointer, UiFinder, Waiter } from '@ephox/agar';
 import { Arr } from '@ephox/katamari';
-import { SugarBody, type SugarElement } from '@ephox/sugar';
+import { Css, SugarBody, type SugarElement } from '@ephox/sugar';
+
+const requestedWidthProperty = '--tox-private-requested-sidebar-width';
 
 const getSidebar = (): SugarElement<HTMLElement> =>
   UiFinder.findIn<HTMLElement>(SugarBody.body(), '.tox-sidebar').getOrDie();
 
+const getSidebarRequestedWidth = (): number => {
+  const raw = Css.getRaw(getSidebar(), requestedWidthProperty)
+    .getOrDie(`Expected the sidebar to have the ${requestedWidthProperty} custom property set`);
+  return parseInt(raw, 10);
+};
+
 const getSidebarResizeHandle = (): SugarElement<HTMLElement> =>
   UiFinder.findIn<HTMLElement>(SugarBody.body(), '.tox-sidebar__resize-handle').getOrDie();
+
+const getEditArea = (): SugarElement<HTMLElement> =>
+  UiFinder.findIn<HTMLElement>(SugarBody.body(), '.tox-edit-area').getOrDie();
+
+const getSidebarWrap = (): SugarElement<HTMLElement> =>
+  UiFinder.findIn<HTMLElement>(SugarBody.body(), '.tox-sidebar-wrap').getOrDie();
 
 const pWaitForSidebarOpen = (): Promise<void> =>
   Waiter.pTryUntil('Waiting for the sidebar to finish opening', () => {
@@ -42,7 +56,10 @@ const resizeSidebarBy = async (vector: [ number, number ], delta = 10): Promise<
 
 export {
   getSidebar,
+  getSidebarRequestedWidth,
   getSidebarResizeHandle,
+  getEditArea,
+  getSidebarWrap,
   pWaitForSidebarOpen,
   pWaitForSidebarClosed,
   resizeSidebarBy
