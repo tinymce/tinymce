@@ -21,6 +21,11 @@ import { makeSidebarResizeHandle } from './SidebarResizeHandle';
 
 export type SidebarConfig = Record<string, BridgeSidebar.SidebarSpec>;
 
+export interface SidebarSizeConstraints {
+  readonly minWidth: number;
+  readonly maxWidth: number;
+}
+
 const enum SidebarStateRoleAttr {
   Grown = 'region',
   Shrunk = 'presentation'
@@ -96,13 +101,13 @@ const makePanels = (parts: SlotContainerTypes.SlotContainerParts, panelConfigs: 
   });
 };
 
-const makeSidebar = (panelConfigs: SidebarConfig) => SlotContainer.sketch((parts) => ({
+const makeSidebar = (panelConfigs: SidebarConfig, sizeConstraints: SidebarSizeConstraints) => SlotContainer.sketch((parts) => ({
   dom: {
     tag: 'div',
     classes: [ 'tox-sidebar__pane-container' ]
   },
   components: [
-    makeSidebarResizeHandle(),
+    makeSidebarResizeHandle(sizeConstraints),
     ...makePanels(parts, panelConfigs)
   ],
   slotBehaviours: SimpleBehaviours.unnamedEvents([
@@ -110,11 +115,11 @@ const makeSidebar = (panelConfigs: SidebarConfig) => SlotContainer.sketch((parts
   ])
 }));
 
-const setSidebar = (sidebar: AlloyComponent, panelConfigs: SidebarConfig, showSidebar: string | undefined): void => {
+const setSidebar = (sidebar: AlloyComponent, panelConfigs: SidebarConfig, showSidebar: string | undefined, sizeConstraints: SidebarSizeConstraints): void => {
   const optSlider = Composing.getCurrent(sidebar);
 
   optSlider.each((slider) => {
-    Replacing.set(slider, [ makeSidebar(panelConfigs) ]);
+    Replacing.set(slider, [ makeSidebar(panelConfigs, sizeConstraints) ]);
 
     // Show the default sidebar
     const configKey = showSidebar?.toLowerCase();
@@ -183,13 +188,17 @@ interface FixSizeEvent extends CustomEvent {
 const fixSize = Id.generate('FixSizeEvent');
 const autoSize = Id.generate('AutoSizeEvent');
 
-const renderSidebar = (spec: SketchSpec): AlloySpec => ({
+interface SidebarSpec extends SketchSpec {
+  readonly configuredSidebarWidth: number;
+}
+
+const renderSidebar = (spec: SidebarSpec): AlloySpec => ({
   uid: spec.uid,
   dom: {
     tag: 'div',
     classes: [ 'tox-sidebar' ],
     styles: {
-      [SidebarResize.requestedWidthProperty]: numToPx(SidebarResize.initialWidth)
+      [SidebarResize.requestedWidthProperty]: numToPx(spec.configuredSidebarWidth)
     },
     attributes: {
       role: SidebarStateRoleAttr.Shrunk
