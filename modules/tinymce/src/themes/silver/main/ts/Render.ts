@@ -3,7 +3,7 @@ import {
 } from '@ephox/alloy';
 import { Arr, Merger, Obj, Optional, Result, Singleton } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Compare, Css, SugarBody, SugarShadowDom, type SugarElement } from '@ephox/sugar';
+import { Class, Compare, Css, SugarBody, SugarShadowDom, type SugarElement } from '@ephox/sugar';
 
 import type Editor from 'tinymce/core/api/Editor';
 import type { ExecCommandArgs } from 'tinymce/core/api/EditorCommands';
@@ -18,6 +18,7 @@ import * as DomEvents from './Events';
 import * as Iframe from './modes/Iframe';
 import * as Inline from './modes/Inline';
 import { LazyUiReferences, type ReadyUiReferences, type SinkAndMothership } from './modes/UiReferences';
+import { SimpleBehaviours } from './ui/alien/SimpleBehaviours';
 import * as ContextToolbar from './ui/context/ContextToolbar';
 import * as FormatControls from './ui/core/FormatControls';
 import OuterContainer from './ui/general/OuterContainer';
@@ -27,6 +28,7 @@ import * as SilverContextMenu from './ui/menus/contextmenu/SilverContextMenu';
 import type { MenuRegistry } from './ui/menus/menubar/Integration';
 import * as TableSelectorHandles from './ui/selector/TableSelectorHandles';
 import * as Sidebar from './ui/sidebar/Sidebar';
+import * as SidebarResize from './ui/sidebar/SidebarResize';
 import * as EditorSize from './ui/sizing/EditorSize';
 import * as Utils from './ui/sizing/Utils';
 import { renderStatusbar } from './ui/statusbar/Statusbar';
@@ -277,12 +279,19 @@ const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
     return {
       dom: {
         tag: 'div',
-        classes: [ 'tox-sidebar-wrap', 'tox-sidebar-wrap--resizable' ]
+        classes: [ 'tox-sidebar-wrap' ]
       },
       components: [
         partSocket,
         partSidebar
-      ]
+      ],
+      behaviours: SimpleBehaviours.unnamedEvents([
+        AlloyEvents.run<Sidebar.SidebarContentChangedEvent>(Sidebar.sidebarContentChanged, (comp, se) => {
+          const shouldBeResizable = se.event.visible && se.event.resizable;
+          const toggle = shouldBeResizable ? Class.add : Class.remove;
+          toggle(comp.element, SidebarResize.resizableClass);
+        })
+      ])
     };
   };
 
