@@ -1,5 +1,7 @@
 import type Editor from 'tinymce/core/api/Editor';
+import type { EditorEventMap } from 'tinymce/core/api/EventTypes';
 import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type Observable from 'tinymce/core/api/util/Observable';
 
 const fireSkinLoaded = (editor: Editor): void => {
   editor.dispatch('SkinLoaded');
@@ -67,6 +69,14 @@ const fireToggleSidebar = (editor: Editor): void => {
   editor.dispatch('ToggleSidebar');
 };
 
+const fireSidebarResizeStart = (dispatcher: Observable<EditorEventMap>): void => {
+  dispatcher.dispatch('SidebarResizeStart');
+};
+
+const fireSidebarResized = (dispatcher: Observable<EditorEventMap>, width: number): void => {
+  dispatcher.dispatch('SidebarResized', { width });
+};
+
 const fireToggleView = (editor: Editor): void => {
   editor.dispatch('ToggleView');
 };
@@ -96,6 +106,8 @@ export {
   fireBlocksTextUpdate,
   fireFontFamilyTextUpdate,
   fireToggleSidebar,
+  fireSidebarResizeStart,
+  fireSidebarResized,
   fireToggleView,
   fireContextToolbarClose,
   fireContextFormSlideBack
