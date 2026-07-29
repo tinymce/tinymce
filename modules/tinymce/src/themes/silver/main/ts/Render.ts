@@ -558,7 +558,14 @@ const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
       const floatingSidebar = FloatingSidebar.setup(editor, popupUi.sink);
       sidebarStrategy = SidebarStrategy.createFloatingSidebarStrategy(floatingSidebar);
     } else {
-      sidebarStrategy = SidebarStrategy.createStaticSidebarStrategy(mainUi.outerContainer);
+      sidebarStrategy = SidebarStrategy.createStaticSidebarStrategy(
+        mainUi.outerContainer,
+        {
+          minWidth: Options.getSidebarMinWidth(editor),
+          maxWidth: Options.getSidebarMaxWidth(editor)
+        },
+        editor
+      );
     }
 
     setupShortcutsAndCommands(mainUi.outerContainer, sidebarStrategy);

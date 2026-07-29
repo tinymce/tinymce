@@ -114,12 +114,7 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
     // This is where the sidebar is rendered for the first time
     sidebarStrategy.setSidebar(
       rawUiConfig.sidebar,
-      Options.getSidebarShow(editor),
-      {
-        minWidth: Options.getSidebarMinWidth(editor),
-        maxWidth: Options.getSidebarMaxWidth(editor)
-      },
-      editor
+      Options.getSidebarShow(editor)
     );
 
     OuterContainer.setViews(
