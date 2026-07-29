@@ -14,8 +14,10 @@ import * as Buttons from './ui/Buttons';
  * @private
  */
 
+const PLUGIN_CODE = 'emoticons';
+
 export default (): void => {
-  PluginManager.add('emoticons', (editor, pluginUrl) => {
+  PluginManager.add(PLUGIN_CODE, (editor, pluginUrl) => {
     Options.register(editor, pluginUrl);
     const databaseUrl = Options.getEmojiDatabaseUrl(editor);
     const databaseId = Options.getEmojiDatabaseId(editor);
@@ -28,7 +30,8 @@ export default (): void => {
     Filters.setup(editor);
 
     return {
-      getAllEmojis: () => database.waitForLoad().then(() => database.listAll())
+      getAllEmojis: () => database.waitForLoad().then(() => database.listAll()),
+      getMetadata: () => ({ name: 'Emoticons', type: 'opensource', slug: PLUGIN_CODE })
     };
   });
 };

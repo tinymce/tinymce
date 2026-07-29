@@ -9,12 +9,17 @@ import type { FullScreenInfo } from './core/Actions';
 import * as Keyboard from './core/Keyboard';
 import * as Buttons from './ui/Buttons';
 
+const PLUGIN_CODE = 'fullscreen';
+
 export default (): void => {
-  PluginManager.add('fullscreen', (editor) => {
+  PluginManager.add(PLUGIN_CODE, (editor) => {
     const fullscreenState = Cell<FullScreenInfo | null>(null);
 
     if (editor.inline) {
-      return Api.get(fullscreenState);
+      return {
+        ...Api.get(fullscreenState),
+        getMetadata: () => ({ name: 'Full Screen', type: 'opensource', slug: PLUGIN_CODE })
+      };
     }
 
     Options.register(editor);
@@ -24,6 +29,9 @@ export default (): void => {
 
     editor.addShortcut('Meta+Shift+F', '', 'mceFullScreen');
 
-    return Api.get(fullscreenState);
+    return {
+      ...Api.get(fullscreenState),
+      getMetadata: () => ({ name: 'Full Screen', type: 'opensource', slug: PLUGIN_CODE })
+    };
   });
 };

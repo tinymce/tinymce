@@ -3,9 +3,15 @@ import PluginManager from 'tinymce/core/api/PluginManager';
 import * as Commands from './api/Commands';
 import * as Buttons from './ui/Buttons';
 
+const PLUGIN_CODE = 'directionality';
+
 export default (): void => {
-  PluginManager.add('directionality', (editor) => {
+  PluginManager.add(PLUGIN_CODE, (editor) => {
     Commands.register(editor);
     Buttons.register(editor);
+
+    return {
+      getMetadata: () => ({ name: 'Directionality', type: 'opensource', slug: PLUGIN_CODE })
+    };
   });
 };

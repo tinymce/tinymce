@@ -1,0 +1,7 @@
+project: tinymce
+kind: Improved
+body: The Help dialog's Plugins tab now lists all active plugins, including custom
+  plugins, using metadata provided by each plugin.
+time: 2026-07-20T11:38:17.460843+10:00
+custom:
+  Issue: TINYMCE-14650
