@@ -2,6 +2,7 @@ import { Arr } from '@ephox/katamari';
 import { Focus, type SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
 import { keyevent, type MixedKeyModifiers } from '../keyboard/FakeKeys';
+import { getKeyCodeFromKey } from '../keyboard/Keycodes';
 import * as TypeInEditable from '../keyboard/TypeInEditable';
 import * as TypeInInput from '../keyboard/TypeInInput';
 
@@ -68,6 +69,7 @@ export {
   keyup,
   keypress,
   keystroke,
+  getKeyCodeFromKey,
 
   activeKeydown,
   activeKeyup,
