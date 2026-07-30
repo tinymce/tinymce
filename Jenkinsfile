@@ -324,9 +324,6 @@ timestamps { notifyStatusChange(
           }
           parallel processes
         }
-      }
-
-      container('node') {
 
         stage('Deploy Storybook') {
           if (env.BRANCH_NAME == props.primaryBranch) {
@@ -338,7 +335,7 @@ timestamps { notifyStatusChange(
             echo "Skipping Storybook deployment as the pipeline is not running on the primary branch"
           }
         }
-      } // close container
+      }
     } // close pod
     } // close retry
   } // close outer timeout

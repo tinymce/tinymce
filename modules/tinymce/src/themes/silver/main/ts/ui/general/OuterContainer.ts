@@ -5,6 +5,9 @@ import { FieldSchema } from '@ephox/boulder';
 import { Arr, Id, Obj, Optional, Optionals, Type, type Result } from '@ephox/katamari';
 import { Attribute, Css, SelectorFind, type SugarElement } from '@ephox/sugar';
 
+import type { EditorEventMap } from 'tinymce/core/api/EventTypes';
+import type Observable from 'tinymce/core/api/util/Observable';
+
 import { ToolbarMode } from '../../api/Options';
 import type { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { type HeaderSpec, renderHeader } from '../header/CommonHeader';
@@ -57,7 +60,7 @@ interface ToolbarSketchSpec extends MoreDrawerData {
 interface OuterContainerApis {
   readonly getHeader: (comp: AlloyComponent) => Optional<AlloyComponent>;
   readonly getSocket: (comp: AlloyComponent) => Optional<AlloyComponent>;
-  readonly setSidebar: (comp: AlloyComponent, panelConfigs: Sidebar.SidebarConfig, showSidebar?: string) => void;
+  readonly setSidebar: (comp: AlloyComponent, panelConfigs: Sidebar.SidebarConfig, showSidebar: string | undefined, sizeConstraints: Sidebar.SidebarSizeConstraints, eventDispatcher: Observable<EditorEventMap>) => void;
   readonly toggleSidebar: (comp: AlloyComponent, name: string) => void;
   readonly whichSidebar: (comp: AlloyComponent) => string | null;
   // Maybe just change to ToolbarAnchor.
@@ -106,9 +109,9 @@ const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, Out
     getSocket: (comp) => {
       return Composite.parts.getPart(comp, detail, 'socket');
     },
-    setSidebar: (comp, panelConfigs, showSidebar) => {
+    setSidebar: (comp, panelConfigs, showSidebar, sizeConstraints, eventDispatcher) => {
       Composite.parts.getPart(comp, detail, 'sidebar').each(
-        (sidebar) => Sidebar.setSidebar(sidebar, panelConfigs, showSidebar)
+        (sidebar) => Sidebar.setSidebar(sidebar, panelConfigs, showSidebar, sizeConstraints, eventDispatcher)
       );
     },
     toggleSidebar: (comp, name) => {
@@ -358,7 +361,8 @@ const partSidebar = Composite.partType.optional({
   },
   name: 'sidebar',
   schema: [
-    FieldSchema.required('dom')
+    FieldSchema.required('dom'),
+    FieldSchema.required('configuredSidebarWidth')
   ]
 });
 
@@ -421,8 +425,8 @@ export default Sketcher.composite<OuterContainerSketchSpec, OuterContainerSketch
     getSocket: (apis, comp) => {
       return apis.getSocket(comp);
     },
-    setSidebar: (apis, comp, panelConfigs, showSidebar) => {
-      apis.setSidebar(comp, panelConfigs, showSidebar);
+    setSidebar: (apis, comp, panelConfigs, showSidebar, sizeConstraints, eventDispatcher) => {
+      apis.setSidebar(comp, panelConfigs, showSidebar, sizeConstraints, eventDispatcher);
     },
     toggleSidebar: (apis, comp, name) => {
       apis.toggleSidebar(comp, name);

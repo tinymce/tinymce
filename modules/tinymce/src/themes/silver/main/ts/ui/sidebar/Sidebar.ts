@@ -10,12 +10,23 @@ import { Arr, Cell, Fun, Id, Obj, Optional, Optionals, Type } from '@ephox/katam
 import { Attribute, Css, type SugarElement, Width } from '@ephox/sugar';
 
 import type Editor from 'tinymce/core/api/Editor';
+import type { EditorEventMap } from 'tinymce/core/api/EventTypes';
+import type Observable from 'tinymce/core/api/util/Observable';
 import { onControlAttached, onControlDetached } from 'tinymce/themes/silver/ui/controls/Controls';
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { SimpleBehaviours } from '../alien/SimpleBehaviours';
+import { numToPx } from '../sizing/Utils';
+
+import * as SidebarResize from './SidebarResize';
+import { makeSidebarResizeHandle } from './SidebarResizeHandle';
 
 export type SidebarConfig = Record<string, BridgeSidebar.SidebarSpec>;
+
+export interface SidebarSizeConstraints {
+  readonly minWidth: number;
+  readonly maxWidth: number;
+}
 
 const enum SidebarStateRoleAttr {
   Grown = 'region',
@@ -62,7 +73,8 @@ const makePanels = (parts: SlotContainerTypes.SlotContainerParts, panelConfigs: 
       getApi,
       onSetup: bridged.onSetup,
       onShow: bridged.onShow,
-      onHide: bridged.onHide
+      onHide: bridged.onHide,
+      resizable: bridged.resizable
     };
   });
 
@@ -82,6 +94,11 @@ const makePanels = (parts: SlotContainerTypes.SlotContainerParts, panelConfigs: 
             const data = se.event;
             const optSidePanelSpec = Arr.find(specs, (config) => config.name === data.name);
             optSidePanelSpec.each((sidePanelSpec) => {
+              AlloyTriggers.emitWith(
+                sidepanel,
+                sidebarContentChanged,
+                data.visible ? { visible: true, resizable: sidePanelSpec.resizable } : { visible: false }
+              );
               const handler = data.visible ? sidePanelSpec.onShow : sidePanelSpec.onHide;
               handler(sidePanelSpec.getApi(sidepanel));
             });
@@ -92,22 +109,25 @@ const makePanels = (parts: SlotContainerTypes.SlotContainerParts, panelConfigs: 
   });
 };
 
-const makeSidebar = (panelConfigs: SidebarConfig) => SlotContainer.sketch((parts) => ({
+const makeSidebar = (panelConfigs: SidebarConfig, sizeConstraints: SidebarSizeConstraints, eventDispatcher: Observable<EditorEventMap>) => SlotContainer.sketch((parts) => ({
   dom: {
     tag: 'div',
     classes: [ 'tox-sidebar__pane-container' ]
   },
-  components: makePanels(parts, panelConfigs),
+  components: [
+    makeSidebarResizeHandle(sizeConstraints, eventDispatcher),
+    ...makePanels(parts, panelConfigs)
+  ],
   slotBehaviours: SimpleBehaviours.unnamedEvents([
     AlloyEvents.runOnAttached((slotContainer) => SlotContainer.hideAllSlots(slotContainer))
   ])
 }));
 
-const setSidebar = (sidebar: AlloyComponent, panelConfigs: SidebarConfig, showSidebar: string | undefined): void => {
+const setSidebar = (sidebar: AlloyComponent, panelConfigs: SidebarConfig, showSidebar: string | undefined, sizeConstraints: SidebarSizeConstraints, eventDispatcher: Observable<EditorEventMap>): void => {
   const optSlider = Composing.getCurrent(sidebar);
 
   optSlider.each((slider) => {
-    Replacing.set(slider, [ makeSidebar(panelConfigs) ]);
+    Replacing.set(slider, [ makeSidebar(panelConfigs, sizeConstraints, eventDispatcher) ]);
 
     // Show the default sidebar
     const configKey = showSidebar?.toLowerCase();
@@ -176,11 +196,24 @@ interface FixSizeEvent extends CustomEvent {
 const fixSize = Id.generate('FixSizeEvent');
 const autoSize = Id.generate('AutoSizeEvent');
 
-const renderSidebar = (spec: SketchSpec): AlloySpec => ({
+export type SidebarContentChangedEvent = CustomEvent & (
+  | { readonly visible: true; readonly resizable: boolean }
+  | { readonly visible: false }
+);
+export const sidebarContentChanged = Id.generate('SidebarContentChanged');
+
+interface SidebarSpec extends SketchSpec {
+  readonly configuredSidebarWidth: number;
+}
+
+const renderSidebar = (spec: SidebarSpec): AlloySpec => ({
   uid: spec.uid,
   dom: {
     tag: 'div',
     classes: [ 'tox-sidebar' ],
+    styles: {
+      [SidebarResize.requestedWidthProperty]: numToPx(spec.configuredSidebarWidth)
+    },
     attributes: {
       role: SidebarStateRoleAttr.Shrunk
     }
@@ -235,9 +268,11 @@ const renderSidebar = (spec: SketchSpec): AlloySpec => ({
     AddEventsBehaviour.config('sidebar-sliding-events', [
       AlloyEvents.run<FixSizeEvent>(fixSize, (comp, se) => {
         Css.set(comp.element, 'width', se.event.width);
+        Css.set(comp.element, SidebarResize.resolvedWidthProperty, se.event.width);
       }),
       AlloyEvents.run(autoSize, (comp, _se) => {
         Css.remove(comp.element, 'width');
+        Css.remove(comp.element, SidebarResize.resolvedWidthProperty);
       })
     ])
   ])

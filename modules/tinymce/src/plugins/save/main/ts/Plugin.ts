@@ -4,10 +4,16 @@ import * as Commands from './api/Commands';
 import * as Options from './api/Options';
 import * as Buttons from './ui/Buttons';
 
+const PLUGIN_CODE = 'save';
+
 export default (): void => {
-  PluginManager.add('save', (editor) => {
+  PluginManager.add(PLUGIN_CODE, (editor) => {
     Options.register(editor);
     Buttons.register(editor);
     Commands.register(editor);
+
+    return {
+      getMetadata: () => ({ name: 'Save', type: 'opensource', slug: PLUGIN_CODE })
+    };
   });
 };
