@@ -5,13 +5,17 @@
 @selected-outline-color: @color-tint;
 @selected-box-shadow: 0 2px 0 0 @selected-outline-color, 0 -2px 0 0 @selected-outline-color;
 
-.diff-content( 
+@preview-highlight-color: @color-tint;
+@preview-removed-color: @color-error;
+
+.diff-content(
   @pluginName,
   @added-bg,
   @modified-bg,
   @removed-bg,
   @selected-outline-color,
-  @selected-box-shadow
+  @selected-box-shadow,
+  @dim-overlay-color
 ) {
 
   .tox-@{pluginName}__annotation--added,
@@ -20,7 +24,7 @@
     padding-block: calc((1lh - 1.1em) / 2);
     text-decoration: none;
     background-repeat: no-repeat;
-    text-decoration-thickness: max(1px, .07em); 
+    text-decoration-thickness: max(1px, .07em);
   }
 
   .tox-@{pluginName}__annotation--added__highlight {
@@ -173,5 +177,141 @@
     &.tox-@{pluginName}__annotation--removed__highlight {
       padding: 0;
     }
+  }
+
+  .tox-@{pluginName}__diff-focus-overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .tox-@{pluginName}__diff-focus-overlay-dim {
+    fill: @dim-overlay-color;
+  }
+}
+
+.diff-preview-content(
+  @pluginName,
+  @selected-box-shadow,
+  @highlight-color,
+  @removed-color
+) {
+
+  .tox-@{pluginName}__annotation {
+    // Base class for annotations - styling handled by modifier classes
+    display: revert;
+  }
+
+  .tox-@{pluginName}-preview {
+    display: block;
+  }
+
+  .tox-@{pluginName}__annotation--added__highlight,
+  .tox-@{pluginName}__annotation--modified__highlight,
+  .tox-@{pluginName}__annotation--removed__highlight {
+    cursor: pointer;
+  }
+
+  .tox-@{pluginName}__annotation--added.tox-@{pluginName}__annotation--preview-highlight,
+  .tox-@{pluginName}__annotation--modified.tox-@{pluginName}__annotation--preview-highlight {
+    background-position: bottom;
+    background-image: linear-gradient(
+      transparent calc(100% - 3px),
+      @highlight-color calc(100% - 3px)
+    );
+  }
+
+  img, video, iframe {
+    &.tox-@{pluginName}__annotation--added.tox-@{pluginName}__annotation--preview-highlight,
+    &.tox-@{pluginName}__annotation--modified.tox-@{pluginName}__annotation--preview-highlight {
+      background-image: none;
+      outline: 0.25em solid fade(@highlight-color, 20%);
+      padding: 0.25em;
+    }
+  }
+
+  body.tox-@{pluginName}-preview--selectable {
+    .tox-@{pluginName}__annotation--added.tox-@{pluginName}__annotation--preview-highlight,
+    .tox-@{pluginName}__annotation--modified.tox-@{pluginName}__annotation--preview-highlight {
+      cursor: pointer;
+    }
+
+    .tox-@{pluginName}__annotation--preview-highlight.tox-@{pluginName}__annotation--added__selected,
+    .tox-@{pluginName}__annotation--preview-highlight.tox-@{pluginName}__annotation--modified__selected {
+      background-image: none;
+      background-color: fade(@highlight-color, 20%);
+      box-shadow: @selected-box-shadow;
+    }
+
+    // TEMP: Show deleted content when its review card is selected.
+    // Makes deletions visible and scrollable in preview mode.
+    // TODO: Replace with a proper visual marker that doesn't reveal full deleted content.
+    .tox-@{pluginName}__annotation--preview-highlight.tox-@{pluginName}__annotation--removed__selected {
+      display: revert;
+      text-decoration: line-through;
+      background-image: none;
+      background-color: fade(@removed-color, 20%);
+      box-shadow: @selected-box-shadow;
+    }
+
+    // ins/del elements only contain text and inline formatting, so they can safely use
+    // the 1lh background-image approach for tighter inline selection styling
+    ins, del {
+      &.tox-@{pluginName}__annotation--preview-highlight.tox-@{pluginName}__annotation--added__selected,
+      &.tox-@{pluginName}__annotation--preview-highlight.tox-@{pluginName}__annotation--modified__selected {
+        background-color: transparent;
+        box-shadow: none;
+        background-position: center;
+        background-size: 100% calc(1lh + 3px);
+        background-image: linear-gradient(
+          @highlight-color 3px,
+          fade(@highlight-color, 20%) 3px,
+          fade(@highlight-color, 20%) calc(100% - 3px),
+          @highlight-color calc(100% - 3px)
+        );
+      }
+
+      &.tox-@{pluginName}__annotation--preview-highlight.tox-@{pluginName}__annotation--removed__selected {
+        background-color: transparent;
+        box-shadow: none;
+        background-position: center;
+        background-size: 100% calc(1lh + 3px);
+        background-image: linear-gradient(
+          @removed-color 3px,
+          fade(@removed-color, 20%) 3px,
+          fade(@removed-color, 20%) calc(100% - 3px),
+          @removed-color calc(100% - 3px)
+        );
+      }
+    }
+
+    img, video, iframe {
+      &.tox-@{pluginName}__annotation--preview-highlight.tox-@{pluginName}__annotation--added__selected,
+      &.tox-@{pluginName}__annotation--preview-highlight.tox-@{pluginName}__annotation--modified__selected {
+        background-image: none;
+        border: 0.25em solid fade(@highlight-color, 20%);
+        outline: 0.125em solid @highlight-color;
+        padding: 0;
+      }
+
+      &.tox-@{pluginName}__annotation--preview-highlight.tox-@{pluginName}__annotation--removed__selected {
+        display: inline;
+        background-image: none;
+        border: 0.25em solid fade(@removed-color, 20%);
+        outline: 0.125em solid @removed-color;
+        padding: 0;
+      }
+    }
+  }
+
+  .tox-@{pluginName}__annotation--preview-highlight.tox-@{pluginName}__annotation--added__selected,
+  .tox-@{pluginName}__annotation--preview-highlight.tox-@{pluginName}__annotation--modified__selected,
+  .tox-@{pluginName}__annotation--preview-highlight.tox-@{pluginName}__annotation--removed__selected {
+    background-color: transparent;
+    box-shadow: none;
+    border: 0;
   }
 }
