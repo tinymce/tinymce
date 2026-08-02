@@ -313,7 +313,7 @@ export const SidebarDensity: Story = {
         story: `
 **Sidebar Density Demonstration**
 
-Shows multiple review cards in a sidebar-like container (316px width) to demonstrate:
+Shows multiple review cards in a sidebar-like container (440px width) to demonstrate:
 - Card density and spacing (12px gap)
 - Scrolling behavior with multiple cards
 - Hover effects
@@ -341,7 +341,7 @@ This simulates how cards would appear in a sidebar-style UI with full keyboard s
     return (
       <div
         style={{
-          width: '316px',
+          width: '440px',
           maxHeight: '500px',
           overflowY: 'auto',
           padding: '12px',
