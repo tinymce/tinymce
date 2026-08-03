@@ -1,4 +1,4 @@
-import { Pointer, TestStore } from '@ephox/agar';
+import { Pointer, TestStore, UiFinder } from '@ephox/agar';
 import { afterEach, beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import type { Sidebar } from '@ephox/bridge';
 import { Fun } from '@ephox/katamari';
@@ -67,7 +67,7 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
     const { setupElement, ...settings } = configOverrides;
     const config = {
       base_url: '/project/tinymce/js/tinymce',
-      toolbar: 'sidebarone sidebartwo resizable-unset resizable-false w800-resizable-false w1000-resizable-false',
+      toolbar: 'sidebarone sidebartwo resizable-unset resizable-false w800-resizable-false w1000-resizable-false wide-content',
       setup: (editor: Editor) => {
         registerResizable(editor, 'sidebarone', 'side bar one');
         registerResizable(editor, 'sidebartwo', 'side bar two');
@@ -85,6 +85,17 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
             api.element().appendChild(div.dom);
             return Fun.noop;
           }
+        });
+        editor.ui.registry.addSidebar('wide-content', {
+          tooltip: 'wide content',
+          icon: 'comment',
+          onSetup: (api: Sidebar.SidebarInstanceApi) => {
+            const div = SugarElement.fromTag('div');
+            Css.setAll(div, { 'width': '600px', 'min-width': '600px' });
+            api.element().appendChild(div.dom);
+            return Fun.noop;
+          },
+          resizable: true
         });
         editor.on('SidebarResizeStart', () => store.add(resizeStartEvent()));
         editor.on('SidebarResized', (e) => store.add(resizedEvent(e.width)));
@@ -599,6 +610,17 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
           );
         });
       });
+    });
+  });
+
+  context('TINYMCE-14527: Sidebar pane sizing', () => {
+    setupEditorHook({ sidebar_show: 'wide-content', sidebar_width: 440, sidebar_min_width: 300, sidebar_max_width: 800 });
+
+    it('TINYMCE-14527: should keep the shown pane at the sidebar width when its content is wider', () => {
+      const pane = UiFinder.findIn<HTMLElement>(SugarBody.body(), '.tox-sidebar__pane:not([aria-hidden="true"])').getOrDie();
+
+      assertSidebarWidth(440, 'The sidebar should render at its configured width');
+      assert.equal(Width.get(pane), 440, 'The pane should follow the sidebar width instead of growing to its content width');
     });
   });
 });
