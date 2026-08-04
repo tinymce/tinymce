@@ -1,0 +1,7 @@
+project: tinymce
+kind: Fixed
+body: Image with empty alt text would add role='presentation' instead of adding alt
+  text when updated.
+time: 2026-07-30T15:50:43.311611+10:00
+custom:
+  Issue: TINYMCE-13738
