@@ -1,6 +1,6 @@
-import { FocusTools, RealKeys, RealMouse } from '@ephox/agar';
+import { FocusTools, RealKeys, RealMouse, Waiter } from '@ephox/agar';
 import { after, afterEach, before, context, describe, it } from '@ephox/bedrock-client';
-import { Class, SugarDocument } from '@ephox/sugar';
+import { Class, Focus, SugarDocument } from '@ephox/sugar';
 import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -50,9 +50,14 @@ describe('webdriver.tinymce.core.keyboard.IframeTabfocusTest', () => {
       }
     }, []);
 
-    afterEach(() => {
-      // Un focus the editor
+    afterEach(async () => {
+      // Un focus the editor. window.focus() on its own is not enough: it does not
+      // reliably move focus out of the iframe, and FocusController removes the
+      // highlight in a deferred timeout on focusout, so the next test cannot assume
+      // the class is already gone.
+      Focus.active(SugarDocument.getDocument()).each(Focus.blur);
       window.focus();
+      await Waiter.pTryUntil('Editor highlight should be removed', () => assertIsNotHighlighted(hook.editor()));
     });
 
     it('TINY-9277: Focus on tab', async () => {
