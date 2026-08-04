@@ -25,15 +25,22 @@ describe('browser.tinymce.themes.silver.editor.backstage.BackstageSinkTest', () 
   //
   // NOTE: If this approach is causing problems, we can just load silver normally, and create a duplicate
   // backstage, but this approach removes the number of extraneous elements.
+  // The oxide skin is loaded into the shared page below. Remember how to remove it
+  // again: leaving it behind changes the layout for every later test that expects an
+  // unskinned page, which is how it broke webdriver DialogFocusTest.
+  let unloadSkin: () => void = Fun.noop;
+
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     setup: (ed: Editor) => {
       Options.register(ed);
       ed.on('init', () => {
         const skinUrl = EditorManager.baseURL + '/skins/ui/oxide/skin.css';
+        const styleSheetLoader = ed.ui.styleSheetLoader;
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        ed.ui.styleSheetLoader.load(skinUrl).then(
+        styleSheetLoader.load(skinUrl).then(
           () => {
+            unloadSkin = () => styleSheetLoader.unload(skinUrl);
             ed.dispatch('SkinLoaded');
           }
         );
@@ -69,6 +76,7 @@ describe('browser.tinymce.themes.silver.editor.backstage.BackstageSinkTest', () 
   after(() => {
     Attachment.detachSystem(mothership);
     mothership.destroy();
+    unloadSkin();
   });
 
   const buildAndAddColorInput = (backstage: Backstage.UiFactoryBackstage): AlloyComponent => {
