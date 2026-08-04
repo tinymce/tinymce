@@ -1,0 +1,3 @@
+import{S as e}from"./Spinner-BJv4uLJj.js";import"./iframe-BWU6bX5y.js";import"./preload-helper-PPVm8Dsz.js";import"./UniverseProvider-CUpye7VC.js";import"./Bem-Bvj_EqVZ.js";import"./Optional-BNsUfA-0.js";import"./Strings-C1h4ndsz.js";import"./Fun-DfA6N4bS.js";import"./Obj-SoxFuRAr.js";const d={title:"bespoke/tinymceai/Spinner",component:e,parameters:{layout:"centered"},tags:["autodocs","skip-visual-testing"]},r={args:{}};r.parameters={...r.parameters,docs:{...r.parameters?.docs,source:{originalSource:`{
+  args: {}
+}`,...r.parameters?.docs?.source}}};const S=["SimpleSpinner"];export{r as SimpleSpinner,S as __namedExportsOrder,d as default};
