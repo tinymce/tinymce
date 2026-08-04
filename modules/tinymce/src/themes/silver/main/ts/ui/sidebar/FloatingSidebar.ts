@@ -1,7 +1,7 @@
 import { type AlloyComponent, AlloyEvents, Attachment, Behaviour, Composing, GuiFactory, Replacing, type SimpleSpec, SlotContainer, type SlotContainerTypes, SystemEvents, Toggling } from '@ephox/alloy';
 import { StructureSchema } from '@ephox/boulder';
 import { Sidebar as BridgeSidebar } from '@ephox/bridge';
-import { Arr, Cell, Fun, Obj, type Optional } from '@ephox/katamari';
+import { Arr, Cell, Fun, Obj, type Optional, Type } from '@ephox/katamari';
 
 import type Editor from 'tinymce/core/api/Editor';
 import { onControlAttached, onControlDetached } from 'tinymce/themes/silver/ui/controls/Controls';
@@ -97,10 +97,17 @@ const makeSidebar = (panelConfigs: SidebarConfig) => SlotContainer.sketch((parts
   ])
 }));
 
-const setSidebar = (sidebar: AlloyComponent, panelConfigs: SidebarConfig, _showSidebar: string | undefined): void => {
+const setSidebar = (sidebar: AlloyComponent, panelConfigs: SidebarConfig, showSidebar: string | undefined): void => {
   Replacing.set(sidebar, [ makeSidebar(panelConfigs) ]);
 
-  // TODO We should also open the initial sidebar, by reading showSidebar
+  // Show the default sidebar
+  const configKey = showSidebar?.toLowerCase();
+  if (Type.isString(configKey) && Obj.has(panelConfigs, configKey)) {
+    Composing.getCurrent(sidebar).each((slotContainer) => {
+      SlotContainer.showSlot(slotContainer, configKey);
+      Toggling.on(sidebar);
+    });
+  }
 };
 
 const toggleSidebar = (sidebar: AlloyComponent, name: string): void => {
