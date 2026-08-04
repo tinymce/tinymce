@@ -7,6 +7,7 @@ import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 import type Editor from 'tinymce/core/api/Editor';
 import type { Menu } from 'tinymce/core/api/ui/Ui';
 import LocalStorage from 'tinymce/core/api/util/LocalStorage';
+import * as ColorCache from 'tinymce/themes/silver/ui/core/color/ColorCache';
 
 import * as GuiSetup from '../../module/GuiSetup';
 
@@ -141,6 +142,10 @@ describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
 
   beforeEach(() => {
     LocalStorage.clear();
+    // ColorCache memoises a cache per id in module scope, so clearing local
+    // storage alone leaves custom colors added by earlier tests in memory. They
+    // would show up as extra swatches and shift the structure asserted below.
+    ColorCache.clearStoredCaches();
   });
 
   it('Check structure of color swatch', async () => {
