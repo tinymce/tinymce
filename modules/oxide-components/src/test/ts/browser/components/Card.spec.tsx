@@ -681,7 +681,7 @@ describe('browser.components.CardTest', () => {
   });
 
   describe('Header Tests', () => {
-    it('TINY-14722: Should render Card.HeaderContent', async () => {
+    it('TINYMCE-14722: Should render Card.HeaderContent', async () => {
       const { getByText, container } = render(
         <Card.Root>
           <Card.Header>
@@ -700,7 +700,7 @@ describe('browser.components.CardTest', () => {
       ).toBeTruthy();
     });
 
-    it('TINY-14722: Should render Card.HeaderActions', async () => {
+    it('TINYMCE-14722: Should render Card.HeaderActions', async () => {
       const { getByText, container } = render(
         <Card.Root>
           <Card.Header>
@@ -719,7 +719,7 @@ describe('browser.components.CardTest', () => {
       ).toBeTruthy();
     });
 
-    it('TINY-14722: Should render both HeaderContent and HeaderActions', async () => {
+    it('TINYMCE-14722: Should render both HeaderContent and HeaderActions', async () => {
       const { getByText } = render(
         <Card.Root>
           <Card.Header>
@@ -738,7 +738,7 @@ describe('browser.components.CardTest', () => {
       expect(getByText('Action').element(), 'HeaderActions should render alongside HeaderContent').toBeTruthy();
     });
 
-    it('TINY-14722: Should apply hover-visible class by default', async () => {
+    it('TINYMCE-14722: Should apply hover-visible class by default', async () => {
       const { container } = render(
         <Card.Root>
           <Card.Header>
@@ -757,7 +757,7 @@ describe('browser.components.CardTest', () => {
       ).toContain('tox-card__header-actions--hover-visible');
     });
 
-    it('TINY-14722: Should apply always-visible class when visibilityMode is always', async () => {
+    it('TINYMCE-14722: Should apply always-visible class when visibilityMode is always', async () => {
       const { container } = render(
         <Card.Root>
           <Card.Header>
@@ -776,7 +776,7 @@ describe('browser.components.CardTest', () => {
       ).toContain('tox-card__header-actions--always-visible');
     });
 
-    it('TINY-14722: Should apply on-focus class when visibilityMode is focus', async () => {
+    it('TINYMCE-14722: Should apply on-focus class when visibilityMode is focus', async () => {
       const { container } = render(
         <Card.Root>
           <Card.Header>
@@ -795,7 +795,7 @@ describe('browser.components.CardTest', () => {
       ).toContain('tox-card__header-actions--on-focus');
     });
 
-    it('TINY-14722: Should apply hover-visible class to HeaderActions', () => {
+    it('TINYMCE-14722: Should apply hover-visible class to HeaderActions', () => {
       const { container } = render(
         <Card.Root selected={true}>
           <Card.Header>
