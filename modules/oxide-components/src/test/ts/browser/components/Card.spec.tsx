@@ -680,6 +680,149 @@ describe('browser.components.CardTest', () => {
     });
   });
 
+  describe('Header Tests', () => {
+    it('TINY-14722: Should render Card.HeaderContent', async () => {
+      const { getByText, container } = render(
+        <Card.Root>
+          <Card.Header>
+            <Card.HeaderContent>
+              <span>Left content</span>
+            </Card.HeaderContent>
+          </Card.Header>
+        </Card.Root>,
+        { wrapper }
+      );
+
+      expect(getByText('Left content').element(), 'HeaderContent children should render').toBeTruthy();
+      expect(
+        container.querySelector(Bem.elementSelector('tox-card', 'header-content')),
+        'HeaderContent should use tox-card__header-content class'
+      ).toBeTruthy();
+    });
+
+    it('TINY-14722: Should render Card.HeaderActions', async () => {
+      const { getByText, container } = render(
+        <Card.Root>
+          <Card.Header>
+            <Card.HeaderActions>
+              <button>Action</button>
+            </Card.HeaderActions>
+          </Card.Header>
+        </Card.Root>,
+        { wrapper }
+      );
+
+      expect(getByText('Action').element(), 'HeaderActions children should render').toBeTruthy();
+      expect(
+        container.querySelector(Bem.elementSelector('tox-card', 'header-actions')),
+        'HeaderActions should use tox-card__header-actions class'
+      ).toBeTruthy();
+    });
+
+    it('TINY-14722: Should render both HeaderContent and HeaderActions', async () => {
+      const { getByText } = render(
+        <Card.Root>
+          <Card.Header>
+            <Card.HeaderContent>
+              <span>Content</span>
+            </Card.HeaderContent>
+            <Card.HeaderActions>
+              <button>Action</button>
+            </Card.HeaderActions>
+          </Card.Header>
+        </Card.Root>,
+        { wrapper }
+      );
+
+      expect(getByText('Content').element(), 'HeaderContent should render alongside HeaderActions').toBeTruthy();
+      expect(getByText('Action').element(), 'HeaderActions should render alongside HeaderContent').toBeTruthy();
+    });
+
+    it('TINY-14722: Should apply hover-visible class by default', async () => {
+      const { container } = render(
+        <Card.Root>
+          <Card.Header>
+            <Card.HeaderActions>
+              <button>Action</button>
+            </Card.HeaderActions>
+          </Card.Header>
+        </Card.Root>,
+        { wrapper }
+      );
+
+      const headerActions = container.querySelector(Bem.elementSelector('tox-card', 'header-actions'));
+      expect(
+        headerActions?.className,
+        'Default visibilityMode should apply hover-visible modifier'
+      ).toContain('tox-card__header-actions--hover-visible');
+    });
+
+    it('TINY-14722: Should apply always-visible class when visibilityMode is always', async () => {
+      const { container } = render(
+        <Card.Root>
+          <Card.Header>
+            <Card.HeaderActions visibilityMode="always">
+              <button>Action</button>
+            </Card.HeaderActions>
+          </Card.Header>
+        </Card.Root>,
+        { wrapper }
+      );
+
+      const headerActions = container.querySelector(Bem.elementSelector('tox-card', 'header-actions'));
+      expect(
+        headerActions?.className,
+        'visibilityMode always should apply always-visible modifier'
+      ).toContain('tox-card__header-actions--always-visible');
+    });
+
+    it('TINY-14722: Should apply on-focus class when visibilityMode is focus', async () => {
+      const { container } = render(
+        <Card.Root>
+          <Card.Header>
+            <Card.HeaderActions visibilityMode="focus">
+              <button>Action</button>
+            </Card.HeaderActions>
+          </Card.Header>
+        </Card.Root>,
+        { wrapper }
+      );
+
+      const headerActions = container.querySelector(Bem.elementSelector('tox-card', 'header-actions'));
+      expect(
+        headerActions?.className,
+        'visibilityMode focus should apply on-focus modifier'
+      ).toContain('tox-card__header-actions--on-focus');
+    });
+
+    it('TINY-14722: Should reveal hover-visible HeaderActions on card hover', async () => {
+      const { container } = render(
+        <Card.Root selected={true}>
+          <Card.Header>
+            <Card.HeaderContent>
+              <span>Content</span>
+            </Card.HeaderContent>
+            <Card.HeaderActions visibilityMode="hover">
+              <button>Action</button>
+            </Card.HeaderActions>
+          </Card.Header>
+        </Card.Root>,
+        { wrapper }
+      );
+
+      const card = container.querySelector(Bem.blockSelector('tox-card')) as HTMLElement;
+      const headerActions = container.querySelector(Bem.elementSelector('tox-card', 'header-actions')) as HTMLElement;
+
+      expect(window.getComputedStyle(headerActions).opacity, 'HeaderActions should be hidden before hover').toBe('0');
+      expect(window.getComputedStyle(headerActions).pointerEvents, 'HeaderActions should not receive pointer events before hover').toBe('none');
+
+      await userEvent.hover(card);
+
+      expect(window.getComputedStyle(headerActions).opacity, 'HeaderActions should be visible on card hover').toBe('1');
+      expect(window.getComputedStyle(headerActions).pointerEvents, 'HeaderActions should receive pointer events on card hover').toBe('auto');
+    });
+  });
+
   describe('Loading State Tests', () => {
     it('TINY-13458: Should show skeleton content when loading is true', async () => {
       const { container } = render(

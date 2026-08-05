@@ -3,9 +3,10 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { getAll as getAllIcons } from '@tinymce/oxide-icons-default';
 import { useEffect, useState } from 'react';
 
-import { Button, ExpandableBox, UniverseProvider } from '../../main';
+import { Button, ExpandableBox, IconButton, UniverseProvider } from '../../main';
 import * as Bem from '../../utils/Bem';
 import { Icon } from '../icon/Icon';
+import * as Profile from '../profile/Profile';
 
 import * as Card from './Card';
 
@@ -21,6 +22,9 @@ const mockUniverse = {
   getIcon: (name: string) =>
     Obj.get(icons, name).getOr(`<svg id="${name}"></svg>`)
 };
+
+// eslint-disable-next-line max-len
+const AVATAR_URL = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="36" height="36"%3E%3Ccircle cx="18" cy="18" r="18" fill="%234A90E2"/%3E%3Ctext x="18" y="24" text-anchor="middle" fill="white" font-size="14" font-family="sans-serif"%3EJM%3C/text%3E%3C/svg%3E';
 
 const meta = {
   title: 'components/Card',
@@ -42,23 +46,26 @@ const meta = {
 The Card component is a reusable compound component for displaying content with actions.
 
 ## Features
-- **Compound Component Pattern**: Flexible composition with Root, Header, Body, and Actions
+- **Compound Component Pattern**: Flexible composition with Root, Header, HeaderContent, HeaderActions, Body, and Actions
 - **State Management**: Supports selected and resolution states (accepted/rejected)
 - **Controlled Component**: Parent manages state via props
 - **Accessibility**: Proper ARIA attributes and keyboard support
 
 ## Usage Pattern
 
-The component uses a compound component pattern with four parts:
+The component uses a compound component pattern with these parts:
 - \`Card.Root\`: Container managing state and click handlers
 - \`Card.Header\`: Title/status section
+- \`Card.HeaderContent\`: Left-side header content (e.g. Profile). When present, header uses a row layout.
+- \`Card.HeaderActions\`: Right-side header action buttons with visibility modes (\`hover\` default, \`focus\`, \`always\`)
 - \`Card.Body\`: Main content area
-- \`Card.Actions\`: Button container
+- \`Card.Actions\`: Bottom button container
 
 ## Integration
 
 Works seamlessly with other oxide-components:
-- **Button**: For action buttons (Skip, Apply, Revert)
+- **Button** / **IconButton**: For action buttons
+- **Profile**: For user info in HeaderContent
 - **ExpandableBox**: For long content
 - **Icon**: For status indicators
         `
@@ -480,7 +487,6 @@ This matches the Suggested Edits pattern where the card container remains the sa
   render: () => {
     const [ loading, setLoading ] = useState(true);
 
-    // Simulate data loading
     useEffect(() => {
       const timer = setTimeout(() => setLoading(false), 2000);
       return () => clearTimeout(timer);
@@ -507,6 +513,120 @@ This matches the Suggested Edits pattern where the card container remains the sa
             </Card.Actions>
           </Card.Root>
         </Card.CardList>
+      </div>
+    );
+  }
+};
+
+export const WithHeaderActions: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: `
+**Card with Header Actions and Profile**
+
+Demonstrates the new unified card design with:
+- \`Card.HeaderContent\`: Left-side content (Profile component with avatar, name, timestamp)
+- \`Card.HeaderActions\`: Right-side action buttons with hover visibility
+- Action buttons appear on hover/focus by default (\`visibilityMode="hover"\`)
+
+This pattern is used across TinyMCE AI and Suggested Edits for a consistent user experience.
+
+**Try it:** Hover over the card to see the header action buttons appear.
+        `
+      }
+    }
+  },
+  render: () => {
+    const [ selected, setSelected ] = useState(false);
+
+    return (
+      <div style={{ width: '316px' }}>
+        <Card.Root selected={selected} onSelect={() => setSelected(!selected)}>
+          <Card.Header>
+            <Card.HeaderContent>
+              <Profile.Root>
+                <Profile.Image
+                  src={AVATAR_URL}
+                  alt="John Mac Giolla..."
+                />
+                <Profile.Body>
+                  <Profile.Heading>John Mac Giolla...</Profile.Heading>
+                  <Profile.Subheading>May 18, 9:12 AM</Profile.Subheading>
+                </Profile.Body>
+              </Profile.Root>
+            </Card.HeaderContent>
+            <Card.HeaderActions visibilityMode="hover">
+              <IconButton variant="naked" icon="close" aria-label="Reject" />
+              <IconButton variant="naked" icon="checkmark" aria-label="Accept" />
+            </Card.HeaderActions>
+          </Card.Header>
+          <Card.Body>
+            <p style={{ margin: 0 }}>
+              Modified text
+            </p>
+          </Card.Body>
+          <Card.Actions>
+            <Button variant="outlined" className="tox-button--stretch">
+              Provide feedback
+            </Button>
+          </Card.Actions>
+        </Card.Root>
+      </div>
+    );
+  }
+};
+
+export const HeaderActionsAlwaysVisible: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: `
+**Card with Always Visible Header Actions**
+
+Same as the previous story, but with \`visibilityMode="always"\` on HeaderActions.
+The action buttons remain visible at all times instead of only on hover.
+
+This is useful when action visibility is important for discoverability.
+        `
+      }
+    }
+  },
+  render: () => {
+    const [ selected, setSelected ] = useState(false);
+
+    return (
+      <div style={{ width: '316px' }}>
+        <Card.Root selected={selected} onSelect={() => setSelected(!selected)}>
+          <Card.Header>
+            <Card.HeaderContent>
+              <Profile.Root>
+                <Profile.Image
+                  src={AVATAR_URL}
+                  alt="Jane Smith"
+                />
+                <Profile.Body>
+                  <Profile.Heading>Jane Smith</Profile.Heading>
+                  <Profile.Subheading>May 19, 2:45 PM</Profile.Subheading>
+                </Profile.Body>
+              </Profile.Root>
+            </Card.HeaderContent>
+            <Card.HeaderActions visibilityMode="always">
+              <IconButton variant="naked" icon="close" aria-label="Reject" />
+              <IconButton variant="naked" icon="checkmark" aria-label="Accept" />
+            </Card.HeaderActions>
+          </Card.Header>
+          <Card.Body>
+            <p style={{ margin: 0 }}>
+              Added new content
+            </p>
+          </Card.Body>
+          <Card.Actions>
+            <Button variant="outlined" className="tox-button--stretch">
+              Provide feedback
+            </Button>
+          </Card.Actions>
+        </Card.Root>
       </div>
     );
   }
