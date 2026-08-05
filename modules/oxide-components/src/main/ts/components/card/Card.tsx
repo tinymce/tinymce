@@ -4,7 +4,7 @@ import { useCallback, type FC, type PropsWithChildren } from 'react';
 import * as Bem from '../../utils/Bem';
 
 import { useCardListContext } from './CardListContext';
-import { CARD_HEADER_ACTIONS_VISIBILITY, type CardHeaderActionsVisibility, type CardHighlightType, type CardLayout } from './CardTypes';
+import type { CardHeaderActionsVisibility, CardHighlightType, CardLayout } from './CardTypes';
 
 export interface CardRootProps extends PropsWithChildren {
   readonly className?: string;
@@ -160,12 +160,12 @@ const HeaderContent: FC<CardHeaderContentProps> = ({ children }) => {
   );
 };
 
-const HeaderActions: FC<CardHeaderActionsProps> = ({ children, visibilityMode = CARD_HEADER_ACTIONS_VISIBILITY.HOVER }) => {
+const HeaderActions: FC<CardHeaderActionsProps> = ({ children, visibilityMode = 'hover' }) => {
   return (
     <div className={Bem.element('tox-card', 'header-actions', {
-      'always-visible': visibilityMode === CARD_HEADER_ACTIONS_VISIBILITY.ALWAYS,
-      'hover-visible': visibilityMode === CARD_HEADER_ACTIONS_VISIBILITY.HOVER,
-      'on-focus': visibilityMode === CARD_HEADER_ACTIONS_VISIBILITY.FOCUS
+      'always-visible': visibilityMode === 'always',
+      'hover-visible': visibilityMode === 'hover',
+      'on-focus': visibilityMode === 'focus'
     })}>
       {children}
     </div>
@@ -215,4 +215,3 @@ export {
 
 export { CardList, CardListController } from './CardList';
 export type { CardLayout, CardHighlightType, CardHeaderActionsVisibility } from './CardTypes';
-export { CARD_HEADER_ACTIONS_VISIBILITY } from './CardTypes';
