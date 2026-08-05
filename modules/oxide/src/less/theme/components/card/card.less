@@ -127,10 +127,18 @@
       }
     }
 
-    &__header:has(.tox-card__header-content) {
+    &__header:has(.tox-card__header-content),
+    &__header:has(.tox-card__header-actions) {
       flex-direction: row;
-      justify-content: space-between;
       align-items: center;
+    }
+
+    &__header:has(.tox-card__header-content) {
+      justify-content: space-between;
+    }
+
+    &__header:has(.tox-card__header-actions):not(:has(.tox-card__header-content)) {
+      justify-content: flex-end;
     }
 
     &:hover .tox-card__header-actions--hover-visible,

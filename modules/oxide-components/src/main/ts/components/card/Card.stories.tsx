@@ -631,3 +631,46 @@ This is useful when action visibility is important for discoverability.
     );
   }
 };
+
+export const HeaderActionsOnly: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: `
+**Card with Header Actions Only**
+
+Demonstrates the edge case where \`Card.HeaderActions\` is used without \`Card.HeaderContent\`.
+The actions are automatically aligned to the right side of the header.
+
+This is useful for simple cards that only need action buttons without user info or labels.
+        `
+      }
+    }
+  },
+  render: () => {
+    const [ selected, setSelected ] = useState(false);
+
+    return (
+      <div style={{ width: '316px' }}>
+        <Card.Root selected={selected} onSelect={() => setSelected(!selected)}>
+          <Card.Header>
+            <Card.HeaderActions visibilityMode="always">
+              <IconButton variant="naked" icon="close" aria-label="Reject" />
+              <IconButton variant="naked" icon="checkmark" aria-label="Accept" />
+            </Card.HeaderActions>
+          </Card.Header>
+          <Card.Body>
+            <p style={{ margin: 0 }}>
+              Quick action card without header content
+            </p>
+          </Card.Body>
+          <Card.Actions>
+            <Button variant="outlined" className="tox-button--stretch">
+              More options
+            </Button>
+          </Card.Actions>
+        </Card.Root>
+      </div>
+    );
+  }
+};

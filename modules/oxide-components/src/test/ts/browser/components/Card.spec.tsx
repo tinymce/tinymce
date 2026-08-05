@@ -816,6 +816,28 @@ describe('browser.components.CardTest', () => {
       expect(headerActions.className, 'HeaderActions should have hover-visible modifier class').toContain('tox-card__header-actions--hover-visible');
       expect(headerActions.querySelector('button'), 'HeaderActions button child should render').toBeTruthy();
     });
+
+    it('TINYMCE-14722: Should render HeaderActions without HeaderContent', () => {
+      const { container } = render(
+        <Card.Root selected={true}>
+          <Card.Header>
+            <Card.HeaderActions visibilityMode="always">
+              <button>Action</button>
+            </Card.HeaderActions>
+          </Card.Header>
+        </Card.Root>,
+        { wrapper }
+      );
+
+      const header = container.querySelector(Bem.elementSelector('tox-card', 'header')) as HTMLElement;
+      const headerActions = container.querySelector(Bem.elementSelector('tox-card', 'header-actions')) as HTMLElement;
+      const headerContent = container.querySelector(Bem.elementSelector('tox-card', 'header-content'));
+
+      expect(header, 'Header element should exist').toBeTruthy();
+      expect(headerActions, 'HeaderActions element should exist').toBeTruthy();
+      expect(headerContent, 'HeaderContent should not exist').toBeFalsy();
+      expect(headerActions.querySelector('button'), 'HeaderActions button child should render').toBeTruthy();
+    });
   });
 
   describe('Loading State Tests', () => {
