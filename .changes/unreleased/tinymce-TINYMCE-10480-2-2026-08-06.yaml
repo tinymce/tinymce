@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Removed a Firefox-only CSS quirk (`img:-moz-broken`) that no longer had any effect, since Firefox has unshipped support for the non-standard `:-moz-broken` pseudo-class and `-moz-force-broken-image-icon` property
+time: 2026-08-06T00:00:00.000000+00:00
+custom:
+  Issue: TINYMCE-10480-2
