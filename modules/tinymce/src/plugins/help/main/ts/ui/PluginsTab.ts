@@ -42,8 +42,10 @@ const readPluginMetadata = (editor: Editor, key: string): Optional<PluginMetadat
     .filter(Type.isFunction)
     .bind(getUsableMetadata);
 
-const isTypedMetadata = (metadata: PluginMetadata): metadata is TypedPluginMetadata =>
-  Type.isString((metadata as TypedPluginMetadata).slug);
+const isTypedMetadata = (metadata: PluginMetadata): metadata is TypedPluginMetadata => {
+  const { slug, type } = metadata as TypedPluginMetadata;
+  return Type.isString(slug) && (type === 'premium' || type === 'opensource');
+};
 
 const isUrlMetadata = (metadata: PluginMetadata): metadata is UrlPluginMetadata =>
   Type.isString((metadata as UrlPluginMetadata).url);
