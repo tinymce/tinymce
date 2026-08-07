@@ -6,6 +6,7 @@
 @profile-subheading-font-size: @font-size-xs;
 @profile-subheading-text-color: @text-color;
 @profile-gap: @pad-sm;
+@profile-avatar-size: 36px;
 
 .tox {
   .tox-profile {
@@ -16,6 +17,22 @@
 
   .tox-profile__image {
     flex-shrink: 0;
+  }
+
+  .tox-user-avatar {
+    width: @profile-avatar-size;
+    height: @profile-avatar-size;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
   }
 
   .tox-profile__body {

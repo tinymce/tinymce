@@ -680,6 +680,166 @@ describe('browser.components.CardTest', () => {
     });
   });
 
+  describe('Header Tests', () => {
+    it('TINYMCE-14722: Should render Card.HeaderContent', async () => {
+      const { getByText, container } = render(
+        <Card.Root>
+          <Card.Header>
+            <Card.HeaderContent>
+              <span>Left content</span>
+            </Card.HeaderContent>
+          </Card.Header>
+        </Card.Root>,
+        { wrapper }
+      );
+
+      expect(getByText('Left content').element(), 'HeaderContent children should render').toBeTruthy();
+      expect(
+        container.querySelector(Bem.elementSelector('tox-card', 'header-content')),
+        'HeaderContent should use tox-card__header-content class'
+      ).toBeTruthy();
+    });
+
+    it('TINYMCE-14722: Should render Card.HeaderActions', async () => {
+      const { getByText, container } = render(
+        <Card.Root>
+          <Card.Header>
+            <Card.HeaderActions>
+              <button>Action</button>
+            </Card.HeaderActions>
+          </Card.Header>
+        </Card.Root>,
+        { wrapper }
+      );
+
+      expect(getByText('Action').element(), 'HeaderActions children should render').toBeTruthy();
+      expect(
+        container.querySelector(Bem.elementSelector('tox-card', 'header-actions')),
+        'HeaderActions should use tox-card__header-actions class'
+      ).toBeTruthy();
+    });
+
+    it('TINYMCE-14722: Should render both HeaderContent and HeaderActions', async () => {
+      const { getByText } = render(
+        <Card.Root>
+          <Card.Header>
+            <Card.HeaderContent>
+              <span>Content</span>
+            </Card.HeaderContent>
+            <Card.HeaderActions>
+              <button>Action</button>
+            </Card.HeaderActions>
+          </Card.Header>
+        </Card.Root>,
+        { wrapper }
+      );
+
+      expect(getByText('Content').element(), 'HeaderContent should render alongside HeaderActions').toBeTruthy();
+      expect(getByText('Action').element(), 'HeaderActions should render alongside HeaderContent').toBeTruthy();
+    });
+
+    it('TINYMCE-14722: Should apply hover-visible class by default', async () => {
+      const { container } = render(
+        <Card.Root>
+          <Card.Header>
+            <Card.HeaderActions>
+              <button>Action</button>
+            </Card.HeaderActions>
+          </Card.Header>
+        </Card.Root>,
+        { wrapper }
+      );
+
+      const headerActions = container.querySelector(Bem.elementSelector('tox-card', 'header-actions'));
+      expect(
+        headerActions?.className,
+        'Default visibilityMode should apply hover-visible modifier'
+      ).toContain('tox-card__header-actions--hover-visible');
+    });
+
+    it('TINYMCE-14722: Should apply always-visible class when visibilityMode is always', async () => {
+      const { container } = render(
+        <Card.Root>
+          <Card.Header>
+            <Card.HeaderActions visibilityMode="always">
+              <button>Action</button>
+            </Card.HeaderActions>
+          </Card.Header>
+        </Card.Root>,
+        { wrapper }
+      );
+
+      const headerActions = container.querySelector(Bem.elementSelector('tox-card', 'header-actions'));
+      expect(
+        headerActions?.className,
+        'visibilityMode always should apply always-visible modifier'
+      ).toContain('tox-card__header-actions--always-visible');
+    });
+
+    it('TINYMCE-14722: Should apply on-focus class when visibilityMode is focus', async () => {
+      const { container } = render(
+        <Card.Root>
+          <Card.Header>
+            <Card.HeaderActions visibilityMode="focus">
+              <button>Action</button>
+            </Card.HeaderActions>
+          </Card.Header>
+        </Card.Root>,
+        { wrapper }
+      );
+
+      const headerActions = container.querySelector(Bem.elementSelector('tox-card', 'header-actions'));
+      expect(
+        headerActions?.className,
+        'visibilityMode focus should apply on-focus modifier'
+      ).toContain('tox-card__header-actions--on-focus');
+    });
+
+    it('TINYMCE-14722: Should apply hover-visible class to HeaderActions', () => {
+      const { container } = render(
+        <Card.Root selected={true}>
+          <Card.Header>
+            <Card.HeaderContent>
+              <span>Content</span>
+            </Card.HeaderContent>
+            <Card.HeaderActions visibilityMode="hover">
+              <button>Action</button>
+            </Card.HeaderActions>
+          </Card.Header>
+        </Card.Root>,
+        { wrapper }
+      );
+
+      const headerActions = container.querySelector(Bem.elementSelector('tox-card', 'header-actions')) as HTMLElement;
+
+      expect(headerActions, 'HeaderActions element should exist').toBeTruthy();
+      expect(headerActions.className, 'HeaderActions should have hover-visible modifier class').toContain('tox-card__header-actions--hover-visible');
+      expect(headerActions.querySelector('button'), 'HeaderActions button child should render').toBeTruthy();
+    });
+
+    it('TINYMCE-14722: Should render HeaderActions without HeaderContent', () => {
+      const { container } = render(
+        <Card.Root selected={true}>
+          <Card.Header>
+            <Card.HeaderActions visibilityMode="always">
+              <button>Action</button>
+            </Card.HeaderActions>
+          </Card.Header>
+        </Card.Root>,
+        { wrapper }
+      );
+
+      const header = container.querySelector(Bem.elementSelector('tox-card', 'header')) as HTMLElement;
+      const headerActions = container.querySelector(Bem.elementSelector('tox-card', 'header-actions')) as HTMLElement;
+      const headerContent = container.querySelector(Bem.elementSelector('tox-card', 'header-content'));
+
+      expect(header, 'Header element should exist').toBeTruthy();
+      expect(headerActions, 'HeaderActions element should exist').toBeTruthy();
+      expect(headerContent, 'HeaderContent should not exist').toBeFalsy();
+      expect(headerActions.querySelector('button'), 'HeaderActions button child should render').toBeTruthy();
+    });
+  });
+
   describe('Loading State Tests', () => {
     it('TINY-13458: Should show skeleton content when loading is true', async () => {
       const { container } = render(
