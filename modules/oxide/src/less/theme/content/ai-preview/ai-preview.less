@@ -89,7 +89,6 @@ body.tox-tinymceai-preview--selectable {
     background-color: fade(@color-error, 20%);
     box-shadow: @tinymceai-selected-box-shadow;
 
-    // Nested media under a selected removed block (classes on the wrapper).
     img:not(.tox-tinymceai__annotation--removed__paired),
     video,
     iframe {
@@ -142,13 +141,15 @@ body.tox-tinymceai-preview--selectable {
       border-color: @media-modified-background-color;
       .diff-media-selected-outline();
     }
+  }
 
-    &.tox-tinymceai__annotation--preview-highlight.tox-tinymceai__annotation--removed__selected:not(.tox-tinymceai__annotation--removed__paired) {
-      .diff-media-removed();
-      border-color: @media-removed-background-color;
-      display: inline;
-      .diff-media-selected-outline();
-    }
+  img.tox-tinymceai__annotation--preview-highlight.tox-tinymceai__annotation--removed__selected:not(.tox-tinymceai__annotation--removed__paired),
+  video.tox-tinymceai__annotation--preview-highlight.tox-tinymceai__annotation--removed__selected,
+  iframe.tox-tinymceai__annotation--preview-highlight.tox-tinymceai__annotation--removed__selected {
+    .diff-media-removed();
+    border-color: @media-removed-background-color;
+    display: inline-block;
+    .diff-media-selected-outline();
   }
 }
 

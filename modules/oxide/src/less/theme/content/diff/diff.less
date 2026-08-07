@@ -5,22 +5,22 @@
 @media-added-background-color: mix(@background-color, @color-success, 80%);
 @media-removed-background-color: mix(@background-color, @color-error, 80%);
 @media-modified-background-color: mix(@background-color, @color-tint, 80%);
-// Selection ring around media; distinct from @color-tint (#006ce7) used for modified borders.
-@media-selected-outline-color: #233477;
+@media-selected-outline-color: @color-tint;
 
 .diff-media-added() {
   background-color: @media-added-background-color;
   background-image: none;
   border: 2px solid @color-success;
   padding: 0;
+  vertical-align: top;
 }
 
 .diff-media-removed() {
   background-color: @media-removed-background-color;
   background-image: none;
   border: 2px solid @color-error;
-  opacity: 0.6;
   padding: 0;
+  vertical-align: top;
 }
 
 .diff-media-modified() {
@@ -28,6 +28,7 @@
   background-image: none;
   border: 2px solid @color-tint;
   padding: 0;
+  vertical-align: top;
 }
 
 .diff-media-selected-outline() {
@@ -88,6 +89,35 @@
     background-image: none;
     background-color: @removed-bg;
     box-shadow: @selected-box-shadow;
+  }
+
+  // Avoid baseline gap under inline media inside annotation chrome.
+  img,
+  video,
+  iframe,
+  .mce-object,
+  .mce-preview-object {
+    &.tox-@{pluginName}__annotation--added,
+    &.tox-@{pluginName}__annotation--modified,
+    &.tox-@{pluginName}__annotation--removed {
+      padding-block: 0;
+      vertical-align: top;
+    }
+  }
+
+  .tox-@{pluginName}__annotation--added:has(img, video, iframe, .mce-object, .mce-preview-object),
+  .tox-@{pluginName}__annotation--modified:has(img, video, iframe, .mce-object, .mce-preview-object),
+  .tox-@{pluginName}__annotation--removed:has(img, video, iframe, .mce-object, .mce-preview-object) {
+    padding-block: 0;
+    line-height: 0;
+
+    img,
+    video,
+    iframe,
+    .mce-object,
+    .mce-preview-object {
+      vertical-align: top;
+    }
   }
 
   // ins/del elements only contain text and inline formatting, so they can safely use
@@ -158,8 +188,7 @@
     }
   }
 
-  // Paired remove = old half of a replacement: images get the X only (no washout).
-  // Also style media nested under a removed block (typical <!-- removed --> path).
+  // Replaced images: X only (no wash). Video/iframe keep wash even when paired.
   img.tox-@{pluginName}__annotation--removed__highlight:not(.tox-@{pluginName}__annotation--removed__paired),
   img.tox-@{pluginName}__annotation--removed__selected:not(.tox-@{pluginName}__annotation--removed__paired),
   .tox-@{pluginName}__annotation--removed__highlight img:not(.tox-@{pluginName}__annotation--removed__paired),
@@ -214,6 +243,11 @@
     position: absolute;
     top: 0;
     z-index: 11;
+  }
+
+  .tox-@{pluginName}__deleted-media-wash {
+    fill: @background-color;
+    fill-opacity: 0.4;
   }
 
   .tox-@{pluginName}__deleted-media-mark {
