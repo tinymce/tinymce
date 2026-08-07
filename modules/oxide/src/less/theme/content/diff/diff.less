@@ -2,8 +2,18 @@
 @modified-background-color: fade(@color-tint, 20%);
 @removed-background-color: fade(@color-error, 20%);
 
+@media-added-background-color: mix(@background-color, @color-success, 80%);
 @media-removed-background-color: mix(@background-color, @color-error, 80%);
 @media-modified-background-color: mix(@background-color, @color-tint, 80%);
+// Selection ring around media; distinct from @color-tint (#006ce7) used for modified borders.
+@media-selected-outline-color: #233477;
+
+.diff-media-added() {
+  background-color: @media-added-background-color;
+  background-image: none;
+  border: 2px solid @color-success;
+  padding: 0;
+}
 
 .diff-media-removed() {
   background-color: @media-removed-background-color;
@@ -18,6 +28,10 @@
   background-image: none;
   border: 2px solid @color-tint;
   padding: 0;
+}
+
+.diff-media-selected-outline() {
+  outline: 2px solid @media-selected-outline-color;
 }
 
 @selected-outline-color: @color-tint;
@@ -124,43 +138,60 @@
   video,
   iframe {
     &.tox-@{pluginName}__annotation--added__highlight {
-      outline: 0.25em solid @added-bg;
-      padding: 0.25em;
-      background-image: none;
+      .diff-media-added();
     }
 
     &.tox-@{pluginName}__annotation--added__selected {
-      border: 0.25em solid @added-bg;
-      outline: 0.125em solid @selected-outline-color;
-      padding: 0em;
-      background-image: none;
+      .diff-media-added();
+      border-color: @media-added-background-color;
+      .diff-media-selected-outline();
     }
 
-    &.tox-@{pluginName}__annotation--modified__highlight,
-    &.tox-@{pluginName}__annotation--modified__selected {
+    &.tox-@{pluginName}__annotation--modified__highlight {
       .diff-media-modified();
     }
 
-    &.tox-@{pluginName}__annotation--modified__selected,
-    &.tox-@{pluginName}__annotation--removed__selected {
-      outline: 2px solid @selected-outline-color;
+    &.tox-@{pluginName}__annotation--modified__selected {
+      .diff-media-modified();
+      border-color: @media-modified-background-color;
+      .diff-media-selected-outline();
     }
   }
 
-  // A paired remove is the old half of a replacement: replaced images show the X mark
-  // only, while deleted images and all removed videos/iframes are also washed out.
+  // Paired remove = old half of a replacement: images get the X only (no washout).
+  // Also style media nested under a removed block (typical <!-- removed --> path).
   img.tox-@{pluginName}__annotation--removed__highlight:not(.tox-@{pluginName}__annotation--removed__paired),
   img.tox-@{pluginName}__annotation--removed__selected:not(.tox-@{pluginName}__annotation--removed__paired),
+  .tox-@{pluginName}__annotation--removed__highlight img:not(.tox-@{pluginName}__annotation--removed__paired),
+  .tox-@{pluginName}__annotation--removed__selected img:not(.tox-@{pluginName}__annotation--removed__paired),
   video.tox-@{pluginName}__annotation--removed__highlight,
   video.tox-@{pluginName}__annotation--removed__selected,
+  .tox-@{pluginName}__annotation--removed__highlight video,
+  .tox-@{pluginName}__annotation--removed__selected video,
   iframe.tox-@{pluginName}__annotation--removed__highlight,
-  iframe.tox-@{pluginName}__annotation--removed__selected {
+  iframe.tox-@{pluginName}__annotation--removed__selected,
+  .tox-@{pluginName}__annotation--removed__highlight iframe,
+  .tox-@{pluginName}__annotation--removed__selected iframe {
     .diff-media-removed();
+  }
+
+  img.tox-@{pluginName}__annotation--removed__selected:not(.tox-@{pluginName}__annotation--removed__paired),
+  .tox-@{pluginName}__annotation--removed__selected img:not(.tox-@{pluginName}__annotation--removed__paired),
+  video.tox-@{pluginName}__annotation--removed__selected,
+  .tox-@{pluginName}__annotation--removed__selected video,
+  iframe.tox-@{pluginName}__annotation--removed__selected,
+  .tox-@{pluginName}__annotation--removed__selected iframe {
+    border-color: @media-removed-background-color;
+    .diff-media-selected-outline();
   }
 
   img.tox-@{pluginName}__annotation--removed__paired {
     background-image: none;
     padding: 0;
+  }
+
+  img.tox-@{pluginName}__annotation--removed__paired.tox-@{pluginName}__annotation--removed__selected {
+    .diff-media-selected-outline();
   }
 
   div.tox-@{pluginName}__annotation:has(> hr) {
@@ -176,7 +207,6 @@
     border-color: darken(@added-bg, 50%);
   }
 
-  // One above the diff focus overlay so marks always paint over the dim layer.
   .tox-@{pluginName}__deleted-media-overlay {
     left: 0;
     overflow: hidden;
