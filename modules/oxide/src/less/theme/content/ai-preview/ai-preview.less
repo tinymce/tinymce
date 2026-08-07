@@ -88,6 +88,15 @@ body.tox-tinymceai-preview--selectable {
     background-image: none;
     background-color: fade(@color-error, 20%);
     box-shadow: @tinymceai-selected-box-shadow;
+
+    // Nested media under a selected removed block (classes on the wrapper).
+    img:not(.tox-tinymceai__annotation--removed__paired),
+    video,
+    iframe {
+      .diff-media-removed();
+      border-color: @media-removed-background-color;
+      .diff-media-selected-outline();
+    }
   }
 
   // ins/del elements only contain text and inline formatting, so they can safely use
@@ -138,17 +147,6 @@ body.tox-tinymceai-preview--selectable {
       .diff-media-removed();
       border-color: @media-removed-background-color;
       display: inline;
-      .diff-media-selected-outline();
-    }
-  }
-
-  // Nested media under a selected removed block (classes on the wrapper).
-  .tox-tinymceai__annotation--preview-highlight.tox-tinymceai__annotation--removed__selected {
-    img:not(.tox-tinymceai__annotation--removed__paired),
-    video,
-    iframe {
-      .diff-media-removed();
-      border-color: @media-removed-background-color;
       .diff-media-selected-outline();
     }
   }
