@@ -52,7 +52,7 @@ export interface ToolbarGroup {
 
 export type ToolbarMode = 'floating' | 'sliding' | 'scrolling' | 'wrap';
 export type ToolbarLocation = 'top' | 'bottom' | 'auto';
-export type SidebarType = 'static' | 'floating';
+export type SidebarType = 'static' | 'floating' | 'decoupled';
 
 export type CrossOrigin = (url: string, resourceType: 'script' | 'stylesheet') => 'anonymous' | 'use-credentials' | undefined;
 
@@ -104,6 +104,7 @@ interface BaseEditorOptions {
   custom_elements?: string | Record<string, CustomElementSpec>;
   custom_ui_selector?: string;
   custom_undo_redo_levels?: number;
+  decoupled_sidebar_container_selector?: string;
   default_font_stack?: string[];
   deprecation_warnings?: boolean;
   directionality?: 'ltr' | 'rtl';

@@ -2,47 +2,98 @@
 <html lang="en">
   <head>
     <title>Plugin: accordion Demo Page</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: sans-serif;
+      }
+
+      .demo-heading {
+        margin: 0;
+        padding: 12px 16px;
+      }
+
+      .demo-toggle {
+        margin: 0 16px 12px;
+      }
+
+      /* Editors on the left, the unassigned area pinned to the right. */
+      .demo-editors {
+        box-sizing: border-box;
+        width: 70%;
+        padding: 0 16px 16px;
+      }
+
+      /* Space between the editors. */
+      .demo-editors .tox-tinymce {
+        margin-bottom: 32px;
+      }
+
+      .demo-editors .tox-tinymce:last-of-type {
+        margin-bottom: 0;
+      }
+
+      /* Unassigned area - reserved for the decoupled sidebars. Pinned to the
+         viewport so it stays fully visible while the page scrolls. */
+      .demo-unassigned {
+        box-sizing: border-box;
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 30%;
+        height: 100vh;
+        background: navy;
+      }
+
+      /* Hidden unassigned area - the editors reclaim the full page width. */
+      .demo-layout.demo-unassigned-hidden .demo-unassigned {
+        display: none;
+      }
+
+      .demo-layout.demo-unassigned-hidden .demo-editors {
+        width: 100%;
+      }
+    </style>
   </head>
 
   <body>
-    <h2>Plugin: accordion Demo Page</h2>
+    <h2 class="demo-heading">Plugin: accordion Demo Page</h2>
 
-    <div id="ephox-ui">
-      <h1>Editor 1</h1>
-      <textarea id="editor1" cols="30" rows="10" class="tinymce">
-        <details class="mce-accordion" open="open">
-          <summary class="mce-accordion-summary">Expanded accordion</summary>
-          <p>Accordion body...</p>
-        </details>
-        <details class="mce-accordion">
-          <summary class="mce-accordion-summary">Closed accordion</summary>
-          <p>Accordion body...</p>
-        </details>
-      </textarea>
+    <div class="demo-layout demo-unassigned-hidden">
+      <div id="ephox-ui" class="demo-editors">
+        <textarea cols="30" rows="10" class="tinymce">
+          <details class="mce-accordion" open="open">
+            <summary class="mce-accordion-summary">Expanded accordion</summary>
+            <p>Accordion body...</p>
+          </details>
+          <details class="mce-accordion">
+            <summary class="mce-accordion-summary">Closed accordion</summary>
+            <p>Accordion body...</p>
+          </details>
+        </textarea>
+        <textarea cols="30" rows="10" class="tinymce">
+          <details class="mce-accordion" open="open">
+            <summary class="mce-accordion-summary">Expanded accordion</summary>
+            <p>Accordion body...</p>
+          </details>
+          <details class="mce-accordion">
+            <summary class="mce-accordion-summary">Closed accordion</summary>
+            <p>Accordion body...</p>
+          </details>
+        </textarea>
+        <textarea cols="30" rows="10" class="tinymce">
+          <details class="mce-accordion" open="open">
+            <summary class="mce-accordion-summary">Expanded accordion</summary>
+            <p>Accordion body...</p>
+          </details>
+          <details class="mce-accordion">
+            <summary class="mce-accordion-summary">Closed accordion</summary>
+            <p>Accordion body...</p>
+          </details>
+        </textarea>
+      </div>
 
-      <h1>Editor 2</h1>
-      <textarea id="editor2" cols="30" rows="10" class="tinymce-extra">
-        <details class="mce-accordion" open="open">
-          <summary class="mce-accordion-summary">Expanded accordion</summary>
-          <p>Accordion body...</p>
-        </details>
-        <details class="mce-accordion">
-          <summary class="mce-accordion-summary">Closed accordion</summary>
-          <p>Accordion body...</p>
-        </details>
-      </textarea>
-
-      <h1>Editor 3</h1>
-      <textarea id="editor3" cols="30" rows="10" class="tinymce-extra">
-        <details class="mce-accordion" open="open">
-          <summary class="mce-accordion-summary">Expanded accordion</summary>
-          <p>Accordion body...</p>
-        </details>
-        <details class="mce-accordion">
-          <summary class="mce-accordion-summary">Closed accordion</summary>
-          <p>Accordion body...</p>
-        </details>
-      </textarea>
+      <div class="demo-unassigned"></div>
     </div>
 
     <script src="../../../../../js/tinymce/tinymce.js"></script>

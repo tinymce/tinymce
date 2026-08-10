@@ -73,7 +73,8 @@ tinymce.init({
   menu: { insert: { title: 'Insert', items: 'table | image | accordion' }},
   details_initial_state: 'inherited',
   details_serialize_state: 'inherited',
-  sidebar_type: 'floating',
+  sidebar_type: 'decoupled',
+  decoupled_sidebar_container_selector: '.demo-unassigned',
   setup: (editor) => {
     const owner = editorLabel(editor);
     addSidebar1(editor);
@@ -104,20 +105,17 @@ tinymce.init({
         return () => api.element().removeChild(text);
       }
     });
-  }
-});
 
-tinymce.init({
-  selector: 'textarea.tinymce-extra',
-  license_key: 'gpl',
-  plugins: 'table lists image accordion code',
-  toolbar: 'table | numlist bullist | image | accordion | code | mysidebar1',
-  menu: { insert: { title: 'Insert', items: 'table | image | accordion' }},
-  details_initial_state: 'inherited',
-  details_serialize_state: 'inherited',
-  sidebar_type: 'floating',
-  setup: (editor) => {
-    addSidebar1(editor);
+    editor.on('ToggleSidebar', (e) => {
+      const openSidebarName = tinymce.get()
+        .reduce<string>((found, other) => found || other.queryCommandValue('ToggleSidebar'), '');
+      const integratorElement = document.querySelector('.demo-layout');
+      if (integratorElement) {
+        !!openSidebarName
+          ? integratorElement.classList.remove('demo-unassigned-hidden')
+          : integratorElement.classList.add('demo-unassigned-hidden');
+      }
+    });
   }
 });
 

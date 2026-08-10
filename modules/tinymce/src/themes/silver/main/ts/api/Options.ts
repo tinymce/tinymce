@@ -30,7 +30,8 @@ export type SidebarType = typeof SidebarType[keyof typeof SidebarType];
 
 export const SidebarType = {
   static: 'static',
-  floating: 'floating'
+  floating: 'floating',
+  decoupled: 'decoupled'
 } as const;
 
 const option: {
@@ -313,6 +314,11 @@ const register = (editor: Editor): void => {
     default: SidebarType.static
   });
 
+  // Selector for the element the sidebars are rendered into when sidebar_type is 'decoupled'.
+  registerOption('decoupled_sidebar_container_selector', {
+    processor: 'string'
+  });
+
   registerOption('view_show', {
     processor: 'string'
   });
@@ -369,6 +375,7 @@ const getSidebarWidth = option('sidebar_width');
 const getSidebarMinWidth = option('sidebar_min_width');
 const getSidebarMaxWidth = option('sidebar_max_width');
 const getSidebarType = option('sidebar_type');
+const getDecoupledSidebarContainerSelector = option('decoupled_sidebar_container_selector');
 const getViewShow = option('view_show');
 const promotionEnabled = option('promotion');
 const useHelpAccessibility = option('help_accessibility');
@@ -507,6 +514,7 @@ export {
   getSidebarMinWidth,
   getSidebarMaxWidth,
   getSidebarType,
+  getDecoupledSidebarContainerSelector,
   getSkin,
   getSkinUrl,
   getSkinUrlOption,
