@@ -574,9 +574,12 @@ const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
           return SidebarStrategy.createNoopSidebarStrategy();
         },
         (sidebarContainer) => {
+          if (!Class.has(sidebarContainer, 'tox')) {
+            Class.add(sidebarContainer, 'tox');
+          }
+          const strategy = SidebarStrategy.createDecoupledSidebarStrategy(editor, sidebarContainer);
           // Editors sharing a container share the one sidebar, so they have to coordinate to keep
           // only one of them open.
-          const strategy = SidebarStrategy.createDecoupledSidebarStrategy(editor, sidebarContainer);
           DecoupledSidebarSync.setup(editor);
           return strategy;
         }
