@@ -393,6 +393,9 @@ const isMenubarEnabled = (editor: Editor): boolean =>
 const isFloatingSidebar = (editor: Editor): boolean =>
   editor.inline || getSidebarType(editor) === SidebarType.floating;
 
+const isDecoupledSidebar = (editor: Editor): boolean =>
+  getSidebarType(editor) === SidebarType.decoupled;
+
 const getSkinUrl = (editor: Editor): string | undefined => {
   const skinUrl = editor.options.get('skin_url');
 
@@ -531,6 +534,7 @@ export {
   isDistractionFree,
   isDraggableModal,
   isFloatingSidebar,
+  isDecoupledSidebar,
   isMenubarEnabled,
   isMultipleToolbars,
   isReadOnly,

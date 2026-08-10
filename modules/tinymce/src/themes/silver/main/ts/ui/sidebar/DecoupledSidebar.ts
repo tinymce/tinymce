@@ -1,17 +1,14 @@
-import {
-  type AlloyComponent, AlloyEvents, Attachment, Behaviour, Composing, Gui, GuiFactory, Replacing, type SimpleSpec, SlotContainer, type SlotContainerTypes, SystemEvents, Toggling
-} from '@ephox/alloy';
+import { type AlloyComponent, AlloyEvents, Behaviour, Composing, Replacing, type SimpleSpec, SlotContainer, type SlotContainerTypes, SystemEvents, Toggling } from '@ephox/alloy';
 import { StructureSchema } from '@ephox/boulder';
 import { Sidebar as BridgeSidebar } from '@ephox/bridge';
 import { Arr, Cell, Fun, Obj, type Optional } from '@ephox/katamari';
-import type { SugarElement } from '@ephox/sugar';
+import { Attribute } from '@ephox/sugar';
 
-import type Editor from 'tinymce/core/api/Editor';
 import { onControlAttached, onControlDetached } from 'tinymce/themes/silver/ui/controls/Controls';
 
+import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { SimpleBehaviours } from '../alien/SimpleBehaviours';
 
-import * as DecoupledSidebarOrchestrator from './DecoupledSidebarOrchestrator';
 import type { SidebarConfig } from './Sidebar';
 
 const renderDecoupledSidebar = (): SimpleSpec => ({
@@ -20,43 +17,16 @@ const renderDecoupledSidebar = (): SimpleSpec => ({
     classes: [ 'tox-decoupled-sidebar' ]
   },
   components: [
-    // this will be replaced on setSidebar
+    // one block per editor, appended by createSlots
   ],
   behaviours: Behaviour.derive([
     Replacing.config({}),
     Toggling.config({
       toggleClass: 'tox-decoupled-sidebar--open',
       toggleOnExecute: false
-    }),
-    Composing.config({
-      find: (comp: AlloyComponent) => {
-        const children = Replacing.contents(comp);
-        return Arr.head(children);
-      }
     })
   ])
 });
-
-// Builds the container the decoupled sidebars are rendered into. The container element is the one
-// matched by the `decoupled_sidebar_container_selector` option, resolved by the caller.
-const setup = (editor: Editor, container: SugarElement<HTMLElement>): AlloyComponent => {
-  const decoupledSidebar = GuiFactory.build(renderDecoupledSidebar());
-
-  // The container is outside every other editor mothership, so the sidebar needs a system of its
-  // own before anything can be built inside it.
-  const mothership = Gui.takeover(decoupledSidebar);
-  Attachment.attachSystem(container, mothership);
-
-  DecoupledSidebarOrchestrator.register(editor);
-  editor.on('remove', () => DecoupledSidebarOrchestrator.unregister(editor.id));
-
-  editor.on('detach', () => {
-    Attachment.detachSystem(mothership);
-    mothership.destroy();
-  });
-
-  return decoupledSidebar;
-};
 
 const getApi = (comp: AlloyComponent): BridgeSidebar.SidebarInstanceApi => ({
   element: (): HTMLElement => comp.element.dom
@@ -112,40 +82,76 @@ const makeSidebar = (panelConfigs: SidebarConfig) => SlotContainer.sketch((parts
   ])
 }));
 
-const setSidebar = (sidebar: AlloyComponent, panelConfigs: SidebarConfig, _showSidebar: string | undefined): void => {
-  Replacing.set(sidebar, [ makeSidebar(panelConfigs) ]);
-
-  // TODO We should also open the initial sidebar, by reading showSidebar
+const createSlots = (decoupledSidebar: AlloyComponent, editorId: string, panelConfigs: SidebarConfig): void => {
+  // Append (never replace) an editor-keyed block holding a per-editor SlotContainer.
+  Replacing.append(decoupledSidebar, {
+    dom: {
+      tag: 'div',
+      classes: [ 'tox-decoupled-sidebar__editor' ],
+      attributes: { 'data-mce-editor-id': editorId }
+    },
+    components: [ makeSidebar(panelConfigs) ],
+    behaviours: Behaviour.derive([
+      Toggling.config({
+        toggleClass: 'tox-decoupled-sidebar__editor--active',
+        toggleOnExecute: false
+      }),
+      ComposingConfigs.childAt(0)
+    ])
+  });
 };
 
-const toggleSidebar = (sidebar: AlloyComponent, name: string): void => {
-  const optSlotContainer = Composing.getCurrent(sidebar);
+const findEditorContainer = (decoupledSidebar: AlloyComponent, editorId: string): Optional<AlloyComponent> =>
+  Arr.find(Replacing.contents(decoupledSidebar), (container) =>
+    Attribute.get(container.element, 'data-mce-editor-id') === editorId
+  );
 
-  optSlotContainer.each((slotContainer) => {
-    if (SlotContainer.isShowing(slotContainer, name)) {
+const toggleEditorSidebar = (decoupledSidebar: AlloyComponent, editorId: string, name: string): void => {
+  findEditorContainer(decoupledSidebar, editorId).each((editorContainer) => {
+    Composing.getCurrent(editorContainer).each((slotContainer) => {
+      const isClosing = SlotContainer.isShowing(slotContainer, name);
       SlotContainer.hideAllSlots(slotContainer);
-      Toggling.off(sidebar);
-    } else {
-      SlotContainer.hideAllSlots(slotContainer);
-      SlotContainer.showSlot(slotContainer, name);
-      Toggling.on(sidebar);
+
+      if (isClosing) {
+        Toggling.off(editorContainer);
+        Toggling.off(decoupledSidebar);
+      } else {
+        SlotContainer.showSlot(slotContainer, name);
+        Toggling.on(editorContainer);
+        Toggling.on(decoupledSidebar);
+      }
+    });
+  });
+};
+
+const removeEditorSlots = (decoupledSidebar: AlloyComponent, editorId: string): void => {
+  findEditorContainer(decoupledSidebar, editorId).each((editorContainer) => {
+    const wasVisible = Toggling.isOn(editorContainer);
+    Replacing.remove(decoupledSidebar, editorContainer);
+
+    if (wasVisible) {
+      Toggling.off(decoupledSidebar);
     }
   });
 };
 
-const whichSidebar = (sidebar: AlloyComponent): Optional<string> => {
-  const optSlotContainer = Composing.getCurrent(sidebar);
+const isAnySidebarOpen = (decoupledSidebar: AlloyComponent): boolean =>
+  Toggling.isOn(decoupledSidebar);
 
-  return optSlotContainer.bind((slotContainer) =>
-    Arr.find(SlotContainer.getSlotNames(slotContainer), (name) =>
-      SlotContainer.isShowing(slotContainer, name)
+const whichEditorSidebar = (decoupledSidebar: AlloyComponent, editorId: string): Optional<string> =>
+  findEditorContainer(decoupledSidebar, editorId).bind((editorContainer) =>
+    Composing.getCurrent(editorContainer).bind((slotContainer) =>
+      Arr.find(SlotContainer.getSlotNames(slotContainer), (name) =>
+        SlotContainer.isShowing(slotContainer, name)
+      )
     )
   );
-};
 
 export {
-  setup,
-  setSidebar,
-  toggleSidebar,
-  whichSidebar
+  renderDecoupledSidebar,
+  createSlots,
+  toggleEditorSidebar,
+  removeEditorSlots,
+  isAnySidebarOpen,
+  whichEditorSidebar
 };

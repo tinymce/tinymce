@@ -3,7 +3,7 @@ import {
 } from '@ephox/alloy';
 import { Arr, Merger, Obj, Optional, Result, Singleton } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Class, Compare, Css, SugarBody, SugarShadowDom, type SugarElement } from '@ephox/sugar';
+import { Class, Compare, Css, SelectorFind, SugarBody, SugarShadowDom, type SugarElement } from '@ephox/sugar';
 
 import type Editor from 'tinymce/core/api/Editor';
 import type { ExecCommandArgs } from 'tinymce/core/api/EditorCommands';
@@ -27,6 +27,7 @@ import * as StickyHeader from './ui/header/StickyHeader';
 import * as SilverContextMenu from './ui/menus/contextmenu/SilverContextMenu';
 import type { MenuRegistry } from './ui/menus/menubar/Integration';
 import * as TableSelectorHandles from './ui/selector/TableSelectorHandles';
+import * as DecoupledSidebarSync from './ui/sidebar/DecoupledSidebarSync';
 import * as FloatingSidebarSync from './ui/sidebar/FloatingSidebarSync';
 import * as Sidebar from './ui/sidebar/Sidebar';
 import type { SidebarConfig } from './ui/sidebar/Sidebar';
@@ -559,6 +560,27 @@ const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
       // only one of them open.
       sidebarStrategy = SidebarStrategy.createFloatingSidebarStrategy(editor);
       FloatingSidebarSync.setup(editor);
+    } else if (Options.isDecoupledSidebar(editor)) {
+      // The sidebars render into whichever element decoupled_sidebar_container_selector points at,
+      // which the host page owns and positions.
+      const container = Optional.from(Options.getDecoupledSidebarContainerSelector(editor)).bind((selector) =>
+        SelectorFind.descendant<HTMLElement>(SugarBody.body(), selector)
+      );
+
+      sidebarStrategy = container.fold(
+        () => {
+          // eslint-disable-next-line no-console
+          console.warn(`Sidebars are disabled for the editor "${editor.id}": decoupled_sidebar_container_selector did not match an element.`);
+          return SidebarStrategy.createNoopSidebarStrategy();
+        },
+        (sidebarContainer) => {
+          // Editors sharing a container share the one sidebar, so they have to coordinate to keep
+          // only one of them open.
+          const strategy = SidebarStrategy.createDecoupledSidebarStrategy(editor, sidebarContainer);
+          DecoupledSidebarSync.setup(editor);
+          return strategy;
+        }
+      );
     } else {
       sidebarStrategy = SidebarStrategy.createStaticSidebarStrategy(
         mainUi.outerContainer,

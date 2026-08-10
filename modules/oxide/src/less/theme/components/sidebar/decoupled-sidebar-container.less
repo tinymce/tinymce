@@ -13,13 +13,24 @@
     }
   }
 
+  .tox-decoupled-sidebar__editor {
+    // Only the active editor's block is shown, so that when several editors share the one
+    // decoupled sidebar only a single sidebar is ever visible at a time.
+    display: none;
+
+    &--active {
+      display: flex;
+      width: 100%;
+    }
+  }
+
   .tox-decoupled-sidebar__pane-container {
     display: flex;
-    flex: 1;
+    width: 100%;
   }
 
   .tox-decoupled-sidebar__pane {
     display: flex;
-    flex: 1;
+    width: 100%;
   }
 }
