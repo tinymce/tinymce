@@ -53,13 +53,7 @@ export interface CardExpansionProps extends PropsWithChildren {
    * Useful when multiple expansions exist in a list and parent needs stable identification.
    */
   readonly id?: string;
-  /**
-   * Open state (controlled).
-   */
   readonly open: boolean;
-  /**
-   * Called when the open state changes.
-   */
   readonly onOpenChange: (open: boolean) => void;
   readonly className?: string;
 }
