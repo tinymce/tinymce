@@ -1,4 +1,5 @@
 import { Fun, Obj } from '@ephox/katamari';
+import { getAll as getAllIcons } from '@tinymce/oxide-icons-default';
 import { AutoResizingTextarea } from 'oxide-components/components/autoresizingtextarea/AutoResizingTextarea';
 import { Button } from 'oxide-components/components/button/Button';
 import * as Card from 'oxide-components/components/card/Card';
@@ -15,10 +16,11 @@ import { renderVisual } from './utils/VisualTestUtils';
 // eslint-disable-next-line max-len
 const AVATAR_URL = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="36" height="36"%3E%3Ccircle cx="18" cy="18" r="18" fill="%234A90E2"/%3E%3Ctext x="18" y="24" text-anchor="middle" fill="white" font-size="14" font-family="sans-serif"%3EJM%3C/text%3E%3C/svg%3E';
 
+const allIcons = getAllIcons();
 const icons: Record<string, string> = {
-  close: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z"/></svg>',
-  checkmark: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M9.55 18L3.85 12.3L5.275 10.875L9.55 15.15L18.725 5.975L20.15 7.4L9.55 18Z"/></svg>',
-  feedback: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>'
+  close: allIcons.close,
+  checkmark: allIcons.checkmark,
+  feedback: allIcons.feedback
 };
 
 const mockUniverse = {
