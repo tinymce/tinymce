@@ -195,6 +195,46 @@
       }
     }
 
+    &__expansion {
+      display: flex;
+      flex-direction: column;
+      gap: @card-section-gap;
+      width: 100%;
+    }
+
+    &__expansion-trigger {
+      width: 100%;
+    }
+
+    &__expansion-content {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 0.2s ease-in-out;
+
+      &--expanded {
+        grid-template-rows: 1fr;
+
+        // Direct child only — nested expansions must keep overflow:hidden when collapsed,
+        // otherwise their content spills out under the trigger.
+        > .tox-card__expansion-content-inner {
+          min-height: auto;
+          overflow: visible;
+        }
+      }
+
+      &--collapsed {
+        grid-template-rows: 0fr;
+      }
+    }
+
+    &__expansion-content-inner {
+      min-height: 0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: @card-section-gap;
+    }
+
     &.tox-skeleton {
       cursor: default;
       pointer-events: none;

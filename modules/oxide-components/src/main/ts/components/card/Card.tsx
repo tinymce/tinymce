@@ -1,5 +1,5 @@
-import { Arr, Type } from '@ephox/katamari';
-import { useCallback, type FC, type PropsWithChildren } from 'react';
+import { Arr, Id, Type } from '@ephox/katamari';
+import { Children, cloneElement, createContext, isValidElement, useCallback, useContext, useEffect, useId, useMemo, useRef, useState, type FC, type MouseEvent as ReactMouseEvent, type PropsWithChildren, type ReactElement } from 'react';
 
 import * as Bem from '../../utils/Bem';
 
@@ -45,6 +45,44 @@ export interface CardActionsProps extends PropsWithChildren {
 
 export interface CardHighlightProps extends PropsWithChildren {
   readonly type: CardHighlightType;
+}
+
+export interface CardExpansionProps extends PropsWithChildren {
+  /**
+   * Optional unique identifier for this expansion.
+   * Useful when multiple expansions exist in a list and parent needs stable identification.
+   */
+  readonly id?: string;
+  /**
+   * Controlled open state. When provided, the expansion is controlled by the parent.
+   */
+  readonly open?: boolean;
+  /**
+   * Initial open state for uncontrolled mode.
+   * @default false
+   */
+  readonly defaultOpen?: boolean;
+  /**
+   * Called when the open state changes.
+   */
+  readonly onOpenChange?: (open: boolean) => void;
+  readonly className?: string;
+}
+
+export interface CardExpansionTriggerProps extends PropsWithChildren {
+  readonly className?: string;
+}
+
+export interface CardExpansionContentProps extends PropsWithChildren {
+  readonly className?: string;
+}
+
+interface CardExpansionContextValue {
+  readonly open: boolean;
+  readonly toggle: () => void;
+  readonly setOpen: (open: boolean) => void;
+  readonly contentId: string;
+  readonly triggerId: string;
 }
 
 const renderSkeletonLines = (lines: number) =>
@@ -203,6 +241,157 @@ const Highlight: FC<CardHighlightProps> = ({ children, type }) => {
   );
 };
 
+const CardExpansionContext = createContext<CardExpansionContextValue | null>(null);
+
+const useCardExpansion = (): CardExpansionContextValue => {
+  const context = useContext(CardExpansionContext);
+  if (context === null) {
+    throw new Error('Card Expansion components must be used within Card.Expansion');
+  }
+  return context;
+};
+
+const Expansion: FC<CardExpansionProps> = ({
+  children,
+  id,
+  open: controlledOpen,
+  defaultOpen = false,
+  onOpenChange,
+  className
+}) => {
+  const [ uncontrolledOpen, setUncontrolledOpen ] = useState(defaultOpen);
+  const reactId = useId();
+  const fallbackId = useMemo(() => Id.generate('card-expansion'), []);
+
+  let baseId = fallbackId;
+  if (Type.isNonNullable(id)) {
+    baseId = id;
+  } else if (reactId.length > 0) {
+    baseId = reactId;
+  }
+
+  const isControlled = Type.isNonNullable(controlledOpen);
+  const open = isControlled ? controlledOpen : uncontrolledOpen;
+
+  const setOpen = useCallback((nextOpen: boolean) => {
+    if (!isControlled) {
+      setUncontrolledOpen(nextOpen);
+    }
+    onOpenChange?.(nextOpen);
+  }, [ isControlled, onOpenChange ]);
+
+  const toggle = useCallback(() => {
+    setOpen(!open);
+  }, [ open, setOpen ]);
+
+  const contextValue = useMemo<CardExpansionContextValue>(() => ({
+    open,
+    toggle,
+    setOpen,
+    contentId: `${baseId}-content`,
+    triggerId: `${baseId}-trigger`
+  }), [ open, toggle, setOpen, baseId ]);
+
+  const expansionClassName = Bem.element('tox-card', 'expansion')
+    + (Type.isNonNullable(className) ? ` ${className}` : '');
+
+  return (
+    <CardExpansionContext.Provider value={contextValue}>
+      <div className={expansionClassName}>
+        {children}
+      </div>
+    </CardExpansionContext.Provider>
+  );
+};
+
+/**
+ * Trigger that toggles the expansion. Requires a single interactive child element.
+ *
+ * Enter and Space toggle via native button click behavior.
+ */
+const ExpansionTrigger: FC<CardExpansionTriggerProps> = ({ children, className }) => {
+  const { open, toggle, contentId, triggerId } = useCardExpansion();
+
+  const handleClick = useCallback((e: ReactMouseEvent) => {
+    e.stopPropagation();
+    toggle();
+  }, [ toggle ]);
+
+  const childArray = Children.toArray(children);
+  const singleChild = childArray.length === 1 ? childArray[0] : null;
+
+  if (!isValidElement(singleChild)) {
+    throw new Error('Card.ExpansionTrigger requires exactly one valid React element child');
+  }
+
+  const child = singleChild as ReactElement<{
+    'onClick'?: (e: ReactMouseEvent) => void;
+    'className'?: string;
+    'id'?: string;
+    'aria-expanded'?: boolean;
+    'aria-controls'?: string;
+  }>;
+
+  let mergedClassName = child.props.className;
+  if (Type.isNonNullable(className)) {
+    if (Type.isNonNullable(mergedClassName)) {
+      mergedClassName = `${mergedClassName} ${className}`;
+    } else {
+      mergedClassName = className;
+    }
+  }
+
+  return cloneElement(child, {
+    'id': child.props.id ?? triggerId,
+    'aria-expanded': open,
+    'aria-controls': contentId,
+    'className': mergedClassName,
+    'onClick': (e: ReactMouseEvent) => {
+      child.props.onClick?.(e);
+      if (!e.defaultPrevented) {
+        handleClick(e);
+      }
+    }
+  });
+};
+
+const ExpansionContent: FC<CardExpansionContentProps> = ({ children, className }) => {
+  const { open, contentId, triggerId } = useCardExpansion();
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const element = contentRef.current;
+    if (Type.isNullable(element)) {
+      return;
+    }
+    if (open) {
+      element.removeAttribute('inert');
+    } else {
+      element.setAttribute('inert', '');
+    }
+  }, [ open ]);
+
+  const contentClassName = Bem.element('tox-card', 'expansion-content', {
+    expanded: open,
+    collapsed: !open
+  }) + (Type.isNonNullable(className) ? ` ${className}` : '');
+
+  return (
+    <div
+      ref={contentRef}
+      id={contentId}
+      role="region"
+      aria-labelledby={triggerId}
+      aria-hidden={!open}
+      className={contentClassName}
+    >
+      <div className={Bem.element('tox-card', 'expansion-content-inner')}>
+        {children}
+      </div>
+    </div>
+  );
+};
+
 export {
   Root,
   Header,
@@ -210,7 +399,10 @@ export {
   HeaderActions,
   Body,
   Actions,
-  Highlight
+  Highlight,
+  Expansion,
+  ExpansionTrigger,
+  ExpansionContent
 };
 
 export { CardList, CardListController } from './CardList';

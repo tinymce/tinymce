@@ -1,6 +1,7 @@
 import * as Card from 'oxide-components/components/card/Card';
-import { Button, ExpandableBox, UniverseProvider } from 'oxide-components/main';
+import { AutoResizingTextarea, Button, ExpandableBox, UniverseProvider } from 'oxide-components/main';
 import * as Bem from 'oxide-components/utils/Bem';
+import { useState, type FC } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
@@ -837,6 +838,528 @@ describe('browser.components.CardTest', () => {
       expect(headerActions, 'HeaderActions element should exist').toBeTruthy();
       expect(headerContent, 'HeaderContent should not exist').toBeFalsy();
       expect(headerActions.querySelector('button'), 'HeaderActions button child should render').toBeTruthy();
+    });
+  });
+
+  describe('Expansion Tests', () => {
+    it('TINYMCE-14723: Should render Expansion with collapsed content by default', async () => {
+      const { container, getByRole } = render(
+        <Card.Root>
+          <Card.Body>Body</Card.Body>
+          <Card.Expansion>
+            <Card.ExpansionTrigger>
+              <button type="button">Provide feedback</button>
+            </Card.ExpansionTrigger>
+            <Card.ExpansionContent>
+              <span>Feedback editor</span>
+            </Card.ExpansionContent>
+          </Card.Expansion>
+        </Card.Root>,
+        { wrapper }
+      );
+
+      const expansion = container.querySelector(Bem.elementSelector('tox-card', 'expansion'));
+      const content = container.querySelector(Bem.elementSelector('tox-card', 'expansion-content'));
+      const trigger = getByRole('button', { name: 'Provide feedback' });
+
+      expect(expansion, 'Expansion root should render').toBeTruthy();
+      expect(content, 'Expansion content should render').toBeTruthy();
+      expect(
+        content?.className,
+        'Content should have collapsed modifier by default'
+      ).toContain('tox-card__expansion-content--collapsed');
+      expect(trigger.element().getAttribute('aria-expanded'), 'Trigger should be collapsed').toBe('false');
+      expect(content?.getAttribute('aria-hidden'), 'Content should be aria-hidden when collapsed').toBe('true');
+    });
+
+    it('TINYMCE-14723: Should expand content when trigger is clicked', async () => {
+      const onOpenChange = vi.fn();
+      const { container, getByRole } = render(
+        <Card.Root>
+          <Card.Expansion onOpenChange={onOpenChange}>
+            <Card.ExpansionTrigger>
+              <button type="button">Provide feedback</button>
+            </Card.ExpansionTrigger>
+            <Card.ExpansionContent>
+              <span>Feedback editor</span>
+            </Card.ExpansionContent>
+          </Card.Expansion>
+        </Card.Root>,
+        { wrapper }
+      );
+
+      const trigger = getByRole('button', { name: 'Provide feedback' });
+      await userEvent.click(trigger);
+
+      const content = container.querySelector(Bem.elementSelector('tox-card', 'expansion-content'));
+      expect(trigger.element().getAttribute('aria-expanded'), 'Trigger should be expanded after click').toBe('true');
+      expect(
+        content?.className,
+        'Content should have expanded modifier after click'
+      ).toContain('tox-card__expansion-content--expanded');
+      expect(content?.getAttribute('aria-hidden'), 'Content should not be aria-hidden when expanded').toBe('false');
+      expect(onOpenChange, 'onOpenChange should be called with true').toHaveBeenCalledWith(true);
+    });
+
+    it('TINYMCE-14723: Should toggle expansion with Enter key', async () => {
+      const { container, getByRole } = render(
+        <Card.Root>
+          <Card.Expansion>
+            <Card.ExpansionTrigger>
+              <button type="button">Add comment...</button>
+            </Card.ExpansionTrigger>
+            <Card.ExpansionContent>
+              <span>Reply editor</span>
+            </Card.ExpansionContent>
+          </Card.Expansion>
+        </Card.Root>,
+        { wrapper }
+      );
+
+      const trigger = getByRole('button', { name: 'Add comment...' });
+      trigger.element().focus();
+      await userEvent.keyboard('{Enter}');
+
+      const content = container.querySelector(Bem.elementSelector('tox-card', 'expansion-content'));
+      expect(trigger.element().getAttribute('aria-expanded'), 'Enter should expand the trigger').toBe('true');
+      expect(
+        content?.className,
+        'Enter should apply expanded content class'
+      ).toContain('tox-card__expansion-content--expanded');
+    });
+
+    it('TINYMCE-14723: Should support controlled open state', async () => {
+      const onOpenChange = vi.fn();
+      const { container, rerender, getByRole } = render(
+        <Card.Root>
+          <Card.Expansion open={false} onOpenChange={onOpenChange}>
+            <Card.ExpansionTrigger>
+              <button type="button">2 replies</button>
+            </Card.ExpansionTrigger>
+            <Card.ExpansionContent>
+              <span>Nested replies</span>
+            </Card.ExpansionContent>
+          </Card.Expansion>
+        </Card.Root>,
+        { wrapper }
+      );
+
+      let content = container.querySelector(Bem.elementSelector('tox-card', 'expansion-content'));
+      expect(content?.className, 'Controlled closed should be collapsed').toContain('tox-card__expansion-content--collapsed');
+
+      await userEvent.click(getByRole('button', { name: '2 replies' }));
+      expect(onOpenChange, 'Controlled mode should notify parent').toHaveBeenCalledWith(true);
+
+      rerender(
+        <Card.Root>
+          <Card.Expansion open={true} onOpenChange={onOpenChange}>
+            <Card.ExpansionTrigger>
+              <button type="button">2 replies</button>
+            </Card.ExpansionTrigger>
+            <Card.ExpansionContent>
+              <span>Nested replies</span>
+            </Card.ExpansionContent>
+          </Card.Expansion>
+        </Card.Root>
+      );
+
+      content = container.querySelector(Bem.elementSelector('tox-card', 'expansion-content'));
+      expect(content?.className, 'Controlled open should be expanded').toContain('tox-card__expansion-content--expanded');
+      expect(
+        getByRole('button', { name: '2 replies' }).element().getAttribute('aria-expanded'),
+        'Controlled open should set aria-expanded'
+      ).toBe('true');
+    });
+
+    it('TINYMCE-14723: Should wire aria-controls between trigger and content', async () => {
+      const { container, getByRole } = render(
+        <Card.Root>
+          <Card.Expansion>
+            <Card.ExpansionTrigger>
+              <button type="button">Provide feedback</button>
+            </Card.ExpansionTrigger>
+            <Card.ExpansionContent>
+              <span>Feedback editor</span>
+            </Card.ExpansionContent>
+          </Card.Expansion>
+        </Card.Root>,
+        { wrapper }
+      );
+
+      const trigger = getByRole('button', { name: 'Provide feedback' }).element();
+      const content = container.querySelector(Bem.elementSelector('tox-card', 'expansion-content'));
+      const controlsId = trigger.getAttribute('aria-controls');
+
+      expect(controlsId, 'Trigger should have aria-controls').toBeTruthy();
+      expect(content?.id, 'Content id should match aria-controls').toBe(controlsId);
+      expect(content?.getAttribute('role'), 'Content should have role region').toBe('region');
+    });
+
+    it('TINYMCE-14723: Should support nested Expansion for comment reply composer', async () => {
+      const { getByRole, getByText } = render(
+        <Card.Root>
+          <Card.Expansion defaultOpen={true}>
+            <Card.ExpansionTrigger>
+              <button type="button">2 replies</button>
+            </Card.ExpansionTrigger>
+            <Card.ExpansionContent>
+              <span>Existing reply</span>
+              <Card.Expansion>
+                <Card.ExpansionTrigger>
+                  <button type="button">Add comment...</button>
+                </Card.ExpansionTrigger>
+                <Card.ExpansionContent>
+                  <span>Nested reply editor</span>
+                </Card.ExpansionContent>
+              </Card.Expansion>
+            </Card.ExpansionContent>
+          </Card.Expansion>
+        </Card.Root>,
+        { wrapper }
+      );
+
+      expect(getByText('Existing reply').element(), 'Outer expansion content should be visible').toBeTruthy();
+
+      const addComment = getByRole('button', { name: 'Add comment...' });
+      expect(addComment.element().getAttribute('aria-expanded'), 'Nested trigger starts collapsed').toBe('false');
+
+      await userEvent.click(addComment);
+      expect(addComment.element().getAttribute('aria-expanded'), 'Nested trigger should expand').toBe('true');
+      expect(getByText('Nested reply editor').element(), 'Nested content should render').toBeTruthy();
+    });
+
+    it('TINYMCE-14723: Should not select card when Expansion trigger is activated', async () => {
+      const onSelect = vi.fn();
+      const { getByRole } = render(
+        <Card.CardList>
+          <Card.Root index={0} onSelect={onSelect}>
+            <Card.Expansion>
+              <Card.ExpansionTrigger>
+                <button type="button">Provide feedback</button>
+              </Card.ExpansionTrigger>
+              <Card.ExpansionContent>
+                <span>Editor</span>
+              </Card.ExpansionContent>
+            </Card.Expansion>
+          </Card.Root>
+        </Card.CardList>,
+        { wrapper }
+      );
+
+      await userEvent.click(getByRole('button', { name: 'Provide feedback' }));
+      expect(onSelect, 'Card onSelect should not fire when clicking Expansion trigger').not.toHaveBeenCalled();
+    });
+
+    it('TINYMCE-14723: Should toggle expansion with Space key', async () => {
+      const { container, getByRole } = render(
+        <Card.Root>
+          <Card.Expansion>
+            <Card.ExpansionTrigger>
+              <button type="button">Provide feedback</button>
+            </Card.ExpansionTrigger>
+            <Card.ExpansionContent>
+              <span>Feedback editor</span>
+            </Card.ExpansionContent>
+          </Card.Expansion>
+        </Card.Root>,
+        { wrapper }
+      );
+
+      const trigger = getByRole('button', { name: 'Provide feedback' });
+      trigger.element().focus();
+      await userEvent.keyboard('{ }');
+
+      const content = container.querySelector(Bem.elementSelector('tox-card', 'expansion-content'));
+      expect(trigger.element().getAttribute('aria-expanded'), 'Space should expand the trigger').toBe('true');
+      expect(
+        content?.className,
+        'Space should apply expanded content class'
+      ).toContain('tox-card__expansion-content--expanded');
+    });
+
+    it('TINYMCE-14723: Provide feedback pattern should reveal textarea for typing', async () => {
+      const FeedbackComposer: FC = () => {
+        const [ open, setOpen ] = useState(false);
+        const [ feedback, setFeedback ] = useState('');
+
+        return (
+          <Card.Root>
+            <Card.Expansion open={open} onOpenChange={setOpen}>
+              {!open && (
+                <Card.ExpansionTrigger>
+                  <button type="button">Provide feedback</button>
+                </Card.ExpansionTrigger>
+              )}
+              <Card.ExpansionContent>
+                <AutoResizingTextarea
+                  value={feedback}
+                  onChange={setFeedback}
+                  placeholder="Provide feedback..."
+                />
+              </Card.ExpansionContent>
+            </Card.Expansion>
+          </Card.Root>
+        );
+      };
+
+      const { getByRole, getByPlaceholder } = render(<FeedbackComposer />, { wrapper });
+
+      await userEvent.click(getByRole('button', { name: 'Provide feedback' }));
+
+      const textarea = getByPlaceholder('Provide feedback...');
+      expect(textarea.element(), 'Textarea should be available after Provide feedback').toBeTruthy();
+
+      await userEvent.type(textarea, 'Test feedback');
+      expect(
+        (textarea.element() as HTMLTextAreaElement).value,
+        'Typed feedback should appear in the textarea'
+      ).toBe('Test feedback');
+    });
+
+    it('TINYMCE-14723: Provide feedback pattern should hide trigger while composer is open', async () => {
+      const FeedbackComposer: FC = () => {
+        const [ open, setOpen ] = useState(false);
+
+        return (
+          <Card.Root>
+            <Card.Expansion open={open} onOpenChange={setOpen}>
+              {!open && (
+                <Card.ExpansionTrigger>
+                  <button type="button">Provide feedback</button>
+                </Card.ExpansionTrigger>
+              )}
+              <Card.ExpansionContent>
+                <span>Feedback editor</span>
+                <button type="button" onClick={() => setOpen(false)}>Cancel</button>
+              </Card.ExpansionContent>
+            </Card.Expansion>
+          </Card.Root>
+        );
+      };
+
+      const { getByRole, getByText, container } = render(<FeedbackComposer />, { wrapper });
+
+      await userEvent.click(getByRole('button', { name: 'Provide feedback' }));
+
+      expect(
+        container.querySelector('button[aria-expanded]'),
+        'Provide feedback trigger should be removed while composer is open'
+      ).toBeNull();
+      expect(getByText('Feedback editor').element(), 'Composer content should be visible').toBeTruthy();
+    });
+
+    it('TINYMCE-14723: Cancel should collapse the provide feedback composer', async () => {
+      const FeedbackComposer: FC = () => {
+        const [ open, setOpen ] = useState(false);
+        const [ feedback, setFeedback ] = useState('');
+
+        return (
+          <Card.Root>
+            <Card.Expansion open={open} onOpenChange={setOpen}>
+              {!open && (
+                <Card.ExpansionTrigger>
+                  <button type="button">Provide feedback</button>
+                </Card.ExpansionTrigger>
+              )}
+              <Card.ExpansionContent>
+                <AutoResizingTextarea
+                  value={feedback}
+                  onChange={setFeedback}
+                  placeholder="Provide feedback..."
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    setFeedback('');
+                    setOpen(false);
+                  }}
+                >
+                  Cancel
+                </button>
+              </Card.ExpansionContent>
+            </Card.Expansion>
+          </Card.Root>
+        );
+      };
+
+      const { getByRole, getByPlaceholder, container } = render(<FeedbackComposer />, { wrapper });
+
+      await userEvent.click(getByRole('button', { name: 'Provide feedback' }));
+      await userEvent.type(getByPlaceholder('Provide feedback...'), 'Draft');
+      await userEvent.click(getByRole('button', { name: 'Cancel' }));
+
+      expect(
+        getByRole('button', { name: 'Provide feedback' }).element(),
+        'Provide feedback trigger should return after Cancel'
+      ).toBeTruthy();
+      expect(
+        container.querySelector(Bem.elementSelector('tox-card', 'expansion-content'))?.className,
+        'Composer should be collapsed after Cancel'
+      ).toContain('tox-card__expansion-content--collapsed');
+      expect(
+        container.querySelector(Bem.elementSelector('tox-card', 'expansion-content'))?.getAttribute('aria-hidden'),
+        'Collapsed composer should be aria-hidden'
+      ).toBe('true');
+    });
+
+    it('TINYMCE-14723: Add comment pattern should open reply composer inside expanded replies', async () => {
+      const CommentThread: FC = () => {
+        const [ repliesOpen, setRepliesOpen ] = useState(true);
+        const [ replyOpen, setReplyOpen ] = useState(false);
+        const [ reply, setReply ] = useState('');
+
+        return (
+          <Card.Root>
+            <Card.Expansion open={repliesOpen} onOpenChange={setRepliesOpen}>
+              <Card.ExpansionTrigger>
+                <button type="button">2 replies</button>
+              </Card.ExpansionTrigger>
+              <Card.ExpansionContent>
+                <span>Existing reply</span>
+                <Card.Expansion open={replyOpen} onOpenChange={setReplyOpen}>
+                  {!replyOpen && (
+                    <Card.ExpansionTrigger>
+                      <button type="button">Add comment...</button>
+                    </Card.ExpansionTrigger>
+                  )}
+                  <Card.ExpansionContent>
+                    <AutoResizingTextarea
+                      value={reply}
+                      onChange={setReply}
+                      placeholder="Add comment..."
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setReply('');
+                        setReplyOpen(false);
+                      }}
+                    >
+                      Cancel
+                    </button>
+                  </Card.ExpansionContent>
+                </Card.Expansion>
+              </Card.ExpansionContent>
+            </Card.Expansion>
+          </Card.Root>
+        );
+      };
+
+      const { getByRole, getByPlaceholder, getByText, container } = render(<CommentThread />, { wrapper });
+
+      expect(getByText('Existing reply').element(), 'Replies should be visible when outer expansion is open').toBeTruthy();
+      expect(
+        getByRole('button', { name: 'Add comment...' }).element(),
+        'Add comment trigger should be visible before opening composer'
+      ).toBeTruthy();
+
+      await userEvent.click(getByRole('button', { name: 'Add comment...' }));
+
+      expect(
+        Array.from(container.querySelectorAll('button')).some((button) => button.textContent === 'Add comment...'),
+        'Add comment trigger should be hidden while composer is open'
+      ).toBe(false);
+
+      const textarea = getByPlaceholder('Add comment...');
+      await userEvent.type(textarea, 'My reply');
+      expect(
+        (textarea.element() as HTMLTextAreaElement).value,
+        'Reply text should be typed into the composer'
+      ).toBe('My reply');
+    });
+
+    it('TINYMCE-14723: Cancel on nested comment composer should keep replies expansion open', async () => {
+      const CommentThread: FC = () => {
+        const [ repliesOpen, setRepliesOpen ] = useState(true);
+        const [ replyOpen, setReplyOpen ] = useState(false);
+
+        return (
+          <Card.Root>
+            <Card.Expansion open={repliesOpen} onOpenChange={setRepliesOpen}>
+              <Card.ExpansionTrigger>
+                <button type="button">2 replies</button>
+              </Card.ExpansionTrigger>
+              <Card.ExpansionContent>
+                <span>Existing reply</span>
+                <Card.Expansion open={replyOpen} onOpenChange={setReplyOpen}>
+                  {!replyOpen && (
+                    <Card.ExpansionTrigger>
+                      <button type="button">Add comment...</button>
+                    </Card.ExpansionTrigger>
+                  )}
+                  <Card.ExpansionContent>
+                    <span>Reply editor</span>
+                    <button type="button" onClick={() => setReplyOpen(false)}>Cancel</button>
+                  </Card.ExpansionContent>
+                </Card.Expansion>
+              </Card.ExpansionContent>
+            </Card.Expansion>
+          </Card.Root>
+        );
+      };
+
+      const { getByRole, getByText, container } = render(<CommentThread />, { wrapper });
+
+      await userEvent.click(getByRole('button', { name: 'Add comment...' }));
+      await userEvent.click(getByRole('button', { name: 'Cancel' }));
+
+      expect(getByText('Existing reply').element(), 'Outer replies content should remain visible after Cancel').toBeTruthy();
+      expect(
+        getByRole('button', { name: 'Add comment...' }).element(),
+        'Add comment trigger should return after Cancel'
+      ).toBeTruthy();
+      expect(
+        getByRole('button', { name: '2 replies' }).element().getAttribute('aria-expanded'),
+        'Outer replies expansion should stay open after Cancel'
+      ).toBe('true');
+
+      const expansionContents = container.querySelectorAll(Bem.elementSelector('tox-card', 'expansion-content'));
+      expect(
+        expansionContents[0]?.className,
+        'Outer expansion content should remain expanded'
+      ).toContain('tox-card__expansion-content--expanded');
+      expect(
+        expansionContents[1]?.className,
+        'Inner composer should be collapsed after Cancel'
+      ).toContain('tox-card__expansion-content--collapsed');
+    });
+
+    it('TINYMCE-14723: Collapsed nested composer should stay aria-hidden while replies are expanded', async () => {
+      const { container, getByRole } = render(
+        <Card.Root>
+          <Card.Expansion defaultOpen={true}>
+            <Card.ExpansionTrigger>
+              <button type="button">2 replies</button>
+            </Card.ExpansionTrigger>
+            <Card.ExpansionContent>
+              <span>Existing reply</span>
+              <Card.Expansion>
+                <Card.ExpansionTrigger>
+                  <button type="button">Add comment...</button>
+                </Card.ExpansionTrigger>
+                <Card.ExpansionContent>
+                  <button type="button">Save reply</button>
+                </Card.ExpansionContent>
+              </Card.Expansion>
+            </Card.ExpansionContent>
+          </Card.Expansion>
+        </Card.Root>,
+        { wrapper }
+      );
+
+      const expansionContents = container.querySelectorAll(Bem.elementSelector('tox-card', 'expansion-content'));
+      expect(
+        expansionContents[1]?.getAttribute('aria-hidden'),
+        'Nested composer should be aria-hidden while collapsed'
+      ).toBe('true');
+      expect(
+        expansionContents[1]?.hasAttribute('inert'),
+        'Nested composer should be inert while collapsed so it cannot be interacted with'
+      ).toBe(true);
+      expect(
+        getByRole('button', { name: 'Add comment...' }).element().getAttribute('aria-expanded'),
+        'Add comment trigger should report collapsed'
+      ).toBe('false');
     });
   });
 

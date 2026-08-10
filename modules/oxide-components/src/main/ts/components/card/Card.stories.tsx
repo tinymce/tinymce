@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { getAll as getAllIcons } from '@tinymce/oxide-icons-default';
 import { useEffect, useState } from 'react';
 
-import { Button, ExpandableBox, IconButton, UniverseProvider } from '../../main';
+import { Button, ExpandableBox, IconButton, AutoResizingTextarea, UniverseProvider } from '../../main';
 import * as Bem from '../../utils/Bem';
 import { Icon } from '../icon/Icon';
 import * as Profile from '../profile/Profile';
@@ -15,7 +15,8 @@ const icons: Record<string, string> = {
   'checkmark': allIcons.checkmark,
   'close': allIcons.close,
   'chevron-down': allIcons['chevron-down'],
-  'chevron-up': allIcons['chevron-up']
+  'chevron-up': allIcons['chevron-up'],
+  'feedback': allIcons.feedback
 };
 
 const mockUniverse = {
@@ -46,7 +47,7 @@ const meta = {
 The Card component is a reusable compound component for displaying content with actions.
 
 ## Features
-- **Compound Component Pattern**: Flexible composition with Root, Header, HeaderContent, HeaderActions, Body, and Actions
+- **Compound Component Pattern**: Flexible composition with Root, Header, HeaderContent, HeaderActions, Body, Actions, and Expansion
 - **State Management**: Supports selected and resolution states (accepted/rejected)
 - **Controlled Component**: Parent manages state via props
 - **Accessibility**: Proper ARIA attributes and keyboard support
@@ -60,6 +61,9 @@ The component uses a compound component pattern with these parts:
 - \`Card.HeaderActions\`: Right-side header action buttons with visibility modes (\`hover\` default, \`focus\`, \`always\`)
 - \`Card.Body\`: Main content area
 - \`Card.Actions\`: Bottom button container
+- \`Card.Expansion\`: Expandable section for nested content (feedback threads, comment replies)
+- \`Card.ExpansionTrigger\`: Button that toggles the expansion (Enter/Space)
+- \`Card.ExpansionContent\`: Animated collapsible content region
 
 ## Integration
 
@@ -67,6 +71,7 @@ Works seamlessly with other oxide-components:
 - **Button** / **IconButton**: For action buttons
 - **Profile**: For user info in HeaderContent
 - **ExpandableBox**: For long content
+- **AutoResizingTextarea**: For feedback/comment editors inside Expansion
 - **Icon**: For status indicators
         `
       }
@@ -669,6 +674,328 @@ This is useful for simple cards that only need action buttons without user info 
               More options
             </Button>
           </Card.Actions>
+        </Card.Root>
+      </div>
+    );
+  }
+};
+
+export const ExpansionProvideFeedback: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: `
+**Card.Expansion — Provide Feedback (Suggested Edits)**
+
+Mirrors the Suggested Edits pattern: clicking **Provide feedback** expands an editor
+inside the card. Cancel collapses the expansion.
+
+**Try it:** Click or press Enter on Provide feedback.
+        `
+      }
+    }
+  },
+  render: () => {
+    const [ selected, setSelected ] = useState(true);
+    const [ open, setOpen ] = useState(false);
+    const [ feedback, setFeedback ] = useState('');
+
+    return (
+      <div style={{ width: '316px' }}>
+        <Card.Root selected={selected} onSelect={() => setSelected(!selected)}>
+          <Card.Header>
+            <Card.HeaderContent>
+              <Profile.Root>
+                <Profile.Image src={AVATAR_URL} alt="John Mac Giolla..." />
+                <Profile.Body>
+                  <Profile.Heading>John Mac Giolla...</Profile.Heading>
+                  <Profile.Subheading>May 18, 9:12 AM</Profile.Subheading>
+                </Profile.Body>
+              </Profile.Root>
+            </Card.HeaderContent>
+            <Card.HeaderActions visibilityMode="hover">
+              <IconButton variant="naked" icon="close" aria-label="Reject" />
+              <IconButton variant="naked" icon="checkmark" aria-label="Accept" />
+            </Card.HeaderActions>
+          </Card.Header>
+          <Card.Body>
+            <p style={{ margin: 0 }}>Modified text</p>
+          </Card.Body>
+          <Card.Expansion open={open} onOpenChange={setOpen}>
+            {!open && (
+              <Card.ExpansionTrigger>
+                <Button variant="outlined" className="tox-button--stretch">
+                  Provide feedback
+                </Button>
+              </Card.ExpansionTrigger>
+            )}
+            <Card.ExpansionContent>
+              <AutoResizingTextarea
+                value={feedback}
+                onChange={setFeedback}
+                placeholder="Provide feedback..."
+              />
+              <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
+                <Button
+                  variant="outlined"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setFeedback('');
+                    setOpen(false);
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="primary"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setOpen(false);
+                  }}
+                >
+                  Save
+                </Button>
+              </div>
+            </Card.ExpansionContent>
+          </Card.Expansion>
+        </Card.Root>
+      </div>
+    );
+  }
+};
+
+export const ExpansionCommentReplies: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: `
+**Card.Expansion — Comment Replies**
+
+Mirrors the Comments pattern: a replies trigger expands nested reply cards,
+with an **Add comment...** action that opens a reply editor.
+
+**Try it:** Expand replies, then Add comment.
+        `
+      }
+    }
+  },
+  render: () => {
+    const [ selected, setSelected ] = useState(true);
+    const [ repliesOpen, setRepliesOpen ] = useState(false);
+    const [ replyOpen, setReplyOpen ] = useState(false);
+    const [ reply, setReply ] = useState('');
+
+    return (
+      <div style={{ width: '316px' }}>
+        <Card.Root selected={selected} onSelect={() => setSelected(!selected)}>
+          <Card.Header>
+            <Card.HeaderContent>
+              <Profile.Root>
+                <Profile.Image src={AVATAR_URL} alt="Jane Smith" />
+                <Profile.Body>
+                  <Profile.Heading>Jane Smith</Profile.Heading>
+                  <Profile.Subheading>
+                    May 19, 2:45 PM • 2 <Icon icon="feedback" aria-label="comments" />
+                  </Profile.Subheading>
+                </Profile.Body>
+              </Profile.Root>
+            </Card.HeaderContent>
+          </Card.Header>
+          <Card.Body>
+            <p style={{ margin: 0 }}>
+              Can we clarify this section before publishing?
+            </p>
+          </Card.Body>
+
+          <Card.Expansion open={repliesOpen} onOpenChange={setRepliesOpen}>
+            <Card.ExpansionTrigger>
+              <Button variant="outlined" className="tox-button--stretch">
+                2 replies
+              </Button>
+            </Card.ExpansionTrigger>
+            <Card.ExpansionContent>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <div>
+                  <Profile.Root>
+                    <Profile.Image src={AVATAR_URL} alt="Alex Rivera" />
+                    <Profile.Body>
+                      <Profile.Heading>Alex Rivera</Profile.Heading>
+                      <Profile.Subheading>May 19, 3:10 PM</Profile.Subheading>
+                    </Profile.Body>
+                  </Profile.Root>
+                  <p style={{ margin: '8px 0 0' }}>Agreed — the wording is ambiguous.</p>
+                </div>
+                <div>
+                  <Profile.Root>
+                    <Profile.Image src={AVATAR_URL} alt="Sam Lee" />
+                    <Profile.Body>
+                      <Profile.Heading>Sam Lee</Profile.Heading>
+                      <Profile.Subheading>May 19, 4:02 PM</Profile.Subheading>
+                    </Profile.Body>
+                  </Profile.Root>
+                  <p style={{ margin: '8px 0 0' }}>I can take a pass on a rewrite.</p>
+                </div>
+
+                <Card.Expansion open={replyOpen} onOpenChange={setReplyOpen}>
+                  {!replyOpen && (
+                    <Card.ExpansionTrigger>
+                      <Button variant="outlined" className="tox-button--stretch">
+                        Add comment...
+                      </Button>
+                    </Card.ExpansionTrigger>
+                  )}
+                  <Card.ExpansionContent>
+                    <AutoResizingTextarea
+                      value={reply}
+                      onChange={setReply}
+                      placeholder="Add comment..."
+                    />
+                    <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
+                      <Button
+                        variant="outlined"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setReply('');
+                          setReplyOpen(false);
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        variant="primary"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setReplyOpen(false);
+                        }}
+                      >
+                        Comment
+                      </Button>
+                    </div>
+                  </Card.ExpansionContent>
+                </Card.Expansion>
+              </div>
+            </Card.ExpansionContent>
+          </Card.Expansion>
+        </Card.Root>
+      </div>
+    );
+  }
+};
+
+export const ExpansionFeedbackReplies: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: `
+**Card.Expansion — Feedback with Replies (Suggested Edits)**
+
+Shows a feedback thread where the original feedback can expand to show nested replies,
+with an **Provide feedback** action to respond to the feedback.
+
+**Try it:** Expand feedback thread, then Provide feedback.
+        `
+      }
+    }
+  },
+  render: () => {
+    const [ selected, setSelected ] = useState(true);
+    const [ feedbackOpen, setFeedbackOpen ] = useState(false);
+    const [ replyOpen, setReplyOpen ] = useState(false);
+    const [ reply, setReply ] = useState('');
+
+    return (
+      <div style={{ width: '316px' }}>
+        <Card.Root selected={selected} onSelect={() => setSelected(!selected)}>
+          <Card.Header>
+            <Card.HeaderContent>
+              <Profile.Root>
+                <Profile.Image src={AVATAR_URL} alt="John Mac Giolla..." />
+                <Profile.Body>
+                  <Profile.Heading>John Mac Giolla...</Profile.Heading>
+                  <Profile.Subheading>
+                    May 18, 9:12 AM • 2 <Icon icon="feedback" aria-label="feedback" />
+                  </Profile.Subheading>
+                </Profile.Body>
+              </Profile.Root>
+            </Card.HeaderContent>
+            <Card.HeaderActions visibilityMode="hover">
+              <IconButton variant="naked" icon="close" aria-label="Reject" />
+              <IconButton variant="naked" icon="checkmark" aria-label="Accept" />
+            </Card.HeaderActions>
+          </Card.Header>
+          <Card.Body>
+            <p style={{ margin: 0 }}>Modified text with suggested changes</p>
+          </Card.Body>
+
+          <Card.Expansion open={feedbackOpen} onOpenChange={setFeedbackOpen}>
+            <Card.ExpansionTrigger>
+              <Button variant="outlined" className="tox-button--stretch">
+                View feedback (2)
+              </Button>
+            </Card.ExpansionTrigger>
+            <Card.ExpansionContent>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <div>
+                  <Profile.Root>
+                    <Profile.Image src={AVATAR_URL} alt="Sarah Chen" />
+                    <Profile.Body>
+                      <Profile.Heading>Sarah Chen</Profile.Heading>
+                      <Profile.Subheading>May 18, 10:30 AM</Profile.Subheading>
+                    </Profile.Body>
+                  </Profile.Root>
+                  <p style={{ margin: '8px 0 0' }}>This change looks good to me.</p>
+                </div>
+                <div>
+                  <Profile.Root>
+                    <Profile.Image src={AVATAR_URL} alt="Mike Torres" />
+                    <Profile.Body>
+                      <Profile.Heading>Mike Torres</Profile.Heading>
+                      <Profile.Subheading>May 18, 11:15 AM</Profile.Subheading>
+                    </Profile.Body>
+                  </Profile.Root>
+                  <p style={{ margin: '8px 0 0' }}>Could we keep the original phrasing instead?</p>
+                </div>
+
+                <Card.Expansion open={replyOpen} onOpenChange={setReplyOpen}>
+                  {!replyOpen && (
+                    <Card.ExpansionTrigger>
+                      <Button variant="outlined" className="tox-button--stretch">
+                        Provide feedback
+                      </Button>
+                    </Card.ExpansionTrigger>
+                  )}
+                  <Card.ExpansionContent>
+                    <AutoResizingTextarea
+                      value={reply}
+                      onChange={setReply}
+                      placeholder="Provide feedback..."
+                    />
+                    <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
+                      <Button
+                        variant="outlined"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setReply('');
+                          setReplyOpen(false);
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        variant="primary"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setReplyOpen(false);
+                        }}
+                      >
+                        Save
+                      </Button>
+                    </div>
+                  </Card.ExpansionContent>
+                </Card.Expansion>
+              </div>
+            </Card.ExpansionContent>
+          </Card.Expansion>
         </Card.Root>
       </div>
     );
