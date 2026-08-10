@@ -874,20 +874,23 @@ describe('browser.components.CardTest', () => {
     });
 
     it('TINYMCE-14723: Should expand content when trigger is clicked', async () => {
-      const onOpenChange = vi.fn();
-      const { container, getByRole } = render(
-        <Card.Root>
-          <Card.Expansion open={false} onOpenChange={onOpenChange}>
-            <Card.ExpansionTrigger>
-              <button type="button">Provide feedback</button>
-            </Card.ExpansionTrigger>
-            <Card.ExpansionContent>
-              <span>Feedback editor</span>
-            </Card.ExpansionContent>
-          </Card.Expansion>
-        </Card.Root>,
-        { wrapper }
-      );
+      const TestComponent: FC = () => {
+        const [ open, setOpen ] = useState(false);
+        return (
+          <Card.Root>
+            <Card.Expansion open={open} onOpenChange={setOpen}>
+              <Card.ExpansionTrigger>
+                <button type="button">Provide feedback</button>
+              </Card.ExpansionTrigger>
+              <Card.ExpansionContent>
+                <span>Feedback editor</span>
+              </Card.ExpansionContent>
+            </Card.Expansion>
+          </Card.Root>
+        );
+      };
+
+      const { container, getByRole } = render(<TestComponent />, { wrapper });
 
       const trigger = getByRole('button', { name: 'Provide feedback' });
       await userEvent.click(trigger);
@@ -899,23 +902,26 @@ describe('browser.components.CardTest', () => {
         'Content should have expanded modifier after click'
       ).toContain('tox-card__expansion-content--expanded');
       expect(content?.getAttribute('aria-hidden'), 'Content should not be aria-hidden when expanded').toBe('false');
-      expect(onOpenChange, 'onOpenChange should be called with true').toHaveBeenCalledWith(true);
     });
 
     it('TINYMCE-14723: Should toggle expansion with Enter key', async () => {
-      const { container, getByRole } = render(
-        <Card.Root>
-          <Card.Expansion open={false} onOpenChange={Fun.noop}>
-            <Card.ExpansionTrigger>
-              <button type="button">Add comment...</button>
-            </Card.ExpansionTrigger>
-            <Card.ExpansionContent>
-              <span>Reply editor</span>
-            </Card.ExpansionContent>
-          </Card.Expansion>
-        </Card.Root>,
-        { wrapper }
-      );
+      const TestComponent: FC = () => {
+        const [ open, setOpen ] = useState(false);
+        return (
+          <Card.Root>
+            <Card.Expansion open={open} onOpenChange={setOpen}>
+              <Card.ExpansionTrigger>
+                <button type="button">Add comment...</button>
+              </Card.ExpansionTrigger>
+              <Card.ExpansionContent>
+                <span>Reply editor</span>
+              </Card.ExpansionContent>
+            </Card.Expansion>
+          </Card.Root>
+        );
+      };
+
+      const { container, getByRole } = render(<TestComponent />, { wrapper });
 
       const trigger = getByRole('button', { name: 'Add comment...' });
       trigger.element().focus();
@@ -997,27 +1003,32 @@ describe('browser.components.CardTest', () => {
     });
 
     it('TINYMCE-14723: Should support nested Expansion for comment reply composer', async () => {
-      const { getByRole, getByText } = render(
-        <Card.Root>
-          <Card.Expansion open={true} onOpenChange={Fun.noop}>
-            <Card.ExpansionTrigger>
-              <button type="button">2 replies</button>
-            </Card.ExpansionTrigger>
-            <Card.ExpansionContent>
-              <span>Existing reply</span>
-              <Card.Expansion open={false} onOpenChange={Fun.noop}>
-                <Card.ExpansionTrigger>
-                  <button type="button">Add comment...</button>
-                </Card.ExpansionTrigger>
-                <Card.ExpansionContent>
-                  <span>Nested reply editor</span>
-                </Card.ExpansionContent>
-              </Card.Expansion>
-            </Card.ExpansionContent>
-          </Card.Expansion>
-        </Card.Root>,
-        { wrapper }
-      );
+      const TestComponent: FC = () => {
+        const [ outerOpen, setOuterOpen ] = useState(true);
+        const [ innerOpen, setInnerOpen ] = useState(false);
+        return (
+          <Card.Root>
+            <Card.Expansion open={outerOpen} onOpenChange={setOuterOpen}>
+              <Card.ExpansionTrigger>
+                <button type="button">2 replies</button>
+              </Card.ExpansionTrigger>
+              <Card.ExpansionContent>
+                <span>Existing reply</span>
+                <Card.Expansion open={innerOpen} onOpenChange={setInnerOpen}>
+                  <Card.ExpansionTrigger>
+                    <button type="button">Add comment...</button>
+                  </Card.ExpansionTrigger>
+                  <Card.ExpansionContent>
+                    <span>Nested reply editor</span>
+                  </Card.ExpansionContent>
+                </Card.Expansion>
+              </Card.ExpansionContent>
+            </Card.Expansion>
+          </Card.Root>
+        );
+      };
+
+      const { getByRole, getByText } = render(<TestComponent />, { wrapper });
 
       expect(getByText('Existing reply').element(), 'Outer expansion content should be visible').toBeTruthy();
 
@@ -1052,19 +1063,23 @@ describe('browser.components.CardTest', () => {
     });
 
     it('TINYMCE-14723: Should toggle expansion with Space key', async () => {
-      const { container, getByRole } = render(
-        <Card.Root>
-          <Card.Expansion open={false} onOpenChange={Fun.noop}>
-            <Card.ExpansionTrigger>
-              <button type="button">Provide feedback</button>
-            </Card.ExpansionTrigger>
-            <Card.ExpansionContent>
-              <span>Feedback editor</span>
-            </Card.ExpansionContent>
-          </Card.Expansion>
-        </Card.Root>,
-        { wrapper }
-      );
+      const TestComponent: FC = () => {
+        const [ open, setOpen ] = useState(false);
+        return (
+          <Card.Root>
+            <Card.Expansion open={open} onOpenChange={setOpen}>
+              <Card.ExpansionTrigger>
+                <button type="button">Provide feedback</button>
+              </Card.ExpansionTrigger>
+              <Card.ExpansionContent>
+                <span>Feedback editor</span>
+              </Card.ExpansionContent>
+            </Card.Expansion>
+          </Card.Root>
+        );
+      };
+
+      const { container, getByRole } = render(<TestComponent />, { wrapper });
 
       const trigger = getByRole('button', { name: 'Provide feedback' });
       trigger.element().focus();
