@@ -1,3 +1,4 @@
+import { Fun } from '@ephox/katamari';
 import * as Card from 'oxide-components/components/card/Card';
 import { AutoResizingTextarea, Button, ExpandableBox, UniverseProvider } from 'oxide-components/main';
 import * as Bem from 'oxide-components/utils/Bem';
@@ -846,7 +847,7 @@ describe('browser.components.CardTest', () => {
       const { container, getByRole } = render(
         <Card.Root>
           <Card.Body>Body</Card.Body>
-          <Card.Expansion>
+          <Card.Expansion open={false} onOpenChange={Fun.noop}>
             <Card.ExpansionTrigger>
               <button type="button">Provide feedback</button>
             </Card.ExpansionTrigger>
@@ -876,7 +877,7 @@ describe('browser.components.CardTest', () => {
       const onOpenChange = vi.fn();
       const { container, getByRole } = render(
         <Card.Root>
-          <Card.Expansion onOpenChange={onOpenChange}>
+          <Card.Expansion open={false} onOpenChange={onOpenChange}>
             <Card.ExpansionTrigger>
               <button type="button">Provide feedback</button>
             </Card.ExpansionTrigger>
@@ -904,7 +905,7 @@ describe('browser.components.CardTest', () => {
     it('TINYMCE-14723: Should toggle expansion with Enter key', async () => {
       const { container, getByRole } = render(
         <Card.Root>
-          <Card.Expansion>
+          <Card.Expansion open={false} onOpenChange={Fun.noop}>
             <Card.ExpansionTrigger>
               <button type="button">Add comment...</button>
             </Card.ExpansionTrigger>
@@ -974,7 +975,7 @@ describe('browser.components.CardTest', () => {
     it('TINYMCE-14723: Should wire aria-controls between trigger and content', async () => {
       const { container, getByRole } = render(
         <Card.Root>
-          <Card.Expansion>
+          <Card.Expansion open={false} onOpenChange={Fun.noop}>
             <Card.ExpansionTrigger>
               <button type="button">Provide feedback</button>
             </Card.ExpansionTrigger>
@@ -998,13 +999,13 @@ describe('browser.components.CardTest', () => {
     it('TINYMCE-14723: Should support nested Expansion for comment reply composer', async () => {
       const { getByRole, getByText } = render(
         <Card.Root>
-          <Card.Expansion defaultOpen={true}>
+          <Card.Expansion open={true} onOpenChange={Fun.noop}>
             <Card.ExpansionTrigger>
               <button type="button">2 replies</button>
             </Card.ExpansionTrigger>
             <Card.ExpansionContent>
               <span>Existing reply</span>
-              <Card.Expansion>
+              <Card.Expansion open={false} onOpenChange={Fun.noop}>
                 <Card.ExpansionTrigger>
                   <button type="button">Add comment...</button>
                 </Card.ExpansionTrigger>
@@ -1033,7 +1034,7 @@ describe('browser.components.CardTest', () => {
       const { getByRole } = render(
         <Card.CardList>
           <Card.Root index={0} onSelect={onSelect}>
-            <Card.Expansion>
+            <Card.Expansion open={false} onOpenChange={Fun.noop}>
               <Card.ExpansionTrigger>
                 <button type="button">Provide feedback</button>
               </Card.ExpansionTrigger>
@@ -1053,7 +1054,7 @@ describe('browser.components.CardTest', () => {
     it('TINYMCE-14723: Should toggle expansion with Space key', async () => {
       const { container, getByRole } = render(
         <Card.Root>
-          <Card.Expansion>
+          <Card.Expansion open={false} onOpenChange={Fun.noop}>
             <Card.ExpansionTrigger>
               <button type="button">Provide feedback</button>
             </Card.ExpansionTrigger>
@@ -1327,13 +1328,13 @@ describe('browser.components.CardTest', () => {
     it('TINYMCE-14723: Collapsed nested composer should stay aria-hidden while replies are expanded', async () => {
       const { container, getByRole } = render(
         <Card.Root>
-          <Card.Expansion defaultOpen={true}>
+          <Card.Expansion open={true} onOpenChange={Fun.noop}>
             <Card.ExpansionTrigger>
               <button type="button">2 replies</button>
             </Card.ExpansionTrigger>
             <Card.ExpansionContent>
               <span>Existing reply</span>
-              <Card.Expansion>
+              <Card.Expansion open={false} onOpenChange={Fun.noop}>
                 <Card.ExpansionTrigger>
                   <button type="button">Add comment...</button>
                 </Card.ExpansionTrigger>

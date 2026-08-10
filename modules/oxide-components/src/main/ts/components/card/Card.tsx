@@ -1,5 +1,5 @@
 import { Arr, Id, Type } from '@ephox/katamari';
-import { Children, cloneElement, createContext, isValidElement, useCallback, useContext, useEffect, useId, useMemo, useRef, useState, type FC, type MouseEvent as ReactMouseEvent, type PropsWithChildren, type ReactElement } from 'react';
+import { Children, cloneElement, createContext, isValidElement, useCallback, useContext, useEffect, useId, useMemo, useRef, type FC, type MouseEvent as ReactMouseEvent, type PropsWithChildren, type ReactElement } from 'react';
 
 import * as Bem from '../../utils/Bem';
 
@@ -54,18 +54,13 @@ export interface CardExpansionProps extends PropsWithChildren {
    */
   readonly id?: string;
   /**
-   * Controlled open state. When provided, the expansion is controlled by the parent.
+   * Open state (controlled).
    */
-  readonly open?: boolean;
-  /**
-   * Initial open state for uncontrolled mode.
-   * @default false
-   */
-  readonly defaultOpen?: boolean;
+  readonly open: boolean;
   /**
    * Called when the open state changes.
    */
-  readonly onOpenChange?: (open: boolean) => void;
+  readonly onOpenChange: (open: boolean) => void;
   readonly className?: string;
 }
 
@@ -80,7 +75,6 @@ export interface CardExpansionContentProps extends PropsWithChildren {
 interface CardExpansionContextValue {
   readonly open: boolean;
   readonly toggle: () => void;
-  readonly setOpen: (open: boolean) => void;
   readonly contentId: string;
   readonly triggerId: string;
 }
@@ -254,12 +248,10 @@ const useCardExpansion = (): CardExpansionContextValue => {
 const Expansion: FC<CardExpansionProps> = ({
   children,
   id,
-  open: controlledOpen,
-  defaultOpen = false,
+  open,
   onOpenChange,
   className
 }) => {
-  const [ uncontrolledOpen, setUncontrolledOpen ] = useState(defaultOpen);
   const reactId = useId();
   const fallbackId = useMemo(() => Id.generate('card-expansion'), []);
 
@@ -270,27 +262,16 @@ const Expansion: FC<CardExpansionProps> = ({
     baseId = reactId;
   }
 
-  const isControlled = Type.isNonNullable(controlledOpen);
-  const open = isControlled ? controlledOpen : uncontrolledOpen;
-
-  const setOpen = useCallback((nextOpen: boolean) => {
-    if (!isControlled) {
-      setUncontrolledOpen(nextOpen);
-    }
-    onOpenChange?.(nextOpen);
-  }, [ isControlled, onOpenChange ]);
-
   const toggle = useCallback(() => {
-    setOpen(!open);
-  }, [ open, setOpen ]);
+    onOpenChange(!open);
+  }, [ open, onOpenChange ]);
 
   const contextValue = useMemo<CardExpansionContextValue>(() => ({
     open,
     toggle,
-    setOpen,
     contentId: `${baseId}-content`,
     triggerId: `${baseId}-trigger`
-  }), [ open, toggle, setOpen, baseId ]);
+  }), [ open, toggle, baseId ]);
 
   const expansionClassName = Bem.element('tox-card', 'expansion')
     + (Type.isNonNullable(className) ? ` ${className}` : '');

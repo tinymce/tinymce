@@ -161,7 +161,7 @@ describe('visual.CardTest', () => {
         <Card.Body>
           <p style={{ margin: 0 }}>Modified text</p>
         </Card.Body>
-        <Card.Expansion>
+        <Card.Expansion open={false} onOpenChange={Fun.noop}>
           <Card.ExpansionTrigger>
             <Button variant="outlined" className="tox-button--stretch">
               Provide feedback
@@ -201,7 +201,7 @@ describe('visual.CardTest', () => {
         <Card.Body>
           <p style={{ margin: 0 }}>Modified text</p>
         </Card.Body>
-        <Card.Expansion defaultOpen={true}>
+        <Card.Expansion open={true} onOpenChange={Fun.noop}>
           <Card.ExpansionTrigger>
             <Button variant="outlined" className="tox-button--stretch">
               Provide feedback
@@ -249,7 +249,7 @@ describe('visual.CardTest', () => {
           <Card.Body>
             <p style={{ margin: 0 }}>Modified text</p>
           </Card.Body>
-          <Card.Expansion open={open}>
+          <Card.Expansion open={open} onOpenChange={Fun.noop}>
             {!open && (
               <Card.ExpansionTrigger>
                 <Button variant="outlined" className="tox-button--stretch">
@@ -296,7 +296,7 @@ describe('visual.CardTest', () => {
         <Card.Body>
           <p style={{ margin: 0 }}>Can we clarify this section before publishing?</p>
         </Card.Body>
-        <Card.Expansion>
+        <Card.Expansion open={false} onOpenChange={Fun.noop}>
           <Card.ExpansionTrigger>
             <Button variant="outlined" className="tox-button--stretch">
               2 replies
@@ -314,7 +314,7 @@ describe('visual.CardTest', () => {
                 </Profile.Root>
                 <p style={{ margin: '8px 0 0' }}>Agreed — the wording is ambiguous.</p>
               </div>
-              <Card.Expansion>
+              <Card.Expansion open={false} onOpenChange={Fun.noop}>
                 <Card.ExpansionTrigger>
                   <Button variant="outlined" className="tox-button--stretch">
                     Add comment...
@@ -355,7 +355,7 @@ describe('visual.CardTest', () => {
         <Card.Body>
           <p style={{ margin: 0 }}>Can we clarify this section before publishing?</p>
         </Card.Body>
-        <Card.Expansion defaultOpen={true}>
+        <Card.Expansion open={true} onOpenChange={Fun.noop}>
           <Card.ExpansionTrigger>
             <Button variant="outlined" className="tox-button--stretch">
               2 replies
@@ -373,7 +373,7 @@ describe('visual.CardTest', () => {
                 </Profile.Root>
                 <p style={{ margin: '8px 0 0' }}>Agreed — the wording is ambiguous.</p>
               </div>
-              <Card.Expansion defaultOpen={true}>
+              <Card.Expansion open={true} onOpenChange={Fun.noop}>
                 <Card.ExpansionTrigger>
                   <Button variant="outlined" className="tox-button--stretch">
                     Add comment...
@@ -422,7 +422,7 @@ describe('visual.CardTest', () => {
         <Card.Body>
           <p style={{ margin: 0 }}>Modified text with suggested changes</p>
         </Card.Body>
-        <Card.Expansion defaultOpen={true}>
+        <Card.Expansion open={true} onOpenChange={Fun.noop}>
           <Card.ExpansionTrigger>
             <Button variant="outlined" className="tox-button--stretch">
               View feedback (2)
@@ -450,7 +450,7 @@ describe('visual.CardTest', () => {
                 </Profile.Root>
                 <p style={{ margin: '8px 0 0' }}>Could we keep the original phrasing instead?</p>
               </div>
-              <Card.Expansion>
+              <Card.Expansion open={false} onOpenChange={Fun.noop}>
                 <Card.ExpansionTrigger>
                   <Button variant="outlined" className="tox-button--stretch">
                     Provide feedback
