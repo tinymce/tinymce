@@ -1106,7 +1106,7 @@ describe('browser.components.CardTest', () => {
                   <button type="button">Provide feedback</button>
                 </Card.ExpansionTrigger>
               )}
-              <Card.ExpansionContent>
+              <Card.ExpansionContent ariaLabel="Feedback editor">
                 <AutoResizingTextarea
                   value={feedback}
                   onChange={setFeedback}
@@ -1144,7 +1144,7 @@ describe('browser.components.CardTest', () => {
                   <button type="button">Provide feedback</button>
                 </Card.ExpansionTrigger>
               )}
-              <Card.ExpansionContent>
+              <Card.ExpansionContent ariaLabel="Feedback editor">
                 <span>Feedback editor</span>
                 <button type="button" onClick={() => setOpen(false)}>Cancel</button>
               </Card.ExpansionContent>
@@ -1177,7 +1177,7 @@ describe('browser.components.CardTest', () => {
                   <button type="button">Provide feedback</button>
                 </Card.ExpansionTrigger>
               )}
-              <Card.ExpansionContent>
+              <Card.ExpansionContent ariaLabel="Feedback editor">
                 <AutoResizingTextarea
                   value={feedback}
                   onChange={setFeedback}
@@ -1238,7 +1238,7 @@ describe('browser.components.CardTest', () => {
                       <button type="button">Add comment...</button>
                     </Card.ExpansionTrigger>
                   )}
-                  <Card.ExpansionContent>
+                  <Card.ExpansionContent ariaLabel="Comment editor">
                     <AutoResizingTextarea
                       value={reply}
                       onChange={setReply}
@@ -1303,7 +1303,7 @@ describe('browser.components.CardTest', () => {
                       <button type="button">Add comment...</button>
                     </Card.ExpansionTrigger>
                   )}
-                  <Card.ExpansionContent>
+                  <Card.ExpansionContent ariaLabel="Comment editor">
                     <span>Reply editor</span>
                     <button type="button" onClick={() => setReplyOpen(false)}>Cancel</button>
                   </Card.ExpansionContent>

@@ -70,6 +70,7 @@ export interface CardExpansionTriggerProps extends PropsWithChildren {
 
 export interface CardExpansionContentProps extends PropsWithChildren {
   readonly className?: string;
+  readonly ariaLabel?: string;
 }
 
 interface CardExpansionContextValue {
@@ -336,7 +337,7 @@ const ExpansionTrigger: FC<CardExpansionTriggerProps> = ({ children, className }
   });
 };
 
-const ExpansionContent: FC<CardExpansionContentProps> = ({ children, className }) => {
+const ExpansionContent: FC<CardExpansionContentProps> = ({ children, className, ariaLabel }) => {
   const { open, contentId, triggerId } = useCardExpansion();
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -357,12 +358,16 @@ const ExpansionContent: FC<CardExpansionContentProps> = ({ children, className }
     collapsed: !open
   }) + (Type.isNonNullable(className) ? ` ${className}` : '');
 
+  const labelProps = Type.isNonNullable(ariaLabel)
+    ? { 'aria-label': ariaLabel }
+    : { 'aria-labelledby': triggerId };
+
   return (
     <div
       ref={contentRef}
       id={contentId}
       role="region"
-      aria-labelledby={triggerId}
+      {...labelProps}
       aria-hidden={!open}
       className={contentClassName}
     >

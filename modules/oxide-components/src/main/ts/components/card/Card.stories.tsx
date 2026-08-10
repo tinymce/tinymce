@@ -729,7 +729,7 @@ inside the card. Cancel collapses the expansion.
                 </Button>
               </Card.ExpansionTrigger>
             )}
-            <Card.ExpansionContent>
+            <Card.ExpansionContent ariaLabel="Feedback editor">
               <AutoResizingTextarea
                 value={feedback}
                 onChange={setFeedback}
@@ -844,7 +844,7 @@ with an **Add comment...** action that opens a reply editor.
                       </Button>
                     </Card.ExpansionTrigger>
                   )}
-                  <Card.ExpansionContent>
+                  <Card.ExpansionContent ariaLabel="Comment editor">
                     <AutoResizingTextarea
                       value={reply}
                       onChange={setReply}
@@ -890,7 +890,7 @@ export const ExpansionFeedbackReplies: Story = {
 **Card.Expansion — Feedback with Replies (Suggested Edits)**
 
 Shows a feedback thread where the original feedback can expand to show nested replies,
-with an **Provide feedback** action to respond to the feedback.
+with a **Provide feedback** action to respond to the feedback.
 
 **Try it:** Expand feedback thread, then Provide feedback.
         `
@@ -964,7 +964,7 @@ with an **Provide feedback** action to respond to the feedback.
                       </Button>
                     </Card.ExpansionTrigger>
                   )}
-                  <Card.ExpansionContent>
+                  <Card.ExpansionContent ariaLabel="Feedback editor">
                     <AutoResizingTextarea
                       value={reply}
                       onChange={setReply}

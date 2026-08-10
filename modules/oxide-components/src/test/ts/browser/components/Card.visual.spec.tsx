@@ -259,7 +259,7 @@ describe('visual.CardTest', () => {
                 </Button>
               </Card.ExpansionTrigger>
             )}
-            <Card.ExpansionContent>
+            <Card.ExpansionContent ariaLabel="Feedback editor">
               <AutoResizingTextarea
                 value={feedback}
                 onChange={Fun.noop}
