@@ -106,7 +106,7 @@ tinymce.init({
       }
     });
 
-    editor.on('ToggleSidebar', (e) => {
+    editor.on('ToggleSidebar', () => {
       const openSidebarName = tinymce.get()
         .reduce<string>((found, other) => found || other.queryCommandValue('ToggleSidebar'), '');
       const integratorElement = document.querySelector('.demo-layout');
