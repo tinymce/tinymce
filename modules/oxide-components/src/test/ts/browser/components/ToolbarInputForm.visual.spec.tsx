@@ -1,6 +1,6 @@
 import { Fun } from '@ephox/katamari';
-import { ToolbarInputForm, type ToolbarInputFormProps } from 'oxide-components/components/toolbarInputForm/ToolbarInputForm';
-import { UniverseProvider } from 'oxide-components/contexts/UniverseContext/UniverseProvider';
+import { ToolbarInputForm, type ToolbarInputFormProps } from 'oxide-components/components/toolbarinputform/ToolbarInputForm';
+import { UniverseProvider } from 'oxide-components/contexts/universecontext/UniverseProvider';
 import { describe, expect, it } from 'vitest';
 
 import { renderVisual } from './utils/VisualTestUtils';

@@ -1,4 +1,4 @@
-import { useUniverse } from '../../contexts/UniverseContext/Universe';
+import { useUniverse } from '../../contexts/universecontext/Universe';
 import { classes } from '../../utils/Styles';
 
 import type { IconProps } from './IconTypes';

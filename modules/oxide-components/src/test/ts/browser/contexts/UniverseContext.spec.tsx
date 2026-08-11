@@ -1,6 +1,6 @@
-import { useUniverse } from 'oxide-components/contexts/UniverseContext/Universe';
-import { UniverseProvider } from 'oxide-components/contexts/UniverseContext/UniverseProvider';
-import type { UniverseResources } from 'oxide-components/contexts/UniverseContext/UniverseTypes';
+import { useUniverse } from 'oxide-components/contexts/universecontext/Universe';
+import { UniverseProvider } from 'oxide-components/contexts/universecontext/UniverseProvider';
+import type { UniverseResources } from 'oxide-components/contexts/universecontext/UniverseTypes';
 import React from 'react';
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-react';

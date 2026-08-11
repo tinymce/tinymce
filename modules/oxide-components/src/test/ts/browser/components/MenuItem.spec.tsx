@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import type { CommonMenuItemInstanceApi } from 'oxide-components/components/menu/internals/Types';
 import * as Menu from 'oxide-components/components/menu/Menu';
-import { UniverseProvider } from 'oxide-components/contexts/UniverseContext/UniverseProvider';
+import { UniverseProvider } from 'oxide-components/contexts/universecontext/UniverseProvider';
 import * as Bem from 'oxide-components/utils/Bem';
 import { describe, expect, it, vi } from 'vitest';
 import { userEvent, type Locator } from 'vitest/browser';

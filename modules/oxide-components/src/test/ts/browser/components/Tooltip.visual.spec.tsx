@@ -1,6 +1,6 @@
 import { Fun } from '@ephox/katamari';
 import * as Tooltip from 'oxide-components/components/tooltip/Tooltip';
-import { UniverseProvider } from 'oxide-components/contexts/UniverseContext/UniverseProvider';
+import { UniverseProvider } from 'oxide-components/contexts/universecontext/UniverseProvider';
 import { describe, expect, it } from 'vitest';
 import { userEvent } from 'vitest/browser';
 

@@ -2,7 +2,7 @@
 import type { ToggleMenuItemInstanceApi } from 'oxide-components/components/menu/internals/Types';
 import * as Menu from 'oxide-components/components/menu/Menu';
 import * as MenuRenderer from 'oxide-components/components/menu/MenuRenderer';
-import { UniverseProvider } from 'oxide-components/contexts/UniverseContext/UniverseProvider';
+import { UniverseProvider } from 'oxide-components/contexts/universecontext/UniverseProvider';
 import * as Bem from 'oxide-components/utils/Bem';
 import { describe, expect, it, vi } from 'vitest';
 import { type Locator, userEvent } from 'vitest/browser';

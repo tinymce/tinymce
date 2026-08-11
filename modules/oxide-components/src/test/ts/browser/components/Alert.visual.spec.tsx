@@ -1,7 +1,7 @@
 import { Fun } from '@ephox/katamari';
 import { Alert, type AlertProps } from 'oxide-components/components/alert/Alert';
 import { Button } from 'oxide-components/components/button/Button';
-import { UniverseProvider } from 'oxide-components/contexts/UniverseContext/UniverseProvider';
+import { UniverseProvider } from 'oxide-components/contexts/universecontext/UniverseProvider';
 import { describe, it } from 'vitest';
 
 import { renderVisual } from './utils/VisualTestUtils';

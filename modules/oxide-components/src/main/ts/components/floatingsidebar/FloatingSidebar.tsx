@@ -5,7 +5,7 @@ import { forwardRef, useCallback, type CSSProperties, type PropsWithChildren } f
 import * as Bem from '../../utils/Bem';
 import * as Draggable from '../draggable/Draggable';
 
-import '../../module/css';
+import '../../module/Css';
 export interface FloatingSidebarProps extends PropsWithChildren {
   isOpen?: boolean;
   origin?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
