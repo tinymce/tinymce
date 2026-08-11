@@ -26,7 +26,7 @@ const buildDocsUrl = (slug: string): string =>
   `https://www.tiny.cloud/docs/tinymce/${tinymce.majorVersion}/${slug}/`;
 
 const isUsableMetadata = (metadata: unknown): metadata is PluginMetadata =>
-  Type.isObject(metadata) && Type.isString((metadata as PluginMetadata).name);
+  Type.isObject(metadata) && 'name' in metadata && Type.isString(metadata.name);
 
 const getUsableMetadata = (getMetadata: () => PluginMetadata): Optional<PluginMetadata> => {
   try {
@@ -42,13 +42,13 @@ const readPluginMetadata = (editor: Editor, key: string): Optional<PluginMetadat
     .filter(Type.isFunction)
     .bind(getUsableMetadata);
 
-const isTypedMetadata = (metadata: PluginMetadata): metadata is TypedPluginMetadata => {
-  const { slug, type } = metadata as TypedPluginMetadata;
-  return Type.isString(slug) && (type === 'premium' || type === 'opensource');
-};
+const isTypedMetadata = (metadata: PluginMetadata): metadata is TypedPluginMetadata =>
+  'slug' in metadata &&
+  Type.isString(metadata.slug) &&
+  (metadata.type === 'premium' || metadata.type === 'opensource');
 
 const isUrlMetadata = (metadata: PluginMetadata): metadata is UrlPluginMetadata =>
-  Type.isString((metadata as UrlPluginMetadata).url);
+  'url' in metadata && Type.isString(metadata.url);
 
 const toEntry = (metadata: PluginMetadata): PluginEntry => {
   const name = metadata.name;
