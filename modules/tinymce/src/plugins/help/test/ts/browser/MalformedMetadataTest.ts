@@ -1,16 +1,18 @@
-import { before, describe, it } from '@ephox/bedrock-client';
+import { after, before, describe, it } from '@ephox/bedrock-client';
+import { Arr } from '@ephox/katamari';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import type Editor from 'tinymce/core/api/Editor';
+import PluginManager from 'tinymce/core/api/PluginManager';
 import HelpPlugin from 'tinymce/plugins/help/Plugin';
 
 import * as PluginAssert from '../module/PluginAssert';
 import { selectors } from '../module/Selectors';
-import InvalidTypeFakePlugin from '../module/test/InvalidTypeFakePlugin';
-import NameOnlyFakePlugin from '../module/test/NameOnlyFakePlugin';
-import NoSlugFakePlugin from '../module/test/NoSlugFakePlugin';
-import SlugNoTypeFakePlugin from '../module/test/SlugNoTypeFakePlugin';
-import UndefinedTypeFakePlugin from '../module/test/UndefinedTypeFakePlugin';
+import InvalidTypeFakePlugin, { invalidTypeFakeKey } from '../module/test/InvalidTypeFakePlugin';
+import NameOnlyFakePlugin, { nameOnlyFakeKey } from '../module/test/NameOnlyFakePlugin';
+import NoSlugFakePlugin, { noSlugFakeKey } from '../module/test/NoSlugFakePlugin';
+import SlugNoTypeFakePlugin, { slugNoTypeFakeKey } from '../module/test/SlugNoTypeFakePlugin';
+import UndefinedTypeFakePlugin, { undefinedTypeFakeKey } from '../module/test/UndefinedTypeFakePlugin';
 
 describe('browser.tinymce.plugins.help.MalformedMetadataTest', () => {
   const pAssertPlugins = (expected: Record<string, number>): Promise<void> =>
@@ -21,17 +23,21 @@ describe('browser.tinymce.plugins.help.MalformedMetadataTest', () => {
   };
 
   const hook = TinyHooks.bddSetupLight<Editor>({
-    plugins: 'help undefinedtypefake noslugfake nourlplugin slugnotypefake invalidtypefake',
+    plugins: 'help undefinedtypefake noslugfake nameonlyfake slugnotypefake invalidtypefake',
     toolbar: 'help',
     base_url: '/project/tinymce/js/tinymce'
   }, [ HelpPlugin, UndefinedTypeFakePlugin, NoSlugFakePlugin, NameOnlyFakePlugin, SlugNoTypeFakePlugin, InvalidTypeFakePlugin ]);
 
   before(() => openHelpDialog(hook.editor()));
 
+  after(() => {
+    Arr.each([ undefinedTypeFakeKey, noSlugFakeKey, nameOnlyFakeKey, slugNoTypeFakeKey, invalidTypeFakeKey ], PluginManager.remove);
+  });
+
   it('TINYMCE-14730: a plugin with only a name renders as plain text, not a hyperlink', () =>
     pAssertPlugins({
-      'li:contains("Name Only Plugin")': 1,
-      'li a:contains("Name Only Plugin")': 0,
+      'li:contains("Name Only Fake")': 1,
+      'li a:contains("Name Only Fake")': 0,
       'li a[href="undefined"]': 0
     }));
 

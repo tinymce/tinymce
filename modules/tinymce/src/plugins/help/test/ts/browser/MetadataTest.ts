@@ -1,17 +1,19 @@
-import { before, describe, it } from '@ephox/bedrock-client';
+import { after, before, describe, it } from '@ephox/bedrock-client';
+import { Arr } from '@ephox/katamari';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import type Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
+import PluginManager from 'tinymce/core/api/PluginManager';
 import HelpPlugin from 'tinymce/plugins/help/Plugin';
 
 import * as PluginAssert from '../module/PluginAssert';
 import { selectors } from '../module/Selectors';
-import FakePlugin from '../module/test/FakePlugin';
-import HiddenFakePlugin from '../module/test/HiddenFakePlugin';
-import NoMetaFakePlugin from '../module/test/NoMetaFakePlugin';
-import OpenSourceFakePlugin from '../module/test/OpenSourceFakePlugin';
-import PremiumFakePlugin from '../module/test/PremiumFakePlugin';
+import FakePlugin, { fakeKey } from '../module/test/FakePlugin';
+import HiddenFakePlugin, { hiddenFakeKey } from '../module/test/HiddenFakePlugin';
+import NoMetaFakePlugin, { noMetaFakeKey } from '../module/test/NoMetaFakePlugin';
+import OpenSourceFakePlugin, { openSourceFakeKey } from '../module/test/OpenSourceFakePlugin';
+import PremiumFakePlugin, { premiumFakeKey } from '../module/test/PremiumFakePlugin';
 
 describe('browser.tinymce.plugins.help.MetadataTest', () => {
   const majorVersion = EditorManager.majorVersion;
@@ -30,6 +32,10 @@ describe('browser.tinymce.plugins.help.MetadataTest', () => {
   }, [ HelpPlugin, FakePlugin, NoMetaFakePlugin, OpenSourceFakePlugin, PremiumFakePlugin, HiddenFakePlugin ]);
 
   before(() => openHelpDialog(hook.editor()));
+
+  after(() => {
+    Arr.each([ fakeKey, noMetaFakeKey, openSourceFakeKey, premiumFakeKey, hiddenFakeKey ], PluginManager.remove);
+  });
 
   it('TINYMCE-14650: lists a plugin with metadata as a docs link', () =>
     pAssertPlugins({ 'li a:contains("Help")': 1 }));

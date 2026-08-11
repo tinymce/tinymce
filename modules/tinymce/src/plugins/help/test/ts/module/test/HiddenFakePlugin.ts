@@ -3,6 +3,8 @@ import { Fun } from '@ephox/katamari';
 import type Editor from 'tinymce/core/api/Editor';
 import PluginManager, { type PluginMetadata } from 'tinymce/core/api/PluginManager';
 
+export const hiddenFakeKey = 'hiddenfake';
+
 export default (): void => {
   const Plugin = (_editor: Editor, _url: string) => {
     return {
@@ -15,5 +17,5 @@ export default (): void => {
     };
   };
 
-  PluginManager.add('hiddenfake', Plugin);
+  PluginManager.add(hiddenFakeKey, Plugin);
 };

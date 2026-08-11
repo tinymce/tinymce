@@ -7,25 +7,34 @@ const register = (key: string, getMetadata: () => PluginMetadata) => (): void =>
   PluginManager.add(key, (_editor: Editor, _url: string) => ({ getMetadata }));
 };
 
-const EmptyMetaFakePlugin = register('emptymetafake', Fun.constant({} as unknown as PluginMetadata));
+const emptyMetaFakeKey = 'emptymetafake';
+const throwingFakeKey = 'throwingfake';
+const randomFieldsFakeKey = 'randomfieldsfake';
+const namedRandomFakeKey = 'namedrandomfake';
 
-const ThrowingFakePlugin = register('throwingfake', () => {
+const EmptyMetaFakePlugin = register(emptyMetaFakeKey, Fun.constant({} as unknown as PluginMetadata));
+
+const ThrowingFakePlugin = register(throwingFakeKey, () => {
   throw new Error('getMetadata exploded');
 });
 
-const RandomFieldsFakePlugin = register('randomfieldsfake', Fun.constant({
+const RandomFieldsFakePlugin = register(randomFieldsFakeKey, Fun.constant({
   foo: 1,
   bar: 'baz'
 } as unknown as PluginMetadata));
 
-const NamedRandomFieldsFakePlugin = register('namedrandomfake', Fun.constant({
+const NamedRandomFieldsFakePlugin = register(namedRandomFakeKey, Fun.constant({
   name: 'Named Random Fake',
   foo: 1
 } as unknown as PluginMetadata));
 
 export {
   EmptyMetaFakePlugin,
+  emptyMetaFakeKey,
   NamedRandomFieldsFakePlugin,
+  namedRandomFakeKey,
   RandomFieldsFakePlugin,
-  ThrowingFakePlugin
+  randomFieldsFakeKey,
+  ThrowingFakePlugin,
+  throwingFakeKey
 };

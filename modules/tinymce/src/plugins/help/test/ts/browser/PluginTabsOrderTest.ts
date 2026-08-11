@@ -1,16 +1,17 @@
 import { Keys, Mouse } from '@ephox/agar';
-import { describe, it } from '@ephox/bedrock-client';
+import { after, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { SelectorFilter, TextContent } from '@ephox/sugar';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import type Editor from 'tinymce/core/api/Editor';
+import PluginManager from 'tinymce/core/api/PluginManager';
 import HelpPlugin from 'tinymce/plugins/help/Plugin';
 
 import { selectors } from '../module/Selectors';
-import FakePlugin from '../module/test/FakePlugin';
-import NoMetaFakePlugin from '../module/test/NoMetaFakePlugin';
+import FakePlugin, { fakeKey } from '../module/test/FakePlugin';
+import NoMetaFakePlugin, { noMetaFakeKey } from '../module/test/NoMetaFakePlugin';
 
 describe('browser.tinymce.plugins.help.PluginTabsOrderTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -18,6 +19,10 @@ describe('browser.tinymce.plugins.help.PluginTabsOrderTest', () => {
     toolbar: 'help',
     base_url: '/project/tinymce/js/tinymce'
   }, [ HelpPlugin, FakePlugin, NoMetaFakePlugin ]);
+
+  after(() => {
+    Arr.each([ fakeKey, noMetaFakeKey ], PluginManager.remove);
+  });
 
   const pExtractItemsFrom = async (editor: Editor, selector: string): Promise<string[]> => {
     const list = await TinyUiActions.pWaitForUi(

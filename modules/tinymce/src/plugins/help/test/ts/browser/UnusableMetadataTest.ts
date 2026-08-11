@@ -1,13 +1,16 @@
-import { before, describe, it } from '@ephox/bedrock-client';
+import { after, before, describe, it } from '@ephox/bedrock-client';
+import { Arr } from '@ephox/katamari';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import type Editor from 'tinymce/core/api/Editor';
+import PluginManager from 'tinymce/core/api/PluginManager';
 import HelpPlugin from 'tinymce/plugins/help/Plugin';
 
 import * as PluginAssert from '../module/PluginAssert';
 import { selectors } from '../module/Selectors';
 import {
-  EmptyMetaFakePlugin, NamedRandomFieldsFakePlugin, RandomFieldsFakePlugin, ThrowingFakePlugin
+  EmptyMetaFakePlugin, emptyMetaFakeKey, NamedRandomFieldsFakePlugin, namedRandomFakeKey,
+  RandomFieldsFakePlugin, randomFieldsFakeKey, ThrowingFakePlugin, throwingFakeKey
 } from '../module/test/UnusableFakePlugins';
 
 describe('browser.tinymce.plugins.help.UnusableMetadataTest', () => {
@@ -25,6 +28,10 @@ describe('browser.tinymce.plugins.help.UnusableMetadataTest', () => {
   }, [ HelpPlugin, EmptyMetaFakePlugin, ThrowingFakePlugin, RandomFieldsFakePlugin, NamedRandomFieldsFakePlugin ]);
 
   before(() => openHelpDialog(hook.editor()));
+
+  after(() => {
+    Arr.each([ emptyMetaFakeKey, throwingFakeKey, randomFieldsFakeKey, namedRandomFakeKey ], PluginManager.remove);
+  });
 
   it('TINYMCE-14730: the dialog still opens and lists every plugin', () =>
     pAssertPlugins({ li: 5 }));
