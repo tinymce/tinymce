@@ -23,5 +23,4 @@ export const useTooltip = (): TooltipContext => {
   return context;
 };
 
-export const tooltipsEventTarget = new window.EventTarget();
-
+export const tooltipsEventTarget: EventTarget = document;
