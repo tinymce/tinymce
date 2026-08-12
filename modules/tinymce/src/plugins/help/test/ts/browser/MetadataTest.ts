@@ -1,4 +1,4 @@
-import { before, describe, it } from '@ephox/bedrock-client';
+import { after, before, describe, it } from '@ephox/bedrock-client';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import type Editor from 'tinymce/core/api/Editor';
@@ -7,14 +7,34 @@ import HelpPlugin from 'tinymce/plugins/help/Plugin';
 
 import * as PluginAssert from '../module/PluginAssert';
 import { selectors } from '../module/Selectors';
-import FakePlugin from '../module/test/FakePlugin';
-import HiddenFakePlugin from '../module/test/HiddenFakePlugin';
-import NoMetaFakePlugin from '../module/test/NoMetaFakePlugin';
-import OpenSourceFakePlugin from '../module/test/OpenSourceFakePlugin';
-import PremiumFakePlugin from '../module/test/PremiumFakePlugin';
+import * as FakePlugins from '../module/test/FakePlugins';
 
 describe('browser.tinymce.plugins.help.MetadataTest', () => {
   const majorVersion = EditorManager.majorVersion;
+
+  const fakePlugins = [
+    FakePlugins.createFakePlugin('fake', {
+      name: 'Fake',
+      url: 'http://www.fake.com'
+    }),
+    FakePlugins.createFakePlugin('nometafake'),
+    FakePlugins.createFakePlugin('opensourcefake', {
+      name: 'Opensource Fake',
+      type: 'opensource',
+      slug: 'opensource-fake-docs'
+    }),
+    FakePlugins.createFakePlugin('premiumfake', {
+      name: 'Premium Fake',
+      type: 'premium',
+      slug: 'premiumfake'
+    }),
+    FakePlugins.createFakePlugin('hiddenfake', {
+      name: 'Hidden Fake',
+      type: 'opensource',
+      slug: 'hiddenfake',
+      hidden: true
+    })
+  ];
 
   const pAssertPlugins = (expected: Record<string, number>): Promise<void> =>
     PluginAssert.pAssert('Plugin list mismatch', expected, selectors.dialog, selectors.pluginsTab);
@@ -24,12 +44,14 @@ describe('browser.tinymce.plugins.help.MetadataTest', () => {
   };
 
   const hook = TinyHooks.bddSetupLight<Editor>({
-    plugins: 'help fake nometafake opensourcefake premiumfake hiddenfake',
+    plugins: `help ${FakePlugins.keys(fakePlugins)}`,
     toolbar: 'help',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ HelpPlugin, FakePlugin, NoMetaFakePlugin, OpenSourceFakePlugin, PremiumFakePlugin, HiddenFakePlugin ]);
+  }, [ HelpPlugin, ...FakePlugins.registrations(fakePlugins) ]);
 
   before(() => openHelpDialog(hook.editor()));
+
+  after(() => FakePlugins.unregisterAll(fakePlugins));
 
   it('TINYMCE-14650: lists a plugin with metadata as a docs link', () =>
     pAssertPlugins({ 'li a:contains("Help")': 1 }));
