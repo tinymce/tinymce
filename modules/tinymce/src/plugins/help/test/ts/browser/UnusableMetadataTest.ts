@@ -1,19 +1,29 @@
 import { after, before, describe, it } from '@ephox/bedrock-client';
-import { Arr } from '@ephox/katamari';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import type Editor from 'tinymce/core/api/Editor';
-import PluginManager from 'tinymce/core/api/PluginManager';
 import HelpPlugin from 'tinymce/plugins/help/Plugin';
 
 import * as PluginAssert from '../module/PluginAssert';
 import { selectors } from '../module/Selectors';
-import {
-  EmptyMetaFakePlugin, emptyMetaFakeKey, NamedRandomFieldsFakePlugin, namedRandomFakeKey,
-  RandomFieldsFakePlugin, randomFieldsFakeKey, ThrowingFakePlugin, throwingFakeKey
-} from '../module/test/UnusableFakePlugins';
+import * as FakePlugins from '../module/test/FakePlugins';
 
 describe('browser.tinymce.plugins.help.UnusableMetadataTest', () => {
+  const fakePlugins = [
+    FakePlugins.createUntypedFakePlugin('emptymetafake', {}),
+    FakePlugins.createFakePlugin('throwingfake', () => {
+      throw new Error('getMetadata exploded');
+    }),
+    FakePlugins.createUntypedFakePlugin('randomfieldsfake', {
+      foo: 1,
+      bar: 'baz'
+    }),
+    FakePlugins.createUntypedFakePlugin('namedrandomfake', {
+      name: 'Named Random Fake',
+      foo: 1
+    })
+  ];
+
   const pAssertPlugins = (expected: Record<string, number>): Promise<void> =>
     PluginAssert.pAssert('Plugin list mismatch', expected, selectors.dialog, selectors.pluginsTab);
 
@@ -22,16 +32,14 @@ describe('browser.tinymce.plugins.help.UnusableMetadataTest', () => {
   };
 
   const hook = TinyHooks.bddSetupLight<Editor>({
-    plugins: 'help emptymetafake throwingfake randomfieldsfake namedrandomfake',
+    plugins: `help ${FakePlugins.keys(fakePlugins)}`,
     toolbar: 'help',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ HelpPlugin, EmptyMetaFakePlugin, ThrowingFakePlugin, RandomFieldsFakePlugin, NamedRandomFieldsFakePlugin ]);
+  }, [ HelpPlugin, ...FakePlugins.registrations(fakePlugins) ]);
 
   before(() => openHelpDialog(hook.editor()));
 
-  after(() => {
-    Arr.each([ emptyMetaFakeKey, throwingFakeKey, randomFieldsFakeKey, namedRandomFakeKey ], PluginManager.remove);
-  });
+  after(() => FakePlugins.unregisterAll(fakePlugins));
 
   it('TINYMCE-14730: the dialog still opens and lists every plugin', () =>
     pAssertPlugins({ li: 5 }));

@@ -1,20 +1,38 @@
 import { after, before, describe, it } from '@ephox/bedrock-client';
-import { Arr } from '@ephox/katamari';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import type Editor from 'tinymce/core/api/Editor';
-import PluginManager from 'tinymce/core/api/PluginManager';
 import HelpPlugin from 'tinymce/plugins/help/Plugin';
 
 import * as PluginAssert from '../module/PluginAssert';
 import { selectors } from '../module/Selectors';
-import InvalidTypeFakePlugin, { invalidTypeFakeKey } from '../module/test/InvalidTypeFakePlugin';
-import NameOnlyFakePlugin, { nameOnlyFakeKey } from '../module/test/NameOnlyFakePlugin';
-import NoSlugFakePlugin, { noSlugFakeKey } from '../module/test/NoSlugFakePlugin';
-import SlugNoTypeFakePlugin, { slugNoTypeFakeKey } from '../module/test/SlugNoTypeFakePlugin';
-import UndefinedTypeFakePlugin, { undefinedTypeFakeKey } from '../module/test/UndefinedTypeFakePlugin';
+import * as FakePlugins from '../module/test/FakePlugins';
 
 describe('browser.tinymce.plugins.help.MalformedMetadataTest', () => {
+  const fakePlugins = [
+    FakePlugins.createUntypedFakePlugin('undefinedtypefake', {
+      name: 'Undefined Type Fake',
+      url: 'http://www.undefinedtype.com',
+      type: undefined
+    }),
+    FakePlugins.createUntypedFakePlugin('noslugfake', {
+      name: 'No Slug Fake',
+      type: 'opensource'
+    }),
+    FakePlugins.createUntypedFakePlugin('nameonlyfake', {
+      name: 'Name Only Fake'
+    }),
+    FakePlugins.createUntypedFakePlugin('slugnotypefake', {
+      name: 'Slug No Type Fake',
+      slug: 'slug-no-type'
+    }),
+    FakePlugins.createUntypedFakePlugin('invalidtypefake', {
+      name: 'Invalid Type Fake',
+      type: 'PREMIUM',
+      slug: 'invalid-type'
+    })
+  ];
+
   const pAssertPlugins = (expected: Record<string, number>): Promise<void> =>
     PluginAssert.pAssert('Plugin list mismatch', expected, selectors.dialog, selectors.pluginsTab);
 
@@ -23,16 +41,14 @@ describe('browser.tinymce.plugins.help.MalformedMetadataTest', () => {
   };
 
   const hook = TinyHooks.bddSetupLight<Editor>({
-    plugins: 'help undefinedtypefake noslugfake nameonlyfake slugnotypefake invalidtypefake',
+    plugins: `help ${FakePlugins.keys(fakePlugins)}`,
     toolbar: 'help',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ HelpPlugin, UndefinedTypeFakePlugin, NoSlugFakePlugin, NameOnlyFakePlugin, SlugNoTypeFakePlugin, InvalidTypeFakePlugin ]);
+  }, [ HelpPlugin, ...FakePlugins.registrations(fakePlugins) ]);
 
   before(() => openHelpDialog(hook.editor()));
 
-  after(() => {
-    Arr.each([ undefinedTypeFakeKey, noSlugFakeKey, nameOnlyFakeKey, slugNoTypeFakeKey, invalidTypeFakeKey ], PluginManager.remove);
-  });
+  after(() => FakePlugins.unregisterAll(fakePlugins));
 
   it('TINYMCE-14730: a plugin with only a name renders as plain text, not a hyperlink', () =>
     pAssertPlugins({
