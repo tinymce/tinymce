@@ -32,7 +32,7 @@ const createFakePlugin = (key: string, metadata?: FakeMetadata): FakePlugin => {
 
 // Third-party plugins are compiled separately, so at runtime their metadata can be any shape. Those
 // shapes cannot satisfy PluginMetadata by definition, so this is the one place the type is widened.
-const createUntypedFakePlugin = (key: string, metadata: object): FakePlugin =>
+const createUntypedFakePlugin = (key: string, metadata: unknown): FakePlugin =>
   createFakePlugin(key, metadata as PluginMetadata);
 
 const keys = (plugins: FakePlugin[]): string => Arr.map(plugins, (plugin) => plugin.key).join(' ');
