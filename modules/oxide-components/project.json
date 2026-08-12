@@ -3,5 +3,21 @@
   "tags": [
     "open-source",
     "library"
-  ]
+  ],
+  "targets": {
+    "build": {
+      "outputs": [
+        "{projectRoot}/dist",
+        "{projectRoot}/lib",
+        "{projectRoot}/storybook-static"
+      ]
+    },
+    "node-test": {
+      "inputs": [
+        "tiny-library",
+        "{projectRoot}/vitest.config.ts"
+      ],
+      "dependsOn": [ "^build" ]
+    }
+  }
 }
