@@ -1,6 +1,7 @@
 import { Obj } from '@ephox/katamari';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { UniverseProvider } from 'oxide-components/main';
+
+import { UniverseProvider } from '../../contexts/universecontext/UniverseProvider';
 
 import { Icon } from './Icon';
 import type { IconProps } from './IconTypes';

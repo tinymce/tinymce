@@ -1,7 +1,8 @@
 /* eslint-disable max-len */
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { UniverseProvider } from 'oxide-components/main';
 import { fn } from 'storybook/test';
+
+import { UniverseProvider } from '../../contexts/universecontext/UniverseProvider';
 
 import { ToolbarInputForm, type ToolbarInputFormProps } from './ToolbarInputForm';
 

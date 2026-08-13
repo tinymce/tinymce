@@ -1,6 +1,6 @@
 import { AutoResizingTextarea } from 'oxide-components/components/autoresizingtextarea/AutoResizingTextarea';
 import type { Height } from 'oxide-components/components/autoresizingtextarea/AutoResizingTextareaTypes';
-import { Bem } from 'oxide-components/main';
+import { Bem } from 'oxide-components/Main';
 import { useState } from 'react';
 import { describe, expect, it } from 'vitest';
 import { userEvent } from 'vitest/browser';

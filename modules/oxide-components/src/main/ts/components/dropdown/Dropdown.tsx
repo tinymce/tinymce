@@ -17,7 +17,7 @@ import {
   type ReactElement
 } from 'react';
 
-import { Bem } from '../../main';
+import * as Bem from '../../utils/Bem';
 
 import { DropdownContext, useDropdown } from './internals/Context';
 import * as PositioningUtils from './internals/PositioningUtils';

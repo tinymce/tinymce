@@ -1,6 +1,7 @@
 import type { Property } from 'csstype';
-import { Bem } from 'oxide-components/main';
 import type { FunctionComponent } from 'react';
+
+import * as Bem from '../../../utils/Bem';
 
 interface SpinnerProps {
   type?: 'circle' | 'dots';

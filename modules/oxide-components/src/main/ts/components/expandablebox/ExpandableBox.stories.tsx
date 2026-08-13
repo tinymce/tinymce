@@ -1,8 +1,9 @@
 import { Obj } from '@ephox/katamari';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { UniverseProvider } from 'oxide-components/main';
 import { useState } from 'react';
 import { useArgs } from 'storybook/preview-api';
+
+import { UniverseProvider } from '../../contexts/universecontext/UniverseProvider';
 
 import { ExpandableBox, type ExpandableBoxProps } from './ExpandableBox';
 

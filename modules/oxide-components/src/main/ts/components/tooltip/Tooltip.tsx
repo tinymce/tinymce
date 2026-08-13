@@ -1,6 +1,5 @@
 import { Arr, Id, Type } from '@ephox/katamari';
 import { PredicateExists, SugarElement, SugarNode } from '@ephox/sugar';
-import { Bem } from 'oxide-components/main';
 import {
   Children, cloneElement, forwardRef, isValidElement, useCallback,
   useContext,
@@ -9,6 +8,7 @@ import {
   type PropsWithChildren, type ReactNode
 } from 'react';
 
+import * as Bem from '../../utils/Bem';
 import * as Browser from '../../utils/Browser';
 import { DropdownContext } from '../dropdown/internals/Context';
 

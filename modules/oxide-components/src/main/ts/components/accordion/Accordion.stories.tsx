@@ -3,7 +3,9 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { getAll as getAllIcons } from '@tinymce/oxide-icons-default';
 import { useState } from 'react';
 
-import { AutoResizingTextarea, Button, UniverseProvider } from '../../main';
+import { UniverseProvider } from '../../contexts/universecontext/UniverseProvider';
+import { AutoResizingTextarea } from '../autoresizingtextarea/AutoResizingTextarea';
+import { Button } from '../button/Button';
 import * as Dropdown from '../dropdown/Dropdown';
 import { Icon } from '../icon/Icon';
 import * as Menu from '../menu/Menu';

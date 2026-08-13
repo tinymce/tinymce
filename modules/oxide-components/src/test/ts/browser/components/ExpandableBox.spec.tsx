@@ -1,6 +1,6 @@
 import { Fun } from '@ephox/katamari';
 import { ExpandableBox, type ExpandableBoxProps } from 'oxide-components/components/expandablebox/ExpandableBox';
-import { UniverseProvider } from 'oxide-components/main';
+import { UniverseProvider } from 'oxide-components/Main';
 import * as Bem from 'oxide-components/utils/Bem';
 import { useState } from 'react';
 import { describe, expect, it, vi } from 'vitest';

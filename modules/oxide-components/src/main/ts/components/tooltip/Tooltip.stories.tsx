@@ -1,6 +1,9 @@
 import { Obj } from '@ephox/katamari';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Tooltip, UniverseProvider } from 'oxide-components/main';
+
+import { UniverseProvider } from '../../contexts/universecontext/UniverseProvider';
+
+import * as Tooltip from './Tooltip';
 
 const icons: Record<string, string> = {
   close: '<svg width="24" height="24"><path d="M17.3 8.2 13.4 12l3.9 3.8a1 1 0 0 1-1.5 1.5L12 13.4l-3.8 3.9a1 1 0 0 1-1.5-1.5l3.9-3.8-3.9-3.8a1 1 0 0 1 1.5-1.5l3.8 3.9 3.8-3.9a1 1 0 0 1 1.5 1.5Z" fill-rule="evenodd"></path></svg>'

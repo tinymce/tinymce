@@ -3,7 +3,8 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { getAll as getAllIcons } from '@tinymce/oxide-icons-default';
 import { fn } from 'storybook/test';
 
-import { Button, UniverseProvider } from '../../main';
+import { UniverseProvider } from '../../contexts/universecontext/UniverseProvider';
+import { Button } from '../button/Button';
 
 import { Alert, type AlertProps } from './Alert';
 

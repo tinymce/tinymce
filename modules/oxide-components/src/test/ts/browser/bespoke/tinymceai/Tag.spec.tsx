@@ -1,5 +1,5 @@
 import { Fun } from '@ephox/katamari';
-import { Bem, Tag, UniverseProvider, type UniverseResources } from 'oxide-components/main';
+import { Bem, Tag, UniverseProvider, type UniverseResources } from 'oxide-components/Main';
 import { describe, expect, it, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';

@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { getAll as getAllIcons } from '@tinymce/oxide-icons-default';
 import { useRef } from 'react';
 
-import { UniverseProvider } from '../../main';
+import { UniverseProvider } from '../../contexts/universecontext/UniverseProvider';
 
 import { ConfirmationHost, type ConfirmationHostHandle } from './internals/ConfirmationHost';
 

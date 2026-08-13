@@ -3,8 +3,10 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { getAll as getAllIcons } from '@tinymce/oxide-icons-default';
 import { useEffect, useState } from 'react';
 
-import { Button, ExpandableBox, UniverseProvider } from '../../main';
+import { UniverseProvider } from '../../contexts/universecontext/UniverseProvider';
 import * as Bem from '../../utils/Bem';
+import { Button } from '../button/Button';
+import { ExpandableBox } from '../expandablebox/ExpandableBox';
 import { Icon } from '../icon/Icon';
 
 import * as Card from './Card';

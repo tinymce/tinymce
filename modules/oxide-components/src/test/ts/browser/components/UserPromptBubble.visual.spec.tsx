@@ -1,4 +1,4 @@
-import { UserPromptBubble } from 'oxide-components/main';
+import { UserPromptBubble } from 'oxide-components/Main';
 import { describe, it } from 'vitest';
 
 import { renderVisual } from './utils/VisualTestUtils';

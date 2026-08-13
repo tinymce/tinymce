@@ -1,7 +1,7 @@
 import { Type } from '@ephox/katamari';
-import { IconButton } from 'oxide-components/main';
 import { forwardRef } from 'react';
 
+import { IconButton } from '../../../components/iconbutton/IconButton';
 import * as Bem from '../../../utils/Bem';
 
 interface BaseTagProps {

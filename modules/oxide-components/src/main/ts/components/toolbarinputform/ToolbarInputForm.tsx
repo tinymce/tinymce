@@ -1,7 +1,7 @@
 import { Optional } from '@ephox/katamari';
-import { KeyboardNavigationHooks } from 'oxide-components/main';
 import { useEffect, useId, useMemo, useRef, useState, type FC } from 'react';
 
+import * as KeyboardNavigationHooks from '../../keynav/KeyboardNavigationHooks';
 import * as Bem from '../../utils/Bem';
 import { Icon } from '../icon/Icon';
 
