@@ -57,11 +57,12 @@ span[tinymceai-data-pending-diff="true"] {
 }
 
 img, video, iframe {
-  &.tox-tinymceai__annotation--added.tox-tinymceai__annotation--preview-highlight,
+  &.tox-tinymceai__annotation--added.tox-tinymceai__annotation--preview-highlight {
+    .diff-media-added();
+  }
+
   &.tox-tinymceai__annotation--modified.tox-tinymceai__annotation--preview-highlight {
-    background-image: none;
-    outline: 0.25em solid fade(@color-tint, 20%);
-    padding: 0.25em;
+    .diff-media-modified();
   }
 }
 
@@ -87,6 +88,14 @@ body.tox-tinymceai-preview--selectable {
     background-image: none;
     background-color: fade(@color-error, 20%);
     box-shadow: @tinymceai-selected-box-shadow;
+
+    img:not(.tox-tinymceai__annotation--removed__paired),
+    video,
+    iframe {
+      .diff-media-removed();
+      border-color: @media-removed-background-color;
+      .diff-media-selected-outline();
+    }
   }
 
   // ins/del elements only contain text and inline formatting, so they can safely use
@@ -121,21 +130,26 @@ body.tox-tinymceai-preview--selectable {
   }
 
   img, video, iframe {
-    &.tox-tinymceai__annotation--preview-highlight.tox-tinymceai__annotation--added__selected,
-    &.tox-tinymceai__annotation--preview-highlight.tox-tinymceai__annotation--modified__selected {
-      background-image: none;
-      border: 0.25em solid fade(@color-tint, 20%);
-      outline: 0.125em solid @color-tint;
-      padding: 0;
+    &.tox-tinymceai__annotation--preview-highlight.tox-tinymceai__annotation--added__selected {
+      .diff-media-added();
+      border-color: @media-added-background-color;
+      .diff-media-selected-outline();
     }
 
-    &.tox-tinymceai__annotation--preview-highlight.tox-tinymceai__annotation--removed__selected {
-      display: inline;
-      background-image: none;
-      border: 0.25em solid fade(@color-error, 20%);
-      outline: 0.125em solid @color-error;
-      padding: 0;
+    &.tox-tinymceai__annotation--preview-highlight.tox-tinymceai__annotation--modified__selected {
+      .diff-media-modified();
+      border-color: @media-modified-background-color;
+      .diff-media-selected-outline();
     }
+  }
+
+  img.tox-tinymceai__annotation--preview-highlight.tox-tinymceai__annotation--removed__selected:not(.tox-tinymceai__annotation--removed__paired),
+  video.tox-tinymceai__annotation--preview-highlight.tox-tinymceai__annotation--removed__selected,
+  iframe.tox-tinymceai__annotation--preview-highlight.tox-tinymceai__annotation--removed__selected {
+    .diff-media-removed();
+    border-color: @media-removed-background-color;
+    display: inline-block;
+    .diff-media-selected-outline();
   }
 }
 
@@ -151,9 +165,9 @@ body.tox-tinymceai-preview--selectable {
   position: absolute;
   left: 0;
   top: 0;
-  right: 0;
   overflow: hidden;
   pointer-events: none;
+  z-index: 10;
 }
 
 .tox-tinymceai__diff-focus-overlay-dim {
