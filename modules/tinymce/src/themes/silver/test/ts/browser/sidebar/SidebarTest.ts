@@ -250,16 +250,25 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarTest', () => {
       window.focus();
     };
 
+    const getScrollY = (editor: Editor): number => editor.dom.getViewPort(editor.getWin()).y;
+
     const pSetupUnfocusedOffscreenSelection = async (editor: Editor): Promise<number> => {
       editor.setContent('<p>top</p><p style="height: 1000px">spacer</p><p>bottom</p>');
+      await Waiter.pTryUntil('Content should overflow the iframe', () => {
+        Assertions.assertEq(
+          'Content should overflow the iframe viewport',
+          true,
+          editor.getBody().scrollHeight > editor.dom.getViewPort(editor.getWin()).h
+        );
+      });
       TinySelections.setCursor(editor, [ 2, 0 ], 0);
       editor.getWin().scrollTo(0, 0);
       blurEditor();
       await Waiter.pTryUntil('Editor should be unfocused with the iframe scrolled to the top', () => {
         Assertions.assertEq('Editor should be unfocused', false, editor.hasFocus());
-        Assertions.assertEq('Iframe should be scrolled to the top', 0, editor.getWin().scrollY);
+        Assertions.assertEq('Iframe should be scrolled to the top', 0, getScrollY(editor));
       });
-      return editor.getWin().scrollY;
+      return getScrollY(editor);
     };
 
     it('TINYMCE-14765: Opening a sidebar from the toolbar does not jump scroll when the editor was unfocused', async () => {
@@ -272,7 +281,7 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarTest', () => {
       }
       const scrollY = await pSetupUnfocusedOffscreenSelection(editor);
       TinyUiActions.clickOnToolbar(editor, 'button[aria-label="My sidebar 1"]');
-      Assertions.assertEq('Opening a sidebar should not scroll the selection into view', scrollY, editor.getWin().scrollY);
+      Assertions.assertEq('Opening a sidebar should not scroll the selection into view', scrollY, getScrollY(editor));
     });
 
     it('TINYMCE-14765: Closing a sidebar from the toolbar does not jump scroll when the editor was unfocused', async () => {
@@ -285,7 +294,7 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarTest', () => {
       });
       const scrollY = await pSetupUnfocusedOffscreenSelection(editor);
       TinyUiActions.clickOnToolbar(editor, 'button[aria-label="My sidebar 1"]');
-      Assertions.assertEq('Closing a sidebar should not scroll the selection into view', scrollY, editor.getWin().scrollY);
+      Assertions.assertEq('Closing a sidebar should not scroll the selection into view', scrollY, getScrollY(editor));
       Assertions.assertEq('Closing a sidebar should return focus to the editor', true, editor.hasFocus());
     });
 
@@ -293,7 +302,11 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarTest', () => {
       const editor = hook.editor();
       const scrollY = await pSetupUnfocusedOffscreenSelection(editor);
       TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Bold"]');
-      Assertions.assertEq('Bold should still scroll the selection into view', true, editor.getWin().scrollY > scrollY);
+      Assertions.assertEq('Bold should return focus to the editor', true, editor.hasFocus());
+      Assertions.assertEq('Bold should apply to the current selection', true, editor.queryCommandState('Bold'));
+      await Waiter.pTryUntil('Bold should still scroll the selection into view', () => {
+        Assertions.assertEq('Bold should still scroll the selection into view', true, getScrollY(editor) > scrollY);
+      });
     });
   });
 });
