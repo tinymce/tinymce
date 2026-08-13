@@ -9,11 +9,29 @@
 @suggestededits-selected-outline-color: @selected-outline-color;
 @suggestededits-selected-box-shadow: 0 2px 0 0 @suggestededits-selected-outline-color, 0 -2px 0 0 @suggestededits-selected-outline-color;
 
+@suggestededits-dim-overlay-color: @diff-preview-dim-overlay-color;
+
+@suggestededits-preview-highlight-color: @preview-highlight-color;
+@suggestededits-preview-removed-color: @preview-removed-color;
+
 .diff-content(
   suggestededits,
   @suggestededits-added-background-color,
   @suggestededits-modified-background-color,
   @suggestededits-removed-background-color,
   @suggestededits-selected-outline-color,
-  @suggestededits-selected-box-shadow
+  @suggestededits-selected-box-shadow,
+  @suggestededits-dim-overlay-color
 );
+
+.diff-preview-content(
+  suggestededits,
+  @suggestededits-selected-box-shadow,
+  @suggestededits-preview-highlight-color,
+  @suggestededits-preview-removed-color
+);
+
+.tox-suggestededits {
+  // Block class for suggestededits preview - required for Bem type generation
+  display: contents;
+}
