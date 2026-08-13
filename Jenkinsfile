@@ -328,8 +328,10 @@ timestamps { notifyStatusChange(
         stage('Deploy Storybook') {
           if (env.BRANCH_NAME == props.primaryBranch) {
             echo "Deploying Storybook"
-            tinyGit.withGitHubSSHCredentials {
-              exec('bun --silent --cwd modules/oxide-components deploy-storybook')
+            container('node') {
+              tinyGit.withGitHubSSHCredentials {
+                exec('bun --silent --cwd modules/oxide-components deploy-storybook')
+              }
             }
           } else {
             echo "Skipping Storybook deployment as the pipeline is not running on the primary branch"

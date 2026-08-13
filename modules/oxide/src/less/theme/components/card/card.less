@@ -97,6 +97,55 @@
         text-transform: uppercase;
         color: @card-text-color;
       }
+
+      &-content {
+        flex: 1;
+        min-width: 0;
+        font-weight: normal;
+        text-transform: none;
+      }
+
+      &-actions {
+        display: flex;
+        align-items: center;
+        gap: @pad-xs;
+        flex-shrink: 0;
+        opacity: 1;
+        pointer-events: auto;
+        transition: opacity 0.15s ease-in-out;
+
+        &--hover-visible,
+        &--on-focus {
+          opacity: 0;
+          pointer-events: none;
+        }
+
+        &--always-visible {
+          opacity: 1;
+          pointer-events: auto;
+        }
+      }
+    }
+
+    &__header:has(.tox-card__header-content),
+    &__header:has(.tox-card__header-actions) {
+      flex-direction: row;
+      align-items: center;
+    }
+
+    &__header:has(.tox-card__header-content) {
+      justify-content: space-between;
+    }
+
+    &__header:has(.tox-card__header-actions):not(:has(.tox-card__header-content)) {
+      justify-content: flex-end;
+    }
+
+    &:hover .tox-card__header-actions--hover-visible,
+    &:focus-within .tox-card__header-actions--hover-visible,
+    &:focus-within .tox-card__header-actions--on-focus {
+      opacity: 1;
+      pointer-events: auto;
     }
 
     &__body {

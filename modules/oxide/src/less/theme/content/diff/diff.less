@@ -2,6 +2,39 @@
 @modified-background-color: fade(@color-tint, 20%);
 @removed-background-color: fade(@color-error, 20%);
 
+@media-added-background-color: mix(@background-color, @color-success, 80%);
+@media-removed-background-color: mix(@background-color, @color-error, 80%);
+@media-modified-background-color: mix(@background-color, @color-tint, 80%);
+@media-selected-outline-color: @color-tint;
+
+.diff-media-added() {
+  background-color: @media-added-background-color;
+  background-image: none;
+  border: 2px solid @color-success;
+  padding: 0;
+  vertical-align: top;
+}
+
+.diff-media-removed() {
+  background-color: @media-removed-background-color;
+  background-image: none;
+  border: 2px solid @color-error;
+  padding: 0;
+  vertical-align: top;
+}
+
+.diff-media-modified() {
+  background-color: @media-modified-background-color;
+  background-image: none;
+  border: 2px solid @color-tint;
+  padding: 0;
+  vertical-align: top;
+}
+
+.diff-media-selected-outline() {
+  outline: 2px solid @media-selected-outline-color;
+}
+
 @selected-outline-color: @color-tint;
 @selected-box-shadow: 0 2px 0 0 @selected-outline-color, 0 -2px 0 0 @selected-outline-color;
 
@@ -62,6 +95,35 @@
     box-shadow: @selected-box-shadow;
   }
 
+  // Avoid baseline gap under inline media inside annotation chrome.
+  img,
+  video,
+  iframe,
+  .mce-object,
+  .mce-preview-object {
+    &.tox-@{pluginName}__annotation--added,
+    &.tox-@{pluginName}__annotation--modified,
+    &.tox-@{pluginName}__annotation--removed {
+      padding-block: 0;
+      vertical-align: top;
+    }
+  }
+
+  .tox-@{pluginName}__annotation--added:has(img, video, iframe, .mce-object, .mce-preview-object),
+  .tox-@{pluginName}__annotation--modified:has(img, video, iframe, .mce-object, .mce-preview-object),
+  .tox-@{pluginName}__annotation--removed:has(img, video, iframe, .mce-object, .mce-preview-object) {
+    padding-block: 0;
+    line-height: 0;
+
+    img,
+    video,
+    iframe,
+    .mce-object,
+    .mce-preview-object {
+      vertical-align: top;
+    }
+  }
+
   // ins/del elements only contain text and inline formatting, so they can safely use
   // the 1lh background-image approach for better inline selection styling
   ins, del {
@@ -110,43 +172,59 @@
   video,
   iframe {
     &.tox-@{pluginName}__annotation--added__highlight {
-      outline: 0.25em solid @added-bg;
-      padding: 0.25em;
-      background-image: none;
+      .diff-media-added();
     }
 
     &.tox-@{pluginName}__annotation--added__selected {
-      border: 0.25em solid @added-bg;
-      outline: 0.125em solid @selected-outline-color;
-      padding: 0em;
-      background-image: none;
+      .diff-media-added();
+      border-color: @media-added-background-color;
+      .diff-media-selected-outline();
     }
 
     &.tox-@{pluginName}__annotation--modified__highlight {
-      outline: 0.25em solid @modified-bg;
-      padding: 0.25em;
-      background-image: none;
+      .diff-media-modified();
     }
 
     &.tox-@{pluginName}__annotation--modified__selected {
-      border: 0.25em solid @modified-bg;
-      outline: 0.125em solid @selected-outline-color;
-      padding: 0em;
-      background-image: none;
+      .diff-media-modified();
+      border-color: @media-modified-background-color;
+      .diff-media-selected-outline();
     }
+  }
 
-    &.tox-@{pluginName}__annotation--removed__highlight {
-      outline: 0.25em solid @removed-bg;
-      padding: 0.25em;
-      background-image: none;
-    }
+  // Replaced images: X only (no wash). Video/iframe keep wash even when paired.
+  img.tox-@{pluginName}__annotation--removed__highlight:not(.tox-@{pluginName}__annotation--removed__paired),
+  img.tox-@{pluginName}__annotation--removed__selected:not(.tox-@{pluginName}__annotation--removed__paired),
+  .tox-@{pluginName}__annotation--removed__highlight img:not(.tox-@{pluginName}__annotation--removed__paired),
+  .tox-@{pluginName}__annotation--removed__selected img:not(.tox-@{pluginName}__annotation--removed__paired),
+  video.tox-@{pluginName}__annotation--removed__highlight,
+  video.tox-@{pluginName}__annotation--removed__selected,
+  .tox-@{pluginName}__annotation--removed__highlight video,
+  .tox-@{pluginName}__annotation--removed__selected video,
+  iframe.tox-@{pluginName}__annotation--removed__highlight,
+  iframe.tox-@{pluginName}__annotation--removed__selected,
+  .tox-@{pluginName}__annotation--removed__highlight iframe,
+  .tox-@{pluginName}__annotation--removed__selected iframe {
+    .diff-media-removed();
+  }
 
-    &.tox-@{pluginName}__annotation--removed__selected {
-      border: 0.25em solid @removed-bg;
-      outline: 0.125em solid @selected-outline-color;
-      padding: 0em;
-      background-image: none;
-    }
+  img.tox-@{pluginName}__annotation--removed__selected:not(.tox-@{pluginName}__annotation--removed__paired),
+  .tox-@{pluginName}__annotation--removed__selected img:not(.tox-@{pluginName}__annotation--removed__paired),
+  video.tox-@{pluginName}__annotation--removed__selected,
+  .tox-@{pluginName}__annotation--removed__selected video,
+  iframe.tox-@{pluginName}__annotation--removed__selected,
+  .tox-@{pluginName}__annotation--removed__selected iframe {
+    border-color: @media-removed-background-color;
+    .diff-media-selected-outline();
+  }
+
+  img.tox-@{pluginName}__annotation--removed__paired {
+    background-image: none;
+    padding: 0;
+  }
+
+  img.tox-@{pluginName}__annotation--removed__paired.tox-@{pluginName}__annotation--removed__selected {
+    .diff-media-selected-outline();
   }
 
   div.tox-@{pluginName}__annotation:has(> hr) {
@@ -160,6 +238,28 @@
 
   div.tox-@{pluginName}__annotation--added__highlight > hr {
     border-color: darken(@added-bg, 50%);
+  }
+
+  .tox-@{pluginName}__deleted-media-overlay {
+    left: 0;
+    overflow: hidden;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    z-index: 11;
+  }
+
+  .tox-@{pluginName}__deleted-media-wash {
+    fill: @background-color;
+    fill-opacity: 0.4;
+  }
+
+  .tox-@{pluginName}__deleted-media-mark {
+    stroke: @color-error;
+  }
+
+  .tox-@{pluginName}__deleted-media-halo {
+    stroke: @color-white;
   }
 
   .mce-pagebreak {
@@ -183,9 +283,9 @@
     position: absolute;
     left: 0;
     top: 0;
-    right: 0;
     overflow: hidden;
     pointer-events: none;
+    z-index: 10;
   }
 
   .tox-@{pluginName}__diff-focus-overlay-dim {
@@ -225,11 +325,12 @@
   }
 
   img, video, iframe {
-    &.tox-@{pluginName}__annotation--added.tox-@{pluginName}__annotation--preview-highlight,
+    &.tox-@{pluginName}__annotation--added.tox-@{pluginName}__annotation--preview-highlight {
+      .diff-media-added();
+    }
+
     &.tox-@{pluginName}__annotation--modified.tox-@{pluginName}__annotation--preview-highlight {
-      background-image: none;
-      outline: 0.25em solid fade(@highlight-color, 20%);
-      padding: 0.25em;
+      .diff-media-modified();
     }
   }
 
@@ -255,6 +356,14 @@
       background-image: none;
       background-color: fade(@removed-color, 20%);
       box-shadow: @selected-box-shadow;
+
+      img:not(.tox-@{pluginName}__annotation--removed__paired),
+      video,
+      iframe {
+        .diff-media-removed();
+        border-color: @media-removed-background-color;
+        .diff-media-selected-outline();
+      }
     }
 
     // ins/del elements only contain text and inline formatting, so they can safely use
@@ -289,21 +398,26 @@
     }
 
     img, video, iframe {
-      &.tox-@{pluginName}__annotation--preview-highlight.tox-@{pluginName}__annotation--added__selected,
-      &.tox-@{pluginName}__annotation--preview-highlight.tox-@{pluginName}__annotation--modified__selected {
-        background-image: none;
-        border: 0.25em solid fade(@highlight-color, 20%);
-        outline: 0.125em solid @highlight-color;
-        padding: 0;
+      &.tox-@{pluginName}__annotation--preview-highlight.tox-@{pluginName}__annotation--added__selected {
+        .diff-media-added();
+        border-color: @media-added-background-color;
+        .diff-media-selected-outline();
       }
 
-      &.tox-@{pluginName}__annotation--preview-highlight.tox-@{pluginName}__annotation--removed__selected {
-        display: inline;
-        background-image: none;
-        border: 0.25em solid fade(@removed-color, 20%);
-        outline: 0.125em solid @removed-color;
-        padding: 0;
+      &.tox-@{pluginName}__annotation--preview-highlight.tox-@{pluginName}__annotation--modified__selected {
+        .diff-media-modified();
+        border-color: @media-modified-background-color;
+        .diff-media-selected-outline();
       }
+    }
+
+    img.tox-@{pluginName}__annotation--preview-highlight.tox-@{pluginName}__annotation--removed__selected:not(.tox-@{pluginName}__annotation--removed__paired),
+    video.tox-@{pluginName}__annotation--preview-highlight.tox-@{pluginName}__annotation--removed__selected,
+    iframe.tox-@{pluginName}__annotation--preview-highlight.tox-@{pluginName}__annotation--removed__selected {
+      .diff-media-removed();
+      border-color: @media-removed-background-color;
+      display: inline-block;
+      .diff-media-selected-outline();
     }
   }
 

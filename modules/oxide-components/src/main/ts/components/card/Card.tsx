@@ -4,7 +4,7 @@ import { useCallback, type FC, type PropsWithChildren } from 'react';
 import * as Bem from '../../utils/Bem';
 
 import { useCardListContext } from './CardListContext';
-import type { CardHighlightType, CardLayout } from './CardTypes';
+import type { CardHeaderActionsVisibility, CardHighlightType, CardLayout } from './CardTypes';
 
 export interface CardRootProps extends PropsWithChildren {
   readonly className?: string;
@@ -26,6 +26,15 @@ export interface CardRootProps extends PropsWithChildren {
 
 export interface CardHeaderProps extends PropsWithChildren {
   readonly title?: string;
+}
+
+export interface CardHeaderContentProps extends PropsWithChildren {}
+
+export interface CardHeaderActionsProps extends PropsWithChildren {
+  /**
+   * Controls when header actions are revealed. Defaults to hover (also revealed on focus-within).
+   */
+  readonly visibilityMode?: CardHeaderActionsVisibility;
 }
 
 export interface CardBodyProps extends PropsWithChildren {}
@@ -143,6 +152,26 @@ const Header: FC<CardHeaderProps> = ({ children, title }) => {
   );
 };
 
+const HeaderContent: FC<CardHeaderContentProps> = ({ children }) => {
+  return (
+    <div className={Bem.element('tox-card', 'header-content')}>
+      {children}
+    </div>
+  );
+};
+
+const HeaderActions: FC<CardHeaderActionsProps> = ({ children, visibilityMode = 'hover' }) => {
+  return (
+    <div className={Bem.element('tox-card', 'header-actions', {
+      'always-visible': visibilityMode === 'always',
+      'hover-visible': visibilityMode === 'hover',
+      'on-focus': visibilityMode === 'focus'
+    })}>
+      {children}
+    </div>
+  );
+};
+
 const Body: FC<CardBodyProps> = ({ children }) => {
   return (
     <div className={Bem.element('tox-card', 'body')}>
@@ -177,10 +206,12 @@ const Highlight: FC<CardHighlightProps> = ({ children, type }) => {
 export {
   Root,
   Header,
+  HeaderContent,
+  HeaderActions,
   Body,
   Actions,
   Highlight
 };
 
 export { CardList, CardListController } from './CardList';
-export type { CardLayout, CardHighlightType } from './CardTypes';
+export type { CardLayout, CardHighlightType, CardHeaderActionsVisibility } from './CardTypes';
