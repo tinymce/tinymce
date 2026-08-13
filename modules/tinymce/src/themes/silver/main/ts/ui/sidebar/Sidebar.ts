@@ -44,8 +44,12 @@ const setup = (editor: Editor): void => {
       icon: spec.icon,
       tooltip: spec.tooltip,
       onAction: (buttonApi) => {
-        editor.execCommand('ToggleSidebar', false, name);
+        const closing = isActive();
+        editor.execCommand('ToggleSidebar', false, name, { skip_focus: true });
         buttonApi.setActive(isActive());
+        if (closing) {
+          editor.focus({ scrollToCursor: false });
+        }
       },
       onSetup: (buttonApi) => {
         buttonApi.setActive(isActive());

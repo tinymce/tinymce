@@ -1,8 +1,8 @@
 import { ApproxStructure, Assertions, TestStore, UiFinder, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
-import { SugarBody, SugarElement, Traverse } from '@ephox/sugar';
-import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
+import { Focus, SugarBody, SugarDocument, SugarElement, Traverse } from '@ephox/sugar';
+import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import type Editor from 'tinymce/core/api/Editor';
 import type { Sidebar } from 'tinymce/core/api/ui/Ui';
@@ -225,6 +225,75 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarTest', () => {
       assertButtonEnabled('mysidebar1');
 
       editor.mode.set('design');
+    });
+  });
+
+  context('Sidebar toggle should not scroll the selection into view', () => {
+    const hook = TinyHooks.bddSetupLight<Editor>({
+      base_url: '/project/tinymce/js/tinymce',
+      toolbar: 'mysidebar1 bold',
+      height: 300,
+      setup: (editor: Editor) => {
+        editor.ui.registry.addSidebar('mysidebar1', {
+          tooltip: 'My sidebar 1',
+          icon: 'bold',
+          onSetup: (api) => {
+            api.element().appendChild(SugarElement.fromHtml('<div style="width: 200px; background: red;"></div>').dom);
+            return Fun.noop;
+          }
+        });
+      }
+    });
+
+    const blurEditor = () => {
+      Focus.active(SugarDocument.getDocument()).each(Focus.blur);
+      window.focus();
+    };
+
+    const pSetupUnfocusedOffscreenSelection = async (editor: Editor): Promise<number> => {
+      editor.setContent('<p>top</p><p style="height: 1000px">spacer</p><p>bottom</p>');
+      TinySelections.setCursor(editor, [ 2, 0 ], 0);
+      editor.getWin().scrollTo(0, 0);
+      blurEditor();
+      await Waiter.pTryUntil('Editor should be unfocused with the iframe scrolled to the top', () => {
+        Assertions.assertEq('Editor should be unfocused', false, editor.hasFocus());
+        Assertions.assertEq('Iframe should be scrolled to the top', 0, editor.getWin().scrollY);
+      });
+      return editor.getWin().scrollY;
+    };
+
+    it('TINYMCE-14765: Opening a sidebar from the toolbar does not jump scroll when the editor was unfocused', async () => {
+      const editor = hook.editor();
+      if (editor.queryCommandValue('ToggleSidebar') === 'mysidebar1') {
+        TinyUiActions.clickOnToolbar(editor, 'button[aria-label="My sidebar 1"]');
+        await Waiter.pTryUntil('Sidebar should be closed before opening', () => {
+          Assertions.assertEq('Sidebar should be closed', '', editor.queryCommandValue('ToggleSidebar'));
+        });
+      }
+      const scrollY = await pSetupUnfocusedOffscreenSelection(editor);
+      TinyUiActions.clickOnToolbar(editor, 'button[aria-label="My sidebar 1"]');
+      Assertions.assertEq('Opening a sidebar should not scroll the selection into view', scrollY, editor.getWin().scrollY);
+    });
+
+    it('TINYMCE-14765: Closing a sidebar from the toolbar does not jump scroll when the editor was unfocused', async () => {
+      const editor = hook.editor();
+      if (editor.queryCommandValue('ToggleSidebar') !== 'mysidebar1') {
+        TinyUiActions.clickOnToolbar(editor, 'button[aria-label="My sidebar 1"]');
+      }
+      await Waiter.pTryUntil('Sidebar should be open before closing', () => {
+        Assertions.assertEq('Sidebar should be open', 'mysidebar1', editor.queryCommandValue('ToggleSidebar'));
+      });
+      const scrollY = await pSetupUnfocusedOffscreenSelection(editor);
+      TinyUiActions.clickOnToolbar(editor, 'button[aria-label="My sidebar 1"]');
+      Assertions.assertEq('Closing a sidebar should not scroll the selection into view', scrollY, editor.getWin().scrollY);
+      Assertions.assertEq('Closing a sidebar should return focus to the editor', true, editor.hasFocus());
+    });
+
+    it('TINYMCE-14765: Bold from the toolbar still scrolls to the selection when the editor was unfocused', async () => {
+      const editor = hook.editor();
+      const scrollY = await pSetupUnfocusedOffscreenSelection(editor);
+      TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Bold"]');
+      Assertions.assertEq('Bold should still scroll the selection into view', true, editor.getWin().scrollY > scrollY);
     });
   });
 });

@@ -1,0 +1,7 @@
+project: tinymce
+kind: Fixed
+body: Opening or closing a sidebar from the toolbar no longer scrolls the current
+  selection into view.
+time: 2026-08-13T13:34:15.566224+10:00
+custom:
+  Issue: TINYMCE-14765
