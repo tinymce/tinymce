@@ -77,14 +77,14 @@ Contains some global utilities used in the project.
 - `Styles.ts` - CSS class name utilities
 - `FocusHelpers.ts` - Focus management utilities
 
-**Main Export (`main.ts`)**
+**Main Export (`Main.ts`)**
 - Central export file for the entire library
 
 #### Demo Application (`src/demo/`)
 
 If needed, the developer can use this folder to test and develop the component he/she is working on, until it is ready to have a proper story that can be used to showcase the component's functionality and behavior.
 - `html/index.html` - Demo app HTML template
-- `ts/main.tsx` - Demo app entry point (Shouldn't be changed directly)
+- `ts/Main.tsx` - Demo app entry point (Shouldn't be changed directly)
 - `ts/App.tsx` - Demo application component: Main file the developer can use to test and develop the component he/she is working on.
 
 #### Tests (`src/test/`)
@@ -183,7 +183,7 @@ Components integrate with TinyMCE's Oxide design system:
 2. Add component file with the name `Component.tsx`
 3. Create Storybook stories with `.stories.tsx` extension
 4. Add tests in `src/test/ts/browser/components/`
-5. Export from `src/main/ts/main.ts`
+5. Export from `src/main/ts/Main.ts`
 
 ### Component Guidelines
 

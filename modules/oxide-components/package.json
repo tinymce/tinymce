@@ -24,9 +24,9 @@
     "CHANGELOG.txt",
     "LICENSE.txt"
   ],
-  "main": "lib/main.js",
-  "module": "lib/main.js",
-  "types": "lib/src/main/ts/main.d.ts",
+  "main": "lib/Main.js",
+  "module": "lib/Main.js",
+  "types": "lib/src/main/ts/Main.d.ts",
   "scripts": {
     "dev": "vite",
     "build": "bun build-storybook && tsc -b && vite build",
