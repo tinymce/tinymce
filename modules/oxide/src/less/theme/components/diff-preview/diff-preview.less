@@ -1,0 +1,55 @@
+//
+// Shared diff preview shell
+//
+
+.tox {
+  .tox-diff-preview {
+    // Block class for the shared preview shell - required for Bem type generation
+    display: contents;
+  }
+
+  .tox-diff-preview__host {
+    height: 100%;
+    position: relative;
+    flex: 1 1 0;
+
+    &:empty {
+      pointer-events: none;
+    }
+  }
+
+  .tox-diff-preview__layer {
+    display: flex;
+    flex-direction: column;
+    inset: 0;
+    position: absolute;
+  }
+
+  .tox-diff-preview__viewport {
+    flex: 1 1 auto;
+    min-height: 0;
+    position: relative;
+  }
+
+  .tox-diff-preview__frame {
+    background-color: @edit-area-iframe-background-color;
+    border: @edit-area-border;
+    height: 100%;
+    min-height: 0;
+    position: relative;
+    width: 100%;
+  }
+
+  .tox-diff-preview__footer {
+    background-color: var(--tox-private-background-color, @background-color);
+    border-top: 1px solid @border-color-light;
+    flex: 0 0 auto;
+  }
+
+  .tox-diff-preview__toolbar {
+    display: flex;
+    gap: @pad-sm;
+    justify-content: flex-end;
+    padding: 12px @pad-md;
+  }
+}
