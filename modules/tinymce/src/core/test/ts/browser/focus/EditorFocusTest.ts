@@ -95,10 +95,10 @@ describe('browser.tinymce.core.focus.EditorFocusTest', () => {
       TinySelections.setCursor(editor, [ 2, 0 ], 0);
       editor.getWin().scrollTo(0, 0);
       selectBody();
-      const scrollY = editor.getWin().scrollY;
+      const scrollY = editor.dom.getViewPort(editor.getWin()).y;
       editor.focus({ scrollToCursor: false });
       assert.isTrue(editor.hasFocus(), 'Editor should have focus');
-      assert.equal(editor.getWin().scrollY, scrollY, 'Should not scroll the selection into view');
+      assert.equal(editor.dom.getViewPort(editor.getWin()).y, scrollY, 'Should not scroll the selection into view');
       McEditor.remove(editor);
     });
   });
