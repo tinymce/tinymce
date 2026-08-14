@@ -1,6 +1,6 @@
 import { UiFinder, Waiter } from '@ephox/agar';
-import { before, describe, it } from '@ephox/bedrock-client';
-import { Arr } from '@ephox/katamari';
+import { after, before, describe, it } from '@ephox/bedrock-client';
+import { Arr, Global } from '@ephox/katamari';
 import { SugarBody } from '@ephox/sugar';
 import { McEditor, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -19,6 +19,11 @@ const getFilename = (url: string) => {
 describe('browser.tinymce.plugins.emoticons.DifferentEmojiDatabaseTest', () => {
   before(() => {
     Plugin();
+  });
+
+  after(() => {
+    Global.tinymce?.Resource.unload('tinymce.plugins.emoticons.test-emojis.js');
+    Global.tinymce?.Resource.unload('tinymce.plugins.emoticons.test-emojis-alt.js');
   });
 
   const pTestEditorWithSettings = async (categories: string[], databaseUrl: string) => {

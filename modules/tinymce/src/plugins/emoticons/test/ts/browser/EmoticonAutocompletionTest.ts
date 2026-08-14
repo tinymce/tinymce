@@ -1,5 +1,6 @@
 import { Keys } from '@ephox/agar';
-import { describe, it } from '@ephox/bedrock-client';
+import { after, describe, it } from '@ephox/bedrock-client';
+import { Global } from '@ephox/katamari';
 import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import type Editor from 'tinymce/core/api/Editor';
@@ -13,6 +14,10 @@ describe('browser.tinymce.plugins.emoticons.EmoticonAutocompletionTest', () => {
     emoticons_database_url: '/project/tinymce/src/plugins/emoticons/test/js/test-emojis.js',
     emoticons_database_id: 'tinymce.plugins.emoticons.test-emojis.js'
   }, [ Plugin ], true);
+
+  after(() => {
+    Global.tinymce?.Resource.unload('tinymce.plugins.emoticons.test-emojis.js');
+  });
 
   // NOTE: This is almost identical to charmap
   it('TBA: Autocomplete, trigger an autocomplete and check it appears', async () => {

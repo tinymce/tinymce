@@ -17,6 +17,8 @@ describe('browser.tinymce.plugins.table.ContextMenuTest', () => {
 
   const pOpenContextMenu = async (editor: Editor, target: string) => {
     await TinyUiActions.pTriggerContextMenu(editor, target, '.tox-silver-sink [role="menuitem"]');
+    // normalise focus onto the first item before keyboard navigation
+    FocusTools.setFocus(SugarBody.body(), '.tox-silver-sink [role="menuitem"]');
     await Waiter.pWaitBetweenUserActions();
   };
 

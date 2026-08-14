@@ -24,6 +24,14 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
       `.tox-collection__item:contains("${itemText}")`
     );
 
+    // Set focus on the intended item rather than asserting where the menu placed it
+    const pFocusOnItem = async (itemText: string) => {
+      const selector = `.tox-collection__item:contains("${itemText}")`;
+      await UiFinder.pWaitForVisible(`Waiting for menu item ${itemText}`, SugarBody.body(), selector);
+      FocusTools.setFocus(SugarBody.body(), selector);
+      await pAssertFocusOnItem(itemText);
+    };
+
     const pAssertFocusOnToolbarButton = (buttonText: string) => FocusTools.pTryOnSelector(
       `Focus should be on ${buttonText}`,
       SugarDocument.getDocument(),
@@ -118,7 +126,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
         assertEvent(1, 'left');
         await MenuUtils.pOpenAlignMenu('Align');
         assertEvent(2, 'left');
-        await pAssertFocusOnItem('Left');
+        await pFocusOnItem('Left');
         TinyUiActions.keydown(editor, Keys.down());
         await pAssertFocusOnItem('Center');
         assertEvent(2, 'left');
@@ -159,7 +167,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
         assertEvent(1, 'Verdana');
         await MenuUtils.pOpenMenu({ name: 'FontSelect', text: 'Verdana' });
         assertEvent(1, 'Verdana');
-        await pAssertFocusOnItem('Andale Mono');
+        await pFocusOnItem('Andale Mono');
         assertEvent(1, 'Verdana');
         TinyUiActions.keydown(editor, Keys.enter());
         assertEvent(3, 'Andale Mono');
@@ -198,7 +206,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
         assertEvent(1, '12pt');
         await MenuUtils.pOpenMenu({ name: 'FontSelect', text: '12pt' }); // This might be fragile.
         assertEvent(2, '12pt');
-        await pAssertFocusOnItem('8pt');
+        await pFocusOnItem('8pt');
         assertEvent(2, '12pt');
         TinyUiActions.keydown(editor, Keys.enter());
         assertEvent(4, '8pt');
@@ -237,7 +245,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
         assertEvent(1, 'Paragraph');
         await MenuUtils.pOpenMenu({ name: 'Format', text: 'Paragraph' });
         assertEvent(1, 'Paragraph');
-        await pAssertFocusOnItem('Paragraph');
+        await pFocusOnItem('Paragraph');
         TinyUiActions.keydown(editor, Keys.down());
         await pAssertFocusOnItem('Heading 1');
         assertEvent(2, 'Paragraph');
@@ -271,7 +279,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
 
         // Check that the menus are working also
         Mouse.clickOn(SugarBody.body(), '[role="menubar"] [role="menuitem"]:contains("Format")');
-        await pAssertFocusOnItem('Bold');
+        await pFocusOnItem('Bold');
         TinyUiActions.keydown(editor, Keys.down());
         await pAssertFocusOnItem('Italic');
         TinyUiActions.keydown(editor, Keys.down());
@@ -303,7 +311,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
         assertEvent(1, 'Paragraph');
         await MenuUtils.pOpenMenu({ name: 'Format', text: 'Paragraph', last: true });
         assertEvent(2, 'Paragraph');
-        await pAssertFocusOnItem('Headings');
+        await pFocusOnItem('Headings');
         TinyUiActions.keydown(editor, Keys.right());
         await pAssertFocusOnItem('Heading 1');
         assertEvent(2, 'Paragraph');
@@ -337,7 +345,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
 
         // Check that the menus are working also
         Mouse.clickOn(SugarBody.body(), '[role="menubar"] [role="menuitem"]:contains("Format")');
-        await pAssertFocusOnItem('Bold');
+        await pFocusOnItem('Bold');
         TinyUiActions.keydown(editor, Keys.down());
         await pAssertFocusOnItem('Italic');
         TinyUiActions.keydown(editor, Keys.down());

@@ -8,40 +8,55 @@ const delay = (ms: number): Promise<never> => {
   return new Promise((resolve) => setTimeout(resolve, ms));
 };
 
+// Wait for a condition instead of counting ticks in a fixed window; interval timers are not
+// precise enough under CI load for exact tick counts
+const waitUntil = (predicate: () => boolean, timeoutMs: number = 10000): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    const start = Date.now();
+    const checker = setInterval(() => {
+      if (predicate()) {
+        clearInterval(checker);
+        resolve();
+      } else if (Date.now() - start > timeoutMs) {
+        clearInterval(checker);
+        reject(new Error('Timed out waiting for repeatable to fire'));
+      }
+    }, 10);
+  });
+};
+
 describe('browser.katamari.RepeatableTests', () => {
   it('Make a repeatable then clean it', async () => {
     const intervalId = Singleton.repeatable(100);
     assert.strictEqual(intervalId.get(), Optional.none());
-    let counter = 0;
-    let start = Date.now();
+
+    let firstCounter = 0;
     intervalId.set(() => {
-      counter++;
+      firstCounter++;
     });
-    await delay(250);
-    let end = Date.now();
-    assert.strictEqual(counter, 2);
-    assert.isAbove(end - start, 200);
+    // Reaching 2 proves the function repeats rather than firing once
+    await waitUntil(() => firstCounter >= 2);
     const currentId = intervalId.get().getOrNull();
     assert.isNotNull(currentId);
-    start = Date.now();
+
+    let secondCounter = 0;
     intervalId.set(() => {
-      counter--;
+      secondCounter++;
     });
-    await delay(250);
-    end = Date.now();
+    // revoke() in set() is synchronous, so the first counter must be frozen from here on
+    const firstCounterAtReplace = firstCounter;
+    await waitUntil(() => secondCounter >= 2);
+    assert.strictEqual(firstCounter, firstCounterAtReplace, 'Replaced interval should stop firing');
     const newId = intervalId.get().getOrNull();
-    assert.isNotNull(currentId);
+    assert.isNotNull(newId);
     assert.notStrictEqual(currentId, newId);
-    assert.strictEqual(counter, 0);
     assert.isTrue(intervalId.isSet());
-    assert.isAbove(end - start, 200);
+
     intervalId.clear();
     assert.isFalse(intervalId.isSet());
     assert.strictEqual(intervalId.get(), Optional.none());
-    start = Date.now();
-    await delay(150); // Waiting to make sure that interval did not run again
-    end = Date.now();
-    assert.isAbove(end - start, 100);
-    assert.strictEqual(counter, 0);
+    const secondCounterAtClear = secondCounter;
+    await delay(250); // Waiting to make sure that the interval does not run again
+    assert.strictEqual(secondCounter, secondCounterAtClear, 'Cleared interval should not fire');
   });
 });

@@ -1,5 +1,6 @@
 import { FocusTools, Keys, UiFinder, Waiter } from '@ephox/agar';
-import { describe, it } from '@ephox/bedrock-client';
+import { after, describe, it } from '@ephox/bedrock-client';
+import { Global } from '@ephox/katamari';
 import { Attribute, SugarBody, SugarDocument, SugarElement } from '@ephox/sugar';
 import { TinyAssertions, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -19,6 +20,10 @@ describe.skip('browser.tinymce.plugins.emoticons.ImageEmojiTest', () => {
       Resource.unload('tinymce.plugins.emoticons');
     }
   }, [ Plugin ], true);
+
+  after(() => {
+    Global.tinymce?.Resource.unload('tinymce.plugins.emoticons');
+  });
 
   it('TBA: Open dialog, Search for "dog", Dog should be first option', async () => {
     const editor = hook.editor();
