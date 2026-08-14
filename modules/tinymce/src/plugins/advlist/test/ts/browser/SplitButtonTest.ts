@@ -21,8 +21,6 @@ describe('browser.tinymce.plugins.advlist.SplitButtonTest', () => {
       'button[data-mce-name="numlist-chevron"][aria-label^="Numbered list"]' :
       'button[data-mce-name="bullist-chevron"][aria-label^="Bullet list"]';
     TinyUiActions.clickOnToolbar(editor, selector);
-    // Wait for an item to be highlighted, not just the menu to exist, so the menu has finished opening.
-    // Which item is highlighted is not asserted.
     await TinyUiActions.pWaitForUi(editor, '.tox-menu.tox-selected-menu .tox-collection__item--active');
   };
 

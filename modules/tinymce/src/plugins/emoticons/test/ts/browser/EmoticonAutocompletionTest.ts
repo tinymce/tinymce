@@ -1,10 +1,12 @@
 import { Keys } from '@ephox/agar';
 import { after, describe, it } from '@ephox/bedrock-client';
-import { Global } from '@ephox/katamari';
 import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import type Editor from 'tinymce/core/api/Editor';
+import type { TinyMCE } from 'tinymce/core/api/Tinymce';
 import Plugin from 'tinymce/plugins/emoticons/Plugin';
+
+declare let tinymce: TinyMCE;
 
 describe('browser.tinymce.plugins.emoticons.EmoticonAutocompletionTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -16,7 +18,7 @@ describe('browser.tinymce.plugins.emoticons.EmoticonAutocompletionTest', () => {
   }, [ Plugin ], true);
 
   after(() => {
-    Global.tinymce?.Resource.unload('tinymce.plugins.emoticons.test-emojis.js');
+    tinymce.Resource.unload('tinymce.plugins.emoticons.test-emojis.js');
   });
 
   // NOTE: This is almost identical to charmap

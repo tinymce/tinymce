@@ -34,8 +34,8 @@ const isInViewport = (popup: AlloyComponent): boolean => {
   const bounds = popup.element.dom.getBoundingClientRect();
   return bounds.top >= -viewportSlack &&
     bounds.left >= -viewportSlack &&
-    bounds.top <= window.innerHeight + viewportSlack &&
-    bounds.left <= window.innerWidth + viewportSlack;
+    bounds.bottom <= window.innerHeight + viewportSlack &&
+    bounds.right <= window.innerWidth + viewportSlack;
 };
 
 const pTestPopupInSink = (sinkName: string, popup: AlloyComponent, sink: AlloyComponent): Promise<void> =>
