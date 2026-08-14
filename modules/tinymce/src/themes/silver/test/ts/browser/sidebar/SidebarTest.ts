@@ -5,6 +5,7 @@ import { Focus, SugarBody, SugarDocument, SugarElement, Traverse } from '@ephox/
 import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import type Editor from 'tinymce/core/api/Editor';
+import Env from 'tinymce/core/api/Env';
 import type { Sidebar } from 'tinymce/core/api/ui/Ui';
 
 interface EventLog {
@@ -298,7 +299,13 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarTest', () => {
       Assertions.assertEq('Closing a sidebar should return focus to the editor', true, editor.hasFocus());
     });
 
-    it('TINYMCE-14765: Bold command still focuses and scrolls when the editor was unfocused', async () => {
+    it('TINYMCE-14765: Bold command still focuses and scrolls when the editor was unfocused', async function () {
+      // Default editor.focus() scrolls by focusing the iframe window. That native scroll happens on
+      // Chromium. Firefox never does it. LambdaTest Safari also does not, even though local Safari
+      // does. We've agreed to keep this as a Chromium sanity check that we still attempt the scroll.
+      if (!Env.browser.isChromium()) {
+        this.skip();
+      }
       const editor = hook.editor();
       const scrollY = await pSetupUnfocusedOffscreenSelection(editor);
       editor.execCommand('Bold');
