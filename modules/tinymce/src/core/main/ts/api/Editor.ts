@@ -402,7 +402,7 @@ class Editor implements EditorObservable {
    * @param {Boolean/Object} skipFocus Skip DOM focus. Just set it as the active editor. Alternatively, pass `{ scrollToCursor: false }` to focus without scrolling the selection into view.
    * @param {Boolean} skipFocus.scrollToCursor When passing an options object, set to false to focus without scrolling the selection into view. Defaults to true.
    */
-  public focus(skipFocus?: boolean | EditorFocus.EditorFocusOptions): void {
+  public focus(skipFocus?: EditorFocus.EditorFocusArg): void {
     this.execCommand('mceFocus', false, skipFocus);
   }
 

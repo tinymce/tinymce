@@ -29,7 +29,7 @@ const registerExecCommands = (editor: Editor): void => {
       editor.getWin().print();
     },
 
-    mceFocus: (_command, _ui, value?: boolean | EditorFocus.EditorFocusOptions) => {
+    mceFocus: (_command, _ui, value?: EditorFocus.EditorFocusArg) => {
       EditorFocus.focus(editor, value);
     },
 

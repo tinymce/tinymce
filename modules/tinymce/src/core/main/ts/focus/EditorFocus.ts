@@ -16,6 +16,8 @@ interface EditorFocusOptions {
   readonly scrollToCursor?: boolean;
 }
 
+type EditorFocusArg = boolean | EditorFocusOptions;
+
 const getContentEditableHost = (editor: Editor, node: Node): HTMLElement | null =>
   editor.dom.getParent(node, (node): node is HTMLElement => editor.dom.getContentEditable(node) === 'true');
 
@@ -150,7 +152,7 @@ const focusEditor = (editor: Editor, scrollToCursor: boolean) => {
 
 const activateEditor = (editor: Editor) => editor.editorManager.setActive(editor);
 
-const focus = (editor: Editor, args?: boolean | EditorFocusOptions): void => {
+const focus = (editor: Editor, args?: EditorFocusArg): void => {
   if (editor.removed) {
     return;
   }
@@ -172,5 +174,6 @@ export {
   focus,
   hasFocus,
   hasEditorOrUiFocus,
+  type EditorFocusArg,
   type EditorFocusOptions
 };
