@@ -29,11 +29,11 @@
   "types": "lib/src/main/ts/main.d.ts",
   "scripts": {
     "dev": "vite",
-    "build": "bun build-storybook && node ../../bin/tsc7.mjs -b && vite build",
+    "build": "node ../../bin/tsc7.mjs -b && vite build",
     "lint": "node ../../bin/lint.mjs src",
     "start": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "deploy-storybook": "gh-pages -d ./storybook-static --nojekyll --dest modules/oxide-components",
+    "deploy-storybook": "bun build-storybook && gh-pages -d ./storybook-static --nojekyll --dest modules/oxide-components",
     "test-watch": "vitest --project '!visual'",
     "test": "echo 'No tests'",
     "test-visual-ci": "node ./visual-regression-test-ci.mjs",
@@ -42,7 +42,7 @@
     "test-ci": "vitest --watch=false --project '!visual' --reporter=default --reporter=junit --outputFile=scratch/test-results.xml",
     "test-browser-manual": "vitest --watch --project '!visual' --browser.headless false",
     "test-browser-headless": "vitest --watch --project '!visual'",
-    "ci": "npm exec --prefix ../../ lerna -- run --scope @tinymce/oxide-components --include-dependencies build && npm-run-all -p lint test"
+    "ci": "bun run build && npm-run-all -p lint test"
   },
   "peerDependencies": {
     "react": "^18.3.1",
