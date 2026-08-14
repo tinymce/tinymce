@@ -281,6 +281,8 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarTest', () => {
     });
 
     it('TINYMCE-14765: Bold from toolbar still scrolls when editor unfocused', async function () {
+      // Scroll behavior works locally on Safari but CI Safari doesn't register the scroll change
+      // so we've agreed to keep chromium as a sanity check that we still attempt the scroll.
       if (!Env.browser.isChromium()) {
         this.skip();
       }
