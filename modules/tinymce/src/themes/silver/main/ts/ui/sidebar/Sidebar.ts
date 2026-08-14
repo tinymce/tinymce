@@ -45,6 +45,8 @@ const setup = (editor: Editor): void => {
       tooltip: spec.tooltip,
       onAction: (buttonApi) => {
         const closing = isActive();
+        // eslint-disable-next-line no-console
+        console.log('Sidebar button clicked, name:', name, 'closing:', closing);
         editor.execCommand('ToggleSidebar', false, name, { skip_focus: true });
         buttonApi.setActive(isActive());
         if (closing) {
