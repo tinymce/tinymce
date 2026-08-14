@@ -29,7 +29,7 @@
   "types": "lib/src/main/ts/main.d.ts",
   "scripts": {
     "dev": "vite",
-    "build": "bun build-storybook && tsc -b && vite build",
+    "build": "bun build-storybook && node ../../bin/tsc7.mjs -b && vite build",
     "lint": "eslint --max-warnings=0 'src/**/*.ts' 'src/**/*.tsx'",
     "start": "storybook dev -p 6006",
     "build-storybook": "storybook build",

@@ -16,6 +16,10 @@ interface BookmarkManager {
   moveToBookmark: (bookmark: Bookmark) => void;
 }
 
+interface BookmarkManagerStatics {
+  readonly isBookmarkNode: (node: Node | null) => boolean;
+}
+
 /**
  * Constructs a new BookmarkManager instance for a specific selection instance.
  *
@@ -23,7 +27,7 @@ interface BookmarkManager {
  * @method BookmarkManager
  * @param {tinymce.dom.Selection} selection Selection instance to handle bookmarks for.
  */
-const BookmarkManager = (selection: EditorSelection): BookmarkManager => {
+const bookmarkManagerImpl = (selection: EditorSelection): BookmarkManager => {
   return {
     /**
      * Returns a bookmark location for the current selection. This bookmark object
@@ -70,6 +74,9 @@ const BookmarkManager = (selection: EditorSelection): BookmarkManager => {
  * @param {DOMNode} node DOM Node to check if it's a bookmark node or not.
  * @return {Boolean} true/false if the node is a bookmark node or not.
  */
-BookmarkManager.isBookmarkNode = Bookmarks.isBookmarkNode;
+bookmarkManagerImpl.isBookmarkNode = Bookmarks.isBookmarkNode;
+
+// The inferred implementation keeps declaration emit self-contained for the d.ts bundler used by rollup:core-types.
+const BookmarkManager: ((selection: EditorSelection) => BookmarkManager) & BookmarkManagerStatics = bookmarkManagerImpl;
 
 export default BookmarkManager;

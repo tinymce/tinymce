@@ -207,6 +207,11 @@ interface DOMUtils {
   dumpRng: (r: Range) => string;
 }
 
+interface DOMUtilsStatics {
+  readonly DOM: DOMUtils;
+  readonly nodeIndex: (node: Node | null, normalized?: boolean) => number;
+}
+
 const legacySetAttribute = (elm: SugarElement<Element>, name: string, value: string | number | boolean | null) => {
   if (Type.isNullable(value) || value === '') {
     Attribute.remove(elm, name);
@@ -324,7 +329,7 @@ const setupAttrHooks = (styles: Styles, settings: Partial<DOMUtilsSettings>, get
  * @param {Document} doc Document reference to bind the utility class to.
  * @param {settings} settings Optional settings collection.
  */
-const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMUtils => {
+const domUtilsImpl = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMUtils => {
   const addedStyles: Record<string, boolean> = {};
   const win = window;
   const files: Record<string, boolean> = {};
@@ -1821,7 +1826,10 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
  * // Example of how to add a class to some element by id
  * tinymce.DOM.addClass('someid', 'someclass');
  */
-DOMUtils.DOM = DOMUtils(document);
-DOMUtils.nodeIndex = findNodeIndex;
+domUtilsImpl.DOM = domUtilsImpl(document);
+domUtilsImpl.nodeIndex = findNodeIndex;
+
+// The inferred implementation keeps declaration emit self-contained for the d.ts bundler used by rollup:core-types.
+const DOMUtils: ((doc: Document, settings?: Partial<DOMUtilsSettings>) => DOMUtils) & DOMUtilsStatics = domUtilsImpl;
 
 export default DOMUtils;

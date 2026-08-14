@@ -3,7 +3,7 @@ const nodeResolve = require('@rollup/plugin-node-resolve');
 module.exports = function (grunt) {
   grunt.initConfig({
     shell: {
-      tsc: { command: 'tsc -b' }
+      tsc: { command: 'node ../../bin/tsc7.mjs -b' }
     },
 
     rollup: {

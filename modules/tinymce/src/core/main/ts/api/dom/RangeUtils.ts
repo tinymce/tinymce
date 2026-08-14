@@ -18,12 +18,19 @@ interface RangeUtils {
   expand: (rng: Range, options?: { type: 'word' }) => Range;
 }
 
+interface RangeUtilsStatics {
+  readonly compareRanges: (rng1: RangeLikeObject | undefined, rng2: RangeLikeObject | undefined) => boolean;
+  readonly getCaretRangeFromPoint: (clientX: number, clientY: number, doc: Document) => Range | undefined;
+  readonly getSelectedNode: (range: Range) => Node | null;
+  readonly getNode: (container: Node, offset: number) => Node;
+}
+
 /**
  * This class contains a few utility methods for ranges.
  *
  * @class tinymce.dom.RangeUtils
  */
-const RangeUtils = (dom: DOMUtils): RangeUtils => {
+const rangeUtilsImpl = (dom: DOMUtils): RangeUtils => {
   /**
    * Walks the specified range like object and executes the callback for each sibling collection it finds.
    *
@@ -101,7 +108,7 @@ const RangeUtils = (dom: DOMUtils): RangeUtils => {
  * @param {RangeObject} rng2 First range to compare.
  * @return {Boolean} True or false if the ranges are equal.
  */
-RangeUtils.compareRanges = RangeCompare.isEq;
+rangeUtilsImpl.compareRanges = RangeCompare.isEq;
 
 /**
  * Gets the caret range for the given x/y location.
@@ -113,9 +120,12 @@ RangeUtils.compareRanges = RangeCompare.isEq;
  * @param {Document} doc Document that the x and y coordinates are relative to
  * @returns {Range} Caret range
  */
-RangeUtils.getCaretRangeFromPoint = CaretRangeFromPoint.fromPoint;
+rangeUtilsImpl.getCaretRangeFromPoint = CaretRangeFromPoint.fromPoint;
 
-RangeUtils.getSelectedNode = RangeNodes.getSelectedNode;
-RangeUtils.getNode = RangeNodes.getNode;
+rangeUtilsImpl.getSelectedNode = RangeNodes.getSelectedNode;
+rangeUtilsImpl.getNode = RangeNodes.getNode;
+
+// The inferred implementation keeps declaration emit self-contained for the d.ts bundler used by rollup:core-types.
+const RangeUtils: ((dom: DOMUtils) => RangeUtils) & RangeUtilsStatics = rangeUtilsImpl;
 
 export default RangeUtils;
