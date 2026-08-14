@@ -164,6 +164,8 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
 
   UiState.setupEventsForUi(editor, uiRefs);
 
+  // eslint-disable-next-line no-console
+  console.log('Iframe.ts - registering ToggleSidebar command');
   editor.addCommand('ToggleSidebar', (_ui: boolean, value: string) => {
     const win = editor.getWin();
     const scrollY = editor.dom.getViewPort(win).y;
