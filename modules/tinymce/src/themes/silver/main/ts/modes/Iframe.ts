@@ -167,7 +167,13 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
   editor.addCommand('ToggleSidebar', (_ui: boolean, value: string) => {
     const win = editor.getWin();
     const scrollY = editor.dom.getViewPort(win).y;
-    const restoreScroll = () => win.scrollTo(0, scrollY);
+    // eslint-disable-next-line no-console
+    console.log('ToggleSidebar - captured scrollY:', scrollY);
+    const restoreScroll = () => {
+      // eslint-disable-next-line no-console
+      console.log('restoreScroll called, scrolling to:', scrollY, 'current:', editor.dom.getViewPort(win).y);
+      win.scrollTo(0, scrollY);
+    };
 
     OuterContainer.toggleSidebar(outerContainer, value);
     Events.fireToggleSidebar(editor);
