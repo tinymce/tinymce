@@ -44,7 +44,7 @@ const setup = (editor: Editor): void => {
       icon: spec.icon,
       tooltip: spec.tooltip,
       onAction: (buttonApi) => {
-        editor.execCommand('ToggleSidebar', false, name);
+        editor.execCommand('ToggleSidebar', false, name, { skip_focus: true });
         buttonApi.setActive(isActive());
       },
       onSetup: (buttonApi) => {
