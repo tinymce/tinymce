@@ -1,0 +1,7 @@
+project: tinymce
+kind: Fixed
+body: Opening or closing sidebars from the toolbar no longer causes the editor to
+  scroll to the cursor when unfocused.
+time: 2026-08-14T22:59:00+10:00
+custom:
+  Issue: TINYMCE-14765
