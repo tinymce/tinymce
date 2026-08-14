@@ -5,8 +5,8 @@ import { SugarBody, SugarElement, Traverse } from '@ephox/sugar';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import type Editor from 'tinymce/core/api/Editor';
-import type { Sidebar } from 'tinymce/core/api/ui/Ui';
 import Env from 'tinymce/core/api/Env';
+import type { Sidebar } from 'tinymce/core/api/ui/Ui';
 
 interface EventLog {
   readonly name: string;
