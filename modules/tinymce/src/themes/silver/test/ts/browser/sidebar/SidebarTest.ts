@@ -253,7 +253,11 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarTest', () => {
 
     const getScrollY = (editor: Editor): number => editor.dom.getViewPort(editor.getWin()).y;
 
-    const pSetupUnfocusedOffscreenSelection = async (editor: Editor): Promise<number> => {
+    const pSetupUnfocusedOffscreenSelection = async (
+      editor: Editor,
+      cursorPath: number[] = [ 2, 0 ],
+      scrollY = 0
+    ): Promise<number> => {
       editor.setContent('<p>top</p><p style="height: 1000px">spacer</p><p>bottom</p>');
       await Waiter.pTryUntil('Content should overflow the iframe', () => {
         Assertions.assertEq(
@@ -262,14 +266,19 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarTest', () => {
           editor.getBody().scrollHeight > editor.dom.getViewPort(editor.getWin()).h
         );
       });
-      TinySelections.setCursor(editor, [ 2, 0 ], 0);
-      editor.getWin().scrollTo(0, 0);
+      TinySelections.setCursor(editor, cursorPath, 0);
+      editor.getWin().scrollTo(0, scrollY);
       blurEditor();
-      await Waiter.pTryUntil('Editor should be unfocused with the iframe scrolled to the top', () => {
+      await Waiter.pTryUntil('Editor should be unfocused with the iframe at the expected scroll', () => {
         Assertions.assertEq('Editor should be unfocused', false, editor.hasFocus());
-        Assertions.assertEq('Iframe should be scrolled to the top', 0, getScrollY(editor));
+        Assertions.assertEq('Iframe should be at the expected scroll', scrollY, getScrollY(editor));
       });
       return getScrollY(editor);
+    };
+
+    const pClickSidebarAndWaitForAnimation = async (editor: Editor): Promise<void> => {
+      TinyUiActions.clickOnToolbar(editor, 'button[aria-label="My sidebar 1"]');
+      await UiFinder.pWaitForNotExists('Sidebar slide animation should finish', SugarBody.body(), '.tox-sidebar--sliding-growing, .tox-sidebar--sliding-shrinking');
     };
 
     it('TINYMCE-14765: Opening a sidebar from the toolbar does not jump scroll when the editor was unfocused', async () => {
@@ -281,8 +290,21 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarTest', () => {
         });
       }
       const scrollY = await pSetupUnfocusedOffscreenSelection(editor);
-      TinyUiActions.clickOnToolbar(editor, 'button[aria-label="My sidebar 1"]');
+      await pClickSidebarAndWaitForAnimation(editor);
       Assertions.assertEq('Opening a sidebar should not scroll the selection into view', scrollY, getScrollY(editor));
+    });
+
+    it('TINYMCE-14765: Opening a sidebar from the toolbar does not jump scroll to the top when the selection is at the top', async () => {
+      const editor = hook.editor();
+      if (editor.queryCommandValue('ToggleSidebar') === 'mysidebar1') {
+        TinyUiActions.clickOnToolbar(editor, 'button[aria-label="My sidebar 1"]');
+        await Waiter.pTryUntil('Sidebar should be closed before opening', () => {
+          Assertions.assertEq('Sidebar should be closed', '', editor.queryCommandValue('ToggleSidebar'));
+        });
+      }
+      const scrollY = await pSetupUnfocusedOffscreenSelection(editor, [ 0, 0 ], 500);
+      await pClickSidebarAndWaitForAnimation(editor);
+      Assertions.assertEq('Opening a sidebar should not reset iframe scroll to the top', scrollY, getScrollY(editor));
     });
 
     it('TINYMCE-14765: Closing a sidebar from the toolbar does not jump scroll when the editor was unfocused', async () => {
@@ -294,7 +316,7 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarTest', () => {
         Assertions.assertEq('Sidebar should be open', 'mysidebar1', editor.queryCommandValue('ToggleSidebar'));
       });
       const scrollY = await pSetupUnfocusedOffscreenSelection(editor);
-      TinyUiActions.clickOnToolbar(editor, 'button[aria-label="My sidebar 1"]');
+      await pClickSidebarAndWaitForAnimation(editor);
       Assertions.assertEq('Closing a sidebar should not scroll the selection into view', scrollY, getScrollY(editor));
       Assertions.assertEq('Closing a sidebar should return focus to the editor', true, editor.hasFocus());
     });

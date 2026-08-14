@@ -6,6 +6,7 @@ import { Css, DomEvent, SugarElement, SugarPosition, SugarShadowDom } from '@eph
 import type { EventUtilsEvent } from 'tinymce/core/api/dom/EventUtils';
 import type Editor from 'tinymce/core/api/Editor';
 import type { EditorUiApi } from 'tinymce/core/api/ui/Ui';
+import Delay from 'tinymce/core/api/util/Delay';
 
 import * as Events from '../api/Events';
 import * as Options from '../api/Options';
@@ -164,8 +165,19 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
   UiState.setupEventsForUi(editor, uiRefs);
 
   editor.addCommand('ToggleSidebar', (_ui: boolean, value: string) => {
+    const win = editor.getWin();
+    const scrollY = editor.dom.getViewPort(win).y;
+    const restoreScroll = () => win.scrollTo(0, scrollY);
+
     OuterContainer.toggleSidebar(outerContainer, value);
     Events.fireToggleSidebar(editor);
+    restoreScroll();
+
+    editor.on('ResizeContent', restoreScroll);
+    Delay.setEditorTimeout(editor, () => {
+      editor.off('ResizeContent', restoreScroll);
+      restoreScroll();
+    }, 500);
   });
 
   editor.addQueryValueHandler('ToggleSidebar', () => OuterContainer.whichSidebar(outerContainer) ?? '');
