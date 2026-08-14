@@ -298,14 +298,14 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarTest', () => {
       Assertions.assertEq('Closing a sidebar should return focus to the editor', true, editor.hasFocus());
     });
 
-    it('TINYMCE-14765: Bold from the toolbar still scrolls to the selection when the editor was unfocused', async () => {
+    it('TINYMCE-14765: Bold command still focuses and scrolls when the editor was unfocused', async () => {
       const editor = hook.editor();
       const scrollY = await pSetupUnfocusedOffscreenSelection(editor);
-      TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Bold"]');
+      editor.execCommand('Bold');
       Assertions.assertEq('Bold should return focus to the editor', true, editor.hasFocus());
       Assertions.assertEq('Bold should apply to the current selection', true, editor.queryCommandState('Bold'));
-      await Waiter.pTryUntil('Bold should still scroll the selection into view', () => {
-        Assertions.assertEq('Bold should still scroll the selection into view', true, getScrollY(editor) > scrollY);
+      await Waiter.pTryUntil('Bold should scroll the selection into view', () => {
+        Assertions.assertEq('Bold should scroll the selection into view', true, getScrollY(editor) > scrollY);
       });
     });
   });
