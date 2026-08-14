@@ -1,0 +1,21 @@
+{
+  "$schema": "../../node_modules/oxlint/configuration_schema.json",
+  "extends": [
+    "../../.oxlintrc.json"
+  ],
+  "rules": {
+    "@tinymce/no-direct-editor-events": "off",
+    "@tinymce/no-implicit-dom-globals": [
+      "error",
+      {
+        "allowed": [
+          "btoa",
+          "fetch",
+          "requestAnimationFrame",
+          "InputEvent"
+        ],
+        "appendDefaults": true
+      }
+    ]
+  }
+}

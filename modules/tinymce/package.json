@@ -21,7 +21,7 @@
     "build": "grunt buildOnly",
     "test": "grunt test",
     "test-manual": "grunt test-manual",
-    "lint": "eslint --max-warnings=0 src/**/*.ts",
+    "lint": "node ../../bin/lint.mjs src",
     "silver-test": "grunt bedrock-auto:silver",
     "silver-test-manual": "grunt bedrock-manual:silver",
     "dev": "rspack serve"

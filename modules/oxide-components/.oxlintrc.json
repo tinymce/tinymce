@@ -1,0 +1,65 @@
+{
+  "$schema": "../../node_modules/oxlint/configuration_schema.json",
+  "extends": [
+    "../../.oxlintrc.json"
+  ],
+  "ignorePatterns": [
+    "lib"
+  ],
+  "overrides": [
+    {
+      "files": [
+        "**/*.{ts,tsx}"
+      ],
+      "plugins": [
+        "react",
+        "react-hooks"
+      ],
+      "env": {
+        "browser": true
+      },
+      "rules": {
+        "react-hooks/rules-of-hooks": "error",
+        "react-hooks/exhaustive-deps": "warn"
+      }
+    },
+    {
+      "files": [
+        "**/*.stories.{ts,tsx,js,jsx,mjs,cjs}",
+        "**/*.story.{ts,tsx,js,jsx,mjs,cjs}"
+      ],
+      "plugins": [
+        "react",
+        "react-hooks"
+      ],
+      "jsPlugins": [
+        "eslint-plugin-storybook"
+      ],
+      "rules": {
+        "storybook/await-interactions": "error",
+        "storybook/context-in-play-function": "error",
+        "storybook/default-exports": "error",
+        "storybook/hierarchy-separator": "warn",
+        "storybook/no-redundant-story-name": "warn",
+        "storybook/no-renderer-packages": "error",
+        "storybook/prefer-pascal-case": "warn",
+        "storybook/story-exports": "error",
+        "storybook/use-storybook-expect": "error",
+        "storybook/use-storybook-testing-library": "error",
+        "import/no-anonymous-default-export": "off",
+        "react-hooks/rules-of-hooks": "off"
+      }
+    },
+    {
+      "files": [
+        ".storybook/main.{js,cjs,mjs,ts}"
+      ],
+      "jsPlugins": [
+        "eslint-plugin-storybook"
+      ],
+      "rules": {
+        "storybook/no-uninstalled-addons": "error"
+      }
+    }
+  ]
+}

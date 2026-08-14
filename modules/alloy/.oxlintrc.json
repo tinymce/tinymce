@@ -1,0 +1,17 @@
+{
+  "$schema": "../../node_modules/oxlint/configuration_schema.json",
+  "extends": [
+    "../../.oxlintrc.json"
+  ],
+  "rules": {
+    "@tinymce/no-implicit-dom-globals": [
+      "error",
+      {
+        "allowed": [
+          "requestAnimationFrame"
+        ],
+        "appendDefaults": true
+      }
+    ]
+  }
+}

@@ -11,7 +11,7 @@
     "prepublishOnly": "tsc -b",
     "build": "tsc",
     "dev": "rspack serve",
-    "lint": "eslint --max-warnings=0 src/**/*.ts"
+    "lint": "node ../../bin/lint.mjs src"
   },
   "dependencies": {
     "@ephox/boulder": "^9.0.0",

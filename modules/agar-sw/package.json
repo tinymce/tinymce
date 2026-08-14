@@ -13,7 +13,7 @@
     "build": "grunt",
     "test": "bedrock-auto -b chrome-headless -d src/test/ts",
     "test-manual": "bedrock --testdirs src/test/ts/browser",
-    "lint": "eslint --max-warnings=0 src/**/*.ts"
+    "lint": "node ../../bin/lint.mjs src"
   },
   "author": "Ephox Corporation DBA Tiny Technologies, Inc",
   "license": "GPL-2.0-or-later",

@@ -41,7 +41,7 @@
   },
   "scripts": {
     "test": "tsc -b",
-    "lint": "eslint --max-warnings=0 src/**/*.ts",
+    "lint": "node ../../bin/lint.mjs src",
     "prepublishOnly": "tsc -b",
     "build": "tsc",
     "dev": "rspack serve"
