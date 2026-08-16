@@ -149,6 +149,14 @@ const focusEditor = (editor: Editor, scrollToSelection: boolean) => {
 
 const activateEditor = (editor: Editor) => editor.editorManager.setActive(editor);
 
+const normalizeFocusOptions = (args?: Exclude<EditorFocusArg, true>): EditorFocusOptions => {
+  if (Type.isNonNullable(args) && !Type.isBoolean(args)) {
+    return args;
+  }
+
+  return { scrollToSelection: true };
+};
+
 const focus = (editor: Editor, args?: EditorFocusArg): void => {
   if (editor.removed) {
     return;
@@ -159,12 +167,8 @@ const focus = (editor: Editor, args?: EditorFocusArg): void => {
     return;
   }
 
-  if (Type.isNonNullable(args) && !Type.isBoolean(args)) {
-    focusEditor(editor, args.scrollToSelection !== false);
-    return;
-  }
-
-  focusEditor(editor, true);
+  const options = normalizeFocusOptions(args);
+  focusEditor(editor, options.scrollToSelection !== false);
 };
 
 export {
