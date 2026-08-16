@@ -13,7 +13,7 @@ import * as SelectionBookmark from '../selection/SelectionBookmark';
 import * as FocusController from './FocusController';
 
 interface EditorFocusOptions {
-  readonly scrollToCursor?: boolean;
+  readonly scrollToSelection?: boolean;
 }
 
 type EditorFocusArg = boolean | EditorFocusOptions;
@@ -90,10 +90,10 @@ const hasFocus = (editor: Editor): boolean => editor.inline ? hasInlineFocus(edi
 
 const hasEditorOrUiFocus = (editor: Editor): boolean => hasFocus(editor) || hasUiFocus(editor);
 
-const focusEditor = (editor: Editor, scrollToCursor: boolean) => {
+const focusEditor = (editor: Editor, scrollToSelection: boolean) => {
   const selection: EditorSelection = editor.selection;
   const body = editor.getBody();
-  const preventScroll = !scrollToCursor;
+  const preventScroll = !scrollToSelection;
   let rng = selection.getRng();
   editor.quirks.refreshContentEditable();
 
@@ -163,7 +163,7 @@ const focus = (editor: Editor, args?: EditorFocusArg): void => {
   }
 
   if (Type.isNonNullable(args) && !Type.isBoolean(args)) {
-    focusEditor(editor, args.scrollToCursor !== false);
+    focusEditor(editor, args.scrollToSelection !== false);
     return;
   }
 

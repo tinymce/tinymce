@@ -103,13 +103,13 @@ describe('browser.tinymce.core.focus.EditorFocusTest', () => {
     });
   });
 
-  context('scrollToCursor option', () => {
+  context('scrollToSelection option', () => {
     const selectBody = () => {
       const body = SugarBody.body();
       Focus.focus(body);
     };
 
-    it('TINYMCE-14765: Focus with scrollToCursor false does not scroll the selection into view', async () => {
+    it('TINYMCE-14765: Focus with scrollToSelection false does not scroll the selection into view', async () => {
       const editor = await McEditor.pFromSettings<Editor>({
         menubar: false,
         height: 300,
@@ -120,7 +120,7 @@ describe('browser.tinymce.core.focus.EditorFocusTest', () => {
       editor.getWin().scrollTo(0, 0);
       selectBody();
       const scrollY = editor.getWin().scrollY;
-      editor.focus({ scrollToCursor: false });
+      editor.focus({ scrollToSelection: false });
       assert.isTrue(editor.hasFocus(), 'Editor should have focus');
       assert.equal(editor.getWin().scrollY, scrollY, 'Should not scroll the selection into view');
       McEditor.remove(editor);
