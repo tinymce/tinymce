@@ -582,6 +582,36 @@ describe('browser.components.CardTest', () => {
     });
   });
 
+  describe('Divider Tests', () => {
+    it('TINYMCE-14723: Should render divider with correct class', async () => {
+      const { container } = render(
+        <Card.Root>
+          <Card.Body>Content above</Card.Body>
+          <Card.Divider />
+          <Card.Body>Content below</Card.Body>
+        </Card.Root>,
+        { wrapper }
+      );
+
+      const divider = container.querySelector('.tox-card__divider');
+      expect(divider, 'Divider should render with correct class').toBeTruthy();
+      expect(divider?.tagName, 'Divider should be an hr element').toBe('HR');
+    });
+
+    it('TINYMCE-14723: Should support custom className', async () => {
+      const { container } = render(
+        <Card.Root>
+          <Card.Body>Content</Card.Body>
+          <Card.Divider className="custom-divider" />
+        </Card.Root>,
+        { wrapper }
+      );
+
+      const divider = container.querySelector('.tox-card__divider');
+      expect(divider?.className, 'Divider should include custom className').toContain('custom-divider');
+    });
+  });
+
   describe('Snapshot Tests', () => {
     it('TINY-13459: Should match snapshot for focused card in list', async () => {
       const { asFragment } = render(

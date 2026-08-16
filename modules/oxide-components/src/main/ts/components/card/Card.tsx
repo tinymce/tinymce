@@ -47,6 +47,10 @@ export interface CardHighlightProps extends PropsWithChildren {
   readonly type: CardHighlightType;
 }
 
+export interface CardDividerProps {
+  readonly className?: string;
+}
+
 export interface CardExpansionProps extends PropsWithChildren {
   /**
    * Optional unique identifier for this expansion.
@@ -230,6 +234,13 @@ const Highlight: FC<CardHighlightProps> = ({ children, type }) => {
   );
 };
 
+const Divider: FC<CardDividerProps> = ({ className }) => {
+  const dividerClassName = Bem.element('tox-card', 'divider')
+    + (Type.isNonNullable(className) ? ` ${className}` : '');
+
+  return <hr className={dividerClassName} />;
+};
+
 const CardExpansionContext = createContext<CardExpansionContextValue | null>(null);
 
 const useCardExpansion = (): CardExpansionContextValue => {
@@ -380,6 +391,7 @@ export {
   Body,
   Actions,
   Highlight,
+  Divider,
   Expansion,
   ExpansionTrigger,
   ExpansionContent
