@@ -127,10 +127,7 @@ const focusEditor = (editor: Editor, scrollToSelection: boolean) => {
   // Focus the window iframe
   if (!editor.inline) {
     // WebKit needs this call to fire focusin event properly see #5948
-    // But Opera pre Blink engine will produce an empty selection so skip Opera
-    if (!Env.browser.isOpera()) {
-      focusBody(body, preventScroll);
-    }
+    focusBody(body, preventScroll);
 
     if (preventScroll) {
       if (Type.isNonNullable(editor.iframeElement)) {
