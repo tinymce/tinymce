@@ -1,5 +1,5 @@
 import { Keys, Mouse } from '@ephox/agar';
-import { describe, it } from '@ephox/bedrock-client';
+import { after, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { SelectorFilter, TextContent } from '@ephox/sugar';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
@@ -9,15 +9,24 @@ import type Editor from 'tinymce/core/api/Editor';
 import HelpPlugin from 'tinymce/plugins/help/Plugin';
 
 import { selectors } from '../module/Selectors';
-import FakePlugin from '../module/test/FakePlugin';
-import NoMetaFakePlugin from '../module/test/NoMetaFakePlugin';
+import * as FakePlugins from '../module/test/FakePlugins';
 
 describe('browser.tinymce.plugins.help.PluginTabsOrderTest', () => {
+  const fakePlugins = [
+    FakePlugins.createFakePlugin('fake', {
+      name: 'Fake',
+      url: 'http://www.fake.com'
+    }),
+    FakePlugins.createFakePlugin('nometafake')
+  ];
+
   const hook = TinyHooks.bddSetupLight<Editor>({
-    plugins: 'help fake nometafake',
+    plugins: `help ${FakePlugins.keys(fakePlugins)}`,
     toolbar: 'help',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ HelpPlugin, FakePlugin, NoMetaFakePlugin ]);
+  }, [ HelpPlugin, ...FakePlugins.registrations(fakePlugins) ]);
+
+  after(() => FakePlugins.unregisterAll(fakePlugins));
 
   const pExtractItemsFrom = async (editor: Editor, selector: string): Promise<string[]> => {
     const list = await TinyUiActions.pWaitForUi(

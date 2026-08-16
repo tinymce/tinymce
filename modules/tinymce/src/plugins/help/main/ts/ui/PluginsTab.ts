@@ -1,7 +1,7 @@
-import { Arr, Fun, Obj, Optional, Optionals, Type } from '@ephox/katamari';
+import { Arr, Obj, Optional, Optionals, Type } from '@ephox/katamari';
 
 import type Editor from 'tinymce/core/api/Editor';
-import type { PluginMetadata } from 'tinymce/core/api/PluginManager';
+import type { PluginMetadata, TypedPluginMetadata, UrlPluginMetadata } from 'tinymce/core/api/PluginManager';
 import type { TinyMCE } from 'tinymce/core/api/Tinymce';
 import type { Dialog } from 'tinymce/core/api/ui/Ui';
 import I18n from 'tinymce/core/api/util/I18n';
@@ -25,19 +25,41 @@ const buildLink = (name: string, url: string): string =>
 const buildDocsUrl = (slug: string): string =>
   `https://www.tiny.cloud/docs/tinymce/${tinymce.majorVersion}/${slug}/`;
 
+const isUsableMetadata = (metadata: unknown): metadata is PluginMetadata =>
+  Type.isObject(metadata) && 'name' in metadata && Type.isString(metadata.name);
+
+const getUsableMetadata = (getMetadata: () => PluginMetadata): Optional<PluginMetadata> => {
+  try {
+    return Optional.from<unknown>(getMetadata()).filter(isUsableMetadata);
+  } catch {
+    return Optional.none();
+  }
+};
+
 const readPluginMetadata = (editor: Editor, key: string): Optional<PluginMetadata> =>
   Obj.get(editor.plugins, key)
     .bind((plugin) => Optional.from(plugin.getMetadata))
     .filter(Type.isFunction)
-    .map(Fun.apply);
+    .bind(getUsableMetadata);
+
+const isTypedMetadata = (metadata: PluginMetadata): metadata is TypedPluginMetadata =>
+  'slug' in metadata &&
+  Type.isString(metadata.slug) &&
+  (metadata.type === 'premium' || metadata.type === 'opensource');
+
+const isUrlMetadata = (metadata: PluginMetadata): metadata is UrlPluginMetadata =>
+  'url' in metadata && Type.isString(metadata.url);
 
 const toEntry = (metadata: PluginMetadata): PluginEntry => {
-  if ('type' in metadata) {
-    const displayName = metadata.type === 'premium' ? withPremiumMarker(metadata.name) : metadata.name;
-    const url = buildDocsUrl(metadata.slug);
-    return { name: metadata.name, html: buildLink(displayName, url) };
+  const name = metadata.name;
+  if (isTypedMetadata(metadata)) {
+    const displayName = metadata.type === 'premium' ? withPremiumMarker(name) : name;
+    return { name, html: buildLink(displayName, buildDocsUrl(metadata.slug)) };
+  } else if (isUrlMetadata(metadata)) {
+    return { name, html: buildLink(name, metadata.url) };
+  } else {
+    return { name, html: name };
   }
-  return { name: metadata.name, html: buildLink(metadata.name, metadata.url) };
 };
 
 const buildPluginEntry = (editor: Editor, key: string): Optional<PluginEntry> =>
