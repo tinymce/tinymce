@@ -1,12 +1,15 @@
 import { FocusTools, Keys, UiFinder, Waiter } from '@ephox/agar';
-import { describe, it } from '@ephox/bedrock-client';
+import { after, describe, it } from '@ephox/bedrock-client';
 import { Attribute, SugarBody, SugarDocument, SugarElement } from '@ephox/sugar';
 import { TinyAssertions, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import type Editor from 'tinymce/core/api/Editor';
 import Resource from 'tinymce/core/api/Resource';
+import type { TinyMCE } from 'tinymce/core/api/Tinymce';
 import Plugin from 'tinymce/plugins/emoticons/Plugin';
+
+declare let tinymce: TinyMCE;
 
 // TODO TINY-10480: Investigate flaky tests
 describe.skip('browser.tinymce.plugins.emoticons.ImageEmojiTest', () => {
@@ -19,6 +22,10 @@ describe.skip('browser.tinymce.plugins.emoticons.ImageEmojiTest', () => {
       Resource.unload('tinymce.plugins.emoticons');
     }
   }, [ Plugin ], true);
+
+  after(() => {
+    tinymce.Resource.unload('tinymce.plugins.emoticons');
+  });
 
   it('TBA: Open dialog, Search for "dog", Dog should be first option', async () => {
     const editor = hook.editor();

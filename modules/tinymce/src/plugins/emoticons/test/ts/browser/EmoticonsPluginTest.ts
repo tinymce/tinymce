@@ -1,10 +1,13 @@
-import { describe, it } from '@ephox/bedrock-client';
+import { after, describe, it } from '@ephox/bedrock-client';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import type Editor from 'tinymce/core/api/Editor';
+import type { TinyMCE } from 'tinymce/core/api/Tinymce';
 import type { EmojiEntry } from 'tinymce/plugins/emoticons/core/EmojiDatabase';
 import Plugin from 'tinymce/plugins/emoticons/Plugin';
+
+declare let tinymce: TinyMCE;
 
 describe('browser.tinymce.plugins.emoticons.EmoticonsPluginTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -13,6 +16,10 @@ describe('browser.tinymce.plugins.emoticons.EmoticonsPluginTest', () => {
     base_url: '/project/tinymce/js/tinymce',
     emoticons_database_url: '/project/tinymce/src/plugins/emoticons/main/js/emojis.js'
   }, [ Plugin ], true);
+
+  after(() => {
+    tinymce.Resource.unload('tinymce.plugins.emoticons');
+  });
 
   it('TINY-10572: The plugin successfully exports the promise function that gives emojis', async () => {
     const editor = hook.editor();

@@ -1,12 +1,15 @@
 import { FocusTools, UiFinder } from '@ephox/agar';
-import { before, describe, it } from '@ephox/bedrock-client';
+import { after, before, describe, it } from '@ephox/bedrock-client';
 import { PlatformDetection } from '@ephox/sand';
 import { SugarBody, SugarDocument } from '@ephox/sugar';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import type Editor from 'tinymce/core/api/Editor';
+import type { TinyMCE } from 'tinymce/core/api/Tinymce';
 import Plugin from 'tinymce/plugins/emoticons/Plugin';
+
+declare let tinymce: TinyMCE;
 
 describe('browser.tinymce.plugins.emoticons.EmojiStyleTest', () => {
   before(function () {
@@ -17,16 +20,26 @@ describe('browser.tinymce.plugins.emoticons.EmojiStyleTest', () => {
     }
   });
 
+  const databaseId = 'tinymce.plugins.emoticons';
+  const databaseUrl = '/project/tinymce/src/plugins/emoticons/main/js/emojis.js';
+
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'emoticons',
     toolbar: 'emoticons',
     base_url: '/project/tinymce/js/tinymce',
-    emoticons_database_url: '/project/tinymce/src/plugins/emoticons/main/js/emojis.js'
+    emoticons_database_url: databaseUrl
   }, [ Plugin ], true);
+
+  after(() => {
+    tinymce.Resource.unload(databaseId);
+  });
 
   it('TINY-10636: hover on emoji should have box-shadow', async () => {
     const editor = hook.editor();
     const doc = SugarDocument.getDocument();
+
+    // The plugin starts loading the database on editor init; wait for it before opening the dialog.
+    await tinymce.Resource.load(databaseId, databaseUrl);
 
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Emojis"]');
     await UiFinder.pWaitFor('waiting for emoji dialog', SugarBody.body(), 'div[aria-label="100"]');

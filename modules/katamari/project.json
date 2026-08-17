@@ -1,4 +1,4 @@
 {
   "name": "@ephox/katamari",
-  "tags": [ "open-source", "library" ]
+  "tags": [ "open-source", "library", "headless-test" ]
 }

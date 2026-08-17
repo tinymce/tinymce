@@ -26,6 +26,18 @@ const addPopupToSinkWithinBounds = (popup: AlloyComponent, placementSpec: Placem
   addPopupToSinkCommon(popup, sink, positioner);
 };
 
+// Browsers snap scroll offsets to whole pixels, so an element scrolled to the top of the viewport
+// can land a fraction of a pixel outside it. Allow a pixel of slack rather than testing against 0.
+const viewportSlack = 1;
+
+const isInViewport = (popup: AlloyComponent): boolean => {
+  const bounds = popup.element.dom.getBoundingClientRect();
+  return bounds.top >= -viewportSlack &&
+    bounds.left >= -viewportSlack &&
+    bounds.bottom <= window.innerHeight + viewportSlack &&
+    bounds.right <= window.innerWidth + viewportSlack;
+};
+
 const pTestPopupInSink = (sinkName: string, popup: AlloyComponent, sink: AlloyComponent): Promise<void> =>
   Waiter.pTryUntil(`Ensuring that the popup is inside the ${sinkName} sink`, () => {
     const inside = Sinks.isInside(sink, popup);
@@ -34,9 +46,7 @@ const pTestPopupInSink = (sinkName: string, popup: AlloyComponent, sink: AlloyCo
 
 const pTestPopupInViewport = (sinkName: string, popup: AlloyComponent): Promise<void> =>
   Waiter.pTryUntil(`Ensuring that the popup is inside window viewport for the ${sinkName} sink`, () => {
-    const bounds = popup.element.dom.getBoundingClientRect();
-    const inside = bounds.top >= 0 && bounds.left >= 0 && bounds.top <= window.innerHeight && bounds.left <= window.innerWidth;
-    assert.isTrue(inside, `The popup does not appear within the window viewport for the ${sinkName} sink`);
+    assert.isTrue(isInViewport(popup), `The popup does not appear within the window viewport for the ${sinkName} sink`);
   });
 
 const pTestPopupPosition = async (sinkName: string, popup: AlloyComponent, sink: AlloyComponent) => {
@@ -81,13 +91,9 @@ const cTestPopupInSink = (label: string, sinkName: string): NamedChain => Chain.
 );
 
 const cTestPopupInViewport = (sinkName: string): NamedChain => Chain.control(
-  NamedChain.bundle((data) => {
-    const bounds = data.popup.element.dom.getBoundingClientRect();
-    const inside = bounds.top >= 0 && bounds.left >= 0 && bounds.top <= window.innerHeight && bounds.left <= window.innerWidth;
-    return inside ? Result.value(data) : Result.error(
-      new Error('The popup does not appear within window viewport for the ' + sinkName + ' sink')
-    );
-  }),
+  NamedChain.bundle((data) => isInViewport(data.popup) ? Result.value(data) : Result.error(
+    new Error('The popup does not appear within window viewport for the ' + sinkName + ' sink')
+  )),
   Guard.tryUntil('Ensuring that the popup is inside window viewport for the ' + sinkName + ' sink')
 );
 

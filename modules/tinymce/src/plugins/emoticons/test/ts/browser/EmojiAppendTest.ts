@@ -1,11 +1,14 @@
 import { ApproxStructure, Assertions, FocusTools, Keys, type StructAssert, UiFinder, Waiter } from '@ephox/agar';
-import { describe, it } from '@ephox/bedrock-client';
+import { after, describe, it } from '@ephox/bedrock-client';
 import { Attribute, SugarBody, SugarDocument } from '@ephox/sugar';
 import { TinyAssertions, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import type Editor from 'tinymce/core/api/Editor';
+import type { TinyMCE } from 'tinymce/core/api/Tinymce';
 import Plugin from 'tinymce/plugins/emoticons/Plugin';
+
+declare let tinymce: TinyMCE;
 
 describe('browser.tinymce.plugins.emoticons.EmojiAppendTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -25,6 +28,10 @@ describe('browser.tinymce.plugins.emoticons.EmojiAppendTest', () => {
       }
     }
   }, [ Plugin ], true);
+
+  after(() => {
+    tinymce.Resource.unload('tinymce.plugins.emoticons.test-emojis.js');
+  });
 
   const tabElement = (s: ApproxStructure.StructApi, str: ApproxStructure.StringApi, arr: ApproxStructure.ArrayApi) =>
     (name: string): StructAssert => s.element('div', {

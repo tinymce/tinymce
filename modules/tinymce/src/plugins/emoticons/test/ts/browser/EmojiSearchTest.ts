@@ -1,12 +1,15 @@
 import { FocusTools, Keys, UiFinder, Waiter } from '@ephox/agar';
-import { before, describe, it } from '@ephox/bedrock-client';
+import { after, before, describe, it } from '@ephox/bedrock-client';
 import { PlatformDetection } from '@ephox/sand';
 import { Attribute, SugarBody, SugarDocument } from '@ephox/sugar';
 import { TinyAssertions, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import type Editor from 'tinymce/core/api/Editor';
+import type { TinyMCE } from 'tinymce/core/api/Tinymce';
 import Plugin from 'tinymce/plugins/emoticons/Plugin';
+
+declare let tinymce: TinyMCE;
 
 describe('browser.tinymce.plugins.emoticons.EmojiSearchTest', () => {
   before(function () {
@@ -23,6 +26,10 @@ describe('browser.tinymce.plugins.emoticons.EmojiSearchTest', () => {
     base_url: '/project/tinymce/js/tinymce',
     emoticons_database_url: '/project/tinymce/src/plugins/emoticons/main/js/emojis.js'
   }, [ Plugin ], true);
+
+  after(() => {
+    tinymce.Resource.unload('tinymce.plugins.emoticons');
+  });
 
   it('TBA: Open dialog, Search for "rainbow", Rainbow should be first option', async () => {
     const editor = hook.editor();

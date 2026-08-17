@@ -21,7 +21,7 @@ describe('browser.tinymce.plugins.advlist.SplitButtonTest', () => {
       'button[data-mce-name="numlist-chevron"][aria-label^="Numbered list"]' :
       'button[data-mce-name="bullist-chevron"][aria-label^="Bullet list"]';
     TinyUiActions.clickOnToolbar(editor, selector);
-    await TinyUiActions.pWaitForUi(editor, '.tox-menu.tox-selected-menu');
+    await TinyUiActions.pWaitForUi(editor, '.tox-menu.tox-selected-menu .tox-collection__item--active');
   };
 
   const assertBullListStructure = () => {
@@ -44,8 +44,7 @@ describe('browser.tinymce.plugins.advlist.SplitButtonTest', () => {
                   s.element('div', {
                     classes: [
                       arr.has('tox-menu-nav__js'),
-                      arr.has('tox-collection__item'),
-                      arr.has('tox-collection__item--active')
+                      arr.has('tox-collection__item')
                     ],
                     attrs: {
                       'role': str.is('menuitemradio'),
@@ -132,8 +131,7 @@ describe('browser.tinymce.plugins.advlist.SplitButtonTest', () => {
                   s.element('div', {
                     classes: [
                       arr.has('tox-menu-nav__js'),
-                      arr.has('tox-collection__item'),
-                      arr.has('tox-collection__item--active')
+                      arr.has('tox-collection__item')
                     ],
                     attrs: {
                       'role': str.is('menuitemradio'),

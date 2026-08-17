@@ -13,7 +13,9 @@
       "outputs": [
         "{projectRoot}/dist",
         "{projectRoot}/js",
-        "{projectRoot}/lib"
+        "{projectRoot}/lib",
+        "{projectRoot}/src/plugins/emoticons/main/js",
+        "{projectRoot}/src/plugins/help/main/js/i18n"
       ]
     }
   }

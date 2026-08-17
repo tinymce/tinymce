@@ -39,6 +39,7 @@
     "test-visual-ci": "node ./visual-regression-test-ci.mjs",
     "test-visual-local": "node ./visual-regression-test.mjs",
     "test-visual-local-update": "node ./visual-regression-test.mjs update",
+    "node-test": "vitest --watch=false --project atomic --reporter=default",
     "test-ci": "vitest --watch=false --project '!visual' --reporter=default --reporter=junit --outputFile=scratch/test-results.xml",
     "test-browser-manual": "vitest --watch --project '!visual' --browser.headless false",
     "test-browser-headless": "vitest --watch --project '!visual'",
