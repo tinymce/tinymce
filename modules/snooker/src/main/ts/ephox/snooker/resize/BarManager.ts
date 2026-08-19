@@ -110,10 +110,12 @@ export const BarManager = (wire: ResizeWire): BarManager => {
   /* mousedown on resize bar: start dragging when the bar is clicked, storing the initial position. */
   const mousedown = DomEvent.bind(wire.parent(), 'mousedown', (event) => {
     if (Bars.isRowBar(event.target)) {
+      event.prevent();
       handler(event.target, 'top');
     }
 
     if (Bars.isColBar(event.target)) {
+      event.prevent();
       handler(event.target, 'left');
     }
   });

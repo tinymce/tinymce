@@ -1,0 +1,6 @@
+project: snooker
+kind: Fixed
+body: Typing in while resizing a table no longer moves the selection outside the editable
+time: 2026-08-17T15:11:05.559192+02:00
+custom:
+  Issue: TINYMCE-14594
