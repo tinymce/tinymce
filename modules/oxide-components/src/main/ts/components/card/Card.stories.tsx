@@ -1,6 +1,7 @@
 import { Fun, Obj } from '@ephox/katamari';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { getAll as getAllIcons } from '@tinymce/oxide-icons-default';
+import { AutoResizingTextarea } from 'oxide-components/components/autoresizingtextarea/AutoResizingTextarea';
 import { Button } from 'oxide-components/components/button/Button';
 import { ExpandableBox } from 'oxide-components/components/expandablebox/ExpandableBox';
 import { Icon } from 'oxide-components/components/icon/Icon';
@@ -18,7 +19,8 @@ const icons: Record<string, string> = {
   'checkmark': allIcons.checkmark,
   'close': allIcons.close,
   'chevron-down': allIcons['chevron-down'],
-  'chevron-up': allIcons['chevron-up']
+  'chevron-up': allIcons['chevron-up'],
+  'feedback': allIcons.feedback
 };
 
 const mockUniverse = {
@@ -50,7 +52,7 @@ const meta = {
 The Card component is a reusable compound component for displaying content with actions.
 
 ## Features
-- **Compound Component Pattern**: Flexible composition with Root, Header, HeaderContent, HeaderActions, Body, and Actions
+- **Compound Component Pattern**: Flexible composition with Root, Header, HeaderContent, HeaderActions, Body, Actions, and Expansion
 - **State Management**: Supports selected and resolution states (accepted/rejected)
 - **Controlled Component**: Parent manages state via props
 - **Accessibility**: Proper ARIA attributes and keyboard support
@@ -65,13 +67,30 @@ The component uses a compound component pattern with these parts:
 - \`Card.Body\`: Main content area
 - \`Card.Actions\`: Bottom button container
 
+## Feedback/Comment Threads
+
+For feedback and comment threads, click the card to reveal the thread content:
+1. **Click card** → Shows divider + existing replies + textarea
+2. **Focus textarea** → Shows Cancel/Save buttons
+3. **Click Cancel** → Hides buttons, keeps textarea visible
+
+The feedback count is shown in the \`Profile.Subheading\` with an icon.
+
 ## Integration
 
 Works seamlessly with other oxide-components:
 - **Button** / **IconButton**: For action buttons
 - **Profile**: For user info in HeaderContent
 - **ExpandableBox**: For long content
+- **AutoResizingTextarea**: For feedback/comment editors
 - **Icon**: For status indicators
+
+## Advanced: Card.Expansion
+
+For custom expandable sections, use the \`Card.Expansion\` compound components:
+- \`Card.Expansion\`: Expandable section wrapper (controlled)
+- \`Card.ExpansionTrigger\`: Button that toggles the expansion
+- \`Card.ExpansionContent\`: Animated collapsible content region
         `
       }
     }
@@ -673,6 +692,405 @@ This is useful for simple cards that only need action buttons without user info 
               More options
             </Button>
           </Card.Actions>
+        </Card.Root>
+      </div>
+    );
+  }
+};
+
+export const ExpansionBasic: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: `
+**Card.Expansion API Example**
+
+Demonstrates the \`Card.Expansion\` compound components:
+- \`Card.Expansion\`: Wrapper with controlled state
+- \`Card.ExpansionTrigger\`: Button that toggles expansion (requires single interactive child)
+- \`Card.ExpansionContent\`: Animated collapsible content region
+
+**Try it:** Click "View feedback (2)" to expand, click again to collapse.
+        `
+      }
+    }
+  },
+  render: () => {
+    const [ open, setOpen ] = useState(false);
+
+    return (
+      <div style={{ width: '316px' }}>
+        <Card.Root>
+          <Card.Header>
+            <Card.HeaderContent>
+              <Profile.Root>
+                <Profile.Image src={AVATAR_URL} alt="John Mac Giolla..." />
+                <Profile.Body>
+                  <Profile.Heading>John Mac Giolla...</Profile.Heading>
+                  <Profile.Subheading>
+                    May 18, 9:12 AM • 2 <Icon icon="feedback" aria-label="feedback" />
+                  </Profile.Subheading>
+                </Profile.Body>
+              </Profile.Root>
+            </Card.HeaderContent>
+          </Card.Header>
+          <Card.Body>
+            <p style={{ margin: 0 }}>Modified text with suggested changes</p>
+          </Card.Body>
+          <Card.Expansion open={open} onOpenChange={setOpen}>
+            <Card.ExpansionTrigger>
+              <Button variant="outlined" className="tox-button--stretch">
+                View feedback (2)
+              </Button>
+            </Card.ExpansionTrigger>
+            <Card.ExpansionContent>
+              <div>
+                <Profile.Root>
+                  <Profile.Image src={AVATAR_URL} alt="Sarah Chen" />
+                  <Profile.Body>
+                    <Profile.Heading>Sarah Chen</Profile.Heading>
+                    <Profile.Subheading>May 18, 10:30 AM</Profile.Subheading>
+                  </Profile.Body>
+                </Profile.Root>
+                <p style={{ margin: '8px 0 0' }}>This change looks good to me.</p>
+              </div>
+              <div>
+                <Profile.Root>
+                  <Profile.Image src={AVATAR_URL} alt="Mike Torres" />
+                  <Profile.Body>
+                    <Profile.Heading>Mike Torres</Profile.Heading>
+                    <Profile.Subheading>May 18, 11:15 AM</Profile.Subheading>
+                  </Profile.Body>
+                </Profile.Root>
+                <p style={{ margin: '8px 0 0' }}>Could we keep the original phrasing instead?</p>
+              </div>
+            </Card.ExpansionContent>
+          </Card.Expansion>
+        </Card.Root>
+      </div>
+    );
+  }
+};
+
+export const ExpansionProvideFeedback: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: `
+**Card — Provide Feedback (Suggested Edits)**
+
+Click the card to reveal the feedback composer. Focus the textarea to show action buttons.
+
+**Try it:** Click the card → focus textarea → Cancel hides buttons, keeps textarea visible.
+        `
+      }
+    }
+  },
+  render: () => {
+    const [ selected, setSelected ] = useState(true);
+    const [ threadOpen, setThreadOpen ] = useState(false);
+    const [ actionsVisible, setActionsVisible ] = useState(false);
+    const [ feedback, setFeedback ] = useState('');
+
+    return (
+      <div style={{ width: '316px' }}>
+        <Card.Root
+          selected={selected}
+          onSelect={() => {
+            setSelected(!selected);
+            setThreadOpen(!threadOpen);
+          }}
+        >
+          <Card.Header>
+            <Card.HeaderContent>
+              <Profile.Root>
+                <Profile.Image src={AVATAR_URL} alt="John Mac Giolla..." />
+                <Profile.Body>
+                  <Profile.Heading>John Mac Giolla...</Profile.Heading>
+                  <Profile.Subheading>May 18, 9:12 AM</Profile.Subheading>
+                </Profile.Body>
+              </Profile.Root>
+            </Card.HeaderContent>
+            <Card.HeaderActions visibilityMode="hover">
+              <IconButton variant="naked" icon="close" aria-label="Reject" />
+              <IconButton variant="naked" icon="checkmark" aria-label="Accept" />
+            </Card.HeaderActions>
+          </Card.Header>
+          <Card.Body>
+            <p style={{ margin: 0 }}>Modified text</p>
+          </Card.Body>
+          {threadOpen && (
+            <>
+              <Card.Divider />
+              <div
+                style={{ paddingBottom: '16px' }}
+                onFocusCapture={() => setActionsVisible(true)}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <AutoResizingTextarea
+                  value={feedback}
+                  onChange={setFeedback}
+                  placeholder="Provide feedback..."
+                />
+                {actionsVisible && (
+                  <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end', marginTop: '8px' }}>
+                    <Button
+                      variant="outlined"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setFeedback('');
+                        setActionsVisible(false);
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      variant="primary"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setFeedback('');
+                        setActionsVisible(false);
+                      }}
+                    >
+                      Save
+                    </Button>
+                  </div>
+                )}
+              </div>
+            </>
+          )}
+        </Card.Root>
+      </div>
+    );
+  }
+};
+
+export const ExpansionCommentReplies: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: `
+**Card — Comment Thread (Comments)**
+
+Click the card to reveal existing replies and a composer. Focus the textarea to show action buttons.
+
+**Try it:** Click card → see replies + composer → focus textarea → action buttons appear.
+        `
+      }
+    }
+  },
+  render: () => {
+    const [ selected, setSelected ] = useState(true);
+    const [ threadOpen, setThreadOpen ] = useState(false);
+    const [ actionsVisible, setActionsVisible ] = useState(false);
+    const [ reply, setReply ] = useState('');
+
+    return (
+      <div style={{ width: '316px' }}>
+        <Card.Root
+          selected={selected}
+          onSelect={() => {
+            setSelected(!selected);
+            setThreadOpen(!threadOpen);
+          }}
+        >
+          <Card.Header>
+            <Card.HeaderContent>
+              <Profile.Root>
+                <Profile.Image src={AVATAR_URL} alt="Jane Smith" />
+                <Profile.Body>
+                  <Profile.Heading>Jane Smith</Profile.Heading>
+                  <Profile.Subheading>
+                    May 19, 2:45 PM • 2 <Icon icon="feedback" aria-label="comments" />
+                  </Profile.Subheading>
+                </Profile.Body>
+              </Profile.Root>
+            </Card.HeaderContent>
+          </Card.Header>
+          <Card.Body>
+            <p style={{ margin: 0 }}>
+              Can we clarify this section before publishing?
+            </p>
+          </Card.Body>
+
+          {threadOpen && (
+            <>
+              <Card.Divider />
+              <div
+                style={{ paddingBottom: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}
+                onFocusCapture={() => setActionsVisible(true)}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div>
+                  <Profile.Root>
+                    <Profile.Image src={AVATAR_URL} alt="Alex Rivera" />
+                    <Profile.Body>
+                      <Profile.Heading>Alex Rivera</Profile.Heading>
+                      <Profile.Subheading>May 19, 3:10 PM</Profile.Subheading>
+                    </Profile.Body>
+                  </Profile.Root>
+                  <p style={{ margin: '8px 0 0' }}>Agreed — the wording is ambiguous.</p>
+                </div>
+                <div>
+                  <Profile.Root>
+                    <Profile.Image src={AVATAR_URL} alt="Sam Lee" />
+                    <Profile.Body>
+                      <Profile.Heading>Sam Lee</Profile.Heading>
+                      <Profile.Subheading>May 19, 4:02 PM</Profile.Subheading>
+                    </Profile.Body>
+                  </Profile.Root>
+                  <p style={{ margin: '8px 0 0' }}>I can take a pass on a rewrite.</p>
+                </div>
+
+                <AutoResizingTextarea
+                  value={reply}
+                  onChange={setReply}
+                  placeholder="Add comment..."
+                />
+                {actionsVisible && (
+                  <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
+                    <Button
+                      variant="outlined"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setReply('');
+                        setActionsVisible(false);
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      variant="primary"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setReply('');
+                        setActionsVisible(false);
+                      }}
+                    >
+                      Comment
+                    </Button>
+                  </div>
+                )}
+              </div>
+            </>
+          )}
+        </Card.Root>
+      </div>
+    );
+  }
+};
+
+export const ExpansionFeedbackReplies: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: `
+**Card — Feedback Thread (Suggested Edits)**
+
+Click the card to reveal existing feedback and a composer. Focus the textarea to show action buttons.
+
+**Try it:** Click card → see feedback + composer → focus textarea → action buttons appear.
+        `
+      }
+    }
+  },
+  render: () => {
+    const [ selected, setSelected ] = useState(true);
+    const [ threadOpen, setThreadOpen ] = useState(false);
+    const [ actionsVisible, setActionsVisible ] = useState(false);
+    const [ reply, setReply ] = useState('');
+
+    return (
+      <div style={{ width: '316px' }}>
+        <Card.Root
+          selected={selected}
+          onSelect={() => {
+            setSelected(!selected);
+            setThreadOpen(!threadOpen);
+          }}
+        >
+          <Card.Header>
+            <Card.HeaderContent>
+              <Profile.Root>
+                <Profile.Image src={AVATAR_URL} alt="John Mac Giolla..." />
+                <Profile.Body>
+                  <Profile.Heading>John Mac Giolla...</Profile.Heading>
+                  <Profile.Subheading>
+                    May 18, 9:12 AM • 2 <Icon icon="feedback" aria-label="feedback" />
+                  </Profile.Subheading>
+                </Profile.Body>
+              </Profile.Root>
+            </Card.HeaderContent>
+            <Card.HeaderActions visibilityMode="hover">
+              <IconButton variant="naked" icon="close" aria-label="Reject" />
+              <IconButton variant="naked" icon="checkmark" aria-label="Accept" />
+            </Card.HeaderActions>
+          </Card.Header>
+          <Card.Body>
+            <p style={{ margin: 0 }}>Modified text with suggested changes</p>
+          </Card.Body>
+
+          {threadOpen && (
+            <>
+              <Card.Divider />
+              <div
+                style={{ paddingBottom: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}
+                onFocusCapture={() => setActionsVisible(true)}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div>
+                  <Profile.Root>
+                    <Profile.Image src={AVATAR_URL} alt="Sarah Chen" />
+                    <Profile.Body>
+                      <Profile.Heading>Sarah Chen</Profile.Heading>
+                      <Profile.Subheading>May 18, 10:30 AM</Profile.Subheading>
+                    </Profile.Body>
+                  </Profile.Root>
+                  <p style={{ margin: '8px 0 0' }}>This change looks good to me.</p>
+                </div>
+                <div>
+                  <Profile.Root>
+                    <Profile.Image src={AVATAR_URL} alt="Mike Torres" />
+                    <Profile.Body>
+                      <Profile.Heading>Mike Torres</Profile.Heading>
+                      <Profile.Subheading>May 18, 11:15 AM</Profile.Subheading>
+                    </Profile.Body>
+                  </Profile.Root>
+                  <p style={{ margin: '8px 0 0' }}>Could we keep the original phrasing instead?</p>
+                </div>
+
+                <AutoResizingTextarea
+                  value={reply}
+                  onChange={setReply}
+                  placeholder="Provide feedback..."
+                />
+                {actionsVisible && (
+                  <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
+                    <Button
+                      variant="outlined"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setReply('');
+                        setActionsVisible(false);
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      variant="primary"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setReply('');
+                        setActionsVisible(false);
+                      }}
+                    >
+                      Save
+                    </Button>
+                  </div>
+                )}
+              </div>
+            </>
+          )}
         </Card.Root>
       </div>
     );
