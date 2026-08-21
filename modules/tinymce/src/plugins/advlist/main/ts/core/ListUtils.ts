@@ -22,9 +22,23 @@ const inList = (editor: Editor, parents: Node[], nodeName: string): boolean =>
     .exists((list) => list.nodeName === nodeName && isChildOfBody(editor, list));
 
 const getSelectedStyleType = (editor: Editor): Optional<string> => {
-  const listElm = editor.dom.getParent(editor.selection.getNode(), 'ol,ul');
-  const style = editor.dom.getStyle(listElm, 'listStyleType');
-  return Optional.from(style);
+  const dom = editor.dom;
+  const node = editor.selection.getNode();
+  const listElm = dom.getParent(node, 'ol,ul');
+
+  if (Type.isNullable(listElm)) {
+    return Optional.none();
+  }
+
+  // A `list-style-type` on the item wins over the one on the list, so the item has to be checked
+  // first for the toolbar to reflect the correct style
+  const listItemElm = dom.getParent(node, 'li', listElm);
+  const itemStyleType = Optional.from(listItemElm)
+    .bind((listItemElm) => Optional.from(dom.getStyle(listItemElm, 'listStyleType')))
+    // `none` marks the items that only wrap a nested list
+    .filter((styleType) => styleType !== '' && styleType !== 'none');
+
+  return itemStyleType.orThunk(() => Optional.from(dom.getStyle(listElm, 'listStyleType')));
 };
 
 // Lists/core/Util.ts - Duplicated in Lists plugin

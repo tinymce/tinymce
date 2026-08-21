@@ -9,6 +9,7 @@ import Tools from '../../api/util/Tools';
 import * as NodeStructureBookmark from '../../bookmark/NodeStructureBookmark';
 import { fireListEvent } from '../events/Events';
 import { listToggleActionFromListName } from '../lists/ListAction';
+import * as ListStyle from '../lists/ListStyle';
 import * as NodeType from '../lists/NodeType';
 import * as Selection from '../lists/Selection';
 import { isCustomList, isWithinNonEditableList } from '../lists/Util';
@@ -412,6 +413,8 @@ const toggleList = (editor: Editor, listName: 'UL' | 'OL' | 'DL', _detail: ListD
   } else {
     toggleSingleList(editor, parentList, listName, detail);
   }
+
+  ListStyle.clearShadowingItemStyles(editor);
 };
 
 export {

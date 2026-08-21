@@ -169,6 +169,28 @@ describe('browser.tinymce.plugins.advlist.ListStyleAliasTest', () => {
       ].join(''));
     });
 
+    it('TINYMCE-14565: the list style of the item should win over the one on the list', async () => {
+      const editor = hook.editor();
+      editor.setContent('<ol style="list-style-type: lower-roman;"><li style="list-style-type: upper-alpha;">abc</li></ol>');
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
+
+      await pClickAndAssertCheckedListStyleType(editor, 'Upper Alpha');
+    });
+
+    it('TINYMCE-14565: the list style of the list should be checked when the item has list style of none', async () => {
+      const editor = hook.editor();
+      editor.setContent([
+        '<ol style="list-style-type: lower-roman;">',
+        '<li style="list-style-type: none;">abc',
+        '<ol><li>123</li></ol>',
+        '</li>',
+        '</ol>'
+      ].join(''));
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
+
+      await pClickAndAssertCheckedListStyleType(editor, 'Lower Roman');
+    });
+
     it('TINY-11515: should be able to convert a lower-latin (alias) list to a bullet list', async () => {
       const editor = hook.editor();
       editor.setContent([

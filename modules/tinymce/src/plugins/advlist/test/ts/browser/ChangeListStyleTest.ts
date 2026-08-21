@@ -102,6 +102,17 @@ describe('browser.tinymce.plugins.advlist.ChangeListStyleTest', () => {
         TinyAssertions.assertContent(editor, '<ul><li>a</li><ul><li>b</li></ul></ul>');
         TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 0, [ 0, 1, 0, 0 ], 1);
       });
+
+      it('TINYMCE-14565: applying a list style to a list item hoist it to the parent list', async () => {
+        const editor = hook.editor();
+        editor.setContent('<ol><li style="list-style-type: upper-alpha;">a</li><li style="list-style-type: lower-greek;">b</li></ol>');
+        TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
+        TinyUiActions.clickOnToolbar(editor, 'button.tox-split-button__chevron[aria-label="Numbered list"]');
+        await pWaitForMenu(editor);
+        TinyUiActions.clickOnUi(editor, 'div.tox-selected-menu[role="menu"] div[aria-label="Lower Alpha"]');
+        TinyAssertions.assertContent(editor, '<ol style="list-style-type: lower-alpha;"><li>a</li><li style="list-style-type: lower-greek;">b</li></ol>');
+        TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 0);
+      });
     });
   });
 });

@@ -1,0 +1,7 @@
+project: tinymce
+kind: Fixed
+body: Applying a list style did not change the markers, and the toolbar showed the
+  wrong active style, on list items that had their own inline `list-style-type`.
+time: 2026-08-20T15:32:33.28916+02:00
+custom:
+  Issue: TINYMCE-14565
