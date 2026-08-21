@@ -1721,30 +1721,30 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
             testConversion('<embed src="about:blank" type="application/pdf" width="100" height="100" style="color: red;">', '<iframe src="about:blank" width="100" height="100"></iframe>'));
         });
       });
-    });
 
-    context('allow_html_in_comments', () => {
-      it('TINY-12220: Should allow html in comment elements', () => {
-        const parser = DomParser({ ...scenario.settings, allow_html_in_comments: true }, schema);
-        const serializer = HtmlSerializer({}, schema);
+      context('allow_html_in_comments', () => {
+        it('TINY-12220: Should allow html in comment elements', () => {
+          const parser = DomParser({ ...scenario.settings, allow_html_in_comments: true }, schema);
+          const serializer = HtmlSerializer({}, schema);
 
-        const initialHtml = '<!-- <b>test</b> -->';
-        const fragment = parser.parse(initialHtml);
-        const serializedHtml = serializer.serialize(fragment);
+          const initialHtml = '<!-- <b>test</b> -->';
+          const fragment = parser.parse(initialHtml);
+          const serializedHtml = serializer.serialize(fragment);
 
-        assert.equal(serializedHtml, initialHtml, 'Should match the initial HTML');
-      });
+          assert.equal(serializedHtml, initialHtml, 'Should match the initial HTML');
+        });
 
-      it('TINY-12220: Should allow html in comment if sanitize is set to false', () => {
-        const parser = DomParser({ ...scenario.settings }, schema);
-        const serializer = HtmlSerializer({}, schema);
+        it('TINY-12220: Should allow html in comment if sanitize is set to false', () => {
+          const parser = DomParser({ ...scenario.settings }, schema);
+          const serializer = HtmlSerializer({}, schema);
 
-        const initialHtml = '<p>foo<!-- <b>bar</b> --></p><!-- <b>baz</b> -->';
-        const fragment = parser.parse(initialHtml);
-        const serializedHtml = serializer.serialize(fragment);
-        const expectedHtml = scenario.isSanitizeEnabled ? '<p>foo</p>' : initialHtml;
+          const initialHtml = '<p>foo<!-- <b>bar</b> --></p><!-- <b>baz</b> -->';
+          const fragment = parser.parse(initialHtml);
+          const serializedHtml = serializer.serialize(fragment);
+          const expectedHtml = scenario.isSanitizeEnabled ? '<p>foo</p>' : initialHtml;
 
-        assert.equal(serializedHtml, expectedHtml, 'Should match the expected HTML');
+          assert.equal(serializedHtml, expectedHtml, 'Should match the expected HTML');
+        });
       });
     });
   });
