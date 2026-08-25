@@ -1,11 +1,10 @@
 import { Fun } from '@ephox/katamari';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { UniverseProvider } from 'oxide-components/contexts/UniverseContext/UniverseProvider';
+import { Button } from 'oxide-components/components/button/Button';
+import { IconButton } from 'oxide-components/components/iconbutton/IconButton';
+import { UniverseProvider } from 'oxide-components/contexts/universecontext/UniverseProvider';
 import React, { useMemo, useRef, useState } from 'react';
 import { fn } from 'storybook/test';
-
-import { Button } from '../button/Button';
-import { IconButton } from '../iconbutton/IconButton';
 
 import * as ContextToolbar from './ContextToolbar';
 

@@ -2,7 +2,7 @@ import { Fun } from '@ephox/katamari';
 import * as FloatingSidebar from 'oxide-components/components/floatingsidebar/FloatingSidebar';
 import type { FloatingSidebarProps } from 'oxide-components/components/floatingsidebar/FloatingSidebar';
 import { IconButton } from 'oxide-components/components/iconbutton/IconButton';
-import { UniverseProvider } from 'oxide-components/contexts/UniverseContext/UniverseProvider';
+import { UniverseProvider } from 'oxide-components/contexts/universecontext/UniverseProvider';
 import { describe, it } from 'vitest';
 
 import { renderVisual } from './utils/VisualTestUtils';

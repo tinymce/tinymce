@@ -1,7 +1,11 @@
 /* eslint-disable max-len */
 import { Fun, Id } from '@ephox/katamari';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Dropdown, Icon, IconButton, Tooltip, UniverseProvider } from 'oxide-components/main';
+import * as Dropdown from 'oxide-components/components/dropdown/Dropdown';
+import { Icon } from 'oxide-components/components/icon/Icon';
+import { IconButton } from 'oxide-components/components/iconbutton/IconButton';
+import * as Tooltip from 'oxide-components/components/tooltip/Tooltip';
+import { UniverseProvider } from 'oxide-components/contexts/universecontext/UniverseProvider';
 
 import type { ToggleMenuItemInstanceApi } from './internals/Types';
 import * as Menu from './Menu';

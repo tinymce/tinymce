@@ -1,11 +1,10 @@
 import { Type } from '@ephox/katamari';
 import type { Property } from 'csstype';
+import * as Draggable from 'oxide-components/components/draggable/Draggable';
+import * as Bem from 'oxide-components/utils/Bem';
 import { forwardRef, useCallback, type CSSProperties, type PropsWithChildren } from 'react';
 
-import * as Bem from '../../utils/Bem';
-import * as Draggable from '../draggable/Draggable';
-
-import '../../module/css';
+import 'oxide-components/module/Css';
 export interface FloatingSidebarProps extends PropsWithChildren {
   isOpen?: boolean;
   origin?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';

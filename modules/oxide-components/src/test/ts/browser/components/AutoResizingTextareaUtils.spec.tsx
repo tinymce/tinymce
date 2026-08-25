@@ -1,6 +1,6 @@
 import { AutoResizingTextarea } from 'oxide-components/components/autoresizingtextarea/AutoResizingTextarea';
 import { computeSingleRowHeight, resizeTextarea } from 'oxide-components/components/autoresizingtextarea/AutoResizingTextareaUtils';
-import { Bem } from 'oxide-components/main';
+import { Bem } from 'oxide-components/Main';
 import { createRef, forwardRef, type FC, type ReactNode } from 'react';
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-react';

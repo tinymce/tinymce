@@ -1,4 +1,5 @@
 import { Id, Type } from '@ephox/katamari';
+import * as Bem from 'oxide-components/utils/Bem';
 import {
   Children,
   cloneElement,
@@ -16,8 +17,6 @@ import {
   type PropsWithChildren,
   type ReactElement
 } from 'react';
-
-import { Bem } from '../../main';
 
 import { DropdownContext, useDropdown } from './internals/Context';
 import * as PositioningUtils from './internals/PositioningUtils';

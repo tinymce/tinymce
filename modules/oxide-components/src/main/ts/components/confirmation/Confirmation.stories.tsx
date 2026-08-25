@@ -1,9 +1,8 @@
 import { Obj } from '@ephox/katamari';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { getAll as getAllIcons } from '@tinymce/oxide-icons-default';
+import { UniverseProvider } from 'oxide-components/contexts/universecontext/UniverseProvider';
 import { useRef } from 'react';
-
-import { UniverseProvider } from '../../main';
 
 import { ConfirmationHost, type ConfirmationHostHandle } from './internals/ConfirmationHost';
 

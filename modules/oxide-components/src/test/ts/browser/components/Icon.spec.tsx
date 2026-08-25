@@ -1,6 +1,6 @@
 import { Arr } from '@ephox/katamari';
 import { Icon } from 'oxide-components/components/icon/Icon';
-import { UniverseProvider } from 'oxide-components/main';
+import { UniverseProvider } from 'oxide-components/Main';
 import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 

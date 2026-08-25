@@ -1,9 +1,9 @@
 import { Obj } from '@ephox/katamari';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { getAll as getAllIcons } from '@tinymce/oxide-icons-default';
+import { Button } from 'oxide-components/components/button/Button';
+import { UniverseProvider } from 'oxide-components/contexts/universecontext/UniverseProvider';
 import { fn } from 'storybook/test';
-
-import { Button, UniverseProvider } from '../../main';
 
 import { Alert, type AlertProps } from './Alert';
 

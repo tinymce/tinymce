@@ -1,11 +1,12 @@
 import { Obj } from '@ephox/katamari';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { getAll as getAllIcons } from '@tinymce/oxide-icons-default';
+import { Button } from 'oxide-components/components/button/Button';
+import { ExpandableBox } from 'oxide-components/components/expandablebox/ExpandableBox';
+import { Icon } from 'oxide-components/components/icon/Icon';
+import { UniverseProvider } from 'oxide-components/contexts/universecontext/UniverseProvider';
+import * as Bem from 'oxide-components/utils/Bem';
 import { useEffect, useState } from 'react';
-
-import { Button, ExpandableBox, UniverseProvider } from '../../main';
-import * as Bem from '../../utils/Bem';
-import { Icon } from '../icon/Icon';
 
 import * as Card from './Card';
 

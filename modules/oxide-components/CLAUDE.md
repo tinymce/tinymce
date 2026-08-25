@@ -44,7 +44,7 @@ Visual regression tests are per-component `ComponentName.visual.spec.tsx` files 
 - `src/main/ts/components/` - Shared components (each has `Component.tsx` and `Component.stories.tsx`)
 - `src/main/ts/keynav/` - Keyboard navigation system with hooks interface
 - `src/main/ts/utils/` - Utilities (`Styles.ts` for CSS classes, `FocusHelpers.ts`)
-- `src/main/ts/main.ts` - Library exports
+- `src/main/ts/Main.ts` - Library exports
 - `src/demo/ts/App.tsx` - Scratch area for testing components during development
 
 ### Key Patterns

@@ -1,6 +1,7 @@
 import { Fun } from '@ephox/katamari';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { UniverseProvider, type UniverseResources } from 'oxide-components/main';
+import { UniverseProvider } from 'oxide-components/contexts/universecontext/UniverseProvider';
+import type { UniverseResources } from 'oxide-components/contexts/universecontext/UniverseTypes';
 
 import { Tag } from './Tag';
 

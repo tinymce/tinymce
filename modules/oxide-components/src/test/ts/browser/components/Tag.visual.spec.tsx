@@ -1,5 +1,5 @@
 import { Fun } from '@ephox/katamari';
-import { Tag, UniverseProvider, type UniverseResources } from 'oxide-components/main';
+import { Tag, UniverseProvider, type UniverseResources } from 'oxide-components/Main';
 import { describe, expect, it } from 'vitest';
 import { userEvent } from 'vitest/browser';
 

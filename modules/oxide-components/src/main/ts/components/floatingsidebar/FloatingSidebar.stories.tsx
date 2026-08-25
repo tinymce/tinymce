@@ -1,9 +1,8 @@
 import { Fun } from '@ephox/katamari';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { UniverseProvider } from 'oxide-components/contexts/UniverseContext/UniverseProvider';
+import { IconButton } from 'oxide-components/components/iconbutton/IconButton';
+import { UniverseProvider } from 'oxide-components/contexts/universecontext/UniverseProvider';
 import { fn } from 'storybook/test';
-
-import { IconButton } from '../iconbutton/IconButton';
 
 import * as FloatingSidebar from './FloatingSidebar';
 import type { FloatingSidebarProps } from './FloatingSidebar';

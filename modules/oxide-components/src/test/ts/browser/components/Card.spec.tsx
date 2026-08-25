@@ -1,5 +1,5 @@
 import * as Card from 'oxide-components/components/card/Card';
-import { Button, ExpandableBox, UniverseProvider } from 'oxide-components/main';
+import { Button, ExpandableBox, UniverseProvider } from 'oxide-components/Main';
 import * as Bem from 'oxide-components/utils/Bem';
 import { describe, expect, it, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';

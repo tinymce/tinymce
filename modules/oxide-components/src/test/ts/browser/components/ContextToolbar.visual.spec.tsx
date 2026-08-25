@@ -2,7 +2,7 @@ import { Fun } from '@ephox/katamari';
 import { Button } from 'oxide-components/components/button/Button';
 import * as ContextToolbar from 'oxide-components/components/contexttoolbar/ContextToolbar';
 import { IconButton } from 'oxide-components/components/iconbutton/IconButton';
-import { UniverseProvider } from 'oxide-components/contexts/UniverseContext/UniverseProvider';
+import { UniverseProvider } from 'oxide-components/contexts/universecontext/UniverseProvider';
 import { useMemo, useRef, useState } from 'react';
 import { describe, expect, it } from 'vitest';
 

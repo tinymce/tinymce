@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Button } from 'oxide-components/main';
+import { Button } from 'oxide-components/components/button/Button';
 
 import * as Dropdown from './Dropdown';
 

@@ -1,12 +1,13 @@
 import { Fun, Obj } from '@ephox/katamari';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { getAll as getAllIcons } from '@tinymce/oxide-icons-default';
+import { AutoResizingTextarea } from 'oxide-components/components/autoresizingtextarea/AutoResizingTextarea';
+import { Button } from 'oxide-components/components/button/Button';
+import * as Dropdown from 'oxide-components/components/dropdown/Dropdown';
+import { Icon } from 'oxide-components/components/icon/Icon';
+import * as Menu from 'oxide-components/components/menu/Menu';
+import { UniverseProvider } from 'oxide-components/contexts/universecontext/UniverseProvider';
 import { useState } from 'react';
-
-import { AutoResizingTextarea, Button, UniverseProvider } from '../../main';
-import * as Dropdown from '../dropdown/Dropdown';
-import { Icon } from '../icon/Icon';
-import * as Menu from '../menu/Menu';
 
 import * as Accordion from './Accordion';
 

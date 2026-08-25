@@ -1,6 +1,8 @@
 import { Arr, Id, Type } from '@ephox/katamari';
 import { PredicateExists, SugarElement, SugarNode } from '@ephox/sugar';
-import { Bem } from 'oxide-components/main';
+import { DropdownContext } from 'oxide-components/components/dropdown/internals/Context';
+import * as Bem from 'oxide-components/utils/Bem';
+import * as Browser from 'oxide-components/utils/Browser';
 import {
   Children, cloneElement, forwardRef, isValidElement, useCallback,
   useContext,
@@ -8,9 +10,6 @@ import {
   type FC, type HTMLAttributes,
   type PropsWithChildren, type ReactNode
 } from 'react';
-
-import * as Browser from '../../utils/Browser';
-import { DropdownContext } from '../dropdown/internals/Context';
 
 import { TooltipContext, tooltipsEventTarget, useTooltip } from './internals/Context';
 

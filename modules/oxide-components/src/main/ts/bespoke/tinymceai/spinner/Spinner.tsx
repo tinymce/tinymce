@@ -1,5 +1,5 @@
 import type { Property } from 'csstype';
-import { Bem } from 'oxide-components/main';
+import * as Bem from 'oxide-components/utils/Bem';
 import type { FunctionComponent } from 'react';
 
 interface SpinnerProps {
