@@ -190,41 +190,34 @@
       border-color: @media-modified-background-color;
       .diff-media-selected-outline();
     }
+
+    &.tox-@{pluginName}__annotation--removed__highlight {
+      .diff-media-removed();
+    }
+
+    &.tox-@{pluginName}__annotation--removed__selected {
+      .diff-media-removed();
+      border-color: @media-removed-background-color;
+      .diff-media-selected-outline();
+    }
   }
 
-  // Replaced images: X only (no wash). Video/iframe keep wash even when paired.
-  img.tox-@{pluginName}__annotation--removed__highlight:not(.tox-@{pluginName}__annotation--removed__paired),
-  img.tox-@{pluginName}__annotation--removed__selected:not(.tox-@{pluginName}__annotation--removed__paired),
-  .tox-@{pluginName}__annotation--removed__highlight img:not(.tox-@{pluginName}__annotation--removed__paired),
-  .tox-@{pluginName}__annotation--removed__selected img:not(.tox-@{pluginName}__annotation--removed__paired),
-  video.tox-@{pluginName}__annotation--removed__highlight,
-  video.tox-@{pluginName}__annotation--removed__selected,
-  .tox-@{pluginName}__annotation--removed__highlight video,
-  .tox-@{pluginName}__annotation--removed__selected video,
-  iframe.tox-@{pluginName}__annotation--removed__highlight,
-  iframe.tox-@{pluginName}__annotation--removed__selected,
-  .tox-@{pluginName}__annotation--removed__highlight iframe,
-  .tox-@{pluginName}__annotation--removed__selected iframe {
-    .diff-media-removed();
+  .tox-@{pluginName}__annotation--removed__highlight,
+  .tox-@{pluginName}__annotation--removed__selected {
+    img,
+    video,
+    iframe {
+      .diff-media-removed();
+    }
   }
 
-  img.tox-@{pluginName}__annotation--removed__selected:not(.tox-@{pluginName}__annotation--removed__paired),
-  .tox-@{pluginName}__annotation--removed__selected img:not(.tox-@{pluginName}__annotation--removed__paired),
-  video.tox-@{pluginName}__annotation--removed__selected,
-  .tox-@{pluginName}__annotation--removed__selected video,
-  iframe.tox-@{pluginName}__annotation--removed__selected,
-  .tox-@{pluginName}__annotation--removed__selected iframe {
-    border-color: @media-removed-background-color;
-    .diff-media-selected-outline();
-  }
-
-  img.tox-@{pluginName}__annotation--removed__paired {
-    background-image: none;
-    padding: 0;
-  }
-
-  img.tox-@{pluginName}__annotation--removed__paired.tox-@{pluginName}__annotation--removed__selected {
-    .diff-media-selected-outline();
+  .tox-@{pluginName}__annotation--removed__selected {
+    img,
+    video,
+    iframe {
+      border-color: @media-removed-background-color;
+      .diff-media-selected-outline();
+    }
   }
 
   div.tox-@{pluginName}__annotation:has(> hr) {
@@ -358,7 +351,7 @@
       background-color: fade(@removed-color, 20%);
       box-shadow: @selected-box-shadow;
 
-      img:not(.tox-@{pluginName}__annotation--removed__paired),
+      img,
       video,
       iframe {
         .diff-media-removed();
@@ -410,15 +403,13 @@
         border-color: @media-modified-background-color;
         .diff-media-selected-outline();
       }
-    }
 
-    img.tox-@{pluginName}__annotation--preview-highlight.tox-@{pluginName}__annotation--removed__selected:not(.tox-@{pluginName}__annotation--removed__paired),
-    video.tox-@{pluginName}__annotation--preview-highlight.tox-@{pluginName}__annotation--removed__selected,
-    iframe.tox-@{pluginName}__annotation--preview-highlight.tox-@{pluginName}__annotation--removed__selected {
-      .diff-media-removed();
-      border-color: @media-removed-background-color;
-      display: inline-block;
-      .diff-media-selected-outline();
+      &.tox-@{pluginName}__annotation--preview-highlight.tox-@{pluginName}__annotation--removed__selected {
+        .diff-media-removed();
+        border-color: @media-removed-background-color;
+        display: inline-block;
+        .diff-media-selected-outline();
+      }
     }
   }
 
