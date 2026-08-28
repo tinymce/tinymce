@@ -23,6 +23,7 @@ const runTests = async () => {
       args.push(`--maxWorkers=${workers}`);
     }
 
+    console.log('Spawning vitest...');
     const result = spawnSync('vitest', args, { stdio: 'inherit' });
     if (result.error) {
       console.error('Failed to run Vitest', result.error);
