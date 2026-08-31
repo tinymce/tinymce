@@ -306,6 +306,7 @@ const submitHandler = (editor: Editor, info: ImageDialogInfo, helpers: Helpers) 
   // Since the style field was removed that process must be simulated on submit.
   const finalData = {
     ...data,
+    isDecorative: info.hasAccessibilityOptions && data.isDecorative,
     style: getStyleValue(helpers.normalizeCss, toImageData(data, false))
   };
 

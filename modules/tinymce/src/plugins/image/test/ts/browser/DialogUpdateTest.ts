@@ -81,6 +81,19 @@ describe('browser.tinymce.plugins.image.DialogUpdateTest', () => {
     editor.options.unset('image_caption');
   });
 
+  it('TINYMCE-13738: Typing a non-empty alt on an image previously saved with an empty alt should apply the alt, not role="presentation"', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p><img src="#1" alt="" /></p>');
+    TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
+    editor.execCommand('mceImage');
+    await TinyUiActions.pWaitForDialog(editor);
+    assertInputValue(generalTabLabels.src, '#1');
+    assertInputValue(generalTabLabels.alt, '');
+    setInputValue(generalTabLabels.alt, 'A cat');
+    TinyUiActions.submitDialog(editor);
+    assertCleanHtml('Checking output', editor, '<p><img src="#1" alt="A cat"></p>');
+  });
+
   it('TINY-11670: floating images should not lose the float if is not put in a caption', async () => {
     const editor = hook.editor();
     editor.setContent(`<p><img src="${image}" style="border: 2px solid red; float: left" width="200" height="200"/></p>`);

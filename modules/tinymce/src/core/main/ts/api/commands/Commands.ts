@@ -29,8 +29,8 @@ const registerExecCommands = (editor: Editor): void => {
       editor.getWin().print();
     },
 
-    mceFocus: (_command, _ui, value?: boolean) => {
-      EditorFocus.focus(editor, value === true);
+    mceFocus: (_command, _ui, value?: EditorFocus.EditorFocusArg) => {
+      EditorFocus.focus(editor, value);
     },
 
     mceToggleVisualAid: () => {

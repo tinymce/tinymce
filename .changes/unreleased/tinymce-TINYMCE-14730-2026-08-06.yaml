@@ -1,6 +1,0 @@
-project: tinymce
-kind: Improved
-body: The Help dialog's Plugins tab now lists plugins with invalid metadata as plain text.
-time: 2026-08-06T14:05:31.029873+10:00
-custom:
-  Issue: TINYMCE-14730

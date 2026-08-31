@@ -12,6 +12,12 @@ import * as SelectionBookmark from '../selection/SelectionBookmark';
 
 import * as FocusController from './FocusController';
 
+interface EditorFocusOptions {
+  readonly scrollToSelection?: boolean;
+}
+
+type EditorFocusArg = boolean | EditorFocusOptions;
+
 const getContentEditableHost = (editor: Editor, node: Node): HTMLElement | null =>
   editor.dom.getParent(node, (node): node is HTMLElement => editor.dom.getContentEditable(node) === 'true');
 
@@ -42,7 +48,12 @@ const normalizeSelection = (editor: Editor, rng: Range): void => {
   );
 };
 
-const focusBody = (body: HTMLElement & { setActive?: VoidFunction }) => {
+const focusBody = (body: HTMLElement & { setActive?: VoidFunction }, preventScroll = false) => {
+  if (preventScroll) {
+    body.focus({ preventScroll: true });
+    return;
+  }
+
   if (body.setActive) {
     // IE 11 sometimes throws "Invalid function" then fallback to focus
     // setActive is better since it doesn't scroll to the element being focused
@@ -79,7 +90,7 @@ const hasFocus = (editor: Editor): boolean => editor.inline ? hasInlineFocus(edi
 
 const hasEditorOrUiFocus = (editor: Editor): boolean => hasFocus(editor) || hasUiFocus(editor);
 
-const focusEditor = (editor: Editor) => {
+const focusEditor = (editor: Editor, preventScroll: boolean) => {
   const selection: EditorSelection = editor.selection;
   const body = editor.getBody();
   let rng = selection.getRng();
@@ -100,10 +111,10 @@ const focusEditor = (editor: Editor) => {
   const contentEditableHost = getContentEditableHost(editor, selection.getNode());
   if (contentEditableHost && editor.dom.isChildOf(contentEditableHost, body)) {
     if (!hasContentEditableFalseParent(editor, contentEditableHost)) {
-      focusBody(body);
+      focusBody(body, preventScroll);
     }
 
-    focusBody(contentEditableHost);
+    focusBody(contentEditableHost, preventScroll);
     if (!editor.hasEditableRoot()) {
       restoreBookmark(editor);
     }
@@ -115,17 +126,20 @@ const focusEditor = (editor: Editor) => {
   // Focus the window iframe
   if (!editor.inline) {
     // WebKit needs this call to fire focusin event properly see #5948
-    // But Opera pre Blink engine will produce an empty selection so skip Opera
-    if (!Env.browser.isOpera()) {
-      focusBody(body);
-    }
+    focusBody(body, preventScroll);
 
-    editor.getWin().focus();
+    if (preventScroll) {
+      if (Type.isNonNullable(editor.iframeElement)) {
+        editor.iframeElement.focus({ preventScroll: true });
+      }
+    } else {
+      editor.getWin().focus();
+    }
   }
 
   // Focus the body as well since it's contentEditable
   if (Env.browser.isFirefox() || editor.inline) {
-    focusBody(body);
+    focusBody(body, preventScroll);
     normalizeSelection(editor, rng);
   }
 
@@ -134,20 +148,32 @@ const focusEditor = (editor: Editor) => {
 
 const activateEditor = (editor: Editor) => editor.editorManager.setActive(editor);
 
-const focus = (editor: Editor, skipFocus: boolean): void => {
+const normalizeFocusOptions = (args?: Exclude<EditorFocusArg, true>): EditorFocusOptions => {
+  if (Type.isNonNullable(args) && !Type.isBoolean(args)) {
+    return args;
+  }
+
+  return { scrollToSelection: true };
+};
+
+const focus = (editor: Editor, args?: EditorFocusArg): void => {
   if (editor.removed) {
     return;
   }
 
-  if (skipFocus) {
+  if (args === true) {
     activateEditor(editor);
-  } else {
-    focusEditor(editor);
+    return;
   }
+
+  const options = normalizeFocusOptions(args);
+  focusEditor(editor, options.scrollToSelection === false);
 };
 
 export {
   focus,
   hasFocus,
-  hasEditorOrUiFocus
+  hasEditorOrUiFocus,
+  type EditorFocusOptions,
+  type EditorFocusArg
 };

@@ -618,9 +618,10 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
 
     it('TINYMCE-14527: should keep the shown pane at the sidebar width when its content is wider', () => {
       const pane = UiFinder.findIn<HTMLElement>(SugarBody.body(), '.tox-sidebar__pane:not([aria-hidden="true"])').getOrDie();
+      const resizeHandleWidth = 1;
 
       assertSidebarWidth(440, 'The sidebar should render at its configured width');
-      assert.equal(Width.get(pane), 440, 'The pane should follow the sidebar width instead of growing to its content width');
+      assert.equal(Width.get(pane), 440 - resizeHandleWidth, 'The pane should follow the sidebar width instead of growing to its content width');
     });
   });
 

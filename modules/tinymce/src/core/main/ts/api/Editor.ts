@@ -399,9 +399,14 @@ class Editor implements EditorObservable {
    * it will also place DOM focus inside the editor.
    *
    * @method focus
-   * @param {Boolean} skipFocus Skip DOM focus. Just set is as the active editor.
+   * @param {Boolean/Object} skipFocus If true, skip DOM focus and only set this editor as the active editor. If an object, focus the editor and optionally control scrolling.
+   * @param {Boolean} skipFocus.scrollToSelection If false, focuses the editor without scrolling the selection into view. Defaults to true.
+   * @example
+   * tinymce.activeEditor.focus();
+   * tinymce.activeEditor.focus(true);
+   * tinymce.activeEditor.focus({ scrollToSelection: false });
    */
-  public focus(skipFocus?: boolean): void {
+  public focus(skipFocus?: EditorFocus.EditorFocusArg): void {
     this.execCommand('mceFocus', false, skipFocus);
   }
 

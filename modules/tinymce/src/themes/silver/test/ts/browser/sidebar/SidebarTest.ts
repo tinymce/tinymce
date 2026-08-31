@@ -1,10 +1,11 @@
 import { ApproxStructure, Assertions, TestStore, UiFinder, Waiter } from '@ephox/agar';
-import { context, describe, it } from '@ephox/bedrock-client';
+import { afterEach, context, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { SugarBody, SugarElement, Traverse } from '@ephox/sugar';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import type Editor from 'tinymce/core/api/Editor';
+import Env from 'tinymce/core/api/Env';
 import type { Sidebar } from 'tinymce/core/api/ui/Ui';
 
 interface EventLog {
@@ -225,6 +226,84 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarTest', () => {
       assertButtonEnabled('mysidebar1');
 
       editor.mode.set('design');
+    });
+  });
+
+  context('Sidebar toggle should not scroll to caret', () => {
+    const hook = TinyHooks.bddSetupLight<Editor>({
+      base_url: '/project/tinymce/js/tinymce',
+      height: 300,
+      toolbar: 'bold mysidebar1',
+      setup: (editor: Editor) => {
+        editor.ui.registry.addSidebar('mysidebar1', {
+          tooltip: 'My sidebar 1',
+          icon: 'comment',
+          onSetup: (api: Sidebar.SidebarInstanceApi) => {
+            api.element().appendChild(SugarElement.fromHtml('<div style="width: 200px;">Test</div>').dom);
+            return Fun.noop;
+          },
+          onShow: Fun.noop,
+          onHide: Fun.noop
+        });
+      }
+    });
+
+    const blurEditor = () => {
+      const body = SugarBody.body();
+      body.dom.focus();
+    };
+
+    const pToggleSidebar = async (editor: Editor): Promise<void> => {
+      TinyUiActions.clickOnToolbar(editor, 'button[aria-label="My sidebar 1"]');
+      await Waiter.pWait(100);
+    };
+
+    afterEach(async () => {
+      const editor = hook.editor();
+      if (editor.queryCommandValue('ToggleSidebar') === 'mysidebar1') {
+        await pToggleSidebar(editor);
+      }
+    });
+
+    it('TINYMCE-14765: Opening sidebar from toolbar does not scroll when editor unfocused', async () => {
+      const editor = hook.editor();
+      editor.setContent('<p>top</p><p style="height: 1000px">spacer</p><p>bottom</p>');
+      editor.selection.select(editor.getBody().lastChild as Element);
+      editor.getWin().scrollTo(0, 0);
+      blurEditor();
+      const scrollY = editor.getWin().scrollY;
+      await pToggleSidebar(editor);
+      Assertions.assertEq('Should not scroll', scrollY, editor.getWin().scrollY);
+    });
+
+    it('TINYMCE-14765: Closing sidebar from toolbar does not scroll when editor unfocused', async () => {
+      const editor = hook.editor();
+      editor.setContent('<p>top</p><p style="height: 1000px">spacer</p><p>bottom</p>');
+      await pToggleSidebar(editor);
+      editor.selection.select(editor.getBody().lastChild as Element);
+      editor.getWin().scrollTo(0, 0);
+      blurEditor();
+      const scrollY = editor.getWin().scrollY;
+      await pToggleSidebar(editor);
+      Assertions.assertEq('Should not scroll', scrollY, editor.getWin().scrollY);
+    });
+
+    it('TINYMCE-14765: Bold from toolbar still scrolls when editor unfocused', async function () {
+      // Scroll behavior works locally on Safari but CI Safari doesn't register the scroll change
+      // so we've agreed to keep chromium as a sanity check that we still attempt the scroll.
+      if (!Env.browser.isChromium()) {
+        this.skip();
+      }
+      const editor = hook.editor();
+      editor.setContent('<p>top</p><p style="height: 1000px">spacer</p><p>bottom</p>');
+      editor.selection.select(editor.getBody().lastChild as Element);
+      editor.getWin().scrollTo(0, 0);
+      blurEditor();
+      const scrollY = editor.getWin().scrollY;
+      TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Bold"]');
+      await Waiter.pWait(100);
+      Assertions.assertEq('Should be focused', true, editor.hasFocus());
+      Assertions.assertEq('Should have scrolled', true, editor.getWin().scrollY > scrollY);
     });
   });
 });
