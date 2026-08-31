@@ -49,7 +49,6 @@ def runRemoteTests(String name, String browser, String provider, String platform
   def browserVersion = version != null ? " --browserVersion=${version}" : ""
   def bedrockCommand =
   "bun browser-test" +
-    " --bundler=rspack" +
     " --skipTypecheck" +
     " --chunk=2000" +
     " --bedrock-browser=" + browser +
@@ -216,12 +215,11 @@ timestamps { notifyStatusChange(
       }
 
       def winChrome = [ browser: 'chrome', provider: 'aws', os: 'windows', buckets: 1 ]
-      // Firefox pinned to 152 until we can update bedrock to avoid further mouse-hover flakes
-      def winFirefox = [ browser: 'firefox', provider: 'lambdatest', os: 'windows', version: '152', buckets: 1 ]
+      def winFirefox = [ browser: 'firefox', provider: 'lambdatest', os: 'windows', buckets: 1 ]
       def winEdge = [ browser: 'edge', provider: 'lambdatest', os: 'windows', buckets: 1 ]
 
       def macChrome = [ browser: 'chrome', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ]
-      def macFirefox = [ browser: 'firefox', provider: 'lambdatest', os: 'macOS Sequoia', version: '152', buckets: 1 ]
+      def macFirefox = [ browser: 'firefox', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ]
       def macSafari = [ browser: 'safari', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ]
 
       def branchBuildPlatforms = [
