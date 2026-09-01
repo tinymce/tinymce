@@ -1,8 +1,9 @@
 import { Arr, Obj } from '@ephox/katamari';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { getAll as getAllIcons } from '@tinymce/oxide-icons-default';
+import { UniverseProvider } from 'oxide-components/contexts/universecontext/UniverseProvider';
 
-import { Button, UniverseProvider } from '../../main';
+import { Button } from '../button/Button';
 import * as Card from '../card/Card';
 import { Icon } from '../icon/Icon';
 
