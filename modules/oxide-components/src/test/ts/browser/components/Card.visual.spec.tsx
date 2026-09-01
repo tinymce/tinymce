@@ -6,7 +6,7 @@ import * as Card from 'oxide-components/components/card/Card';
 import { Icon } from 'oxide-components/components/icon/Icon';
 import { IconButton } from 'oxide-components/components/iconbutton/IconButton';
 import * as Profile from 'oxide-components/components/profile/Profile';
-import { UniverseProvider } from 'oxide-components/contexts/UniverseContext/UniverseProvider';
+import { UniverseProvider } from 'oxide-components/Main';
 import { useState, type FC, type ReactElement } from 'react';
 import { describe, it } from 'vitest';
 import { userEvent } from 'vitest/browser';

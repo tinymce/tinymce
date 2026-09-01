@@ -1,5 +1,5 @@
 import * as Profile from 'oxide-components/components/profile/Profile';
-import { UniverseProvider } from 'oxide-components/main';
+import { UniverseProvider } from 'oxide-components/Main';
 import * as Bem from 'oxide-components/utils/Bem';
 import type { ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
