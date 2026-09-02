@@ -1,0 +1,151 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`browser.components.AlertTest > Snapshot Tests > TINYMCE-14505: Should match snapshot for a removable error alert with actions > Error, removable, with actions 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      class="tox-alert tox-alert--error"
+      role="alert"
+    >
+      <div
+        class="tox-alert__body"
+      >
+        <div
+          class="tox-alert__content"
+        >
+          <p
+            class="tox-alert__message"
+          >
+            Something went wrong
+          </p>
+        </div>
+        <div
+          class="tox-alert__actions"
+        >
+          <button
+            class="tox-button tox-button--secondary--outline "
+            type="button"
+          >
+            Retry
+          </button>
+          <button
+            class="tox-button tox-button--naked "
+            type="button"
+          >
+            Dismiss
+          </button>
+        </div>
+      </div>
+      <button
+        aria-label="Close"
+        class="tox-button tox-button--naked tox-button--icon"
+        type="button"
+      >
+        <span
+          class="tox-icon"
+        >
+          <svg
+            id="close"
+          />
+        </span>
+      </button>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.components.AlertTest > Snapshot Tests > TINYMCE-14505: Should match snapshot for a removable warning alert with a custom close label > Warning, removable, custom close label 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      class="tox-alert tox-alert--warning"
+      role="alert"
+    >
+      <div
+        class="tox-alert__body"
+      >
+        <div
+          class="tox-alert__content"
+        >
+          <p
+            class="tox-alert__message"
+          >
+            Check your input
+          </p>
+        </div>
+      </div>
+      <button
+        aria-label="Dismiss warning"
+        class="tox-button tox-button--naked tox-button--icon"
+        type="button"
+      >
+        <span
+          class="tox-icon"
+        >
+          <svg
+            id="close"
+          />
+        </span>
+      </button>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.components.AlertTest > Snapshot Tests > TINYMCE-14505: Should match snapshot for a warning alert > Warning 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      class="tox-alert tox-alert--warning"
+      role="alert"
+    >
+      <div
+        class="tox-alert__body"
+      >
+        <div
+          class="tox-alert__content"
+        >
+          <p
+            class="tox-alert__message"
+          >
+            Check your input
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.components.AlertTest > Snapshot Tests > TINYMCE-14505: Should match snapshot for an error alert > Error 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      class="tox-alert tox-alert--error"
+      role="alert"
+    >
+      <div
+        class="tox-alert__body"
+      >
+        <div
+          class="tox-alert__content"
+        >
+          <p
+            class="tox-alert__message"
+          >
+            Something went wrong
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

@@ -1,0 +1,182 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`browser.components.Draggable > Snapshot Tests > TINYMCE-14505: Should match snapshot for a partially overflowing draggable > Allowed horizontal overflow 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      style="display: flex; align-items: center; justify-content: center; padding: 10px;"
+    >
+      <div>
+        <div
+          allowedoverflow="[object Object]"
+          style="position: absolute; top: min(30px, 100% - 150px); left: min(20px, 100% - 40px);"
+        >
+          <div
+            data-testid="draggable"
+            style="width: 200px; height: 150px;"
+          >
+            <div
+              style="cursor: grab;"
+            >
+              <div
+                data-testid="draggable-handle"
+                style="width: 100%; height: 50px; background-color: rgb(232, 217, 111);"
+              />
+            </div>
+            <div
+              data-testid="draggable-content"
+              style="background-color: rgb(254, 246, 138); height: 100px;"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.components.Draggable > Snapshot Tests > TINYMCE-14505: Should match snapshot for the bottom-left origin > Bottom-left origin 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      style="display: flex; align-items: center; justify-content: center; padding: 10px;"
+    >
+      <div>
+        <div
+          style="position: absolute; bottom: min(30px, 100% - 150px); left: min(20px, 100% - 200px);"
+        >
+          <div
+            data-testid="draggable"
+            style="width: 200px; height: 150px;"
+          >
+            <div
+              style="cursor: grab;"
+            >
+              <div
+                data-testid="draggable-handle"
+                style="width: 100%; height: 50px; background-color: rgb(232, 217, 111);"
+              />
+            </div>
+            <div
+              data-testid="draggable-content"
+              style="background-color: rgb(254, 246, 138); height: 100px;"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.components.Draggable > Snapshot Tests > TINYMCE-14505: Should match snapshot for the bottom-right origin > Bottom-right origin 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      style="display: flex; align-items: center; justify-content: center; padding: 10px;"
+    >
+      <div>
+        <div
+          style="position: absolute; bottom: min(30px, 100% - 150px); right: min(20px, 100% - 200px);"
+        >
+          <div
+            data-testid="draggable"
+            style="width: 200px; height: 150px;"
+          >
+            <div
+              style="cursor: grab;"
+            >
+              <div
+                data-testid="draggable-handle"
+                style="width: 100%; height: 50px; background-color: rgb(232, 217, 111);"
+              />
+            </div>
+            <div
+              data-testid="draggable-content"
+              style="background-color: rgb(254, 246, 138); height: 100px;"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.components.Draggable > Snapshot Tests > TINYMCE-14505: Should match snapshot for the top-left origin > Top-left origin 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      style="display: flex; align-items: center; justify-content: center; padding: 10px;"
+    >
+      <div>
+        <div
+          style="position: absolute; top: min(30px, 100% - 150px); left: min(20px, 100% - 200px);"
+        >
+          <div
+            data-testid="draggable"
+            style="width: 200px; height: 150px;"
+          >
+            <div
+              style="cursor: grab;"
+            >
+              <div
+                data-testid="draggable-handle"
+                style="width: 100%; height: 50px; background-color: rgb(232, 217, 111);"
+              />
+            </div>
+            <div
+              data-testid="draggable-content"
+              style="background-color: rgb(254, 246, 138); height: 100px;"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.components.Draggable > Snapshot Tests > TINYMCE-14505: Should match snapshot for the top-right origin > Top-right origin 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      style="display: flex; align-items: center; justify-content: center; padding: 10px;"
+    >
+      <div>
+        <div
+          style="position: absolute; top: min(30px, 100% - 150px); right: min(20px, 100% - 200px);"
+        >
+          <div
+            data-testid="draggable"
+            style="width: 200px; height: 150px;"
+          >
+            <div
+              style="cursor: grab;"
+            >
+              <div
+                data-testid="draggable-handle"
+                style="width: 100%; height: 50px; background-color: rgb(232, 217, 111);"
+              />
+            </div>
+            <div
+              data-testid="draggable-content"
+              style="background-color: rgb(254, 246, 138); height: 100px;"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

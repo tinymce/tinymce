@@ -4,6 +4,8 @@ import { describe, expect, it, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 
+import * as SnapshotTestUtils from '../../components/utils/SnapshotTestUtils';
+
 const resources: UniverseResources = {
   getIcon: Fun.constant(`<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 16 16">
     <path fill="#222F3E" fill-rule="evenodd" d="M11.723 5.62 9.356 8l2.367 2.38a.95.95 0 0 1-1.343 1.343L8 9.356l-2.38 2.367a.95.95 0 0 1-1.343-1.343L6.644 8 4.277 5.62A.95.95 0 0 1 5.62 4.277L8 6.644l2.38-2.367a.95.95 0 0 1 1.343 1.343Z"/>
@@ -34,5 +36,38 @@ describe('browser.bespoke.tinymceai.Tag', () => {
     expect(onClose).toHaveBeenCalledTimes(1);
     await userEvent.keyboard('{Delete}');
     expect(onClose).toHaveBeenCalledTimes(2);
+  });
+
+  describe('Snapshot Tests', () => {
+    const renderTag = (tag: React.ReactNode) => render(
+      <UniverseProvider resources={SnapshotTestUtils.stubIconUniverse}>{tag}</UniverseProvider>,
+      { wrapper }
+    );
+
+    it('TINYMCE-14505: Should match snapshot for a plain tag', () => {
+      const { asFragment } = renderTag(<Tag link={false} closeable={false} label="Plain tag" />);
+      expect(SnapshotTestUtils.normalize(asFragment())).toMatchSnapshot('Plain tag');
+    });
+
+    it('TINYMCE-14505: Should match snapshot for a link tag', () => {
+      const { asFragment } = renderTag(
+        <Tag link href="https://www.tiny.cloud" closeable={false} label="Link tag" />
+      );
+      expect(SnapshotTestUtils.normalize(asFragment())).toMatchSnapshot('Link tag');
+    });
+
+    it('TINYMCE-14505: Should match snapshot for a closeable tag', () => {
+      const { asFragment } = renderTag(
+        <Tag link={false} closeable label="Closeable tag" onClose={Fun.noop} />
+      );
+      expect(SnapshotTestUtils.normalize(asFragment())).toMatchSnapshot('Closeable tag');
+    });
+
+    it('TINYMCE-14505: Should match snapshot for a disabled closeable tag with an aria-label', () => {
+      const { asFragment } = renderTag(
+        <Tag link={false} closeable disabled label="Disabled tag" ariaLabel="Disabled tag" onClose={Fun.noop} />
+      );
+      expect(SnapshotTestUtils.normalize(asFragment())).toMatchSnapshot('Disabled closeable tag');
+    });
   });
 });

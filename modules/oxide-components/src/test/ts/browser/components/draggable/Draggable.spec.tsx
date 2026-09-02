@@ -7,6 +7,7 @@ import { userEvent, page } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 
 import * as Mouse from '../utils/Mouse';
+import * as SnapshotTestUtils from '../utils/SnapshotTestUtils';
 
 const draggableTestId = 'draggable';
 const draggableHandleTestId = 'draggable-handle';
@@ -540,6 +541,52 @@ describe('browser.components.Draggable', () => {
 
       expect(dragStartCount).toBe(1);
       expect(dragEndCount).toBe(1);
+    });
+  });
+
+  describe('Snapshot Tests', () => {
+    const size = { width: 200, height: 150 };
+    const declaredSize = { width: '200px', height: '150px' };
+    const initialPosition = { x: '20px', y: '30px' };
+
+    it('TINYMCE-14505: Should match snapshot for the top-left origin', () => {
+      const { asFragment } = render(
+        createTestElement(size, { origin: 'top-left', initialPosition, declaredSize }),
+        { wrapper: Wrapper }
+      );
+      expect(SnapshotTestUtils.normalize(asFragment())).toMatchSnapshot('Top-left origin');
+    });
+
+    it('TINYMCE-14505: Should match snapshot for the top-right origin', () => {
+      const { asFragment } = render(
+        createTestElement(size, { origin: 'top-right', initialPosition, declaredSize }),
+        { wrapper: Wrapper }
+      );
+      expect(SnapshotTestUtils.normalize(asFragment())).toMatchSnapshot('Top-right origin');
+    });
+
+    it('TINYMCE-14505: Should match snapshot for the bottom-left origin', () => {
+      const { asFragment } = render(
+        createTestElement(size, { origin: 'bottom-left', initialPosition, declaredSize }),
+        { wrapper: Wrapper }
+      );
+      expect(SnapshotTestUtils.normalize(asFragment())).toMatchSnapshot('Bottom-left origin');
+    });
+
+    it('TINYMCE-14505: Should match snapshot for the bottom-right origin', () => {
+      const { asFragment } = render(
+        createTestElement(size, { origin: 'bottom-right', initialPosition, declaredSize }),
+        { wrapper: Wrapper }
+      );
+      expect(SnapshotTestUtils.normalize(asFragment())).toMatchSnapshot('Bottom-right origin');
+    });
+
+    it('TINYMCE-14505: Should match snapshot for a partially overflowing draggable', () => {
+      const { asFragment } = render(
+        createTestElement(size, { initialPosition, declaredSize, allowedOverflow: { horizontal: 0.8 }}),
+        { wrapper: Wrapper }
+      );
+      expect(SnapshotTestUtils.normalize(asFragment())).toMatchSnapshot('Allowed horizontal overflow');
     });
   });
 });

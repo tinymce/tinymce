@@ -1,0 +1,148 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`browser.components.SegmentedControl > Snapshot Tests > TINYMCE-14505: Should match snapshot for a disabled group > Disabled group 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      aria-disabled="true"
+      class="tox-segmented-control tox-segmented-control--disabled"
+      role="radiogroup"
+    >
+      <span
+        aria-checked="true"
+        aria-disabled="true"
+        class="tox-segmented-control__segment tox-segmented-control__segment--active"
+        data-value="diff"
+        role="radio"
+        tabindex="-1"
+      >
+        Diff mode
+      </span>
+      <span
+        aria-checked="false"
+        aria-disabled="true"
+        class="tox-segmented-control__segment"
+        data-value="preview"
+        role="radio"
+        tabindex="-1"
+      >
+        Preview
+      </span>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.components.SegmentedControl > Snapshot Tests > TINYMCE-14505: Should match snapshot for a single disabled option > Single disabled option 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      class="tox-segmented-control"
+      role="radiogroup"
+    >
+      <span
+        aria-checked="true"
+        aria-disabled="false"
+        class="tox-segmented-control__segment tox-segmented-control__segment--active"
+        data-value="diff"
+        role="radio"
+        tabindex="-1"
+      >
+        Diff mode
+      </span>
+      <span
+        aria-checked="false"
+        aria-disabled="true"
+        class="tox-segmented-control__segment"
+        data-value="preview"
+        role="radio"
+        tabindex="-1"
+      >
+        Preview
+      </span>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.components.SegmentedControl > Snapshot Tests > TINYMCE-14505: Should match snapshot for three options with the middle one active > Three options, middle active 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      class="tox-segmented-control"
+      role="radiogroup"
+    >
+      <span
+        aria-checked="false"
+        aria-disabled="false"
+        class="tox-segmented-control__segment"
+        data-value="first"
+        role="radio"
+        tabindex="-1"
+      >
+        First
+      </span>
+      <span
+        aria-checked="true"
+        aria-disabled="false"
+        class="tox-segmented-control__segment tox-segmented-control__segment--active"
+        data-value="middle"
+        role="radio"
+        tabindex="-1"
+      >
+        Middle
+      </span>
+      <span
+        aria-checked="false"
+        aria-disabled="false"
+        class="tox-segmented-control__segment"
+        data-value="last"
+        role="radio"
+        tabindex="-1"
+      >
+        Last
+      </span>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.components.SegmentedControl > Snapshot Tests > TINYMCE-14505: Should match snapshot for two options with the first active > Two options, first active 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      class="tox-segmented-control"
+      role="radiogroup"
+    >
+      <span
+        aria-checked="true"
+        aria-disabled="false"
+        class="tox-segmented-control__segment tox-segmented-control__segment--active"
+        data-value="diff"
+        role="radio"
+        tabindex="-1"
+      >
+        Diff mode
+      </span>
+      <span
+        aria-checked="false"
+        aria-disabled="false"
+        class="tox-segmented-control__segment"
+        data-value="preview"
+        role="radio"
+        tabindex="-1"
+      >
+        Preview
+      </span>
+    </div>
+  </div>
+</DocumentFragment>
+`;

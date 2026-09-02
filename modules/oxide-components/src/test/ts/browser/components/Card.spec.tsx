@@ -5,6 +5,8 @@ import { describe, expect, it, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 
+import * as SnapshotTestUtils from './utils/SnapshotTestUtils';
+
 describe('browser.components.CardTest', () => {
   const getIcon = vi.fn((icon: string) => `<svg id="${icon}"></svg>`);
   const mockUniverse = {
@@ -596,7 +598,7 @@ describe('browser.components.CardTest', () => {
         { wrapper }
       );
 
-      expect(asFragment()).toMatchSnapshot('Focused card');
+      expect(SnapshotTestUtils.normalize(asFragment())).toMatchSnapshot('Focused card');
     });
 
     it('TINY-13459: Should match snapshot for selected card in list', async () => {
@@ -614,7 +616,7 @@ describe('browser.components.CardTest', () => {
         { wrapper }
       );
 
-      expect(asFragment()).toMatchSnapshot('Selected card');
+      expect(SnapshotTestUtils.normalize(asFragment())).toMatchSnapshot('Selected card');
     });
 
     it('TINY-13459: Should match snapshot for CardList', async () => {
@@ -640,8 +642,53 @@ describe('browser.components.CardTest', () => {
         { wrapper }
       );
 
-      expect(asFragment()).toMatchSnapshot('CardList with multiple cards');
+      expect(SnapshotTestUtils.normalize(asFragment())).toMatchSnapshot('CardList with multiple cards');
     });
+
+    it('TINYMCE-14505: Should match snapshot for a loading card', () => {
+      const { asFragment } = render(<Card.Root loading />, { wrapper });
+      expect(SnapshotTestUtils.normalize(asFragment())).toMatchSnapshot('Loading skeleton');
+    });
+
+    it('TINYMCE-14505: Should match snapshot for a card that has a decision', () => {
+      const { asFragment } = render(
+        <Card.Root hasDecision>
+          <Card.Header title="Decided" />
+          <Card.Body>Decided content</Card.Body>
+        </Card.Root>,
+        { wrapper }
+      );
+      expect(SnapshotTestUtils.normalize(asFragment())).toMatchSnapshot('Card with a decision');
+    });
+
+    it('TINYMCE-14505: Should match snapshot for every highlight type', () => {
+      const { asFragment } = render(
+        <Card.Root>
+          <Card.Body>
+            <Card.Highlight type="added">Added</Card.Highlight>
+            <Card.Highlight type="deleted">Deleted</Card.Highlight>
+            <Card.Highlight type="modified">Modified</Card.Highlight>
+          </Card.Body>
+        </Card.Root>,
+        { wrapper }
+      );
+      expect(SnapshotTestUtils.normalize(asFragment())).toMatchSnapshot('All highlight types');
+    });
+
+    it('TINYMCE-14505: Should match snapshot for the space-between actions layout', () => {
+      const { asFragment } = render(
+        <Card.Root>
+          <Card.Body>Content</Card.Body>
+          <Card.Actions layout="space-between">
+            <Button variant="outlined">Skip</Button>
+            <Button variant="outlined">Apply</Button>
+          </Card.Actions>
+        </Card.Root>,
+        { wrapper }
+      );
+      expect(SnapshotTestUtils.normalize(asFragment())).toMatchSnapshot('Actions with space-between layout');
+    });
+
   });
 
   describe('Skeleton Tests', () => {

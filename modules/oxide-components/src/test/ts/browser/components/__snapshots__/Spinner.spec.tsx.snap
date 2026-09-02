@@ -1,0 +1,52 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`browser.components.SpinnerTest > Snapshot Tests > TINYMCE-14505: Should match snapshot for a spinner with a custom colour > Custom colour 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      class="tox-ai__spinner tox-ai__spinner--circle"
+      style="--tox-private-spinner-color: red;"
+    />
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.components.SpinnerTest > Snapshot Tests > TINYMCE-14505: Should match snapshot for the circle type > Circle, both sizes 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      class="tox-ai__spinner tox-ai__spinner--circle"
+    />
+    <div
+      class="tox-ai__spinner tox-ai__spinner--circle tox-ai__spinner--small"
+    />
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.components.SpinnerTest > Snapshot Tests > TINYMCE-14505: Should match snapshot for the dots type > Dots, both sizes 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      class="tox-ai__spinner tox-ai__spinner--dots"
+    >
+      <div />
+      <div />
+      <div />
+    </div>
+    <div
+      class="tox-ai__spinner tox-ai__spinner--dots tox-ai__spinner--small"
+    >
+      <div />
+      <div />
+      <div />
+    </div>
+  </div>
+</DocumentFragment>
+`;

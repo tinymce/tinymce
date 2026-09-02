@@ -4,6 +4,8 @@ import { describe, expect, it, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 
+import * as SnapshotTestUtils from './utils/SnapshotTestUtils';
+
 describe('browser.components.SegmentedControl', () => {
   it('TINY-13937: Should render with correct initial value', async () => {
     const { container } = render(
@@ -183,5 +185,52 @@ describe('browser.components.SegmentedControl', () => {
     const radiogroup = container.querySelector('[role="radiogroup"]');
     expect(radiogroup?.className).toContain('custom-class');
     expect(radiogroup?.getAttribute('aria-label')).toBe('Display mode');
+  });
+
+  describe('Snapshot Tests', () => {
+    it('TINYMCE-14505: Should match snapshot for two options with the first active', () => {
+      const { asFragment } = render(
+        <SegmentedControl.Root value="diff" onChange={vi.fn()}>
+          <SegmentedControl.Option value="diff">Diff mode</SegmentedControl.Option>
+          <SegmentedControl.Option value="preview">Preview</SegmentedControl.Option>
+        </SegmentedControl.Root>,
+        { wrapper: SnapshotTestUtils.snapshotWrapper }
+      );
+      expect(SnapshotTestUtils.normalize(asFragment())).toMatchSnapshot('Two options, first active');
+    });
+
+    it('TINYMCE-14505: Should match snapshot for three options with the middle one active', () => {
+      const { asFragment } = render(
+        <SegmentedControl.Root value="middle" onChange={vi.fn()}>
+          <SegmentedControl.Option value="first">First</SegmentedControl.Option>
+          <SegmentedControl.Option value="middle">Middle</SegmentedControl.Option>
+          <SegmentedControl.Option value="last">Last</SegmentedControl.Option>
+        </SegmentedControl.Root>,
+        { wrapper: SnapshotTestUtils.snapshotWrapper }
+      );
+      expect(SnapshotTestUtils.normalize(asFragment())).toMatchSnapshot('Three options, middle active');
+    });
+
+    it('TINYMCE-14505: Should match snapshot for a disabled group', () => {
+      const { asFragment } = render(
+        <SegmentedControl.Root value="diff" onChange={vi.fn()} disabled>
+          <SegmentedControl.Option value="diff">Diff mode</SegmentedControl.Option>
+          <SegmentedControl.Option value="preview">Preview</SegmentedControl.Option>
+        </SegmentedControl.Root>,
+        { wrapper: SnapshotTestUtils.snapshotWrapper }
+      );
+      expect(SnapshotTestUtils.normalize(asFragment())).toMatchSnapshot('Disabled group');
+    });
+
+    it('TINYMCE-14505: Should match snapshot for a single disabled option', () => {
+      const { asFragment } = render(
+        <SegmentedControl.Root value="diff" onChange={vi.fn()}>
+          <SegmentedControl.Option value="diff">Diff mode</SegmentedControl.Option>
+          <SegmentedControl.Option value="preview" disabled>Preview</SegmentedControl.Option>
+        </SegmentedControl.Root>,
+        { wrapper: SnapshotTestUtils.snapshotWrapper }
+      );
+      expect(SnapshotTestUtils.normalize(asFragment())).toMatchSnapshot('Single disabled option');
+    });
   });
 });

@@ -1,0 +1,65 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`browser.TooltipTest > Snapshot Tests > TINYMCE-14505: Should match snapshot for a mounted overflow tooltip > Overflow tooltip, mounted 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      style="width: 50px; overflow: hidden; white-space: nowrap; anchor-name: --test-anchor;"
+    >
+      A much longer label than fits
+    </div>
+    <div
+      class="tox-tooltip tox-tooltip--up tox-tooltip--anchor"
+      popover="manual"
+      style="position-anchor: --test-anchor;"
+    >
+      <div
+        class="tox-tooltip__body"
+      >
+        Tooltip text
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.TooltipTest > Snapshot Tests > TINYMCE-14505: Should match snapshot for a tooltip mounted alongside its trigger > Tooltip with trigger 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <button
+      style="anchor-name: --test-anchor;"
+    >
+      Hover me
+    </button>
+    <div
+      class="tox-tooltip tox-tooltip--up tox-tooltip--anchor"
+      popover="manual"
+      style="position-anchor: --test-anchor;"
+    >
+      <div
+        class="tox-tooltip__body"
+      >
+        Tooltip text
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.TooltipTest > Snapshot Tests > TINYMCE-14505: Should match snapshot for an unmounted overflow tooltip > Overflow tooltip, not mounted 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      style="width: 200px; overflow: hidden; white-space: nowrap; anchor-name: --test-anchor;"
+    >
+      Short
+    </div>
+  </div>
+</DocumentFragment>
+`;

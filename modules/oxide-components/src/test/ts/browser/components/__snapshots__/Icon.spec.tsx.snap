@@ -1,0 +1,35 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`browser.components.Icon > Snapshot Tests > TINYMCE-14505: Should match snapshot for a rendered icon > Icon 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <span
+      class="tox-icon"
+    >
+      <svg
+        id="chevron-down"
+      />
+    </span>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.components.Icon > Snapshot Tests > TINYMCE-14505: Should match snapshot for an icon with extra span attributes > Icon with span attributes 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <span
+      aria-hidden="true"
+      class="tox-icon"
+      data-testid="chevron-up-icon"
+    >
+      <svg
+        id="chevron-up"
+      />
+    </span>
+  </div>
+</DocumentFragment>
+`;

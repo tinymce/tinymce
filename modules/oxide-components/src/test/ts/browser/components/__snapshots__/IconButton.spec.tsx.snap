@@ -1,0 +1,114 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`browser.components.IconButtonTest > Snapshot Tests > TINYMCE-14505: Should match snapshot for an icon button with an aria-label > With aria-label 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <button
+      aria-label="Close"
+      class="tox-button tox-button--icon"
+      type="button"
+    >
+      <span
+        class="tox-icon"
+      >
+        <svg
+          id="close"
+        />
+      </span>
+    </button>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.components.IconButtonTest > Snapshot Tests > TINYMCE-14505: Should match snapshot for every variant > All variants 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <button
+      class="tox-button tox-button--icon"
+      type="button"
+    >
+      <span
+        class="tox-icon"
+      >
+        <svg
+          id="bold"
+        />
+      </span>
+    </button>
+    <button
+      class="tox-button tox-button--secondary tox-button--icon"
+      type="button"
+    >
+      <span
+        class="tox-icon"
+      >
+        <svg
+          id="bold"
+        />
+      </span>
+    </button>
+    <button
+      class="tox-button tox-button--secondary--outline tox-button--icon"
+      type="button"
+    >
+      <span
+        class="tox-icon"
+      >
+        <svg
+          id="bold"
+        />
+      </span>
+    </button>
+    <button
+      class="tox-button tox-button--naked tox-button--icon"
+      type="button"
+    >
+      <span
+        class="tox-icon"
+      >
+        <svg
+          id="bold"
+        />
+      </span>
+    </button>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.components.IconButtonTest > Snapshot Tests > TINYMCE-14505: Should match snapshot for the active and disabled states > Active and disabled 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <button
+      class="tox-button tox-button--enabled tox-button--icon"
+      type="button"
+    >
+      <span
+        class="tox-icon"
+      >
+        <svg
+          id="bold"
+        />
+      </span>
+    </button>
+    <button
+      class="tox-button tox-button--icon"
+      disabled=""
+      type="button"
+    >
+      <span
+        class="tox-icon"
+      >
+        <svg
+          id="bold"
+        />
+      </span>
+    </button>
+  </div>
+</DocumentFragment>
+`;

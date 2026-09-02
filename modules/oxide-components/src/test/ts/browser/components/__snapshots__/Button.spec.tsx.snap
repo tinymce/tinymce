@@ -1,0 +1,128 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`browser.components.ButtonTest > Snapshot Tests > TINYMCE-14505: Should match snapshot for a button with a custom className > Custom className 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <button
+      class="tox-button custom-class"
+      type="button"
+    >
+      Custom
+    </button>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.components.ButtonTest > Snapshot Tests > TINYMCE-14505: Should match snapshot for the naked variant > Naked variant 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <button
+      class="tox-button tox-button--naked "
+      type="button"
+    >
+      Default
+    </button>
+    <button
+      class="tox-button tox-button--naked tox-button--enabled "
+      type="button"
+    >
+      Active
+    </button>
+    <button
+      class="tox-button tox-button--naked "
+      disabled=""
+      type="button"
+    >
+      Disabled
+    </button>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.components.ButtonTest > Snapshot Tests > TINYMCE-14505: Should match snapshot for the outlined variant > Outlined variant 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <button
+      class="tox-button tox-button--secondary--outline "
+      type="button"
+    >
+      Default
+    </button>
+    <button
+      class="tox-button tox-button--secondary--outline tox-button--enabled "
+      type="button"
+    >
+      Active
+    </button>
+    <button
+      class="tox-button tox-button--secondary--outline "
+      disabled=""
+      type="button"
+    >
+      Disabled
+    </button>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.components.ButtonTest > Snapshot Tests > TINYMCE-14505: Should match snapshot for the primary variant > Primary variant 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <button
+      class="tox-button "
+      type="button"
+    >
+      Default
+    </button>
+    <button
+      class="tox-button tox-button--enabled "
+      type="button"
+    >
+      Active
+    </button>
+    <button
+      class="tox-button "
+      disabled=""
+      type="button"
+    >
+      Disabled
+    </button>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.components.ButtonTest > Snapshot Tests > TINYMCE-14505: Should match snapshot for the secondary variant > Secondary variant 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <button
+      class="tox-button tox-button--secondary "
+      type="button"
+    >
+      Default
+    </button>
+    <button
+      class="tox-button tox-button--secondary tox-button--enabled "
+      type="button"
+    >
+      Active
+    </button>
+    <button
+      class="tox-button tox-button--secondary "
+      disabled=""
+      type="button"
+    >
+      Disabled
+    </button>
+  </div>
+</DocumentFragment>
+`;

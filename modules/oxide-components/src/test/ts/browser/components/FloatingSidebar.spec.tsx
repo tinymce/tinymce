@@ -7,6 +7,7 @@ import { userEvent, page } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 
 import * as Mouse from './utils/Mouse';
+import * as SnapshotTestUtils from './utils/SnapshotTestUtils';
 
 const floatingSidebarHeaderTestId = 'floating-sidebar-header';
 const floatingSidebarContentTestId = 'floating-sidebar-content';
@@ -184,6 +185,33 @@ describe('browser.components.FloatingSidebar', () => {
       const rect = containerElement.dom.getBoundingClientRect();
 
       expect(rect.height).toBe(80);
+    });
+  });
+
+  describe('Snapshot Tests', () => {
+    const renderSidebar = (props: Parameters<typeof FloatingSidebar.Root>[0] = {}) => render(
+      <FloatingSidebar.Root {...props}>
+        <FloatingSidebar.Header>
+          <div data-testid={floatingSidebarHeaderTestId}>Header</div>
+        </FloatingSidebar.Header>
+        <div data-testid={floatingSidebarContentTestId}>Content</div>
+      </FloatingSidebar.Root>,
+      { wrapper: Wrapper }
+    );
+
+    it('TINYMCE-14505: Should match snapshot for a closed sidebar', () => {
+      const { asFragment } = renderSidebar({ isOpen: false });
+      expect(SnapshotTestUtils.normalize(asFragment())).toMatchSnapshot('Closed sidebar');
+    });
+
+    it('TINYMCE-14505: Should match snapshot for an open sidebar', () => {
+      const { asFragment } = renderSidebar({ isOpen: true });
+      expect(SnapshotTestUtils.normalize(asFragment())).toMatchSnapshot('Open sidebar');
+    });
+
+    it('TINYMCE-14505: Should match snapshot for a sidebar anchored bottom-left', () => {
+      const { asFragment } = renderSidebar({ origin: 'bottom-left', initialPosition: { x: '20px', y: '30px' }});
+      expect(SnapshotTestUtils.normalize(asFragment())).toMatchSnapshot('Bottom-left origin');
     });
   });
 });

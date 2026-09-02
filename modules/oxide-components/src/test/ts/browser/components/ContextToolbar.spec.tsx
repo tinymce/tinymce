@@ -5,6 +5,8 @@ import { describe, expect, it, vi } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 
+import * as SnapshotTestUtils from './utils/SnapshotTestUtils';
+
 const triggerTestId = 'context-toolbar-trigger';
 const toolbarTestId = 'context-toolbar-toolbar';
 
@@ -719,5 +721,44 @@ describe('browser.components.ContextToolbar', () => {
 
     await userEvent.keyboard('{Shift>}{Tab}{/Shift}');
     await expect.element(button1).toHaveFocus();
+  });
+
+  describe('Snapshot Tests', () => {
+    const renderToolbar = (props: { persistent?: boolean } = {}) => render(
+      <Fragment>
+        <div className='tox' style={{ position: 'relative' }} />
+        <ContextToolbar.Root {...props}>
+          <ContextToolbar.Trigger>
+            <div data-testid={triggerTestId}>Click Me</div>
+          </ContextToolbar.Trigger>
+          <ContextToolbar.Toolbar>
+            <ContextToolbar.Group>
+              <div data-testid={toolbarTestId}>Toolbar Content</div>
+            </ContextToolbar.Group>
+          </ContextToolbar.Toolbar>
+        </ContextToolbar.Root>
+      </Fragment>,
+      { wrapper: Wrapper }
+    );
+
+    it('TINYMCE-14505: Should match snapshot for a closed context toolbar', async () => {
+      const { asFragment, getByTestId } = renderToolbar();
+      await expect.element(getByTestId(triggerTestId)).toBeVisible();
+      expect(SnapshotTestUtils.normalize(asFragment())).toMatchSnapshot('Closed toolbar');
+    });
+
+    it('TINYMCE-14505: Should match snapshot for an open context toolbar', async () => {
+      const { asFragment, getByTestId } = renderToolbar();
+      await userEvent.click(getByTestId(triggerTestId));
+      await expect.element(getByTestId(toolbarTestId)).toBeVisible();
+      expect(SnapshotTestUtils.normalize(asFragment())).toMatchSnapshot('Open toolbar');
+    });
+
+    it('TINYMCE-14505: Should match snapshot for an open persistent context toolbar', async () => {
+      const { asFragment, getByTestId } = renderToolbar({ persistent: true });
+      await userEvent.click(getByTestId(triggerTestId));
+      await expect.element(getByTestId(toolbarTestId)).toBeVisible();
+      expect(SnapshotTestUtils.normalize(asFragment())).toMatchSnapshot('Open persistent toolbar');
+    });
   });
 });

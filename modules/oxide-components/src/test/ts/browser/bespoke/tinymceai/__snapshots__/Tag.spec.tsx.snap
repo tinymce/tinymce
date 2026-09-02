@@ -1,0 +1,115 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`browser.bespoke.tinymceai.Tag > Snapshot Tests > TINYMCE-14505: Should match snapshot for a closeable tag > Closeable tag 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      class="tox-tag"
+      tabindex="-1"
+    >
+      <span
+        class="tox-tag__label"
+      >
+        Closeable tag
+      </span>
+      <span
+        class="tox-tag__close"
+      >
+        <button
+          class="tox-button tox-button--naked tox-button--icon"
+          type="button"
+        >
+          <span
+            class="tox-icon"
+          >
+            <svg
+              id="source-close"
+            />
+          </span>
+        </button>
+      </span>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.bespoke.tinymceai.Tag > Snapshot Tests > TINYMCE-14505: Should match snapshot for a disabled closeable tag with an aria-label > Disabled closeable tag 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      class="tox-tag"
+      disabled=""
+      tabindex="-1"
+    >
+      <span
+        class="tox-tag__label"
+      >
+        Disabled tag
+      </span>
+      <span
+        class="tox-tag__close"
+      >
+        <button
+          aria-label="Disabled tag"
+          class="tox-button tox-button--naked tox-button--icon"
+          disabled=""
+          type="button"
+        >
+          <span
+            class="tox-icon"
+          >
+            <svg
+              id="source-close"
+            />
+          </span>
+        </button>
+      </span>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.bespoke.tinymceai.Tag > Snapshot Tests > TINYMCE-14505: Should match snapshot for a link tag > Link tag 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <a
+      class="tox-tag"
+      href="https://www.tiny.cloud"
+      rel="noopener noreferrer"
+      tabindex="-1"
+      target="_blank"
+    >
+      <span
+        class="tox-tag__label"
+      >
+        Link tag
+      </span>
+    </a>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.bespoke.tinymceai.Tag > Snapshot Tests > TINYMCE-14505: Should match snapshot for a plain tag > Plain tag 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      class="tox-tag"
+      tabindex="-1"
+    >
+      <span
+        class="tox-tag__label"
+      >
+        Plain tag
+      </span>
+    </div>
+  </div>
+</DocumentFragment>
+`;

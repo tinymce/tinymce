@@ -1,0 +1,378 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`browser.components.AccordionTest > Snapshot Tests > TINYMCE-14505: Should match snapshot for a collapsed item > Collapsed item 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      class="tox-accordion"
+      tabindex="0"
+    >
+      <div
+        aria-disabled="false"
+        class="tox-accordion__item"
+        tabindex="-1"
+      >
+        <h3
+          class="tox-accordion__heading"
+        >
+          <button
+            aria-controls="tox-item1-content"
+            aria-disabled="false"
+            aria-expanded="false"
+            class="tox-accordion__header"
+            id="tox-item1-header"
+            tabindex="-1"
+            type="button"
+          >
+            <span
+              class="tox-accordion__header-icon"
+            >
+              <span
+                class="tox-icon"
+              >
+                <svg
+                  id="chevron-down"
+                />
+              </span>
+            </span>
+            <span
+              class="tox-accordion__header-text"
+            >
+              Item 1
+            </span>
+          </button>
+        </h3>
+        <div
+          aria-hidden="true"
+          aria-labelledby="tox-item1-header"
+          class="tox-accordion__content tox-accordion__content--collapsed"
+          id="tox-item1-content"
+          role="region"
+        >
+          <div
+            class="tox-accordion__content-inner"
+          >
+            <p>
+              Content 1
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.components.AccordionTest > Snapshot Tests > TINYMCE-14505: Should match snapshot for a disabled item > Disabled item 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      class="tox-accordion"
+      tabindex="0"
+    >
+      <div
+        aria-disabled="true"
+        class="tox-accordion__item"
+        tabindex="-1"
+      >
+        <h3
+          class="tox-accordion__heading"
+        >
+          <button
+            aria-controls="tox-item1-content"
+            aria-disabled="true"
+            aria-expanded="false"
+            class="tox-accordion__header tox-accordion__header--disabled"
+            disabled=""
+            id="tox-item1-header"
+            tabindex="-1"
+            type="button"
+          >
+            <span
+              class="tox-accordion__header-icon"
+            >
+              <span
+                class="tox-icon"
+              >
+                <svg
+                  id="chevron-down"
+                />
+              </span>
+            </span>
+            <span
+              class="tox-accordion__header-text"
+            >
+              Item 1
+            </span>
+          </button>
+        </h3>
+        <div
+          aria-hidden="true"
+          aria-labelledby="tox-item1-header"
+          class="tox-accordion__content tox-accordion__content--collapsed"
+          id="tox-item1-content"
+          role="region"
+        >
+          <div
+            class="tox-accordion__content-inner"
+          >
+            <p>
+              Content 1
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.components.AccordionTest > Snapshot Tests > TINYMCE-14505: Should match snapshot for a trailing icon and a custom heading level > Trailing icon, h2 heading 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      class="tox-accordion"
+      tabindex="0"
+    >
+      <div
+        aria-disabled="false"
+        class="tox-accordion__item"
+        tabindex="-1"
+      >
+        <h2
+          class="tox-accordion__heading"
+        >
+          <button
+            aria-controls="tox-item1-content"
+            aria-disabled="false"
+            aria-expanded="false"
+            class="tox-accordion__header tox-accordion__header--icon-end"
+            id="tox-item1-header"
+            tabindex="-1"
+            type="button"
+          >
+            <span
+              class="tox-accordion__header-text"
+            >
+              Item 1
+            </span>
+            <span
+              class="tox-accordion__header-icon"
+            >
+              <span
+                class="tox-icon"
+              >
+                <svg
+                  id="chevron-down"
+                />
+              </span>
+            </span>
+          </button>
+        </h2>
+        <div
+          aria-hidden="true"
+          aria-labelledby="tox-item1-header"
+          class="tox-accordion__content tox-accordion__content--collapsed"
+          id="tox-item1-content"
+          role="region"
+        >
+          <div
+            class="tox-accordion__content-inner"
+          >
+            <p>
+              Content 1
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.components.AccordionTest > Snapshot Tests > TINYMCE-14505: Should match snapshot for an expanded item > Expanded item 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      class="tox-accordion"
+      tabindex="0"
+    >
+      <div
+        aria-disabled="false"
+        class="tox-accordion__item tox-accordion__item--expanded"
+        tabindex="-1"
+      >
+        <h3
+          class="tox-accordion__heading"
+        >
+          <button
+            aria-controls="tox-item1-content"
+            aria-disabled="false"
+            aria-expanded="true"
+            class="tox-accordion__header tox-accordion__header--expanded"
+            id="tox-item1-header"
+            tabindex="-1"
+            type="button"
+          >
+            <span
+              class="tox-accordion__header-icon"
+            >
+              <span
+                class="tox-icon"
+              >
+                <svg
+                  id="chevron-up"
+                />
+              </span>
+            </span>
+            <span
+              class="tox-accordion__header-text"
+            >
+              Item 1
+            </span>
+          </button>
+        </h3>
+        <div
+          aria-hidden="false"
+          aria-labelledby="tox-item1-header"
+          class="tox-accordion__content tox-accordion__content--expanded"
+          id="tox-item1-content"
+          role="region"
+        >
+          <div
+            class="tox-accordion__content-inner"
+          >
+            <p>
+              Content 1
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.components.AccordionTest > Snapshot Tests > TINYMCE-14505: Should match snapshot for two items expanded at once > Two items expanded 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      class="tox-accordion"
+      tabindex="0"
+    >
+      <div
+        aria-disabled="false"
+        class="tox-accordion__item tox-accordion__item--expanded"
+        tabindex="-1"
+      >
+        <h3
+          class="tox-accordion__heading"
+        >
+          <button
+            aria-controls="tox-item1-content"
+            aria-disabled="false"
+            aria-expanded="true"
+            class="tox-accordion__header tox-accordion__header--expanded"
+            id="tox-item1-header"
+            tabindex="-1"
+            type="button"
+          >
+            <span
+              class="tox-accordion__header-icon"
+            >
+              <span
+                class="tox-icon"
+              >
+                <svg
+                  id="chevron-up"
+                />
+              </span>
+            </span>
+            <span
+              class="tox-accordion__header-text"
+            >
+              Item 1
+            </span>
+          </button>
+        </h3>
+        <div
+          aria-hidden="false"
+          aria-labelledby="tox-item1-header"
+          class="tox-accordion__content tox-accordion__content--expanded"
+          id="tox-item1-content"
+          role="region"
+        >
+          <div
+            class="tox-accordion__content-inner"
+          >
+            <p>
+              Content 1
+            </p>
+          </div>
+        </div>
+      </div>
+      <div
+        aria-disabled="false"
+        class="tox-accordion__item tox-accordion__item--expanded"
+        tabindex="-1"
+      >
+        <h3
+          class="tox-accordion__heading"
+        >
+          <button
+            aria-controls="tox-item2-content"
+            aria-disabled="false"
+            aria-expanded="true"
+            class="tox-accordion__header tox-accordion__header--expanded"
+            id="tox-item2-header"
+            tabindex="-1"
+            type="button"
+          >
+            <span
+              class="tox-accordion__header-icon"
+            >
+              <span
+                class="tox-icon"
+              >
+                <svg
+                  id="chevron-up"
+                />
+              </span>
+            </span>
+            <span
+              class="tox-accordion__header-text"
+            >
+              Item 2
+            </span>
+          </button>
+        </h3>
+        <div
+          aria-hidden="false"
+          aria-labelledby="tox-item2-header"
+          class="tox-accordion__content tox-accordion__content--expanded"
+          id="tox-item2-content"
+          role="region"
+        >
+          <div
+            class="tox-accordion__content-inner"
+          >
+            <p>
+              Content 2
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

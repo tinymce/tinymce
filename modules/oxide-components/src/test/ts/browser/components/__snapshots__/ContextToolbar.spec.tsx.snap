@@ -1,0 +1,144 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`browser.components.ContextToolbar > Snapshot Tests > TINYMCE-14505: Should match snapshot for a closed context toolbar > Closed toolbar 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      style="display: flex; align-items: center; justify-content: center; padding: 10px;"
+    >
+      <div>
+        <div
+          class="tox"
+          style="position: relative;"
+        />
+        <div>
+          <div
+            data-testid="context-toolbar-trigger"
+          >
+            Click Me
+          </div>
+        </div>
+        <div
+          class="tox-context-toolbar"
+          style="visibility: hidden; pointer-events: auto;"
+          tabindex="-1"
+        >
+          <div
+            class="tox-toolbar"
+            role="toolbar"
+          >
+            <div
+              class="tox-toolbar__group"
+              role="group"
+            >
+              <div
+                data-testid="context-toolbar-toolbar"
+              >
+                Toolbar Content
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.components.ContextToolbar > Snapshot Tests > TINYMCE-14505: Should match snapshot for an open context toolbar > Open toolbar 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      style="display: flex; align-items: center; justify-content: center; padding: 10px;"
+    >
+      <div>
+        <div
+          class="tox"
+          style="position: relative;"
+        />
+        <div>
+          <div
+            data-testid="context-toolbar-trigger"
+            style="anchor-name: --test-anchor;"
+          >
+            Click Me
+          </div>
+        </div>
+        <div
+          class="tox-context-toolbar"
+          style="pointer-events: auto; position: absolute; margin: 0px; top: calc(6px + anchor(--test-anchor bottom)); right: unset; bottom: unset; left: unset; position-anchor: --test-anchor; justify-self: anchor-center; position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;"
+          tabindex="-1"
+        >
+          <div
+            class="tox-toolbar"
+            role="toolbar"
+          >
+            <div
+              class="tox-toolbar__group"
+              role="group"
+            >
+              <div
+                data-testid="context-toolbar-toolbar"
+              >
+                Toolbar Content
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.components.ContextToolbar > Snapshot Tests > TINYMCE-14505: Should match snapshot for an open persistent context toolbar > Open persistent toolbar 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      style="display: flex; align-items: center; justify-content: center; padding: 10px;"
+    >
+      <div>
+        <div
+          class="tox"
+          style="position: relative;"
+        />
+        <div>
+          <div
+            data-testid="context-toolbar-trigger"
+            style="anchor-name: --test-anchor;"
+          >
+            Click Me
+          </div>
+        </div>
+        <div
+          class="tox-context-toolbar"
+          style="pointer-events: auto; position: absolute; margin: 0px; top: calc(6px + anchor(--test-anchor bottom)); right: unset; bottom: unset; left: unset; position-anchor: --test-anchor; justify-self: anchor-center; position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;"
+          tabindex="-1"
+        >
+          <div
+            class="tox-toolbar"
+            role="toolbar"
+          >
+            <div
+              class="tox-toolbar__group"
+              role="group"
+            >
+              <div
+                data-testid="context-toolbar-toolbar"
+              >
+                Toolbar Content
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

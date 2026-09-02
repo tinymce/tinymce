@@ -1,0 +1,114 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`browser.MenuItemTest > Snapshot Tests > TINYMCE-14505: Should match snapshot for a disabled menu item > Disabled item 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      class="tox-menu tox-collection tox-collection--list"
+      role="menu"
+    >
+      <div
+        class="tox-collection__group"
+      >
+        <div
+          aria-disabled="true"
+          aria-haspopup="false"
+          class="tox-collection__item tox-collection__item--state-disabled"
+          id=":id-0:"
+          role="menuitem"
+          tabindex="-1"
+        >
+          <div
+            class="tox-collection__item-label"
+          >
+            Disabled item
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.MenuItemTest > Snapshot Tests > TINYMCE-14505: Should match snapshot for a menu item with an icon and a shortcut > Item with icon and shortcut 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      class="tox-menu tox-collection tox-collection--list"
+      role="menu"
+    >
+      <div
+        class="tox-collection__group"
+      >
+        <div
+          aria-disabled="false"
+          aria-haspopup="false"
+          aria-keyshortcuts="Ctrl+B"
+          class="tox-collection__item tox-collection__item--active"
+          id=":id-0:"
+          role="menuitem"
+          tabindex="-1"
+        >
+          <div
+            class="tox-collection__item-icon"
+          >
+            <span
+              class="tox-icon"
+            >
+              <svg
+                id="checkmark"
+              />
+            </span>
+          </div>
+          <div
+            class="tox-collection__item-label"
+          >
+            Item with icon
+          </div>
+          <div
+            class="tox-collection__item-accessory"
+          >
+            Ctrl+B
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.MenuItemTest > Snapshot Tests > TINYMCE-14505: Should match snapshot for a plain menu item > Plain item 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      class="tox-menu tox-collection tox-collection--list"
+      role="menu"
+    >
+      <div
+        class="tox-collection__group"
+      >
+        <div
+          aria-disabled="false"
+          aria-haspopup="false"
+          class="tox-collection__item tox-collection__item--active"
+          id=":id-0:"
+          role="menuitem"
+          tabindex="-1"
+        >
+          <div
+            class="tox-collection__item-label"
+          >
+            Plain item
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

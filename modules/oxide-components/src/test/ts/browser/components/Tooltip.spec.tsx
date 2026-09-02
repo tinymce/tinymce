@@ -7,6 +7,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 
+import * as SnapshotTestUtils from './utils/SnapshotTestUtils';
+
 vi.mock(import('oxide-components/utils/Browser'), () => ({
   isSafari: vi.fn(Fun.never)
 }));
@@ -271,6 +273,58 @@ describe('browser.TooltipTest', () => {
 
       await expect.poll(() => secondTooltipEl.matches(':popover-open')).toBe(true);
       expect(document.querySelectorAll(openTooltipSelector).length).toBe(1);
+    });
+  });
+
+  describe('Snapshot Tests', () => {
+    const tooltipSelector = Bem.blockSelector('tox-tooltip');
+
+    it('TINYMCE-14505: Should match snapshot for a tooltip mounted alongside its trigger', async () => {
+      const { asFragment } = render(
+        <Tooltip.Root>
+          <Tooltip.Trigger>
+            <button>Hover me</button>
+          </Tooltip.Trigger>
+          <Tooltip.Content text='Tooltip text' />
+        </Tooltip.Root>,
+        { wrapper }
+      );
+
+      await expect.poll(() => document.querySelector(tooltipSelector)).not.toBeNull();
+
+      expect(SnapshotTestUtils.normalize(asFragment())).toMatchSnapshot('Tooltip with trigger');
+    });
+
+    it('TINYMCE-14505: Should match snapshot for an unmounted overflow tooltip', async () => {
+      const { asFragment } = render(
+        <Tooltip.Root showCondition='overflow'>
+          <Tooltip.Trigger>
+            <div style={{ width: '200px', overflow: 'hidden', whiteSpace: 'nowrap' }}>Short</div>
+          </Tooltip.Trigger>
+          <Tooltip.Content text='Tooltip text' />
+        </Tooltip.Root>,
+        { wrapper }
+      );
+
+      await expect.poll(() => document.querySelector(tooltipSelector)).toBeNull();
+
+      expect(SnapshotTestUtils.normalize(asFragment())).toMatchSnapshot('Overflow tooltip, not mounted');
+    });
+
+    it('TINYMCE-14505: Should match snapshot for a mounted overflow tooltip', async () => {
+      const { asFragment } = render(
+        <Tooltip.Root showCondition='overflow'>
+          <Tooltip.Trigger>
+            <div style={{ width: '50px', overflow: 'hidden', whiteSpace: 'nowrap' }}>A much longer label than fits</div>
+          </Tooltip.Trigger>
+          <Tooltip.Content text='Tooltip text' />
+        </Tooltip.Root>,
+        { wrapper }
+      );
+
+      await expect.poll(() => document.querySelector(tooltipSelector)).not.toBeNull();
+
+      expect(SnapshotTestUtils.normalize(asFragment())).toMatchSnapshot('Overflow tooltip, mounted');
     });
   });
 });

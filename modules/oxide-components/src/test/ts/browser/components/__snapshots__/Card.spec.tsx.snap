@@ -184,3 +184,140 @@ exports[`browser.components.CardTest > Snapshot Tests > TINY-13459: Should match
   </div>
 </DocumentFragment>
 `;
+
+exports[`browser.components.CardTest > Snapshot Tests > TINYMCE-14505: Should match snapshot for a card that has a decision > Card with a decision 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      aria-busy="false"
+      aria-label="Card 1"
+      aria-selected="true"
+      class="tox-card tox-card--selected tox-card--has-decision"
+      role="option"
+      tabindex="-1"
+    >
+      <div
+        class="tox-card__header"
+      >
+        Decided
+      </div>
+      <div
+        class="tox-card__body"
+      >
+        Decided content
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.components.CardTest > Snapshot Tests > TINYMCE-14505: Should match snapshot for a loading card > Loading skeleton 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      aria-busy="true"
+      aria-label="Card 1"
+      aria-selected="true"
+      class="tox-card tox-skeleton"
+      role="option"
+    >
+      <div
+        class="tox-card__body"
+      >
+        <div
+          class="tox-skeleton__line"
+          style="width: 100%;"
+        />
+      </div>
+      <div
+        class="tox-card__actions"
+      >
+        <div
+          class="tox-skeleton__line"
+          style="width: 50%;"
+        />
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.components.CardTest > Snapshot Tests > TINYMCE-14505: Should match snapshot for every highlight type > All highlight types 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      aria-busy="false"
+      aria-label="Card 1"
+      aria-selected="true"
+      class="tox-card tox-card--selected"
+      role="option"
+      tabindex="-1"
+    >
+      <div
+        class="tox-card__body"
+      >
+        <div
+          class="tox-card__highlight tox-card__highlight--added"
+        >
+          Added
+        </div>
+        <div
+          class="tox-card__highlight tox-card__highlight--deleted"
+        >
+          Deleted
+        </div>
+        <div
+          class="tox-card__highlight tox-card__highlight--modified"
+        >
+          Modified
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.components.CardTest > Snapshot Tests > TINYMCE-14505: Should match snapshot for the space-between actions layout > Actions with space-between layout 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      aria-busy="false"
+      aria-label="Card 1"
+      aria-selected="true"
+      class="tox-card tox-card--selected"
+      role="option"
+      tabindex="-1"
+    >
+      <div
+        class="tox-card__body"
+      >
+        Content
+      </div>
+      <div
+        class="tox-card__actions tox-card__actions--space-between"
+      >
+        <button
+          class="tox-button tox-button--secondary--outline "
+          type="button"
+        >
+          Skip
+        </button>
+        <button
+          class="tox-button tox-button--secondary--outline "
+          type="button"
+        >
+          Apply
+        </button>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

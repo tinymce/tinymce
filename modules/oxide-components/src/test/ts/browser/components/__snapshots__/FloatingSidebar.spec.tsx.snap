@@ -1,0 +1,124 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`browser.components.FloatingSidebar > Snapshot Tests > TINYMCE-14505: Should match snapshot for a closed sidebar > Closed sidebar 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      style="display: flex; align-items: center; justify-content: center; padding: 10px;"
+    >
+      <div
+        allowedoverflow="[object Object]"
+        class="tox-floating-sidebar"
+        style="top: min( 0px, calc( 100% - var(--tox-private-floating-sidebar-height) ) ); right: min( 0px, calc( 100% - var(--tox-private-floating-sidebar-width) * 0.20 ) );"
+      >
+        <aside
+          class="tox-floating-sidebar__content-wrapper"
+        >
+          <div
+            style="cursor: grab;"
+          >
+            <header
+              class="tox-sidebar-content__header tox-floating-sidebar__header"
+            >
+              <div
+                data-testid="floating-sidebar-header"
+              >
+                Header
+              </div>
+            </header>
+          </div>
+          <div
+            data-testid="floating-sidebar-content"
+          >
+            Content
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.components.FloatingSidebar > Snapshot Tests > TINYMCE-14505: Should match snapshot for a sidebar anchored bottom-left > Bottom-left origin 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      style="display: flex; align-items: center; justify-content: center; padding: 10px;"
+    >
+      <div
+        allowedoverflow="[object Object]"
+        class="tox-floating-sidebar tox-floating-sidebar--open"
+        style="bottom: min( 30px, calc( 100% - var(--tox-private-floating-sidebar-height) ) ); left: min( 20px, calc( 100% - var(--tox-private-floating-sidebar-width) * 0.20 ) );"
+      >
+        <aside
+          class="tox-floating-sidebar__content-wrapper"
+        >
+          <div
+            style="cursor: grab;"
+          >
+            <header
+              class="tox-sidebar-content__header tox-floating-sidebar__header"
+            >
+              <div
+                data-testid="floating-sidebar-header"
+              >
+                Header
+              </div>
+            </header>
+          </div>
+          <div
+            data-testid="floating-sidebar-content"
+          >
+            Content
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.components.FloatingSidebar > Snapshot Tests > TINYMCE-14505: Should match snapshot for an open sidebar > Open sidebar 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      style="display: flex; align-items: center; justify-content: center; padding: 10px;"
+    >
+      <div
+        allowedoverflow="[object Object]"
+        class="tox-floating-sidebar tox-floating-sidebar--open"
+        style="top: min( 0px, calc( 100% - var(--tox-private-floating-sidebar-height) ) ); right: min( 0px, calc( 100% - var(--tox-private-floating-sidebar-width) * 0.20 ) );"
+      >
+        <aside
+          class="tox-floating-sidebar__content-wrapper"
+        >
+          <div
+            style="cursor: grab;"
+          >
+            <header
+              class="tox-sidebar-content__header tox-floating-sidebar__header"
+            >
+              <div
+                data-testid="floating-sidebar-header"
+              >
+                Header
+              </div>
+            </header>
+          </div>
+          <div
+            data-testid="floating-sidebar-content"
+          >
+            Content
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

@@ -1,0 +1,68 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`browser.components.AutoResizingTextareaTest > Snapshot Tests > TINYMCE-14505: Should match snapshot for a disabled textarea > Disabled 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <textarea
+      class="tox-textarea "
+      disabled=""
+      rows="1"
+    >
+      Disabled
+    </textarea>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.components.AutoResizingTextareaTest > Snapshot Tests > TINYMCE-14505: Should match snapshot for a textarea clamped at its maximum rows > Clamped at maximum rows 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <textarea
+      class="tox-textarea "
+      rows="3"
+    >
+      one
+two
+three
+four
+five
+six
+    </textarea>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.components.AutoResizingTextareaTest > Snapshot Tests > TINYMCE-14505: Should match snapshot for a textarea grown to fit its content > Grown to three rows 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <textarea
+      class="tox-textarea "
+      rows="3"
+    >
+      one
+two
+three
+    </textarea>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.components.AutoResizingTextareaTest > Snapshot Tests > TINYMCE-14505: Should match snapshot for an empty textarea with a placeholder > Empty with placeholder 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <textarea
+      class="tox-textarea "
+      placeholder="Ask anything"
+      rows="1"
+    />
+  </div>
+</DocumentFragment>
+`;

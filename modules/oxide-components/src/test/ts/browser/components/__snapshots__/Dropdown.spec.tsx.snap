@@ -1,0 +1,97 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`browser.DropdownTest > Snapshot Tests > TINYMCE-14505: Should match snapshot for a closed dropdown > Closed dropdown 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <button
+      class="tox-button "
+      style="anchor-name: --test-anchor;"
+      type="button"
+    >
+      Trigger
+    </button>
+    <div
+      class="tox-dropdown-content "
+      popover="auto"
+      style="inset-block: 1px; position-area: block-end span-inline-end; position-anchor: --test-anchor;"
+    />
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.DropdownTest > Snapshot Tests > TINYMCE-14505: Should match snapshot for a dropdown open above the trigger > Open top end 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <button
+      class="tox-button "
+      style="anchor-name: --test-anchor;"
+      type="button"
+    >
+      Trigger
+    </button>
+    <div
+      class="tox-dropdown-content "
+      popover="auto"
+      style="inset-block: 1px; position-area: block-start span-inline-start; position-anchor: --test-anchor;"
+    >
+      <div>
+        Dropdown Content
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.DropdownTest > Snapshot Tests > TINYMCE-14505: Should match snapshot for a dropdown open below the trigger > Open bottom start 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <button
+      class="tox-button "
+      style="anchor-name: --test-anchor;"
+      type="button"
+    >
+      Trigger
+    </button>
+    <div
+      class="tox-dropdown-content "
+      popover="auto"
+      style="inset-block: 1px; position-area: block-end span-inline-end; position-anchor: --test-anchor;"
+    >
+      <div>
+        Dropdown Content
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.DropdownTest > Snapshot Tests > TINYMCE-14505: Should match snapshot for a dropdown with a merged className and style > Open with merged className and style 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <button
+      class="tox-button "
+      style="anchor-name: --test-anchor;"
+      type="button"
+    >
+      Trigger
+    </button>
+    <div
+      class="tox-dropdown-content custom-content"
+      popover="auto"
+      style="max-height: 100px; inset-block: 1px; position-area: block-end span-inline-end; position-anchor: --test-anchor;"
+    >
+      <div>
+        Dropdown Content
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

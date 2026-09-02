@@ -1,0 +1,51 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`browser.MenuDividerTest > Snapshot Tests > TINYMCE-14505: Should match snapshot for a divider between menu items > Divider between items 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      class="tox-menu tox-collection tox-collection--list"
+      role="menu"
+    >
+      <div
+        class="tox-collection__group"
+      >
+        <div
+          aria-disabled="false"
+          aria-haspopup="false"
+          class="tox-collection__item tox-collection__item--active"
+          id=":id-0:"
+          role="menuitem"
+          tabindex="-1"
+        >
+          <div
+            class="tox-collection__item-label"
+          >
+            Above
+          </div>
+        </div>
+        <div
+          class="tox-collection__item-separator"
+          role="separator"
+        />
+        <div
+          aria-disabled="false"
+          aria-haspopup="false"
+          class="tox-collection__item"
+          id=":id-1:"
+          role="menuitem"
+          tabindex="-1"
+        >
+          <div
+            class="tox-collection__item-label"
+          >
+            Below
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

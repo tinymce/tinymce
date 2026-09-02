@@ -6,6 +6,8 @@ import { describe, expect, it } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 
+import * as SnapshotTestUtils from './utils/SnapshotTestUtils';
+
 describe('browser.components.AutoResizingTextareaTest', () => {
   it('Sanity check', async () => {
     const placeHolder = 'Placeholder for disabled textarea';
@@ -288,5 +290,41 @@ describe('browser.components.AutoResizingTextareaTest', () => {
     await expect.element(textareaLocator, {
       message: 'Textarea rows should stay at 1 after typing one short line'
     }).toHaveAttribute('rows', '1');
+  });
+
+  describe('Snapshot Tests', () => {
+    const rows = (value: number): Height => ({ unit: 'rows', value });
+
+    it('TINYMCE-14505: Should match snapshot for an empty textarea with a placeholder', () => {
+      const { asFragment } = render(
+        <AutoResizingTextarea value="" placeholder="Ask anything" />,
+        { wrapper: SnapshotTestUtils.snapshotWrapper }
+      );
+      expect(SnapshotTestUtils.normalize(asFragment())).toMatchSnapshot('Empty with placeholder');
+    });
+
+    it('TINYMCE-14505: Should match snapshot for a disabled textarea', () => {
+      const { asFragment } = render(
+        <AutoResizingTextarea value="Disabled" disabled />,
+        { wrapper: SnapshotTestUtils.snapshotWrapper }
+      );
+      expect(SnapshotTestUtils.normalize(asFragment())).toMatchSnapshot('Disabled');
+    });
+
+    it('TINYMCE-14505: Should match snapshot for a textarea grown to fit its content', () => {
+      const { asFragment } = render(
+        <AutoResizingTextarea value={'one\ntwo\nthree'} minHeight={rows(1)} maxHeight={rows(4)} />,
+        { wrapper: SnapshotTestUtils.snapshotWrapper }
+      );
+      expect(SnapshotTestUtils.normalize(asFragment())).toMatchSnapshot('Grown to three rows');
+    });
+
+    it('TINYMCE-14505: Should match snapshot for a textarea clamped at its maximum rows', () => {
+      const { asFragment } = render(
+        <AutoResizingTextarea value={'one\ntwo\nthree\nfour\nfive\nsix'} minHeight={rows(1)} maxHeight={rows(3)} />,
+        { wrapper: SnapshotTestUtils.snapshotWrapper }
+      );
+      expect(SnapshotTestUtils.normalize(asFragment())).toMatchSnapshot('Clamped at maximum rows');
+    });
   });
 });

@@ -1,0 +1,16 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`browser.components.UserPromptBubbleTest > Snapshot Tests > TINYMCE-14505: Should match snapshot for a user prompt > User prompt 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      class="tox-ai__user-prompt__text"
+      tabindex="-1"
+    >
+      Summarise this document
+    </div>
+  </div>
+</DocumentFragment>
+`;

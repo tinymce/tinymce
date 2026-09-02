@@ -1,0 +1,210 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`browser.components.MenuRendererTest > Snapshot Tests > TINYMCE-14505: Should match snapshot for a menu rendered from a spec > Menu from a spec 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      class="tox-menu tox-collection tox-collection--list"
+      role="menu"
+    >
+      <div
+        class="tox-collection__group"
+      >
+        <div
+          aria-disabled="false"
+          aria-haspopup="false"
+          class="tox-collection__item tox-collection__item--active"
+          id=":id-0:"
+          role="menuitem"
+          tabindex="-1"
+        >
+          <div
+            class="tox-collection__item-label"
+          >
+            Plain item
+          </div>
+        </div>
+        <div
+          aria-disabled="false"
+          aria-haspopup="false"
+          aria-keyshortcuts="Ctrl+B"
+          class="tox-collection__item"
+          id=":id-1:"
+          role="menuitem"
+          tabindex="-1"
+        >
+          <div
+            class="tox-collection__item-icon"
+          >
+            <span
+              class="tox-icon"
+            >
+              <svg
+                id="checkmark"
+              />
+            </span>
+          </div>
+          <div
+            class="tox-collection__item-label"
+          >
+            Item with icon
+          </div>
+          <div
+            class="tox-collection__item-accessory"
+          >
+            Ctrl+B
+          </div>
+        </div>
+        <div
+          aria-disabled="true"
+          aria-haspopup="false"
+          class="tox-collection__item tox-collection__item--state-disabled"
+          id=":id-2:"
+          role="menuitem"
+          tabindex="-1"
+        >
+          <div
+            class="tox-collection__item-label"
+          >
+            Disabled item
+          </div>
+        </div>
+        <div
+          aria-checked="true"
+          aria-disabled="false"
+          aria-haspopup="false"
+          class="tox-collection__item tox-collection__item--enabled"
+          id=":id-3:"
+          role="menuitemcheckbox"
+          tabindex="-1"
+        >
+          <div
+            class="tox-collection__item-label"
+          >
+            Active toggle
+          </div>
+          <div
+            class="tox-collection__item-checkmark"
+          >
+            <span
+              class="tox-icon"
+            >
+              <svg
+                id="checkmark"
+              />
+            </span>
+          </div>
+        </div>
+        <div
+          aria-checked="false"
+          aria-disabled="false"
+          aria-haspopup="false"
+          class="tox-collection__item"
+          id=":id-4:"
+          role="menuitemcheckbox"
+          tabindex="-1"
+        >
+          <div
+            class="tox-collection__item-label"
+          >
+            Inactive toggle
+          </div>
+          <div
+            class="tox-collection__item-checkmark"
+          >
+            <span
+              class="tox-icon"
+            >
+              <svg
+                id="checkmark"
+              />
+            </span>
+          </div>
+        </div>
+        <div
+          aria-disabled="false"
+          aria-haspopup="true"
+          class="tox-collection__item"
+          id=":id-5:"
+          role="menuitem"
+          style="box-sizing: border-box; width: 100%; anchor-name: --test-anchor;"
+          tabindex="-1"
+        >
+          <div
+            class="tox-collection__item-label"
+          >
+            Submenu
+          </div>
+          <div
+            class="tox-collection__item-caret"
+          >
+            <span
+              class="tox-icon"
+            >
+              <svg
+                id="chevron-right"
+              />
+            </span>
+          </div>
+        </div>
+        <div
+          class="tox-dropdown-content "
+          popover="auto"
+          style="inset-inline: 1px; position-area: span-block-end inline-end; position-anchor: --test-anchor;"
+        />
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.components.MenuRendererTest > Snapshot Tests > TINYMCE-14505: Should match snapshot for a menu with left-hand submenus > Left-hand submenus 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      class="tox-menu tox-collection tox-collection--list"
+      role="menu"
+    >
+      <div
+        class="tox-collection__group"
+      >
+        <div
+          aria-disabled="false"
+          aria-haspopup="true"
+          class="tox-collection__item tox-collection__item--active"
+          id=":id-0:"
+          role="menuitem"
+          style="box-sizing: border-box; width: 100%; anchor-name: --test-anchor;"
+          tabindex="-1"
+        >
+          <div
+            class="tox-collection__item-label"
+          >
+            Submenu
+          </div>
+          <div
+            class="tox-collection__item-caret"
+          >
+            <span
+              class="tox-icon"
+            >
+              <svg
+                id="chevron-right"
+              />
+            </span>
+          </div>
+        </div>
+        <div
+          class="tox-dropdown-content "
+          popover="auto"
+          style="inset-inline: 1px; position-area: span-block-end inline-start; position-anchor: --test-anchor;"
+        />
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

@@ -1,0 +1,120 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`browser.ConfirmationTest > Snapshot Tests > TINYMCE-14505: Should match snapshot for the confirming dialog > Confirming dialog 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      class="tox-dialog-wrap"
+    >
+      <div
+        class="tox-dialog-wrap__backdrop"
+        style="display: flex;"
+      >
+        <dialog
+          class="tox-dialog"
+          style="margin: auto;"
+        >
+          <div
+            class="tox-dialog__body"
+          >
+            <div
+              class="tox-dialog__body-content"
+            >
+              Are you sure?
+            </div>
+          </div>
+          <div
+            class="tox-dialog__footer"
+          >
+            <div
+              class="tox-dialog__footer-start"
+            />
+            <div
+              class="tox-dialog__footer-end"
+            >
+              <button
+                aria-label="Yes"
+                class="tox-button "
+                disabled=""
+                type="button"
+              >
+                <div
+                  class="tox-ai__spinner tox-ai__spinner--circle"
+                  style="--tox-private-spinner-color: lightgray;"
+                />
+              </button>
+              <button
+                aria-label="No"
+                class="tox-button tox-button--secondary "
+                disabled=""
+                type="button"
+              >
+                No
+              </button>
+            </div>
+          </div>
+        </dialog>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.ConfirmationTest > Snapshot Tests > TINYMCE-14505: Should match snapshot for the idle dialog > Idle dialog 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      class="tox-dialog-wrap"
+    >
+      <div
+        class="tox-dialog-wrap__backdrop"
+        style="display: flex;"
+      >
+        <dialog
+          class="tox-dialog"
+          style="margin: auto;"
+        >
+          <div
+            class="tox-dialog__body"
+          >
+            <div
+              class="tox-dialog__body-content"
+            >
+              Are you sure?
+            </div>
+          </div>
+          <div
+            class="tox-dialog__footer"
+          >
+            <div
+              class="tox-dialog__footer-start"
+            />
+            <div
+              class="tox-dialog__footer-end"
+            >
+              <button
+                aria-label="Yes"
+                class="tox-button "
+                type="button"
+              >
+                Yes
+              </button>
+              <button
+                aria-label="No"
+                class="tox-button tox-button--secondary "
+                type="button"
+              >
+                No
+              </button>
+            </div>
+          </div>
+        </dialog>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

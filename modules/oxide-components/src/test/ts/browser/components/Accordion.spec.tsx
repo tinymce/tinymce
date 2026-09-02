@@ -9,6 +9,8 @@ import { useState } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 
+import * as SnapshotTestUtils from './utils/SnapshotTestUtils';
+
 const allIcons = getAllIcons();
 const icons: Record<string, string> = {
   'chevron-down': allIcons['chevron-down'],
@@ -536,5 +538,57 @@ describe('browser.components.AccordionTest', () => {
 
     expect(button.element().className).toContain('tox-accordion__header--expanded');
   });
-});
 
+  describe('Snapshot Tests', () => {
+    it('TINYMCE-14505: Should match snapshot for a collapsed item', () => {
+      const { asFragment } = render(
+        <Accordion.Root>
+          <Accordion.Item id="item1" title="Item 1"><p>Content 1</p></Accordion.Item>
+        </Accordion.Root>,
+        { wrapper: SnapshotTestUtils.snapshotWrapper }
+      );
+      expect(SnapshotTestUtils.normalize(asFragment())).toMatchSnapshot('Collapsed item');
+    });
+
+    it('TINYMCE-14505: Should match snapshot for an expanded item', () => {
+      const { asFragment } = render(
+        <Accordion.Root defaultExpanded={[ 'item1' ]}>
+          <Accordion.Item id="item1" title="Item 1"><p>Content 1</p></Accordion.Item>
+        </Accordion.Root>,
+        { wrapper: SnapshotTestUtils.snapshotWrapper }
+      );
+      expect(SnapshotTestUtils.normalize(asFragment())).toMatchSnapshot('Expanded item');
+    });
+
+    it('TINYMCE-14505: Should match snapshot for two items expanded at once', () => {
+      const { asFragment } = render(
+        <Accordion.Root allowMultiple defaultExpanded={[ 'item1', 'item2' ]}>
+          <Accordion.Item id="item1" title="Item 1"><p>Content 1</p></Accordion.Item>
+          <Accordion.Item id="item2" title="Item 2"><p>Content 2</p></Accordion.Item>
+        </Accordion.Root>,
+        { wrapper: SnapshotTestUtils.snapshotWrapper }
+      );
+      expect(SnapshotTestUtils.normalize(asFragment())).toMatchSnapshot('Two items expanded');
+    });
+
+    it('TINYMCE-14505: Should match snapshot for a disabled item', () => {
+      const { asFragment } = render(
+        <Accordion.Root>
+          <Accordion.Item id="item1" title="Item 1" disabled><p>Content 1</p></Accordion.Item>
+        </Accordion.Root>,
+        { wrapper: SnapshotTestUtils.snapshotWrapper }
+      );
+      expect(SnapshotTestUtils.normalize(asFragment())).toMatchSnapshot('Disabled item');
+    });
+
+    it('TINYMCE-14505: Should match snapshot for a trailing icon and a custom heading level', () => {
+      const { asFragment } = render(
+        <Accordion.Root>
+          <Accordion.Item id="item1" title="Item 1" iconPosition="end" headingLevel="h2"><p>Content 1</p></Accordion.Item>
+        </Accordion.Root>,
+        { wrapper: SnapshotTestUtils.snapshotWrapper }
+      );
+      expect(SnapshotTestUtils.normalize(asFragment())).toMatchSnapshot('Trailing icon, h2 heading');
+    });
+  });
+});

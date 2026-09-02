@@ -1,0 +1,84 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`browser.components.ToolbarInputFormTest > Snapshot Tests > TINYMCE-14505: Should match snapshot for a form with a typed value > Form with a typed value 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <form
+      class="tox-toolbar-input-form"
+      novalidate=""
+    >
+      <label
+        class="tox-label"
+        for=":id-0:"
+      >
+        <span>
+          Prompt
+        </span>
+      </label>
+      <input
+        class="tox-toolbar-textfield"
+        id=":id-0:"
+        required=""
+        type="text"
+        value="Summarise this"
+      />
+      <button
+        class="tox-tbtn"
+        type="submit"
+      >
+        <span
+          class="tox-icon"
+        >
+          <svg
+            id="checkmark"
+          />
+        </span>
+      </button>
+    </form>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.components.ToolbarInputFormTest > Snapshot Tests > TINYMCE-14505: Should match snapshot for an empty form > Empty form 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <form
+      class="tox-toolbar-input-form"
+      novalidate=""
+    >
+      <label
+        class="tox-label"
+        for=":id-0:"
+      >
+        <span>
+          Prompt
+        </span>
+      </label>
+      <input
+        class="tox-toolbar-textfield"
+        id=":id-0:"
+        placeholder="Ask anything"
+        required=""
+        type="text"
+        value=""
+      />
+      <button
+        class="tox-tbtn"
+        type="submit"
+      >
+        <span
+          class="tox-icon"
+        >
+          <svg
+            id="checkmark"
+          />
+        </span>
+      </button>
+    </form>
+  </div>
+</DocumentFragment>
+`;

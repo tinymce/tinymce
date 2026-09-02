@@ -7,6 +7,8 @@ import { describe, expect, it, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 
+import * as SnapshotTestUtils from './utils/SnapshotTestUtils';
+
 describe('browser.DropdownTest', () => {
   const wrapper = ({ children }: { children: React.ReactNode }) => {
     return (
@@ -219,6 +221,67 @@ describe('browser.DropdownTest', () => {
 
       expect(parentKeyDown).not.toHaveBeenCalled();
       await expect.poll(() => document.querySelector('[popover]:popover-open')).toBeNull();
+    });
+  });
+
+  describe('Snapshot Tests', () => {
+    const openDropdown = async (side: 'top' | 'bottom' | 'left' | 'right', align: 'start' | 'center' | 'end') => {
+      const screen = render(
+        <Dropdown.Root side={side} align={align}>
+          <Dropdown.Trigger>
+            <Button>Trigger</Button>
+          </Dropdown.Trigger>
+          <Dropdown.Content>
+            <div>Dropdown Content</div>
+          </Dropdown.Content>
+        </Dropdown.Root>,
+        { wrapper }
+      );
+      await userEvent.click(screen.getByText('Trigger'));
+      await expect.poll(() => document.querySelector('[popover]:popover-open')).toHaveTextContent('Dropdown Content');
+      return screen;
+    };
+
+    it('TINYMCE-14505: Should match snapshot for a closed dropdown', () => {
+      const { asFragment } = render(
+        <Dropdown.Root>
+          <Dropdown.Trigger>
+            <Button>Trigger</Button>
+          </Dropdown.Trigger>
+          <Dropdown.Content>
+            <div>Dropdown Content</div>
+          </Dropdown.Content>
+        </Dropdown.Root>,
+        { wrapper }
+      );
+      expect(SnapshotTestUtils.normalize(asFragment())).toMatchSnapshot('Closed dropdown');
+    });
+
+    it('TINYMCE-14505: Should match snapshot for a dropdown open below the trigger', async () => {
+      const { asFragment } = await openDropdown('bottom', 'start');
+      expect(SnapshotTestUtils.normalize(asFragment())).toMatchSnapshot('Open bottom start');
+    });
+
+    it('TINYMCE-14505: Should match snapshot for a dropdown open above the trigger', async () => {
+      const { asFragment } = await openDropdown('top', 'end');
+      expect(SnapshotTestUtils.normalize(asFragment())).toMatchSnapshot('Open top end');
+    });
+
+    it('TINYMCE-14505: Should match snapshot for a dropdown with a merged className and style', async () => {
+      const screen = render(
+        <Dropdown.Root>
+          <Dropdown.Trigger>
+            <Button>Trigger</Button>
+          </Dropdown.Trigger>
+          <Dropdown.Content className="custom-content" style={{ maxHeight: '100px' }}>
+            <div>Dropdown Content</div>
+          </Dropdown.Content>
+        </Dropdown.Root>,
+        { wrapper }
+      );
+      await userEvent.click(screen.getByText('Trigger'));
+      await expect.poll(() => document.querySelector('[popover]:popover-open')).toHaveTextContent('Dropdown Content');
+      expect(SnapshotTestUtils.normalize(screen.asFragment())).toMatchSnapshot('Open with merged className and style');
     });
   });
 });

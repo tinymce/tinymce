@@ -16,7 +16,7 @@ exports[`browser.MenuTest > Should be able to open submenus > 1. Before open sub
           aria-disabled="false"
           aria-haspopup="false"
           class="tox-collection__item tox-collection__item--active"
-          id=":r0:"
+          id=":id-0:"
           role="menuitem"
           tabindex="-1"
         >
@@ -31,7 +31,7 @@ exports[`browser.MenuTest > Should be able to open submenus > 1. Before open sub
           aria-disabled="false"
           aria-haspopup="false"
           class="tox-collection__item"
-          id=":r1:"
+          id=":id-1:"
           role="menuitemcheckbox"
           tabindex="-1"
         >
@@ -101,7 +101,7 @@ exports[`browser.MenuTest > Should be able to open submenus > 1. Before open sub
           aria-disabled="false"
           aria-haspopup="true"
           class="tox-collection__item"
-          id=":r2:"
+          id=":id-2:"
           role="menuitem"
           style="box-sizing: border-box; width: 100%; anchor-name: --test-anchor;"
           tabindex="-1"
@@ -202,7 +202,7 @@ exports[`browser.MenuTest > Should be able to open submenus > 2. After opening s
           aria-disabled="false"
           aria-haspopup="false"
           class="tox-collection__item"
-          id=":r0:"
+          id=":id-0:"
           role="menuitem"
           tabindex="-1"
         >
@@ -217,7 +217,7 @@ exports[`browser.MenuTest > Should be able to open submenus > 2. After opening s
           aria-disabled="false"
           aria-haspopup="false"
           class="tox-collection__item"
-          id=":r1:"
+          id=":id-1:"
           role="menuitemcheckbox"
           tabindex="-1"
         >
@@ -287,7 +287,7 @@ exports[`browser.MenuTest > Should be able to open submenus > 2. After opening s
           aria-disabled="false"
           aria-haspopup="true"
           class="tox-collection__item tox-collection__item--active"
-          id=":r2:"
+          id=":id-2:"
           role="menuitem"
           style="box-sizing: border-box; width: 100%; anchor-name: --test-anchor;"
           tabindex="-1"
@@ -377,7 +377,7 @@ exports[`browser.MenuTest > Should be able to open submenus > 2. After opening s
                 aria-disabled="false"
                 aria-haspopup="false"
                 class="tox-collection__item tox-collection__item--active"
-                id=":r3:"
+                id=":id-3:"
                 role="menuitem"
                 tabindex="-1"
               >
@@ -392,7 +392,7 @@ exports[`browser.MenuTest > Should be able to open submenus > 2. After opening s
                 aria-disabled="true"
                 aria-haspopup="false"
                 class="tox-collection__item tox-collection__item--state-disabled"
-                id=":r4:"
+                id=":id-4:"
                 role="menuitemcheckbox"
                 tabindex="-1"
               >
@@ -483,7 +483,7 @@ exports[`browser.MenuTest > Should be able to render using MenuRenderer > 1. Bef
           aria-disabled="false"
           aria-haspopup="false"
           class="tox-collection__item tox-collection__item--active"
-          id=":r5:"
+          id=":id-0:"
           role="menuitem"
           tabindex="-1"
         >
@@ -498,7 +498,7 @@ exports[`browser.MenuTest > Should be able to render using MenuRenderer > 1. Bef
           aria-disabled="false"
           aria-haspopup="false"
           class="tox-collection__item"
-          id=":r6:"
+          id=":id-1:"
           role="menuitemcheckbox"
           tabindex="-1"
         >
@@ -568,7 +568,7 @@ exports[`browser.MenuTest > Should be able to render using MenuRenderer > 1. Bef
           aria-disabled="false"
           aria-haspopup="true"
           class="tox-collection__item"
-          id=":r7:"
+          id=":id-2:"
           role="menuitem"
           style="box-sizing: border-box; width: 100%; anchor-name: --test-anchor;"
           tabindex="-1"
@@ -662,7 +662,7 @@ exports[`browser.MenuTest > Should be able to render using MenuRenderer > 2. Aft
           aria-disabled="false"
           aria-haspopup="false"
           class="tox-collection__item"
-          id=":r5:"
+          id=":id-0:"
           role="menuitem"
           tabindex="-1"
         >
@@ -677,7 +677,7 @@ exports[`browser.MenuTest > Should be able to render using MenuRenderer > 2. Aft
           aria-disabled="false"
           aria-haspopup="false"
           class="tox-collection__item"
-          id=":r6:"
+          id=":id-1:"
           role="menuitemcheckbox"
           tabindex="-1"
         >
@@ -747,7 +747,7 @@ exports[`browser.MenuTest > Should be able to render using MenuRenderer > 2. Aft
           aria-disabled="false"
           aria-haspopup="true"
           class="tox-collection__item tox-collection__item--active"
-          id=":r7:"
+          id=":id-2:"
           role="menuitem"
           style="box-sizing: border-box; width: 100%; anchor-name: --test-anchor;"
           tabindex="-1"
@@ -830,7 +830,7 @@ exports[`browser.MenuTest > Should be able to render using MenuRenderer > 2. Aft
                 aria-disabled="false"
                 aria-haspopup="false"
                 class="tox-collection__item"
-                id=":r8:"
+                id=":id-3:"
                 role="menuitem"
                 tabindex="-1"
               >
@@ -845,7 +845,7 @@ exports[`browser.MenuTest > Should be able to render using MenuRenderer > 2. Aft
                 aria-disabled="false"
                 aria-haspopup="false"
                 class="tox-collection__item"
-                id=":r9:"
+                id=":id-4:"
                 role="menuitemcheckbox"
                 tabindex="-1"
               >
