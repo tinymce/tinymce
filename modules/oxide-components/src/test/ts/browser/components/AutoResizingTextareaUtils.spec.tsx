@@ -1,5 +1,5 @@
 import { AutoResizingTextarea } from 'oxide-components/components/autoresizingtextarea/AutoResizingTextarea';
-import { computeSingleRowHeight, resizeTextarea } from 'oxide-components/components/autoresizingtextarea/AutoResizingTextareaUtils';
+import { computeRowMetrics, resizeTextarea } from 'oxide-components/components/autoresizingtextarea/AutoResizingTextareaUtils';
 import { Bem } from 'oxide-components/Main';
 import { createRef, forwardRef, type FC, type ReactNode } from 'react';
 import { describe, expect, it } from 'vitest';
@@ -12,7 +12,7 @@ interface TestComponentProps {
 
 const TestComponent = forwardRef<HTMLTextAreaElement, TestComponentProps>(({ hidden, initialValue = '' }, ref) => (
   <div style={{ display: hidden ? 'none' : 'block' }}>
-    <AutoResizingTextarea ref={ref} value={initialValue} data-testid="textarea" />
+    <AutoResizingTextarea ref={ref} value={initialValue} />
   </div>
 ));
 
@@ -26,9 +26,10 @@ const Wrapper: FC<{ children: ReactNode }> = ({ children }) => (
 
 interface MountOptions extends TestComponentProps {
   readonly initialRows?: number;
+  readonly pinnedHeight?: boolean;
 }
 
-const mountTextarea = ({ initialRows, ...props }: MountOptions = {}): HTMLTextAreaElement => {
+const mountTextarea = ({ initialRows, pinnedHeight, ...props }: MountOptions = {}): HTMLTextAreaElement => {
   const ref = createRef<HTMLTextAreaElement>();
   render(<TestComponent ref={ref} {...props} />, { wrapper: Wrapper });
   if (!ref.current) {
@@ -37,26 +38,37 @@ const mountTextarea = ({ initialRows, ...props }: MountOptions = {}): HTMLTextAr
   if (initialRows !== undefined) {
     ref.current.rows = initialRows;
   }
+  if (pinnedHeight) {
+    ref.current.style.height = '40px';
+    ref.current.style.boxSizing = 'border-box';
+  }
   return ref.current;
 };
 
 describe('browser.components.autoresizingtextarea.AutoResizingTextareaUtils', () => {
 
-  describe('computeSingleRowHeight', () => {
+  describe('computeRowMetrics', () => {
     it('TINY-12773: returns a positive height (>1) for a visible textarea', () => {
       const textarea = mountTextarea();
-      expect(computeSingleRowHeight(textarea)).toBeGreaterThan(1);
+      expect(computeRowMetrics(textarea).lineHeight).toBeGreaterThan(1);
     });
 
-    it('TINY-12773: returns 1 as a fallback when the textarea has no layout (display:none ancestor)', () => {
+    it('TINY-12773: returns a lineHeight of 1 as a fallback when the textarea has no layout (display:none ancestor)', () => {
       const textarea = mountTextarea({ hidden: true });
-      expect(computeSingleRowHeight(textarea)).toBe(1);
+      expect(computeRowMetrics(textarea).lineHeight).toBe(1);
+    });
+
+    it('TINY-12773: falls back to the whole measurement as lineHeight when the height is pinned by CSS', () => {
+      const textarea = mountTextarea({ pinnedHeight: true });
+      const { lineHeight, padding } = computeRowMetrics(textarea);
+      expect(lineHeight).toBeGreaterThan(1);
+      expect(padding).toBe(0);
     });
 
     it('TINY-12773: restores the textarea\'s rows and value after measuring', () => {
       const textarea = mountTextarea({ initialValue: 'pre-existing content' });
       textarea.rows = 5;
-      computeSingleRowHeight(textarea);
+      computeRowMetrics(textarea);
       expect(textarea.rows).toBe(5);
       expect(textarea.value).toBe('pre-existing content');
     });
@@ -65,30 +77,30 @@ describe('browser.components.autoresizingtextarea.AutoResizingTextareaUtils', ()
   describe('resizeTextarea', () => {
     it('TINY-12773: is a no-op when the textarea is hidden', () => {
       const textarea = mountTextarea({ hidden: true, initialRows: 3 });
-      resizeTextarea({ textarea, minRows: 1, maxRows: 4, singleRowHeight: 20 });
+      resizeTextarea({ textarea, minRows: 1, maxRows: 4, metrics: { lineHeight: 20, padding: 0 }});
       expect(textarea.rows).toBe(3);
     });
 
     it('TINY-12773: sets rows to minRows for empty content (one-row content clamped up)', () => {
       const textarea = mountTextarea({ initialValue: '' });
-      const singleRowHeight = computeSingleRowHeight(textarea);
-      resizeTextarea({ textarea, minRows: 3, maxRows: 5, singleRowHeight });
+      const metrics = computeRowMetrics(textarea);
+      resizeTextarea({ textarea, minRows: 3, maxRows: 5, metrics });
       expect(textarea.rows).toBe(3);
     });
 
     it('TINY-12773: grows rows to fit multi-line content within range', () => {
       // Three lines (two newlines).
       const textarea = mountTextarea({ initialValue: 'line1\nline2\nline3' });
-      const singleRowHeight = computeSingleRowHeight(textarea);
-      resizeTextarea({ textarea, minRows: 1, maxRows: 10, singleRowHeight });
+      const metrics = computeRowMetrics(textarea);
+      resizeTextarea({ textarea, minRows: 1, maxRows: 10, metrics });
       expect(textarea.rows).toBe(3);
     });
 
     it('TINY-12773: clamps to maxRows when content exceeds the limit', () => {
       const longContent = Array.from({ length: 50 }, (_, i) => `line${i}`).join('\n');
       const textarea = mountTextarea({ initialValue: longContent });
-      const singleRowHeight = computeSingleRowHeight(textarea);
-      resizeTextarea({ textarea, minRows: 1, maxRows: 4, singleRowHeight });
+      const metrics = computeRowMetrics(textarea);
+      resizeTextarea({ textarea, minRows: 1, maxRows: 4, metrics });
       expect(textarea.rows).toBe(4);
     });
   });

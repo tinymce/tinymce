@@ -2,7 +2,7 @@ import { Fun } from '@ephox/katamari';
 import * as Card from 'oxide-components/components/card/Card';
 import { AutoResizingTextarea, Button, ExpandableBox, UniverseProvider } from 'oxide-components/Main';
 import * as Bem from 'oxide-components/utils/Bem';
-import { useState, type FC } from 'react';
+import { createRef, useState, type FC } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
@@ -68,6 +68,20 @@ describe('browser.components.CardTest', () => {
       expect(card?.className).toContain('custom-class');
     });
 
+    it('TINYMCE-14607: Should apply id and forward ref to the root element', async () => {
+      const cardRef = createRef<HTMLDivElement>();
+      const { container } = render(
+        <Card.Root id="operation-1-card" ref={cardRef}>
+          <Card.Body>Content</Card.Body>
+        </Card.Root>,
+        { wrapper }
+      );
+
+      const card = container.querySelector('.tox-card');
+      expect(card?.id).toBe('operation-1-card');
+      expect(cardRef.current).toBe(card);
+    });
+
     it('TINY-13459: Should render header with title prop', async () => {
       const { getByText } = render(
         <Card.Root>
@@ -123,6 +137,38 @@ describe('browser.components.CardTest', () => {
 
       const card = container.querySelector('.tox-card');
       expect(card?.className).not.toContain('tox-card--selected');
+    });
+
+    it('TINYMCE-14607: Should not be selected by default when used outside a CardList', async () => {
+      const { container } = render(
+        <Card.Root>
+          <Card.Body>Content</Card.Body>
+        </Card.Root>,
+        { wrapper }
+      );
+
+      const card = container.querySelector('.tox-card');
+      expect(card?.className).not.toContain('tox-card--selected');
+      expect(card?.getAttribute('aria-selected')).toBe('false');
+    });
+
+    it('TINYMCE-14607: Should follow the selected prop when used outside a CardList', async () => {
+      const { container, rerender } = render(
+        <Card.Root selected={true}>
+          <Card.Body>Content</Card.Body>
+        </Card.Root>,
+        { wrapper }
+      );
+
+      expect(container.querySelector('.tox-card')?.className).toContain('tox-card--selected');
+
+      rerender(
+        <Card.Root selected={false}>
+          <Card.Body>Content</Card.Body>
+        </Card.Root>
+      );
+
+      expect(container.querySelector('.tox-card')?.className).not.toContain('tox-card--selected');
     });
   });
 

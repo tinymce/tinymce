@@ -120,6 +120,36 @@ describe('browser.components.ProfileTest', () => {
       expect(avatar?.parentElement).toBe(imageWrapper);
     });
 
+    it('TINYMCE-14607: Should render Profile.Badge as a sibling of the avatar', async () => {
+      const { container } = render(
+        <Profile.Root>
+          <Profile.Image src={AVATAR_URL} alt="Test User">
+            <Profile.Badge><svg id="ai-badge" /></Profile.Badge>
+          </Profile.Image>
+        </Profile.Root>,
+        { wrapper }
+      );
+
+      const imageWrapper = container.querySelector('.tox-profile__image');
+      const avatar = container.querySelector('.tox-user-avatar');
+      const badge = container.querySelector('.tox-profile__badge');
+
+      expect(badge).toBeTruthy();
+      expect(badge?.parentElement).toBe(imageWrapper);
+      expect(avatar?.nextElementSibling).toBe(badge);
+    });
+
+    it('TINYMCE-14607: Should not render a badge when Profile.Image has no children', async () => {
+      const { container } = render(
+        <Profile.Root>
+          <Profile.Image src={AVATAR_URL} alt="Test User" />
+        </Profile.Root>,
+        { wrapper }
+      );
+
+      expect(container.querySelector('.tox-profile__badge')).toBeFalsy();
+    });
+
     it('Should allow custom content in Heading', async () => {
       const { getByText } = render(
         <Profile.Root>

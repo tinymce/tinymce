@@ -24,6 +24,27 @@ const mockUniverse = {
 // eslint-disable-next-line max-len
 const AVATAR_URL = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="32" height="32"%3E%3Ccircle cx="16" cy="16" r="16" fill="%234A90E2"/%3E%3Ctext x="16" y="22" text-anchor="middle" fill="white" font-size="16" font-family="sans-serif"%3EJD%3C/text%3E%3C/svg%3E';
 
+/* eslint-disable max-len */
+const AiBadgeIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path d="M12 0C13.4761 0 14.8892 0.268335 16.1953 0.755859C15.9718 1.01778 15.7746 1.30295 15.6084 1.60742C14.4779 1.21495 13.2641 1 12 1C5.92487 1 1 5.92487 1 12C1 18.0751 5.92487 23 12 23C18.0751 23 23 18.0751 23 12C23 10.7354 22.7843 9.52148 22.3916 8.39063C22.6962 8.22437 22.9812 8.02731 23.2432 7.80371C23.731 9.11013 24 10.5235 24 12C24 18.6274 18.6274 24 12 24C5.37258 24 0 18.6274 0 12C0 5.37258 5.37258 0 12 0Z" fill="url(#profile-story-ai-badge)" />
+    <path fillRule="evenodd" clipRule="evenodd" d="M13.957 16.4551H12.0938L11.4668 14.4043H8.48438L7.85742 16.4551H6L8.93555 8H11.0156L13.957 16.4551ZM8.88867 13.0801H11.0625L10.0313 9.6875H9.92578L8.88867 13.0801Z" fill="url(#profile-story-ai-badge)" />
+    <path d="M17.1621 8.11621V16.4551H15.3926V8H17C17.0531 8.03992 17.1074 8.07839 17.1621 8.11621Z" fill="url(#profile-story-ai-badge)" />
+    <path d="M19.25 3.23145C19.4198 4.40128 20.3349 5.32067 21.5 5.49121C20.335 5.66177 19.4198 6.58019 19.25 7.75C19.0802 6.58019 18.165 5.66177 17 5.49121C18.1651 5.32067 19.0802 4.40128 19.25 3.23145Z" fill="url(#profile-story-ai-badge)" />
+    <path d="M22.0625 1.37695C22.0817 2.30455 22.8261 3.05227 23.75 3.07129C22.826 3.09032 22.0814 3.83783 22.0625 4.76563C22.0436 3.83783 21.299 3.09032 20.375 3.07129C21.2989 3.05227 22.0433 2.30455 22.0625 1.37695Z" fill="url(#profile-story-ai-badge)" />
+    <path d="M18.125 1C18.3179 1.52333 18.7288 1.93623 19.25 2.12988C18.729 2.3235 18.3179 2.73566 18.125 3.25879C17.9321 2.73566 17.521 2.3235 17 2.12988C17.5212 1.93623 17.9321 1.52333 18.125 1Z" fill="url(#profile-story-ai-badge)" />
+    <defs>
+      <linearGradient id="profile-story-ai-badge" x1="21.4286" y1="2.4" x2="-0.158596" y2="19.3857" gradientUnits="userSpaceOnUse">
+        <stop stopColor="#FFA95B" />
+        <stop offset="0.286612" stopColor="#D139FF" />
+        <stop offset="0.689809" stopColor="#476CFF" />
+        <stop offset="1" stopColor="#8DFFF4" />
+      </linearGradient>
+    </defs>
+  </svg>
+);
+/* eslint-enable max-len */
+
 const meta = {
   title: 'components/Profile',
   component: Profile.Root,
@@ -50,9 +71,10 @@ The Profile component is a reusable compound component for displaying user infor
 
 ## Usage Pattern
 
-The component uses a compound component pattern with five parts:
+The component uses a compound component pattern:
 - \`Profile.Root\`: Container for the profile
 - \`Profile.Image\`: Avatar/profile image
+- \`Profile.Badge\`: Optional overlay on the avatar, such as an AI attribution mark
 - \`Profile.Body\`: Container for text content
 - \`Profile.Heading\`: Main text (usually name)
 - \`Profile.Subheading\`: Secondary text (usually timestamp or metadata)
@@ -124,6 +146,40 @@ Common use case: System-generated suggestions or when avatars are disabled.
         <Profile.Root>
           <Profile.Body>
             <Profile.Heading>System</Profile.Heading>
+          </Profile.Body>
+        </Profile.Root>
+      </div>
+    );
+  }
+};
+
+export const WithAiBadge: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: `
+**Profile with AI badge**
+
+Renders \`Profile.Badge\` as a child of \`Profile.Image\` so the mark overlaps the avatar.
+The badge content is supplied by the consumer; this story uses the same AI attribution SVG as Suggested Edits.
+
+Common use case: AI-assisted suggestions and revisions.
+        `
+      }
+    }
+  },
+  render: () => {
+    return (
+      <div style={{ width: '316px', padding: '12px', backgroundColor: '#f9f9f9' }}>
+        <Profile.Root>
+          <Profile.Image src={AVATAR_URL} alt="John Mac Giolla Phádraig">
+            <Profile.Badge>
+              <AiBadgeIcon />
+            </Profile.Badge>
+          </Profile.Image>
+          <Profile.Body>
+            <Profile.Heading>John Mac Giolla Phádraig</Profile.Heading>
+            <Profile.Subheading>May 18, 9:12 AM</Profile.Subheading>
           </Profile.Body>
         </Profile.Root>
       </div>

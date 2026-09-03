@@ -43,6 +43,25 @@ describe('visual.ProfileTest', () => {
     await screen.expectScreenshot('profile-with-timestamp');
   });
 
+  it('TINYMCE-14607: renders profile with a badge sized to the avatar', async () => {
+    const screen = renderVisual(
+      <Profile.Root>
+        <Profile.Image src={AVATAR_URL} alt="John Doe">
+          <Profile.Badge>
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="12" r="11" fill="#FFFFFF" stroke="#D139FF" strokeWidth="2" />
+            </svg>
+          </Profile.Badge>
+        </Profile.Image>
+        <Profile.Body>
+          <Profile.Heading>John Doe</Profile.Heading>
+          <Profile.Subheading>2 hours ago</Profile.Subheading>
+        </Profile.Body>
+      </Profile.Root>
+    );
+    await screen.expectScreenshot('profile-with-badge');
+  });
+
   it('renders profile with long name', async () => {
     const screen = renderVisual(
       <div style={{ width: '316px' }}>

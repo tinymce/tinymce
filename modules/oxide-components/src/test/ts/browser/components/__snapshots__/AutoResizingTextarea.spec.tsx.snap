@@ -6,7 +6,7 @@ exports[`browser.components.AutoResizingTextareaTest > Snapshot Tests > TINYMCE-
     class="tox"
   >
     <textarea
-      class="tox-textarea "
+      class="tox-textarea"
       disabled=""
       rows="1"
     >
@@ -22,7 +22,7 @@ exports[`browser.components.AutoResizingTextareaTest > Snapshot Tests > TINYMCE-
     class="tox"
   >
     <textarea
-      class="tox-textarea "
+      class="tox-textarea"
       rows="3"
     >
       one
@@ -42,7 +42,7 @@ exports[`browser.components.AutoResizingTextareaTest > Snapshot Tests > TINYMCE-
     class="tox"
   >
     <textarea
-      class="tox-textarea "
+      class="tox-textarea"
       rows="3"
     >
       one
@@ -59,7 +59,7 @@ exports[`browser.components.AutoResizingTextareaTest > Snapshot Tests > TINYMCE-
     class="tox"
   >
     <textarea
-      class="tox-textarea "
+      class="tox-textarea"
       placeholder="Ask anything"
       rows="1"
     />

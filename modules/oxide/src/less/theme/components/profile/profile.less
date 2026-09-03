@@ -7,6 +7,7 @@
 @profile-subheading-text-color: @text-color;
 @profile-gap: @pad-sm;
 @profile-avatar-size: 36px;
+@profile-badge-overlap: -4px;
 
 .tox {
   .tox-profile {
@@ -16,7 +17,23 @@
   }
 
   .tox-profile__image {
+    align-items: center;
+    display: flex;
     flex-shrink: 0;
+  }
+
+  .tox-profile__badge {
+    display: flex;
+    flex-shrink: 0;
+    height: @profile-avatar-size;
+    margin-inline-start: @profile-badge-overlap;
+    width: @profile-avatar-size;
+
+    svg {
+      display: block;
+      height: 100%;
+      width: 100%;
+    }
   }
 
   .tox-user-avatar {
@@ -59,7 +76,7 @@
     text-transform: none;
 
     .tox-icon svg {
-      fill: contrast(@background-color, #222F3E80, #FFFFFF80);
+      fill: contrast(@background-color, fade(@color-black, 50%), fade(@color-white, 50%));
       transform: translate(0px, 8px);
       margin-top: -10px;
     }

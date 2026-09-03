@@ -193,8 +193,8 @@ exports[`browser.components.CardTest > Snapshot Tests > TINYMCE-14505: Should ma
     <div
       aria-busy="false"
       aria-label="Card 1"
-      aria-selected="true"
-      class="tox-card tox-card--selected tox-card--has-decision"
+      aria-selected="false"
+      class="tox-card tox-card--has-decision"
       role="option"
       tabindex="-1"
     >
@@ -221,7 +221,7 @@ exports[`browser.components.CardTest > Snapshot Tests > TINYMCE-14505: Should ma
     <div
       aria-busy="true"
       aria-label="Card 1"
-      aria-selected="true"
+      aria-selected="false"
       class="tox-card tox-skeleton"
       role="option"
     >
@@ -254,8 +254,8 @@ exports[`browser.components.CardTest > Snapshot Tests > TINYMCE-14505: Should ma
     <div
       aria-busy="false"
       aria-label="Card 1"
-      aria-selected="true"
-      class="tox-card tox-card--selected"
+      aria-selected="false"
+      class="tox-card"
       role="option"
       tabindex="-1"
     >
@@ -291,8 +291,8 @@ exports[`browser.components.CardTest > Snapshot Tests > TINYMCE-14505: Should ma
     <div
       aria-busy="false"
       aria-label="Card 1"
-      aria-selected="true"
-      class="tox-card tox-card--selected"
+      aria-selected="false"
+      class="tox-card"
       role="option"
       tabindex="-1"
     >

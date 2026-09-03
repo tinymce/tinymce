@@ -1,8 +1,9 @@
+import { Fun } from '@ephox/katamari';
 import { AutoResizingTextarea } from 'oxide-components/components/autoresizingtextarea/AutoResizingTextarea';
 import type { Height } from 'oxide-components/components/autoresizingtextarea/AutoResizingTextareaTypes';
 import { Bem } from 'oxide-components/Main';
 import { useState } from 'react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 
@@ -11,8 +12,8 @@ import * as SnapshotTestUtils from './utils/SnapshotTestUtils';
 describe('browser.components.AutoResizingTextareaTest', () => {
   it('Sanity check', async () => {
     const placeHolder = 'Placeholder for disabled textarea';
-    const { getByTestId } = render(
-      <AutoResizingTextarea value='' placeholder={placeHolder} disabled={true} data-testid="textarea" />,
+    const { getByRole } = render(
+      <AutoResizingTextarea value='' placeholder={placeHolder} disabled={true} />,
       {
 
         wrapper: ({ children }) => {
@@ -35,7 +36,7 @@ describe('browser.components.AutoResizingTextareaTest', () => {
         },
       });
 
-    const textareaLocator = getByTestId('textarea');
+    const textareaLocator = getByRole('textbox');
     await expect.element(textareaLocator, {
       message: 'Textarea should have a placeholder'
     }).toHaveAttribute('placeholder', placeHolder);
@@ -61,10 +62,10 @@ describe('browser.components.AutoResizingTextareaTest', () => {
     const TestComponent = () => {
       const [ value, setValue ] = useState('');
       return (
-        <AutoResizingTextarea value={value} onChange={setValue} maxHeight={maxHeight} minHeight={minHeight} data-testid="textarea" />
+        <AutoResizingTextarea value={value} onChange={setValue} maxHeight={maxHeight} minHeight={minHeight} />
       );
     };
-    const { getByTestId } = render(
+    const { getByRole } = render(
       <TestComponent />,
       {
 
@@ -87,7 +88,7 @@ describe('browser.components.AutoResizingTextareaTest', () => {
           );
         },
       });
-    const textareaLocator = getByTestId('textarea');
+    const textareaLocator = getByRole('textbox');
     await expect.element(textareaLocator, {
       message: 'Textarea rows should be initially the minHeight'
     }).toHaveAttribute('rows', `${minHeight.value}`);
@@ -129,11 +130,11 @@ describe('browser.components.AutoResizingTextareaTest', () => {
     const TestComponent = () => {
       const [ value, setValue ] = useState('');
       return (
-        <AutoResizingTextarea value={value} onChange={setValue} maxHeight={maxHeight} minHeight={minHeight} data-testid="textarea" />
+        <AutoResizingTextarea value={value} onChange={setValue} maxHeight={maxHeight} minHeight={minHeight} />
       );
     };
 
-    const { getByTestId } = render(
+    const { getByRole } = render(
       <TestComponent />,
       {
         wrapper: ({ children }) => {
@@ -161,7 +162,7 @@ describe('browser.components.AutoResizingTextareaTest', () => {
         },
       });
 
-    const textareaLocator = getByTestId('textarea');
+    const textareaLocator = getByRole('textbox');
     await expect.element(textareaLocator, {
       message: 'Textarea rows should be initially resolved to 2'
     }).toHaveAttribute('rows', '2');
@@ -178,8 +179,8 @@ describe('browser.components.AutoResizingTextareaTest', () => {
 
     await userEvent.type(textareaLocator, lineOfText + lineOfText);
     await expect.element(textareaLocator, {
-      message: 'Textarea rows should not grow more than 5 after typing more'
-    }).toHaveAttribute('rows', `${5}`);
+      message: 'Textarea rows should not grow more than 6 after typing more'
+    }).toHaveAttribute('rows', `${6}`);
 
     await userEvent.clear(textareaLocator);
     await expect.element(textareaLocator, {
@@ -201,11 +202,11 @@ describe('browser.components.AutoResizingTextareaTest', () => {
     const TestComponent = () => {
       const [ value, setValue ] = useState('');
       return (
-        <AutoResizingTextarea value={value} onChange={setValue} maxHeight={maxHeight} minHeight={minHeight} data-testid="textarea" />
+        <AutoResizingTextarea value={value} onChange={setValue} maxHeight={maxHeight} minHeight={minHeight} />
       );
     };
 
-    const { getByTestId } = render(
+    const { getByRole } = render(
       <TestComponent />,
       {
         wrapper: ({ children }) => {
@@ -233,7 +234,7 @@ describe('browser.components.AutoResizingTextareaTest', () => {
         },
       });
 
-    const textareaLocator = getByTestId('textarea');
+    const textareaLocator = getByRole('textbox');
     await expect.element(textareaLocator, {
       message: 'Textarea rows should be initially resolved to 1'
     }).toHaveAttribute('rows', `${1}`);
@@ -248,15 +249,15 @@ describe('browser.components.AutoResizingTextareaTest', () => {
       const [ value, setValue ] = useState('');
       return (
         <>
-          <button data-testid="toggle" onClick={() => setHidden(false)}>show</button>
+          <button onClick={() => setHidden(false)}>show</button>
           <div style={{ display: hidden ? 'none' : 'block' }}>
-            <AutoResizingTextarea value={value} onChange={setValue} data-testid="textarea" />
+            <AutoResizingTextarea value={value} onChange={setValue} />
           </div>
         </>
       );
     };
 
-    const { getByTestId } = render(
+    const { getByRole } = render(
       <TestComponent />,
       {
         wrapper: ({ children }) => {
@@ -279,9 +280,9 @@ describe('browser.components.AutoResizingTextareaTest', () => {
         },
       });
 
-    await userEvent.click(getByTestId('toggle'));
+    await userEvent.click(getByRole('button', { name: 'show' }));
 
-    const textareaLocator = getByTestId('textarea');
+    const textareaLocator = getByRole('textbox');
     await expect.element(textareaLocator, {
       message: 'Textarea rows should be 1 once revealed'
     }).toHaveAttribute('rows', '1');
@@ -290,6 +291,28 @@ describe('browser.components.AutoResizingTextareaTest', () => {
     await expect.element(textareaLocator, {
       message: 'Textarea rows should stay at 1 after typing one short line'
     }).toHaveAttribute('rows', '1');
+  });
+
+  it('TINYMCE-14607: Should honour tabIndex and call onKeyDown', async () => {
+    const onKeyDown = vi.fn();
+    const { getByRole } = render(
+      <AutoResizingTextarea value="" onChange={Fun.noop} tabIndex={-1} onKeyDown={onKeyDown} />,
+      {
+        wrapper: ({ children }) => (
+          <div className={Bem.block('tox')}>
+            {children}
+          </div>
+        )
+      }
+    );
+
+    const textareaLocator = getByRole('textbox');
+    await expect.element(textareaLocator, {
+      message: 'Textarea should have tabIndex -1'
+    }).toHaveAttribute('tabindex', '-1');
+
+    await userEvent.type(textareaLocator, '{Escape}');
+    expect(onKeyDown, 'onKeyDown should fire for Escape').toHaveBeenCalled();
   });
 
   describe('Snapshot Tests', () => {

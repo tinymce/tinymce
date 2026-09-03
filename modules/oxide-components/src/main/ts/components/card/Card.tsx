@@ -1,5 +1,5 @@
 import { Arr, Type } from '@ephox/katamari';
-import { Children, cloneElement, createContext, isValidElement, useCallback, useContext, useId, useLayoutEffect, useMemo, useRef, type FC, type MouseEvent as ReactMouseEvent, type PropsWithChildren, type ReactElement } from 'react';
+import { Children, cloneElement, createContext, forwardRef, isValidElement, useCallback, useContext, useId, useLayoutEffect, useMemo, useRef, type FC, type MouseEvent as ReactMouseEvent, type PropsWithChildren, type ReactElement } from 'react';
 
 import * as Bem from '../../utils/Bem';
 
@@ -7,6 +7,7 @@ import { useCardListContext } from './CardListContext';
 import type { CardHeaderActionsVisibility, CardHighlightType, CardLayout } from './CardTypes';
 
 export interface CardRootProps extends PropsWithChildren {
+  readonly id?: string;
   readonly className?: string;
   readonly onSelect?: () => void;
   readonly selected?: boolean;
@@ -59,7 +60,11 @@ export interface CardExpansionProps extends PropsWithChildren {
    */
   readonly id?: string;
   readonly open: boolean;
-  readonly onOpenChange: (open: boolean) => void;
+  /**
+   * Called by `ExpansionTrigger`. Optional, so an expansion whose open state is derived
+   * entirely from the parent (no trigger rendered) does not need a no-op callback.
+   */
+  readonly onOpenChange?: (open: boolean) => void;
   readonly className?: string;
 }
 
@@ -89,8 +94,9 @@ const renderSkeletonLines = (lines: number) =>
     <div key={i} className={Bem.element('tox-skeleton', 'line')} style={{ width: '100%' }} />
   ));
 
-const Root: FC<CardRootProps> = ({
+const Root = forwardRef<HTMLDivElement, CardRootProps>(({
   children,
+  id,
   className,
   onSelect,
   selected = false,
@@ -98,11 +104,14 @@ const Root: FC<CardRootProps> = ({
   hasDecision = false,
   index,
   loading = false
-}) => {
+}, ref) => {
   const listContext = useCardListContext();
 
-  const isFocused = listContext?.focusedIndex === index;
-  const isSelected = listContext?.selectedIndex === index;
+  // Without both a list context and an index the comparisons below are `undefined === undefined`,
+  // which would mark every standalone card as focused and selected.
+  const inList = Type.isNonNullable(listContext) && Type.isNonNullable(index);
+  const isFocused = inList && listContext?.focusedIndex === index;
+  const isSelected = inList && listContext?.selectedIndex === index;
 
   const handleClick = useCallback((e: React.MouseEvent) => {
     const target = e.target as HTMLElement;
@@ -166,6 +175,8 @@ const Root: FC<CardRootProps> = ({
 
   return (
     <div
+      ref={ref}
+      id={id}
       className={cardClassName}
       onClick={loading ? undefined : handleClick}
       onKeyDown={loading ? undefined : handleKeyDown}
@@ -173,13 +184,15 @@ const Root: FC<CardRootProps> = ({
       tabIndex={loading ? undefined : -1}
       role="option"
       aria-label={ariaLabel ?? `Card ${(index ?? 0) + 1}`}
-      aria-selected={isSelected}
+      aria-selected={isSelected || selected}
       aria-busy={loading}
     >
       {loading ? skeletonContent : children}
     </div>
   );
-};
+});
+
+Root.displayName = 'Card.Root';
 
 const Header: FC<CardHeaderProps> = ({ children, title }) => {
   return (
@@ -268,7 +281,7 @@ const Expansion: FC<CardExpansionProps> = ({
   const baseId = id ?? reactId;
 
   const toggle = useCallback(() => {
-    onOpenChange(!open);
+    onOpenChange?.(!open);
   }, [ open, onOpenChange ]);
 
   const contextValue = useMemo<CardExpansionContextValue>(() => ({
@@ -373,8 +386,11 @@ const ExpansionContent: FC<CardExpansionContentProps> = ({ children, className, 
 
       if (element.contains(document.activeElement)) {
         const trigger = document.getElementById(triggerId);
+        const fallback = element.closest<HTMLElement>('.tox-card');
         if (Type.isNonNullable(trigger)) {
           trigger.focus();
+        } else if (Type.isNonNullable(fallback)) {
+          fallback.focus();
         }
       }
     }

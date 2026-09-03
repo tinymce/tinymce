@@ -164,11 +164,6 @@ describe('visual.CardTest', () => {
           <p style={{ margin: 0 }}>Modified text</p>
         </Card.Body>
         <Card.Expansion open={false} onOpenChange={Fun.noop}>
-          <Card.ExpansionTrigger>
-            <Button variant="outlined" className="tox-button--stretch">
-              Provide feedback
-            </Button>
-          </Card.ExpansionTrigger>
           <Card.ExpansionContent>
             <AutoResizingTextarea
               value=""
@@ -204,11 +199,6 @@ describe('visual.CardTest', () => {
           <p style={{ margin: 0 }}>Modified text</p>
         </Card.Body>
         <Card.Expansion open={true} onOpenChange={Fun.noop}>
-          <Card.ExpansionTrigger>
-            <Button variant="outlined" className="tox-button--stretch">
-              Provide feedback
-            </Button>
-          </Card.ExpansionTrigger>
           <Card.ExpansionContent>
             <AutoResizingTextarea
               value=""
@@ -317,11 +307,6 @@ describe('visual.CardTest', () => {
                 <p style={{ margin: '8px 0 0' }}>Agreed — the wording is ambiguous.</p>
               </div>
               <Card.Expansion open={false} onOpenChange={Fun.noop}>
-                <Card.ExpansionTrigger>
-                  <Button variant="outlined" className="tox-button--stretch">
-                    Add comment...
-                  </Button>
-                </Card.ExpansionTrigger>
                 <Card.ExpansionContent>
                   <AutoResizingTextarea
                     value=""
@@ -376,11 +361,6 @@ describe('visual.CardTest', () => {
                 <p style={{ margin: '8px 0 0' }}>Agreed — the wording is ambiguous.</p>
               </div>
               <Card.Expansion open={true} onOpenChange={Fun.noop}>
-                <Card.ExpansionTrigger>
-                  <Button variant="outlined" className="tox-button--stretch">
-                    Add comment...
-                  </Button>
-                </Card.ExpansionTrigger>
                 <Card.ExpansionContent>
                   <AutoResizingTextarea
                     value=""

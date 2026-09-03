@@ -40,8 +40,7 @@
     }
 
     &:focus-visible {
-      outline: none;
-      box-shadow: 0 0 0 @keyboard-focus-outline-width @keyboard-focus-outline-color;
+      outline: @keyboard-focus-outline-width solid @keyboard-focus-outline-color;
       border-color: transparent;
     }
 
@@ -150,7 +149,7 @@
 
     &__body {
       color: @card-text-color;
-      font-size: @font-size-md;
+      font-size: @font-size-sm;
 
       .tox-expandable-box {
         border: none;
@@ -206,10 +205,15 @@
       flex-direction: column;
       gap: @card-section-gap;
       width: 100%;
+
+      &:has(> .tox-card__expansion-content--collapsed:only-child) {
+        margin-block-start: -@card-section-gap;
+      }
     }
 
     &__expansion-content {
       display: grid;
+      font-size: @font-size-sm;
       grid-template-rows: 0fr;
       transition: grid-template-rows 0.2s ease-in-out;
 

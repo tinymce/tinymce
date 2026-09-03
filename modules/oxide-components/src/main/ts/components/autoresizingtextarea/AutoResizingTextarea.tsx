@@ -1,11 +1,11 @@
 import { Cell, Singleton, Type } from '@ephox/katamari';
 import { SugarElement, Visibility } from '@ephox/sugar';
-import { forwardRef, useLayoutEffect, useMemo, useRef, useState, type MutableRefObject } from 'react';
+import { forwardRef, useLayoutEffect, useMemo, useRef, useState, type KeyboardEventHandler, type MutableRefObject } from 'react';
 
 import * as Bem from '../../utils/Bem';
 
-import type { Height } from './AutoResizingTextareaTypes';
-import { computeMaxRows, computeMinRows, computeSingleRowHeight, resizeTextarea } from './AutoResizingTextareaUtils';
+import type { Height, RowMetrics } from './AutoResizingTextareaTypes';
+import { computeMaxRows, computeMinRows, computeRowMetrics, resizeTextarea } from './AutoResizingTextareaUtils';
 
 const defaultMinHeight: Height = {
   unit: 'rows',
@@ -20,27 +20,30 @@ const defaultMaxHeight: Height = {
 export interface AutoResizingTextareaProps {
   readonly maxHeight?: Height;
   readonly minHeight?: Height;
-  readonly className?: string;
   readonly value: string;
   readonly onChange?: (value: string) => void;
+  readonly onKeyDown?: KeyboardEventHandler<HTMLTextAreaElement>;
   readonly disabled?: boolean;
   readonly placeholder?: string;
+  readonly tabIndex?: number;
 }
 
 export const AutoResizingTextarea = forwardRef<HTMLTextAreaElement, AutoResizingTextareaProps>(({
   maxHeight = defaultMaxHeight,
   minHeight = defaultMinHeight,
-  className,
   value,
   onChange,
-  ...rest
+  onKeyDown,
+  disabled,
+  placeholder,
+  tabIndex
 }, ref) => {
   const textareaRef: MutableRefObject<HTMLTextAreaElement | null> = useRef(null);
 
-  // Initial value of 1 is a placeholder; the real value is measured once the textarea
+  // Initial lineHeight of 1 is a placeholder; the real values are measured once the textarea
   // actually has layout (it may mount inside a `display: none` ancestor — e.g. a collapsed
   // accordion — where `scrollHeight` reads 0). A ResizeObserver re-measures when layout returns.
-  const [ singleRowHeight, setSingleRowHeight ] = useState(1);
+  const [ metrics, setMetrics ] = useState<RowMetrics>({ lineHeight: 1, padding: 0 });
 
   useLayoutEffect(() => {
     const textarea = textareaRef.current;
@@ -55,10 +58,10 @@ export const AutoResizingTextarea = forwardRef<HTMLTextAreaElement, AutoResizing
       if (measured.get() || !Visibility.isVisible(SugarElement.fromDom(textarea))) {
         return;
       }
-      const value = computeSingleRowHeight(textarea);
-      if (value > 1) {
+      const value = computeRowMetrics(textarea);
+      if (value.lineHeight > 1) {
         measured.set(true);
-        setSingleRowHeight(value);
+        setMetrics(value);
         // Once measured, we're done — stop observing so subsequent `rows`
         // mutations from `resizeTextarea` don't re-fire this callback (which
         // would surface as a `ResizeObserver loop` warning).
@@ -76,9 +79,9 @@ export const AutoResizingTextarea = forwardRef<HTMLTextAreaElement, AutoResizing
   }, []);
 
   // The minRows and maxRows only need to be computed once per component instance, so they are in the useMemo hook
-  const minRows = useMemo(() => computeMinRows({ minHeight, singleRowHeight }), [ minHeight, singleRowHeight ]);
+  const minRows = useMemo(() => computeMinRows({ minHeight, metrics }), [ minHeight, metrics ]);
 
-  const maxRows = useMemo(() => computeMaxRows({ maxHeight, singleRowHeight }), [ maxHeight, singleRowHeight ]);
+  const maxRows = useMemo(() => computeMaxRows({ maxHeight, metrics }), [ maxHeight, metrics ]);
 
   useLayoutEffect(() => {
     if (textareaRef.current) {
@@ -86,20 +89,23 @@ export const AutoResizingTextarea = forwardRef<HTMLTextAreaElement, AutoResizing
         textarea: textareaRef.current,
         minRows,
         maxRows,
-        singleRowHeight
+        metrics
       });
     }
-  }, [ value, minRows, maxRows, singleRowHeight ]);
+  }, [ value, minRows, maxRows, metrics ]);
 
   return <textarea
-    {...rest}
-    className={`${Bem.block('tox-textarea')} ${className ?? ''}`}
+    className={Bem.block('tox-textarea')}
     value={value}
+    disabled={disabled}
+    placeholder={placeholder}
+    tabIndex={tabIndex}
     onChange={(event) => {
       if (onChange) {
         onChange(event.target.value);
       }
     }}
+    onKeyDown={onKeyDown}
     ref={(el) => {
       textareaRef.current = el;
       if (ref) {

@@ -7,10 +7,12 @@ export interface ProfileRootProps extends PropsWithChildren {
   readonly className?: string;
 }
 
-export interface ProfileImageProps {
+export interface ProfileImageProps extends PropsWithChildren {
   readonly src: string;
   readonly alt: string;
 }
+
+export interface ProfileBadgeProps extends PropsWithChildren {}
 
 export interface ProfileBodyProps extends PropsWithChildren {}
 
@@ -31,12 +33,21 @@ const Root = forwardRef<HTMLDivElement, ProfileRootProps>(({ children, className
   );
 });
 
-const Image: FC<ProfileImageProps> = ({ src, alt }) => {
+const Image: FC<ProfileImageProps> = ({ src, alt, children }) => {
   return (
     <div className={Bem.element('tox-profile', 'image')}>
       <div className="tox-user-avatar">
         <img src={src} alt={alt} />
       </div>
+      {children}
+    </div>
+  );
+};
+
+const Badge: FC<ProfileBadgeProps> = ({ children }) => {
+  return (
+    <div className={Bem.element('tox-profile', 'badge')}>
+      {children}
     </div>
   );
 };
@@ -68,6 +79,7 @@ const Subheading: FC<ProfileSubheadingProps> = ({ children }) => {
 export {
   Root,
   Image,
+  Badge,
   Body,
   Heading,
   Subheading
