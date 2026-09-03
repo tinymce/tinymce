@@ -1,4 +1,4 @@
-import { afterEach, before, context, describe, it } from '@ephox/bedrock-client';
+import { afterEach, beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 import { TinyAssertions, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -117,7 +117,7 @@ describe('browser.tinymce.models.dom.table.command.TableDeleteRowTest', () => {
       const lastRowIndex = rows - 1;
       const pathToBody = [ 0, options.colgroup ? 1 : 0 ];
 
-      before(() => {
+      beforeEach(() => {
         const editor = hook.editor();
         editor.setContent(createTable(originalTBody.join('')));
       });
@@ -142,7 +142,7 @@ describe('browser.tinymce.models.dom.table.command.TableDeleteRowTest', () => {
         TinyAssertions.assertCursor(editor, [ ...pathToBody, 0, 0, 0 ], textOffset(0, 0));
         TinyAssertions.assertContent(
           editor,
-          createTable(originalTBody.slice(1, -1).join(''))
+          createTable(originalTBody.slice(1).join(''))
         );
 
         assertEvents(1);

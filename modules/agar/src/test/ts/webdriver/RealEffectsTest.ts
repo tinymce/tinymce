@@ -4,6 +4,7 @@ import { Class, Css, Html, Insert, Remove, SugarElement } from '@ephox/sugar';
 
 import * as Assertions from 'ephox/agar/api/Assertions';
 import { Chain } from 'ephox/agar/api/Chain';
+import * as GeneralSteps from 'ephox/agar/api/GeneralSteps';
 import * as Guard from 'ephox/agar/api/Guard';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
 import * as RealClipboard from 'ephox/agar/api/RealClipboard';
@@ -47,6 +48,15 @@ UnitTest.asynctest('Real Effects Test', (success, failure) => {
       Assertions.cAssertEq(label + '\nChecking the input value', expected)
     ]);
 
+  const sAssertAllTextSelected = (label) =>
+    Chain.asStep(body, [
+      UiFinder.cFindIn('input'),
+      Chain.op((input: SugarElement<HTMLInputElement>) => {
+        const { selectionStart, selectionEnd, value } = input.dom;
+        Assertions.assertEq(label + '\nExpected the entire input value to be selected', true, selectionStart === 0 && selectionEnd === value.length);
+      })
+    ]);
+
   const sCheckButtonBorder = (label, expected) =>
     Chain.asStep(body, [
       UiFinder.cFindIn('button.test'),
@@ -76,12 +86,15 @@ UnitTest.asynctest('Real Effects Test', (success, failure) => {
     ]),
     sCheckInput('After correcting "this"', 'I am typing this'),
     Step.wait(50),
-    RealKeys.sSendKeysOn('input', [
-      RealKeys.combo(platform.os.isMacOS() ? { metaKey: true } : { ctrlKey: true }, 'a')
-    ]),
-    Step.wait(50),
+    Waiter.sTryUntil('Selecting the entire input value', GeneralSteps.sequence([
+      RealKeys.sSendKeysOn('input', [
+        RealKeys.combo(platform.os.isMacOS() ? { metaKey: true } : { ctrlKey: true }, 'a')
+      ]),
+      sAssertAllTextSelected('After sending select-all')
+    ]), 50, 4000),
     RealClipboard.sCopy('input'),
     sCheckInput('After triggering copy', 'I am typing this'),
+    sAssertAllTextSelected('After triggering copy'),
 
     Step.wait(50),
     RealKeys.sSendKeysOn('input', [

@@ -212,29 +212,31 @@ describe('browser.tinymce.core.undo.LevelsTest', () => {
         true,
         false
       ], (isReadonly) => {
-        it('isEq', () => {
-          assert.strictEqual(Levels.isEq(isReadonly, Levels.createFragmentedLevel([ 'a', 'b' ]), Levels.createFragmentedLevel([ 'a', 'b' ])), true);
-          assert.strictEqual(Levels.isEq(isReadonly, Levels.createFragmentedLevel([ 'a', 'b' ]), Levels.createFragmentedLevel([ 'a', 'c' ])), false);
-          assert.strictEqual(Levels.isEq(isReadonly, Levels.createCompleteLevel('a'), Levels.createCompleteLevel('a')), true);
-          assert.strictEqual(Levels.isEq(isReadonly, Levels.createCompleteLevel('a'), Levels.createCompleteLevel('b')), false);
-          assert.strictEqual(Levels.isEq(isReadonly, Levels.createFragmentedLevel([ 'a' ]), Levels.createCompleteLevel('a')), true);
-          assert.strictEqual(Levels.isEq(isReadonly, Levels.createCompleteLevel('a'), Levels.createFragmentedLevel([ 'a' ])), true);
-        });
+        context(`readonly: ${isReadonly}`, () => {
+          it('isEq', () => {
+            assert.strictEqual(Levels.isEq(isReadonly, Levels.createFragmentedLevel([ 'a', 'b' ]), Levels.createFragmentedLevel([ 'a', 'b' ])), true);
+            assert.strictEqual(Levels.isEq(isReadonly, Levels.createFragmentedLevel([ 'a', 'b' ]), Levels.createFragmentedLevel([ 'a', 'c' ])), false);
+            assert.strictEqual(Levels.isEq(isReadonly, Levels.createCompleteLevel('a'), Levels.createCompleteLevel('a')), true);
+            assert.strictEqual(Levels.isEq(isReadonly, Levels.createCompleteLevel('a'), Levels.createCompleteLevel('b')), false);
+            assert.strictEqual(Levels.isEq(isReadonly, Levels.createFragmentedLevel([ 'a' ]), Levels.createCompleteLevel('a')), true);
+            assert.strictEqual(Levels.isEq(isReadonly, Levels.createCompleteLevel('a'), Levels.createFragmentedLevel([ 'a' ])), true);
+          });
 
-        it('isEq ignore bogus elements', () => {
-          assert.strictEqual(Levels.isEq(isReadonly, Levels.createFragmentedLevel([ 'a', '<span data-mce-bogus="1">b</span>' ]), Levels.createFragmentedLevel([ 'a', 'b' ])), true);
-          assert.strictEqual(Levels.isEq(isReadonly, Levels.createFragmentedLevel([ 'a', 'b' ]), Levels.createFragmentedLevel([ 'a', '<span data-mce-bogus="1">b</span>' ])), true);
-          assert.strictEqual(Levels.isEq(isReadonly, Levels.createCompleteLevel('a'), Levels.createCompleteLevel('<span data-mce-bogus="1">a</span>')), true);
-          assert.strictEqual(Levels.isEq(isReadonly, Levels.createCompleteLevel('<span data-mce-bogus="1">a</span>'), Levels.createCompleteLevel('a')), true);
-          assert.strictEqual(Levels.isEq(isReadonly, Levels.createCompleteLevel('a'), Levels.createFragmentedLevel([ '<span data-mce-bogus="1">a</span>' ])), true);
-          assert.strictEqual(Levels.isEq(isReadonly, Levels.createFragmentedLevel([ '<span data-mce-bogus="1">a</span>' ]), Levels.createCompleteLevel('a')), true);
-        });
+          it('isEq ignore bogus elements', () => {
+            assert.strictEqual(Levels.isEq(isReadonly, Levels.createFragmentedLevel([ 'a', '<span data-mce-bogus="1">b</span>' ]), Levels.createFragmentedLevel([ 'a', 'b' ])), true);
+            assert.strictEqual(Levels.isEq(isReadonly, Levels.createFragmentedLevel([ 'a', 'b' ]), Levels.createFragmentedLevel([ 'a', '<span data-mce-bogus="1">b</span>' ])), true);
+            assert.strictEqual(Levels.isEq(isReadonly, Levels.createCompleteLevel('a'), Levels.createCompleteLevel('<span data-mce-bogus="1">a</span>')), true);
+            assert.strictEqual(Levels.isEq(isReadonly, Levels.createCompleteLevel('<span data-mce-bogus="1">a</span>'), Levels.createCompleteLevel('a')), true);
+            assert.strictEqual(Levels.isEq(isReadonly, Levels.createCompleteLevel('a'), Levels.createFragmentedLevel([ '<span data-mce-bogus="1">a</span>' ])), true);
+            assert.strictEqual(Levels.isEq(isReadonly, Levels.createFragmentedLevel([ '<span data-mce-bogus="1">a</span>' ]), Levels.createCompleteLevel('a')), true);
+          });
 
-        it('isEq passed undefined', () => {
-          assert.strictEqual(Levels.isEq(isReadonly, undefined, Levels.createFragmentedLevel([ 'a', 'b' ])), false);
-          assert.strictEqual(Levels.isEq(isReadonly, Levels.createCompleteLevel('a'), undefined), false);
-          assert.strictEqual(Levels.isEq(isReadonly, undefined, undefined), false);
-          assert.strictEqual(Levels.isEq(isReadonly, Levels.createFragmentedLevel([]), Levels.createFragmentedLevel([])), true);
+          it('isEq passed undefined', () => {
+            assert.strictEqual(Levels.isEq(isReadonly, undefined, Levels.createFragmentedLevel([ 'a', 'b' ])), false);
+            assert.strictEqual(Levels.isEq(isReadonly, Levels.createCompleteLevel('a'), undefined), false);
+            assert.strictEqual(Levels.isEq(isReadonly, undefined, undefined), false);
+            assert.strictEqual(Levels.isEq(isReadonly, Levels.createFragmentedLevel([]), Levels.createFragmentedLevel([])), true);
+          });
         });
       });
     });

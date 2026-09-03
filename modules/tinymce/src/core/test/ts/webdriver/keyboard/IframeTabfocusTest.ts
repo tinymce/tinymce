@@ -1,6 +1,6 @@
-import { FocusTools, RealKeys, RealMouse } from '@ephox/agar';
-import { after, afterEach, before, context, describe, it } from '@ephox/bedrock-client';
-import { Class, SugarDocument } from '@ephox/sugar';
+import { FocusTools, RealKeys, RealMouse, Waiter } from '@ephox/agar';
+import { after, before, beforeEach, context, describe, it } from '@ephox/bedrock-client';
+import { Class, Focus, SugarDocument } from '@ephox/sugar';
 import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -50,9 +50,10 @@ describe('webdriver.tinymce.core.keyboard.IframeTabfocusTest', () => {
       }
     }, []);
 
-    afterEach(() => {
-      // Un focus the editor
-      window.focus();
+    beforeEach(async () => {
+      // Un focus the editor, a real tab or click in the previous test leaves focus in it
+      Focus.active(SugarDocument.getDocument()).each(Focus.blur);
+      await Waiter.pTryUntil('Wait for the editor to lose its focus highlight', () => assertIsNotHighlighted(hook.editor()));
     });
 
     it('TINY-9277: Focus on tab', async () => {
