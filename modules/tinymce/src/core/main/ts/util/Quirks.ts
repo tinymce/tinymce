@@ -531,19 +531,6 @@ const Quirks = (editor: Editor): Quirks => {
   };
 
   /**
-   * Forces Gecko to render a broken image icon if it fails to load an image.
-   */
-  const showBrokenImageIcon = () => {
-    editor.contentStyles.push(
-      'img:-moz-broken {' +
-      '-moz-force-broken-image-icon:1;' +
-      'min-width:24px;' +
-      'min-height:24px' +
-      '}'
-    );
-  };
-
-  /**
    * iOS has a bug where it's impossible to type if the document has a touchstart event
    * bound and the user touches the document while having the on screen keyboard visible.
    *
@@ -799,7 +786,6 @@ const Quirks = (editor: Editor): Quirks => {
     if (isGecko) {
       focusBody();
       setGeckoEditingOptions();
-      showBrokenImageIcon();
       blockCmdArrowNavigation();
     }
   };
@@ -848,7 +834,6 @@ const Quirks = (editor: Editor): Quirks => {
       removeStylesWhenDeletingAcrossBlockElements();
       setGeckoEditingOptions();
       addBrAfterLastLinks();
-      showBrokenImageIcon();
       blockCmdArrowNavigation();
       disableBackspaceIntoATable();
     }
