@@ -25,6 +25,10 @@ describe('browser.tinymce.themes.silver.editor.backstage.BackstageSinkTest', () 
   //
   // NOTE: If this approach is causing problems, we can just load silver normally, and create a duplicate
   // backstage, but this approach removes the number of extraneous elements.
+  //
+  // The skin is unloaded again when the editor is removed: leaving it behind
+  // changes the layout for every later test that expects an unskinned page,
+  // which is how it broke webdriver DialogFocusTest.
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     setup: (ed: Editor) => {
@@ -37,6 +41,7 @@ describe('browser.tinymce.themes.silver.editor.backstage.BackstageSinkTest', () 
             ed.dispatch('SkinLoaded');
           }
         );
+        ed.on('remove', () => ed.ui.styleSheetLoader.unload(skinUrl));
 
         ed.ui.registry.addContext('any', Fun.always);
       });
