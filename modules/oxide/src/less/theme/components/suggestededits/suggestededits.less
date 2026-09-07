@@ -26,8 +26,6 @@
 
 @suggestededits-card-active-border-color: @suggestededits-color-tint;
 
-@view-header-padding: (@pad-sm + @keyboard-focus-outline-width);
-
 .tox {
   [data-mce-name="suggestededits"] .tox-icon .tox-icon--badge {
     fill: @color-tint;
@@ -56,7 +54,6 @@
 
     .tox-suggestededits {
       background-color: @suggestededits-background-color;
-      border-top: 1px solid @suggestededits-border-color;
       display: flex;
       flex: 1;
       height: inherit;
@@ -82,6 +79,7 @@
 
       .tox-suggestededits__sidebar {
         background-color: @suggestededits-sidebar-background-color;
+        border-left: 1px solid @tinymce-separator-color;
         display: flex;
         flex-direction: column;
         flex: 0 1 auto;
@@ -89,7 +87,7 @@
         width: 440px;
       }
 
-      .tox-suggestededits__sidebar-header {
+      .tox-suggestededits__sidebar-toolbar {
         padding: 4px 12px;
       }
 
