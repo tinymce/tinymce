@@ -46,7 +46,6 @@ const getCornerLocation = (origin: CornerOrigin): CornerLocation =>
   Strings.removeLeading(origin, 'corner-') as CornerLocation;
 
 export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
-  const selectionRng = Singleton.value<Range>();
   const tableResize = Singleton.value<TableResize>();
   const resizeWire = Singleton.value<ResizeWire>();
   let startW: number;
@@ -135,10 +134,6 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
         sz.on();
       }
 
-      sz.events.startDrag.bind((_event) => {
-        selectionRng.set(editor.selection.getRng());
-      });
-
       sz.events.beforeResize.bind((event) => {
         const rawTable = event.table.dom;
         Events.fireObjectResizeStart(editor, rawTable, Utils.getPixelWidth(rawTable), Utils.getPixelHeight(rawTable), barResizerPrefix + event.type);
@@ -148,11 +143,6 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
         const table = event.table;
         const rawTable = table.dom;
         Utils.removeDataStyle(table);
-
-        selectionRng.on((rng) => {
-          editor.selection.setRng(rng);
-          editor.focus();
-        });
 
         Events.fireObjectResized(editor, rawTable, Utils.getPixelWidth(rawTable), Utils.getPixelHeight(rawTable), barResizerPrefix + event.type);
         editor.undoManager.add();

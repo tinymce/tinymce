@@ -111,11 +111,13 @@ export const BarManager = (wire: ResizeWire): BarManager => {
   const mousedown = DomEvent.bind(wire.parent(), 'mousedown', (event) => {
     if (Bars.isRowBar(event.target)) {
       event.prevent();
+      event.stop();
       handler(event.target, 'top');
     }
 
     if (Bars.isColBar(event.target)) {
       event.prevent();
+      event.stop();
       handler(event.target, 'left');
     }
   });
