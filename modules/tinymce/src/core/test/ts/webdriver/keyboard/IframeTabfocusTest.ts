@@ -1,6 +1,6 @@
 import { FocusTools, RealKeys, RealMouse, Waiter } from '@ephox/agar';
 import { after, before, beforeEach, context, describe, it } from '@ephox/bedrock-client';
-import { Class, Focus, SugarDocument } from '@ephox/sugar';
+import { Class, SugarDocument } from '@ephox/sugar';
 import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -50,25 +50,42 @@ describe('webdriver.tinymce.core.keyboard.IframeTabfocusTest', () => {
       }
     }, []);
 
+    // Shares the iframe's tabindex and precedes it in the DOM, so a tab from here always lands on the iframe
+    let outsideButton: HTMLButtonElement;
+
+    before(() => {
+      const container = hook.editor().getContainer();
+      outsideButton = document.createElement('button');
+      outsideButton.id = 'outsideButton';
+      outsideButton.tabIndex = 1;
+      container.parentNode?.insertBefore(outsideButton, container);
+    });
+
+    after(() => {
+      outsideButton.remove();
+    });
+
     beforeEach(async () => {
-      // Un focus the editor, a real tab or click in the previous test leaves focus in it
-      Focus.active(SugarDocument.getDocument()).each(Focus.blur);
+      // Move focus out of the editor, a real tab or click in the previous test leaves focus in it. Safari ignores
+      // blur() on the iframe, and its webdriver clicks into the iframe do not take focus from a focused outside
+      // element, so focus the button and then blur it.
+      outsideButton.focus();
       await Waiter.pTryUntil('Wait for the editor to lose its focus highlight', () => assertIsNotHighlighted(hook.editor()));
+      outsideButton.blur();
     });
 
     it('TINY-9277: Focus on tab', async () => {
       const editor = hook.editor();
       assertIsNotHighlighted(editor);
-      // Pressing tab to focus on the editor
-      await RealKeys.pSendKeysOn('body', [ RealKeys.text('\t') ]);
-      assertIsHighlighted(editor);
+      await RealKeys.pSendKeysOn('#outsideButton', [ RealKeys.text('\t') ]);
+      await Waiter.pTryUntil('Wait for the editor to be highlighted', () => assertIsHighlighted(editor));
     });
 
     it('TINY-9277: Focus on click', async () => {
       const editor = hook.editor();
       assertIsNotHighlighted(editor);
       await RealMouse.pClickOn('iframe => body');
-      assertIsHighlighted(editor);
+      await Waiter.pTryUntil('Wait for the editor to be highlighted', () => assertIsHighlighted(editor));
     });
   });
 });

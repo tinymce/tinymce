@@ -131,7 +131,8 @@ describe('browser.tinymce.core.keyboard.SpaceKeyTest', () => {
       }
 
       const editor = hook.editor();
-      editor.setContent('<details><summary>ab</summary><div>content</div></details>');
+      // Earlier tests leave the undo manager in its typing state, so only a reset makes this content the level undo returns to
+      editor.resetContent('<details><summary>ab</summary><div>content</div></details>');
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
       TinyContentActions.keystroke(editor, Keys.space());
       TinyContentActions.keystroke(editor, Keys.space());

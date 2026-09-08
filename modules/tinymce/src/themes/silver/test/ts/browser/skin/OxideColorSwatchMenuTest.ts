@@ -142,9 +142,6 @@ describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
 
   beforeEach(() => {
     LocalStorage.clear();
-    // ColorCache memoises a cache per id in module scope, so clearing local
-    // storage alone leaves custom colors added by earlier tests in memory. They
-    // would show up as extra swatches and shift the structure asserted below.
     ColorCache.clearStoredCaches();
   });
 

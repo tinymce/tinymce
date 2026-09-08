@@ -1,5 +1,5 @@
 import { UiControls, UiFinder, Waiter } from '@ephox/agar';
-import { afterEach, before, beforeEach, context, describe, it } from '@ephox/bedrock-client';
+import { after, afterEach, before, beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 import type { SugarElement } from '@ephox/sugar';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
@@ -7,6 +7,7 @@ import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import type Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
 import LocalStorage from 'tinymce/core/api/util/LocalStorage';
+import * as ColorCache from 'tinymce/themes/silver/ui/core/color/ColorCache';
 
 import * as MenuUtils from '../../../module/MenuUtils';
 import * as TooltipUtils from '../../../module/TooltipUtils';
@@ -25,7 +26,12 @@ interface BespokeButtonsScenario {
   readonly buttonSelector: string;
 }
 
-describe('browser.tinymce.themes.silver.editor.TooltipShortcutTest', () => {
+describe('browser.tinymce.themes.silver.editor.DynamicTooltipTest', () => {
+  after(() => {
+    LocalStorage.clear();
+    ColorCache.clearStoredCaches();
+  });
+
   context('Color buttons', () => {
     const colorSettings = [
       '#BFEDD2', 'Light Green',
