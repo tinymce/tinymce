@@ -22,6 +22,7 @@ import EditorObservable from './EditorObservable';
 import Env from './Env';
 import * as Events from './EventTypes';
 import FakeClipboard from './FakeClipboard';
+import type { BlobInfo } from './file/BlobCache';
 import * as Formats from './fmt/Format';
 import FocusManager from './FocusManager';
 import Formatter from './Formatter';
@@ -75,7 +76,8 @@ export type {
   Model,
   WriterSettings,
   User,
-  ExpectedUser
+  ExpectedUser,
+  BlobInfo
 };
 export {
   Rect,

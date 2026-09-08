@@ -1,0 +1,6 @@
+project: tinymce
+kind: Added
+body: Added the `BlobInfo` type to the public API.
+time: 2026-09-03T08:12:25.675688054+02:00
+custom:
+  Issue: TINYMCE-14853
