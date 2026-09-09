@@ -48,6 +48,10 @@ const inBlock = (blockName: string, requiredState: boolean) => (editor: Editor, 
   return state === requiredState;
 };
 
+
+const inBlocks = (blockNames: string[], requiredState: boolean) => (editor: Editor, _shiftKey: boolean) => {
+  return blockNames.some((blockName) => inBlock(blockName, requiredState)(editor, _shiftKey));
+
 const inCefBlock = (editor: Editor) => {
   const editableRoot = NewLineUtils.getEditableRoot(editor.dom, editor.selection.getStart());
   return Type.isNullable(editableRoot);
@@ -55,6 +59,8 @@ const inCefBlock = (editor: Editor) => {
 
 const inPreBlock = (requiredState: boolean) => inBlock('pre', requiredState);
 const inSummaryBlock = () => inBlock('summary', true);
+const inParagraphBlock = () => inBlock('p', true);
+const inHeadingBlock = () => inBlocks([ 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ], true);
 
 const shouldPutBrInPre = (requiredState: boolean) => {
   return (editor: Editor, _shiftKey: boolean) => {
@@ -103,6 +109,8 @@ const getAction = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): NewLineAct
     // If the pre block is cef, do not try to insert a new line (or delete contents)
     match([ inPreBlock(true), inCefBlock ], newLineAction.none()),
     match([ inSummaryBlock() ], newLineAction.br()),
+    match([ inParagraphBlock() ], newLineAction.br()),
+    match([ inHeadingBlock() ], newLineAction.br()),
     match([ inPreBlock(true), shouldPutBrInPre(false), hasShiftKey ], newLineAction.br()),
     match([ inPreBlock(true), shouldPutBrInPre(false) ], newLineAction.block()),
     match([ inPreBlock(true), shouldPutBrInPre(true), hasShiftKey ], newLineAction.block()),
