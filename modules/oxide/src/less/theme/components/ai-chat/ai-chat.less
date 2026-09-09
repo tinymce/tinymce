@@ -10,7 +10,7 @@
   --tox-private-tinymceai-context-more-max-width: 320px;
   --tox-private-tinymceai-response-status-icon-height: max(24px, calc(var(--tox-private-font-size-sm) + 4px));
   --tox-private-tinymceai-chat-action-button-icon-color: light-dark(
-    var(--tox-private-color-tint), 
+    var(--tox-private-color-tint),
     var(--tox-private-text-color)
   );
 
@@ -75,6 +75,11 @@
       padding-left: var(--tox-private-pad-md, @pad-md);
       padding-right: var(--tox-private-pad-md, @pad-md);
     }
+  }
+
+  .tox-menu {
+    width: stretch;
+    overflow: visible;
   }
 
   .tox-ai__user-prompt {
@@ -374,7 +379,6 @@
 
     .tox-menu {
       max-height: inherit;
-      overflow: auto;
       padding: var(--tox-private-pad-xs, @pad-xs);
     }
   }
@@ -553,7 +557,7 @@
         );
       }
 
-      // scale down bigger icons to fit the 16px icon size of the action button. 
+      // scale down bigger icons to fit the 16px icon size of the action button.
       // This is a temporary solution until we have a proper icon size system in place
       svg[width='24'], svg[width='24px'] {
         transform: scale(calc(16 / 24));
@@ -562,7 +566,7 @@
       svg[width='20'], svg[width='20px'] {
         transform: scale(calc(16 / 20));
       }
-      
+
       svg[width='18'], svg[width='18px'] {
         transform: scale(calc(16 / 18));
       }
