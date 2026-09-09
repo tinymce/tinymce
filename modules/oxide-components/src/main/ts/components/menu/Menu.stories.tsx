@@ -75,6 +75,7 @@ const iconResolver = (icon: string): string => {
 
 const mockUniverse = {
   getIcon: iconResolver,
+  translate: Fun.identity,
 };
 
 const menu: JSX.Element = (

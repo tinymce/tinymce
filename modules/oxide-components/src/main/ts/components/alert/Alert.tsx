@@ -1,5 +1,6 @@
 import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
 
+import { useUniverse } from '../../contexts/universecontext/Universe';
 import * as Bem from '../../utils/Bem';
 import { IconButton } from '../iconbutton/IconButton';
 
@@ -39,9 +40,11 @@ export const Alert = forwardRef<HTMLDivElement, AlertProps>(({
   removable = false,
   onRemove,
   actions,
-  closeAriaLabel = 'Close',
+  closeAriaLabel,
   ...domProps
 }, ref) => {
+  const { translate } = useUniverse();
+  const resolvedCloseAriaLabel = closeAriaLabel ?? translate('Close');
   return (
     <div
       ref={ref}
@@ -64,7 +67,7 @@ export const Alert = forwardRef<HTMLDivElement, AlertProps>(({
           variant='naked'
           icon='close'
           onClick={onRemove}
-          aria-label={closeAriaLabel}
+          aria-label={resolvedCloseAriaLabel}
         />
       )}
     </div>

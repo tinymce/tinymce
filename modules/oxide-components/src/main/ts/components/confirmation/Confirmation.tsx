@@ -1,13 +1,14 @@
 import { useCallback, useEffect, useRef, useState, type FC, type MouseEventHandler } from 'react';
 
 import { Spinner } from '../../bespoke/tinymceai/spinner/Spinner';
+import { useUniverse } from '../../contexts/universecontext/Universe';
 import * as Bem from '../../utils/Bem';
 import { Button } from '../button/Button';
 
 export interface ConfirmationProps {
   readonly text: string;
-  readonly buttonName: string;
-  readonly cancelBtnName: string;
+  readonly buttonName?: string;
+  readonly cancelBtnName?: string;
   readonly onConfirm: () => Promise<void>;
   readonly onCancel: () => Promise<void>;
 }
@@ -19,6 +20,9 @@ export const Confirmation: FC<ConfirmationProps> = ({
   onConfirm,
   onCancel
 }) => {
+  const { translate } = useUniverse();
+  const resolvedButtonName = buttonName ?? translate('Yes');
+  const resolvedCancelBtnName = cancelBtnName ?? translate('No');
   const confirmButtonRef = useRef<HTMLButtonElement>(null);
   const [ confirming, setConfirming ] = useState(false);
 
@@ -52,8 +56,8 @@ export const Confirmation: FC<ConfirmationProps> = ({
               ref={confirmButtonRef}
               disabled={confirming}
               onClick={onClick}
-              aria-label={buttonName}
-            >{confirming ? <Spinner type="circle" color='lightgray' /> : buttonName}</Button>
+              aria-label={resolvedButtonName}
+            >{confirming ? <Spinner type="circle" color='lightgray' /> : resolvedButtonName}</Button>
             <Button
               variant='secondary'
               disabled={confirming}
@@ -61,8 +65,8 @@ export const Confirmation: FC<ConfirmationProps> = ({
                 // eslint-disable-next-line no-console
                 void onCancel().catch(console.error);
               }}
-              aria-label={cancelBtnName}
-            >{cancelBtnName}</Button>
+              aria-label={resolvedCancelBtnName}
+            >{resolvedCancelBtnName}</Button>
           </div>
         </div>
       </dialog>

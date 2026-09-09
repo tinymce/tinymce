@@ -1,3 +1,4 @@
+import { Fun } from '@ephox/katamari';
 import { UniverseProvider, type UniverseResources } from 'oxide-components/Main';
 import * as Bem from 'oxide-components/utils/Bem';
 import type { ReactNode } from 'react';
@@ -51,7 +52,10 @@ const normalize = (fragment: DocumentFragment): DocumentFragment => {
   return fragment;
 };
 
-const stubIconUniverse: UniverseResources = { getIcon: (icon: string): string => `<svg id="${icon}"></svg>` };
+const stubIconUniverse: UniverseResources = {
+  getIcon: (icon: string): string => `<svg id="${icon}"></svg>`,
+  translate: Fun.identity
+};
 
 const snapshotWrapper = ({ children }: { children: ReactNode }): ReactNode => (
   <div className={Bem.block('tox')}>

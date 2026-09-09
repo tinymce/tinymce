@@ -14,6 +14,7 @@ const closeIcon = `<svg width="24" height="24">
 
 const resources = {
   getIcon: Fun.constant(closeIcon),
+  translate: Fun.identity,
 };
 
 const args: FloatingSidebarProps = {

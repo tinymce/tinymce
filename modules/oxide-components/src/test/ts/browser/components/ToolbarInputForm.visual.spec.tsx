@@ -25,6 +25,7 @@ const iconResolver = (icon: string): string => {
 
 const resources = {
   getIcon: iconResolver,
+  translate: Fun.identity,
 };
 
 const renderToolbarInputForm = (args: ToolbarInputFormProps): JSX.Element => (

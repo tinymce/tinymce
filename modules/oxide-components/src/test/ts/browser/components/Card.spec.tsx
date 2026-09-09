@@ -1,3 +1,4 @@
+import { Fun } from '@ephox/katamari';
 import * as Card from 'oxide-components/components/card/Card';
 import { Button, ExpandableBox, UniverseProvider } from 'oxide-components/Main';
 import * as Bem from 'oxide-components/utils/Bem';
@@ -11,6 +12,7 @@ describe('browser.components.CardTest', () => {
   const getIcon = vi.fn((icon: string) => `<svg id="${icon}"></svg>`);
   const mockUniverse = {
     getIcon,
+    translate: Fun.identity,
   };
 
   const wrapper = ({ children }: { children: React.ReactNode }) => {

@@ -1,6 +1,7 @@
 import { Type } from '@ephox/katamari';
 import { forwardRef, useLayoutEffect, useRef, useState, type PropsWithChildren } from 'react';
 
+import { useUniverse } from '../../contexts/universecontext/Universe';
 import * as Bem from '../../utils/Bem';
 import { Button } from '../button/Button';
 import { Icon } from '../icon/Icon';
@@ -23,10 +24,13 @@ export const ExpandableBox = forwardRef<HTMLDivElement, ExpandableBoxProps>(({
   maxHeight = 80,
   expanded = false,
   onToggle,
-  expandLabel = 'Expand',
-  collapseLabel = 'Collapse',
+  expandLabel,
+  collapseLabel,
   children
 }, ref) => {
+  const { translate } = useUniverse();
+  const resolvedExpandLabel = expandLabel ?? translate('Expand');
+  const resolvedCollapseLabel = collapseLabel ?? translate('Collapse');
   const contentRef = useRef<HTMLDivElement | null>(null);
   const [ overflowing, setOverflowing ] = useState(false);
   const contentClass = Bem.element('tox-expandable-box', 'content', { expanded, overflowing: overflowing && !expanded });
@@ -46,7 +50,7 @@ export const ExpandableBox = forwardRef<HTMLDivElement, ExpandableBoxProps>(({
       {
         overflowing && <Button variant="naked" type="button" onClick={() => onToggle?.()} >
           <Icon icon={expanded ? 'chevron-up' : 'chevron-down'} />
-          {expanded ? collapseLabel : expandLabel}
+          {expanded ? resolvedCollapseLabel : resolvedExpandLabel}
         </Button>
       }
     </div>

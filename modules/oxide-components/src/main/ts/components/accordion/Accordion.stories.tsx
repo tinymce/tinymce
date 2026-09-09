@@ -19,7 +19,8 @@ const icons: Record<string, string> = {
 
 const mockUniverse = {
   getIcon: (name: string) =>
-    Obj.get(icons, name).getOrDie('Failed to get icon')
+    Obj.get(icons, name).getOrDie('Failed to get icon'),
+  translate: Fun.identity
 };
 
 const meta = {

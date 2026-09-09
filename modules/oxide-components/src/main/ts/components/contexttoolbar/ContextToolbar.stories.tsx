@@ -16,6 +16,7 @@ const resolvedIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height=
 
 const mockUniverse = {
   getIcon: Fun.constant(resolvedIcon),
+  translate: Fun.identity,
 };
 
 const meta = {

@@ -1,7 +1,8 @@
 import { Fun } from '@ephox/katamari';
 import { Alert } from 'oxide-components/components/alert/Alert';
 import { Button } from 'oxide-components/components/button/Button';
-import { describe, expect, it } from 'vitest';
+import { UniverseProvider } from 'oxide-components/contexts/universecontext/UniverseProvider';
+import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 
 import * as SnapshotTestUtils from './utils/SnapshotTestUtils';
@@ -39,6 +40,36 @@ describe('browser.components.AlertTest', () => {
         { wrapper: SnapshotTestUtils.snapshotWrapper }
       );
       expect(SnapshotTestUtils.normalize(asFragment())).toMatchSnapshot('Warning, removable, custom close label');
+    });
+  });
+
+  describe('Universe translate', () => {
+    it('TINYMCE-14751: should render the translated close label when closeAriaLabel is not provided', () => {
+      const translate = vi.fn<(text: string) => string>((text) => `translated-${text}`);
+      const mockUniverse = { getIcon: Fun.constant(''), translate };
+
+      const { getByLabelText } = render(
+        <UniverseProvider resources={mockUniverse}>
+          <Alert severity="error" message="Something went wrong" removable onRemove={Fun.noop} />
+        </UniverseProvider>
+      );
+
+      expect(getByLabelText('translated-Close').element()).toBeVisible();
+      expect(translate).toHaveBeenCalledWith('Close');
+    });
+
+    it('TINYMCE-14751: should render the provided closeAriaLabel instead of calling translate', () => {
+      const translate = vi.fn<(text: string) => string>((text) => `translated-${text}`);
+      const mockUniverse = { getIcon: Fun.constant(''), translate };
+
+      const { getByLabelText } = render(
+        <UniverseProvider resources={mockUniverse}>
+          <Alert severity="error" message="Something went wrong" removable onRemove={Fun.noop} closeAriaLabel="Dismiss" />
+        </UniverseProvider>
+      );
+
+      expect(getByLabelText('Dismiss').element()).toBeVisible();
+      expect(translate).not.toHaveBeenCalled();
     });
   });
 });

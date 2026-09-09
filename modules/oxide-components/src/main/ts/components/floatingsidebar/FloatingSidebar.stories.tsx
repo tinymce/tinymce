@@ -112,6 +112,7 @@ const resolvedIcon = `<svg width="24" height="24">
 
 const mockUniverse = {
   getIcon: Fun.constant(resolvedIcon),
+  translate: Fun.identity,
 };
 
 export const ButtonInHeader: Story = {

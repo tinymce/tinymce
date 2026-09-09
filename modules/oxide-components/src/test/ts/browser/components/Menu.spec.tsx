@@ -1,4 +1,5 @@
 /* eslint-disable max-len */
+import { Fun } from '@ephox/katamari';
 import type { ToggleMenuItemInstanceApi } from 'oxide-components/components/menu/internals/Types';
 import * as Menu from 'oxide-components/components/menu/Menu';
 import * as MenuRenderer from 'oxide-components/components/menu/MenuRenderer';
@@ -38,6 +39,7 @@ const iconResolver = (icon: string): string => {
 
 const mockUniverse = {
   getIcon: iconResolver,
+  translate: Fun.identity,
 };
 
 const waitForElementText = async (getByText: (text: string) => Locator, text: string) => {

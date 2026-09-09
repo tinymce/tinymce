@@ -1,3 +1,4 @@
+import { Fun } from '@ephox/katamari';
 import { useUniverse } from 'oxide-components/contexts/universecontext/Universe';
 import { UniverseProvider } from 'oxide-components/contexts/universecontext/UniverseProvider';
 import type { UniverseResources } from 'oxide-components/contexts/universecontext/UniverseTypes';
@@ -7,6 +8,7 @@ import { render } from 'vitest-browser-react';
 
 const createMockUniverse = (overrides?: Partial<UniverseResources>): UniverseResources => ({
   getIcon: (name: string) => `<svg data-icon="${name}">mock-${name}</svg>`,
+  translate: Fun.identity,
   ...overrides
 });
 

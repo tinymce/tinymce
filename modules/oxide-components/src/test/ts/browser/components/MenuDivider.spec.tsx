@@ -9,6 +9,7 @@ import * as SnapshotTestUtils from './utils/SnapshotTestUtils';
 
 const mockUniverse = {
   getIcon: Fun.constant(''),
+  translate: Fun.identity,
 };
 
 describe('browser.MenuDividerTest', () => {

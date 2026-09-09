@@ -12,6 +12,7 @@ const closeIcon = `<svg width="24" height="24">
 
 const resources = {
   getIcon: Fun.constant(closeIcon),
+  translate: Fun.identity,
 };
 
 const message = 'The change is not supported by the editor and can\'t be previewed or applied.';

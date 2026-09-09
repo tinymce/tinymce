@@ -1,4 +1,4 @@
-import { Arr } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
 import { Icon } from 'oxide-components/components/icon/Icon';
 import { UniverseProvider } from 'oxide-components/Main';
 import { describe, expect, it, vi } from 'vitest';
@@ -14,6 +14,7 @@ describe('browser.components.Icon', () => {
     const getIcon = vi.fn((icon: string) => `<svg id="${icon}"></svg>`);
     const mockUniverse = {
       getIcon,
+      translate: Fun.identity,
     };
 
     const { getByTestId } = render(

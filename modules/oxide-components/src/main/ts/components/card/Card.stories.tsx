@@ -1,4 +1,4 @@
-import { Obj } from '@ephox/katamari';
+import { Fun, Obj } from '@ephox/katamari';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { getAll as getAllIcons } from '@tinymce/oxide-icons-default';
 import { Button } from 'oxide-components/components/button/Button';
@@ -20,7 +20,8 @@ const icons: Record<string, string> = {
 
 const mockUniverse = {
   getIcon: (name: string) =>
-    Obj.get(icons, name).getOr(`<svg id="${name}"></svg>`)
+    Obj.get(icons, name).getOr(`<svg id="${name}"></svg>`),
+  translate: Fun.identity
 };
 
 const meta = {

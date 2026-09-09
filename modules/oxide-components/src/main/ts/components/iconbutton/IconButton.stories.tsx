@@ -1,4 +1,4 @@
-import { Obj } from '@ephox/katamari';
+import { Fun, Obj } from '@ephox/katamari';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { UniverseProvider } from 'oxide-components/contexts/universecontext/UniverseProvider';
 
@@ -14,7 +14,8 @@ const icons: Record<string, string> = {
 
 const mockUniverse = {
   getIcon: (name: string) =>
-    Obj.get(icons, name).getOrDie('Failed to get icon')
+    Obj.get(icons, name).getOrDie('Failed to get icon'),
+  translate: Fun.identity
 };
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export

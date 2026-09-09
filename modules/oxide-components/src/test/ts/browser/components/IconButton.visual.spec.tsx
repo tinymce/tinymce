@@ -13,6 +13,7 @@ const leftArrowIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height
 
 const resources = {
   getIcon: Fun.constant(leftArrowIcon),
+  translate: Fun.identity,
 };
 
 const VARIANTS = [ 'primary', 'secondary', 'outlined', 'naked' ] as const;

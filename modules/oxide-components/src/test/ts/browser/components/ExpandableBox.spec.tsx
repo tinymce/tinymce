@@ -13,6 +13,7 @@ describe('browser.components.ExpandableBoxTest', () => {
   const getIcon = vi.fn((icon: string) => `<svg id="${icon}"></svg>`);
   const mockUniverse = {
     getIcon,
+    translate: Fun.identity,
   };
 
   const wrapper = ({ children }: { children: React.ReactNode }) => {
@@ -113,5 +114,49 @@ describe('browser.components.ExpandableBoxTest', () => {
     await userEvent.click(getByText('Show more'));
     await waitForElementText(getByText, 'Show less');
     expect(SnapshotTestUtils.normalize(asFragment())).toMatchSnapshot('2. After show mode click');
+  });
+
+  describe('Universe translate', () => {
+    it('TINYMCE-14751: should render the translated expand and collapse labels when not provided', async () => {
+      const translate = vi.fn<(text: string) => string>((text) => `translated-${text}`);
+      const localMockUniverse = { getIcon, translate };
+
+      const { getByText } = render(
+        <UniverseProvider resources={localMockUniverse}>
+          <TestComponentToggle {...defaultProps}>
+            <div style={{ height: '200px' }}>Hello world</div>
+          </TestComponentToggle>
+        </UniverseProvider>,
+        { wrapper }
+      );
+
+      await waitForElementText(getByText, 'translated-Expand');
+      expect(translate).toHaveBeenCalledWith('Expand');
+
+      await userEvent.click(getByText('translated-Expand'));
+      await waitForElementText(getByText, 'translated-Collapse');
+      expect(translate).toHaveBeenCalledWith('Collapse');
+    });
+
+    it('TINYMCE-14751: should render the provided expand and collapse labels instead of calling translate', async () => {
+      const translate = vi.fn<(text: string) => string>((text) => `translated-${text}`);
+      const localMockUniverse = { getIcon, translate };
+
+      const { getByText } = render(
+        <UniverseProvider resources={localMockUniverse}>
+          <TestComponentToggle {...defaultProps} expandLabel="Show more" collapseLabel="Show less">
+            <div style={{ height: '200px' }}>Hello world</div>
+          </TestComponentToggle>
+        </UniverseProvider>,
+        { wrapper }
+      );
+
+      await waitForElementText(getByText, 'Show more');
+      expect(translate).not.toHaveBeenCalled();
+
+      await userEvent.click(getByText('Show more'));
+      await waitForElementText(getByText, 'Show less');
+      expect(translate).not.toHaveBeenCalled();
+    });
   });
 });

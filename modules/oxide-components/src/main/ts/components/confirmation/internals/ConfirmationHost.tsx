@@ -27,8 +27,6 @@ export const ConfirmationHost = forwardRef<ConfirmationHostHandle>((_props, ref)
 
   return request ? <Confirmation
     text={request.text}
-    buttonName='Yes'
-    cancelBtnName='No'
     onConfirm={() => mountedRef.current ?
       request.onConfirm().finally(() => setRequest(null)) :
       Promise.resolve()

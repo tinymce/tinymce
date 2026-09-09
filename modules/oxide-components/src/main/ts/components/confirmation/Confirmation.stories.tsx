@@ -1,4 +1,4 @@
-import { Obj } from '@ephox/katamari';
+import { Fun, Obj } from '@ephox/katamari';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { getAll as getAllIcons } from '@tinymce/oxide-icons-default';
 import { UniverseProvider } from 'oxide-components/contexts/universecontext/UniverseProvider';
@@ -13,7 +13,8 @@ const icons: Record<string, string> = {
 
 const mockUniverse = {
   getIcon: (name: string) =>
-    Obj.get(icons, name).getOrDie('Failed to get icon')
+    Obj.get(icons, name).getOrDie('Failed to get icon'),
+  translate: Fun.identity
 };
 
 const render = (args: { text: string; onConfirm: () => Promise<void> }): JSX.Element => {

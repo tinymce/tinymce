@@ -1,4 +1,4 @@
-import { Arr } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
 import { SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 import { getAll as getAllIcons } from '@tinymce/oxide-icons-default';
 import { userEvent } from '@vitest/browser/context';
@@ -21,6 +21,7 @@ describe('browser.components.AccordionTest', () => {
   const getIcon = vi.fn((icon: string) => icons[icon] || `<svg id="${icon}"></svg>`);
   const mockUniverse = {
     getIcon,
+    translate: Fun.identity,
   };
 
   const wrapper = ({ children }: { children: React.ReactNode }) => {
