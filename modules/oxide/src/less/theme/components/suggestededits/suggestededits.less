@@ -118,7 +118,7 @@
             align-self: stretch;
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 12px;
           }
 
           .tox-suggestededits__card--editor {
@@ -194,9 +194,20 @@
               display: flex;
               gap: 8px;
 
+              .tox-suggestededits__operations-details {
+                display: flex;
+                flex: 1;
+                flex-direction: column;
+                min-width: 0;
+              }
+
               .tox-suggestededits__operations-text {
                 color: @suggestededits-text-color;
                 font-weight: bold;
+              }
+
+              .tox-suggestededits__operations-content-text {
+                overflow-wrap: break-word;
               }
             }
 
