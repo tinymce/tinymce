@@ -1,3 +1,4 @@
+import { Fun } from '@ephox/katamari';
 import * as Profile from 'oxide-components/components/profile/Profile';
 import { UniverseProvider } from 'oxide-components/Main';
 import * as Bem from 'oxide-components/utils/Bem';
@@ -9,6 +10,7 @@ describe('browser.components.ProfileTest', () => {
   const getIcon = vi.fn((icon: string) => `<svg id="${icon}"></svg>`);
   const mockUniverse = {
     getIcon,
+    translate: Fun.identity
   };
 
   const wrapper = ({ children }: { children: ReactNode }) => {

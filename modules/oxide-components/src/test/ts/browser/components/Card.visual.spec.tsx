@@ -24,7 +24,8 @@ const icons: Record<string, string> = {
 };
 
 const mockUniverse = {
-  getIcon: (name: string) => Obj.get(icons, name).getOr(`<svg id="${name}"></svg>`)
+  getIcon: (name: string) => Obj.get(icons, name).getOr(`<svg id="${name}"></svg>`),
+  translate: Fun.identity
 };
 
 const renderCardVisual = (ui: ReactElement) =>

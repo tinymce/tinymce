@@ -1,4 +1,4 @@
-import { Arr, Obj } from '@ephox/katamari';
+import { Arr, Fun, Obj } from '@ephox/katamari';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { getAll as getAllIcons } from '@tinymce/oxide-icons-default';
 import { UniverseProvider } from 'oxide-components/contexts/universecontext/UniverseProvider';
@@ -18,7 +18,8 @@ const icons: Record<string, string> = {
 
 const mockUniverse = {
   getIcon: (name: string) =>
-    Obj.get(icons, name).getOr(`<svg id="${name}"></svg>`)
+    Obj.get(icons, name).getOr(`<svg id="${name}"></svg>`),
+  translate: Fun.identity
 };
 
 // eslint-disable-next-line max-len
