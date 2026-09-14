@@ -1,4 +1,5 @@
-import { context, describe, it, before, afterEach, after } from '@ephox/bedrock-client';
+import { Waiter } from '@ephox/agar';
+import { after, afterEach, before, context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Insert, Remove, Selectors, SugarBody, SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
@@ -8,8 +9,7 @@ import type Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import type { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
 
-// TODO TINY-10480: Investigate flaky tests
-describe.skip('browser.tinymce.core.EditorAutoFocusTest', () => {
+describe('browser.tinymce.core.EditorAutoFocusTest', () => {
   before(() => {
     Insert.append(SugarBody.body(), SugarElement.fromHtml(`<div id="abc">
       <div class="tinymce" id="mce_0">Editor_0</div>
@@ -37,21 +37,21 @@ describe.skip('browser.tinymce.core.EditorAutoFocusTest', () => {
 
   const pSetupEditorAutoFocus = (id: string, options: RawEditorOptions) => {
     const height = restOfWindowHeight();
-    return new Promise((resolve) => {
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      EditorManager.init({
-        selector: 'div.tinymce',
-        base_url: '/project/tinymce/js/tinymce/',
-        license_key: 'gpl',
-        menubar: false,
-        statusbar: false,
-        height,
-        auto_focus: id,
-        init_instance_callback: (editor: Editor) => {
-          editor.on('focus', resolve);
-        },
-        ...options
-      });
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    EditorManager.init({
+      selector: 'div.tinymce',
+      base_url: '/project/tinymce/js/tinymce/',
+      license_key: 'gpl',
+      menubar: false,
+      statusbar: false,
+      height,
+      auto_focus: id,
+      ...options
+    });
+    return Waiter.pTryUntil(`Waiting for editor "${id}" to auto focus`, () => {
+      const editor = EditorManager.get(id) as Editor;
+      assert.isTrue(editor.hasFocus());
+      return editor;
     });
   };
 

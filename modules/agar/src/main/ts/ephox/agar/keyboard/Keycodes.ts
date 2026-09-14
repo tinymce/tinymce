@@ -1,4 +1,4 @@
-import { Arr, Type, type Optional } from '@ephox/katamari';
+import { Arr, type Optional, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
 const isMac = PlatformDetection.detect().os.isMacOS();
@@ -233,3 +233,5 @@ export const getKeyEventFromKeyCode = (
 
 export const getKeyEventFromData = (view: typeof globalThis, event: string, data: string): Optional<KeyboardEvent> =>
   Arr.find(keys, (key) => key.data === data).map((key) => createKeyboardEvent(view, event, false, false, false, false, key));
+
+export const getKeyCodeFromKey = (key: string): number => Arr.find(keys, (k) => k.key === key).map((k) => k.keyCode).getOrDie(`key: ${key} doesn't have a mapped value`);
