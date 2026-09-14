@@ -171,6 +171,7 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
   editor.addQueryValueHandler('ToggleSidebar', () => OuterContainer.whichSidebar(outerContainer) ?? '');
 
   editor.addCommand('ToggleView', (_ui: boolean, value: string) => {
+    const sidebarBefore = OuterContainer.whichSidebar(outerContainer);
     if (OuterContainer.toggleView(outerContainer, value)) {
       const target = outerContainer.element;
       mainUi.mothership.broadcastOn([ Channels.dismissPopups() ], { target });
@@ -183,6 +184,10 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
         editor.focus();
         editor.nodeChanged();
         OuterContainer.refreshToolbar(outerContainer);
+      }
+
+      if (sidebarBefore !== OuterContainer.whichSidebar(outerContainer)) {
+        Events.fireToggleSidebar(editor);
       }
 
       Events.fireToggleView(editor);

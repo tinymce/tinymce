@@ -25,7 +25,7 @@ interface SilverViewWrapperDetail extends Sketcher.SingleSketchDetail {
 interface SilverViewWrapperApis {
   readonly setViews: (comp: AlloyComponent, viewConfigs: ViewConfig) => void;
   readonly whichView: (comp: AlloyComponent) => Optional<string>;
-  readonly toggleView: (comp: AlloyComponent, showMainView: () => void, hideMainView: () => void, name: string) => boolean;
+  readonly toggleView: (comp: AlloyComponent, showMainView: () => void, hideMainView: (keepToolbar: boolean) => void, name: string) => boolean;
 }
 
 const makeViews = (parts: SlotContainerTypes.SlotContainerParts, viewConfigs: ViewConfig, providers: UiFactoryBackstageProviders) => {
@@ -97,15 +97,18 @@ const runOnShow = (slotContainer: AlloyComponent, name: string) => runOnPaneWith
 const runOnHide = (slotContainer: AlloyComponent, name: string) => runOnPaneWithInstanceApi(slotContainer, name, View.getOnHide);
 
 const factory: UiSketcher.SingleSketchFactory<SilverViewWrapperDetail, SilverViewWrapperSpec> = (detail, spec) => {
-  const setViews = (comp: AlloyComponent, viewConfigs: ViewConfig) => {
-    Replacing.set(comp, [ makeSlotContainer(viewConfigs, spec.backstage.shared.providers) ]);
+  let viewConfigs: ViewConfig = {};
+
+  const setViews = (comp: AlloyComponent, configs: ViewConfig) => {
+    viewConfigs = configs;
+    Replacing.set(comp, [ makeSlotContainer(configs, spec.backstage.shared.providers) ]);
   };
 
   const whichView = (comp: AlloyComponent): Optional<string> => {
     return Composing.getCurrent(comp).bind(getCurrentName);
   };
 
-  const toggleView = (comp: AlloyComponent, showMainView: () => void, hideMainView: () => void, name: string): boolean => {
+  const toggleView = (comp: AlloyComponent, showMainView: () => void, hideMainView: (keepToolbar: boolean) => void, name: string): boolean => {
     return Composing.getCurrent(comp).exists((slotContainer) => {
       const optCurrentSlotName = getCurrentName(slotContainer);
       const isTogglingCurrentView = optCurrentSlotName.exists((current) => name === current);
@@ -115,7 +118,7 @@ const factory: UiSketcher.SingleSketchFactory<SilverViewWrapperDetail, SilverVie
         SlotContainer.hideAllSlots(slotContainer);
 
         if (!isTogglingCurrentView) {
-          hideMainView();
+          hideMainView(viewConfigs[name]?.keepToolbar === true);
           showContainer(comp);
           SlotContainer.showSlot(slotContainer, name);
           runOnShow(slotContainer, name);

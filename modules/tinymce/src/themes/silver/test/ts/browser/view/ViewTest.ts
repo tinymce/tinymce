@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, FocusTools, Keys, type StructAssert, TestStore, UiFinder, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
-import { Attribute, Css, Html, Scroll, SugarBody, SugarShadowDom } from '@ephox/sugar';
+import { Attribute, Class, Css, Html, Scroll, SugarBody, SugarShadowDom } from '@ephox/sugar';
 import { TinyApis, TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -270,6 +270,16 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
       toggleView('myview1');
       await pAssertToolbarDrawerVisibleState(false);
       toggleView('myview1');
+      await pAssertToolbarDrawerVisibleState(true);
+    });
+
+    it('TINYMCE-14768: Toolbar drawer state should survive switching directly between views', async () => {
+      await pAssertToolbarDrawerVisibleState(true);
+      toggleView('myview1');
+      await pAssertToolbarDrawerVisibleState(false);
+      toggleView('myview2');
+      await pAssertToolbarDrawerVisibleState(false);
+      toggleView('myview2');
       await pAssertToolbarDrawerVisibleState(true);
     });
 
@@ -555,6 +565,167 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
 
       const boldButton = await TinyUiActions.pWaitForUi(editor, '.tox-toolbar__primary [data-mce-name="bold"]');
       assert.isDefined(boldButton, 'Bold button should be in `tox-toolbar__primary`');
+    });
+  });
+
+  context('TINYMCE-14768: keepToolbar', () => {
+    const openedSidebarSelector = '.tox-sidebar__slider.tox-sidebar--sliding-open:not(.tox-sidebar--sliding-growing)';
+    const closedSidebarSelector = '.tox-sidebar__slider.tox-sidebar--sliding-closed:not(.tox-sidebar--sliding-shrinking)';
+    const store = TestStore();
+    const hook = TinyHooks.bddSetup<Editor>({
+      base_url: '/project/tinymce/js/tinymce',
+      toolbar_mode: 'floating',
+      toolbar: 'mysidebar | ' + Arr.range(10, Fun.constant('bold | italic ')).join(''),
+      width: 500,
+      setup: (editor: Editor) => {
+        editor.ui.registry.addSidebar('mysidebar', {
+          tooltip: 'My sidebar',
+          icon: 'comment',
+          onShow: (api) => {
+            api.element().style.width = '200px';
+            store.add('mysidebar:show');
+          },
+          onHide: () => store.add('mysidebar:hide')
+        });
+
+        editor.on('ToggleSidebar', () => store.add('ToggleSidebar'));
+        editor.on('ToggleView', () => store.add('ToggleView'));
+
+        editor.ui.registry.addView('toolbarview', {
+          keepToolbar: true,
+          onShow: (api) => {
+            api.getContainer().innerHTML = 'keep-toolbar';
+          },
+          onHide: Fun.noop
+        });
+
+        editor.ui.registry.addView('plainview', {
+          onShow: (api) => {
+            api.getContainer().innerHTML = 'plain';
+          },
+          onHide: Fun.noop
+        });
+      }
+    }, []);
+
+    const pAssertToolbarDrawerVisibleState = async (expectedState: boolean) => {
+      if (expectedState) {
+        await UiFinder.pWaitForVisible('Wait for toolbar drawer to be visible', SugarBody.body(), '.tox-toolbar__overflow');
+      } else {
+        await Waiter.pTryUntil('Wait for toolbar drawer to close', () => UiFinder.notExists(SugarBody.body(), '.tox-toolbar__overflow'));
+      }
+    };
+
+    const pWaitForSidebarOpened = () =>
+      Waiter.pTryUntil('Wait for the sidebar to finish opening', () => UiFinder.exists(SugarBody.body(), openedSidebarSelector));
+
+    const pWaitForSidebarClosed = () =>
+      Waiter.pTryUntil('Wait for the sidebar to finish closing', () => UiFinder.exists(SugarBody.body(), closedSidebarSelector));
+
+    it('hides the edit area and keeps the editor header visible', () => {
+      const editor = hook.editor();
+      editor.execCommand('ToggleView', false, 'toolbarview');
+
+      const editorContainer = UiFinder.findIn(TinyDom.container(editor), '.tox-editor-container').getOrDie();
+      assert.isFalse(Attribute.has(editorContainer, 'aria-hidden'), 'Editor container should not be aria-hidden');
+      assert.isTrue(Css.getRaw(editorContainer, 'display').isNone(), 'Editor container should not have display none');
+      assert.isTrue(Class.has(editorContainer, 'tox-editor-container--keep-toolbar'), 'Should pin the header strip');
+
+      const sidebarWrap = UiFinder.findIn(TinyDom.container(editor), '.tox-sidebar-wrap').getOrDie();
+      assert.equal('true', Attribute.get(sidebarWrap, 'aria-hidden'), 'Edit area wrap should be aria-hidden');
+      assert.equal('none', Css.getRaw(sidebarWrap, 'display').getOrDie(), 'Edit area wrap should be display none');
+
+      const header = UiFinder.findIn(TinyDom.container(editor), '.tox-editor-header').getOrDie();
+      assert.notEqual('none', Css.get(header, 'display'), 'Header should remain visible');
+
+      const viewWrap = UiFinder.findIn(TinyDom.container(editor), '.tox-view-wrap').getOrDie();
+      assert.isFalse(Attribute.has(viewWrap, 'aria-hidden'), 'View should be visible');
+      assert.isTrue(Css.getRaw(viewWrap, 'display').isNone(), 'View should not have display none');
+
+      editor.execCommand('ToggleView', false, 'toolbarview');
+
+      assert.isFalse(Attribute.has(editorContainer, 'aria-hidden'), 'Editor container restored');
+      assert.isTrue(Css.getRaw(editorContainer, 'display').isNone(), 'Editor container display restored');
+      assert.isFalse(Class.has(editorContainer, 'tox-editor-container--keep-toolbar'), 'Keep-toolbar class removed');
+      assert.isFalse(Attribute.has(sidebarWrap, 'aria-hidden'), 'Edit area wrap restored');
+      assert.isTrue(Css.getRaw(sidebarWrap, 'display').isNone(), 'Edit area wrap display restored');
+    });
+
+    it('leaves the toolbar drawer in the user\'s state while the toolbar stays visible', async () => {
+      const editor = hook.editor();
+
+      await pAssertToolbarDrawerVisibleState(false);
+      editor.execCommand('ToggleToolbarDrawer');
+      await pAssertToolbarDrawerVisibleState(true);
+
+      editor.execCommand('ToggleView', false, 'toolbarview');
+      await pAssertToolbarDrawerVisibleState(true);
+
+      editor.execCommand('ToggleToolbarDrawer');
+      await pAssertToolbarDrawerVisibleState(false);
+
+      editor.execCommand('ToggleView', false, 'toolbarview');
+      await pAssertToolbarDrawerVisibleState(false);
+    });
+
+    it('restores the toolbar drawer when switching from a full view to a keep-toolbar view', async () => {
+      const editor = hook.editor();
+
+      await pAssertToolbarDrawerVisibleState(false);
+      editor.execCommand('ToggleToolbarDrawer');
+      await pAssertToolbarDrawerVisibleState(true);
+
+      editor.execCommand('ToggleView', false, 'plainview');
+      await pAssertToolbarDrawerVisibleState(false);
+
+      editor.execCommand('ToggleView', false, 'toolbarview');
+      await pAssertToolbarDrawerVisibleState(true);
+
+      editor.execCommand('ToggleView', false, 'toolbarview');
+      await pAssertToolbarDrawerVisibleState(true);
+    });
+
+    it('closes an open sidebar when a keep-toolbar view opens', async () => {
+      const editor = hook.editor();
+
+      editor.execCommand('ToggleSidebar', false, 'mysidebar');
+      await pWaitForSidebarOpened();
+      store.clear();
+
+      editor.execCommand('ToggleView', false, 'toolbarview');
+
+      assert.equal(editor.queryCommandValue('ToggleSidebar'), '', 'No sidebar should be active while the keep-toolbar view is open');
+      UiFinder.exists(SugarBody.body(), closedSidebarSelector);
+      UiFinder.exists(SugarBody.body(), 'button[data-mce-name="mysidebar"][aria-pressed="false"]');
+      store.assertEq('The sidebar should be hidden and announced before the view opens', [ 'mysidebar:hide', 'ToggleSidebar', 'ToggleView' ]);
+
+      editor.execCommand('ToggleView', false, 'toolbarview');
+
+      assert.equal(editor.queryCommandValue('ToggleSidebar'), '', 'The sidebar should stay closed once the view has closed');
+      const sidebar = UiFinder.findIn(SugarBody.body(), '.tox-sidebar').getOrDie();
+      assert.isTrue(Css.getRaw(sidebar, 'width').isNone(), 'The sidebar should not be left with a pinned width');
+
+      editor.execCommand('ToggleSidebar', false, 'mysidebar');
+      await pWaitForSidebarOpened();
+      editor.execCommand('ToggleSidebar', false, 'mysidebar');
+      await pWaitForSidebarClosed();
+    });
+
+    it('leaves an open sidebar in place for a plain view', async () => {
+      const editor = hook.editor();
+
+      editor.execCommand('ToggleSidebar', false, 'mysidebar');
+      await pWaitForSidebarOpened();
+      store.clear();
+
+      editor.execCommand('ToggleView', false, 'plainview');
+
+      assert.equal(editor.queryCommandValue('ToggleSidebar'), 'mysidebar', 'The sidebar should stay active while a plain view is open');
+      store.assertEq('A plain view should not touch the sidebar', [ 'ToggleView' ]);
+
+      editor.execCommand('ToggleView', false, 'plainview');
+      editor.execCommand('ToggleSidebar', false, 'mysidebar');
+      await pWaitForSidebarClosed();
     });
   });
 });

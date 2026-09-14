@@ -14,6 +14,7 @@ export default (): void => {
       let isToggled2 = false;
 
       ed.ui.registry.addView('myview1', {
+        keepToolbar: true,
         buttons: [
           {
             type: 'group',

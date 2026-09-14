@@ -9,18 +9,21 @@ export interface ViewInstanceApi {
 
 export interface ViewSpec {
   buttons?: ViewButtonSpec[];
+  keepToolbar?: boolean;
   onShow: (api: ViewInstanceApi) => void;
   onHide: (api: ViewInstanceApi) => void;
 }
 
 export interface View {
   buttons: ViewButton[];
+  keepToolbar: boolean;
   onShow: (api: ViewInstanceApi) => void;
   onHide: (api: ViewInstanceApi) => void;
 }
 
 export const viewSchema = StructureSchema.objOf([
   FieldSchema.defaultedArrayOf('buttons', [], viewButtonSchema),
+  FieldSchema.defaultedBoolean('keepToolbar', false),
   FieldSchema.requiredFunction('onShow'),
   FieldSchema.requiredFunction('onHide')
 ]);

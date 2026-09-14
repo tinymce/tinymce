@@ -3,7 +3,7 @@ import {
 } from '@ephox/alloy';
 import { FieldSchema } from '@ephox/boulder';
 import { Arr, Id, Obj, Optional, Optionals, Type, type Result } from '@ephox/katamari';
-import { Attribute, Css, SelectorFind, type SugarElement } from '@ephox/sugar';
+import { Attribute, Class, Css, SelectorFind, type SugarElement } from '@ephox/sugar';
 
 import type { EditorEventMap } from 'tinymce/core/api/EventTypes';
 import type Observable from 'tinymce/core/api/util/Observable';
@@ -79,7 +79,7 @@ interface OuterContainerApis {
   readonly toggleView: (comp: AlloyComponent, name: string) => boolean;
   readonly whichView: (comp: AlloyComponent) => string | null;
   readonly showMainView: (comp: AlloyComponent) => void;
-  readonly hideMainView: (comp: AlloyComponent) => void;
+  readonly hideMainView: (comp: AlloyComponent, keepToolbar: boolean) => void;
 }
 
 interface ToolbarApis {
@@ -90,18 +90,31 @@ interface ToolbarApis {
   readonly isOpen?: (toolbar: AlloyComponent) => boolean;
 }
 
+const keepToolbarClass = 'tox-editor-container--keep-toolbar';
+
+const setHidden = (element: SugarElement<Element>, hidden: boolean): void => {
+  if (hidden) {
+    Css.set(element, 'display', 'none');
+    Attribute.set(element, 'aria-hidden', 'true');
+  } else {
+    Css.remove(element, 'display');
+    Attribute.remove(element, 'aria-hidden');
+  }
+};
+
 const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, OuterContainerSketchSpec> = (detail, components, _spec) => {
   let toolbarDrawerOpenState = false;
+  let toolbarVisible = true;
 
-  const toggleStatusbar = (editorContainer: SugarElement<Element>) => {
+  const setStatusbarHidden = (editorContainer: SugarElement<Element>, hidden: boolean): void => {
     SelectorFind.sibling(editorContainer, '.tox-statusbar').each((statusBar) => {
-      if (Css.get(statusBar, 'display') === 'none' && Attribute.get(statusBar, 'aria-hidden') === 'true') {
-        Css.remove(statusBar, 'display');
-        Attribute.remove(statusBar, 'aria-hidden');
-      } else {
-        Css.set(statusBar, 'display', 'none');
-        Attribute.set(statusBar, 'aria-hidden', 'true');
-      }
+      setHidden(statusBar, hidden);
+    });
+  };
+
+  const setSidebarWrapHidden = (editorContainer: SugarElement<Element>, hidden: boolean): void => {
+    SelectorFind.descendant(editorContainer, '.tox-sidebar-wrap').each((wrap) => {
+      setHidden(wrap, hidden);
     });
   };
 
@@ -193,7 +206,7 @@ const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, Out
     },
     toggleView: (comp, name) => {
       return Composite.parts.getPart(comp, detail, 'viewWrapper').exists(
-        (wrapper) => ViewWrapper.toggleView(wrapper, () => apis.showMainView(comp), () => apis.hideMainView(comp), name)
+        (wrapper) => ViewWrapper.toggleView(wrapper, () => apis.showMainView(comp), (keepToolbar) => apis.hideMainView(comp, keepToolbar), name)
       );
     },
     whichView: (comp) => {
@@ -201,29 +214,51 @@ const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, Out
         ViewWrapper.whichView
       ).getOrNull();
     },
-    hideMainView: (comp: AlloyComponent) => {
-      toolbarDrawerOpenState = apis.isToolbarDrawerToggled(comp);
-      if (toolbarDrawerOpenState) {
-        apis.toggleToolbarDrawer(comp);
+    hideMainView: (comp: AlloyComponent, keepToolbar: boolean) => {
+      const restoreDrawer = keepToolbar && !toolbarVisible && toolbarDrawerOpenState;
+      if (keepToolbar) {
+        toolbarDrawerOpenState = false;
+      } else if (toolbarVisible) {
+        toolbarDrawerOpenState = apis.isToolbarDrawerToggled(comp);
+        if (toolbarDrawerOpenState) {
+          apis.toggleToolbarDrawer(comp);
+        }
       }
+      toolbarVisible = keepToolbar;
 
       Composite.parts.getPart(comp, detail, 'editorContainer').each((editorContainer) => {
         const element = editorContainer.element;
-        toggleStatusbar(element);
-        Css.set(element, 'display', 'none');
-        Attribute.set(element, 'aria-hidden', 'true');
+        setStatusbarHidden(element, true);
+
+        if (keepToolbar) {
+          Composite.parts.getPart(comp, detail, 'sidebar').each(Sidebar.closeSidebar);
+          Class.add(element, keepToolbarClass);
+          setHidden(element, false);
+          setSidebarWrapHidden(element, true);
+        } else {
+          Class.remove(element, keepToolbarClass);
+          setSidebarWrapHidden(element, false);
+          setHidden(element, true);
+        }
       });
+
+      if (restoreDrawer) {
+        apis.toggleToolbarDrawerWithoutFocusing(comp);
+      }
     },
     showMainView: (comp: AlloyComponent) => {
       if (toolbarDrawerOpenState) {
         apis.toggleToolbarDrawer(comp);
+        toolbarDrawerOpenState = false;
       }
+      toolbarVisible = true;
 
       Composite.parts.getPart(comp, detail, 'editorContainer').each((editorContainer) => {
         const element = editorContainer.element;
-        toggleStatusbar(element);
-        Css.remove(element, 'display');
-        Attribute.remove(element, 'aria-hidden');
+        Class.remove(element, keepToolbarClass);
+        setSidebarWrapHidden(element, false);
+        setStatusbarHidden(element, false);
+        setHidden(element, false);
       });
     }
   };

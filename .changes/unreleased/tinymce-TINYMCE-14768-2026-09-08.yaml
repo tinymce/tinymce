@@ -1,0 +1,7 @@
+project: tinymce
+kind: Added
+body: Views can now keep the editor toolbar visible with the new `keepToolbar` option,
+  which closes any open sidebar.
+time: 2026-09-08T10:44:46.945077+10:00
+custom:
+  Issue: TINYMCE-14768
