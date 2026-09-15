@@ -15,6 +15,14 @@ describe('browser.tinymce.core.FakeCaretImageCaptionTest', () => {
     image_caption: true
   }, [ ImagePlugin ]);
 
+  // A body offset would land before any caret container left by a previous selection, which hides the fake caret
+  const setCursorBefore = (editor: Editor, selector: string) => {
+    const rng = editor.dom.createRng();
+    rng.setStartBefore(editor.dom.select(selector)[0]);
+    rng.collapse(true);
+    editor.selection.setRng(rng);
+  };
+
   it('TINY-11997: should hide after tabbing inside figcaption', async function () {
     // skiped on FireFox since `setRawSelection` seems not to work on it
     if (isFirefox) {
@@ -28,7 +36,7 @@ describe('browser.tinymce.core.FakeCaretImageCaptionTest', () => {
       '</figure>'
     );
 
-    TinySelections.setCursor(editor, [], 0);
+    setCursorBefore(editor, 'figure');
     await Waiter.pTryUntil('Wait for fake caret to be added', () => {
       TinyAssertions.assertContentPresence(editor, { '.mce-visual-caret': 1 });
     });
@@ -59,8 +67,7 @@ describe('browser.tinymce.core.FakeCaretImageCaptionTest', () => {
       '</div>'
     );
     editor.focus();
-    TinySelections.setRawSelection(editor, [], 0, [], 0);
-    editor.selection.getNode().focus();
+    setCursorBefore(editor, 'div[contenteditable="false"]');
     await Waiter.pTryUntil('Wait for fake caret to be added', () => {
       TinyAssertions.assertContentPresence(editor, { '.mce-visual-caret': 1 });
     });
