@@ -65,7 +65,7 @@ class EditorCommands {
     }
 
     if (lowerCaseCommand !== 'mcefocus') {
-      if (!/^(mceAddUndoLevel|mceEndUndoLevel)$/i.test(lowerCaseCommand) && !skipFocus) {
+      if (!/^(mceAddUndoLevel|mceEndUndoLevel|toggleview)$/i.test(lowerCaseCommand) && !skipFocus) {
         editor.focus();
       } else {
         SelectionBookmark.restore(editor);

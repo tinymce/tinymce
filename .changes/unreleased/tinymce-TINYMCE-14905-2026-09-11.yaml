@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Opening or closing a View no longer scrolls the editor to the caret position.
+time: 2026-09-11T16:28:00+10:00
+custom:
+  Issue: TINYMCE-14905

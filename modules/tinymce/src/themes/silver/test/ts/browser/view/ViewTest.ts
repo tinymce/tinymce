@@ -381,6 +381,35 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
     });
   });
 
+  context('Scroll persistence', () => {
+    const hook = TinyHooks.bddSetup<Editor>({
+      base_url: '/project/tinymce/js/tinymce',
+      setup: (editor: Editor) => {
+        editor.ui.registry.addView('myview1', {
+          onShow: (api) => {
+            api.getContainer().innerHTML = '<button>myview1</button>';
+          },
+          onHide: Fun.noop
+        });
+      }
+    }, []);
+
+    it('TINYMCE-14905: ToggleView does not scroll the editor to the caret', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>top</p><p style="height: 1000px">spacer</p><p>bottom</p>');
+      editor.selection.select(editor.getBody().lastChild as Element);
+      editor.focus();
+      editor.getWin().scrollTo(0, 0);
+      const scrollY = editor.getWin().scrollY;
+
+      editor.execCommand('ToggleView', false, 'myview1');
+      editor.execCommand('ToggleView', false, 'myview1');
+
+      assert.equal(editor.getWin().scrollY, scrollY, 'ToggleView should not scroll the editor to the caret');
+      assert.isTrue(editor.hasFocus(), 'Editor should be focused after closing the view');
+    });
+  });
+
   context('Initialize view with command', () => {
     const store = TestStore();
     const hook = TinyHooks.bddSetupLight<Editor>({
