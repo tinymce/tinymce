@@ -137,6 +137,9 @@ describe('browser.agar.http.HttpMockingTest', () => {
     }),
     Http.del('/custom/empty/304', async () => {
       return new window.Response(null, { status: 304 });
+    }),
+    Http.get('/custom/throwing', async () => {
+      throw new Error('Handler blew up');
     })
   ], { logLevel: 'debug', name: 'test' });
 
@@ -204,6 +207,13 @@ describe('browser.agar.http.HttpMockingTest', () => {
     Assert.eq('Should be expected JSON response', { message: 'Patch response' }, json);
     Assert.eq('Should be expected status', 200, response.status);
     Assert.eq('Should be expected content-type', 'application/json', response.headers.get('Content-Type'));
+  });
+
+  it('TINYMCE-14918: Should respond with a 500 when the handler throws rather than leaking an unhandled rejection', async () => {
+    const response = await window.fetch('/custom/throwing');
+
+    Assert.eq('Should be expected status', 500, response.status);
+    Assert.eq('Should be expected body', 'Handler blew up', await response.text());
   });
 
   it('TINY-13084: Should return custom http status 403', async () => {

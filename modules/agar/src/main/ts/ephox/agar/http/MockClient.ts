@@ -1,6 +1,7 @@
 import { Type } from '@ephox/katamari';
 
 import * as HttpHandler from './HttpHandler';
+import * as ResponseHelpers from './ResponseHelpers';
 import * as Shared from './Shared';
 
 export interface MockingConfig {
@@ -175,7 +176,17 @@ const messageHandler = (event: MessageEvent) => {
       body: data.body.byteLength > 0 ? data.body : undefined,
     });
 
-    const requestPromise = handler(request, abortController.signal).then(async (response) => {
+    // A handler that throws would otherwise leave the request hanging forever and surface as an unhandled
+    // rejection in whichever test happens to be running, so it is turned into a 500 response instead
+    const handlerPromise = handler(request, abortController.signal).catch((err) => {
+      errorLog(`Handler failed for [${data.method}] ${data.url}:`, err);
+      return ResponseHelpers.textResponse(
+        err instanceof Error ? err.message : String(err),
+        { status: 500, statusText: 'Mock handler error' }
+      );
+    });
+
+    const requestPromise = handlerPromise.then(async (response) => {
       infoLog(`[${data.method}] ${data.url} -> ${response.status} ${response.statusText}`);
 
       const headMessage: Shared.MockedResponseHeadMessage = {
@@ -193,6 +204,9 @@ const messageHandler = (event: MessageEvent) => {
       } else {
         await handleNonBodyResponse(port, abortController);
       }
+    }).catch((err) => {
+      // Streaming the response back can still fail, which must not leak out as an unhandled rejection either
+      errorLog(`Failed to respond to [${data.method}] ${data.url}:`, err);
     }).finally(() => {
       inflightRequests.delete(data.requestId);
     });
