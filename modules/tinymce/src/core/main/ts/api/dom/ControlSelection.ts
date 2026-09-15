@@ -305,6 +305,13 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
   };
 
   const showResizeRect = (targetElm: HTMLElement) => {
+    // The throttled call can fire after setContent has replaced the target, leaving
+    // handles bound to the zero-sized geometry of a detached element
+    if (!targetElm.isConnected) {
+      hideResizeRect();
+      return;
+    }
+
     unbindResizeHandleEvents();
 
     // Get position and size of target
@@ -421,7 +428,9 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
     }
   };
 
-  const throttledShowResizeRect = Throttler.first(showResizeRect, 0);
+  // Adaptable so a burst of update requests shows the rect for the most recently
+  // requested element rather than the first, which may since have been detached
+  const throttledShowResizeRect = Throttler.adaptable(showResizeRect, 0);
 
   const hideResizeRect = (removeSelected: boolean = true) => {
     throttledShowResizeRect.cancel();

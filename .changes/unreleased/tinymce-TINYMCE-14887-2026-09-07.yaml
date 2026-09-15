@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Resizing an image would sometimes show a 0px ghost image
+time: 2026-09-07T17:48:51.564186+10:00
+custom:
+    Issue: TINYMCE-14887

@@ -7,6 +7,7 @@ import { assert } from 'chai';
 
 import type Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 describe('browser.tinymce.core.dom.ControlSelectionTest', () => {
   const imgSrc = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAGUlEQVR4nGK5aLGTATdgwiM3gqUBAQAA//8ukgHZvWHlnwAAAABJRU5ErkJggg==';
@@ -182,6 +183,26 @@ describe('browser.tinymce.core.dom.ControlSelectionTest', () => {
       editor.resetContent('<p><uc-video contenteditable="false" class="tox-uc-video" style="width: 100%; height: 50px"></uc-video></p>');
       await pResizeAndAssertDimensions(editor, 'uc-video', [ 0 ], 'uc-video', '#mceResizeHandlenw', -10, -10, 798, 50);
     });
+  });
+
+  it('TINYMCE-14887: Resize handles follow the last element requested within the same tick', async () => {
+    const editor = hook.editor();
+    const editorBody = TinyDom.body(editor);
+    editor.setContent(`<table style="width: 600px; height: 200px"><tbody><tr><td><img src="${imgSrc}" width="100" height="100"></td></tr></tbody></table>`);
+    await pWaitForElementDimensions(editor, 'table', 600, 200);
+    TinySelections.select(editor, 'img', []);
+    await pWaitForDragHandles(editorBody, '#mceResizeHandlese');
+
+    // Both elements contain the selection, so neither request moves it and nothing else can update the handles
+    const requestResizeRect = (selector: string) => {
+      const target = UiFinder.findIn<HTMLElement>(editorBody, selector).getOrDie().dom;
+      editor.selection.controlSelection.updateResizeRect({ type: 'mousedown', target } as unknown as EditorEvent<MouseEvent>);
+    };
+    requestResizeRect('table');
+    requestResizeRect('img');
+    await Waiter.pWait(0);
+
+    await pAssertInitialGhostElement(editor, '#mceResizeHandlese', (ghost) => getAndAssertDimensions(ghost, 100, 100));
   });
 
   it('TINY-6229: Resize video element', async () => {
