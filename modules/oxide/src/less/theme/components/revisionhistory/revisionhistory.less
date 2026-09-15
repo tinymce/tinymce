@@ -138,15 +138,25 @@
         }
       }
 
+      .tox-revisionhistory__card-tags {
+        display: flex;
+        align-items: flex-start;
+        flex-direction: row;
+        gap: @pad-sm;
+        overflow-x: auto;
+      }
+
       .tox-revisionhistory__card-label {
         display: block;
-        width: min-content;
+        max-width: min-content;
         padding: @pad-xs @pad-sm;
         margin-bottom: @pad-sm;
         font-size: @font-size-xs;
         font-weight: @font-weight-bold;
         border-radius: @pad-xs;
         background: if(@revisionhistory-dark-mode, mix(@color-black, @color-white, 80%), mix(@color-white, @color-black, 80%));
+        text-wrap: balance;
+        flex: 0 1 auto;
       }
 
       .tox-revisionhistory__card-content {
@@ -161,7 +171,7 @@
         display: flex;
 
         .tox-revisionhistory__avatar {
-          position: relative;   
+          position: relative;
           z-index: 1;
         }
 
