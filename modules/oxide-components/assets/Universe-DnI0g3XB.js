@@ -1,0 +1,1 @@
+import{r}from"./iframe-sDbtdLpN.js";import{a as t}from"./UniverseProvider-2eeL7Kxw.js";import{b as s}from"./Optional-CwIPeCD0.js";const a=()=>{const e=r.useContext(t);if(s(e))throw new Error("useUniverse must be used within a UniverseProvider");return e};export{a as u};
