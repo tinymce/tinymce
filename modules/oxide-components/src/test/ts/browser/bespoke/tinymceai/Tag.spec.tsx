@@ -27,7 +27,7 @@ describe('browser.bespoke.tinymceai.Tag', () => {
     const onClose = vi.fn();
     const { getByTestId } = render(
       <UniverseProvider resources={resources}>
-        <Tag data-testid="tag" ref={(el) => el?.focus()} closeable link={false} label="Test Tag" onClose={onClose} />
+        <Tag data-testid="tag" ref={(el) => el?.focus()} closeable link={false} label="Test Tag" closeAriaLabel="Remove tag" onClose={onClose} />
       </UniverseProvider>,
       { wrapper }
     );
@@ -37,6 +37,16 @@ describe('browser.bespoke.tinymceai.Tag', () => {
     expect(onClose).toHaveBeenCalledTimes(1);
     await userEvent.keyboard('{Delete}');
     expect(onClose).toHaveBeenCalledTimes(2);
+  });
+
+  it('TINYMCE-14742: should name the close button with the closeAriaLabel', async () => {
+    const { getByRole } = render(
+      <UniverseProvider resources={resources}>
+        <Tag closeable link={false} label="Test Tag" closeAriaLabel="Remove tag" onClose={Fun.noop} />
+      </UniverseProvider>,
+      { wrapper }
+    );
+    await expect.element(getByRole('button', { name: 'Remove tag', exact: true })).toBeVisible();
   });
 
   describe('Snapshot Tests', () => {
@@ -59,14 +69,14 @@ describe('browser.bespoke.tinymceai.Tag', () => {
 
     it('TINYMCE-14505: Should match snapshot for a closeable tag', () => {
       const { asFragment } = renderTag(
-        <Tag link={false} closeable label="Closeable tag" onClose={Fun.noop} />
+        <Tag link={false} closeable label="Closeable tag" closeAriaLabel="Remove tag" onClose={Fun.noop} />
       );
       expect(SnapshotTestUtils.normalize(asFragment())).toMatchSnapshot('Closeable tag');
     });
 
     it('TINYMCE-14505: Should match snapshot for a disabled closeable tag with an aria-label', () => {
       const { asFragment } = renderTag(
-        <Tag link={false} closeable disabled label="Disabled tag" ariaLabel="Disabled tag" onClose={Fun.noop} />
+        <Tag link={false} closeable disabled label="Disabled tag" closeAriaLabel="Disabled tag" onClose={Fun.noop} />
       );
       expect(SnapshotTestUtils.normalize(asFragment())).toMatchSnapshot('Disabled closeable tag');
     });

@@ -72,8 +72,8 @@ const WithIconButtonsContextToolbar = () => (
         </ContextToolbar.Trigger>
         <ContextToolbar.Toolbar>
           <ContextToolbar.Group>
-            <IconButton variant='primary' icon='checkmark' onClick={Fun.noop} />
-            <IconButton variant='secondary' icon='cross' onClick={Fun.noop} />
+            <IconButton variant='primary' icon='checkmark' aria-label='Accept' onClick={Fun.noop} />
+            <IconButton variant='secondary' icon='cross' aria-label='Reject' onClick={Fun.noop} />
           </ContextToolbar.Group>
         </ContextToolbar.Toolbar>
       </ContextToolbar.Root>
@@ -118,7 +118,7 @@ const MixedContentContextToolbar = () => (
       <ContextToolbar.Toolbar>
         <UniverseProvider resources={resources}>
           <ContextToolbar.Group>
-            <IconButton icon='arrow-up' onClick={Fun.noop} />
+            <IconButton icon='arrow-up' aria-label='Previous' onClick={Fun.noop} />
             <span style={{
               padding: '8px',
               fontSize: '12px',
@@ -127,7 +127,7 @@ const MixedContentContextToolbar = () => (
             }}>
               1/3
             </span>
-            <IconButton icon='arrow-down' onClick={Fun.noop} />
+            <IconButton icon='arrow-down' aria-label='Next' onClick={Fun.noop} />
           </ContextToolbar.Group>
         </UniverseProvider>
         <ContextToolbar.Group>

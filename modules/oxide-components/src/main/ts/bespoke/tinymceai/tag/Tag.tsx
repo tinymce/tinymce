@@ -11,7 +11,6 @@ interface BaseTagProps {
   readonly onFocus?: (event: React.FocusEvent<HTMLElement>) => void;
   readonly onBlur?: (event: React.FocusEvent<HTMLElement>) => void;
   readonly onClick?: (event: React.MouseEvent<HTMLElement>) => void;
-  readonly ariaLabel?: string;
   readonly focusable?: boolean;
 }
 
@@ -27,11 +26,13 @@ interface LinkTagProps {
 
 interface NonClosableProps {
   readonly closeable: false;
+  readonly closeAriaLabel?: never;
 }
 
 interface ClosableProps {
   readonly closeable: true;
   readonly onClose: () => void;
+  readonly closeAriaLabel: string;
   readonly disabled?: boolean;
 }
 
@@ -39,7 +40,7 @@ export type TagProps = (NonLinkTagProps | LinkTagProps) & (NonClosableProps | Cl
 
 // Tag is here in reference to a tagging/labeling context, not a HTML tag.
 export const Tag = forwardRef<HTMLDivElement | HTMLAnchorElement, TagProps>((props, ref) => {
-  const { label, icon, closeable, ariaLabel, link, focusable: focusableProp, ...rest } = props;
+  const { label, icon, closeable, closeAriaLabel, link, focusable: focusableProp, ...rest } = props;
   const disabled = closeable && props.disabled === true;
   const href = link ? props.href : undefined;
   const target = link ? (props.target ?? '_blank') : undefined;
@@ -61,7 +62,7 @@ export const Tag = forwardRef<HTMLDivElement | HTMLAnchorElement, TagProps>((pro
       <span className={Bem.element('tox-tag', 'label')}>{label}</span>
       {closeable && (
         <span className={Bem.element('tox-tag', 'close')}>
-          <IconButton icon='source-close' variant='naked' disabled={disabled} aria-label={ariaLabel} onClick={(e) => {
+          <IconButton icon='source-close' variant='naked' disabled={disabled} aria-label={closeAriaLabel} onClick={(e) => {
             e.preventDefault();
             props.onClose();
           }} />

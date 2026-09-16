@@ -23,7 +23,7 @@ describe('visual.IconButtonTest', () => {
     it(`renders the ${variant} state`, async () => {
       const screen = renderVisual(
         <UniverseProvider resources={resources}>
-          <IconButton icon='left-arrow' variant={variant} />
+          <IconButton icon='left-arrow' variant={variant} aria-label='Go back' />
         </UniverseProvider>
       );
       await screen.expectScreenshot(`icon-button-${variant}`);

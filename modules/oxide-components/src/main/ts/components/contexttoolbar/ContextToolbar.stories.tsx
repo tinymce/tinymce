@@ -223,8 +223,8 @@ export const WithIconButtons: Story = {
           </ContextToolbar.Trigger>
           <ContextToolbar.Toolbar>
             <ContextToolbar.Group>
-              <IconButton variant='primary' icon='checkmark' onClick={fn()} />
-              <IconButton variant='secondary' icon='cross' onClick={fn()} />
+              <IconButton variant='primary' icon='checkmark' aria-label='Accept' onClick={fn()} />
+              <IconButton variant='secondary' icon='cross' aria-label='Reject' onClick={fn()} />
             </ContextToolbar.Group>
           </ContextToolbar.Toolbar>
         </ContextToolbar.Root>
@@ -276,7 +276,7 @@ export const MixedContent: Story = {
           <ContextToolbar.Toolbar>
             <UniverseProvider resources={mockUniverse}>
               <ContextToolbar.Group>
-                <IconButton icon='arrow-up' onClick={fn()} />
+                <IconButton icon='arrow-up' aria-label='Previous' onClick={fn()} />
 
                 <span style={{
                   padding: '8px',
@@ -286,7 +286,7 @@ export const MixedContent: Story = {
                 }}>
                   1/3
                 </span>
-                <IconButton icon='arrow-down' onClick={fn()} />
+                <IconButton icon='arrow-down' aria-label='Next' onClick={fn()} />
               </ContextToolbar.Group>
             </UniverseProvider>
             <ContextToolbar.Group>

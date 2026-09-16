@@ -5,10 +5,11 @@ import { Button, type ButtonProps } from '../button/Button';
 import { Icon } from '../icon/Icon';
 import type { IconProps } from '../icon/IconTypes';
 
-export interface IconButtonProps extends IconProps, Omit<ButtonProps, 'children' | 'className'> {
-  readonly children?: never;
-  readonly className?: never;
-}
+type AccessibleName =
+  | { readonly 'aria-label': string; readonly 'aria-labelledby'?: never }
+  | { readonly 'aria-labelledby': string; readonly 'aria-label'?: never };
+
+export type IconButtonProps = IconProps & Omit<ButtonProps, 'children' | 'className' | 'aria-label' | 'aria-labelledby'> & AccessibleName & { readonly children?: never; readonly className?: never };
 
 export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>((props, ref) => {
   const { icon, ...rest } = props;

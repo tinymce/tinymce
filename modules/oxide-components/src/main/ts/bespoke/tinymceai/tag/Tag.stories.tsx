@@ -30,6 +30,7 @@ export const ClosableTag: Story = {
     closeable: true,
     link: false,
     label: 'Value',
+    closeAriaLabel: 'Remove tag',
     onClose: Fun.noop
   },
   render: (args) => (
@@ -44,6 +45,7 @@ export const FocusedClosableTag: Story = {
     closeable: true,
     link: false,
     label: 'Value',
+    closeAriaLabel: 'Remove tag',
     onClose: Fun.noop
   },
   render: (args) => {

@@ -15,7 +15,7 @@ const resources: UniverseResources = {
 
 const renderTag = () => (
   <UniverseProvider resources={resources}>
-    <Tag closeable={true} link={false} label='Value' onClose={Fun.noop} />
+    <Tag closeable={true} link={false} label='Value' closeAriaLabel='Remove tag' onClose={Fun.noop} />
   </UniverseProvider>
 );
 

@@ -125,7 +125,7 @@ This works because `Dropdown.Trigger` spreads `...props` onto the button child, 
 
 ### IconButton
 - Renders a single icon inside a `Button` with the `tox-button--icon` class
-- Props: `icon` (required) + all `ButtonProps` except `children` (forbidden) and `className` (forbidden)
+- Props: `icon` (required) + a required accessible name — exactly one of `aria-label` or `aria-labelledby` — + all other `ButtonProps` except `children` (forbidden) and `className` (forbidden)
 - Use `Button` instead when the button needs text content alongside an icon
 
 ## Testing Dropdown Components

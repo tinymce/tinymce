@@ -28,6 +28,7 @@ exports[`browser.components.IconButtonTest > Snapshot Tests > TINYMCE-14505: Sho
     class="tox"
   >
     <button
+      aria-label="Bold"
       class="tox-button tox-button--icon"
       type="button"
     >
@@ -40,6 +41,7 @@ exports[`browser.components.IconButtonTest > Snapshot Tests > TINYMCE-14505: Sho
       </span>
     </button>
     <button
+      aria-label="Bold"
       class="tox-button tox-button--secondary tox-button--icon"
       type="button"
     >
@@ -52,6 +54,7 @@ exports[`browser.components.IconButtonTest > Snapshot Tests > TINYMCE-14505: Sho
       </span>
     </button>
     <button
+      aria-label="Bold"
       class="tox-button tox-button--secondary--outline tox-button--icon"
       type="button"
     >
@@ -64,6 +67,7 @@ exports[`browser.components.IconButtonTest > Snapshot Tests > TINYMCE-14505: Sho
       </span>
     </button>
     <button
+      aria-label="Bold"
       class="tox-button tox-button--naked tox-button--icon"
       type="button"
     >
@@ -85,6 +89,7 @@ exports[`browser.components.IconButtonTest > Snapshot Tests > TINYMCE-14505: Sho
     class="tox"
   >
     <button
+      aria-label="Bold"
       class="tox-button tox-button--enabled tox-button--icon"
       type="button"
     >
@@ -97,6 +102,7 @@ exports[`browser.components.IconButtonTest > Snapshot Tests > TINYMCE-14505: Sho
       </span>
     </button>
     <button
+      aria-label="Bold"
       class="tox-button tox-button--icon"
       disabled=""
       type="button"

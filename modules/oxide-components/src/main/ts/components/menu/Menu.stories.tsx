@@ -194,7 +194,7 @@ export const MenuInADropdown: Story = {
     return (<>
       <Dropdown.Root>
         <Dropdown.Trigger>
-          <IconButton variant={'secondary'} icon={'item'}></IconButton>
+          <IconButton variant={'secondary'} icon={'item'} aria-label={'Menu'}></IconButton>
         </Dropdown.Trigger>
         <Dropdown.Content>
           {menu}
@@ -227,7 +227,7 @@ export const MenuInADropdownWithTooltip: Story = {
         <Tooltip.Root>
           <Dropdown.Trigger>
             <Tooltip.Trigger>
-              <IconButton variant={'secondary'} icon={'item'}></IconButton>
+              <IconButton variant={'secondary'} icon={'item'} aria-label={'Menu'}></IconButton>
             </Tooltip.Trigger>
           </Dropdown.Trigger>
           <Dropdown.Content>

@@ -18,6 +18,7 @@ exports[`browser.bespoke.tinymceai.Tag > Snapshot Tests > TINYMCE-14505: Should 
         class="tox-tag__close"
       >
         <button
+          aria-label="Remove tag"
           class="tox-button tox-button--naked tox-button--icon"
           type="button"
         >

@@ -54,7 +54,7 @@ describe('visual.FloatingSidebarTest', () => {
           <FloatingSidebar.Header>
             <div className='tox-sidebar-content__title'>Floating Header</div>
             <div className='tox-sidebar-content__header-close-button'>
-              <IconButton variant='naked' icon='close' onClick={Fun.noop} />
+              <IconButton variant='naked' icon='close' aria-label='Close' onClick={Fun.noop} />
             </div>
           </FloatingSidebar.Header>
           {sidebarContent}

@@ -127,7 +127,7 @@ export const ButtonInHeader: Story = {
       <FloatingSidebar.Header>
         <div className='tox-sidebar-content__title'>Floating Header</div>
         <div className='tox-sidebar-content__header-close-button'>
-          <IconButton variant='naked' icon="close" onClick={() => window.alert('Close the sidebar!')} />
+          <IconButton variant='naked' icon="close" aria-label="Close" onClick={() => window.alert('Close the sidebar!')} />
         </div>
       </FloatingSidebar.Header>
       <div style={{ padding: '12px' }}>
