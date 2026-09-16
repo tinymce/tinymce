@@ -723,8 +723,8 @@ const Quirks = (editor: Editor): Quirks => {
 
   const selectPos = (editor: Editor, e: EditorEvent<MouseEvent>, pos: CaretPosition): void => {
     e.preventDefault();
-    editor.focus();
     editor.selection.setRng(pos.toRange());
+    editor.focus();
   };
 
   /**

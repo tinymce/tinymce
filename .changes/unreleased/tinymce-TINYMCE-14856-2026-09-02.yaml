@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Clicking to the right of a list item's text in an unfocused editor scrolled the content back to the top in Chrome.
+time: 2026-09-02T19:46:58.004465+01:00
+custom:
+  Issue: TINYMCE-14856
