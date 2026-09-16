@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Drag selection wasn't working when clicking on the right of an `li` in Chrome.
+time: 2026-09-07T09:23:52.820764613+02:00
+custom:
+  Issue: TINYMCE-14855

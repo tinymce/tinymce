@@ -1,8 +1,8 @@
 import { Keys, Monitor, Mouse } from '@ephox/agar';
 import { before, context, describe, it } from '@ephox/bedrock-client';
-import { Arr, Fun } from '@ephox/katamari';
+import { Arr } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Focus, PredicateFind, Ready, SelectorFind, SugarDocument, SugarNode, Traverse } from '@ephox/sugar';
+import { Focus, PredicateFind, SugarDocument, SugarElement, SugarNode } from '@ephox/sugar';
 import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -93,25 +93,35 @@ describe('browser.tinymce.core.dom.SelectionQuirksTest', () => {
       }
     });
 
-    const testClickOnRightSideOfLI = async (editor: Editor, { content, path, offset }: { content: string; path: number[]; offset: number }) => {
-      const li = SelectorFind.descendant<HTMLLIElement>(TinyDom.body(editor), 'li').getOrDie();
-      const firstChild = Traverse.firstChild(li).getOrDie();
-      const textNode = SugarNode.isText(firstChild) ? firstChild : PredicateFind.descendant(firstChild, SugarNode.isText).getOrDie();
+    const mouseEventOnRightSideOfLI = (editor: Editor): MouseEvent => {
+      const li = editor.dom.select('li')[0];
+      const firstChild = SugarElement.fromDom(li.firstChild as Node);
+      const textNode = SugarNode.isText(firstChild) ? firstChild.dom : PredicateFind.descendant(firstChild, SugarNode.isText).getOrDie().dom;
       const rng = editor.getDoc().createRange();
-      rng.setStart(textNode.dom, 0);
-      rng.setEnd(textNode.dom, textNode.dom.data.length);
+      rng.setStart(textNode, 0);
+      rng.setEnd(textNode, textNode.data.length);
       const rect = rng.getClientRects()[0];
 
-      if (content.includes('<img')) {
-        await Ready.image(SelectorFind.descendant<HTMLImageElement>(li, 'img').getOrDie()).catch(Fun.noop);
-      }
-
-      const target: EventTarget = li.dom;
-      const mouseEvent = {
-        target,
+      return {
+        button: 0,
+        target: li as EventTarget,
         clientX: rect.right + 100,
         clientY: rect.top + rect.height / 2
       } as MouseEvent;
+    };
+
+    const testClickOnRightSideOfLI = async (editor: Editor, { content, path, offset }: { content: string; path: number[]; offset: number }) => {
+      if (content.includes('<img')) {
+        const img = editor.dom.select('img')[0];
+        if (img && !img.complete) {
+          await new Promise((resolve) => {
+            img.onload = resolve;
+            img.onerror = resolve;
+          });
+        }
+      }
+      const mouseEvent = mouseEventOnRightSideOfLI(editor);
+
       editor.dispatch('mousedown', mouseEvent);
       editor.dispatch('click', mouseEvent);
       editor.dispatch('mouseup', mouseEvent);
@@ -171,6 +181,17 @@ describe('browser.tinymce.core.dom.SelectionQuirksTest', () => {
       await TinyContentActions.pType(editor, 'def');
 
       await testClickOnRightSideOfLI(editor, { content, path: [ 0, 0, 0 ], offset: 3 });
+    });
+
+    it('TINYMCE-14855: pressing the left mouse button on the right of the first element of an li must not prevent mousedown, otherwise the browser cannot start a drag selection', async () => {
+      const editor = hook.editor();
+      editor.setContent('<ol><li>abc<div>def</div></li></ol>');
+
+      assert.isFalse(editor.dispatch('mousedown', mouseEventOnRightSideOfLI(editor)).isDefaultPrevented(),
+        'mousedown must not be prevented or the browser will not start a native drag selection');
+      assert.isTrue(editor.dispatch('click', mouseEventOnRightSideOfLI(editor)).isDefaultPrevented(),
+        'the caret correction is expected to happen on click');
+      TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 3);
     });
 
     it('TINYMCE-14856: clicking on the right of the first element of an li scrolled into view in an unfocused editor should not scroll the content back to the top', async () => {

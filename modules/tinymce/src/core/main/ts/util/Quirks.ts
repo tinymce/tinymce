@@ -734,7 +734,7 @@ const Quirks = (editor: Editor): Quirks => {
   **/
 
   const fixInLISelection = () => {
-    editor.on('mousedown', (e) => {
+    editor.on('click', (e) => {
       const target = SugarElement.fromDom(e.target);
       if (isListItem(target)) {
         firstBlockChildOrNewLine(target).fold(
