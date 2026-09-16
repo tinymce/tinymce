@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: The editor iframe was missing its `title` attribute on browsers other than Firefox.
+time: 2026-09-14T11:27:37.304425845Z
+custom:
+  Issue: TINYMCE-13100

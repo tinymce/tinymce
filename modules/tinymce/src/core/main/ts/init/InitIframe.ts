@@ -28,7 +28,7 @@ const createIframeElement = (id: string, title: TranslatedString, customAttrs: {
     id: id + '_ifr',
     frameBorder: '0',
     allowTransparency: 'true',
-    ...Env.browser.isFirefox() ? { title } : {}
+    title
   });
 
   Class.add(iframe, 'tox-edit-area__iframe');
@@ -50,14 +50,17 @@ const getIframeHtml = (editor: Editor) => {
   const bodyId = Options.getBodyId(editor);
   const bodyClass = Options.getBodyClass(editor);
   const translatedAriaText = editor.translate(Options.getIframeAriaText(editor));
-  const iframeBodyAriaLabel = Env.browser.isFirefox() ? '' : `aria-label="${translatedAriaText}"`;
+  // TINYMCE-13100: VoiceOver does not read the iframe title, so the body is labelled
+  // for it. VoiceOver only runs on macOS, and elsewhere the title is announced.
+  // The role goes with it, since aria-label on a generic role is a violation.
+  const iframeBodyAriaAttrs = Env.os.isMacOS() || Env.os.isiOS() ? `role="textbox" aria-multiline="true" aria-label="${translatedAriaText}"` : '';
 
   if (Options.getContentSecurityPolicy(editor)) {
     iframeHTML += '<meta http-equiv="Content-Security-Policy" content="' + Options.getContentSecurityPolicy(editor) + '" />';
   }
 
   iframeHTML += '</head>' +
-    `<body id="${bodyId}" class="mce-content-body ${bodyClass}" data-id="${editor.id}" ${iframeBodyAriaLabel}>` +
+    `<body id="${bodyId}" class="mce-content-body ${bodyClass}" data-id="${editor.id}" ${iframeBodyAriaAttrs}>` +
     '<br>' +
     '</body></html>';
 
