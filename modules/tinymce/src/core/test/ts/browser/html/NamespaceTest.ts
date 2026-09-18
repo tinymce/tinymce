@@ -1,4 +1,4 @@
-import { describe, it } from '@ephox/bedrock-client';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
@@ -82,5 +82,54 @@ describe('browser.tinymce.core.html.NamespaceTest', () => {
     assert.equal(tracker.current(), 'svg');
     tracker.reset();
     assert.equal(tracker.current(), 'html');
+  });
+
+  context('TINYMCE-14388: scope tracking of nested namespace elements', () => {
+    const trackElements = (html: string): Array<[ string, Namespace.NamespaceType ]> => {
+      const tracker = Namespace.createNamespaceTracker();
+      const walker = document.createTreeWalker(SugarElement.fromHtml(html).dom, NodeFilter.SHOW_ELEMENT);
+      const states: Array<[ string, Namespace.NamespaceType ]> = [];
+
+      while (walker.nextNode()) {
+        const type = tracker.track(walker.currentNode);
+        assert.equal(type, tracker.current(), 'Current tracker state should be the last executed track result');
+        states.push([ walker.currentNode.nodeName.toLowerCase(), type ]);
+      }
+
+      return states;
+    };
+
+    it('TINYMCE-14388: element after a nested svg is tracked as html', () => {
+      assert.deepEqual(trackElements('<div><svg><svg><svg></svg></svg></svg><span></span></div>'), [
+        [ 'svg', 'svg' ],
+        [ 'svg', 'svg' ],
+        [ 'svg', 'svg' ],
+        [ 'span', 'html' ]
+      ]);
+    });
+
+    it('TINYMCE-14388: element after a nested math is tracked as html', () => {
+      assert.deepEqual(trackElements('<div><math><math></math></math><span></span></div>'), [
+        [ 'math', 'math' ],
+        [ 'math', 'math' ],
+        [ 'span', 'html' ]
+      ]);
+    });
+
+    it('TINYMCE-14388: element after a math nested in an svg is tracked as html', () => {
+      assert.deepEqual(trackElements('<div><svg><math></math></svg><span></span></div>'), [
+        [ 'svg', 'svg' ],
+        [ 'math', 'math' ],
+        [ 'span', 'html' ]
+      ]);
+    });
+
+    it('TINYMCE-14388: element after an svg nested in a math is tracked as html', () => {
+      assert.deepEqual(trackElements('<div><math><svg></svg></math><span></span></div>'), [
+        [ 'math', 'math' ],
+        [ 'svg', 'svg' ],
+        [ 'span', 'html' ]
+      ]);
+    });
   });
 });

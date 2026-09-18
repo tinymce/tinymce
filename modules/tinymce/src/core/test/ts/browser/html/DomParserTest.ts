@@ -1853,6 +1853,31 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
       const serializedHtml = HtmlSerializer({}, schema).serialize(DomParser({ forced_root_block: 'p' }, schema).parse(input));
       assert.equal(serializedHtml, '<div><svg> <circle> </circle> </svg> <svg> <circle> </circle> </svg></div>');
     });
+
+    context('TINYMCE-14388: nested namespace elements', () => {
+      it('TINYMCE-14388: Should not treat an element following a nested SVG as being in the SVG namespace', () => {
+        const localSchema = Schema();
+        localSchema.addValidElements('svg[*]');
+        const input = '<svg><svg></svg></svg><img src="x:" onerror="void 0"></svg>';
+        const serializedHtml = HtmlSerializer({}, localSchema).serialize(DomParser({ forced_root_block: 'p' }, localSchema).parse(input));
+        assert.equal(serializedHtml, '<svg><svg></svg></svg><p><img src="x:"></p>');
+      });
+
+      it('TINYMCE-14388: Should not treat an element following a nested SVG as being in the SVG namespace (default schema)', () => {
+        const localSchema = Schema();
+        const input = '<svg><svg></svg></svg><img src="x:" onerror="void 0">';
+        const serializedHtml = HtmlSerializer({}, localSchema).serialize(DomParser({ forced_root_block: 'p' }, localSchema).parse(input));
+        assert.equal(serializedHtml, '<p><img src="x:"></p>');
+      });
+
+      it('TINYMCE-14388: Should not treat an element following a nested MathML element as being in the MathML namespace', () => {
+        const localSchema = Schema();
+        localSchema.addValidElements('math[*]');
+        const input = '<math><math></math></math><img src="x:" onerror="void 0">';
+        const serializedHtml = HtmlSerializer({}, localSchema).serialize(DomParser({ forced_root_block: 'p' }, localSchema).parse(input));
+        assert.equal(serializedHtml, '<math><math></math></math><p><img src="x:"></p>');
+      });
+    });
   });
 
   context('Table elements', () => {

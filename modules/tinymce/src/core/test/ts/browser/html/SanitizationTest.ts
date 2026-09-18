@@ -4,11 +4,27 @@ import { assert } from 'chai';
 import Schema from 'tinymce/core/api/html/Schema';
 import { getSanitizer, type MimeType } from 'tinymce/core/html/Sanitization';
 
+interface HtmlSanitizerTestCase {
+  readonly input: string;
+  readonly expected: string;
+  readonly mimeType: MimeType;
+  readonly sanitize?: boolean;
+  readonly validate?: boolean;
+  readonly customElements?: string[];
+  readonly validElements?: string;
+}
+
 describe('browser.tinymce.core.html.SanitizationTest', () => {
   context('Sanitize html', () => {
-    const testHtmlSanitizer = (testCase: { input: string; expected: string; mimeType: MimeType; sanitize?: boolean; customElements?: string[] }) => {
+    const testHtmlSanitizer = (testCase: HtmlSanitizerTestCase) => {
       const customElements = testCase.customElements ?? [];
-      const sanitizer = getSanitizer({ sanitize: testCase.sanitize ?? true }, Schema({ custom_elements: customElements.join(',') }));
+      const schema = Schema({ custom_elements: customElements.join(',') });
+
+      if (testCase.validElements) {
+        schema.addValidElements(testCase.validElements);
+      }
+
+      const sanitizer = getSanitizer({ sanitize: testCase.sanitize ?? true, validate: testCase.validate }, schema);
 
       const body = document.createElement('body');
       body.innerHTML = testCase.input;
@@ -50,6 +66,58 @@ describe('browser.tinymce.core.html.SanitizationTest', () => {
       customElements: [ 'custom-video' ],
       sanitize: false
     }));
+
+    context('TINYMCE-14388: namespace scope of content following nested namespace elements', () => {
+      // Firefox 152 and older skip the foreign content breakout rules when parsing a fragment,
+      // so an HTML element nested in SVG stays in the SVG namespace
+      const breaksOutOfForeignContent = (): boolean => {
+        const body = document.createElement('body');
+        body.innerHTML = '<svg><img></svg>';
+        return body.firstElementChild?.childElementCount === 0;
+      };
+
+      it('TINYMCE-14388: event handler is removed from an element following nested svg elements', () => testHtmlSanitizer({
+        input: '<svg><svg></svg></svg><img src="x:" onerror="void 0">',
+        expected: '<svg><svg></svg></svg><img src="x:">',
+        mimeType: 'text/html',
+        validate: true,
+        validElements: 'svg[*]'
+      }));
+
+      it('TINYMCE-14388: event handler is removed from an element that breaks out of nested svg elements', () => testHtmlSanitizer({
+        input: '<svg><svg></svg><img src="x:" onerror="void 0"></svg>',
+        // Where the img does not break out it is left in the svg namespace, which DOMPurify removes outright
+        expected: breaksOutOfForeignContent() ? '<svg><svg></svg></svg><img src="x:">' : '<svg><svg></svg></svg>',
+        mimeType: 'text/html',
+        validate: true,
+        validElements: 'svg[*]'
+      }));
+
+      it('TINYMCE-14388: event handler is removed from an element following deeply nested svg elements', () => testHtmlSanitizer({
+        input: '<svg><svg><svg></svg></svg></svg><img src="x:" onerror="void 0">',
+        expected: '<svg><svg><svg></svg></svg></svg><img src="x:">',
+        mimeType: 'text/html',
+        validate: true,
+        validElements: 'svg[*]'
+      }));
+
+      it('TINYMCE-14388: event handler is removed from an element following nested math elements', () => testHtmlSanitizer({
+        input: '<math><math></math></math><img src="x:" onerror="void 0">',
+        expected: '<math><math></math></math><img src="x:">',
+        mimeType: 'text/html',
+        validate: true,
+        validElements: 'math[*]'
+      }));
+
+      it('TINYMCE-14388: event handler is removed from an element following nested svg elements when sanitization is disabled', () => testHtmlSanitizer({
+        input: '<svg><svg></svg></svg><img src="x:" onerror="void 0">',
+        expected: '<svg><svg></svg></svg><img src="x:">',
+        mimeType: 'text/html',
+        sanitize: false,
+        validate: true,
+        validElements: 'svg[*]'
+      }));
+    });
   });
 
   context('Santitize non-html', () => {
