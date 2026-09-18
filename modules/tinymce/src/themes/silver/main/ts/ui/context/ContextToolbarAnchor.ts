@@ -70,12 +70,28 @@ const determineInsetLayout = (editor: Editor, contextbar: SugarElement<HTMLEleme
     // Preserve the position, get the bounds and then see if we have an overlap.
     // If overlapping and this wasn't triggered by a reposition then flip the placement
     return preservePosition(contextbar, data.getMode(), () => {
+      const contextbarBox = Boxes.box(contextbar);
       // TINY-8890: The negative 20px threshold here was arrived at by considering the use
       // case of a table with default heights for the rows. The threshold had to be
       // large enough so that the context toolbar would not prevent the user selecting
       // in the row containing the context toolbar.
-      const isOverlapping = isVerticalOverlap(selectionBounds, Boxes.box(contextbar), -20);
-      return isOverlapping && !data.isReposition() ? LayoutInset.flip : LayoutInset.preserve;
+      const isOverlapping = isVerticalOverlap(selectionBounds, contextbarBox, -20);
+      if (!isOverlapping || data.isReposition()) {
+        return LayoutInset.preserve;
+      }
+      // GH-11175: In a small editor (e.g. only a small table is visible) both the north
+      // and south inset placements can overlap the selection. Flipping then never moves the
+      // toolbar clear of the selection, so it would oscillate up and down on every keypress.
+      // Only flip when the opposite placement would actually avoid the overlap; otherwise
+      // preserve the current placement so the toolbar stays put.
+      const contextbarHeight = Height.get(contextbar) + bubbleSize;
+      const yBounds = data.getMode() === 'fixed' ? bounds.y + Scroll.get().top : bounds.y;
+      const northBox = Boxes.bounds(contextbarBox.x, yBounds, contextbarBox.width, contextbarHeight);
+      const southBox = Boxes.bounds(contextbarBox.x, yBounds + bounds.height - contextbarHeight, contextbarBox.width, contextbarHeight);
+      const currentIsNorth = Math.abs(contextbarBox.y - northBox.y) <= Math.abs(contextbarBox.y - southBox.y);
+      const oppositeBox = currentIsNorth ? southBox : northBox;
+      const oppositeOverlaps = isVerticalOverlap(selectionBounds, oppositeBox, -20);
+      return oppositeOverlaps ? LayoutInset.preserve : LayoutInset.flip;
     });
   } else {
     // Attempt to find the best layout to use that won't cause an overlap for the new anchor element
