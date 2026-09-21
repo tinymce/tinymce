@@ -97,6 +97,12 @@ const removeCaretContainerNode = (editor: Editor, node: Node, moveCaret: boolean
   }
 };
 
+const isAdjacent = (node: Node, sibling: Node): boolean =>
+  node.nextSibling === sibling || node.previousSibling === sibling;
+
+const isCaretContainerNodeAdjacentToSelection = (node: Node, startContainer: Node, endContainer: Node): boolean =>
+  node === startContainer || node === endContainer || isAdjacent(node, startContainer) || isAdjacent(node, endContainer);
+
 // Removes the caret container for the specified node or all on the current document
 const removeCaretContainer = (editor: Editor, node: Node | null, moveCaret: boolean) => {
   const dom = editor.dom, selection = editor.selection;
@@ -104,8 +110,10 @@ const removeCaretContainer = (editor: Editor, node: Node | null, moveCaret: bool
     node = getParentCaretContainer(editor.getBody(), selection.getStart());
 
     if (!node) {
+      const startContainer = editor.selection.getRng().startContainer;
+      const endContainer = editor.selection.getRng().endContainer;
       while ((node = dom.get(CARET_ID))) {
-        removeCaretContainerNode(editor, node, moveCaret);
+        removeCaretContainerNode(editor, node, isCaretContainerNodeAdjacentToSelection(node, startContainer, endContainer));
       }
     }
   } else {
@@ -340,10 +348,10 @@ const removeCaretFormat = (editor: Editor, name: string, vars?: FormatVars, simi
   }
 };
 
-const disableCaretContainer = (editor: Editor, keyCode: number, moveCaret: boolean) => {
+const disableCaretContainer = (editor: Editor, keyCode: number) => {
   const selection = editor.selection, body = editor.getBody();
 
-  removeCaretContainer(editor, null, moveCaret);
+  removeCaretContainer(editor, null, false);
 
   // Remove caret container if it's empty
   if ((keyCode === 8 || keyCode === 46) && selection.isCollapsed() && selection.getStart().innerHTML === ZWSP) {
@@ -356,11 +364,9 @@ const disableCaretContainer = (editor: Editor, keyCode: number, moveCaret: boole
   }
 };
 
-const endsWithNbsp = (element: Node) => NodeType.isText(element) && Strings.endsWith(element.data, Unicode.nbsp);
-
 const setup = (editor: Editor): void => {
   editor.on('mouseup keydown', (e) => {
-    disableCaretContainer(editor, e.keyCode, endsWithNbsp(editor.selection.getRng().endContainer));
+    disableCaretContainer(editor, e.keyCode);
   });
 };
 
@@ -408,5 +414,6 @@ export {
   replaceWithCaretFormat,
   createCaretFormatAtStart,
   isFormatElement,
-  isFormatCaret
+  isFormatCaret,
+  isCaretContainerNodeAdjacentToSelection
 };

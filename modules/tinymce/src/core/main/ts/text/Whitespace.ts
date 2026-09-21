@@ -1,5 +1,7 @@
 import { Arr, Strings, Unicode } from '@ephox/katamari';
 
+import * as NodeType from '../dom/NodeType';
+
 const whiteSpaceRegExp = /^[ \t\r\n]*$/;
 
 const isWhitespaceText = (text: string): boolean => whiteSpaceRegExp.test(text);
@@ -45,9 +47,20 @@ const normalize = (text: string, tabSpaces: number = 4, isStartOfContent: boolea
   return result.str;
 };
 
+const isCaretAfterWhitespace = (sel: Selection): boolean => {
+  const focusNode = sel.focusNode;
+  if (sel.isCollapsed && NodeType.isText(focusNode) && focusNode.data.length) {
+    const lastChar = focusNode.data[focusNode.data.length - 1];
+    return isWhitespaceText(lastChar) || lastChar === Unicode.nbsp;
+  } else {
+    return false;
+  }
+};
+
 export {
   isWhitespaceText,
   isZwsp,
   isNewline,
-  normalize
+  normalize,
+  isCaretAfterWhitespace
 };

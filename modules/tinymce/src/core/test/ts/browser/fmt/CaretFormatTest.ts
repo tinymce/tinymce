@@ -438,6 +438,22 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
     assert.isNull(getParentCaretContainer(caret.dom, caret.dom), 'Should not be caret element');
   });
 
+  it('TINYMCE-14724: isCaretContainerNodeAdjacentToSelection', () => {
+    const parent = SugarElement.fromHtml('<p>before<span id="_mce_caret"></span>after</p>');
+    const node = parent.dom.childNodes[1];
+    const before = parent.dom.childNodes[0];
+    const after = parent.dom.childNodes[2];
+    const unrelated = SugarElement.fromTag('span').dom;
+
+    assert.isTrue(CaretFormat.isCaretContainerNodeAdjacentToSelection(node, node, unrelated), 'Should be true when node is the startContainer');
+    assert.isTrue(CaretFormat.isCaretContainerNodeAdjacentToSelection(node, unrelated, node), 'Should be true when node is the endContainer');
+    assert.isTrue(CaretFormat.isCaretContainerNodeAdjacentToSelection(node, after, unrelated), 'Should be true when startContainer is the next sibling');
+    assert.isTrue(CaretFormat.isCaretContainerNodeAdjacentToSelection(node, before, unrelated), 'Should be true when startContainer is the previous sibling');
+    assert.isTrue(CaretFormat.isCaretContainerNodeAdjacentToSelection(node, unrelated, after), 'Should be true when endContainer is the next sibling');
+    assert.isTrue(CaretFormat.isCaretContainerNodeAdjacentToSelection(node, unrelated, before), 'Should be true when endContainer is the previous sibling');
+    assert.isFalse(CaretFormat.isCaretContainerNodeAdjacentToSelection(node, unrelated, unrelated), 'Should be false when unrelated to selection');
+  });
+
   it('replaceWithCaretFormat', () => {
     const body = SugarElement.fromHtml('<div><br /></div>');
     const formats = [
@@ -914,5 +930,46 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
 
       TinyAssertions.assertContent(editor, '<p><span style="font-size: 36pt;"><s>x</s></span></p>');
     });
+  });
+
+  const formatCaret = '<span id="_mce_caret" data-mce-bogus="1" data-mce-type="format-caret"><strong>&#xFEFF;</strong></span>';
+  it('TINYMCE-14724: should not move the caret when the caret is away from the formatCaret', () => {
+    const editor = hook.editor();
+
+    editor.setContent(`<p>${formatCaret}Note</p><p>R&nbsp;</p>`);
+    TinySelections.setCursor(editor, [ 1, 0 ], 2);
+    editor.dispatch('mouseup');
+    TinyAssertions.assertContent(editor, `<p>Note</p>\n<p>R&nbsp;</p>`);
+    TinyAssertions.assertCursor(editor, [ 1, 0 ], 2);
+  });
+
+  it('TINYMCE-14724: should move the caret when the stray caret container is the previous sibling of the startContainer', () => {
+    const editor = hook.editor();
+
+    editor.setContent(`<p>Before${formatCaret}After</p>`);
+    TinySelections.setCursor(editor, [ 0, 0 ], 2);
+    editor.dispatch('mouseup');
+    TinyAssertions.assertContent(editor, '<p>BeforeAfter</p>');
+    TinyAssertions.assertCursor(editor, [ 0, 0 ], 6);
+  });
+
+  it('TINYMCE-14724: should move the caret when the stray caret container is the next sibling of the startContainer', () => {
+    const editor = hook.editor();
+
+    editor.setContent(`<p>Before${formatCaret}After</p>`);
+    TinySelections.setCursor(editor, [ 0, 2 ], 2);
+    editor.dispatch('mouseup');
+    TinyAssertions.assertContent(editor, '<p>BeforeAfter</p>');
+    TinyAssertions.assertCursor(editor, [ 0, 0 ], 6);
+  });
+
+  it('TINYMCE-14724: should move the caret when the stray caret container is the endContainer of a ranged selection', () => {
+    const editor = hook.editor();
+
+    editor.setContent(`<p>Alpha</p>\n<p>Before${formatCaret}After</p>`);
+    TinySelections.setSelection(editor, [ 0, 0 ], 2, [ 1, 1 ], 0);
+    editor.dispatch('mouseup');
+    TinyAssertions.assertContent(editor, `<p>Alpha</p>\n<p>BeforeAfter</p>`);
+    TinyAssertions.assertCursor(editor, [ 1, 0 ], 6);
   });
 });
