@@ -107,10 +107,9 @@ const Root = forwardRef<HTMLDivElement, CardRootProps>(({
 }, ref) => {
   const listContext = useCardListContext();
 
-  // Without both a list context and an index the comparisons below are `undefined === undefined`,
-  // which would mark every standalone card as focused and selected.
+  // Without both a list context and an index the comparison below is `undefined === undefined`,
+  // which would mark every standalone card as selected.
   const inList = Type.isNonNullable(listContext) && Type.isNonNullable(index);
-  const isFocused = inList && listContext?.focusedIndex === index;
   const isSelected = inList && listContext?.selectedIndex === index;
 
   const handleClick = useCallback((e: React.MouseEvent) => {
@@ -156,7 +155,7 @@ const Root = forwardRef<HTMLDivElement, CardRootProps>(({
   }, [ listContext, index ]);
 
   const cardClassName = Bem.block('tox-card', {
-    'selected': !loading && (isFocused || selected),
+    'selected': !loading && (isSelected || selected),
     'has-decision': hasDecision
   })
     + (loading ? ' tox-skeleton' : '')

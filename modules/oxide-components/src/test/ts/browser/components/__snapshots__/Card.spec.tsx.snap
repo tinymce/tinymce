@@ -14,7 +14,7 @@ exports[`browser.components.CardTest > Snapshot Tests > TINY-13459: Should match
         aria-busy="false"
         aria-label="Card 1"
         aria-selected="false"
-        class="tox-card tox-card--selected"
+        class="tox-card"
         role="option"
         tabindex="-1"
       >
@@ -49,7 +49,7 @@ exports[`browser.components.CardTest > Snapshot Tests > TINY-13459: Should match
         aria-busy="false"
         aria-label="Card 2"
         aria-selected="true"
-        class="tox-card"
+        class="tox-card tox-card--selected"
         role="option"
         tabindex="-1"
       >
@@ -99,7 +99,7 @@ exports[`browser.components.CardTest > Snapshot Tests > TINY-13459: Should match
         aria-busy="false"
         aria-label="Card 1"
         aria-selected="false"
-        class="tox-card tox-card--selected"
+        class="tox-card"
         role="option"
         tabindex="-1"
       >

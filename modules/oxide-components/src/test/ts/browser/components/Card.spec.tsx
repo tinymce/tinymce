@@ -108,7 +108,7 @@ describe('browser.components.CardTest', () => {
   });
 
   describe('State Tests', () => {
-    it('TINY-13459: Should apply selected CSS class when card is focused in list', async () => {
+    it('TINYMCE-14903: Should not apply selected CSS class when card is only focused in list', async () => {
       const { container } = render(
         <Card.CardList defaultFocusedIndex={0}>
           <Card.Root index={0}>
@@ -119,12 +119,12 @@ describe('browser.components.CardTest', () => {
       );
 
       const card = container.querySelector('.tox-card');
-      expect(card?.className).toContain('tox-card--selected');
+      expect(card?.className, 'Focused card should not use selected styling').not.toContain('tox-card--selected');
     });
 
-    it('TINY-13459: Should not apply selected CSS class when card is not focused', async () => {
+    it('TINYMCE-14903: Should apply selected CSS class from selectedIndex even when another card is focused', async () => {
       const { container } = render(
-        <Card.CardList defaultFocusedIndex={1}>
+        <Card.CardList defaultFocusedIndex={0} defaultSelectedIndex={1}>
           <Card.Root index={0}>
             <Card.Body>Content</Card.Body>
           </Card.Root>
@@ -135,8 +135,36 @@ describe('browser.components.CardTest', () => {
         { wrapper }
       );
 
-      const card = container.querySelector('.tox-card');
-      expect(card?.className).not.toContain('tox-card--selected');
+      const cards = container.querySelectorAll('.tox-card');
+      expect(cards[0].className, 'Focused unselected card should not have selected class').not.toContain('tox-card--selected');
+      expect(cards[1].className, 'Selected card should have selected class').toContain('tox-card--selected');
+    });
+
+    it('TINYMCE-14903: Should not apply selected CSS class when an action button is focused without selection', async () => {
+      const TestComponent: FC = () => {
+        const [ focusedIndex, setFocusedIndex ] = useState(-1);
+        return (
+          <Card.CardListController focusedIndex={focusedIndex} onFocusedIndexChange={setFocusedIndex}>
+            <Card.CardList>
+              <Card.Root index={0}>
+                <Card.Body>Content</Card.Body>
+                <Card.Actions>
+                  <Button variant="outlined">Skip</Button>
+                </Card.Actions>
+              </Card.Root>
+            </Card.CardList>
+          </Card.CardListController>
+        );
+      };
+
+      const { container, getByRole } = render(<TestComponent />, { wrapper });
+
+      await userEvent.click(getByRole('button', { name: 'Skip' }));
+
+      expect(
+        container.querySelector('.tox-card')?.className,
+        'Focusing an action button should not apply selected styling'
+      ).not.toContain('tox-card--selected');
     });
 
     it('TINYMCE-14607: Should not be selected by default when used outside a CardList', async () => {
@@ -316,7 +344,7 @@ describe('browser.components.CardTest', () => {
       expect(cards[1].getAttribute('aria-selected')).toBe('false');
     });
 
-    it('TINY-13459: Should apply focused styling to first card by default', async () => {
+    it('TINYMCE-14903: Should not apply selected styling from default focusedIndex', async () => {
       const { container } = render(
         <Card.CardList defaultFocusedIndex={0}>
           <Card.Root index={0}>
@@ -333,12 +361,50 @@ describe('browser.components.CardTest', () => {
       );
 
       const cards = container.querySelectorAll('.tox-card') as NodeListOf<HTMLElement>;
-      expect(cards[0].className).toContain('tox-card--selected');
-      expect(cards[1].className).not.toContain('tox-card--selected');
-      expect(cards[2].className).not.toContain('tox-card--selected');
+      expect(cards[0].className, 'Default focused card should not have selected class').not.toContain('tox-card--selected');
+      expect(cards[1].className, 'Unfocused unselected card should not have selected class').not.toContain('tox-card--selected');
+      expect(cards[2].className, 'Unfocused unselected card should not have selected class').not.toContain('tox-card--selected');
     });
 
-    it('TINY-13459: Should update focused card styling when focusedIndex changes (controlled)', async () => {
+    it('TINYMCE-14903: Should update selected card styling when selectedIndex changes (controlled)', async () => {
+      const onFocusedIndexChange = vi.fn();
+      const { container, rerender } = render(
+        <Card.CardListController focusedIndex={0} selectedIndex={0} onFocusedIndexChange={onFocusedIndexChange}>
+          <Card.CardList>
+            <Card.Root index={0}>
+              <Card.Body>Card 1</Card.Body>
+            </Card.Root>
+            <Card.Root index={1}>
+              <Card.Body>Card 2</Card.Body>
+            </Card.Root>
+          </Card.CardList>
+        </Card.CardListController>,
+        { wrapper }
+      );
+
+      let cards = container.querySelectorAll('.tox-card') as NodeListOf<HTMLElement>;
+      expect(cards[0].className, 'Initially selected card should have selected class').toContain('tox-card--selected');
+      expect(cards[1].className, 'Initially unselected card should not have selected class').not.toContain('tox-card--selected');
+
+      rerender(
+        <Card.CardListController focusedIndex={0} selectedIndex={1} onFocusedIndexChange={onFocusedIndexChange}>
+          <Card.CardList>
+            <Card.Root index={0}>
+              <Card.Body>Card 1</Card.Body>
+            </Card.Root>
+            <Card.Root index={1}>
+              <Card.Body>Card 2</Card.Body>
+            </Card.Root>
+          </Card.CardList>
+        </Card.CardListController>
+      );
+
+      cards = container.querySelectorAll('.tox-card') as NodeListOf<HTMLElement>;
+      expect(cards[0].className, 'Previously selected card should lose selected class').not.toContain('tox-card--selected');
+      expect(cards[1].className, 'Newly selected card should have selected class').toContain('tox-card--selected');
+    });
+
+    it('TINYMCE-14903: Should not apply selected styling when only focusedIndex changes (controlled)', async () => {
       const onFocusedIndexChange = vi.fn();
       const { container, rerender } = render(
         <Card.CardListController focusedIndex={0} onFocusedIndexChange={onFocusedIndexChange}>
@@ -355,8 +421,8 @@ describe('browser.components.CardTest', () => {
       );
 
       let cards = container.querySelectorAll('.tox-card') as NodeListOf<HTMLElement>;
-      expect(cards[0].className).toContain('tox-card--selected');
-      expect(cards[1].className).not.toContain('tox-card--selected');
+      expect(cards[0].className, 'Focused card should not have selected class without selectedIndex').not.toContain('tox-card--selected');
+      expect(cards[1].className, 'Unfocused unselected card should not have selected class').not.toContain('tox-card--selected');
 
       rerender(
         <Card.CardListController focusedIndex={1} onFocusedIndexChange={onFocusedIndexChange}>
@@ -372,8 +438,8 @@ describe('browser.components.CardTest', () => {
       );
 
       cards = container.querySelectorAll('.tox-card') as NodeListOf<HTMLElement>;
-      expect(cards[0].className).not.toContain('tox-card--selected');
-      expect(cards[1].className).toContain('tox-card--selected');
+      expect(cards[0].className, 'Previously focused card should not have selected class').not.toContain('tox-card--selected');
+      expect(cards[1].className, 'Newly focused card should not have selected class').not.toContain('tox-card--selected');
     });
   });
 
