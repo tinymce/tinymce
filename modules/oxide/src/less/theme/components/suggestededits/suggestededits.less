@@ -24,6 +24,15 @@
 @suggestededits-button-primary-active-background-color: @button-active-background-color;
 @suggestededits-button-primary-color: @button-text-color;
 
+@suggestededits-toolbar-button-border-color: contrast(@suggestededits-sidebar-background-color, darken(@suggestededits-sidebar-background-color, 5%), lighten(@suggestededits-sidebar-background-color, 11%));
+
+@suggestededits-toolbar-button-hover-background-color: contrast(@background-color, fade(@color-black, 12%), fade(@color-white, 12%));
+@suggestededits-toolbar-button-hover-border-color: @suggestededits-toolbar-button-hover-background-color;
+
+@suggestededits-toolbar-button-active-background-color: contrast(@background-color, fade(@color-black, 18%), fade(@color-white, 18%));
+@suggestededits-toolbar-button-active-border-color: @suggestededits-toolbar-button-active-background-color;
+@suggestededits-toolbar-button-active-color: @suggestededits-text-color;
+
 @suggestededits-card-active-border-color: @suggestededits-color-tint;
 
 .tox {
@@ -89,6 +98,41 @@
 
       .tox-suggestededits__sidebar-toolbar {
         padding: 4px 12px;
+
+        .tox-button:has(.tox-icon:only-child) {
+          gap: 0;
+          padding: var(--tox-private-pad-xs, @pad-xs) var(--tox-private-pad-md, @pad-md);
+
+          .tox-icon {
+            align-items: center;
+            display: flex;
+            flex: 0 0 auto;
+            height: 24px;
+            justify-content: center;
+            width: 24px;
+          }
+        }
+
+        .tox-button--secondary--outline {
+          border-color: @suggestededits-toolbar-button-border-color;
+
+          &:focus:not(:disabled),
+          &:hover:not(:disabled) {
+            background-color: @suggestededits-toolbar-button-hover-background-color;
+            border-color: @suggestededits-toolbar-button-hover-border-color;
+          }
+
+          &:active:not(:disabled),
+          &.tox-button--enabled:not(:disabled) {
+            background-color: @suggestededits-toolbar-button-active-background-color;
+            border-color: @suggestededits-toolbar-button-active-border-color;
+            color: @suggestededits-toolbar-button-active-color;
+          }
+
+          &[disabled] {
+            border-color: @suggestededits-toolbar-button-border-color;
+          }
+        }
       }
 
       .tox-suggestededits__sidebar-content {
