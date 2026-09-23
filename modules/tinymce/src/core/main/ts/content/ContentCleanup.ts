@@ -3,6 +3,11 @@ import { Attribute, Insert, Remove, SelectorFilter, SugarElement } from '@ephox/
 
 import * as ElementType from '../dom/ElementType';
 
+export const trimEmptyContents = (rootBlock: string, html: string): string => {
+  const emptyRegExp = new RegExp(`^(<${rootBlock}[^>]*>(&nbsp;|&#160;|\\s|\u00a0|<br \\/>|)<\\/${rootBlock}>[\r\n]*|<br \\/>[\r\n]*)$`);
+  return html.replace(emptyRegExp, '');
+};
+
 export const cleanupBogusElements = (parent: SugarElement<Node>): void => {
   const bogusElements = SelectorFilter.descendants(parent, '[data-mce-bogus]');
   Arr.each(bogusElements, (elem) => {

@@ -9,14 +9,8 @@ import * as ElementType from '../dom/ElementType';
 import * as TrimBody from '../dom/TrimBody';
 import * as Zwsp from '../text/Zwsp';
 
-import { cleanupBogusElements, cleanupInputNames } from './ContentCleanup';
+import { cleanupBogusElements, cleanupInputNames, trimEmptyContents } from './ContentCleanup';
 import type { Content, GetContentArgs } from './ContentTypes';
-
-const trimEmptyContents = (editor: Editor, html: string): string => {
-  const blockName = Options.getForcedRootBlock(editor);
-  const emptyRegExp = new RegExp(`^(<${blockName}[^>]*>(&nbsp;|&#160;|\\s|\u00a0|<br \\/>|)<\\/${blockName}>[\r\n]*|<br \\/>[\r\n]*)$`);
-  return html.replace(emptyRegExp, '');
-};
 
 const getPlainTextContent = (editor: Editor, body: HTMLElement) => {
   const doc = editor.getDoc();
@@ -53,7 +47,7 @@ const getContentFromBody = (editor: Editor, args: GetContentArgs, body: HTMLElem
   } else if (args.format === 'tree') {
     content = editor.serializer.serialize(body, args);
   } else {
-    content = trimEmptyContents(editor, editor.serializer.serialize(body, args));
+    content = trimEmptyContents(Options.getForcedRootBlock(editor), editor.serializer.serialize(body, args));
   }
 
   // Trim if not using a whitespace preserve format/element
