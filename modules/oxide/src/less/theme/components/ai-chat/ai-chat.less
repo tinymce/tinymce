@@ -131,16 +131,17 @@
     overflow-x: hidden;
     background-color: var(--tox-private-background-color, @background-color);
     display: flex;
-    padding: calc(12px - var(--tox-private-tinymceai-focus-border-width, @tinymceai-focus-border-width));
+    padding: 12px;
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
     flex: 1 0 0;
     align-self: stretch;
-    border: var(--tox-private-tinymceai-focus-border-width, @tinymceai-focus-border-width) solid var(--tox-private-background-color, @background-color);
 
+    // The ring is drawn inside the box, so it costs no layout and the sidebar's overflow cannot clip it
     &:focus-visible:not(:disabled) {
-       border: var(--tox-private-tinymceai-focus-border-width, @tinymceai-focus-border-width) solid var(--tox-private-color-tint, @color-tint);
+       outline: var(--tox-private-tinymceai-focus-border-width, @tinymceai-focus-border-width) solid var(--tox-private-color-tint, @color-tint);
+       outline-offset: calc(-1 * var(--tox-private-tinymceai-focus-border-width, @tinymceai-focus-border-width));
        border-radius: var(--tox-private-control-border-radius, @control-border-radius);
     }
 
@@ -148,7 +149,6 @@
       &:not(:has(.tox-sidebar-content__message-text)) {
         background-color: var(--tox-private-background-secondary, contrast(@background-color, darken(@background-color, 6%), lighten(@background-color, 7%)));
       }
-      border: none;
     }
   }
 
