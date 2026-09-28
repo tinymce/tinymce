@@ -321,3 +321,78 @@ exports[`browser.components.CardTest > Snapshot Tests > TINYMCE-14505: Should ma
   </div>
 </DocumentFragment>
 `;
+
+exports[`browser.components.CardTest > Snapshot Tests > TINYMCE-14884: Should match snapshot for grouped cards > CardList with grouped cards 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      aria-label="Suggestions of two documents"
+      class="tox-card-list"
+      role="listbox"
+    >
+      <div
+        class="tox-card-group"
+      >
+        <div
+          class="tox-card-group__title"
+          id=":id-0:"
+        >
+          Real Madrid article
+        </div>
+        <div
+          aria-labelledby=":id-0:"
+          class="tox-card-group__content"
+          role="group"
+        >
+          <div
+            aria-busy="false"
+            aria-label="Card 1"
+            aria-selected="false"
+            class="tox-card"
+            role="option"
+            tabindex="-1"
+          >
+            <div
+              class="tox-card__body"
+            >
+              First content
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="tox-card-group"
+      >
+        <div
+          class="tox-card-group__title"
+          id=":id-1:"
+        >
+          Barcelona article
+        </div>
+        <div
+          aria-labelledby=":id-1:"
+          class="tox-card-group__content"
+          role="group"
+        >
+          <div
+            aria-busy="false"
+            aria-label="Card 2"
+            aria-selected="false"
+            class="tox-card"
+            role="option"
+            tabindex="-1"
+          >
+            <div
+              class="tox-card__body"
+            >
+              Second content
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

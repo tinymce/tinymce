@@ -11,6 +11,15 @@
     @diff-preview-dim-overlay-color
   );
 
+  // Groups add their own spacing so we need to remove the ai__scroll default padding and list gap
+  .tox-ai__scroll:has(.tox-card-group) {
+    padding-top: 0;
+
+    .tox-ai__review-sidebar-container .tox-card-list {
+      gap: 0;
+    }
+  }
+
   .tox-ai__scroll {
     .tox-ai__review-sidebar-container {
       scrollbar-gutter: stable;
@@ -22,6 +31,11 @@
 
       .tox-card-list {
         gap: @pad-sm;
+      }
+
+      // Group titles should be expanded out to the entire with of the parent AI scroll container
+      .tox-card-group__title {
+        margin-inline: -12px;
       }
 
       .tox-ai__review-initializing {

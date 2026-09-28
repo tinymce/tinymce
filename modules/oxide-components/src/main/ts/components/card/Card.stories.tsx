@@ -490,6 +490,72 @@ This follows WCAG accessibility guidelines and the listbox pattern.
   }
 };
 
+export const GroupedCards: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: `
+**Cards grouped under a heading**
+
+\`Card.CardGroup\` holds any number of cards of a list under one title, for a list whose cards come from more
+than one source. The cards stay descendants of the list, so the arrow key navigation and the focused index run
+across the groups as one sequence rather than restarting in each of them.
+        `
+      }
+    }
+  },
+  render: () => {
+    const [ focusedIndex, setFocusedIndex ] = useState(0);
+    const [ selectedIndex, setSelectedIndex ] = useState<number | undefined>(undefined);
+
+    const groups = [
+      { title: 'Real Madrid article', cards: [ 'One', 'Two', 'Three' ] },
+      { title: 'Barcelona article', cards: [ 'Four', 'Five', 'Six' ] }
+    ];
+
+    let index = -1;
+
+    return (
+      <div style={{ width: '316px' }}>
+        <Card.CardListController
+          focusedIndex={focusedIndex}
+          onFocusedIndexChange={setFocusedIndex}
+          selectedIndex={selectedIndex}
+          onSelectCard={setSelectedIndex}
+        >
+          <Card.CardList ariaLabel="Suggestions of two documents">
+            {groups.map((group) => (
+              <Card.CardGroup key={group.title} title={group.title}>
+                {group.cards.map((card) => {
+                  index++;
+
+                  return (
+                    <Card.Root key={card} index={index}>
+                      <Card.Body>
+                        <p style={{ margin: 0 }}>{`Suggestion ${card}`}</p>
+                      </Card.Body>
+                      <Card.Actions>
+                        <Button variant="outlined" onClick={(e) => e.stopPropagation()}>
+                          <Icon icon="close" />
+                          Skip
+                        </Button>
+                        <Button variant="outlined" onClick={(e) => e.stopPropagation()}>
+                          <Icon icon="checkmark" />
+                          Apply
+                        </Button>
+                      </Card.Actions>
+                    </Card.Root>
+                  );
+                })}
+              </Card.CardGroup>
+            ))}
+          </Card.CardList>
+        </Card.CardListController>
+      </div>
+    );
+  }
+};
+
 export const SkeletonLoading: Story = {
   parameters: {
     docs: {

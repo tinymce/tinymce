@@ -455,3 +455,66 @@ describe('visual.CardTest', () => {
     await screen.expectScreenshot('card-expansion-feedback-thread');
   });
 });
+
+const groups = [
+  { title: 'Real Madrid article', cards: [ 'One', 'Two', 'Three' ] },
+  { title: 'Barcelona article', cards: [ 'Four', 'Five', 'Six' ] }
+];
+
+// Wide enough to show the heading band and the cards flush against the sides of the group, narrow
+// enough for a long title to overflow it.
+const renderList = (children: JSX.Element, focusedIndex = -1): JSX.Element => (
+  <div style={{ width: '316px' }}>
+    <Card.CardList defaultFocusedIndex={focusedIndex} ariaLabel="Suggestions of two documents">
+      {children}
+    </Card.CardList>
+  </div>
+);
+
+const renderCard = (label: string, index: number): JSX.Element => (
+  <Card.Root key={label} index={index}>
+    <Card.Body>
+      <p style={{ margin: 0 }}>{`Suggestion ${label}`}</p>
+    </Card.Body>
+  </Card.Root>
+);
+
+const renderGroups = (focusedIndex?: number): JSX.Element => {
+  let index = -1;
+
+  return renderList(
+    <>
+      {groups.map((group) => (
+        <Card.CardGroup key={group.title} title={group.title}>
+          {group.cards.map((card) => {
+            index++;
+
+            return renderCard(card, index);
+          })}
+        </Card.CardGroup>
+      ))}
+    </>,
+    focusedIndex
+  );
+};
+
+describe('visual.CardGroupTest', () => {
+  it('TINYMCE-14884: renders the cards of two groups under their own titles', async () => {
+    const screen = renderVisual(renderGroups());
+    await screen.expectScreenshot('card-group');
+  });
+
+  it('TINYMCE-14884: renders a focused card inside a group', async () => {
+    const screen = renderVisual(renderGroups(3));
+    await screen.expectScreenshot('card-group-focused-card');
+  });
+
+  it('TINYMCE-14884: renders a long group title truncated', async () => {
+    const screen = renderVisual(renderList(
+      <Card.CardGroup title="A very long article title that should be truncated with an ellipsis when it does not fit">
+        {[ 'One', 'Two' ].map(renderCard)}
+      </Card.CardGroup>
+    ));
+    await screen.expectScreenshot('card-group-title-truncated');
+  });
+});

@@ -435,4 +435,6 @@ export {
 };
 
 export { CardList, CardListController } from './CardList';
+export { CardGroup } from './CardGroup';
+export type { CardGroupProps } from './CardGroup';
 export type { CardLayout, CardHighlightType, CardHeaderActionsVisibility } from './CardTypes';

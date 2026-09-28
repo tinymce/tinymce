@@ -750,6 +750,33 @@ describe('browser.components.CardTest', () => {
     });
   });
 
+  describe('CardGroup Tests', () => {
+    it('TINYMCE-14884: Should keep the card indexes of the list running across the groups', async () => {
+      const onSelectCard = vi.fn();
+      const { container } = render(
+        <Card.CardList onSelectCard={onSelectCard} ariaLabel="Suggestions of two documents">
+          <Card.CardGroup title="Real Madrid article">
+            <Card.Root index={0}><Card.Body>Card 1</Card.Body></Card.Root>
+            <Card.Root index={1}><Card.Body>Card 2</Card.Body></Card.Root>
+            <Card.Root index={2}><Card.Body>Card 3</Card.Body></Card.Root>
+          </Card.CardGroup>
+          <Card.CardGroup title="Barcelona article">
+            <Card.Root index={3}><Card.Body>Card 4</Card.Body></Card.Root>
+            <Card.Root index={4}><Card.Body>Card 5</Card.Body></Card.Root>
+            <Card.Root index={5}><Card.Body>Card 6</Card.Body></Card.Root>
+          </Card.CardGroup>
+        </Card.CardList>,
+        { wrapper }
+      );
+
+      const cards = container.querySelectorAll(Bem.blockSelector('tox-card'));
+      expect(cards.length).toBe(6);
+
+      await userEvent.click(cards[3] as HTMLElement);
+      expect(onSelectCard).toHaveBeenCalledWith(3);
+    });
+  });
+
   describe('Snapshot Tests', () => {
     it('TINY-13459: Should match snapshot for focused card in list', async () => {
       const { asFragment } = render(
@@ -857,6 +884,25 @@ describe('browser.components.CardTest', () => {
       expect(SnapshotTestUtils.normalize(asFragment())).toMatchSnapshot('Actions with space-between layout');
     });
 
+    it('TINYMCE-14884: Should match snapshot for grouped cards', async () => {
+      const { asFragment } = render(
+        <Card.CardList defaultFocusedIndex={0} ariaLabel="Suggestions of two documents">
+          <Card.CardGroup title="Real Madrid article">
+            <Card.Root index={0}>
+              <Card.Body>First content</Card.Body>
+            </Card.Root>
+          </Card.CardGroup>
+          <Card.CardGroup title="Barcelona article">
+            <Card.Root index={1}>
+              <Card.Body>Second content</Card.Body>
+            </Card.Root>
+          </Card.CardGroup>
+        </Card.CardList>,
+        { wrapper }
+      );
+
+      expect(SnapshotTestUtils.normalize(asFragment())).toMatchSnapshot('CardList with grouped cards');
+    });
   });
 
   describe('Skeleton Tests', () => {

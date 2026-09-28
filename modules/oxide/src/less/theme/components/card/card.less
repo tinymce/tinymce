@@ -11,6 +11,10 @@
 @card-deleted-background-color: mix(@color-error, @background-color, 20%);
 @card-modified-background-color: mix(@color-tint, @background-color, 20%);
 
+@card-group-background-color: darken(@background-color, 6%);
+@card-group-title-background-color: @background-color;
+@card-group-title-border-color: @border-color;
+
 @card-section-padding: @pad-sm + @pad-xs;
 @card-section-gap: @pad-sm + @pad-xs;
 @card-button-gap: @pad-sm;
@@ -153,9 +157,14 @@
       font-size: @font-size-sm;
 
       .tox-expandable-box {
+        background: none;
         border: none;
-        padding: 0;
         gap: @card-section-gap;
+
+        .tox-expandable-box__content,
+        > .tox-button {
+          margin: 0;
+        }
       }
     }
 
@@ -269,8 +278,40 @@
     flex-direction: column;
     gap: @card-section-gap;
 
+    // Groups butt up against each other, since each one insets its own cards from the heading bands
+    &:has(.tox-card-group) {
+      gap: 0;
+    }
+
     &:focus {
       outline: none;
+    }
+  }
+
+  .tox-card-group {
+    background-color: @card-group-background-color;
+    display: flex;
+    flex-direction: column;
+
+    &__title {
+      background-color: @card-group-title-background-color;
+      border-bottom: 1px solid @card-group-title-border-color;
+      color: @text-color;
+      font-size: @font-size-sm;
+      font-weight: @font-weight-bold;
+      overflow: hidden;
+      padding: @card-section-padding;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    &__content {
+      display: flex;
+      flex-direction: column;
+      gap: @card-section-gap;
+      // The cards run flush to the sides of the group, but stay inset from the heading band above and the
+      // group below
+      padding-block: @card-section-padding;
     }
   }
 }
