@@ -4,6 +4,8 @@
 @profile-heading-text-color: @text-color;
 @profile-subheading-font-weight: normal;
 @profile-subheading-font-size: @font-size-xs;
+@profile-subheading-line-height: 16px;
+@profile-subheading-height: 24px;
 @profile-subheading-text-color: @text-color;
 @profile-gap: @pad-sm;
 @profile-avatar-size: 36px;
@@ -72,13 +74,14 @@
     color: @profile-subheading-text-color;
     font-size: @profile-subheading-font-size;
     font-weight: @profile-subheading-font-weight;
-    line-height: 1.5;
+    line-height: @profile-subheading-line-height;
+    padding-block: ((@profile-subheading-height - @profile-subheading-line-height) / 2);
     text-transform: none;
 
     .tox-icon svg {
       fill: contrast(@background-color, fade(@color-black, 50%), fade(@color-white, 50%));
-      transform: translate(0px, 8px);
-      margin-top: -10px;
+      margin-block: -4px;
+      vertical-align: top;
     }
   }
 }
