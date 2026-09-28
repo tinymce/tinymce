@@ -99,6 +99,10 @@
       .tox-suggestededits__sidebar-toolbar {
         padding: 4px 12px;
 
+        &:not(:empty) {
+          padding: 12px 12px 6px;
+        }
+
         .tox-button:has(.tox-icon:only-child) {
           gap: 0;
           padding: var(--tox-private-pad-xs, @pad-xs) var(--tox-private-pad-md, @pad-md);
