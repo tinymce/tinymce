@@ -1,4 +1,4 @@
-import { Fun, Obj } from '@ephox/katamari';
+import { Arr, Fun, Obj } from '@ephox/katamari';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { getAll as getAllIcons } from '@tinymce/oxide-icons-default';
 import { AutoResizingTextarea } from 'oxide-components/components/autoresizingtextarea/AutoResizingTextarea';
@@ -504,6 +504,10 @@ across the groups as one sequence rather than restarting in each of them.
 Scroll the list to see the headings: each one sits in the flow until it would scroll out of view, then pins
 to the top of the list. A heading is pinned only within its own group, so the next one pushes it out as it
 arrives rather than stacking under it.
+
+A heading can carry a \`status\`, which joins the accessible name of the group so a screen reader announces it
+with the title. It is muted text at the far end of the heading, already formatted so the caller owns the
+wording — skip or apply the cards of a group to watch it fall to \`0 pending\`.
         `
       }
     }
@@ -511,12 +515,18 @@ arrives rather than stacking under it.
   render: () => {
     const [ focusedIndex, setFocusedIndex ] = useState(0);
     const [ selectedIndex, setSelectedIndex ] = useState<number | undefined>(undefined);
+    const [ decisions, setDecisions ] = useState<Record<string, 'skip' | 'apply'>>({});
 
     const groups = [
       { title: 'Real Madrid article', cards: [ 'One', 'Two', 'Three' ] },
       { title: 'Barcelona article', cards: [ 'Four', 'Five', 'Six' ] },
       { title: 'Athletic Bilbao article', cards: [ 'Seven', 'Eight', 'Nine' ] }
     ];
+
+    const decide = (card: string, decision: 'skip' | 'apply') =>
+      setDecisions((current) => ({ ...current, [card]: decision }));
+
+    const countPending = (cards: string[]) => Arr.filter(cards, (card) => !Obj.has(decisions, card)).length;
 
     let index = -1;
 
@@ -530,21 +540,37 @@ arrives rather than stacking under it.
         >
           <Card.CardList ariaLabel="Suggestions of two documents">
             {groups.map((group) => (
-              <Card.CardGroup key={group.title} title={group.title}>
+              <Card.CardGroup
+                key={group.title}
+                title={group.title}
+                status={`${countPending(group.cards)} pending`}
+              >
                 {group.cards.map((card) => {
                   index++;
 
                   return (
-                    <Card.Root key={card} index={index}>
+                    <Card.Root key={card} index={index} hasDecision={Obj.has(decisions, card)}>
                       <Card.Body>
                         <p style={{ margin: 0 }}>{`Suggestion ${card}`}</p>
                       </Card.Body>
                       <Card.Actions>
-                        <Button variant="outlined" onClick={(e) => e.stopPropagation()}>
+                        <Button
+                          variant="outlined"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            decide(card, 'skip');
+                          }}
+                        >
                           <Icon icon="close" />
                           Skip
                         </Button>
-                        <Button variant="outlined" onClick={(e) => e.stopPropagation()}>
+                        <Button
+                          variant="outlined"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            decide(card, 'apply');
+                          }}
+                        >
                           <Icon icon="checkmark" />
                           Apply
                         </Button>

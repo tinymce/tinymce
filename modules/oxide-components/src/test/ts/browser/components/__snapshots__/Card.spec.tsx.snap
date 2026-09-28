@@ -337,12 +337,22 @@ exports[`browser.components.CardTest > Snapshot Tests > TINYMCE-14884: Should ma
       >
         <div
           class="tox-card-group__title"
-          id=":id-0:"
         >
-          Real Madrid article
+          <span
+            class="tox-card-group__title-text"
+            id=":id-0:"
+          >
+            Real Madrid article
+          </span>
+          <span
+            class="tox-card-group__status"
+            id=":id-1:"
+          >
+            1 pending
+          </span>
         </div>
         <div
-          aria-labelledby=":id-0:"
+          aria-labelledby=":id-0: :id-1:"
           class="tox-card-group__content"
           role="group"
         >
@@ -367,12 +377,22 @@ exports[`browser.components.CardTest > Snapshot Tests > TINYMCE-14884: Should ma
       >
         <div
           class="tox-card-group__title"
-          id=":id-1:"
         >
-          Barcelona article
+          <span
+            class="tox-card-group__title-text"
+            id=":id-2:"
+          >
+            Barcelona article
+          </span>
+          <span
+            class="tox-card-group__status"
+            id=":id-3:"
+          >
+            0 pending
+          </span>
         </div>
         <div
-          aria-labelledby=":id-1:"
+          aria-labelledby=":id-2: :id-3:"
           class="tox-card-group__content"
           role="group"
         >

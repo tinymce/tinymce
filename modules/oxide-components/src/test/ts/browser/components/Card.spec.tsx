@@ -775,6 +775,59 @@ describe('browser.components.CardTest', () => {
       await userEvent.click(cards[3] as HTMLElement);
       expect(onSelectCard).toHaveBeenCalledWith(3);
     });
+
+    it('TINYMCE-14900: Should render the title of a group in front of the status at the end', async () => {
+      const { container } = render(
+        <Card.CardList>
+          <Card.CardGroup title="Real Madrid article" status="2 pending">
+            <Card.Root index={0}><Card.Body>Card 1</Card.Body></Card.Root>
+          </Card.CardGroup>
+        </Card.CardList>,
+        { wrapper }
+      );
+
+      const heading = container.querySelector('.tox-card-group__title');
+      expect(
+        Array.from(heading?.children ?? []).map((part) => [ part.className, part.textContent ])
+      ).toEqual([
+        [ 'tox-card-group__title-text', 'Real Madrid article' ],
+        [ 'tox-card-group__status', '2 pending' ]
+      ]);
+    });
+
+    it('TINYMCE-14900: Should name a group for assistive technology from its title and status in order', async () => {
+      const { container } = render(
+        <Card.CardList>
+          <Card.CardGroup title="Real Madrid article" status="2 pending">
+            <Card.Root index={0}><Card.Body>Card 1</Card.Body></Card.Root>
+          </Card.CardGroup>
+        </Card.CardList>,
+        { wrapper }
+      );
+
+      const group = container.querySelector(Bem.blockSelector('tox-card-group'));
+      const content = group?.querySelector(Bem.elementSelector('tox-card-group', 'content'));
+      const labelIds = content?.getAttribute('aria-labelledby')?.split(' ') ?? [];
+      expect(labelIds.length).toBe(2);
+      expect(
+        labelIds.map((id) => container.querySelector(`#${CSS.escape(id)}`)?.textContent)
+      ).toEqual([ 'Real Madrid article', '2 pending' ]);
+    });
+
+    it('TINYMCE-14900: Should render a heading of the title alone when the group is given no status', async () => {
+      const { container } = render(
+        <Card.CardList>
+          <Card.CardGroup title="Real Madrid article">
+            <Card.Root index={0}><Card.Body>Card 1</Card.Body></Card.Root>
+          </Card.CardGroup>
+        </Card.CardList>,
+        { wrapper }
+      );
+
+      expect(container.querySelector(Bem.elementSelector('tox-card-group', 'title'))).toBeTruthy();
+      expect(container.querySelector(Bem.elementSelector('tox-card-group', 'title-text'))?.textContent).toBe('Real Madrid article');
+      expect(container.querySelector(Bem.elementSelector('tox-card-group', 'status'))).toBeNull();
+    });
   });
 
   describe('Snapshot Tests', () => {
@@ -887,12 +940,12 @@ describe('browser.components.CardTest', () => {
     it('TINYMCE-14884: Should match snapshot for grouped cards', async () => {
       const { asFragment } = render(
         <Card.CardList defaultFocusedIndex={0} ariaLabel="Suggestions of two documents">
-          <Card.CardGroup title="Real Madrid article">
+          <Card.CardGroup title="Real Madrid article" status="1 pending">
             <Card.Root index={0}>
               <Card.Body>First content</Card.Body>
             </Card.Root>
           </Card.CardGroup>
-          <Card.CardGroup title="Barcelona article">
+          <Card.CardGroup title="Barcelona article" status="0 pending">
             <Card.Root index={1}>
               <Card.Body>Second content</Card.Body>
             </Card.Root>

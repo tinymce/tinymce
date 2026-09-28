@@ -20,6 +20,7 @@
 // clear of it when they are scrolled into view. A set line height is what makes the height knowable here.
 @card-group-title-line-height: @base-value;
 @card-group-title-height: @card-group-title-line-height + (@card-section-padding * 2) + @card-group-title-border-width;
+@card-group-status-text-color: @text-color-muted;
 
 @card-section-padding: @pad-sm + @pad-xs;
 @card-section-gap: @pad-sm + @pad-xs;
@@ -307,19 +308,37 @@
     }
 
     &__title {
+      align-items: center;
       background-color: @card-group-title-background-color;
       border-bottom: @card-group-title-border-width solid @card-group-title-border-color;
       color: @text-color;
+      display: flex;
       font-size: @font-size-sm;
       font-weight: @font-weight-bold;
+      gap: @pad-sm;
       line-height: @card-group-title-line-height;
       overflow: hidden;
       padding: @card-section-padding;
       position: sticky;
-      text-overflow: ellipsis;
       top: 0;
-      white-space: nowrap;
       z-index: @card-group-title-z-index;
+    }
+
+    // Only the document name ellipsises, so the status beside it is never clipped
+    &__title-text {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    &__status {
+      color: @card-group-status-text-color;
+      flex: 0 0 auto;
+      font-size: @font-size-xs;
+      font-weight: @font-weight-normal;
+      // Pushed to the far end of the heading, past the space the ellipsising title gives up
+      margin-inline-start: auto;
     }
 
     &__content {
