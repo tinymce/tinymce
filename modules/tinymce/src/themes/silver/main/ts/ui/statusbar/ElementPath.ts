@@ -23,6 +23,13 @@ const isHidden = (elm: Element): boolean =>
 const renderElementPath = (editor: Editor, settings: ElementPathSettings, providersBackstage: UiFactoryBackstageProviders): SimpleSpec => {
   const delimiter = settings.delimiter ?? '\u203A';
 
+  const isViewOpen = () => editor.queryCommandValue('ToggleView') !== '';
+  const isDisabled = () => providersBackstage.isDisabled() || isViewOpen();
+  const getContext = () => {
+    const context = providersBackstage.checkUiComponentContext('any');
+    return { contextType: context.contextType, shouldDisable: context.shouldDisable || isViewOpen() };
+  };
+
   const renderElement = (name: string, element: Node, index: number): AlloySpec =>
     Button.sketch({
       dom: {
@@ -52,8 +59,8 @@ const renderElementPath = (editor: Editor, settings: ElementPathSettings, provid
             }
           }),
         }),
-        DisablingConfigs.button(providersBackstage.isDisabled),
-        UiState.toggleOnReceive(() => providersBackstage.checkUiComponentContext('any'))
+        DisablingConfigs.button(isDisabled),
+        UiState.toggleOnReceive(getContext)
       ])
     });
 
@@ -117,9 +124,9 @@ const renderElementPath = (editor: Editor, settings: ElementPathSettings, provid
         selector: 'div[role=button]'
       }),
       Disabling.config({
-        disabled: providersBackstage.isDisabled
+        disabled: isDisabled
       }),
-      UiState.toggleOnReceive(() => providersBackstage.checkUiComponentContext('any')),
+      UiState.toggleOnReceive(getContext),
       Tabstopping.config({ }),
       Replacing.config({ }),
       AddEventsBehaviour.config('elementPathEvents', [
@@ -131,6 +138,16 @@ const renderElementPath = (editor: Editor, settings: ElementPathSettings, provid
             const newPath = updatePath(e.parents);
             const newChildren = newPath.length > 0 ? renderPathData(newPath) : [];
             Replacing.set(comp, newChildren);
+          });
+
+          editor.on('ToggleView', () => {
+            const disabled = isDisabled();
+            Disabling.set(comp, disabled);
+            Arr.each(Replacing.contents(comp), (child) => {
+              if (child.hasConfigured(Disabling)) {
+                Disabling.set(child, disabled);
+              }
+            });
           });
         })
       ])

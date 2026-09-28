@@ -8,6 +8,8 @@ import { assert } from 'chai';
 import type Editor from 'tinymce/core/api/Editor';
 import type { View } from 'tinymce/core/api/ui/Ui';
 
+import { resizeEditorBy } from '../../module/UiUtils';
+
 describe('browser.tinymce.themes.silver.view.ViewTest', () => {
   context('Iframe mode', () => {
     const store = TestStore();
@@ -634,6 +636,14 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
           },
           onHide: Fun.noop
         });
+
+        editor.ui.registry.addView('tallview', {
+          keepToolbar: true,
+          onShow: (api) => {
+            api.getContainer().innerHTML = '<div style="height: 2000px"></div>';
+          },
+          onHide: Fun.noop
+        });
       }
     }, []);
 
@@ -755,6 +765,111 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
       editor.execCommand('ToggleView', false, 'plainview');
       editor.execCommand('ToggleSidebar', false, 'mysidebar');
       await pWaitForSidebarClosed();
+    });
+
+    it('TINYMCE-14928: constrains the view wrap height to the space left below the kept-toolbar header', () => {
+      const editor = hook.editor();
+      const container = TinyDom.container(editor);
+
+      editor.execCommand('ToggleView', false, 'tallview');
+
+      const viewWrap = UiFinder.findIn(container, '.tox-view-wrap').getOrDie();
+      const header = UiFinder.findIn(container, '.tox-editor-header').getOrDie();
+
+      const viewWrapRect = viewWrap.dom.getBoundingClientRect();
+      const containerRect = container.dom.getBoundingClientRect();
+      const headerRect = header.dom.getBoundingClientRect();
+
+      assert.isAtMost(viewWrapRect.bottom, containerRect.bottom + 1, 'View wrap should not overflow the bottom of the editor container');
+      assert.isAtLeast(viewWrapRect.top, headerRect.bottom - 1, 'View wrap should start at or below the bottom of the header');
+      assert.isAbove(viewWrapRect.height, 0, 'View wrap should have a positive height');
+
+      editor.execCommand('ToggleView', false, 'tallview');
+
+      assert.equal('none', Css.getRaw(viewWrap, 'display').getOrDie(), 'View wrap should be hidden once the view has closed');
+    });
+
+    it('TINYMCE-14920: keeps the statusbar visible for a keepToolbar view', () => {
+      const editor = hook.editor();
+      const container = TinyDom.container(editor);
+
+      editor.execCommand('ToggleView', false, 'toolbarview');
+
+      const statusbar = UiFinder.findIn(container, '.tox-statusbar').getOrDie();
+      assert.isFalse(Attribute.has(statusbar, 'aria-hidden'), 'Statusbar should not be aria-hidden while the view is open');
+      assert.isTrue(Css.getRaw(statusbar, 'display').isNone(), 'Statusbar should not have display none while the view is open');
+
+      editor.execCommand('ToggleView', false, 'toolbarview');
+
+      assert.isFalse(Attribute.has(statusbar, 'aria-hidden'), 'Statusbar should not be aria-hidden after the view closes');
+      assert.isTrue(Css.getRaw(statusbar, 'display').isNone(), 'Statusbar should not have display none after the view closes');
+    });
+
+    it('TINYMCE-14920: hides the statusbar for a plain view', () => {
+      const editor = hook.editor();
+      const container = TinyDom.container(editor);
+
+      editor.execCommand('ToggleView', false, 'plainview');
+
+      const statusbar = UiFinder.findIn(container, '.tox-statusbar').getOrDie();
+      assert.equal('true', Attribute.get(statusbar, 'aria-hidden'), 'Statusbar should be aria-hidden while a plain view is open');
+      assert.equal('none', Css.getRaw(statusbar, 'display').getOrDie(), 'Statusbar should have display none while a plain view is open');
+
+      editor.execCommand('ToggleView', false, 'plainview');
+
+      assert.isFalse(Attribute.has(statusbar, 'aria-hidden'), 'Statusbar should not be aria-hidden after the view closes');
+      assert.isTrue(Css.getRaw(statusbar, 'display').isNone(), 'Statusbar should not have display none after the view closes');
+    });
+
+    it('TINYMCE-14920: disables the element path while a view is open', () => {
+      const editor = hook.editor();
+      const container = TinyDom.container(editor);
+
+      editor.setContent('<p>a</p>');
+      TinySelections.setCursor(editor, [ 0, 0 ], 1);
+
+      editor.execCommand('ToggleView', false, 'toolbarview');
+
+      const path = UiFinder.findIn(container, '.tox-statusbar__path').getOrDie();
+      assert.equal('true', Attribute.get(path, 'aria-disabled'), 'Element path should be disabled while the view is open');
+
+      const items = UiFinder.findAllIn(container, '.tox-statusbar__path-item');
+      assert.isAbove(items.length, 0, 'There should be at least one element path item');
+      Arr.each(items, (item) => assert.equal('true', Attribute.get(item, 'aria-disabled'), 'Element path item should be disabled while the view is open'));
+
+      editor.nodeChanged();
+      assert.equal('true', Attribute.get(path, 'aria-disabled'), 'Element path should still be disabled after a NodeChange broadcast');
+
+      editor.execCommand('ToggleView', false, 'toolbarview');
+
+      assert.equal('false', Attribute.get(path, 'aria-disabled'), 'Element path should be enabled once the view closes');
+      const itemsAfterClose = UiFinder.findAllIn(container, '.tox-statusbar__path-item');
+      Arr.each(itemsAfterClose, (item) => assert.equal('false', Attribute.get(item, 'aria-disabled'), 'Element path item should be enabled once the view closes'));
+    });
+
+    it('TINYMCE-14920: resizes the editor from the statusbar while a keepToolbar view is open', async () => {
+      const editor = hook.editor();
+      const container = TinyDom.container(editor);
+
+      editor.execCommand('ToggleView', false, 'toolbarview');
+
+      const viewWrap = UiFinder.findIn(container, '.tox-view-wrap').getOrDie();
+      const initialHeight = container.dom.offsetHeight;
+      const initialViewWrapHeight = viewWrap.dom.getBoundingClientRect().height;
+
+      await resizeEditorBy([ 0, 100 ]);
+
+      const resizedHeight = container.dom.offsetHeight;
+      assert.equal(resizedHeight, initialHeight + 100, 'Editor should grow by 100px while the view is open');
+
+      const viewWrapRect = viewWrap.dom.getBoundingClientRect();
+      const containerRect = container.dom.getBoundingClientRect();
+      assert.isAtMost(viewWrapRect.bottom, containerRect.bottom + 1, 'View wrap should not overflow the bottom of the editor container');
+      assert.isAbove(viewWrapRect.height, initialViewWrapHeight, 'View wrap should grow along with the editor');
+
+      editor.execCommand('ToggleView', false, 'toolbarview');
+
+      Css.set(container, 'height', `${initialHeight}px`);
     });
   });
 });

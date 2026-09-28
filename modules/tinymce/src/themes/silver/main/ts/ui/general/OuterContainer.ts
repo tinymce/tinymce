@@ -228,7 +228,7 @@ const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, Out
 
       Composite.parts.getPart(comp, detail, 'editorContainer').each((editorContainer) => {
         const element = editorContainer.element;
-        setStatusbarHidden(element, true);
+        setStatusbarHidden(element, !keepToolbar);
 
         if (keepToolbar) {
           Composite.parts.getPart(comp, detail, 'sidebar').each(Sidebar.closeSidebar);

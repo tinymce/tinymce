@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Views that keep the toolbar now also keep the statusbar visible.
+time: 2026-09-21T11:11:20.788431+10:00
+custom:
+  Issue: TINYMCE-14920

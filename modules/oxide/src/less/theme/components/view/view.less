@@ -13,6 +13,7 @@
     flex: 1;
     flex-direction: column;
     height: 100%;     // Override the height set by browsers so the view doesn't grow beyond editor container
+    min-height: 0;    // Allow the flex item to shrink below its content when the header stays visible for keepToolbar views
   }
 
   .tox-view {
