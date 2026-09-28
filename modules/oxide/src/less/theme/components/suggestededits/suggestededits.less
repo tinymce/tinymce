@@ -248,10 +248,15 @@
 
               .tox-suggestededits__operations-text {
                 color: @suggestededits-text-color;
-                font-weight: bold;
+                font-size: var(--tox-private-font-size-sm, @font-size-sm);
+                font-weight: var(--tox-private-font-weight-bold, @font-weight-bold);
+                line-height: 18px;
               }
 
               .tox-suggestededits__operations-content-text {
+                font-size: var(--tox-private-font-size-md, @font-size-md);
+                font-weight: var(--tox-private-font-weight-normal, @font-weight-normal);
+                line-height: 20px;
                 overflow-wrap: break-word;
               }
             }
