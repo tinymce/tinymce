@@ -8,7 +8,8 @@ import { ExpandableBox, type ExpandableBoxProps } from './ExpandableBox';
 
 const icons: Record<string, string> = {
   'chevron-down': '<svg width="10" height="10"><path d="M8.7 2.2c.3-.3.8-.3 1 0 .4.4.4.9 0 1.2L5.7 7.8c-.3.3-.9.3-1.2 0L.2 3.4a.8.8 0 0 1 0-1.2c.3-.3.8-.3 1.1 0L5 6l3.7-3.8Z" fill-rule="nonzero"/></svg>',
-  'chevron-up': '<svg width="10" height="10"><path d="M8.7 7.8 5 4 1.3 7.8c-.3.3-.8.3-1 0a.8.8 0 0 1 0-1.2l4.1-4.4c.3-.3.9-.3 1.2 0l4.2 4.4c.3.3.3.9 0 1.2-.3.3-.8.3-1.1 0Z" fill-rule="nonzero"/></svg>'
+  'chevron-up': '<svg width="10" height="10"><path d="M8.7 7.8 5 4 1.3 7.8c-.3.3-.8.3-1 0a.8.8 0 0 1 0-1.2l4.1-4.4c.3-.3.9-.3 1.2 0l4.2 4.4c.3.3.3.9 0 1.2-.3.3-.8.3-1.1 0Z" fill-rule="nonzero"/></svg>',
+  'source-file': '<svg width="16" height="16"><path d="M4.333 2h5.61L13 5.057v7.61c0 .735-.598 1.333-1.333 1.333H4.333A1.335 1.335 0 0 1 3 12.667V3.333C3 2.6 3.598 2 4.333 2Zm0 10.667h7.334V6H9V3.333H4.333v9.334Z" fill-rule="evenodd"/></svg>'
 };
 
 const mockUniverse = {
@@ -95,6 +96,35 @@ export const OverflowingHorizontallyOnly: Story = {
   args: {
     ...defaultsProps,
     children: <p>Hello world<WideThing /></p>
+  },
+  render
+};
+
+export const WithTitle: Story = {
+  args: {
+    ...defaultsProps,
+    title: 'Title',
+    children: <><p>{longText}</p><p>{longText}</p></>
+  },
+  render
+};
+
+export const WithTitleAndIcon: Story = {
+  args: {
+    ...defaultsProps,
+    title: 'Title',
+    icon: 'source-file',
+    children: <><p>{longText}</p><p>{longText}</p></>
+  },
+  render
+};
+
+export const WithLongTitleAndIcon: Story = {
+  args: {
+    ...defaultsProps,
+    title: 'A very long title that should be truncated with an ellipsis when it does not fit',
+    icon: 'source-file',
+    children: <><p>{longText}</p><p>{longText}</p></>
   },
   render
 };

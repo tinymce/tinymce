@@ -94,6 +94,76 @@ describe('browser.components.ExpandableBoxTest', () => {
     expect(SnapshotTestUtils.normalize(asFragment())).toMatchSnapshot('Content fits within maxHeight');
   });
 
+  it('TINYMCE-14867: Should render an optional title', async () => {
+    const { asFragment, getByText } = render(
+      <UniverseProvider resources={mockUniverse}>
+        <TestComponentToggle
+          {...defaultProps}
+          title="My title"
+        >
+          <div style={{ height: '200px' }}>Hello world</div>
+        </TestComponentToggle>
+      </UniverseProvider>,
+      { wrapper }
+    );
+
+    await waitForElementText(getByText, 'My title');
+    expect(asFragment()).toMatchSnapshot('1. Collapsed with title');
+
+    await userEvent.click(getByText('Expand'));
+    await waitForElementText(getByText, 'Collapse');
+    expect(asFragment()).toMatchSnapshot('2. Expanded with title');
+  });
+
+  it('TINYMCE-14867: Should render an optional icon before the title', async () => {
+    const { asFragment, getByText } = render(
+      <UniverseProvider resources={mockUniverse}>
+        <TestComponentToggle
+          {...defaultProps}
+          title="My title"
+          icon="source-file"
+        >
+          <div style={{ height: '200px' }}>Hello world</div>
+        </TestComponentToggle>
+      </UniverseProvider>,
+      { wrapper }
+    );
+
+    await waitForElementText(getByText, 'My title');
+    expect(asFragment()).toMatchSnapshot('Collapsed with title and icon');
+  });
+
+  it('TINYMCE-14867: Should not render an icon when there is no title', async () => {
+    const { container } = render(
+      <UniverseProvider resources={mockUniverse}>
+        <ExpandableBox
+          {...defaultProps}
+          icon="source-file"
+        >
+          <div style={{ height: '50px' }}>Hello world</div>
+        </ExpandableBox>
+      </UniverseProvider>,
+      { wrapper }
+    );
+
+    expect(container.querySelector('#source-file')).toBeNull();
+  });
+
+  it('TINYMCE-14867: Should not render a title element when no title is provided', async () => {
+    const { container } = render(
+      <UniverseProvider resources={mockUniverse}>
+        <ExpandableBox
+          {...defaultProps}
+        >
+          <div style={{ height: '50px' }}>Hello world</div>
+        </ExpandableBox>
+      </UniverseProvider>,
+      { wrapper }
+    );
+
+    expect(container.querySelector(Bem.elementSelector('tox-expandable-box', 'title'))).toBeNull();
+  });
+
   it('Should be able to set maxHeight, collapseText and expandText', async () => {
     const { asFragment, getByText } = render(
       <UniverseProvider resources={mockUniverse}>

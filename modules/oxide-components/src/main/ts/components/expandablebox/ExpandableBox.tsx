@@ -7,6 +7,10 @@ import { Button } from '../button/Button';
 import { Icon } from '../icon/Icon';
 
 export interface ExpandableBoxProps extends PropsWithChildren {
+  /** Optional title rendered above the content */
+  readonly title?: string;
+  /** Optional icon rendered before the title, only rendered when there is a title */
+  readonly icon?: string;
   /** Max height the content can be before it becomes expandable */
   readonly maxHeight?: number;
   /** Expanded state */
@@ -21,6 +25,8 @@ export interface ExpandableBoxProps extends PropsWithChildren {
 
 /** Expandable container box */
 export const ExpandableBox = forwardRef<HTMLDivElement, ExpandableBoxProps>(({
+  title,
+  icon,
   maxHeight = 80,
   expanded = false,
   onToggle,
@@ -44,6 +50,12 @@ export const ExpandableBox = forwardRef<HTMLDivElement, ExpandableBoxProps>(({
 
   return (
     <div ref={ref} className={Bem.block('tox-expandable-box')}>
+      {Type.isNonNullable(title) && (
+        <div className={Bem.element('tox-expandable-box', 'title')}>
+          {Type.isNonNullable(icon) && <Icon icon={icon} />}
+          <span className={Bem.element('tox-expandable-box', 'title-text')}>{title}</span>
+        </div>
+      )}
       <div ref={contentRef} className={contentClass} style={{ maxHeight: expanded ? undefined : `${maxHeight}px` }}>
         {children}
       </div>

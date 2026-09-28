@@ -18,7 +18,16 @@
 
 .tox .tox-ai {
   .tox-expandable-box {
-    padding: var(--tox-private-pad-sm, @pad-sm) calc(var(--tox-private-pad-md, @pad-md) * 0.75);
+    margin-bottom: calc(var(--tox-private-pad-md, @pad-md) * 0.75);
+
+    // The box itself stays flush so the title band can span its full width, so the parts inside carry the inset
+    .tox-expandable-box__content {
+      margin: var(--tox-private-pad-sm, @pad-sm) calc(var(--tox-private-pad-md, @pad-md) * 0.75);
+    }
+
+    > .tox-button {
+      margin: 0 calc(var(--tox-private-pad-md, @pad-md) * 0.75) var(--tox-private-pad-sm, @pad-sm);
+    }
 
     &:focus-visible:not(:disabled) {
        outline: 2px solid var(--tox-private-color-tint, @color-tint);

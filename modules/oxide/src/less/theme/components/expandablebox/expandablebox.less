@@ -4,16 +4,46 @@
 
 .tox {
   .tox-expandable-box {
-    border-radius: 6px;
+    background: var(--tox-private-background-color, @background-color);
+    border-radius: var(--tox-private-control-border-radius, @control-border-radius);
     border: 1px solid var(--tox-private-border-color, @border-color);
     display: flex;
     flex-direction: column;
     justify-content: stretch;
+    overflow: hidden; // Keeps the tinted title band within the rounded corners
+
+    > .tox-button {
+      margin: 0 var(--tox-private-pad-md, @pad-md) var(--tox-private-pad-md, @pad-md);
+    }
+  }
+
+  .tox-expandable-box__title {
+    align-items: center;
+    background: hsl(from var(--tox-private-color-tint, @color-tint) h s l / 10%);
+    border-bottom: 1px solid var(--tox-private-border-color, @border-color);
+    color: var(--tox-private-text-color, @text-color);
+    display: flex;
+    font-size: var(--tox-private-font-size-sm, @font-size-sm);
+    font-weight: var(--tox-private-font-weight-bold, @font-weight-bold);
     gap: var(--tox-private-pad-sm, @pad-sm);
+    min-width: 0;
     padding: var(--tox-private-pad-sm, @pad-sm) var(--tox-private-pad-md, @pad-md);
+
+    .tox-icon {
+      flex-shrink: 0;
+      height: var(--tox-private-base-value, @base-value);
+      fill: var(--tox-private-text-color, @text-color);
+    }
+  }
+
+  .tox-expandable-box__title-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .tox-expandable-box__content {
+    margin: var(--tox-private-pad-md, @pad-md);
     overflow: auto;
   }
 

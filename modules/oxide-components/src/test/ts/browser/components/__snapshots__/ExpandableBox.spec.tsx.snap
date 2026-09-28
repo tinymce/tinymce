@@ -202,3 +202,145 @@ exports[`browser.components.ExpandableBoxTest > Should not render expand if the 
   </div>
 </DocumentFragment>
 `;
+
+exports[`browser.components.ExpandableBoxTest > TINYMCE-14867: Should render an optional icon before the title > Collapsed with title and icon 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      class="tox-expandable-box"
+    >
+      <div
+        class="tox-expandable-box__title"
+      >
+        <span
+          class="tox-icon"
+        >
+          <svg
+            id="source-file"
+          />
+        </span>
+        <span
+          class="tox-expandable-box__title-text"
+        >
+          My title
+        </span>
+      </div>
+      <div
+        class="tox-expandable-box__content tox-expandable-box__content--overflowing"
+        style="max-height: 80px;"
+      >
+        <div
+          style="height: 200px;"
+        >
+          Hello world
+        </div>
+      </div>
+      <button
+        class="tox-button tox-button--naked "
+        type="button"
+      >
+        <span
+          class="tox-icon"
+        >
+          <svg
+            id="chevron-down"
+          />
+        </span>
+        Expand
+      </button>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.components.ExpandableBoxTest > TINYMCE-14867: Should render an optional title > 1. Collapsed with title 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      class="tox-expandable-box"
+    >
+      <div
+        class="tox-expandable-box__title"
+      >
+        <span
+          class="tox-expandable-box__title-text"
+        >
+          My title
+        </span>
+      </div>
+      <div
+        class="tox-expandable-box__content tox-expandable-box__content--overflowing"
+        style="max-height: 80px;"
+      >
+        <div
+          style="height: 200px;"
+        >
+          Hello world
+        </div>
+      </div>
+      <button
+        class="tox-button tox-button--naked "
+        type="button"
+      >
+        <span
+          class="tox-icon"
+        >
+          <svg
+            id="chevron-down"
+          />
+        </span>
+        Expand
+      </button>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.components.ExpandableBoxTest > TINYMCE-14867: Should render an optional title > 2. Expanded with title 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      class="tox-expandable-box"
+    >
+      <div
+        class="tox-expandable-box__title"
+      >
+        <span
+          class="tox-expandable-box__title-text"
+        >
+          My title
+        </span>
+      </div>
+      <div
+        class="tox-expandable-box__content tox-expandable-box__content--expanded"
+        style=""
+      >
+        <div
+          style="height: 200px;"
+        >
+          Hello world
+        </div>
+      </div>
+      <button
+        class="tox-button tox-button--naked "
+        type="button"
+      >
+        <span
+          class="tox-icon"
+        >
+          <svg
+            id="chevron-up"
+          />
+        </span>
+        Collapse
+      </button>
+    </div>
+  </div>
+</DocumentFragment>
+`;
