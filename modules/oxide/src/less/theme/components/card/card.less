@@ -14,6 +14,12 @@
 @card-group-background-color: darken(@background-color, 6%);
 @card-group-title-background-color: @background-color;
 @card-group-title-border-color: @border-color;
+@card-group-title-border-width: 1px;
+@card-group-title-z-index: 1;
+// Pinned, the heading covers the top of the scroll port, so the cards have to know how tall it is to keep
+// clear of it when they are scrolled into view. A set line height is what makes the height knowable here.
+@card-group-title-line-height: @base-value;
+@card-group-title-height: @card-group-title-line-height + (@card-section-padding * 2) + @card-group-title-border-width;
 
 @card-section-padding: @pad-sm + @pad-xs;
 @card-section-gap: @pad-sm + @pad-xs;
@@ -293,16 +299,27 @@
     display: flex;
     flex-direction: column;
 
+    // Scrolling a card into view has to clear the heading pinned over the top of the scroll port, which the
+    // browser does not account for on its own. The gap comes along so the card lands where it sits when the
+    // group is read from the top, rather than flush against the heading.
+    .tox-card {
+      scroll-margin-top: @card-group-title-height + @card-section-gap;
+    }
+
     &__title {
       background-color: @card-group-title-background-color;
-      border-bottom: 1px solid @card-group-title-border-color;
+      border-bottom: @card-group-title-border-width solid @card-group-title-border-color;
       color: @text-color;
       font-size: @font-size-sm;
       font-weight: @font-weight-bold;
+      line-height: @card-group-title-line-height;
       overflow: hidden;
       padding: @card-section-padding;
+      position: sticky;
       text-overflow: ellipsis;
+      top: 0;
       white-space: nowrap;
+      z-index: @card-group-title-z-index;
     }
 
     &__content {

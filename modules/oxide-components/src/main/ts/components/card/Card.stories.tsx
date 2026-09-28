@@ -500,6 +500,10 @@ export const GroupedCards: Story = {
 \`Card.CardGroup\` holds any number of cards of a list under one title, for a list whose cards come from more
 than one source. The cards stay descendants of the list, so the arrow key navigation and the focused index run
 across the groups as one sequence rather than restarting in each of them.
+
+Scroll the list to see the headings: each one sits in the flow until it would scroll out of view, then pins
+to the top of the list. A heading is pinned only within its own group, so the next one pushes it out as it
+arrives rather than stacking under it.
         `
       }
     }
@@ -510,13 +514,14 @@ across the groups as one sequence rather than restarting in each of them.
 
     const groups = [
       { title: 'Real Madrid article', cards: [ 'One', 'Two', 'Three' ] },
-      { title: 'Barcelona article', cards: [ 'Four', 'Five', 'Six' ] }
+      { title: 'Barcelona article', cards: [ 'Four', 'Five', 'Six' ] },
+      { title: 'Athletic Bilbao article', cards: [ 'Seven', 'Eight', 'Nine' ] }
     ];
 
     let index = -1;
 
     return (
-      <div style={{ width: '316px' }}>
+      <div style={{ width: '316px', height: '400px', overflowY: 'auto' }}>
         <Card.CardListController
           focusedIndex={focusedIndex}
           onFocusedIndexChange={setFocusedIndex}
