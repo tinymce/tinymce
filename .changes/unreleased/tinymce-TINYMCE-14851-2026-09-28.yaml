@@ -1,0 +1,6 @@
+project: tinymce
+kind: Added
+body: New `revert-all` icon.
+time: 2026-09-28T10:58:11.560644+10:00
+custom:
+  Issue: TINYMCE-14851
