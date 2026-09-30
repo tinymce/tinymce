@@ -26,7 +26,7 @@
     display: flex;
     flex-direction: column;
     gap: @card-section-gap;
-    padding: @card-section-padding;
+    padding: @card-section-padding - @card-selected-border-width;
     cursor: pointer;
     transition: box-shadow 0.15s ease-in-out, border 0.15s ease-in-out;
     border: @card-selected-border-width solid transparent;
@@ -50,6 +50,7 @@
       &:not(.tox-card--selected) {
         border-width: 1px;
         border-color: @text-color-muted;
+        padding: @card-section-padding - 1px;
       }
 
       .tox-card__header {
