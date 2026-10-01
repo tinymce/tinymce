@@ -1,4 +1,4 @@
-import { Fun } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import * as Card from 'oxide-components/components/card/Card';
 import { AutoResizingTextarea, Button, ExpandableBox, UniverseProvider } from 'oxide-components/Main';
 import * as Bem from 'oxide-components/utils/Bem';
@@ -507,6 +507,29 @@ describe('browser.components.CardTest', () => {
       secondCard.focus();
       await userEvent.keyboard('{Enter}');
       expect(onSelectCard).toHaveBeenCalledWith(1);
+    });
+
+    it('TINYMCE-14844: Should use the execute override instead of clicking the focused card on Enter', async () => {
+      const onSelectCard = vi.fn();
+      const execute = vi.fn(() => Optional.some(true));
+      const { container } = render(
+        <Card.CardList defaultFocusedIndex={1} onSelectCard={onSelectCard} execute={execute}>
+          <Card.Root index={0}>
+            <Card.Body>Card 1</Card.Body>
+          </Card.Root>
+          <Card.Root index={1}>
+            <Card.Body>Card 2</Card.Body>
+          </Card.Root>
+        </Card.CardList>,
+        { wrapper }
+      );
+
+      const secondCard = container.querySelectorAll<HTMLElement>('.tox-card')[1];
+      secondCard.focus();
+      await userEvent.keyboard('{Enter}');
+      expect(execute, 'execute override should be called once on Enter').toHaveBeenCalledTimes(1);
+      expect(execute, 'execute override should receive the focused card').toHaveBeenCalledWith(expect.objectContaining({ dom: secondCard }));
+      expect(onSelectCard, 'focused card should not be clicked when execute is overridden').not.toHaveBeenCalled();
     });
 
     it('TINY-13459: Should allow buttons inside card to respond to Space key', async () => {

@@ -1,4 +1,5 @@
 import { Optional, Type } from '@ephox/katamari';
+import type { SugarElement } from '@ephox/sugar';
 import { useCallback, useEffect, useMemo, useRef, useState, type FC, type PropsWithChildren } from 'react';
 
 import * as KeyboardNavigationHooks from '../../keynav/KeyboardNavigationHooks';
@@ -67,7 +68,17 @@ export interface CardListProps extends PropsWithChildren {
    * Ignored when used inside CardListController.
    */
   readonly onSelectCard?: (index: number) => void;
+  /**
+   * Handler for Enter/Space on the focused card. Return `Optional.some(true)` when handled.
+   * Defaults to clicking the focused card.
+   */
+  readonly execute?: (focused: SugarElement<HTMLElement>) => Optional<boolean>;
 }
+
+const defaultExecute = (focused: SugarElement<HTMLElement>): Optional<boolean> => {
+  focused.dom.click();
+  return Optional.some(true);
+};
 
 export const CardListController: FC<CardListControllerProps> = ({
   children,
@@ -99,6 +110,7 @@ interface CardListImplProps {
   readonly selectedIndex: number | undefined;
   readonly setFocusedIndex: (index: number) => void;
   readonly onSelectCard: ((index: number) => void) | undefined;
+  readonly execute: (focused: SugarElement<HTMLElement>) => Optional<boolean>;
 }
 
 const CardListImpl: FC<CardListImplProps> = ({
@@ -109,7 +121,8 @@ const CardListImpl: FC<CardListImplProps> = ({
   focusedIndex,
   selectedIndex,
   setFocusedIndex,
-  onSelectCard
+  onSelectCard,
+  execute
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -132,10 +145,7 @@ const CardListImpl: FC<CardListImplProps> = ({
     allowHorizontal: false,
     cycles,
     closest: false,
-    execute: (focused) => {
-      focused.dom.click();
-      return Optional.some(true);
-    }
+    execute
   });
 
   const listClassName = Bem.block('tox-card-list') + (Type.isNonNullable(className) ? ` ${className}` : '');
@@ -158,7 +168,8 @@ const CardListControlled: FC<CardListProps> = ({
   children,
   className,
   ariaLabel,
-  cycles = false
+  cycles = false,
+  execute = defaultExecute
 }) => {
   const controllerContext = useCardListControllerContext();
 
@@ -184,6 +195,7 @@ const CardListControlled: FC<CardListProps> = ({
       selectedIndex={controllerContext.selectedIndex}
       setFocusedIndex={setFocusedIndex}
       onSelectCard={handleSelectCard}
+      execute={execute}
     />
   );
 };
@@ -195,7 +207,8 @@ const CardListUncontrolled: FC<CardListProps> = ({
   cycles = false,
   defaultFocusedIndex = 0,
   defaultSelectedIndex,
-  onSelectCard
+  onSelectCard,
+  execute = defaultExecute
 }) => {
   const [ focusedIndex, setFocusedIndex ] = useState(defaultFocusedIndex);
   const [ selectedIndex, setSelectedIndex ] = useState(defaultSelectedIndex);
@@ -215,6 +228,7 @@ const CardListUncontrolled: FC<CardListProps> = ({
       selectedIndex={selectedIndex}
       setFocusedIndex={setFocusedIndex}
       onSelectCard={handleSelectCard}
+      execute={execute}
     />
   );
 };
