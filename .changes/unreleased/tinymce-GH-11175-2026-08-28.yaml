@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: The table context toolbar no longer jumps up and down on every keypress when editing a small table in a small editor.
+time: 2026-08-28T09:00:00.000000000Z
+custom:
+  Issue: GH-11175
