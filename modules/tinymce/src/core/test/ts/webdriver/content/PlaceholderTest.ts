@@ -131,4 +131,15 @@ describe('webdriver.tinymce.core.content.PlaceholderTest', () => {
     await pAssertPlaceholderNotExists(editor);
     assertCount(1);
   });
+
+  it('TINY-XXXX: Check placeholder hides when typing special characters with Alt key', async () => {
+    const editor = hook.editor();
+    setContent(editor, '<p></p>');
+    await pAssertPlaceholderExists(editor);
+    await RealKeys.pSendKeysOn('iframe => body => p', [ RealKeys.combo({ alt: true }, '@') ]);
+    await pAssertPlaceholderNotExists(editor);
+    await RealKeys.pSendKeysOn('iframe => body => p', [ RealKeys.backspace() ]);
+    await pAssertPlaceholderExists(editor);
+    assertCount(2);
+  });
 });
