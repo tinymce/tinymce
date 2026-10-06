@@ -55,4 +55,19 @@ describe('browser.tinymce.plugins.media.SanitizationTest', () => {
     inputHtml: `<p data-mce-object="video" data-mce-p-src="about:blank" data-mce-html='<a href="#">Unsupported content</a>'>x</p>`,
     expectedHtml: '<video src="about:blank"><a href="#">Unsupported content</a></video>'
   }));
+
+  it('TINYMCE-14932: video element with onerror handler should not execute', () => runTest({
+    inputHtml: `<span data-mce-object="video" data-mce-p-src="/missing.mp4" data-mce-p-onerror="throw Error('XSS')">x</span>`,
+    expectedHtml: '<p><video src="/missing.mp4"></video></p>'
+  }));
+
+  it('TINYMCE-14932: audio element with onerror handler should not execute', () => runTest({
+    inputHtml: `<span data-mce-object="audio" data-mce-p-src="/missing.mp3" data-mce-p-onerror="throw Error('XSS')">x</span>`,
+    expectedHtml: '<p><audio src="/missing.mp3"></audio></p>'
+  }));
+
+  it('TINYMCE-14932: img element with onerror handler should not execute', () => runTest({
+    inputHtml: `<span data-mce-object="img" data-mce-p-src="/missing.jpg" data-mce-p-onerror="throw Error('XSS')">x</span>`,
+    expectedHtml: '<p><img src="/missing.jpg"></p>'
+  }));
 });
