@@ -8,9 +8,21 @@ import * as Sanitize from './Sanitize';
 
 declare let unescape: any;
 
+let nonNonScriptingDocument: Document;
+
+const createNonScriptingDocument = () => {
+  if (Type.isNonNullable(nonNonScriptingDocument)) {
+    return nonNonScriptingDocument;
+  }
+
+  nonNonScriptingDocument = new DOMParser().parseFromString('', 'text/html');
+  return nonNonScriptingDocument;
+};
+
 const buildMediaElement = (editor: Editor, node: AstNode) => {
+  const doc = createNonScriptingDocument();
   const realElmName = node.attr('data-mce-object') as string;
-  const element = document.createElement(realElmName);
+  const element = doc.createElement(realElmName);
 
   // Add width/height to everything but audio
   if (realElmName !== 'audio') {
