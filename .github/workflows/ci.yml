@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [ "release/**", "main" ]
+
+jobs:
+  verify:
+    name: Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    env:
+      NODE_OPTIONS: --max-old-space-size=1936
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          # Pinned so CI resolves dependencies the same way on every run.
+          bun-version: "1.4.2"
+
+      - run: bun install --frozen-lockfile
+
+      - run: bun run ci-all-seq
+
+      # storybook-static comes from the oxide-components build inside ci-all-seq.
+      - uses: actions/upload-artifact@v4
+        with:
+          name: storybook
+          path: modules/oxide-components/storybook-static
+          if-no-files-found: error
+          retention-days: 1
+
+  deploy-storybook:
+    name: Publish Storybook
+    needs: verify
+    if: github.repository == 'tinymce/tinymce' && github.ref_name == 'release/8'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    concurrency:
+      group: storybook-publish
+      cancel-in-progress: false
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: storybook
+          path: storybook-static
+
+      - uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./storybook-static
+          destination_dir: modules/oxide-components

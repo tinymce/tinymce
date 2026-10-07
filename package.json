@@ -25,7 +25,7 @@
     "ci": "npm-run-all -p oxide-ci oxide-icons-ci oxide-components-ci -p tsc \"tinymce-grunt dev\"",
     "ci-seq": "run-s agar-sw-build oxide-ci oxide-icons-ci oxide-components-ci tsc \"tinymce-grunt dev\"",
     "ci-all": "npm-run-all -p changie-merge eslint ci -s tinymce-rollup",
-    "ci-all-seq": "npm-run-all -p eslint ci-seq -s tinymce-rollup",
+    "ci-all-seq": "npm-run-all -s changie-merge -p eslint ci-seq -s tinymce-rollup \"tinymce-grunt shell:moxiedoc\"",
     "local-ci": "run-s -s ci-all test",
     "test": "run-s headless-test browser-test",
     "build": "npm-run-all oxide-ci -p oxide-icons-ci oxide-components-ci -s tinymce-grunt",
