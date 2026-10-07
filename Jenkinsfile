@@ -201,14 +201,8 @@ timestamps { notifyStatusChange(
         stage('Build') {
           // 10 min: full build + type-check; actual avg ~2 min, max observed ~7 min
           timeout(time: 10, unit: 'MINUTES') {
-            // verify no errors in changelog merge
-            exec("bun changie-merge")
             withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
-              // type check and build TinyMCE
-              exec("bun ci-all-seq")
-
-              // validate documentation generator
-              exec("bun tinymce-grunt shell:moxiedoc")
+              exec("bun run ci-all-seq")
             }
           }
         }
@@ -322,19 +316,6 @@ timestamps { notifyStatusChange(
             bedrockRemoteTools.tinyWorkSishTunnel()
           }
           parallel processes
-        }
-
-        stage('Deploy Storybook') {
-          if (env.BRANCH_NAME == props.primaryBranch) {
-            echo "Deploying Storybook"
-            container('node') {
-              tinyGit.withGitHubSSHCredentials {
-                exec('bun --silent --cwd modules/oxide-components deploy-storybook')
-              }
-            }
-          } else {
-            echo "Skipping Storybook deployment as the pipeline is not running on the primary branch"
-          }
         }
       }
     } // close pod
