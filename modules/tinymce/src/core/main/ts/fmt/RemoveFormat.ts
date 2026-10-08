@@ -1,4 +1,4 @@
-import { Adt, Arr, Fun, Optional, Type } from '@ephox/katamari';
+import { Adt, Arr, Fun, Obj, Optional, Type } from '@ephox/katamari';
 import { Insert, InsertAll, SugarElement, Traverse } from '@ephox/sugar';
 
 import type DOMUtils from '../api/dom/DOMUtils';
@@ -221,15 +221,25 @@ const removeStyles = (dom: DOMUtils, elm: Element, format: Format, vars: FormatV
   }
 };
 
+const resetInheritedStyles = (editor: Editor, listItems: Element[], styleNames: string[]) => {
+  Arr.each(listItems, (li) => {
+    ListItemFormat.resetInheritedListItemStyles(editor.dom, editor.getBody(), li, styleNames);
+    removeEmptyStyleAttributeIfNeeded(editor.dom, li);
+  });
+};
+
 const removeListStyleFormats = (editor: Editor, name: string, vars: FormatVars | undefined) => {
   if (name === 'removeformat') {
-    Arr.each(ListItemFormat.getPartiallySelectedListItems(editor), (li) => {
+    const listItems = ListItemFormat.getPartiallySelectedListItems(editor);
+    Arr.each(listItems, (li) => {
       Arr.each(ListItemFormat.listItemStyles, (name) => editor.dom.setStyle(li, name, ''));
-      removeEmptyStyleAttributeIfNeeded(editor.dom, li);
     });
+    resetInheritedStyles(editor, listItems, ListItemFormat.listItemStyles);
   } else {
     ListItemFormat.getExpandedListItemFormat(editor.formatter, name).each((liFmt) => {
-      Arr.each(ListItemFormat.getPartiallySelectedListItems(editor), (li) => removeStyles(editor.dom, li, liFmt, vars, null));
+      const listItems = ListItemFormat.getPartiallySelectedListItems(editor);
+      Arr.each(listItems, (li) => removeStyles(editor.dom, li, liFmt, vars, null));
+      resetInheritedStyles(editor, listItems, Obj.keys(liFmt.styles ?? {}));
     });
   }
 };

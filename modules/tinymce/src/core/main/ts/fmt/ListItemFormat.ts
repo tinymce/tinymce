@@ -1,4 +1,4 @@
-import { Arr, Obj, Optional, Type } from '@ephox/katamari';
+import { Arr, Obj, Optional, Strings, Type } from '@ephox/katamari';
 import { SelectorFilter } from '@ephox/sugar';
 
 import type DOMUtils from '../api/dom/DOMUtils';
@@ -88,4 +88,26 @@ export const getPartiallySelectedListItems = (editor: Editor): Element[] => {
   const items = getCellSelectionListItems(editor)
     .getOrThunk(() => getAndOnlyNormalizeFirstBlockIf(editor.selection, (el) => !NodeType.isListItem(el)));
   return Arr.filter(items, isEditableListItem(editor.selection.dom));
+};
+
+const inheritedListItemStyleResets: Record<string, string> = {
+  fontWeight: 'normal',
+  fontStyle: 'normal'
+};
+
+const findClosestAncestorListItemStyle = (dom: DOMUtils, root: Node, li: Element, name: string): Optional<string> => {
+  const listItemAncestors = dom.getParents(li.parentNode, NodeType.isListItem, root);
+
+  return Arr.findMap(listItemAncestors, (parent) => Optional.from(dom.getStyle(parent, name)).filter(Strings.isNotEmpty));
+};
+
+export const resetInheritedListItemStyles = (dom: DOMUtils, root: Node, li: Element, names: string[]): void => {
+  Arr.each(names, (name) => {
+    Obj.get(inheritedListItemStyleResets, name).each((resetValue) => {
+      const isInherited = findClosestAncestorListItemStyle(dom, root, li, name).exists((value) => value !== resetValue);
+      if (isInherited) {
+        dom.setStyle(li, name, resetValue);
+      }
+    });
+  });
 };

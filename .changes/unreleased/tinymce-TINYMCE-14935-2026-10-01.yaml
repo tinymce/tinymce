@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Removing bold or italic from a nested list item no longer leaves it styled through inheritance from its parent list item.
+time: 2026-10-01T12:00:00.000000+02:00
+custom:
+  Issue: TINYMCE-14935

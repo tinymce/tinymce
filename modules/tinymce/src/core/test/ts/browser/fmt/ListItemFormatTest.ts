@@ -312,6 +312,17 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
         })
       );
     });
+
+    context('Apply inline formats to nested LIs', () => {
+      it('TINYMCE-14935: applying bold to the entire contents of a nested LI should replace its font-weight reset with bold', () =>
+        testApplyInlineListFormat({
+          format: 'bold',
+          rawInput: '<ul><li style="font-weight: bold;"><strong>abc</strong><ul><li style="font-weight: normal;">def</li></ul></li></ul>',
+          selection: { startPath: [ 0, 0, 1, 0, 0 ], soffset: 0, finishPath: [ 0, 0, 1, 0, 0 ], foffset: 3 },
+          expected: '<ul><li style="font-weight: bold;"><strong>abc</strong><ul><li style="font-weight: bold;"><strong>def</strong></li></ul></li></ul>'
+        })
+      );
+    });
   });
 
   context('Remove inline formats from LIs', () => {
@@ -517,6 +528,114 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
             '<ul>',
             '<li><p><span style="color: red; font-size: 16pt;">bird</span> sings</p></li>',
             '<li><p>cat runs</p></li>',
+            '</ul>'
+          ].join('')
+        })
+      );
+    });
+
+    context('Remove inline formats from nested LIs', () => {
+      it('TINYMCE-14935: removing bold from the entire contents of a nested LI should reset the bold inherited from the parent LI', () =>
+        testRemoveInlineListFormat({
+          format: 'bold',
+          rawInput: '<ul><li style="font-weight: bold;"><strong>abc</strong><ul><li style="font-weight: bold;"><strong>def</strong></li></ul></li></ul>',
+          selection: { startPath: [ 0, 0, 1, 0, 0, 0 ], soffset: 0, finishPath: [ 0, 0, 1, 0, 0, 0 ], foffset: 3 },
+          expected: '<ul><li style="font-weight: bold;"><strong>abc</strong><ul><li style="font-weight: normal;">def</li></ul></li></ul>'
+        })
+      );
+
+      it('TINYMCE-14935: removing italic from the entire contents of a nested LI should reset the italic inherited from the parent LI', () =>
+        testRemoveInlineListFormat({
+          format: 'italic',
+          rawInput: '<ul><li style="font-style: italic;"><em>abc</em><ul><li style="font-style: italic;"><em>def</em></li></ul></li></ul>',
+          selection: { startPath: [ 0, 0, 1, 0, 0, 0 ], soffset: 0, finishPath: [ 0, 0, 1, 0, 0, 0 ], foffset: 3 },
+          expected: '<ul><li style="font-style: italic;"><em>abc</em><ul><li style="font-style: normal;">def</li></ul></li></ul>'
+        })
+      );
+
+      it('TINYMCE-14935: removing bold from part of a nested LI should reset the bold inherited from the parent LI', () =>
+        testRemoveInlineListFormat({
+          format: 'bold',
+          rawInput: '<ul><li style="font-weight: bold;"><strong>abc</strong><ul><li style="font-weight: bold;"><strong>def</strong></li></ul></li></ul>',
+          selection: { startPath: [ 0, 0, 1, 0, 0, 0 ], soffset: 0, finishPath: [ 0, 0, 1, 0, 0, 0 ], foffset: 1 },
+          expected: '<ul><li style="font-weight: bold;"><strong>abc</strong><ul><li style="font-weight: normal;">d<strong>ef</strong></li></ul></li></ul>'
+        })
+      );
+
+      it('TINYMCE-14935: removing bold from both the parent and the nested LI should not reset the bold on the nested LI', () =>
+        testRemoveInlineListFormat({
+          format: 'bold',
+          rawInput: '<ul><li style="font-weight: bold;"><strong>abc</strong><ul><li style="font-weight: bold;"><strong>def</strong></li></ul></li></ul>',
+          selection: { startPath: [ 0, 0, 0, 0 ], soffset: 0, finishPath: [ 0, 0, 1, 0, 0, 0 ], foffset: 3 },
+          expected: '<ul><li>abc<ul><li>def</li></ul></li></ul>'
+        })
+      );
+
+      it('TINYMCE-14935: removing bold from a deeply nested LI should reset the bold inherited from an ancestor LI that is not its direct parent', () =>
+        testRemoveInlineListFormat({
+          format: 'bold',
+          rawInput: '<ul><li style="font-weight: bold;"><strong>abc</strong><ul><li>def<ul><li style="font-weight: bold;"><strong>ghi</strong></li></ul></li></ul></li></ul>',
+          selection: { startPath: [ 0, 0, 1, 0, 1, 0, 0, 0 ], soffset: 0, finishPath: [ 0, 0, 1, 0, 1, 0, 0, 0 ], foffset: 3 },
+          expected: '<ul><li style="font-weight: bold;"><strong>abc</strong><ul><li>def<ul><li style="font-weight: normal;">ghi</li></ul></li></ul></li></ul>'
+        })
+      );
+
+      it('TINYMCE-14935: removing bold from a deeply nested LI should not reset the bold when a closer ancestor LI already resets it', () =>
+        testRemoveInlineListFormat({
+          format: 'bold',
+          rawInput: '<ul><li style="font-weight: bold;"><strong>abc</strong><ul><li style="font-weight: normal;">def<ul><li style="font-weight: bold;"><strong>ghi</strong></li></ul></li></ul></li></ul>',
+          selection: { startPath: [ 0, 0, 1, 0, 1, 0, 0, 0 ], soffset: 0, finishPath: [ 0, 0, 1, 0, 1, 0, 0, 0 ], foffset: 3 },
+          expected: '<ul><li style="font-weight: bold;"><strong>abc</strong><ul><li style="font-weight: normal;">def<ul><li>ghi</li></ul></li></ul></li></ul>'
+        })
+      );
+
+      it('TINYMCE-14935: removing bold from a nested LI whose parent LI is not bold should only remove the bold', () =>
+        testRemoveInlineListFormat({
+          format: 'bold',
+          rawInput: '<ul><li>abc<ul><li style="font-weight: bold;"><strong>def</strong></li></ul></li></ul>',
+          selection: { startPath: [ 0, 0, 1, 0, 0, 0 ], soffset: 0, finishPath: [ 0, 0, 1, 0, 0, 0 ], foffset: 3 },
+          expected: '<ul><li>abc<ul><li>def</li></ul></li></ul>'
+        })
+      );
+
+      it('TINYMCE-14935: removing italic from a nested LI should not reset the bold inherited from the parent LI', () =>
+        testRemoveInlineListFormat({
+          format: 'italic',
+          rawInput: '<ul><li style="font-weight: bold;"><strong>abc</strong><ul><li style="font-style: italic;"><em>def</em></li></ul></li></ul>',
+          selection: { startPath: [ 0, 0, 1, 0, 0, 0 ], soffset: 0, finishPath: [ 0, 0, 1, 0, 0, 0 ], foffset: 3 },
+          expected: '<ul><li style="font-weight: bold;"><strong>abc</strong><ul><li>def</li></ul></li></ul>'
+        })
+      );
+
+      it('TINYMCE-14935: removing bold at caret in a nested LI should reset the bold inherited from the parent LI', () =>
+        testRemoveInlineListFormat({
+          format: 'bold',
+          rawInput: '<ul><li style="font-weight: bold;"><strong>abc</strong><ul><li style="font-weight: bold;"><strong>def</strong></li></ul></li></ul>',
+          selection: { startPath: [ 0, 0, 1, 0, 0, 0 ], soffset: 1, finishPath: [ 0, 0, 1, 0, 0, 0 ], foffset: 1 },
+          expected: '<ul><li style="font-weight: bold;"><strong>abc</strong><ul><li style="font-weight: normal;">def</li></ul></li></ul>'
+        })
+      );
+
+      it('TINYMCE-14935: removing all formats from a nested LI should reset the bold and italic but not the color inherited from the parent LI', () =>
+        testRemoveInlineListFormat({
+          format: 'removeformat',
+          rawInput: [
+            '<ul>',
+            '<li style="font-weight: bold; font-style: italic; color: red;"><span style="color: red;"><em><strong>abc</strong></em></span>',
+            '<ul>',
+            '<li style="font-weight: bold; font-style: italic; color: red;"><span style="color: red;"><em><strong>def</strong></em></span></li>',
+            '</ul>',
+            '</li>',
+            '</ul>'
+          ].join(''),
+          selection: { startPath: [ 0, 0, 1, 0, 0, 0, 0, 0 ], soffset: 0, finishPath: [ 0, 0, 1, 0, 0, 0, 0, 0 ], foffset: 3 },
+          expected: [
+            '<ul>',
+            '<li style="font-weight: bold; font-style: italic; color: red;"><span style="color: red;"><em><strong>abc</strong></em></span>',
+            '<ul>',
+            '<li style="font-weight: normal; font-style: normal;">def</li>',
+            '</ul>',
+            '</li>',
             '</ul>'
           ].join('')
         })
