@@ -1,5 +1,6 @@
+import { Keys } from '@ephox/agar';
 import { afterEach, context, describe, it } from '@ephox/bedrock-client';
-import { LegacyUnit, TinyAssertions, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
+import { LegacyUnit, TinyAssertions, TinyContentActions, TinyHooks, TinySelections, TinyState, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import type Editor from 'tinymce/core/api/Editor';
@@ -1108,6 +1109,107 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
         '<p><dfn>dfn tag </dfn> <code>code tag </code> <samp>samp tag</samp> ' +
         '<kbd> kbd tag</kbd> <var> var tag</var> <cite> cite tag</cite> <mark> mark tag</mark> <q> q tag</q> ' +
         '<s>strike tag</s> <s>s tag</s> <small>small tag</small></p>'
+      );
+    });
+  });
+
+  context('TINYMCE-8693: Test for cell content indent/outdent', () => {
+    const hook = TinyHooks.bddSetupLight<Editor>({
+      toolbar: 'outdent indent',
+      base_url: '/project/tinymce/js/tinymce'
+    }, []);
+
+    const pAssertToolbarButtonState = (editor: Editor, buttonName: string, active: boolean) =>
+      TinyUiActions.pWaitForUi(editor, `button[data-mce-name="${buttonName}"][aria-disabled="${!active}"]`);
+
+    it('TINYMCE-8693: Outdent button should be active after an indent and a new line in a cell', async () => {
+      const editor = hook.editor();
+      editor.setContent('<table><tbody><tr><td>abc</td></tr></tbody></table>');
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 3);
+      await pAssertToolbarButtonState(editor, 'outdent', false);
+
+      editor.execCommand('Indent');
+      await pAssertToolbarButtonState(editor, 'outdent', true);
+      TinyAssertions.assertContent(editor,
+        '<table>\n<tbody>\n<tr>\n<td>\n<p style="padding-left: 40px;">abc</p>\n</td>\n</tr>\n</tbody>\n</table>'
+      );
+
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0, 0 ], 3);
+      TinyContentActions.keystroke(editor, Keys.enter());
+
+      await pAssertToolbarButtonState(editor, 'outdent', true);
+      TinyAssertions.assertContent(editor,
+        '<table>\n<tbody>\n<tr>\n<td>\n<p style="padding-left: 40px;">abc</p>\n<p style="padding-left: 40px;">&nbsp;</p>\n</td>\n</tr>\n</tbody>\n</table>'
+      );
+
+      editor.execCommand('Outdent');
+      await pAssertToolbarButtonState(editor, 'outdent', false);
+      TinyAssertions.assertContent(editor,
+        '<table>\n<tbody>\n<tr>\n<td>\n<p style="padding-left: 40px;">abc</p>\n<p>&nbsp;</p>\n</td>\n</tr>\n</tbody>\n</table>'
+      );
+    });
+
+    it('TINYMCE-8693: Outdent button should be active after an indent and a new line in a cell (cursor between chars)', async () => {
+      const editor = hook.editor();
+      editor.setContent('<table><tbody><tr><td>abc</td></tr></tbody></table>');
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 2);
+      await pAssertToolbarButtonState(editor, 'outdent', false);
+
+      editor.execCommand('Indent');
+      await pAssertToolbarButtonState(editor, 'outdent', true);
+      TinyAssertions.assertContent(editor,
+        '<table>\n<tbody>\n<tr>\n<td>\n<p style="padding-left: 40px;">abc</p>\n</td>\n</tr>\n</tbody>\n</table>'
+      );
+
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0, 0 ], 3);
+      TinyContentActions.keystroke(editor, Keys.enter());
+
+      await pAssertToolbarButtonState(editor, 'outdent', true);
+      TinyAssertions.assertContent(editor,
+        '<table>\n<tbody>\n<tr>\n<td>\n<p style="padding-left: 40px;">abc</p>\n<p style="padding-left: 40px;">&nbsp;</p>\n</td>\n</tr>\n</tbody>\n</table>'
+      );
+
+      editor.execCommand('Outdent');
+      await pAssertToolbarButtonState(editor, 'outdent', false);
+      TinyAssertions.assertContent(editor,
+        '<table>\n<tbody>\n<tr>\n<td>\n<p style="padding-left: 40px;">abc</p>\n<p>&nbsp;</p>\n</td>\n</tr>\n</tbody>\n</table>'
+      );
+    });
+
+    it('TINYMCE-8693: Indent a selected cell with existing <p> children should not nest an extra <p> wrapper', async () => {
+      const editor = hook.editor();
+      editor.setContent(
+        '<table><tbody><tr>' +
+      '<td data-mce-first-selected="1" data-mce-last-selected="1" data-mce-selected="1">' +
+        '<p>abc</p><p>def</p>' +
+      '</td></tr></tbody></table>'
+      );
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0, 0 ], 0);
+      await pAssertToolbarButtonState(editor, 'outdent', false);
+
+      editor.execCommand('Indent');
+
+      await pAssertToolbarButtonState(editor, 'outdent', true);
+      TinyAssertions.assertContent(editor,
+        '<table>\n<tbody>\n<tr>\n<td>\n<p style="padding-left: 40px;">abc</p>\n<p style="padding-left: 40px;">def</p>\n</td>\n</tr>\n</tbody>\n</table>'
+      );
+    });
+
+    it('TINYMCE-8693: All inline child should have a wrapper', async () => {
+      const editor = hook.editor();
+      editor.setContent(
+        '<table><tbody><tr>' +
+    '<td data-mce-first-selected="1" data-mce-last-selected="1" data-mce-selected="1">' +
+    '<p>aaa</p>bbb<p>ccc</p>' +
+    '</td></tr></tbody></table>'
+      );
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0, 0 ], 0);
+
+      editor.execCommand('Indent');
+
+      await pAssertToolbarButtonState(editor, 'outdent', true);
+      TinyAssertions.assertContent(editor,
+        '<table>\n<tbody>\n<tr>\n<td>\n<p style="padding-left: 40px;">aaa</p>\n<p style="padding-left: 40px;">bbb</p>\n<p style="padding-left: 40px;">ccc</p>\n</td>\n</tr>\n</tbody>\n</table>'
       );
     });
   });

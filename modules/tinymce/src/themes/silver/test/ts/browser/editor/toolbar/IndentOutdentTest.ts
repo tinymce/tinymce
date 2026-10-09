@@ -45,7 +45,8 @@ describe('browser.tinymce.themes.silver.editor.toolbar.IndentOutdentTest', () =>
       editor.execCommand('indent');
       const tds = UiFinder.findAllIn(TinyDom.body(editor), 'td');
       Arr.each(tds, (td) => {
-        assert.isTrue(Css.getRaw(td, 'padding-left').isSome(), `td ${td.dom.innerHTML} should be indented`);
+        const wrapper = UiFinder.findIn(td, 'p').getOrDie();
+        assert.equal(Css.getRaw(wrapper, 'padding-left').getOrUndefined(), '40px', `td ${td.dom.innerHTML} should be indented`);
       });
     });
   });

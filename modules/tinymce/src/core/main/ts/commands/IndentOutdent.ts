@@ -4,8 +4,10 @@ import { Css, PredicateFind, SugarElement, SugarElements, Traverse } from '@epho
 import type DOMUtils from '../api/dom/DOMUtils';
 import type Editor from '../api/Editor';
 import * as Options from '../api/Options';
+import * as Bookmarks from '../bookmark/Bookmarks';
 import { isList, isListItem, isTable } from '../dom/ElementType';
 import * as NodeType from '../dom/NodeType';
+import * as FormatUtils from '../fmt/FormatUtils';
 import { indentListSelection, outdentListSelection } from '../lists/actions/Indentation';
 import * as ListIndentation from '../lists/listmodel/ListsIndendation';
 import * as TableCellSelection from '../selection/TableCellSelection';
@@ -46,9 +48,21 @@ const validateBlocks = (editor: Editor, blocks: SugarElement<HTMLElement>[]): bo
     return contentEditable !== 'false' && intentValue > 0;
   });
 
+const getCellContentBlocks = (editor: Editor, cell: SugarElement<HTMLElement>): SugarElement<HTMLElement>[] =>
+  Arr.filter(SugarElements.fromDom(Arr.from(cell.dom.childNodes)), (child): child is SugarElement<HTMLElement> =>
+    editor.dom.isBlock(child.dom));
+
 const canOutdent = (editor: Editor): boolean => {
   const blocks = getBlocksToIndent(editor);
-  return !editor.mode.isReadOnly() && (blocks.length > 1 || validateBlocks(editor, blocks));
+  const indentedBlocks = Arr.bind(blocks, (block) => {
+    if (!NodeType.isTableCell(block.dom)) {
+      return [ block ];
+    }
+
+    const inner = getCellContentBlocks(editor, block);
+    return inner.length > 0 ? inner : [ block ];
+  });
+  return !editor.mode.isReadOnly() && (blocks.length > 1 || validateBlocks(editor, indentedBlocks));
 };
 
 const canIndent = (editor: Editor): boolean =>
@@ -59,6 +73,35 @@ const isListComponent = (el: SugarElement<Node>): boolean =>
 
 const parentIsListComponent = (el: SugarElement<Node>): boolean =>
   Traverse.parent(el).exists(isListComponent);
+
+const wrapCellInlineContent = (editor: Editor, cell: HTMLElement): HTMLElement[] => {
+  const { dom } = editor;
+  const children = Arr.filter(Arr.from(cell.childNodes), (child) => !FormatUtils.isEmptyTextNode(child));
+  const blocks: HTMLElement[] = [];
+  let run: Node[] = [];
+
+  const flushRun = () => {
+    if (run.length > 0 && !Arr.forall(run, Bookmarks.isBookmarkNode)) {
+      const wrapper = dom.create('p');
+      cell.insertBefore(wrapper, run[0]);
+      Arr.each(run, (n) => wrapper.appendChild(n));
+      blocks.push(wrapper);
+    }
+    run = [];
+  };
+
+  Arr.each(children, (c) => {
+    if (dom.isBlock(c)) {
+      flushRun();
+      blocks.push(c);
+    } else {
+      run.push(c);
+    }
+  });
+  flushRun();
+
+  return blocks;
+};
 
 const getBlocksToIndent = (editor: Editor): SugarElement<HTMLElement>[] => {
   const selectedCells = TableCellSelection.getCellsFromEditor(editor);
@@ -80,7 +123,15 @@ const handle = (editor: Editor, command: string): void => {
   const useMargin = Options.shouldIndentUseMargin(editor);
 
   Arr.each(getBlocksToIndent(editor), (block) => {
-    indentElement(dom, command, useMargin, indentValue, indentUnit, block.dom);
+    if (NodeType.isTableCell(block.dom)) {
+      const bm = editor.selection.getBookmark();
+      Arr.each(wrapCellInlineContent(editor, block.dom), (w) => {
+        indentElement(dom, command, useMargin, indentValue, indentUnit, w);
+      });
+      editor.selection.moveToBookmark(bm);
+    } else {
+      indentElement(dom, command, useMargin, indentValue, indentUnit, block.dom);
+    }
   });
 
   if (command === 'indent') {
