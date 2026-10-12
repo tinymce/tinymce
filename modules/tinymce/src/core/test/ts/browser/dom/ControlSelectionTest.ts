@@ -205,6 +205,27 @@ describe('browser.tinymce.core.dom.ControlSelectionTest', () => {
     await pAssertInitialGhostElement(editor, '#mceResizeHandlese', (ghost) => getAndAssertDimensions(ghost, 100, 100));
   });
 
+  it('TINYMCE-14927: Resize handles and helpers are hidden from screen readers', async () => {
+    const editor = hook.editor();
+    const editorBody = TinyDom.body(editor);
+    editor.setContent(`<p><img src="${imgSrc}" width="100" height="100"></p>`);
+    TinySelections.select(editor, 'img', []);
+    const handle = await pWaitForDragHandles(editorBody, '#mceResizeHandlese');
+    Assertions.assertPresence('Resize handles should be aria-hidden', {
+      '.mce-resizehandle[aria-hidden="true"]': 4,
+      '.mce-resizehandle:not([aria-hidden="true"])': 0
+    }, editorBody);
+
+    Mouse.mouseDown(handle);
+    await Waiter.pWaitBetweenUserActions();
+    Assertions.assertPresence('Resize ghost, helper and backdrop should be aria-hidden', {
+      '.mce-clonedresizable[aria-hidden="true"]': 1,
+      '.mce-resize-helper[aria-hidden="true"]': 1,
+      '.mce-resize-backdrop[aria-hidden="true"]': 1
+    }, editorBody);
+    Mouse.mouseUp(handle);
+  });
+
   it('TINY-6229: Resize video element', async () => {
     const editor = hook.editor();
     editor.setContent('<p><video controls width="300" height="150"></video></p>');
