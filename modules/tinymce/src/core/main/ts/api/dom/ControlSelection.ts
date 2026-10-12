@@ -355,7 +355,8 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
 
           resizeBackdrop = dom.add(rootElement, 'div', {
             'class': 'mce-resize-backdrop',
-            'data-mce-bogus': 'all'
+            'data-mce-bogus': 'all',
+            'aria-hidden': 'true'
           });
           dom.setStyles(resizeBackdrop, {
             position: 'fixed',
@@ -368,6 +369,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
           selectedElmGhost = createGhostElement(dom, selectedElm);
           dom.addClass(selectedElmGhost, 'mce-clonedresizable');
           dom.setAttrib(selectedElmGhost, 'data-mce-bogus', 'all');
+          dom.setAttrib(selectedElmGhost, 'aria-hidden', 'true');
           selectedElmGhost.contentEditable = 'false'; // Hides IE move layer cursor
           dom.setStyles(selectedElmGhost, {
             left: selectedElmX,
@@ -391,7 +393,8 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
 
           resizeHelper = dom.add(rootElement, 'div', {
             'class': 'mce-resize-helper',
-            'data-mce-bogus': 'all'
+            'data-mce-bogus': 'all',
+            'aria-hidden': 'true'
           }, startW + ' &times; ' + startH);
         };
 
@@ -406,6 +409,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
           'data-mce-bogus': 'all',
           'class': 'mce-resizehandle',
           'unselectable': true,
+          'aria-hidden': 'true',
           'style': 'cursor:' + name + '-resize; margin:0; padding:0'
         });
 
