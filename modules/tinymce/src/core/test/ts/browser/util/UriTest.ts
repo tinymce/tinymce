@@ -117,7 +117,7 @@ describe('browser.tinymce.core.util.UriTest', () => {
   });
 
   it('getDocumentBaseUrl', () => {
-    // eslint-disable-next-line @typescript-eslint/unbound-method
+
     const getDocumentBaseUrl = URI.getDocumentBaseUrl;
 
     assert.deepEqual(getDocumentBaseUrl({ protocol: 'file:', host: '', pathname: '/dir/path1/path2' }), 'file:///dir/path1/');

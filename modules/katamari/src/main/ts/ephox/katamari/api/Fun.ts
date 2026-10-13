@@ -1,10 +1,10 @@
 import * as Type from './Type';
 
 const noop: (...args: any[]) => void
-= () => { };
+  = () => { };
 
 const noarg: <T>(f: () => T) => (...args: any[]) => void
-= (f) => () => f();
+  = (f) => () => f();
 
 /** Compose a unary function with an n-ary function */
 const compose = <T extends any[], U, V>(fa: (v: U) => V, fb: (...x: T) => U): (...x: T) => V => {

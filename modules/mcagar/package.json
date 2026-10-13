@@ -31,7 +31,7 @@
     "@ephox/katamari": "^11.0.0",
     "@ephox/sand": "^8.0.0",
     "@ephox/sugar": "^11.0.0",
-    "fast-check": "^4.4.0"
+    "fast-check": "^4.10.2"
   },
   "peerDependencies": {
     "tinymce": ">=4.0.0"

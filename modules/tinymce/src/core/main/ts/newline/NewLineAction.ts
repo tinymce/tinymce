@@ -13,7 +13,7 @@ export interface NewLineActionAdt {
   fold: <T> (
     br: VoidFunction,
     block: VoidFunction,
-    none: VoidFunction,
+    none: VoidFunction
   ) => T;
   match: <T> (branches: {
     br: VoidFunction;

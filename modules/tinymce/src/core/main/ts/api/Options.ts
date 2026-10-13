@@ -553,7 +553,7 @@ const register = (editor: Editor): void => {
   registerOption('url_converter', {
     processor: 'function',
     // Note: Don't bind here, as the binding is handled via the `url_converter_scope`
-    // eslint-disable-next-line @typescript-eslint/unbound-method
+
     default: editor.convertURL
   });
 

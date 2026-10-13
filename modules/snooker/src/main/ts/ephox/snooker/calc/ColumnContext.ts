@@ -12,7 +12,7 @@ export interface ColumnContext {
     only: OnlyHandler<T>,
     left: LeftHandler<T>,
     middle: MiddleHandler<T>,
-    right: RightHandler<T>,
+    right: RightHandler<T>
   ) => T;
   match: <T> (branches: {
     none: NoneHandler<T>;

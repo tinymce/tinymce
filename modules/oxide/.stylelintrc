@@ -4,6 +4,8 @@
     "stylelint-order"
   ],
   "rules": {
-    "no-descending-specificity": null
+    "no-descending-specificity": null,
+    "property-no-deprecated": null,
+    "declaration-property-value-keyword-no-deprecated": null
   }
 }

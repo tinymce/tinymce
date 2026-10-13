@@ -8,7 +8,7 @@ interface ComparisonAdt<A, B> {
     bothErrors: (error1: B, error2: B) => T,
     firstError: (error1: B, value2: A) => T,
     secondError: (value1: A, error2: B) => T,
-    bothValues: (value1: A, value2: A) => T,
+    bothValues: (value1: A, value2: A) => T
   ) => T;
   readonly match: <T> (branches: {
     bothErrors: (error1: B, error2: B) => T;

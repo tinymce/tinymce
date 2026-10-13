@@ -14,7 +14,7 @@ export interface BeforeAfter {
     none: NoneHandler<T>,
     success: SuccessHandler<T>,
     failedUp: FailedUpHandler<T>,
-    failedDown: FailedDownHandler<T>,
+    failedDown: FailedDownHandler<T>
   ) => T;
   match: <T>(branches: {
     none: NoneHandler<T>;

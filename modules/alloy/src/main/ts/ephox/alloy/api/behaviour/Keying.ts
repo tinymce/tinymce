@@ -17,7 +17,7 @@ export interface KeyingBehaviour<D extends GeneralKeyingConfig> extends Behaviou
   setGridSize: (
     component: AlloyComponent,
     numRows: number,
-    numColumns: number,
+    numColumns: number
   ) => void;
 }
 

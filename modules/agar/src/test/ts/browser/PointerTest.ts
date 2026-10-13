@@ -134,9 +134,9 @@ describe('browser.agar.PointerTest', () => {
     });
 
     it('pWithMockPointerCapture restores originals after callback', async () => {
-      // eslint-disable-next-line @typescript-eslint/unbound-method
+
       const originalSet = input.dom.setPointerCapture;
-      // eslint-disable-next-line @typescript-eslint/unbound-method
+
       const originalRelease = input.dom.releasePointerCapture;
 
       await Pointer.pWithMockPointerCapture(input, {}, () => {
@@ -144,14 +144,13 @@ describe('browser.agar.PointerTest', () => {
         Assert.eq('releasePointerCapture should be replaced', true, input.dom.releasePointerCapture !== originalRelease);
       });
 
-      // eslint-disable-next-line @typescript-eslint/unbound-method
       Assert.eq('setPointerCapture should be restored', originalSet, input.dom.setPointerCapture);
-      // eslint-disable-next-line @typescript-eslint/unbound-method
+
       Assert.eq('releasePointerCapture should be restored', originalRelease, input.dom.releasePointerCapture);
     });
 
     it('pWithMockPointerCapture restores originals even if callback throws', async () => {
-      // eslint-disable-next-line @typescript-eslint/unbound-method
+
       const originalSet = input.dom.setPointerCapture;
       let threwException = false;
 
@@ -164,7 +163,7 @@ describe('browser.agar.PointerTest', () => {
       }
 
       Assert.eq('callback should have thrown', true, threwException);
-      // eslint-disable-next-line @typescript-eslint/unbound-method
+
       Assert.eq('setPointerCapture should be restored after error', originalSet, input.dom.setPointerCapture);
     });
 

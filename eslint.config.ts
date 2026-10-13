@@ -31,6 +31,7 @@ export default defineConfig(
         "@typescript-eslint/no-shadow": "off",
         "@typescript-eslint/no-this-alias": "off",
         "@typescript-eslint/no-unsafe-argument": "off",
+        "@typescript-eslint/unbound-method": "off", // false positives on intersection types e.g. Attributes = Array<..> & { map: Record<..> }
         "@typescript-eslint/prefer-for-of": "off",
         "@typescript-eslint/prefer-regexp-exec": "off",
         "@typescript-eslint/require-await": "off",

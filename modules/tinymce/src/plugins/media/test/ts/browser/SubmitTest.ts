@@ -29,13 +29,13 @@ describe('browser.tinymce.plugins.media.core.SubmitTest', () => {
     };
 
     const customEmbed =
-    '<div style="left: 0px; width: 100%; height: 0px; position: relative; padding-bottom: 56.338%; max-width: 650px;">' +
+      '<div style="left: 0px; width: 100%; height: 0px; position: relative; padding-bottom: 56.338%; max-width: 650px;">' +
     '<iframe src="https://www.youtube.com/embed/IcgmSRJHu_8"' +
     ' width="560" height="314" allowfullscreen="allowfullscreen">' +
     '</iframe></div>';
 
     const sandboxedCustomEmbed =
-    '<div style="left: 0px; width: 100%; height: 0px; position: relative; padding-bottom: 56.338%; max-width: 650px;">' +
+      '<div style="left: 0px; width: 100%; height: 0px; position: relative; padding-bottom: 56.338%; max-width: 650px;">' +
     '<iframe src="https://www.youtube.com/embed/IcgmSRJHu_8"' +
     ' width="560" height="314" sandbox="" allowfullscreen="allowfullscreen">' +
     '</iframe></div>';

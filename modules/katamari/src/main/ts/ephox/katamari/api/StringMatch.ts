@@ -31,13 +31,13 @@ const adt = Adt.generate<{
   all: () => StringMatch;
   not: (stringMatch: StringMatch) => StringMatch;
 }>([
-      { starts: [ 'value', 'f' ] },
-      { pattern: [ 'regex', 'f' ] },
-      { contains: [ 'value', 'f' ] },
-      { exact: [ 'value', 'f' ] },
-      { all: [ ] },
-      { not: [ 'stringMatch' ] }
-    ]);
+  { starts: [ 'value', 'f' ] },
+  { pattern: [ 'regex', 'f' ] },
+  { contains: [ 'value', 'f' ] },
+  { exact: [ 'value', 'f' ] },
+  { all: [ ] },
+  { not: [ 'stringMatch' ] }
+]);
 
 const caseInsensitive = (val: string): string => {
   return val.toLowerCase();

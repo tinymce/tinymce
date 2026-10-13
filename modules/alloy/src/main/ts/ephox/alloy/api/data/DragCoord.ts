@@ -9,7 +9,7 @@ export interface CoordAdt<T = number> {
   fold: <U>(
     offset: DragCoords<T, U>,
     absolute: DragCoords<T, U>,
-    fixed: DragCoords<T, U>,
+    fixed: DragCoords<T, U>
   ) => U;
   match: <U>(branches: {
     offset: DragCoords<T, U>;

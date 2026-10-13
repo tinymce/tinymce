@@ -35,7 +35,7 @@ UnitTest.test('TableLookupTest - cells', () => {
   };
 
   const html =
-  '<table style="border-collapse: collapse; width: 1088px; float: none; height: 60px;" summary="Skin burns" border="1">' +
+    '<table style="border-collapse: collapse; width: 1088px; float: none; height: 60px;" summary="Skin burns" border="1">' +
   '<caption>Outer table<br></caption>' +
   '<tbody>' +
   '<tr style="height: 20px;">' +

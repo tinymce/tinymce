@@ -19,9 +19,9 @@ const pWithMockPointerCapture = async <T>(
   options: MockPointerCaptureOptions,
   callback: () => T | Promise<T>
 ): Promise<T> => {
-  // eslint-disable-next-line @typescript-eslint/unbound-method
+
   const originalSetPointerCapture = element.dom.setPointerCapture;
-  // eslint-disable-next-line @typescript-eslint/unbound-method
+
   const originalReleasePointerCapture = element.dom.releasePointerCapture;
 
   element.dom.setPointerCapture = options.setPointerCapture ?? Fun.noop;

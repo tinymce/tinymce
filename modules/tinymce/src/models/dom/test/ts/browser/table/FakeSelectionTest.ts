@@ -33,10 +33,10 @@ describe('browser.tinymce.models.dom.table.FakeSelectionTest', () => {
   });
 
   const simpleTable =
-  '<table><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></table>';
+    '<table><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></table>';
 
   const simpleColgroupTable =
-  '<table><colgroup><col /><col /></colgroup><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></table>';
+    '<table><colgroup><col /><col /></colgroup><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></table>';
 
   const getCells = (table: SugarElement<HTMLTableElement>, selector: string = 'td,th'): SugarElement<HTMLTableCellElement>[] =>
     SelectorFilter.descendants(table, selector);

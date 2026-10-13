@@ -34,7 +34,7 @@ const cPatchInputElement = (files: File[]) => Chain.op<any>(() => {
   const HTMLInputElement = window.HTMLInputElement;
   const currentProps = {
     files: Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'files'),
-    // eslint-disable-next-line @typescript-eslint/unbound-method
+
     click: HTMLInputElement.prototype.click
   };
 

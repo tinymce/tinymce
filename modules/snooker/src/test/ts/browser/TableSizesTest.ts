@@ -9,7 +9,7 @@ import { addStyles, readRowHeights, readWidth } from '../module/ephox/snooker/te
 
 describe('Table Sizes Test (fusebox)', () => {
   const percentTable =
-  '<table style="width: 100%;">' +
+    '<table style="width: 100%;">' +
   '<tbody>' +
   '<tr><td style="width: 10%;">A0</td><td style="width: 30%;">B0</td>' +
   '<td style="width: 20%;">C0</td><td style="width: 25%;">D0</td>' +
@@ -23,7 +23,7 @@ describe('Table Sizes Test (fusebox)', () => {
   '</table>';
 
   const pixelTable =
-  '<table style="width: 500px;">' +
+    '<table style="width: 500px;">' +
   '<tbody>' +
   '<tr><td style="width: 50px;">A0</td><td style="width: 150px;">B0</td>' +
   '<td style="width: 100px;">C0</td><td style="width: 125px;">D0</td>' +
@@ -37,7 +37,7 @@ describe('Table Sizes Test (fusebox)', () => {
   '</table>';
 
   const pixelTableTdHeights =
-  '<table border="1" style="border-collapse: collapse; width: 100%;"> ' +
+    '<table border="1" style="border-collapse: collapse; width: 100%;"> ' +
   '<tbody> ' +
   '<tr> <td style="width: 20%; height: 40px;" rowspan="2"></td> ' +
   '<td style="width: 20%; height: 40px;">  </td> ' +
@@ -54,7 +54,7 @@ describe('Table Sizes Test (fusebox)', () => {
   '</table';
 
   const pixelTableTrHeights =
-  '<table border="1" style="border-collapse: collapse; width: 100%;"> ' +
+    '<table border="1" style="border-collapse: collapse; width: 100%;"> ' +
   '<tbody> ' +
   '<tr style="height: 50px;"> <td style="width: 20%;" rowspan="2"></td> ' +
   '<td style="width: 20%;">  </td> ' +

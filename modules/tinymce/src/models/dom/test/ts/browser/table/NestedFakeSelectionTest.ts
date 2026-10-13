@@ -24,7 +24,7 @@ describe('browser.tinymce.models.dom.table.NestedFakeSelectionTest', () => {
   }, []);
 
   const basicNestedTable =
-  '<table>' +
+    '<table>' +
     '<tbody>' +
       '<tr>' +
         '<td data-cell="1a">' +

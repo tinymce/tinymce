@@ -243,7 +243,7 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
 
     it('TBA: Open dialog via execCommand', async () => {
       const baseHtml =
-      '<table style="height: 500px; width: 500px; border-width: 1px; ' +
+        '<table style="height: 500px; width: 500px; border-width: 1px; ' +
       'border-spacing: 5px; background-color: #0000ff; ' +
       'border-color: #ff0000; border-style: dotted; ' +
       'margin-left: 0px; margin-right: auto;">' +
@@ -293,7 +293,7 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
       };
 
       const newHtml =
-      '<table class="dog" style="width: 500px; height: 500px; margin-left: 0px; margin-right: auto; ' +
+        '<table class="dog" style="width: 500px; height: 500px; margin-left: 0px; margin-right: auto; ' +
       `background-color: #0000ff; border: 1px dotted ${isSafari15 ? 'rgb(255, 0, 0)' : '#ff0000'}; ` +
       'border-spacing: 5px; border-collapse: collapse;" border="1">' +
       '<caption>Caption</caption>' +

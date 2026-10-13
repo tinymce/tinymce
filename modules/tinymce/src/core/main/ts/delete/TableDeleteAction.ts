@@ -23,7 +23,7 @@ export interface DeleteActionAdt {
     singleCellTable: SingleCellTableFn<T>,
     fullTable: FullTableFn<T>,
     partialTable: PartialTableFn<T>,
-    multiTable: MultiTableFn<T>,
+    multiTable: MultiTableFn<T>
   ) => T;
   match: <T> (branches: {
     singleCellTable: SingleCellTableFn<T>;

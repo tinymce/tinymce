@@ -452,7 +452,7 @@ const contentBodyLoaded = (editor: Editor): void => {
   editor.dom = DOMUtils(doc, {
     keep_values: true,
     // Note: Don't bind here, as the binding is handled via the `url_converter_scope`
-    // eslint-disable-next-line @typescript-eslint/unbound-method
+
     url_converter: editor.convertURL,
     url_converter_scope: editor,
     update_styles: true,

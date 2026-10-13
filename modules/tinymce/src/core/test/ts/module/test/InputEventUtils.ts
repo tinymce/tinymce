@@ -22,7 +22,7 @@ const cloneEvent = <T extends Event>(originalEvent: T): T => {
   }
 
   // The composed path can't be cloned, so delegate instead
-  // eslint-disable-next-line @typescript-eslint/unbound-method
+
   if (Type.isNonNullable(originalEvent.composedPath)) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     event.composedPath = () => originalEvent.composedPath!();

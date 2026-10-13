@@ -9,7 +9,7 @@ import type { SugarElement } from '@ephox/sugar';
 
 import FakeClipboard from 'tinymce/core/api/FakeClipboard';
 
- type RowElement = HTMLTableRowElement | HTMLTableColElement;
+type RowElement = HTMLTableRowElement | HTMLTableColElement;
 
 const tableTypeBase = 'x-tinymce/dom-table-';
 const tableTypeRow = tableTypeBase + 'rows';

@@ -11,7 +11,7 @@ export interface DirectionAdt {
     south: DirectionFunc<T>,
     north: DirectionFunc<T>,
     east: DirectionFunc<T>,
-    west: DirectionFunc<T>,
+    west: DirectionFunc<T>
   ) => T;
   match: <T>(branches: {
     southeast: DirectionFunc<T>;

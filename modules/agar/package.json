@@ -32,7 +32,7 @@
     "@ephox/polaris": "^8.0.0",
     "@ephox/sand": "^8.0.0",
     "@ephox/sugar": "^11.0.0",
-    "fast-check": "^4.4.0"
+    "fast-check": "^4.10.2"
   },
   "devDependencies": {
     "@ephox/agar-sw": "^1.0.0",

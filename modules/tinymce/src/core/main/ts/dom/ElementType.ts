@@ -28,6 +28,7 @@ const isBr = (node: SugarElement<Node>): node is SugarElement<HTMLBRElement> => 
 const isScript = (node: SugarElement<Node>): node is SugarElement<HTMLScriptElement> => SugarNode.isElement(node) && SugarNode.name(node) === 'script';
 const isStyle = (node: SugarElement<Node>): node is SugarElement<HTMLStyleElement> => SugarNode.isElement(node) && SugarNode.name(node) === 'style';
 const isIframe = (node: SugarElement<Node>): node is SugarElement<HTMLIFrameElement> => SugarNode.isElement(node) && SugarNode.name(node) === 'iframe';
+const isNoscript = (node: SugarElement<Node>): node is SugarElement<HTMLElement> => SugarNode.isElement(node) && SugarNode.name(node) === 'noscript';
 const isTextBlock = lazyLookup(textBlocks);
 const isList = lazyLookup(lists);
 const isListItem = lazyLookup(listItems);
@@ -46,5 +47,6 @@ export {
   isScript,
   isStyle,
   isIframe,
+  isNoscript,
   isWsPreserveElement
 };

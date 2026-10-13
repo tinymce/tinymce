@@ -17,7 +17,7 @@ export interface DeleteActionAdt {
   fold: <T> (
     remove: (element: Node) => T,
     moveToElement: (element: Node) => T,
-    moveToPosition: (position: CaretPosition) => T,
+    moveToPosition: (position: CaretPosition) => T
   ) => T;
   match: <T> (branches: {
     remove: (element: Node) => T;
