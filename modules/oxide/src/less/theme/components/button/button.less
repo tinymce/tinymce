@@ -28,12 +28,12 @@
 
 .tox {
   .tox-button when (@custom-properties-enabled = true) {
-    --tox-private-button-border-width: 1px;
+    --tox-private-button-border-width: var(--tox-private-control-border-width);
     --tox-private-button-border-style: solid;
-  
+
     --tox-private-button-padding-x: var(--tox-private-pad-md);
-    --tox-private-button-padding-y: var(--tox-private-pad-xs);
-  
+    --tox-private-button-padding-y: var(--tox-private-control-padding-y);
+
     --tox-private-button-font-size: var(--tox-private-font-size-sm);
     --tox-private-button-font-style: normal;
     --tox-private-button-font-weight: var(--tox-private-font-weight-bold); 

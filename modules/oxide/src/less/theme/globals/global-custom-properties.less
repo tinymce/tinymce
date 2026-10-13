@@ -1,5 +1,6 @@
 .tox when (@custom-properties-enabled = true) {
   --tox-private-color-scheme: light dark;
+  color-scheme: var(--tox-private-color-scheme);
   // Root variables
   // Begin customization by changing these variables as most other variables are derivatives of these.
   --tox-private-background-color: light-dark(#fff, #222F3E);
@@ -31,11 +32,10 @@
     hsl(0 0% 100% / 15%);
   );
 
-  // used only in toolbar-split-button -> should not be a global
-  // --tox-private-border-color-light: light-dark(
-  //     hsl(from var(--tox-private-background-color) h s calc( l - 11)),
-  //     hsl(from var(--tox-private-background-color) h s calc( l + 11))
-  //   );
+  --tox-private-border-color-light: light-dark(
+    hsl(from var(--tox-private-background-color) h s calc(l - 11)),
+    hsl(from var(--tox-private-background-color) h s calc(l + 11))
+  );
 
   --tox-private-text-color: light-dark(var(--tox-private-color-black), var(--tox-private-color-white));
   --tox-private-text-color-muted: light-dark(
@@ -46,6 +46,8 @@
   // Some useful generic variables
   --tox-private-panel-border-radius: 6px; // Dialogs, menues etc.
   --tox-private-control-border-radius: 6px; // Buttons, input fields etc.
+  --tox-private-control-padding-y: var(--tox-private-pad-xs); // Buttons, input fields etc.
+  --tox-private-control-border-width: 1px; // Buttons, input fields etc.
 
   // Focus outline
   --tox-private-keyboard-focus-outline-width: 2px;

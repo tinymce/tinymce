@@ -23,8 +23,8 @@
     --tox-private-checkbox-indeterminate-color: var(--tox-private-checkbox-selected-color); 
 
     --tox-private-checkbox-border-radius: var(--tox-private-control-border-radius);
-    --tox-private-checkbox-focus-box-shadow: inset 0 0 0 1px var(--tox-private-keyboard-focus-outline-color);
-    --tox-private-checkbox-disabled-text-color: var(--tox-private-text-color-muted);
+    --tox-private-checkbox-focus-box-shadow: inset 0 0 0 1px var(--tox-private-color-tint);
+    --tox-private-checkbox-disabled-text-color: hsl(from var(--tox-private-text-color) h s l / 50%);
   } 
 
   .tox-checkbox {
@@ -50,7 +50,7 @@
     align-items: center;
     justify-content: center;
     box-sizing: content-box;
-    padding: var(--tox-private-pad-xs, calc(@button-padding-y - @button-border-width));
+    padding: calc(var(--tox-private-control-padding-y, @button-padding-y) - var(--tox-private-control-border-width, @button-border-width));
     
     border-radius: var(--tox-private-checkbox-border-radius, @checkbox-focus-border-radius);
     box-shadow: @checkbox-unfocused-box-shadow;

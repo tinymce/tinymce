@@ -72,21 +72,21 @@
       hsl(from var(--tox-private-button-naked-text-color) h s l / 12%),
       hsl(from var(--tox-private-button-naked-text-color) h s l / 20%)
     );
-    --tox-private-button-naked-focus-border-color: var(--tox-private-button-naked-focus-background-color);
+    --tox-private-button-naked-focus-border-color: transparent;
     --tox-private-button-naked-focus-text-color: var(--tox-private-button-naked-text-color);
 
     --tox-private-button-naked-hover-background-color: light-dark(
       hsl(from var(--tox-private-button-naked-text-color) h s l / 12%),
       hsl(from var(--tox-private-button-naked-text-color) h s l / 20%)
     );
-    --tox-private-button-naked-hover-border-color: var(--tox-private-button-naked-hover-background-color);
+    --tox-private-button-naked-hover-border-color: transparent;
     --tox-private-button-naked-hover-text-color: var(--tox-private-button-naked-text-color);
 
     --tox-private-button-naked-active-background-color: light-dark(
       hsl(from var(--tox-private-button-naked-text-color) h s l / 18%),
       hsl(from var(--tox-private-button-naked-text-color) h s l / 30%)
     );
-    --tox-private-button-naked-active-border-color: var(--tox-private-button-naked-active-background-color);
+    --tox-private-button-naked-active-border-color: transparent;
     --tox-private-button-naked-active-text-color: var(--tox-private-button-naked-text-color);
 
     /* Enabled state*/
@@ -136,7 +136,7 @@
 
     &:hover:not(:disabled) {
       background-color: var(--tox-private-button-naked-hover-background-color, @button-naked-hover-background-color);
-      border-color: var(--tox-private-button-naked-hover-background-color, @button-naked-hover-border-color);
+      border-color: var(--tox-private-button-naked-hover-border-color, @button-naked-hover-border-color);
       color: var(--tox-private-button-naked-hover-text-color, @button-naked-hover-icon-color);
       box-shadow: @button-naked-hover-box-shadow;
     }
