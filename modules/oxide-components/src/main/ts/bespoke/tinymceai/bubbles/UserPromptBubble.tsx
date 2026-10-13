@@ -1,5 +1,6 @@
-import * as Bem from 'oxide-components/utils/Bem';
 import type { FunctionComponent } from 'react';
+
+import * as Bem from '../../../utils/Bem';
 
 interface UserPromptProps {
   readonly prompt: string;

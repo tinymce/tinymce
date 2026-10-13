@@ -14,31 +14,5 @@ export default defineConfig({
   server: {
     open: './src/demo/html/index.html',
   },
-  build: {
-    emptyOutDir: false,
-    sourcemap: true,
-    outDir: 'lib',
-    lib: {
-      entry: resolve(__dirname, 'src/main/ts/Main.ts'),
-      fileName: 'Main',
-      name: 'oxide-components',
-      formats: [ 'es' ],
-    },
-    rollupOptions: {
-      // make sure to externalize deps that shouldn't be bundled
-      // into your library
-      external: [ 'react', 'react-dom', 'react-dom/client', 'react/jsx-runtime' ],
-      output: {
-        // Provide global variables to use in the UMD build
-        // for externalized deps
-        globals: {
-          'react': 'React',
-          'react-dom': 'ReactDOM',
-          'react-dom/client': 'ReactDOMClient',
-          'react/jsx-runtime': 'ReactJSXRuntime',
-        },
-      },
-    },
-  },
   plugins: [ react() ]
 });

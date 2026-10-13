@@ -8,7 +8,6 @@ import {
 import type { Preview, ReactRenderer } from '@storybook/react-vite';
 import type { PartialStoryFn } from 'storybook/internal/csf';
 
-// @ts-expect-error the bundler handles this just fine but tsc is not happy with it
 import '@tinymce/oxide/build/skins/ui/default/skin.css';
 import { classes } from '../src/main/ts/utils/Styles';
 

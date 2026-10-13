@@ -16,7 +16,7 @@
   "license": "GPL-2.0-or-later",
   "sideEffects": false,
   "files": [
-    "lib",
+    "lib/main",
     "src",
     "tsconfig.json",
     "README.md",
@@ -24,12 +24,19 @@
     "CHANGELOG.txt",
     "LICENSE.txt"
   ],
-  "main": "lib/Main.js",
-  "module": "lib/Main.js",
-  "types": "lib/src/main/ts/Main.d.ts",
+  "main": "./lib/main/ts/Main.js",
+  "module": "./lib/main/ts/Main.js",
+  "types": "./lib/main/ts/Main.d.ts",
+  "exports": {
+    ".": {
+      "tiny:source": "./src/main/ts/Main.ts",
+      "types": "./lib/main/ts/Main.d.ts",
+      "default": "./lib/main/ts/Main.js"
+    }
+  },
   "scripts": {
     "dev": "vite",
-    "build": "bun build-storybook && tsc -b && vite build",
+    "build": "bun build-storybook && tsc -b",
     "lint": "eslint --max-warnings=0 'src/**/*.ts' 'src/**/*.tsx'",
     "start": "storybook dev -p 6006",
     "build-storybook": "storybook build",

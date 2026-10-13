@@ -3,7 +3,6 @@
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.demo.tsbuildinfo",
     "target": "ES2020",
     "useDefineForClassFields": true,
-    "rootDir": "src",
     "lib": [
       "ES2020",
       "DOM"
@@ -27,7 +26,8 @@
   },
   "include": [
     "src/demo/ts",
-    "src/**/*.stories.*"
+    "src/**/*.stories.*",
+    ".storybook/preview.tsx"
   ],
   "references": [
     {

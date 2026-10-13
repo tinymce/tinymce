@@ -2,6 +2,7 @@
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "outDir": "./lib",
+    "rootDir": "src",
     "target": "ES2020",
     "useDefineForClassFields": true,
     "lib": [
@@ -11,23 +12,18 @@
     "module": "ESNext",
     "skipLibCheck": true,
     "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",
     "declaration": true,
-    "emitDeclarationOnly": true,
     "declarationMap": true,
+    "sourceMap": true,
     "jsx": "react-jsx",
     "strict": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true,
-    "paths": {
-      "oxide-components/*": ["./src/main/ts/*"]
-    }
+    "noUncheckedSideEffectImports": true
   },
   "include": [
-    "src/main/ts",
-    ".storybook/preview.tsx"
+    "src/main/ts"
   ],
   "exclude": [
     "src/**/*.stories.*"
