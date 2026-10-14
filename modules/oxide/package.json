@@ -12,7 +12,8 @@
     "build": "grunt build",
     "start": "grunt start",
     "prepublishOnly": "bun ci",
-    "ci": "grunt build"
+    "ci": "grunt build",
+    "css-parity": "bun tools/css-parity/cli.ts"
   },
   "keywords": [
     "TinyMCE"
@@ -60,9 +61,19 @@
     "prismjs": "^1.27.0"
   },
   "devDependencies": {
+    "@types/less": "^3.0.8",
+    "@types/node": "^22.15.19",
     "connect": "^3.7.0",
     "connect-livereload": "^0.6.1",
     "stylelint-config-recommended-less": "^4.2.1",
-    "typed-css-modules": "^0.9.1"
+    "typed-css-modules": "^0.9.1",
+    "less": "^4.2.2",
+    "less-plugin-preset-env": "^2.0.2",
+    "playwright": "1.58.2",
+    "postcss": "^8.4.39",
+    "postcss-selector-parser": "^7.0.0",
+    "tsx": "^4.20.6",
+    "vitest": "^4.0.18",
+    "yargs": "^17.7.2"
   }
 }

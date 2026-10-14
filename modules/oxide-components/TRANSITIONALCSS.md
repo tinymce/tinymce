@@ -139,6 +139,22 @@ When creating CSS Custom Properties avoid using LESS functions like `contrast()`
     </details>
     <br/>
 
+8. **Verify Parity with the `css-parity` Tool**\
+Once a component's rules are converted, confirm the custom-properties (flag on) output resolves to the same computed values as the LESS (flag off) output. Run it from `editor/modules/oxide/` — there's nothing to register:
+
+    ```bash
+    bun run css-parity
+    ```
+
+    It compiles the `default` and `dark` skins twice each (flag off/on), renders a DOM for every selector in the skin into headless Chromium — one page per compile per emulated media scenario — and compares the computed values. `:hover`/`:active`/`:focus`/`:focus-within`/`:focus-visible`/`:visited` are forced through the DevTools protocol, `:has()`, `:checked`, `:disabled` and structural pseudo-classes are synthesized, and rules inside `@media` are evaluated under emulated narrow-viewport and forced-colors conditions. The DOM follows BEM: an element class (`.tox-dialog__header`) is placed inside its block (`.tox-dialog`), and a modifier class (`.tox-checkbox--disabled`) also gets its base class (`.tox-checkbox`), so Custom Properties declared on a component's root reach the rules that read them. Only the custom properties build declares a `color-scheme` (`light-dark()` needs it), so the LESS page is given the same one — otherwise every system color, scrollbar and native control would differ in the dark skin. The run takes a few seconds and prints:
+
+    - ❌ computed-value mismatches, grouped by component — the only thing that fails the run (exit code 1);
+    - ⚠️ selectors the tool couldn't build a matching DOM for, or whose pseudo-element Chromium can't compute (e.g. `::-webkit-slider-thumb`), so their own values may not have been compared;
+    - ⚠️ selectors compared against the fallback: a Custom Property the rule reads is declared somewhere, but not on the element or any ancestor, even after the BEM context is added, so the `var()` fallback (the LESS value) is what got compared. It usually means the rule reads another component's Custom Property (see step 5);
+    - ⏭️ selectors Chromium doesn't support (`::-moz-*`, `::-ms-*`), `@media` rules no emulated scenario matches, and rules inside other at-rules (e.g. `@supports`) or nested inside another rule.
+
+    The tool lives in `editor/modules/oxide/tools/css-parity/` and is a local check, not run in CI.
+
 ---
 
 ## Summary
@@ -150,6 +166,7 @@ When creating CSS Custom Properties avoid using LESS functions like `contrast()`
 | CSS Variables | Use `tox-private` prefixed variables with LESS fallbacks |
 | Global Variables | Prefer using a global CSS Custom Properties and promote shared variables to global scope |
 | Theme Logic | Replace LESS functions with `light-dark()` and use relative colors syntax |
+| Verify Parity | Run `bun run css-parity` locally — checks every selector of the default and dark skins (not run in CI) |
 
 
 
