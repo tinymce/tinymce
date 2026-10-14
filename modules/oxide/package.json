@@ -42,10 +42,10 @@
   },
   "files": [
     "build/skins/content/**/*.css",
-    "build/skins/content/**/*.d.css.ts",
+    "build/skins/content/**/*.ts",
     "build/skins/content/**/*.css.map",
     "build/skins/ui/**/*.css",
-    "build/skins/ui/**/*.d.css.ts",
+    "build/skins/ui/**/*.ts",
     "build/skins/ui/**/*.css.map",
     "build/skins/ui/**/*.woff",
     "src/less/**/*",
