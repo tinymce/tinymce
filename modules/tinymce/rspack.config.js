@@ -12,7 +12,7 @@ const escapeHtml = (str) => str.replace(/[&<>"']/g, (m) => ({
   "'": '&#39;'
 })[m]);
 
-const generateDemoIndex = (app) => {
+const generateDemoIndex = () => {
   const demoList = fg.sync(['src/**/demo/html/*.html', 'src/**/demo/html/**/*.html'], { cwd: __dirname });
   const sortedDemos = demoList.reduce((acc, link) => {
     const type = link.split('/')[1];
@@ -49,7 +49,7 @@ const generateDemoIndex = (app) => {
   </html>
   `;
 
-  app.get('/', (_, res) => res.send(html))
+  return html;
 };
 
 const buildDemoEntries = (typeNames, type, demo, pathPrefix = '') => typeNames.reduce(
@@ -137,8 +137,20 @@ const config = [
       liveReload: false,
       static: { publicPath: "/", directory: __dirname },
       client: { overlay: { errors: true, warnings: true } },
-      setupMiddlewares: (middlewares, devServer) => {
-        generateDemoIndex(devServer.app);
+      setupMiddlewares: (middlewares) => {
+        const html = generateDemoIndex();
+        middlewares.unshift({
+          name: 'demo-index',
+          middleware: (req, res, next) => {
+            const pathname = req.url.split('?')[0];
+            if ((req.method === 'GET' || req.method === 'HEAD') && pathname === '/') {
+              res.setHeader('Content-Type', 'text/html; charset=utf-8');
+              res.end(html);
+            } else {
+              next();
+            }
+          }
+        });
         return middlewares;
       },
     },
