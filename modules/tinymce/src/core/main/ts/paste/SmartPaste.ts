@@ -6,8 +6,8 @@ import Tools from '../api/util/Tools';
 
 /*
  * This module tries to be smart depending on what the user pastes if it looks like an url
- * it will make a link out of the current selection. If it's an image url that looks like
- * an image it will check if it's an image and insert it as an image.
+ * it will make a link out of the current selection, or insert a link if the selection is collapsed.
+ * If it's an image url that looks like an image it will check if it's an image and insert it as an image.
  */
 
 type PasteFn = (editor: Editor, html: string) => boolean;
@@ -56,10 +56,20 @@ const linkSelection = (editor: Editor, html: string, pasteHtmlFn: PasteFn): bool
 const insertImage = (editor: Editor, html: string, pasteHtmlFn: PasteFn): boolean =>
   isImageUrl(editor, html) ? createImage(editor, html, pasteHtmlFn) : false;
 
+const insertLink = (editor: Editor, html: string, pasteHtmlFn: PasteFn): boolean => {
+  if (editor.selection.isCollapsed() && isAbsoluteUrl(html)) {
+    // isAbsoluteUrl rejects quotes and angle brackets, so the url is safe to use in markup
+    return pasteHtmlFn(editor, `<a href="${html}">${html}</a>`);
+  } else {
+    return false;
+  }
+};
+
 const smartInsertContent = (editor: Editor, html: string): void => {
   Tools.each([
     linkSelection,
     insertImage,
+    insertLink,
     pasteHtml
   ], (action) => {
     return !action(editor, html, pasteHtml);
