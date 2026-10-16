@@ -82,6 +82,43 @@
 @z-index-dialogs-offset-busy-spinner: 3;
 
 .tox {
+  & when (@custom-properties-enabled = true) {
+    // .tox-dialog-wrap holds the backdrop of modal dialogs; .tox-dialog covers inline dialogs, which have no wrap.
+    .tox-dialog-wrap,
+    .tox-dialog {
+      --tox-private-dialog-backdrop-background-color: hsl(from var(--tox-private-background-color) h s l / 75%);
+      --tox-private-dialog-header-padding: var(--tox-private-pad-sm) var(--tox-private-pad-md) 0 var(--tox-private-pad-md);
+      --tox-private-dialog-body-padding: var(--tox-private-pad-md) var(--tox-private-pad-md);
+      --tox-private-dialog-footer-padding: var(--tox-private-pad-sm) var(--tox-private-pad-md);
+      --tox-private-dialog-background-color: light-dark(
+        var(--tox-private-background-color),
+        hsl(from var(--tox-private-background-color) h s calc(l + 5))
+      );
+      --tox-private-dialog-border-radius: 10px;
+      --tox-private-dialog-box-shadow:
+        0 16px 16px -10px hsl(from var(--tox-private-color-black) h s l / 15%),
+        0 0 40px 1px hsl(from var(--tox-private-color-black) h s l / 15%);
+      --tox-private-dialog-tab-max-width: 13em;
+      --tox-private-dialog-nav-focus-background-color: hsl(from var(--tox-private-color-tint) h s l / 10%);
+      --tox-private-dialog-table-border-color: hsl(from var(--tox-private-border-color) h s calc(l - 55));
+
+      // The default skin derives the link color from a mix of black and tint; the dark skin lightens the tint instead.
+      --tox-private-dialog-body-link-color: light-dark(
+        color-mix(in srgb, var(--tox-private-color-black) 60%, var(--tox-private-color-tint)),
+        hsl(from var(--tox-private-color-tint) h s calc(l + 25))
+      );
+      --tox-private-dialog-body-link-hover-color: light-dark(
+        hsl(from color-mix(in srgb, var(--tox-private-color-black) 60%, var(--tox-private-color-tint)) h s calc(l - 20)),
+        hsl(from var(--tox-private-color-tint) h s calc(l + 45))
+      );
+      --tox-private-dialog-body-link-active-color: light-dark(
+        hsl(from color-mix(in srgb, var(--tox-private-color-black) 60%, var(--tox-private-color-tint)) h s calc(l - 30)),
+        hsl(from var(--tox-private-color-tint) h s calc(l + 55))
+      );
+      --tox-private-dialog-body-link-focus-outline-border-radius: 1px;
+    }
+  }
+
   .tox-dialog-wrap {
     align-items: center;
     display: flex;
@@ -91,11 +128,11 @@
     right: @dialog-wrap-inset-right;
     bottom: @dialog-wrap-inset-bottom;
     left: @dialog-wrap-inset-left;
-    z-index: @z-index-dialogs;
+    z-index: var(--tox-private-z-index-dialogs, @z-index-dialogs);
   }
 
   .tox-dialog-wrap__backdrop {
-    background-color: @dialog-backdrop-background-color;
+    background-color: var(--tox-private-dialog-backdrop-background-color, @dialog-backdrop-background-color);
     bottom: 0;
     left: 0;
     position: absolute;
@@ -106,16 +143,16 @@
 
   // modal backdrop with 100% full opacity for mobile
   .tox-dialog-wrap__backdrop--opaque {
-    background-color: @dialog-backdrop-background-color-opaque;
+    background-color: var(--tox-private-background-color, @dialog-backdrop-background-color-opaque);
   }
 
   .tox-dialog {
-    background-color: @dialog-background-color;
-    border-color: @dialog-border-color;
-    border-radius: @dialog-border-radius;
+    background-color: var(--tox-private-dialog-background-color, @dialog-background-color);
+    border-color: var(--tox-private-border-color, @dialog-border-color);
+    border-radius: var(--tox-private-dialog-border-radius, @dialog-border-radius);
     border-style: solid;
     border-width: @dialog-border-width;
-    box-shadow: @dialog-box-shadow;
+    box-shadow: var(--tox-private-dialog-box-shadow, @dialog-box-shadow);
     display: flex;
     flex-direction: column;
     max-height: 100%;
@@ -137,18 +174,18 @@
 
   // This is needed for inline dialogs, since they don't use the wrapper/backdrop
   .tox-dialog-inline {
-    z-index: @z-index-dialogs;
+    z-index: var(--tox-private-z-index-dialogs, @z-index-dialogs);
   }
 
   .tox-dialog__header {
     align-items: center;
-    background-color: @dialog-header-background-color;
+    background-color: var(--tox-private-dialog-background-color, @dialog-header-background-color);
     border-bottom: @dialog-header-separator-border;
-    color: @dialog-title-text-color;
+    color: var(--tox-private-text-color, @dialog-title-text-color);
     display: flex;
-    font-size: @font-size-base;
+    font-size: var(--tox-private-font-size-base, @font-size-base);
     justify-content: space-between;
-    padding: @dialog-header-padding;
+    padding: var(--tox-private-dialog-header-padding, @dialog-header-padding);
     position: relative;
   }
 
@@ -174,23 +211,23 @@
   }
 
   .tox-dialog__title {
-    font-family: @dialog-title-font-family;
-    font-size: @dialog-title-font-size;
+    font-family: var(--tox-private-font-stack, @dialog-title-font-family);
+    font-size: var(--tox-private-font-size-lg, @dialog-title-font-size);
     font-style: @dialog-title-font-style;
-    font-weight: @dialog-title-font-weight;
-    line-height: @dialog-title-line-height;
+    font-weight: var(--tox-private-font-weight-normal, @dialog-title-font-weight);
+    line-height: var(--tox-private-line-height-base, @dialog-title-line-height);
     margin: 0;
     text-transform: @dialog-title-text-transform;
   }
 
   .tox-dialog__body {
-    color: @dialog-body-text-color;
+    color: var(--tox-private-text-color, @dialog-body-text-color);
     display: flex;
     flex: 1;
-    font-size: @dialog-body-font-size;
+    font-size: var(--tox-private-font-size-md, @dialog-body-font-size);
     font-style: @dialog-body-font-style;
-    font-weight: @dialog-body-font-weight;
-    line-height: @dialog-body-line-height;
+    font-weight: var(--tox-private-font-weight-normal, @dialog-body-font-weight);
+    line-height: var(--tox-private-line-height-base, @dialog-body-line-height);
     min-width: 0;
     text-align: @dialog-body-text-align;
     text-transform: @dialog-body-text-transform;
@@ -207,7 +244,7 @@
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
-    padding: @dialog-body-padding;
+    padding: var(--tox-private-dialog-body-padding, @dialog-body-padding);
 
     @media @breakpoint-gt-sm {
       max-width: @dialog-tab-column-max-width;
@@ -225,23 +262,23 @@
 
   .tox-dialog__body-nav-item {
     border-bottom: 2px solid transparent;
-    color: @text-color-muted;
+    color: var(--tox-private-text-color-muted, @text-color-muted);
     display: inline-block;
     flex-shrink: 0;
-    font-size: @font-size-sm;
-    line-height: @line-height-base;
-    margin-bottom: @pad-sm;
-    max-width: @dialog-tab-max-width;
+    font-size: var(--tox-private-font-size-sm, @font-size-sm);
+    line-height: var(--tox-private-line-height-base, @line-height-base);
+    margin-bottom: var(--tox-private-pad-sm, @pad-sm);
+    max-width: var(--tox-private-dialog-tab-max-width, @dialog-tab-max-width);
     text-decoration: none;
 
     &:focus {
-      background-color: @dialog-nav-focus-background-color;
+      background-color: var(--tox-private-dialog-nav-focus-background-color, @dialog-nav-focus-background-color);
     }
   }
 
   .tox-dialog__body-nav-item--active {
-    border-bottom: 2px solid @dialog-body-link-color;
-    color: @dialog-body-link-color;
+    border-bottom: 2px solid var(--tox-private-dialog-body-link-color, @dialog-body-link-color);
+    color: var(--tox-private-dialog-body-link-color, @dialog-body-link-color);
 
     @media (forced-colors: active) {
       border-bottom: 2px solid highlight;
@@ -257,11 +294,11 @@
     max-height: ~"min(650px, calc(100vh - 110px))";
     overflow: auto; //overflow controls all scrolling in the dialogs
     -webkit-overflow-scrolling: touch;
-    padding: @dialog-body-padding;
+    padding: var(--tox-private-dialog-body-padding, @dialog-body-padding);
 
     >* {
       margin-bottom: 0;
-      margin-top: @pad-md;
+      margin-top: var(--tox-private-pad-md, @pad-md);
     }
 
     >*:first-child {
@@ -278,34 +315,34 @@
     }
 
     a {
-      color: @dialog-body-link-color;
+      color: var(--tox-private-dialog-body-link-color, @dialog-body-link-color);
       cursor: pointer;
       text-decoration: @dialog-body-link-text-decoration;
 
       &:hover,
       &:focus {
-        color: @dialog-body-link-hover-color;
+        color: var(--tox-private-dialog-body-link-hover-color, @dialog-body-link-hover-color);
         text-decoration: @dialog-body-link-hover-text-decoration;
       }
 
       &:focus-visible {
-        border-radius: @dialog-body-link-focus-outline-border-radius;
-        outline: 2px solid @dialog-body-link-focus-outline-color;
+        border-radius: var(--tox-private-dialog-body-link-focus-outline-border-radius, @dialog-body-link-focus-outline-border-radius);
+        outline: 2px solid var(--tox-private-dialog-body-link-color, @dialog-body-link-focus-outline-color);
         outline-offset: 2px;
       }
 
       &:active {
-        color: @dialog-body-link-active-color;
+        color: var(--tox-private-dialog-body-link-active-color, @dialog-body-link-active-color);
         text-decoration: @dialog-body-link-active-text-decoration;
       }
     }
 
     svg {
-      fill: @dialog-body-text-color;
+      fill: var(--tox-private-text-color, @dialog-body-text-color);
     }
 
     strong {
-      font-weight: @font-weight-bold;
+      font-weight: var(--tox-private-font-weight-bold, @font-weight-bold);
     }
 
     ul {
@@ -321,7 +358,7 @@
     ul,
     ol,
     dl {
-      margin-bottom: @pad-md;
+      margin-bottom: var(--tox-private-pad-md, @pad-md);
     }
 
     ul,
@@ -335,29 +372,29 @@
     }
 
     .tox-form__group h1 {
-      color: @dialog-body-h1-text-color;
-      font-size: @dialog-body-h1-font-size;
+      color: var(--tox-private-text-color, @dialog-body-h1-text-color);
+      font-size: var(--tox-private-font-size-lg, @dialog-body-h1-font-size);
       font-style: @dialog-body-h1-font-style;
-      font-weight: @dialog-body-h1-font-weight;
+      font-weight: var(--tox-private-font-weight-bold, @dialog-body-h1-font-weight);
       letter-spacing: @dialog-body-h1-letter-spacing;
-      margin-bottom: @pad-md;
+      margin-bottom: var(--tox-private-pad-md, @pad-md);
       margin-top: 2rem;
       text-transform: @dialog-body-h1-text-transform;
     }
 
     .tox-form__group h2 {
-      color: @dialog-body-h2-text-color;
-      font-size: @dialog-body-h2-font-size;
+      color: var(--tox-private-text-color, @dialog-body-h2-text-color);
+      font-size: var(--tox-private-font-size-md, @dialog-body-h2-font-size);
       font-style: @dialog-body-h2-font-style;
-      font-weight: @dialog-body-h2-font-weight;
+      font-weight: var(--tox-private-font-weight-bold, @dialog-body-h2-font-weight);
       letter-spacing: @dialog-body-h2-letter-spacing;
-      margin-bottom: @pad-md;
+      margin-bottom: var(--tox-private-pad-md, @pad-md);
       margin-top: 2rem;
       text-transform: @dialog-body-h2-text-transform;
     }
 
     .tox-form__group p {
-      margin-bottom: @pad-md;
+      margin-bottom: var(--tox-private-pad-md, @pad-md);
     }
 
     .tox-form__group h1:first-child,
@@ -420,11 +457,11 @@
 
   .tox-dialog__footer {
     align-items: center;
-    background-color: @dialog-footer-background-color;
+    background-color: var(--tox-private-dialog-background-color, @dialog-footer-background-color);
     border-top: @dialog-footer-separator-border;
     display: flex;
     justify-content: space-between;
-    padding: @dialog-footer-padding;
+    padding: var(--tox-private-dialog-footer-padding, @dialog-footer-padding);
   }
 
   .tox-dialog__footer-start,
@@ -435,7 +472,7 @@
   // Make a dialog disabled for user input
   .tox-dialog__busy-spinner {
     align-items: center;
-    background-color: @dialog-busy-backdrop-background-color;
+    background-color: var(--tox-private-dialog-backdrop-background-color, @dialog-busy-backdrop-background-color);
     bottom: 0;
     display: flex;
     justify-content: center;
@@ -457,18 +494,18 @@
 
     thead {
       th {
-        font-weight: @font-weight-bold;
-        padding-bottom: @pad-sm;
+        font-weight: var(--tox-private-font-weight-bold, @font-weight-bold);
+        padding-bottom: var(--tox-private-pad-sm, @pad-sm);
       }
 
       th:first-child {
-        padding-right: @pad-sm;
+        padding-right: var(--tox-private-pad-sm, @pad-sm);
       }
     }
 
     tbody {
       tr {
-        border-bottom: 1px solid @dialog-table-border-color;
+        border-bottom: 1px solid var(--tox-private-dialog-table-border-color, @dialog-table-border-color);
       }
 
       tr:last-child {
@@ -477,12 +514,12 @@
     }
 
     td {
-      padding-bottom: @pad-sm;
-      padding-top: @pad-sm;
+      padding-bottom: var(--tox-private-pad-sm, @pad-sm);
+      padding-top: var(--tox-private-pad-sm, @pad-sm);
     }
 
     td:first-child {
-      padding-right: @pad-sm;
+      padding-right: var(--tox-private-pad-sm, @pad-sm);
     }
   }
 
@@ -491,7 +528,7 @@
 
     // Allow iframes to have consistent BG with Editor iframe
     &.tox-dialog__iframe--opaque {
-      background: @edit-area-iframe-background-color;
+      background: var(--tox-private-color-white, @edit-area-iframe-background-color);
     }
   }
 
@@ -499,8 +536,8 @@
     position: relative;
 
     &::before {
-      border: @dialog-iframe-bordered-border-width solid @dialog-iframe-bordered-border-color;
-      border-radius: @dialog-iframe-bordered-border-radius;
+      border: var(--tox-private-control-border-width, @dialog-iframe-bordered-border-width) solid var(--tox-private-border-color, @dialog-iframe-bordered-border-color);
+      border-radius: var(--tox-private-panel-border-radius, @dialog-iframe-bordered-border-radius);
       content: '';
       inset: 0;
       opacity: 1;
@@ -510,13 +547,13 @@
     }
 
     iframe {
-      border-radius: @dialog-iframe-bordered-border-radius;
+      border-radius: var(--tox-private-panel-border-radius, @dialog-iframe-bordered-border-radius);
     }
   }
 
   .tox-navobj-bordered-focus.tox-navobj-bordered::before {
-    border-color: @textfield-focus-border-color;
-    box-shadow: @textfield-focus-box-shadow;
+    border-color: var(--tox-private-color-tint, @textfield-focus-border-color);
+    box-shadow: var(--tox-private-field-focus-box-shadow, @textfield-focus-box-shadow);
     outline: @textfield-focus-outline;
   }
 
@@ -524,7 +561,7 @@
   .tox-dialog__popups {
     position: absolute;
     width: 100%;
-    z-index: @z-index-dialogs;
+    z-index: var(--tox-private-z-index-dialogs, @z-index-dialogs);
   }
 
   // Make iframe/url dialogs stretch contents to fit the height and width of parent container
