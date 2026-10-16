@@ -6,8 +6,18 @@
 @toolbar-label-spacing-y: 5px;
 
 .tox {
+  .tox-label--context-toolbar when (@custom-properties-enabled = true) {
+    --tox-private-toolbar-label-spacing-x: 1px;
+    --tox-private-toolbar-label-spacing-y: 5px;
+    --tox-private-toolbar-label-margin:
+      calc(var(--tox-private-toolbar-label-spacing-y) + 1px)
+      var(--tox-private-toolbar-label-spacing-x)
+      var(--tox-private-toolbar-label-spacing-y)
+      0;
+  }
+
   .tox-label--context-toolbar {
-    margin: (@toolbar-label-spacing-y + 1px) @toolbar-label-spacing-x @toolbar-label-spacing-y 0;
+    margin: var(--tox-private-toolbar-label-margin, (@toolbar-label-spacing-y + 1px) @toolbar-label-spacing-x @toolbar-label-spacing-y 0);
     -webkit-touch-callout: none;
     -webkit-user-select: none;
             user-select: none;

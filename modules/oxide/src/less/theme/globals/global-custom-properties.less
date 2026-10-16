@@ -60,6 +60,23 @@
   --tox-private-field-focus-box-shadow: 0 0 0 1px var(--tox-private-color-tint); // Input fields, select boxes etc.
   --tox-private-field-disabled-text-color: hsl(from var(--tox-private-text-color) h s l / 85%); // Input fields, select boxes etc.
 
+  // Bar items: the compact buttons and inputs in the toolbar and menubar (toolbar buttons, split buttons, the number input,
+  // menubar buttons) — not .tox-button. The toolbar and menubar rows are sized from them, so changing these affects all of those components.
+  --tox-private-bar-item-height: 28px;
+  --tox-private-bar-item-spacing-x: 1px;
+  --tox-private-bar-item-spacing-y: 5px;
+  --tox-private-bar-item-border-radius: 3px;
+  --tox-private-toggled-background-color: light-dark(
+    color-mix(in srgb, var(--tox-private-color-tint) 35%, white),
+    color-mix(in srgb, var(--tox-private-color-tint) 65%, white)
+  ); // Toggled on toolbar buttons, active menubar buttons, enabled collection items etc.
+  --tox-private-bar-padding-x: 11px; // Toolbar groups, the menubar, toolbar rows of color swatches and image selectors
+  
+  --tox-private-toolbar-button-bespoke-background-color: light-dark(
+    hsl(from var(--tox-private-background-color) h s calc(l - 3)),
+    hsl(from var(--tox-private-background-color) h s calc(l + 7))
+  ); // Toolbar buttons with a dynamic text label, the toolbar number input, the context form size input
+
   // Focus outline
   --tox-private-keyboard-focus-outline-width: 2px;
   --tox-private-keyboard-focus-outline-color: light-dark(

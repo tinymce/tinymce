@@ -55,25 +55,74 @@
 @toolbar-button-disabled-text-color: fade(@toolbar-button-text-color, 50%);
 
 .tox {
+  // Split buttons and the number input are toolbar buttons too, but their roots don't carry .tox-tbtn.
+  .tox-tbtn,
+  .tox-split-button,
+  .tox-number-input {
+    & when (@custom-properties-enabled = true) {
+      --tox-private-toolbar-button-width: 34px;
+      --tox-private-toolbar-button-margin:
+        calc(var(--tox-private-bar-item-spacing-y) + 1px)
+        var(--tox-private-bar-item-spacing-x)
+        var(--tox-private-bar-item-spacing-y)
+        0;
+      --tox-private-toolbar-button-md-height: calc(var(--tox-private-bar-item-height) * 1.5);
+      --tox-private-toolbar-button-md-width: calc(var(--tox-private-toolbar-button-width) * 1.5);
+      --tox-private-toolbar-button-lg-height: calc(var(--tox-private-bar-item-height) * 2);
+      --tox-private-toolbar-button-lg-width: calc(var(--tox-private-toolbar-button-width) * 2);
+      --tox-private-toolbar-button-padding: 0;
+      --tox-private-toolbar-button-border: 0;
+      --tox-private-toolbar-button-box-shadow: none;
+      --tox-private-toolbar-button-font-style: normal;
+      --tox-private-toolbar-button-text-transform: none;
+      --tox-private-toolbar-button-chevron-color: hsl(from var(--tox-private-text-color) h s l / 50%);
+
+      // State properties default to the base ones above (or the state they derive from), so overriding a base property
+      // changes every state, while each state can still be overridden on its own.
+      // Hover state
+      --tox-private-toolbar-button-hover-border: var(--tox-private-toolbar-button-border);
+      --tox-private-toolbar-button-hover-box-shadow: var(--tox-private-toolbar-button-box-shadow);
+
+      // Focus state
+      --tox-private-toolbar-button-focus-border: var(--tox-private-toolbar-button-hover-border);
+      --tox-private-toolbar-button-focus-box-shadow: var(--tox-private-toolbar-button-box-shadow);
+
+      // Enabled (toggled on) state
+      --tox-private-toolbar-button-enabled-border: var(--tox-private-toolbar-button-hover-border);
+      --tox-private-toolbar-button-enabled-box-shadow: var(--tox-private-toolbar-button-box-shadow);
+      --tox-private-toolbar-button-enabled-transform: none;
+
+      // Active (pressed) state
+      --tox-private-toolbar-button-active-border: var(--tox-private-toolbar-button-enabled-border);
+      --tox-private-toolbar-button-active-box-shadow: var(--tox-private-toolbar-button-box-shadow); // Set to `0 1px 1px 0 rgba(0, 0, 0, .1) inset` for a small push in effect
+      --tox-private-toolbar-button-active-transform: none; // Set to `translateY(1px)` for a small push down effect
+
+      // Disabled state
+      --tox-private-toolbar-button-disabled-border: var(--tox-private-toolbar-button-border);
+      --tox-private-toolbar-button-disabled-box-shadow: var(--tox-private-toolbar-button-box-shadow);
+      --tox-private-toolbar-button-disabled-text-color: hsl(from var(--tox-private-text-color) h s l / 50%);
+    }
+  }
+
   .tox-tbtn {
     align-items: center;
-    background: @toolbar-button-background-color;
-    border: @toolbar-button-border;
-    border-radius: @toolbar-button-border-radius;
-    box-shadow: @toolbar-button-box-shadow;
-    color: @toolbar-button-text-color;
+    background: var(--tox-private-background-color, @toolbar-button-background-color);
+    border: var(--tox-private-toolbar-button-border, @toolbar-button-border);
+    border-radius: var(--tox-private-bar-item-border-radius, @toolbar-button-border-radius);
+    box-shadow: var(--tox-private-toolbar-button-box-shadow, @toolbar-button-box-shadow);
+    color: var(--tox-private-text-color, @toolbar-button-text-color);
     display: flex;
     flex: 0 0 auto;
-    font-size: @toolbar-button-font-size;
-    font-style: @toolbar-button-font-style;
-    font-weight: @toolbar-button-font-weight;
-    height: @toolbar-button-height;
+    font-size: var(--tox-private-font-size-sm, @toolbar-button-font-size);
+    font-style: var(--tox-private-toolbar-button-font-style, @toolbar-button-font-style);
+    font-weight: var(--tox-private-font-weight-normal, @toolbar-button-font-weight);
+    height: var(--tox-private-bar-item-height, @toolbar-button-height);
     justify-content: center;
-    margin: @toolbar-button-margin;
+    margin: var(--tox-private-toolbar-button-margin, @toolbar-button-margin);
     outline: none;
-    padding: @toolbar-button-padding;
-    text-transform: @toolbar-button-text-transform;
-    width: @toolbar-button-width;
+    padding: var(--tox-private-toolbar-button-padding, @toolbar-button-padding);
+    text-transform: var(--tox-private-toolbar-button-text-transform, @toolbar-button-text-transform);
+    width: var(--tox-private-toolbar-button-width, @toolbar-button-width);
 
     .tox-tbtn__icon-wrap {
       pointer-events: none;
@@ -97,7 +146,7 @@
 
     svg {
       display: block;
-      fill: @toolbar-button-icon-color;
+      fill: var(--tox-private-text-color, @toolbar-button-icon-color);
 
       @media (forced-colors: active) {
         & {
@@ -128,9 +177,9 @@
   }
 
   .tox-tbtn:focus {
-    background: @toolbar-button-focus-background-color;
-    border: @toolbar-button-focus-border;
-    box-shadow: @toolbar-button-focus-box-shadow;
+    background: var(--tox-private-background-color, @toolbar-button-focus-background-color);
+    border: var(--tox-private-toolbar-button-focus-border, @toolbar-button-focus-border);
+    box-shadow: var(--tox-private-toolbar-button-focus-box-shadow, @toolbar-button-focus-box-shadow);
     position: relative;
     z-index: 1; // Ensure focus outline is on top of other buttons
 
@@ -140,30 +189,30 @@
   }
 
   .tox-tbtn:hover {
-    background: @toolbar-button-hover-background-color;
-    border: @toolbar-button-hover-border;
-    box-shadow: @toolbar-button-hover-box-shadow;
-    color: @toolbar-button-hover-text-color;
+    background: var(--tox-private-background-secondary, @toolbar-button-hover-background-color);
+    border: var(--tox-private-toolbar-button-hover-border, @toolbar-button-hover-border);
+    box-shadow: var(--tox-private-toolbar-button-hover-box-shadow, @toolbar-button-hover-box-shadow);
+    color: var(--tox-private-text-color, @toolbar-button-hover-text-color);
 
     svg {
-      fill: @toolbar-button-hover-icon-color;
+      fill: var(--tox-private-text-color, @toolbar-button-hover-icon-color);
     }
   }
 
   .tox-tbtn:active {
-    background: @toolbar-button-active-background-color;
-    border: @toolbar-button-active-border;
-    box-shadow: @toolbar-button-active-box-shadow;
-    color: @toolbar-button-active-text-color;
+    background: var(--tox-private-toggled-background-color, @toolbar-button-active-background-color);
+    border: var(--tox-private-toolbar-button-active-border, @toolbar-button-active-border);
+    box-shadow: var(--tox-private-toolbar-button-active-box-shadow, @toolbar-button-active-box-shadow);
+    color: var(--tox-private-text-color, @toolbar-button-active-text-color);
 
     svg {
-      fill: @toolbar-button-active-icon-color;
+      fill: var(--tox-private-text-color, @toolbar-button-active-icon-color);
     }
   }
 
   .tox-tbtn--disabled .tox-tbtn--enabled {
     svg {
-      fill: @toolbar-button-disabled-icon-color;
+      fill: var(--tox-private-toolbar-button-disabled-text-color, @toolbar-button-disabled-icon-color);
     }
   }
 
@@ -171,14 +220,14 @@
   .tox-tbtn--disabled:hover,
   .tox-tbtn:disabled,
   .tox-tbtn:disabled:hover {
-    background: @toolbar-button-disabled-background-color;
-    border: @toolbar-button-disabled-border;
-    box-shadow: @toolbar-button-disabled-box-shadow;
-    color: @toolbar-button-disabled-text-color;
+    background: var(--tox-private-background-color, @toolbar-button-disabled-background-color);
+    border: var(--tox-private-toolbar-button-disabled-border, @toolbar-button-disabled-border);
+    box-shadow: var(--tox-private-toolbar-button-disabled-box-shadow, @toolbar-button-disabled-box-shadow);
+    color: var(--tox-private-toolbar-button-disabled-text-color, @toolbar-button-disabled-text-color);
     cursor: not-allowed;
 
     svg {
-      fill: @toolbar-button-disabled-icon-color;
+      fill: var(--tox-private-toolbar-button-disabled-text-color, @toolbar-button-disabled-icon-color);
     }
   }
 
@@ -187,23 +236,23 @@
   .tox-tbtn--enabled,
   .tox-tbtn--enabled:hover,
   .tox-tbtn--enabled:focus {
-    background: @toolbar-button-enabled-background-color;
-    border: @toolbar-button-enabled-border;
-    box-shadow: @toolbar-button-enabled-box-shadow;
-    color: @toolbar-button-enabled-text-color;
+    background: var(--tox-private-toggled-background-color, @toolbar-button-enabled-background-color);
+    border: var(--tox-private-toolbar-button-enabled-border, @toolbar-button-enabled-border);
+    box-shadow: var(--tox-private-toolbar-button-enabled-box-shadow, @toolbar-button-enabled-box-shadow);
+    color: var(--tox-private-text-color, @toolbar-button-enabled-text-color);
     position: relative;
 
     >* {
-      transform: @toolbar-button-enabled-transform;
+      transform: var(--tox-private-toolbar-button-enabled-transform, @toolbar-button-enabled-transform);
     }
 
     svg {
-      fill: @toolbar-button-enabled-icon-color;
+      fill: var(--tox-private-text-color, @toolbar-button-enabled-icon-color);
     }
 
     &.tox-tbtn--disabled {
       svg {
-        fill: @toolbar-button-disabled-icon-color;
+        fill: var(--tox-private-toolbar-button-disabled-text-color, @toolbar-button-disabled-icon-color);
       }
     }
   }
@@ -213,26 +262,26 @@
   }
 
   .tox-tbtn:focus:not(.tox-tbtn--disabled) {
-    color: @toolbar-button-focus-text-color;
+    color: var(--tox-private-text-color, @toolbar-button-focus-text-color);
 
     svg {
-      fill: @toolbar-button-focus-icon-color;
+      fill: var(--tox-private-text-color, @toolbar-button-focus-icon-color);
     }
   }
 
   .tox-tbtn:active>* {
-    transform: @toolbar-button-active-transform;
+    transform: var(--tox-private-toolbar-button-active-transform, @toolbar-button-active-transform);
   }
 
   .tox-tbtn--md {
-    height: @toolbar-button-height * 1.5;
-    width: @toolbar-button-width * 1.5;
+    height: var(--tox-private-toolbar-button-md-height, @toolbar-button-height * 1.5);
+    width: var(--tox-private-toolbar-button-md-width, @toolbar-button-width * 1.5);
   }
 
   .tox-tbtn--lg {
     flex-direction: column;
-    height: @toolbar-button-height * 2;
-    width: @toolbar-button-width * 2;
+    height: var(--tox-private-toolbar-button-lg-height, @toolbar-button-height * 2);
+    width: var(--tox-private-toolbar-button-lg-width, @toolbar-button-width * 2);
   }
 
   .tox-tbtn--return {
@@ -251,9 +300,9 @@
   .tox-tbtn__vlabel {
     display: block;
     font-size: 10px;
-    font-weight: @font-weight-normal;
+    font-weight: var(--tox-private-font-weight-normal, @font-weight-normal);
     letter-spacing: -.025em;
-    margin-bottom: @pad-xs;
+    margin-bottom: var(--tox-private-pad-xs, @pad-xs);
     white-space: nowrap;
   }
 }

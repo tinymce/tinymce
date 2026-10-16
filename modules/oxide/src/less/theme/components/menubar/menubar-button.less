@@ -38,40 +38,71 @@
 @menubar-select-active-text-color: @toolbar-button-active-text-color;
 
 .tox {
+  .tox-mbtn when (@custom-properties-enabled = true) {
+    --tox-private-menubar-button-margin:
+      var(--tox-private-bar-item-spacing-y)
+      var(--tox-private-bar-item-spacing-x)
+      calc(var(--tox-private-bar-item-spacing-y) + 1px)
+      0;
+    --tox-private-menubar-button-border: 0;
+    --tox-private-menubar-button-box-shadow: none;
+    --tox-private-menubar-button-font-style: normal;
+    --tox-private-menubar-button-text-transform: none;
+
+    // State properties default to the base ones above (or the state they derive from), so overriding a base property
+    // changes every state, while each state can still be overridden on its own.
+    // Hover state
+    --tox-private-menubar-button-hover-border: var(--tox-private-menubar-button-border);
+    --tox-private-menubar-button-hover-box-shadow: var(--tox-private-menubar-button-box-shadow);
+
+    // Focus state
+    --tox-private-menubar-button-focus-border: var(--tox-private-menubar-button-hover-border);
+    --tox-private-menubar-button-focus-box-shadow: var(--tox-private-menubar-button-hover-box-shadow);
+
+    // Active state
+    --tox-private-menubar-button-active-border: var(--tox-private-menubar-button-hover-border);
+    --tox-private-menubar-button-active-box-shadow: var(--tox-private-menubar-button-box-shadow);
+
+    // Disabled state
+    --tox-private-menubar-button-disabled-border: var(--tox-private-menubar-button-border);
+    --tox-private-menubar-button-disabled-box-shadow: var(--tox-private-menubar-button-box-shadow);
+    --tox-private-menubar-button-disabled-text-color: hsl(from var(--tox-private-text-color) h s l / 50%);
+  }
+
   .tox-mbtn {
     align-items: center;
-    background: @menubar-select-background-color;
-    border: @menubar-select-border;
-    border-radius: @menubar-select-border-radius;
-    box-shadow: @menubar-select-box-shadow;
-    color: @menubar-select-text-color;
+    background: var(--tox-private-background-color, @menubar-select-background-color);
+    border: var(--tox-private-menubar-button-border, @menubar-select-border);
+    border-radius: var(--tox-private-bar-item-border-radius, @menubar-select-border-radius);
+    box-shadow: var(--tox-private-menubar-button-box-shadow, @menubar-select-box-shadow);
+    color: var(--tox-private-text-color, @menubar-select-text-color);
     display: flex;
     flex: 0 0 auto;
-    font-size: @menubar-select-font-size;
-    font-style: @menubar-select-font-style;
-    font-weight: @menubar-select-font-weight;
-    height: @menubar-select-height;
+    font-size: var(--tox-private-font-size-sm, @menubar-select-font-size);
+    font-style: var(--tox-private-menubar-button-font-style, @menubar-select-font-style);
+    font-weight: var(--tox-private-font-weight-normal, @menubar-select-font-weight);
+    height: var(--tox-private-bar-item-height, @menubar-select-height);
     justify-content: center;
-    margin: @menubar-select-spacing-y @menubar-select-spacing-x (@menubar-select-spacing-y + 1px) 0;
+    margin: var(--tox-private-menubar-button-margin, @menubar-select-spacing-y @menubar-select-spacing-x (@menubar-select-spacing-y + 1px) 0);
     outline: none;
     padding: 0 4px;
-    text-transform: @menubar-select-text-transform;
+    text-transform: var(--tox-private-menubar-button-text-transform, @menubar-select-text-transform);
     width: auto;
   }
 
   .tox-mbtn[disabled] {
-    background-color: @menubar-select-disabled-background-color;
-    border: @menubar-select-disabled-border;
-    box-shadow: @menubar-select-disabled-box-shadow;
-    color: @menubar-select-disabled-text-color;
+    background-color: var(--tox-private-background-color, @menubar-select-disabled-background-color);
+    border: var(--tox-private-menubar-button-disabled-border, @menubar-select-disabled-border);
+    box-shadow: var(--tox-private-menubar-button-disabled-box-shadow, @menubar-select-disabled-box-shadow);
+    color: var(--tox-private-menubar-button-disabled-text-color, @menubar-select-disabled-text-color);
     cursor: not-allowed;
   }
 
   .tox-mbtn:focus:not(:disabled) {
-    background: @menubar-select-focus-background-color;
-    border: @menubar-select-focus-border;
-    box-shadow: @menubar-select-focus-box-shadow;
-    color: @menubar-select-focus-text-color;
+    background: var(--tox-private-background-color, @menubar-select-focus-background-color);
+    border: var(--tox-private-menubar-button-focus-border, @menubar-select-focus-border);
+    box-shadow: var(--tox-private-menubar-button-focus-box-shadow, @menubar-select-focus-box-shadow);
+    color: var(--tox-private-text-color, @menubar-select-focus-text-color);
     position: relative;
     z-index: 1; // Ensure focus outline is on top of other buttons
 
@@ -84,22 +115,22 @@
   // Active state applied using class
   .tox-mbtn--active,
   .tox-mbtn:not(:disabled).tox-mbtn--active:focus {
-    background: @menubar-select-active-background-color;
-    border: @menubar-select-active-border;
-    box-shadow: @menubar-select-active-box-shadow;
-    color: @menubar-select-active-text-color;
+    background: var(--tox-private-toggled-background-color, @menubar-select-active-background-color);
+    border: var(--tox-private-menubar-button-active-border, @menubar-select-active-border);
+    box-shadow: var(--tox-private-menubar-button-active-box-shadow, @menubar-select-active-box-shadow);
+    color: var(--tox-private-text-color, @menubar-select-active-text-color);
   }
 
   .tox-mbtn:hover:not(:disabled):not(.tox-mbtn--active) {
-    background: @menubar-select-hover-background-color;
-    border: @menubar-select-hover-border;
-    box-shadow: @menubar-select-hover-box-shadow;
-    color: @menubar-select-hover-text-color;
+    background: var(--tox-private-background-secondary, @menubar-select-hover-background-color);
+    border: var(--tox-private-menubar-button-hover-border, @menubar-select-hover-border);
+    box-shadow: var(--tox-private-menubar-button-hover-box-shadow, @menubar-select-hover-box-shadow);
+    color: var(--tox-private-text-color, @menubar-select-hover-text-color);
   }
 
   .tox-mbtn__select-label {
     cursor: default;
-    font-weight: @menubar-select-font-weight;
+    font-weight: var(--tox-private-font-weight-normal, @menubar-select-font-weight);
     margin: 0 4px;
   }
 

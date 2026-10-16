@@ -58,7 +58,24 @@ const valuesMatch = (offValue: string, onValue: string): boolean => {
   return offColors.every((offColor, i) => colorsCloseEnough(offColor, onColors[i]));
 };
 
+// `light-dark()` only accepts colors, so a skin that removes a shadow (`box-shadow: none`)
+// can't be written as `light-dark(<shadow>, none)`. The custom properties build instead
+// makes every shadow color `transparent` in that scheme (see components/menu/menu.less),
+// which paints nothing but computes to e.g. `rgba(0, 0, 0, 0) 0px 0px 2px 0px` rather
+// than `none`. Treat a box-shadow whose layers are ALL fully transparent as `none`; a
+// shadow with any visible layer is still compared as-is.
+const SHADOW_LAYER_SEPARATOR = /,(?![^(]*\))/;
+const TRANSPARENT_COLOR = /rgba\([^)]*,\s*0\)/;
+
+const normalizeInvisibleShadow = (prop: string, value: string): string =>
+  prop === 'box-shadow' && value.split(SHADOW_LAYER_SEPARATOR).every((layer) => TRANSPARENT_COLOR.test(layer))
+    ? 'none'
+    : value;
+
+const normalize = (prop: string, value: string): string =>
+  normalizeInvisibleShadow(prop, normalizeColor(value));
+
 export const diffComputed = (off: Record<string, string>, on: Record<string, string>): DiffMismatch[] =>
   Object.entries(off)
-    .filter(([ prop, offValue ]) => on[prop] === undefined || !valuesMatch(normalizeColor(offValue), normalizeColor(on[prop])))
+    .filter(([ prop, offValue ]) => on[prop] === undefined || !valuesMatch(normalize(prop, offValue), normalize(prop, on[prop])))
     .map(([ prop, offValue ]) => ({ prop, offValue, onValue: on[prop] ?? '(missing)' }));

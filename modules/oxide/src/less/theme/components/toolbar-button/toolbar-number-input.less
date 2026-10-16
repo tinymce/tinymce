@@ -9,16 +9,24 @@
 @toolbar-number-input-input-wrapper-width: 60px;
 
 .tox {
+  .tox-number-input when (@custom-properties-enabled = true) {
+    --tox-private-number-input-button-width: 24px;
+    --tox-private-number-input-button-margin: 2px;
+    --tox-private-number-input-button-icon-ratio: .67;
+    --tox-private-number-input-input-wrapper-font-size: 14px;
+    --tox-private-number-input-input-wrapper-width: 60px;
+  }
+
   .tox-number-input {
-    background: @toolbar-button-bespoke-background-color;
-    border-radius: @toolbar-button-border-radius;
+    background: var(--tox-private-toolbar-button-bespoke-background-color, @toolbar-button-bespoke-background-color);
+    border-radius: var(--tox-private-bar-item-border-radius, @toolbar-button-border-radius);
     display: flex;
-    margin: (@toolbar-button-spacing-y + 1px) @toolbar-button-spacing-x @toolbar-button-spacing-y 0;
+    margin: var(--tox-private-toolbar-button-margin, (@toolbar-button-spacing-y + 1px) @toolbar-button-spacing-x @toolbar-button-spacing-y 0);
     position: relative;
     width: auto;
 
     &:focus {
-      background: @toolbar-button-bespoke-focus-background-color; // Prevent toolbar button focus background to override bespoke background
+      background: var(--tox-private-toolbar-button-bespoke-background-color, @toolbar-button-bespoke-focus-background-color); // Prevent toolbar button focus background to override bespoke background
     }
 
     &:focus::after {
@@ -32,7 +40,7 @@
       text-align: center;
 
       &:focus {
-        background-color: @toolbar-button-bespoke-focus-background-color;
+        background-color: var(--tox-private-toolbar-button-bespoke-background-color, @toolbar-button-bespoke-focus-background-color);
         z-index: 1; // Ensure focus outline is on top of other buttons
 
         &::after {
@@ -46,38 +54,38 @@
     }
 
     input {
-      border-radius: @toolbar-button-border-radius;
-      color: @toolbar-button-text-color;
-      font-size: @toolbar-number-input-input-wrapper-font-size;
-      margin: @toolbar-number-input-button-margin 0;
+      border-radius: var(--tox-private-bar-item-border-radius, @toolbar-button-border-radius);
+      color: var(--tox-private-text-color, @toolbar-button-text-color);
+      font-size: var(--tox-private-number-input-input-wrapper-font-size, @toolbar-number-input-input-wrapper-font-size);
+      margin: var(--tox-private-number-input-button-margin, @toolbar-number-input-button-margin) 0;
       pointer-events: all;
       position: relative;
-      width: @toolbar-number-input-input-wrapper-width;
+      width: var(--tox-private-number-input-input-wrapper-width, @toolbar-number-input-input-wrapper-width);
 
       &:hover {
-        background: @toolbar-button-hover-background-color;
-        color: @toolbar-button-hover-text-color;
+        background: var(--tox-private-background-secondary, @toolbar-button-hover-background-color);
+        color: var(--tox-private-text-color, @toolbar-button-hover-text-color);
       }
 
       &:focus {
-        background-color: @toolbar-button-bespoke-focus-background-color;
+        background-color: var(--tox-private-toolbar-button-bespoke-background-color, @toolbar-button-bespoke-focus-background-color);
       }
 
       &:disabled {
-        background: @toolbar-button-disabled-background-color;
-        border: @toolbar-button-disabled-border;
-        box-shadow: @toolbar-button-disabled-box-shadow;
-        color: @toolbar-button-disabled-text-color;
+        background: var(--tox-private-background-color, @toolbar-button-disabled-background-color);
+        border: var(--tox-private-toolbar-button-disabled-border, @toolbar-button-disabled-border);
+        box-shadow: var(--tox-private-toolbar-button-disabled-box-shadow, @toolbar-button-disabled-box-shadow);
+        color: var(--tox-private-toolbar-button-disabled-text-color, @toolbar-button-disabled-text-color);
         cursor: not-allowed;
       }
     }
 
     button {
-      color: @toolbar-button-text-color;
-      height: @toolbar-button-height;
+      color: var(--tox-private-text-color, @toolbar-button-text-color);
+      height: var(--tox-private-bar-item-height, @toolbar-button-height);
       position: relative;
       text-align: center;
-      width: @toolbar-number-input-button-width;
+      width: var(--tox-private-number-input-button-width, @toolbar-number-input-button-width);
 
       @media (forced-colors: active) {
         &:hover,
@@ -93,13 +101,13 @@
 
       svg {
         display: block;
-        fill: @toolbar-button-icon-color;
+        fill: var(--tox-private-text-color, @toolbar-button-icon-color);
         margin: 0 auto;
-        transform: scale(@toolbar-number-input-button-icon-ratio);
+        transform: scale(var(--tox-private-number-input-button-icon-ratio, @toolbar-number-input-button-icon-ratio));
       }
 
       &:focus {
-        background: @toolbar-button-bespoke-focus-background-color;
+        background: var(--tox-private-toolbar-button-bespoke-background-color, @toolbar-button-bespoke-focus-background-color);
         z-index: 1; // Ensure focus outline is on top of other buttons
 
         &::after {
@@ -108,51 +116,51 @@
       }
 
       &:hover {
-        background: @toolbar-button-hover-background-color;
-        border: @toolbar-button-hover-border;
-        box-shadow: @toolbar-button-hover-box-shadow;
-        color: @toolbar-button-hover-text-color;
+        background: var(--tox-private-background-secondary, @toolbar-button-hover-background-color);
+        border: var(--tox-private-toolbar-button-hover-border, @toolbar-button-hover-border);
+        box-shadow: var(--tox-private-toolbar-button-hover-box-shadow, @toolbar-button-hover-box-shadow);
+        color: var(--tox-private-text-color, @toolbar-button-hover-text-color);
 
         svg {
-          fill: @toolbar-button-hover-icon-color;
+          fill: var(--tox-private-text-color, @toolbar-button-hover-icon-color);
         }
       }
 
       &:active {
-        background: @toolbar-button-active-background-color;
-        border: @toolbar-button-active-border;
-        box-shadow: @toolbar-button-active-box-shadow;
-        color: @toolbar-button-active-text-color;
+        background: var(--tox-private-toggled-background-color, @toolbar-button-active-background-color);
+        border: var(--tox-private-toolbar-button-active-border, @toolbar-button-active-border);
+        box-shadow: var(--tox-private-toolbar-button-active-box-shadow, @toolbar-button-active-box-shadow);
+        color: var(--tox-private-text-color, @toolbar-button-active-text-color);
 
         svg {
-          fill: @toolbar-button-active-icon-color;
+          fill: var(--tox-private-text-color, @toolbar-button-active-icon-color);
         }
       }
 
       &:disabled {
-        background: @toolbar-button-disabled-background-color;
-        border: @toolbar-button-disabled-border;
-        box-shadow: @toolbar-button-disabled-box-shadow;
-        color: @toolbar-button-disabled-text-color;
+        background: var(--tox-private-background-color, @toolbar-button-disabled-background-color);
+        border: var(--tox-private-toolbar-button-disabled-border, @toolbar-button-disabled-border);
+        box-shadow: var(--tox-private-toolbar-button-disabled-box-shadow, @toolbar-button-disabled-box-shadow);
+        color: var(--tox-private-toolbar-button-disabled-text-color, @toolbar-button-disabled-text-color);
         cursor: not-allowed;
 
         svg {
-          fill: @toolbar-button-disabled-icon-color;
+          fill: var(--tox-private-toolbar-button-disabled-text-color, @toolbar-button-disabled-icon-color);
         }
       }
     }
 
     button.minus {
-      border-radius: @toolbar-button-border-radius 0 0 @toolbar-button-border-radius;
+      border-radius: var(--tox-private-bar-item-border-radius, @toolbar-button-border-radius) 0 0 var(--tox-private-bar-item-border-radius, @toolbar-button-border-radius);
     }
 
     button.plus {
-      border-radius: 0 @toolbar-button-border-radius @toolbar-button-border-radius 0;
+      border-radius: 0 var(--tox-private-bar-item-border-radius, @toolbar-button-border-radius) var(--tox-private-bar-item-border-radius, @toolbar-button-border-radius) 0;
     }
   }
 
   .tox-number-input:focus:not(:active) > button,
   .tox-number-input:focus:not(:active) > .tox-input-wrapper {
-    background: @toolbar-button-bespoke-focus-background-color;
+    background: var(--tox-private-toolbar-button-bespoke-background-color, @toolbar-button-bespoke-focus-background-color);
   }
 }

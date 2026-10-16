@@ -20,24 +20,62 @@
 @_toolbar-row-separator-image-size: calc(100% - @toolbar-row-separator-padding * 2) calc(100% - @_toolbar-row-separator-downsize);
 
 .tox {
+  // Toolbar groups (.tox-toolbar__group) read the group properties from the toolbar they sit in.
+  .tox-toolbar-overlord,
+  .tox-toolbar,
+  .tox-toolbar__primary,
+  .tox-toolbar__overflow {
+    & when (@custom-properties-enabled = true) {
+      --tox-private-toolbar-padding-y: 1px;
+      --tox-private-toolbar-padding-x: var(--tox-private-pad-sm);
+      --tox-private-toolbar-row-separator-padding: var(--tox-private-bar-padding-x);
+      --tox-private-toolbar-separator-distance: 0px;
+      --tox-private-toolbar-separator-color: transparent;
+      --tox-private-toolbar-group-spacing-y: 0px;
+      --tox-private-toolbar-group-separator-color: transparent;
+      --tox-private-toolbar-group-padding-start: calc(var(--tox-private-bar-padding-x) + var(--tox-private-bar-item-spacing-x));
+      // Spacing of a toolbar placed right below the menubar.
+      --tox-private-toolbar-separator-margin-top: calc(var(--tox-private-toolbar-separator-distance) - 1px);
+      --tox-private-toolbar-separator-padding-top: calc(var(--tox-private-toolbar-separator-distance) + var(--tox-private-toolbar-padding-y));
+
+      // One row of toolbar buttons plus the 1px row separator.
+      --tox-private-toolbar-height: calc(
+        var(--tox-private-bar-item-height) +
+        var(--tox-private-bar-item-spacing-y) * 2 +
+        var(--tox-private-toolbar-group-spacing-y) * 2 +
+        1px
+      );
+      // Escaped so LESS doesn't evaluate its own max() function.
+      --tox-private-toolbar-padding-x-no-group-spacing: ~"max(var(--tox-private-toolbar-padding-x) - var(--tox-private-bar-padding-x), 0px)";
+      // The rules below override the offset and downsize, which the position and size are recomputed from.
+      --tox-private-toolbar-row-separator-downsize: calc(var(--tox-private-toolbar-height) + var(--tox-private-toolbar-separator-distance) + var(--tox-private-toolbar-padding-y) * 2);
+      --tox-private-toolbar-row-separator-image-offset: calc(var(--tox-private-toolbar-height) + var(--tox-private-toolbar-separator-distance) + var(--tox-private-toolbar-padding-y));
+      --tox-private-toolbar-row-separator-image: repeating-linear-gradient(var(--tox-private-separator-color) 0 1px, transparent 1px var(--tox-private-toolbar-height));
+      --tox-private-toolbar-row-separator-image-position: center top var(--tox-private-toolbar-row-separator-image-offset);
+      --tox-private-toolbar-row-separator-image-size:
+        calc(100% - var(--tox-private-toolbar-row-separator-padding) * 2)
+        calc(100% - var(--tox-private-toolbar-row-separator-downsize));
+    }
+  }
+
   .tox-toolbar-overlord {
-    background-color: @toolbar-background-color;
+    background-color: var(--tox-private-background-color, @toolbar-background-color);
   }
 
   .tox-toolbar,
   .tox-toolbar__primary,
   .tox-toolbar__overflow {
     background-attachment: local;
-    background-color: @toolbar-background-color;
-    background-image: @_toolbar-row-separator-image;
-    background-position: @_toolbar-row-separator-image-position;
+    background-color: var(--tox-private-background-color, @toolbar-background-color);
+    background-image: var(--tox-private-toolbar-row-separator-image, @_toolbar-row-separator-image);
+    background-position: var(--tox-private-toolbar-row-separator-image-position, @_toolbar-row-separator-image-position);
     background-repeat: no-repeat;
-    background-size: @_toolbar-row-separator-image-size;
+    background-size: var(--tox-private-toolbar-row-separator-image-size, @_toolbar-row-separator-image-size);
     display: flex;
     flex: 0 0 auto;
     flex-shrink: 0;
     flex-wrap: wrap;
-    padding: 0 @_toolbar-padding-x-no-group-spacing;
+    padding: 0 var(--tox-private-toolbar-padding-x-no-group-spacing, @_toolbar-padding-x-no-group-spacing);
     transform: perspective(1px); // Fix for Chrome’s BG size rounding errors in some cases
   }
 
@@ -47,8 +85,13 @@
     @_toolbar-row-separator-image-offset: 0px;
     @_toolbar-row-separator-downsize: 0px;
 
-    background-position: @_toolbar-row-separator-image-position;
-    background-size: @_toolbar-row-separator-image-size;
+    & when (@custom-properties-enabled = true) {
+      --tox-private-toolbar-row-separator-image-offset: 0px;
+      --tox-private-toolbar-row-separator-downsize: 0px;
+    }
+
+    background-position: var(--tox-private-toolbar-row-separator-image-position, @_toolbar-row-separator-image-position);
+    background-size: var(--tox-private-toolbar-row-separator-image-size, @_toolbar-row-separator-image-size);
   }
 
   .tox-toolbar__overflow.tox-toolbar__overflow--closed {
@@ -75,10 +118,10 @@
   // Add top borders
   .tox-menubar + .tox-toolbar,
   .tox-menubar + .tox-toolbar-overlord {
-    border-top: 1px solid @toolbar-separator-color;
-    margin-top: @toolbar-separator-distance - 1px;
-    padding-bottom: @toolbar-padding-y;
-    padding-top: @toolbar-separator-distance + @toolbar-padding-y;
+    border-top: 1px solid var(--tox-private-toolbar-separator-color, @toolbar-separator-color);
+    margin-top: var(--tox-private-toolbar-separator-margin-top, @toolbar-separator-distance - 1px);
+    padding-bottom: var(--tox-private-toolbar-padding-y, @toolbar-padding-y);
+    padding-top: var(--tox-private-toolbar-separator-padding-top, @toolbar-separator-distance + @toolbar-padding-y);
 
     @media (forced-colors: active) {
       outline: 1px solid currentColor;
@@ -107,7 +150,11 @@
   .tox-toolbar-overlord .tox-toolbar__primary {
     @_toolbar-row-separator-image-offset: @_toolbar-height;
 
-    background-position: @_toolbar-row-separator-image-position;
+    & when (@custom-properties-enabled = true) {
+      --tox-private-toolbar-row-separator-image-offset: var(--tox-private-toolbar-height);
+    }
+
+    background-position: var(--tox-private-toolbar-row-separator-image-position, @_toolbar-row-separator-image-position);
   }
 
   .tox-editor-header > .tox-toolbar--scrolling,
@@ -125,8 +172,8 @@
     }
   
     &:focus {
-      background-color: @toolbar-button-bespoke-focus-background-color;
-      border-radius: @control-border-radius;
+      background-color: var(--tox-private-toolbar-button-bespoke-background-color, @toolbar-button-bespoke-focus-background-color);
+      border-radius: var(--tox-private-control-border-radius, @control-border-radius);
       border-style: solid;
       border-width: 1px;
       &:extend(.tox .tox-textfield:focus);
@@ -141,14 +188,21 @@
   @toolbar-row-separator-padding: @pad-sm;
   @toolbar-padding-x: @pad-sm;
 
-  background-color: @pop-background-color;
-  background-position: @_toolbar-row-separator-image-position;
-  background-size: @_toolbar-row-separator-image-size;
+  & when (@custom-properties-enabled = true) {
+    --tox-private-toolbar-row-separator-downsize: calc(var(--tox-private-toolbar-height) + var(--tox-private-pad-xs) * 3);
+    --tox-private-toolbar-row-separator-image-offset: calc(var(--tox-private-toolbar-height) + var(--tox-private-pad-xs));
+    --tox-private-toolbar-row-separator-padding: var(--tox-private-pad-sm);
+    --tox-private-toolbar-padding-x: var(--tox-private-pad-sm);
+  }
+
+  background-color: var(--tox-private-background-color, @pop-background-color);
+  background-position: var(--tox-private-toolbar-row-separator-image-position, @_toolbar-row-separator-image-position);
+  background-size: var(--tox-private-toolbar-row-separator-image-size, @_toolbar-row-separator-image-size);
   border: none;
-  border-radius: @pop-border-radius;
+  border-radius: var(--tox-private-panel-border-radius, @pop-border-radius);
   box-shadow: @pop-box-shadow;
   overscroll-behavior: none;
-  padding: @pad-xs 0;
+  padding: var(--tox-private-pad-xs, @pad-xs) 0;
 
   @media (forced-colors: active) {
     border: solid;
@@ -161,9 +215,14 @@
     @_toolbar-row-separator-downsize: @_toolbar-height + @pad-xs + @pad-xs * 2;
     @_toolbar-row-separator-image-offset: @_toolbar-height + @pad-xs;
 
-    background-position: @_toolbar-row-separator-image-position;
-    background-size: @_toolbar-row-separator-image-size;
-    padding: @pad-xs 0;
+    & when (@custom-properties-enabled = true) {
+      --tox-private-toolbar-row-separator-downsize: calc(var(--tox-private-toolbar-height) + var(--tox-private-pad-xs) * 3);
+      --tox-private-toolbar-row-separator-image-offset: calc(var(--tox-private-toolbar-height) + var(--tox-private-pad-xs));
+    }
+
+    background-position: var(--tox-private-toolbar-row-separator-image-position, @_toolbar-row-separator-image-position);
+    background-size: var(--tox-private-toolbar-row-separator-image-size, @_toolbar-row-separator-image-size);
+    padding: var(--tox-private-pad-xs, @pad-xs) 0;
   }
 }
 

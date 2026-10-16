@@ -12,16 +12,32 @@
 @_menubar-height: @menubar-select-height + (@menubar-select-spacing-y * 2) + 1px;
 
 .tox {
+  .tox-menubar,
+  .tox-promotion {
+    & when (@custom-properties-enabled = true) {
+      --tox-private-menubar-row-separator-color: transparent;
+      // One row of menubar buttons plus the 1px row separator.
+      --tox-private-menubar-height: calc(var(--tox-private-bar-item-height) + var(--tox-private-bar-item-spacing-y) * 2 + 1px);
+      --tox-private-menubar-background:
+        repeating-linear-gradient(var(--tox-private-menubar-row-separator-color) 0 1px, transparent 1px var(--tox-private-menubar-height))
+        center top var(--tox-private-menubar-height) / 100% calc(100% - var(--tox-private-menubar-height)) no-repeat;
+    }
+  }
+
+  .tox-menubar when (@custom-properties-enabled = true) {
+    --tox-private-menubar-padding-start: calc(var(--tox-private-bar-padding-x) + var(--tox-private-bar-item-spacing-x));
+  }
+
   .tox-menubar {
-    background: @menubar-background;
-    background-color: @menubar-background-color;
+    background: var(--tox-private-menubar-background, @menubar-background);
+    background-color: var(--tox-private-background-color, @menubar-background-color);
     display: flex;
     flex: 0 0 auto;
     flex-shrink: 0;
     flex-wrap: wrap;
     grid-column: ~"1 / -1";
     grid-row: 1;
-    padding: 0 @menubar-padding-x 0 (@menubar-padding-x + @menubar-select-spacing-x);
+    padding: 0 var(--tox-private-bar-padding-x, @menubar-padding-x) 0 var(--tox-private-menubar-padding-start, (@menubar-padding-x + @menubar-select-spacing-x));
   }
 
   .tox-promotion + .tox-menubar {
@@ -33,7 +49,7 @@
   .tox:not(.tox-tinymce-inline) .tox-menubar {
     flex-wrap: nowrap;
     min-width: 0;
-    min-height: @_menubar-height;
+    min-height: var(--tox-private-menubar-height, @_menubar-height);
     overflow-x: auto;
     overflow-y: hidden;
   }

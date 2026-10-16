@@ -12,27 +12,42 @@
 @menu-item-collection-grid-padding: @pad-sm;
 
 .tox {
+  .tox-menu when (@custom-properties-enabled = true) {
+    --tox-private-menu-background-color: light-dark(
+      var(--tox-private-background-color),
+      hsl(from var(--tox-private-background-color) h s calc(l + 5))
+    );
+    // The dark skin draws a separator-colored border instead of a shadow.
+    --tox-private-menu-border-color: light-dark(transparent, hsl(0 0% 100% / 15%));
+
+    // The dark skin has no shadow (`none`), but light-dark() only accepts colors, so the shadow
+    // colors turn transparent instead. css-parity treats an all-transparent box-shadow as `none`.
+    --tox-private-menu-box-shadow:
+      0 0 2px 0 light-dark(hsl(from var(--tox-private-color-black) h s l / 20%), transparent),
+      0 4px 8px 0 light-dark(hsl(from var(--tox-private-color-black) h s l / 15%), transparent);
+  }
+
   .tox-menu {
-    background-color: @menu-background-color;
-    border: 1px solid @menu-border-color;
-    border-radius: @menu-border-radius;
-    box-shadow: @menu-box-shadow;
+    background-color: var(--tox-private-menu-background-color, @menu-background-color);
+    border: 1px solid var(--tox-private-menu-border-color, @menu-border-color);
+    border-radius: var(--tox-private-panel-border-radius, @menu-border-radius);
+    box-shadow: var(--tox-private-menu-box-shadow, @menu-box-shadow);
     display: inline-block;
     overflow: hidden;
     vertical-align: top;
-    z-index: @z-index-menu;
+    z-index: var(--tox-private-z-index-menu, @z-index-menu);
   }
 
   .tox-menu.tox-collection.tox-collection--list {
-    padding: 0 @menu-item-collection-list-padding;
+    padding: 0 var(--tox-private-pad-xs, @menu-item-collection-list-padding);
   }
 
   .tox-menu.tox-collection.tox-collection--toolbar {
-    padding: @menu-item-collection-toolbar-padding;
+    padding: var(--tox-private-pad-sm, @menu-item-collection-toolbar-padding);
   }
 
   .tox-menu.tox-collection.tox-collection--grid {
-    padding: @menu-item-collection-grid-padding;
+    padding: var(--tox-private-pad-sm, @menu-item-collection-grid-padding);
   }
 
   @media @breakpoint-gt-sm {

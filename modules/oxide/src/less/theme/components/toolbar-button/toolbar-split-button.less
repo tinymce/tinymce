@@ -6,43 +6,50 @@
 @toolbar-split-color-preview-opacity: 0.3;
 
 .tox {
+  .tox-split-button when (@custom-properties-enabled = true) {
+    --tox-private-split-button-chevron-touch-padding: 4px;
+    --tox-private-split-button-color-preview-opacity: .3;
+    --tox-private-split-button-main-touch-width: calc(var(--tox-private-toolbar-button-width) - var(--tox-private-split-button-chevron-touch-padding));
+    --tox-private-split-button-chevron-touch-width: calc(var(--tox-private-base-value) + var(--tox-private-split-button-chevron-touch-padding));
+  }
+
   // Split button main component (left side)
   .tox-split-button__main {
-    border-radius: @toolbar-button-border-radius 0 0 @toolbar-button-border-radius;
+    border-radius: var(--tox-private-bar-item-border-radius, @toolbar-button-border-radius) 0 0 var(--tox-private-bar-item-border-radius, @toolbar-button-border-radius);
     margin-right: 0;
 
     &:focus {
-      border: @toolbar-button-border;
-      box-shadow: @toolbar-button-focus-box-shadow;
-      background: @toolbar-button-focus-background-color;
-      color: @toolbar-button-focus-text-color;
+      border: var(--tox-private-toolbar-button-border, @toolbar-button-border);
+      box-shadow: var(--tox-private-toolbar-button-focus-box-shadow, @toolbar-button-focus-box-shadow);
+      background: var(--tox-private-background-color, @toolbar-button-focus-background-color);
+      color: var(--tox-private-text-color, @toolbar-button-focus-text-color);
       position: relative;
       z-index: 1;
 
       &::after {
         .keyboard-focus-outline-mixin();
-        border-radius: @toolbar-button-border-radius 0 0 @toolbar-button-border-radius;
+        border-radius: var(--tox-private-bar-item-border-radius, @toolbar-button-border-radius) 0 0 var(--tox-private-bar-item-border-radius, @toolbar-button-border-radius);
       }
     }
   }
 
   // Split button chevron component (right side)
   .tox-split-button__chevron {
-    width: @toolbar-button-chevron-width;
-    border-radius: 0 @toolbar-button-border-radius @toolbar-button-border-radius 0;
+    width: var(--tox-private-base-value, @toolbar-button-chevron-width);
+    border-radius: 0 var(--tox-private-bar-item-border-radius, @toolbar-button-border-radius) var(--tox-private-bar-item-border-radius, @toolbar-button-border-radius) 0;
     margin-left: 0;
 
     &:focus {
-      border: @toolbar-button-border;
-      box-shadow: @toolbar-button-focus-box-shadow;
-      background: @toolbar-button-focus-background-color;
-      color: @toolbar-button-focus-text-color;
+      border: var(--tox-private-toolbar-button-border, @toolbar-button-border);
+      box-shadow: var(--tox-private-toolbar-button-focus-box-shadow, @toolbar-button-focus-box-shadow);
+      background: var(--tox-private-background-color, @toolbar-button-focus-background-color);
+      color: var(--tox-private-text-color, @toolbar-button-focus-text-color);
       position: relative;
       z-index: 1;
 
       &::after {
         .keyboard-focus-outline-mixin();
-        border-radius: 0 @toolbar-button-border-radius @toolbar-button-border-radius 0;
+        border-radius: 0 var(--tox-private-bar-item-border-radius, @toolbar-button-border-radius) var(--tox-private-bar-item-border-radius, @toolbar-button-border-radius) 0;
       }
     }
 
@@ -52,38 +59,38 @@
         fill: currentColor;
       }
 
-      fill: @toolbar-button-chevron-color;
+      fill: var(--tox-private-toolbar-button-chevron-color, @toolbar-button-chevron-color);
     }
   }
 
   // Touch device adjustments
   &.tox-platform-touch {
     .tox-split-button__main {
-      width: @toolbar-button-width - @toolbar-split-button-chevron-touch-padding;
+      width: var(--tox-private-split-button-main-touch-width, @toolbar-button-width - @toolbar-split-button-chevron-touch-padding);
     }
 
     .tox-split-button__chevron {
-      width: @toolbar-button-chevron-width + @toolbar-split-button-chevron-touch-padding;
+      width: var(--tox-private-split-button-chevron-touch-width, @toolbar-button-chevron-width + @toolbar-split-button-chevron-touch-padding);
     }
   }
 
   // Disabled states for split button components
   .tox-split-button__main.tox-tbtn--disabled,
   .tox-split-button__chevron.tox-tbtn--disabled {
-    background: @toolbar-button-disabled-background-color;
-    box-shadow: @toolbar-button-disabled-box-shadow;
-    color: @toolbar-button-disabled-text-color;
+    background: var(--tox-private-background-color, @toolbar-button-disabled-background-color);
+    box-shadow: var(--tox-private-toolbar-button-disabled-box-shadow, @toolbar-button-disabled-box-shadow);
+    color: var(--tox-private-toolbar-button-disabled-text-color, @toolbar-button-disabled-text-color);
 
     &:hover {
-      background: @toolbar-button-disabled-background-color;
-      box-shadow: @toolbar-button-disabled-box-shadow;
-      color: @toolbar-button-disabled-text-color;
+      background: var(--tox-private-background-color, @toolbar-button-disabled-background-color);
+      box-shadow: var(--tox-private-toolbar-button-disabled-box-shadow, @toolbar-button-disabled-box-shadow);
+      color: var(--tox-private-toolbar-button-disabled-text-color, @toolbar-button-disabled-text-color);
     }
 
     &:focus {
-      background: @toolbar-button-disabled-background-color;
-      box-shadow: @toolbar-button-disabled-box-shadow;
-      color: @toolbar-button-disabled-text-color;
+      background: var(--tox-private-background-color, @toolbar-button-disabled-background-color);
+      box-shadow: var(--tox-private-toolbar-button-disabled-box-shadow, @toolbar-button-disabled-box-shadow);
+      color: var(--tox-private-toolbar-button-disabled-text-color, @toolbar-button-disabled-text-color);
     }
   }
 
@@ -91,6 +98,6 @@
   // Color icon opacity for disabled split buttons
   .tox-split-button__main.tox-tbtn--disabled svg .tox-icon-text-color__color,
   .tox-split-button__main.tox-tbtn--disabled svg .tox-icon-highlight-bg-color__color {
-    opacity: @toolbar-split-color-preview-opacity;
+    opacity: var(--tox-private-split-button-color-preview-opacity, @toolbar-split-color-preview-opacity);
   }
 }

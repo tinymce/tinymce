@@ -10,8 +10,8 @@
 
 .tox {
   .tox-promotion {
-    background: @menubar-background;
-    background-color: @menubar-background-color;
+    background: var(--tox-private-menubar-background, @menubar-background);
+    background-color: var(--tox-private-background-color, @menubar-background-color);
     grid-column: 2;
     grid-row: 1;
     padding-inline-end: 8px;
@@ -19,24 +19,32 @@
     padding-top: 5px;
   }
 
+  .tox-promotion-link when (@custom-properties-enabled = true) {
+    --tox-private-promotion-background-color: #E8F1F8;
+    --tox-private-promotion-background-hover-color: #B4D7FF;
+    --tox-private-promotion-background-active-color: #D9EDF7;
+    --tox-private-promotion-button-height: calc(var(--tox-private-font-size-sm) * 1.9);
+    --tox-private-promotion-text-color: #086BE6;
+  }
+
   .tox-promotion-link {
     align-items: unsafe center;
-    background-color: @promotion-background-color;
+    background-color: var(--tox-private-promotion-background-color, @promotion-background-color);
     border-radius: 5px;
-    color: @promotion-text-color;
+    color: var(--tox-private-promotion-text-color, @promotion-text-color);
     cursor: pointer;
     display: flex;
-    font-size: @menubar-select-font-size;
-    height: @promotion-button-height;
+    font-size: var(--tox-private-font-size-sm, @menubar-select-font-size);
+    height: var(--tox-private-promotion-button-height, @promotion-button-height);
     padding: 4px 8px;
     white-space: nowrap;
 
     &:hover {
-      background-color: @promotion-background-hover-color;
+      background-color: var(--tox-private-promotion-background-hover-color, @promotion-background-hover-color);
     }
 
     &:focus {
-      background-color: @promotion-background-active-color;
+      background-color: var(--tox-private-promotion-background-active-color, @promotion-background-active-color);
     }
   }
 }

@@ -11,8 +11,8 @@
     align-items: center;
     display: flex;
     flex-wrap: wrap;
-    margin: @toolbar-group-spacing-y 0;
-    padding: 0 @toolbar-group-padding-x 0 (@toolbar-group-padding-x + @toolbar-button-spacing-x);
+    margin: var(--tox-private-toolbar-group-spacing-y, @toolbar-group-spacing-y) 0;
+    padding: 0 var(--tox-private-bar-padding-x, @toolbar-group-padding-x) 0 var(--tox-private-toolbar-group-padding-start, (@toolbar-group-padding-x + @toolbar-button-spacing-x));
   }
 
   // Align toolbar group to the right
@@ -29,13 +29,13 @@
 
 .tox:not([dir=rtl]) {
   .tox-toolbar__group:not(:last-of-type) {
-    border-right: 1px solid @toolbar-group-separator-color;
+    border-right: 1px solid var(--tox-private-toolbar-group-separator-color, @toolbar-group-separator-color);
   }
 }
 
 // RTL
 .tox[dir=rtl] {
   .tox-toolbar__group:not(:last-of-type) {
-    border-left: 1px solid @toolbar-group-separator-color;
+    border-left: 1px solid var(--tox-private-toolbar-group-separator-color, @toolbar-group-separator-color);
   }
 }
