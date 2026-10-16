@@ -38,7 +38,7 @@
 
 .tox {
   [data-mce-name="suggestededits"] .tox-icon .tox-icon--badge {
-    fill: @color-tint;
+    fill: var(--tox-private-color-tint, @color-tint);
   }
 
   .tox-view .tox-suggestededits__pane {
@@ -57,13 +57,42 @@
   }
 
 
+  .tox-suggestededits__container when (@custom-properties-enabled = true) {
+    --tox-private-suggestededits-sidebar-background-color: light-dark(
+      hsl(from var(--tox-private-background-color) h s calc(l - 6)),
+      hsl(from var(--tox-private-background-color) h s calc(l + 10))
+    );
+    --tox-private-suggestededits-sidebar-border-width: 1px;
+    --tox-private-suggestededits-sidebar-width: calc(440px + var(--tox-private-suggestededits-sidebar-border-width));
+
+    --tox-private-suggestededits-toolbar-button-border-color: light-dark(
+      hsl(from var(--tox-private-suggestededits-sidebar-background-color) h s calc(l - 5)),
+      hsl(from var(--tox-private-suggestededits-sidebar-background-color) h s calc(l + 11))
+    );
+    --tox-private-suggestededits-toolbar-button-hover-background-color: light-dark(
+      hsl(from var(--tox-private-color-black) h s l / 12%),
+      hsl(from var(--tox-private-color-white) h s l / 12%)
+    );
+    --tox-private-suggestededits-toolbar-button-hover-border-color: var(--tox-private-suggestededits-toolbar-button-hover-background-color);
+    --tox-private-suggestededits-toolbar-button-active-background-color: light-dark(
+      hsl(from var(--tox-private-color-black) h s l / 18%),
+      hsl(from var(--tox-private-color-white) h s l / 18%)
+    );
+    --tox-private-suggestededits-toolbar-button-active-border-color: var(--tox-private-suggestededits-toolbar-button-active-background-color);
+
+    --tox-private-suggestededits-timestamp-icon-color: light-dark(
+      hsl(from var(--tox-private-color-black) h s l / 50%),
+      hsl(from var(--tox-private-color-white) h s l / 50%)
+    );
+  }
+
   .tox-suggestededits__container {
     height: 100%; /* TINY-12393: Improve height calculation */
     display: flex;
     flex-direction: column;
 
     .tox-suggestededits {
-      background-color: @suggestededits-background-color;
+      background-color: var(--tox-private-background-color, @suggestededits-background-color);
       display: flex;
       flex: 1;
       height: inherit;
@@ -83,18 +112,18 @@
           height: 100%;
           width: 100%;
           overflow: scroll;
-          background-color: @color-white; // This allows the content CSS to be applied correctly
+          background-color: var(--tox-private-color-white, @color-white); // This allows the content CSS to be applied correctly
         }
       }
 
       .tox-suggestededits__sidebar {
-        background-color: @suggestededits-sidebar-background-color;
-        border-left: @suggestededits-sidebar-border-width solid @tinymce-separator-color;
+        background-color: var(--tox-private-suggestededits-sidebar-background-color, @suggestededits-sidebar-background-color);
+        border-left: var(--tox-private-suggestededits-sidebar-border-width, @suggestededits-sidebar-border-width) solid var(--tox-private-separator-color, @tinymce-separator-color);
         display: flex;
         flex-direction: column;
         flex: 0 1 auto;
         min-width: 248px;
-        width: 440px + @suggestededits-sidebar-border-width;
+        width: var(--tox-private-suggestededits-sidebar-width, 440px + @suggestededits-sidebar-border-width);
       }
 
       .tox-suggestededits__announcer {
@@ -131,23 +160,23 @@
         }
 
         .tox-button--secondary--outline {
-          border-color: @suggestededits-toolbar-button-border-color;
+          border-color: var(--tox-private-suggestededits-toolbar-button-border-color, @suggestededits-toolbar-button-border-color);
 
           &:focus:not(:disabled),
           &:hover:not(:disabled) {
-            background-color: @suggestededits-toolbar-button-hover-background-color;
-            border-color: @suggestededits-toolbar-button-hover-border-color;
+            background-color: var(--tox-private-suggestededits-toolbar-button-hover-background-color, @suggestededits-toolbar-button-hover-background-color);
+            border-color: var(--tox-private-suggestededits-toolbar-button-hover-border-color, @suggestededits-toolbar-button-hover-border-color);
           }
 
           &:active:not(:disabled),
           &.tox-button--enabled:not(:disabled) {
-            background-color: @suggestededits-toolbar-button-active-background-color;
-            border-color: @suggestededits-toolbar-button-active-border-color;
-            color: @suggestededits-toolbar-button-active-color;
+            background-color: var(--tox-private-suggestededits-toolbar-button-active-background-color, @suggestededits-toolbar-button-active-background-color);
+            border-color: var(--tox-private-suggestededits-toolbar-button-active-border-color, @suggestededits-toolbar-button-active-border-color);
+            color: var(--tox-private-text-color, @suggestededits-toolbar-button-active-color);
           }
 
           &[disabled] {
-            border-color: @suggestededits-toolbar-button-border-color;
+            border-color: var(--tox-private-suggestededits-toolbar-button-border-color, @suggestededits-toolbar-button-border-color);
           }
         }
       }
@@ -169,7 +198,7 @@
 
           .tox-suggestededits__card--divider,
           .tox-card__divider {
-            background-color: @suggestededits-sidebar-background-color;
+            background-color: var(--tox-private-suggestededits-sidebar-background-color, @suggestededits-sidebar-background-color);
             height: 1px;
             width: 100%;
           }
@@ -197,10 +226,10 @@
             width: 100%;
 
             .tox-suggestededits__card--timestamp {
-              color: @suggestededits-text-color;
+              color: var(--tox-private-text-color, @suggestededits-text-color);
 
               .tox-icon svg {
-                fill: contrast(@suggestededits-background-color, fade(@color-black, 50%), fade(@color-white, 50%));
+                fill: var(--tox-private-suggestededits-timestamp-icon-color, contrast(@suggestededits-background-color, fade(@color-black, 50%), fade(@color-white, 50%)));
               }
             }
 
@@ -208,7 +237,7 @@
               align-items: center;
               border: 0;
               border-radius: 20px;
-              color: @text-color-muted;
+              color: var(--tox-private-text-color-muted, @text-color-muted);
               height: 20px;
               width: 20px;
               display: flex;
@@ -263,7 +292,7 @@
               }
 
               .tox-suggestededits__operations-text {
-                color: @suggestededits-text-color;
+                color: var(--tox-private-text-color, @suggestededits-text-color);
                 font-size: var(--tox-private-font-size-sm, @font-size-sm);
                 font-weight: var(--tox-private-font-weight-bold, @font-weight-bold);
                 line-height: 18px;
@@ -282,7 +311,7 @@
             }
 
             .tox-suggestededits__card--feedback {
-              color: @suggestededits-text-color;
+              color: var(--tox-private-text-color, @suggestededits-text-color);
               overflow-wrap: anywhere;
               width: 100%;
             }
@@ -306,7 +335,7 @@
             border-radius: 6px;
 
             &:focus-visible {
-              outline: 2px solid @suggestededits-card-active-border-color;
+              outline: 2px solid var(--tox-private-color-tint, @suggestededits-card-active-border-color);
             }
           }
         }
