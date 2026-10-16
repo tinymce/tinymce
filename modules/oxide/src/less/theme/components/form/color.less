@@ -6,6 +6,15 @@
 @color-input-swatch-border-radius: @control-border-radius;
 
 .tox {
+  .tox-color-input when (@custom-properties-enabled = true) {
+    --tox-private-color-input-swatch-size: calc(var(--tox-private-control-height) - 12px);
+    --tox-private-color-input-swatch-border-color: hsl(from var(--tox-private-color-black) h s l / 20%);
+    --tox-private-color-input-swatch-checker-color: light-dark(
+      hsl(0 0% 0% / 25%),
+      hsl(0 0% 100% / 25%)
+    );
+  }
+
   .tox-color-input {
     display: flex;
     position: relative;
@@ -16,16 +25,16 @@
     }
 
     span {
-      border-color: rgba(red(@color-black) green(@color-black) blue(@color-black) / 20%);
-      border-radius: @color-input-swatch-border-radius;
+      border-color: var(--tox-private-color-input-swatch-border-color, fade(@color-black, 20%));
+      border-radius: var(--tox-private-control-border-radius, @color-input-swatch-border-radius);
       border-style: solid;
       border-width: 1px;
       box-shadow: none;
       box-sizing: border-box;
-      height: @textfield-height - 12px;
+      height: var(--tox-private-color-input-swatch-size, @textfield-height - 12px);
       position: absolute;
       top: 6px;
-      width: $height;
+      width: var(--tox-private-color-input-swatch-size, @textfield-height - 12px);
 
       @media (forced-colors: active) {
         border-color: currentColor;
@@ -35,27 +44,27 @@
 
       &:hover:not([aria-disabled=true]),
       &:focus:not([aria-disabled=true]) {
-        border-color: @input-button-focus-border-color;
+        border-color: var(--tox-private-color-tint, @input-button-focus-border-color);
         cursor: pointer;
       }
 
       &::before {
         background-image:
-          linear-gradient(45deg, @color-input-swatch-checker-color 25%, transparent 25%),
-          linear-gradient(-45deg, @color-input-swatch-checker-color 25%, transparent 25%),
-          linear-gradient(45deg, transparent 75%, @color-input-swatch-checker-color 75%),
-          linear-gradient(-45deg, transparent 75%, @color-input-swatch-checker-color 75%);
+          linear-gradient(45deg, var(--tox-private-color-input-swatch-checker-color, @color-input-swatch-checker-color) 25%, transparent 25%),
+          linear-gradient(-45deg, var(--tox-private-color-input-swatch-checker-color, @color-input-swatch-checker-color) 25%, transparent 25%),
+          linear-gradient(45deg, transparent 75%, var(--tox-private-color-input-swatch-checker-color, @color-input-swatch-checker-color) 75%),
+          linear-gradient(-45deg, transparent 75%, var(--tox-private-color-input-swatch-checker-color, @color-input-swatch-checker-color) 75%);
         background-position: 0 0, 0 6px, 6px -6px, -6px 0;
         background-size: 12px 12px;
-        border: 1px solid @textfield-background-color;
-        border-radius: @color-input-swatch-border-radius;
+        border: 1px solid var(--tox-private-field-background-color, @textfield-background-color);
+        border-radius: var(--tox-private-control-border-radius, @color-input-swatch-border-radius);
         box-sizing: border-box;
         content: '';
-        height: @textfield-height - 12px;
+        height: var(--tox-private-color-input-swatch-size, @textfield-height - 12px);
         left: -1px;
         position: absolute;
         top: -1px;
-        width: $height;
+        width: var(--tox-private-color-input-swatch-size, @textfield-height - 12px);
         z-index: -1;
 
         @media (forced-colors: active) {
@@ -73,7 +82,7 @@
 .tox:not([dir=rtl]) {
   .tox-color-input {
     .tox-textfield {
-      padding-left: @textfield-height;
+      padding-left: var(--tox-private-control-height, @textfield-height);
     }
 
     span {
@@ -86,7 +95,7 @@
 .tox[dir="rtl"] {
   .tox-color-input {
     .tox-textfield {
-      padding-right: @textfield-height;
+      padding-right: var(--tox-private-control-height, @textfield-height);
     }
 
     span {

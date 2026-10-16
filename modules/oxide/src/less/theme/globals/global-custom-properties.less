@@ -48,6 +48,17 @@
   --tox-private-control-border-radius: 6px; // Buttons, input fields etc.
   --tox-private-control-padding-y: var(--tox-private-pad-xs); // Buttons, input fields etc.
   --tox-private-control-border-width: 1px; // Buttons, input fields etc.
+  --tox-private-control-height: 36px; // Buttons, input fields etc.
+  
+  // Form fields (textfield, select, listbox, color input) have no common ancestor to declare these on.
+  --tox-private-field-background-color: light-dark(
+    var(--tox-private-background-color),
+    hsl(from var(--tox-private-background-color) h s calc(l + 5))
+  ); // Input fields, select boxes etc.
+  --tox-private-field-padding-x: calc(var(--tox-private-pad-xs) + var(--tox-private-control-border-radius) / 4); // Input fields, select boxes etc. Border radius modifier for pill shaped controls
+  --tox-private-field-padding-y: calc((var(--tox-private-control-height) - var(--tox-private-control-line-height) - var(--tox-private-control-border-width) * 2) / 2); // Input fields, select boxes etc.
+  --tox-private-field-focus-box-shadow: 0 0 0 1px var(--tox-private-color-tint); // Input fields, select boxes etc.
+  --tox-private-field-disabled-text-color: hsl(from var(--tox-private-text-color) h s l / 85%); // Input fields, select boxes etc.
 
   // Focus outline
   --tox-private-keyboard-focus-outline-width: 2px;

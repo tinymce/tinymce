@@ -8,14 +8,18 @@
 @listbox-button-chevron-width: @toolbar-button-chevron-width;
 
 .tox {
+  .tox-listboxfield when (@custom-properties-enabled = true) {
+    --tox-private-listboxfield-disabled-background-color: hsl(from var(--tox-private-background-color) h s calc(l - 5));
+  }
+
   .tox-listboxfield {
     cursor: pointer;
     position: relative;
   }
 
   .tox-listboxfield .tox-listbox--select[disabled] {
-    background-color: @selectbox-disabled-background-color;
-    color: @selectbox-disabled-text-color;
+    background-color: var(--tox-private-listboxfield-disabled-background-color, @listbox-disabled-background-color);
+    color: var(--tox-private-field-disabled-text-color, @listbox-disabled-text-color);
     cursor: not-allowed;
   }
 
@@ -29,11 +33,11 @@
     align-items: center;
     display: flex;
     justify-content: center;
-    width: @listbox-button-chevron-width;
+    width: var(--tox-private-base-value, @listbox-button-chevron-width);
   }
 
   .tox-listbox__select-chevron svg {
-    fill: @listbox-button-chevron-color;
+    fill: var(--tox-private-text-color, @listbox-button-chevron-color);
 
     @media (forced-colors: active) {
       fill: currentColor !important;
@@ -56,7 +60,7 @@
   // Don't add the padding to select boxes with visible values that, do not have the down-arrow icon
   .tox-listboxfield {
     svg {
-      right: @pad-sm;
+      right: var(--tox-private-pad-sm, @pad-sm);
     }
   }
 }
@@ -66,7 +70,7 @@
   // Don't add the padding to select boxes with visible values that, do not have the down-arrow icon
   .tox-listboxfield {
     svg {
-      left: @pad-sm;
+      left: var(--tox-private-pad-sm, @pad-sm);
     }
   }
 }

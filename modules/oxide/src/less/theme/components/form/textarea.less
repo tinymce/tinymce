@@ -4,10 +4,10 @@
 
 .tox {
   .tox-textarea-wrap {
-    border-color: @textfield-border-color;
-    border-radius: @textfield-border-radius;
+    border-color: var(--tox-private-border-color, @textfield-border-color);
+    border-radius: var(--tox-private-control-border-radius, @textfield-border-radius);
     border-style: @textfield-border-style;
-    border-width: @textfield-border-width;
+    border-width: var(--tox-private-control-border-width, @textfield-border-width);
     display: flex;
     flex: 1;
 

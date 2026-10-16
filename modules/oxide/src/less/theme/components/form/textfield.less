@@ -29,37 +29,42 @@
 @toolbar-textfield-margin: @toolbar-button-spacing-y 0 (@toolbar-button-spacing-y + 1px) 0;
 
 .tox {
+  .tox-textfield when (@custom-properties-enabled = true) {
+    --tox-private-textfield-disabled-background-color: hsl(from var(--tox-private-field-background-color) h s calc(l - 5));
+    --tox-private-textfield-min-height: calc(var(--tox-private-control-height) - var(--tox-private-control-border-width) * 2);
+  }
+
   .tox-textfield {
     appearance: none;
-    background-color: @textfield-background-color;
-    border-color: @textfield-border-color;
-    border-radius: @textfield-border-radius;
+    background-color: var(--tox-private-field-background-color, @textfield-background-color);
+    border-color: var(--tox-private-border-color, @textfield-border-color);
+    border-radius: var(--tox-private-control-border-radius, @textfield-border-radius);
     border-style: @textfield-border-style;
-    border-width: @textfield-border-width;
+    border-width: var(--tox-private-control-border-width, @textfield-border-width);
     box-shadow: @textfield-box-shadow;
     box-sizing: border-box;
-    color: @textfield-text-color;
-    font-family: @textfield-font-family;
-    font-size: @textfield-font-size;
-    line-height: @textfield-line-height;
+    color: var(--tox-private-text-color, @textfield-text-color);
+    font-family: var(--tox-private-font-stack, @textfield-font-family);
+    font-size: var(--tox-private-font-size-md, @textfield-font-size);
+    line-height: var(--tox-private-control-line-height, @textfield-line-height);
     margin: 0;
-    min-height: (@textfield-height - (@textfield-border-width * 2));
+    min-height: var(--tox-private-textfield-min-height, (@textfield-height - (@textfield-border-width * 2)));
     outline: @textfield-outline;
-    padding: @textfield-pad-y @textfield-pad-x;
+    padding: var(--tox-private-field-padding-y, @textfield-pad-y) var(--tox-private-field-padding-x, @textfield-pad-x);
     resize: none;
     width: 100%;
   }
 
   .tox-textfield[disabled], .tox-toolbar-textfield[disabled] {
-    background-color: @textfield-disabled-background-color;
-    color: @textfield-disabled-text-color;
+    background-color: var(--tox-private-textfield-disabled-background-color, @textfield-disabled-background-color);
+    color: var(--tox-private-field-disabled-text-color, @textfield-disabled-text-color);
     cursor: not-allowed;
   }
 
   .tox-textfield:focus, .tox-toolbar-textfield:focus {
-    background-color: @textfield-focus-background-color;
-    border-color: @textfield-focus-border-color;
-    box-shadow: @textfield-focus-box-shadow;
+    background-color: var(--tox-private-field-background-color, @textfield-focus-background-color);
+    border-color: var(--tox-private-color-tint, @textfield-focus-border-color);
+    box-shadow: var(--tox-private-field-focus-box-shadow, @textfield-focus-box-shadow);
     outline: @textfield-focus-outline;
   }
 
@@ -75,7 +80,7 @@
     border: 0;
     border-color: transparent;
     box-shadow: unset;
-    color: @color-tint;
+    color: var(--tox-private-color-tint, @color-tint);
     cursor: pointer;
     display: block;
     margin: 0;
@@ -83,7 +88,7 @@
 
     svg {
       display: block;
-      fill: @text-color;
+      fill: var(--tox-private-text-color, @text-color);
     }
   }
 
@@ -95,7 +100,7 @@
 .tox:not([dir=rtl]) {
   .tox-toolbar-textfield {
     + * {
-      margin-left: @pad-xs;
+      margin-left: var(--tox-private-pad-xs, @pad-xs);
     }
   }
 }
@@ -104,7 +109,7 @@
 .tox[dir=rtl] {
   .tox-toolbar-textfield {
     + * {
-      margin-right: @pad-xs;
+      margin-right: var(--tox-private-pad-xs, @pad-xs);
     }
   }
 }

@@ -9,6 +9,11 @@
 @status-valid-color: green; // Valid state is invisible by default
 
 .tox {
+  .tox-control-wrap when (@custom-properties-enabled = true) {
+    --tox-private-control-wrap-status-unknown-color: orange;
+    --tox-private-control-wrap-status-valid-color: green;
+  }
+
   .tox-control-wrap {
     flex: 1;
     position: relative;
@@ -34,15 +39,15 @@
   }
 
   .tox-control-wrap__status-icon-invalid svg {
-    fill: @status-invalid-color;
+    fill: var(--tox-private-color-error, @status-invalid-color);
   }
 
   .tox-control-wrap__status-icon-unknown svg {
-    fill: @status-unknown-color;
+    fill: var(--tox-private-control-wrap-status-unknown-color, @status-unknown-color);
   }
 
   .tox-control-wrap__status-icon-valid svg {
-    fill: @status-valid-color;
+    fill: var(--tox-private-control-wrap-status-valid-color, @status-valid-color);
   }
 }
 
@@ -51,12 +56,12 @@
   .tox-control-wrap--status-invalid .tox-textfield,
   .tox-control-wrap--status-unknown .tox-textfield,
   .tox-control-wrap--status-valid .tox-textfield, {
-    padding-right: @control-wrap-padding-for-icon;
+    padding-right: var(--tox-private-pad-xl, @control-wrap-padding-for-icon);
   }
 
   // Position status component
   .tox-control-wrap__status-icon-wrap {
-    right: @pad-xs;
+    right: var(--tox-private-pad-xs, @pad-xs);
   }
 }
 
@@ -66,11 +71,11 @@
   .tox-control-wrap--status-invalid .tox-textfield,
   .tox-control-wrap--status-unknown .tox-textfield,
   .tox-control-wrap--status-valid .tox-textfield, {
-    padding-left: @control-wrap-padding-for-icon;
+    padding-left: var(--tox-private-pad-xl, @control-wrap-padding-for-icon);
   }
 
   // Position status component
   .tox-control-wrap__status-icon-wrap {
-    left: @pad-xs;
+    left: var(--tox-private-pad-xs, @pad-xs);
   }
 }

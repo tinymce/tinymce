@@ -4,11 +4,11 @@
 
 .tox {
   .tox-custom-preview {
-    border-color: @custom-preview-border-color;
-    border-radius: @custom-preview-border-radius;
+    border-color: var(--tox-private-border-color, @custom-preview-border-color);
+    border-radius: var(--tox-private-control-border-radius, @custom-preview-border-radius);
     border-style: solid;
-    border-width: @custom-preview-border-width;
+    border-width: var(--tox-private-control-border-width, @custom-preview-border-width);
     flex: 1;
-    padding: @pad-sm;
+    padding: var(--tox-private-pad-sm, @pad-sm);
   }
 }

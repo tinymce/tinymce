@@ -26,6 +26,11 @@
 @selectbox-focus-outline: @textfield-focus-outline;
 
 .tox {
+  .tox-selectfield when (@custom-properties-enabled = true) {
+    --tox-private-selectfield-disabled-background-color: hsl(from var(--tox-private-background-color) h s calc(l - 5));
+    --tox-private-selectfield-min-height: calc(var(--tox-private-control-height) - var(--tox-private-control-border-width) * 2);
+  }
+
   .tox-selectfield {
     cursor: pointer;
     position: relative;
@@ -33,28 +38,28 @@
 
   .tox-selectfield select {
     appearance: none;
-    background-color: @selectbox-background-color;
-    border-color: @selectbox-border-color;
-    border-radius: @selectbox-border-radius;
+    background-color: var(--tox-private-field-background-color, @selectbox-background-color);
+    border-color: var(--tox-private-border-color, @selectbox-border-color);
+    border-radius: var(--tox-private-control-border-radius, @selectbox-border-radius);
     border-style: @selectbox-border-style;
-    border-width: @selectbox-border-width;
+    border-width: var(--tox-private-control-border-width, @selectbox-border-width);
     box-shadow: @selectbox-box-shadow;
     box-sizing: border-box;
-    color: @selectbox-text-color;
-    font-family: @selectbox-font-family;
-    font-size: @selectbox-font-size;
-    line-height: @selectbox-line-height;
+    color: var(--tox-private-text-color, @selectbox-text-color);
+    font-family: var(--tox-private-font-stack, @selectbox-font-family);
+    font-size: var(--tox-private-font-size-md, @selectbox-font-size);
+    line-height: var(--tox-private-control-line-height, @selectbox-line-height);
     margin: 0;
-    min-height: (@selectbox-height - (@selectbox-border-width * 2));
+    min-height: var(--tox-private-selectfield-min-height, (@selectbox-height - (@selectbox-border-width * 2)));
     outline: @selectbox-outline;
-    padding: @selectbox-pad-y @selectbox-pad-x;
+    padding: var(--tox-private-field-padding-y, @selectbox-pad-y) var(--tox-private-field-padding-x, @selectbox-pad-x);
     resize: none;
     width: 100%;
   }
 
   .tox-selectfield select[disabled] {
-    background-color: @selectbox-disabled-background-color;
-    color: @selectbox-disabled-text-color;
+    background-color: var(--tox-private-selectfield-disabled-background-color, @selectbox-disabled-background-color);
+    color: var(--tox-private-field-disabled-text-color, @selectbox-disabled-text-color);
     cursor: not-allowed;
   }
 
@@ -64,9 +69,9 @@
   }
 
   .tox-selectfield select:focus {
-    background-color: @selectbox-focus-background-color;
-    border-color: @selectbox-focus-border-color;
-    box-shadow: @selectbox-focus-box-shadow;
+    background-color: var(--tox-private-field-background-color, @selectbox-focus-background-color);
+    border-color: var(--tox-private-color-tint, @selectbox-focus-border-color);
+    box-shadow: var(--tox-private-field-focus-box-shadow, @selectbox-focus-box-shadow);
     outline: @selectbox-focus-outline;
   }
 
@@ -88,11 +93,11 @@
   .tox-selectfield {
     select[size="0"],
     select[size="1"] {
-      padding-right: @pad-lg;
+      padding-right: var(--tox-private-pad-lg, @pad-lg);
     }
 
     svg {
-      right: @pad-sm;
+      right: var(--tox-private-pad-sm, @pad-sm);
     }
   }
 }
@@ -103,11 +108,11 @@
   .tox-selectfield {
     select[size="0"],
     select[size="1"] {
-      padding-left: @pad-lg;
+      padding-left: var(--tox-private-pad-lg, @pad-lg);
     }
 
     svg {
-      left: @pad-sm;
+      left: var(--tox-private-pad-sm, @pad-sm);
     }
   }
 }

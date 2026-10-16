@@ -17,7 +17,7 @@
   // Wraps a label and input combo.
   .tox-form__group {
     box-sizing: border-box;
-    margin-bottom: @form-group-vertical-spacing;
+    margin-bottom: var(--tox-private-pad-xs, @form-group-vertical-spacing);
   }
 
   // Make group take up all remaining width.
@@ -27,7 +27,7 @@
 
   // Modifier for validation error
   .tox-form__group--error {
-    color: @form-group-error-text-color;
+    color: var(--tox-private-color-error, @form-group-error-text-color);
   }
 
   .tox-form__group--collection {
@@ -44,15 +44,15 @@
   // Escape the calc expression otherwise less incorrectly converts this to 42%
   // https://github.com/less/less.js/issues/3047 and https://github.com/less/less.js/issues/2837
   .tox-form__grid--2col > .tox-form__group {
-    width: calc(~"50% - (@{form-grid-horizontal-gap} / 2)");
+    width: calc(~"50% - (var(--tox-private-pad-sm, @{form-grid-horizontal-gap}) / 2)");
   }
 
   .tox-form__grid--3col > .tox-form__group {
-    width: calc(~"100% / 3 - (@{form-grid-horizontal-gap} / 2)");
+    width: calc(~"100% / 3 - (var(--tox-private-pad-sm, @{form-grid-horizontal-gap}) / 2)");
   }
 
   .tox-form__grid--4col > .tox-form__group {
-    width: calc(~"25% - (@{form-grid-horizontal-gap} / 2)");
+    width: calc(~"25% - (var(--tox-private-pad-sm, @{form-grid-horizontal-gap}) / 2)");
   }
 
   // Horizontally stack elements.
@@ -97,7 +97,7 @@
 .tox:not([dir=rtl]) {
   .tox-form__controls-h-stack {
     > *:not(:first-child) {
-      margin-left: @form-group-horizontal-spacing;
+      margin-left: var(--tox-private-pad-xs, @form-group-horizontal-spacing);
     }
   }
 }
@@ -106,7 +106,7 @@
 .tox[dir=rtl] {
   .tox-form__controls-h-stack {
     > *:not(:first-child) {
-      margin-right: @form-group-horizontal-spacing;
+      margin-right: var(--tox-private-pad-xs, @form-group-horizontal-spacing);
     }
   }
 }
