@@ -288,6 +288,12 @@
     // Groups butt up against each other, since each one insets its own cards from the heading bands
     &:has(.tox-card-group) {
       gap: 0;
+
+      // Cards outside any group, such as the loading skeletons after the groups, keep the same inset as the
+      // grouped ones
+      > .tox-card {
+        margin-inline: @card-section-padding;
+      }
     }
 
     &:focus {
@@ -345,9 +351,9 @@
       display: flex;
       flex-direction: column;
       gap: @card-section-gap;
-      // The cards run flush to the sides of the group, but stay inset from the heading band above and the
-      // group below
-      padding-block: @card-section-padding;
+      // The cards are inset from the sides of the group as far as the heading text is, and from the heading band
+      // above and the group below
+      padding: @card-section-padding;
     }
   }
 }
