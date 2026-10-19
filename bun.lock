@@ -6,7 +6,7 @@
       "name": "tinymce-monorepo",
       "devDependencies": {
         "@ephox/bedrock-client": "17.0.0",
-        "@ephox/bedrock-server": "17.0.1",
+        "@ephox/bedrock-server": "17.1.0",
         "@ephox/oxide-icons-tools": "^4.0.0",
         "@ephox/swag": "^4.6.0",
         "@rspack/cli": "^1.7.9",
@@ -343,7 +343,7 @@
     },
     "modules/tinymce": {
       "name": "tinymce",
-      "version": "8.9.1",
+      "version": "8.10.0",
       "dependencies": {
         "@ephox/acid": "^8.0.0",
         "@ephox/agar": "^10.0.0",
@@ -572,9 +572,9 @@
 
     "@ephox/bedrock-common": ["@ephox/bedrock-common@16.0.0", "", { "dependencies": { "diff": "^5.0.0" } }, "sha512-G70iHnw30n1IMISEJTjBGxZU+BmmlvIBJ3MB0pczGpr9fokrW+THfy69ASeMjx2JZ2KhM/HvvbPTyH7OYDk3Zg=="],
 
-    "@ephox/bedrock-runner": ["@ephox/bedrock-runner@17.0.0", "", { "dependencies": { "@ephox/bedrock-common": "^17.0.0", "jquery": "^4.0.0", "querystringify": "^2.2.0" } }, "sha512-5kpTcN8BnnYL47mTYUTJjswzsHf9c+SawRcG3IWoESIND1sX0tUvmRBRgUCqIDBqgN52F4R+uuXRQUDOuwel+Q=="],
+    "@ephox/bedrock-runner": ["@ephox/bedrock-runner@17.1.0", "", { "dependencies": { "@ephox/bedrock-common": "^17.0.0", "jquery": "^4.0.0", "querystringify": "^2.2.0" } }, "sha512-8wkslc3lQeYg3yqNHxWADnlQdFSmiLwuqovUx/Y0zK9tn6GJ+dyZhbLbzG7+Psvn5UGaVaQuBf4/Ku+4K4Zq8w=="],
 
-    "@ephox/bedrock-server": ["@ephox/bedrock-server@17.0.1", "", { "dependencies": { "@aws-sdk/client-device-farm": "^3.1110.0", "@ephox/bedrock-client": "^17.0.0", "@ephox/bedrock-common": "^17.0.0", "@ephox/bedrock-runner": "^17.0.0", "@jsdevtools/coverage-istanbul-loader": "^3.0.5", "@lambdatest/node-tunnel": "^4.0.12", "@rspack/core": "^2.1.10", "@rspack/dev-server": "^2.2.0", "@wdio/globals": "^8.46.0", "async": "^3.2.6", "cli-highlight": "^2.1.11", "command-line-args": "^6.0.2", "command-line-usage": "^7.0.4", "core-js": "^3.50.0", "core-js-bundle": "^3.50.0", "cross-spawn": "^7.0.6", "deepmerge": "^4.3.1", "etag": "^1.8.1", "finalhandler": "^2.1.1", "fork-ts-checker-webpack-plugin": "^9.1.0", "fresh": "^0.5.2", "glob": "^13.0.6", "grunt": "^1.6.3", "jquery": "^4.0.0", "mime-types": "^3.0.2", "mkdirp": "^3.0.1", "portfinder": "^1.0.38", "recursive-readdir-sync": "^1.0.6", "serve-static": "^2.2.1", "source-map-loader": "^5.0.0", "split2": "^4.2.0", "ts-checker-rspack-plugin": "^1.6.1", "ts-loader": "^9.6.2", "tsconfig-paths-webpack-plugin": "^4.2.0", "webdriverio": "^8.46.0", "webpack": "^5.109.2", "webpack-dev-server": "^6.0.0", "which": "^7.0.0", "xml-writer": "^1.7.0" }, "peerDependencies": { "typescript": ">=3.8.0" }, "bin": { "bedrock-auto": "bin/bedrock-auto.cjs", "bedrock": "bin/bedrock.cjs" } }, "sha512-jxZKMs9Zf90aMp9bUzfCHrrwdF01LUqZ9jsPVNVyfcYEDNAi7Gwt+YBAERkMqJ88wyIsAZpdtl0aFO+Ts8iaLw=="],
+    "@ephox/bedrock-server": ["@ephox/bedrock-server@17.1.0", "", { "dependencies": { "@aws-sdk/client-device-farm": "^3.1110.0", "@ephox/bedrock-client": "^17.0.0", "@ephox/bedrock-common": "^17.0.0", "@ephox/bedrock-runner": "^17.1.0", "@jsdevtools/coverage-istanbul-loader": "^3.0.5", "@lambdatest/node-tunnel": "^4.0.12", "@rspack/core": "^2.1.10", "@rspack/dev-server": "^2.2.0", "@wdio/globals": "^8.46.0", "async": "^3.2.6", "cli-highlight": "^2.1.11", "command-line-args": "^6.0.2", "command-line-usage": "^7.0.4", "core-js": "^3.50.0", "core-js-bundle": "^3.50.0", "cross-spawn": "^7.0.6", "deepmerge": "^4.3.1", "etag": "^1.8.1", "finalhandler": "^2.1.1", "fork-ts-checker-webpack-plugin": "^9.1.0", "fresh": "^0.5.2", "glob": "^13.0.6", "grunt": "^1.6.3", "jquery": "^4.0.0", "mime-types": "^3.0.2", "mkdirp": "^3.0.1", "portfinder": "^1.0.38", "recursive-readdir-sync": "^1.0.6", "serve-static": "^2.2.1", "source-map-loader": "^5.0.0", "split2": "^4.2.0", "ts-checker-rspack-plugin": "^1.6.1", "ts-loader": "^9.6.2", "tsconfig-paths-webpack-plugin": "^4.2.0", "webdriverio": "^8.46.0", "webpack": "^5.109.2", "webpack-dev-server": "^6.0.0", "which": "^7.0.0", "xml-writer": "^1.7.0" }, "peerDependencies": { "typescript": ">=3.8.0" }, "bin": { "bedrock": "bin/bedrock.cjs", "bedrock-auto": "bin/bedrock-auto.cjs" } }, "sha512-SnNCx1LLeDEgC3ZhVG3K5YC0Ru+xNHs27RFoT9HybT9EIH+SAd3aCpv6RB/+zinoFRNs0R7RIQyEPJ95WgH8Dg=="],
 
     "@ephox/boss": ["@ephox/boss@workspace:modules/boss"],
 
