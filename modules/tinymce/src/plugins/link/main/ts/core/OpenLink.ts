@@ -1,4 +1,4 @@
-import { Singleton, type Optional, Optionals, Strings } from '@ephox/katamari';
+import { Arr, Singleton, type Optional, Optionals, Strings } from '@ephox/katamari';
 
 import type Editor from 'tinymce/core/api/Editor';
 import VK from 'tinymce/core/api/util/VK';
@@ -35,6 +35,14 @@ const hasOnlyAltModifier = (e: KeyboardEvent) => {
   return e.altKey === true && e.shiftKey === false && e.ctrlKey === false && e.metaKey === false;
 };
 
+const openEnclosingDetails = (editor: Editor, target: HTMLElement): void => {
+  Arr.each(editor.dom.getParents(target.parentNode, 'details', editor.getBody()), (details) => {
+    if (!details.querySelector(':scope > summary')?.contains(target)) {
+      details.setAttribute('open', 'open');
+    }
+  });
+};
+
 const gotoLink = (editor: Editor, a: HTMLAnchorElement | undefined): void => {
   if (a) {
     const href = Utils.getHref(a);
@@ -42,6 +50,7 @@ const gotoLink = (editor: Editor, a: HTMLAnchorElement | undefined): void => {
       const id = Strings.removeLeading(href, '#');
       const targetEl = editor.dom.select(`[id="${id}"],[name="${id}"]`);
       if (targetEl.length) {
+        openEnclosingDetails(editor, targetEl[0]);
         editor.selection.scrollIntoView(targetEl[0], true);
       }
     } else {

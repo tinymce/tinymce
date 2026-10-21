@@ -84,6 +84,14 @@ const hasAccordion = (editor: Editor, elm: SugarElement<Node>): boolean => {
   return SelectorExists.closest(elm, 'details', isRoot);
 };
 
+const openEnclosingDetails = (editor: Editor, target: HTMLElement): void => {
+  Arr.each(editor.dom.getParents(target.parentNode, 'details', editor.getBody()), (details) => {
+    if (!details.querySelector(':scope > summary')?.contains(target)) {
+      details.setAttribute('open', 'open');
+    }
+  });
+};
+
 const processDisabledEvents = (editor: Editor, e: Event): void => {
   /*
     If an event is a click event on or within an anchor, and the CMD/CTRL key is
@@ -105,6 +113,7 @@ const processDisabledEvents = (editor: Editor, e: Event): void => {
           const id = Strings.removeLeading(href, '#');
           const targetEl = editor.dom.select(`[id="${id}"],[name="${id}"]`);
           if (targetEl.length) {
+            openEnclosingDetails(editor, targetEl[0]);
             editor.selection.scrollIntoView(targetEl[0], true);
           }
         } else {
