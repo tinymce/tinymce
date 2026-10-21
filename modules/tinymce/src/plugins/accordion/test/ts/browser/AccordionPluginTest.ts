@@ -317,6 +317,13 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
     }, false);
   });
 
+  it('TINYMCE-14737: Record an accordion opened through its open attribute, as anchor navigation does, as open in the content', async () => {
+    const editor = hook.editor();
+    editor.setContent(AccordionUtils.createAccordion({ open: false }));
+    await AccordionUtils.pOpenAccordionByAttribute(editor);
+    TinyAssertions.assertContent(editor, AccordionUtils.createAccordion({ open: true }));
+  });
+
   it('TINY-9760: Prevent inserting an accordion into noneditable elements', () => {
     const editor = hook.editor();
     editor.setContent('<div contenteditable="false"><p>noneditable</p></div>');

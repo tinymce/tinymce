@@ -304,6 +304,24 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
       editor.options.set('disabled', false);
     });
 
+    it('TINYMCE-14737: processDisabledEvents should open a closed details containing the bookmark in disabled mode', () => {
+      const editor = hook.editor();
+      const body = TinyDom.body(editor);
+      const doc = TinyDom.document(editor);
+      editor.resetContent();
+      editor.options.set('disabled', true);
+      editor.setContent('<p><a href="#someBookmark">internal bookmark</a></p><div style="padding-top: 2000px;"></div><details><summary>Summary</summary><p><a id="someBookmark"></a>target</p></details>');
+
+      const details = UiFinder.findIn<HTMLDetailsElement>(body, 'details').getOrDie();
+      assert.isFalse(details.dom.open, 'Details should start closed');
+      const yPos = Scroll.get(doc).top;
+      const anchor = UiFinder.findIn(body, 'a[href="#someBookmark"]').getOrDie();
+      Mouse.click(anchor);
+      assert.isTrue(details.dom.open, 'Details should have been opened');
+      assert.notEqual(Scroll.get(doc).top, yPos, 'assert yPos has changed i.e. has scrolled');
+      editor.options.set('disabled', false);
+    });
+
     const assertBodyClass = (editor: Editor, cls: string, state: boolean) => {
       assert.equal(Class.has(TinyDom.body(editor), cls), state, 'Should be the expected class state');
     };

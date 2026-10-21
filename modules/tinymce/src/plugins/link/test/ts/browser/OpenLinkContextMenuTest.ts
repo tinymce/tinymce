@@ -1,8 +1,9 @@
-import { Keys, TestStore } from '@ephox/agar';
-import { after, afterEach, before, describe, it } from '@ephox/bedrock-client';
+import { Keys, TestStore, UiFinder } from '@ephox/agar';
+import { after, afterEach, before, beforeEach, describe, it } from '@ephox/bedrock-client';
 import { PlatformDetection } from '@ephox/sand';
 import { DomEvent, type EventUnbinder, SugarBody } from '@ephox/sugar';
-import { TinyContentActions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
+import { TinyContentActions, TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
+import { assert } from 'chai';
 
 import type Editor from 'tinymce/core/api/Editor';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
@@ -127,6 +128,51 @@ describe('browser.tinymce.plugins.link.OpenLinkContextMenuTest', () => {
         altKey: true,
       });
       store.assertEq('Should not throw an error and should not attempt to open external link', []);
+    });
+  });
+
+  describe('Anchor links into closed details', () => {
+    const linkAndSpacer = '<p><a href="#someBookmark">internal bookmark</a></p><div style="padding-top: 2000px;"></div>';
+
+    const getDetails = (editor: Editor, selector: string): HTMLDetailsElement =>
+      UiFinder.findIn<HTMLDetailsElement>(TinyDom.body(editor), selector).getOrDie().dom;
+
+    const followAnchorLink = (editor: Editor): void => {
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 4);
+      TinyContentActions.keydown(editor, Keys.enter(), { altKey: true });
+    };
+
+    const assertTargetInView = (editor: Editor): void => {
+      const { top, bottom } = UiFinder.findIn<HTMLElement>(TinyDom.body(editor), '#someBookmark').getOrDie().dom.getBoundingClientRect();
+      assert.isAtLeast(top, 0, 'Target should start inside the viewport');
+      assert.isAtMost(bottom, editor.getWin().innerHeight, 'Target should end inside the viewport');
+    };
+
+    beforeEach(() => hook.editor().getWin().scrollTo(0, 0));
+
+    it('TINYMCE-14737: Should open the closed details around the target', () => {
+      const editor = hook.editor();
+      editor.setContent(linkAndSpacer + '<details><summary>Summary</summary><p id="someBookmark">target</p></details>');
+      followAnchorLink(editor);
+      assert.isTrue(getDetails(editor, 'details').open, 'Details should have been opened');
+      assertTargetInView(editor);
+    });
+
+    it('TINYMCE-14737: Should open every closed details around the target', () => {
+      const editor = hook.editor();
+      editor.setContent(linkAndSpacer + '<details id="outer-details"><summary>Outer</summary><details id="inner-details"><summary>Inner</summary><p id="someBookmark">target</p></details></details>');
+      followAnchorLink(editor);
+      assert.isTrue(getDetails(editor, '#outer-details').open, 'Outer details should have been opened');
+      assert.isTrue(getDetails(editor, '#inner-details').open, 'Inner details should have been opened');
+      assertTargetInView(editor);
+    });
+
+    it('TINYMCE-14737: Should leave the details closed when the target is in its summary', () => {
+      const editor = hook.editor();
+      editor.setContent(linkAndSpacer + '<details><summary><span id="someBookmark">Summary</span></summary><p>body</p></details>');
+      followAnchorLink(editor);
+      assert.isFalse(getDetails(editor, 'details').open, 'Details should still be closed');
+      assertTargetInView(editor);
     });
   });
 });
