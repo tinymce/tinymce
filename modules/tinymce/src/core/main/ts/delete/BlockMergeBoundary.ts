@@ -92,5 +92,6 @@ const read = (schema: Schema, rootNode: HTMLElement, forward: boolean, rng: Rang
   rng.collapsed ? readFromRange(schema, rootNode, forward, rng) : Optional.none();
 
 export {
-  read
+  read,
+  getClosestHost
 };

@@ -56,6 +56,8 @@ describe('browser.tinymce.plugins.accordion.FilterContentTest', () => {
     });
   };
 
+  const emptyParagraphAfter = () => ApproxStructure.fromHtml('<p><br data-mce-bogus="1"></p>');
+
   const buildContentStructure = (contentStructure: ContentStructure) => {
     const { before, accordion, after } = contentStructure;
     return ApproxStructure.build((s, str, arr) => {
@@ -83,7 +85,8 @@ describe('browser.tinymce.plugins.accordion.FilterContentTest', () => {
       TinyAssertions.assertContentStructure(
         editor,
         buildContentStructure({
-          accordion: buildAccordionStructure({})
+          accordion: buildAccordionStructure({}),
+          after: emptyParagraphAfter
         })
       );
     });
@@ -101,7 +104,8 @@ describe('browser.tinymce.plugins.accordion.FilterContentTest', () => {
         TinyAssertions.assertContentStructure(
           editor,
           buildContentStructure({
-            accordion: buildAccordionStructure({})
+            accordion: buildAccordionStructure({}),
+            after: emptyParagraphAfter
           })
         );
       });
@@ -139,6 +143,7 @@ describe('browser.tinymce.plugins.accordion.FilterContentTest', () => {
           accordion: buildAccordionStructure({
             isSelected: false
           }),
+          after: emptyParagraphAfter
         })
       );
     });
@@ -157,6 +162,7 @@ describe('browser.tinymce.plugins.accordion.FilterContentTest', () => {
             open: false,
             isSelected: false
           }),
+          after: emptyParagraphAfter
         })
       );
     });
@@ -177,6 +183,7 @@ describe('browser.tinymce.plugins.accordion.FilterContentTest', () => {
             isSelected: false,
             body: [ '<p><strong>First</strong></p>', '<h2>Second</h2>' ]
           }),
+          after: emptyParagraphAfter
         })
       );
     });

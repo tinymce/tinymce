@@ -40,6 +40,8 @@ const isBeforeTable = matchesElementPosition(true, NodeType.isTable);
 const isAfterTable = matchesElementPosition(false, NodeType.isTable);
 const isBeforeContentEditableFalse = matchesElementPosition(true, isCefNode);
 const isAfterContentEditableFalse = matchesElementPosition(false, isCefNode);
+const isBeforeDetails = matchesElementPosition(true, NodeType.isDetails);
+const isAfterDetails = matchesElementPosition(false, NodeType.isDetails);
 
 export {
   isBeforeSpace,
@@ -52,5 +54,7 @@ export {
   isBeforeImageBlock,
   isAfterImageBlock,
   isBeforeMedia,
-  isAfterMedia
+  isAfterMedia,
+  isBeforeDetails,
+  isAfterDetails
 };

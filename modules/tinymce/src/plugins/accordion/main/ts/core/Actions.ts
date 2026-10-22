@@ -1,6 +1,6 @@
-import { Id, Arr } from '@ephox/katamari';
+import { Arr, Id } from '@ephox/katamari';
 import { DomDescent } from '@ephox/phoenix';
-import { Attribute, SelectorFind, SugarElement } from '@ephox/sugar';
+import { Attribute, Compare, Insert, SelectorFind, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
 import type Editor from 'tinymce/core/api/Editor';
 
@@ -9,6 +9,20 @@ import * as Options from '../api/Options';
 
 import * as Identifiers from './Identifiers';
 import * as Utils from './Utils';
+
+const isIgnoredSibling = (node: SugarElement<Node>): boolean =>
+  SugarNode.isText(node) && /^[ \t\r\n]*$/.test(node.dom.data) || SugarNode.isElement(node) && Attribute.has(node, 'data-mce-bogus');
+
+// Add an empty block after an accordion that ends the document so the caret can be placed after it
+const addTrailingBlockIfLast = (editor: Editor, details: SugarElement<Element>): void => {
+  const body = SugarElement.fromDom(editor.getBody());
+  const isDirectChildOfBody = Traverse.parent(details).exists((parent) => Compare.eq(parent, body));
+  const isLast = Arr.forall(Traverse.nextSiblings(details), isIgnoredSibling);
+  if (isDirectChildOfBody && isLast) {
+    const block = editor.dom.create(Options.getForcedRootBlock(editor), Options.getForcedRootBlockAttrs(editor), '<br data-mce-bogus="1">');
+    Insert.after(details, SugarElement.fromDom(block));
+  }
+};
 
 const insertAccordion = (editor: Editor): void => {
   if (!Utils.isInsertAllowed(editor)) {
@@ -33,6 +47,7 @@ const insertAccordion = (editor: Editor): void => {
 
     SelectorFind.descendant(editorBody, `[data-mce-id="${uid}"]`).each((detailsElm) => {
       Attribute.remove(detailsElm, 'data-mce-id');
+      addTrailingBlockIfLast(editor, detailsElm);
       SelectorFind.descendant(detailsElm, `summary`).each((summaryElm) => {
         // Set the cursor location to be at the end of the summary text
         const rng = editor.dom.createRng();

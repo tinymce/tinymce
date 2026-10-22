@@ -4,6 +4,7 @@ import { Arr, Fun, Optional } from '@ephox/katamari';
 import { ContentEditable, Css, Html, Insert, Remove, SugarBody, SugarElement, SugarLocation } from '@ephox/sugar';
 import { assert } from 'chai';
 
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import { FakeCaretPosition, closestCaretCandidateNodeRect, closestFakeCaretCandidate } from 'tinymce/core/caret/ClosestCaretCandidate';
 
 interface TestCaretInfo {
@@ -305,7 +306,8 @@ describe('browser.tinymce.core.ClosestCaretCandidateTest', () => {
       const container = createContainer(args.html);
       const target = Cursors.calculateOne(container, args.targetPath) as SugarElement<Element>;
       const pos = SugarLocation.absolute(target);
-      const actualCaretInfo = closestFakeCaretCandidate(container.dom, pos.left + args.dx, pos.top + args.dy);
+      const dom = DOMUtils(document, { root_element: container.dom });
+      const actualCaretInfo = closestFakeCaretCandidate(dom, container.dom, pos.left + args.dx, pos.top + args.dy);
 
       drawHelperPoint(container, pos.left + args.dx, pos.top + args.dy, 'red');
 

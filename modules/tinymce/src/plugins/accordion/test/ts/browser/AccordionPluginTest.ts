@@ -69,7 +69,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
     testInsertingAccordion(hook.editor(), {
       initialContent: '<ol><li>tiny</li></ol>',
       initialCursor: [[ 0, 0, 0 ], 'tiny'.length ],
-      assertContent: `<ol><li>tiny${AccordionUtils.createAccordion()}</li></ol>`,
+      assertContent: `<ol><li>tiny${AccordionUtils.createAccordion({}, true)}</li></ol>`,
       assertCursor: [[ 0, 0, 1, 0, 0 ], 'Accordion summary…'.length ],
     });
   });
@@ -78,7 +78,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
     testInsertingAccordion(hook.editor(), {
       initialContent: '<dl><dt>tiny</dt></dl>',
       initialCursor: [[ 0, 0, 0 ], 'tiny'.length ],
-      assertContent: `<dl><dt>tiny${AccordionUtils.createAccordion()}</dt></dl>`,
+      assertContent: `<dl><dt>tiny${AccordionUtils.createAccordion({}, true)}</dt></dl>`,
       assertCursor: [[ 0, 0, 1, 0, 0 ], 'Accordion summary…'.length ],
     });
   });
@@ -87,7 +87,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
     testInsertingAccordion(hook.editor(), {
       initialContent: '<dl><dd>tiny</dd></dl>',
       initialCursor: [[ 0, 0, 0 ], 'tiny'.length ],
-      assertContent: `<dl><dd>tiny${AccordionUtils.createAccordion()}</dd></dl>`,
+      assertContent: `<dl><dd>tiny${AccordionUtils.createAccordion({}, true)}</dd></dl>`,
       assertCursor: [[ 0, 0, 1, 0, 0 ], 'Accordion summary…'.length ],
     });
   });
@@ -96,7 +96,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
     testInsertingAccordion(hook.editor(), {
       initialContent: '<table><colgroup><col></colgroup><tbody><tr><td>&nbsp;</td></tr></tbody></table>',
       initialCursor: [[ 0, 1, 0, 0, 0 ], 0 ],
-      assertContent: `<table><colgroup><col></colgroup><tbody><tr><td>${AccordionUtils.createAccordion()}</td></tr></tbody></table>`,
+      assertContent: `<table><colgroup><col></colgroup><tbody><tr><td>${AccordionUtils.createAccordion({}, true)}</td></tr></tbody></table>`,
       assertCursor: [[ 0, 1, 0, 0, 0, 0, 0 ], 'Accordion summary…'.length ],
     });
   });
@@ -105,9 +105,47 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
     testInsertingAccordion(hook.editor(), {
       initialContent: AccordionUtils.createAccordion({ summary: 'summary', body: '<p>body</p>' }),
       initialCursor: [[ 0, 1, 0, 0 ], 'body'.length ],
-      assertContent: AccordionUtils.createAccordion({ summary: 'summary', body: `<p>body</p>${AccordionUtils.createAccordion()}` }),
+      assertContent: AccordionUtils.createAccordion({ summary: 'summary', body: `<p>body</p>${AccordionUtils.createAccordion({}, true)}` }),
       assertCursor: [[ 0, 1, 1, 0, 0 ], 'Accordion summary…'.length ],
     });
+  });
+
+  it('TINYMCE-9955: Insert an accordion between two paragraphs should not add an empty paragraph after it', () => {
+    testInsertingAccordion(hook.editor(), {
+      initialContent: '<p>a</p><p>b</p>',
+      initialCursor: [[ 0, 0 ], 'a'.length ],
+      assertContent: `<p>a</p>${AccordionUtils.createAccordion({}, true)}<p>b</p>`,
+      assertCursor: [[ 1, 0, 0 ], 'Accordion summary…'.length ],
+    });
+  });
+
+  it('TINYMCE-9955: Undo after inserting an accordion at the end of the document should remove the accordion and the empty paragraph after it', () => {
+    const editor = hook.editor();
+    editor.resetContent('<p>tiny</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 'tiny'.length);
+    editor.execCommand('InsertAccordion');
+    TinyAssertions.assertContent(editor, '<p>tiny</p>' + AccordionUtils.createAccordion());
+    editor.undoManager.undo();
+    TinyAssertions.assertContent(editor, '<p>tiny</p>');
+    assert.isFalse(editor.undoManager.hasUndo());
+  });
+
+  it('TINYMCE-9955: The empty block added after an accordion should use the forced_root_block_attrs', () => {
+    const editor = hook.editor();
+    editor.options.set('forced_root_block_attrs', { class: 'tiny' });
+    editor.setContent('<p>tiny</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 'tiny'.length);
+    editor.execCommand('InsertAccordion');
+    TinyAssertions.assertContent(editor, '<p>tiny</p>' + AccordionUtils.createAccordion({}, true) + '<p class="tiny">&nbsp;</p>');
+    editor.options.unset('forced_root_block_attrs');
+  });
+
+  it('TINYMCE-9955: Inserting an accordion with insertContent at the end of the document should not add an empty paragraph after it', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>tiny</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 'tiny'.length);
+    editor.insertContent(AccordionUtils.createAccordion({}, true));
+    TinyAssertions.assertContent(editor, '<p>tiny</p>' + AccordionUtils.createAccordion({}, true));
   });
 
   it('TINY-9730: Do not insert an accordion inside another accordion if selection is in summary', () => {
@@ -131,7 +169,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
 
   it('TINY-9731: Remove an accordion element under the cursor', () => {
     const editor = hook.editor();
-    editor.setContent(`${AccordionUtils.createAccordion()}<p>tiny</p>`);
+    editor.setContent(`${AccordionUtils.createAccordion({}, true)}<p>tiny</p>`);
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 'tiny'.length);
     editor.execCommand('RemoveAccordion');
     TinyAssertions.assertContent(editor, '<p>tiny</p>');

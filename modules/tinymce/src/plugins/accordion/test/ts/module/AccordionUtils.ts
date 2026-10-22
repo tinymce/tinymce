@@ -9,13 +9,13 @@ interface AccordionDetails {
   readonly body?: string;
 }
 
-const createAccordion = (details: AccordionDetails = {}): string => {
+const createAccordion = (details: AccordionDetails = {}, withoutEmptySpace: boolean = false): string => {
   const {
     open = true,
     summary = 'Accordion summary&hellip;',
     body = '<p>Accordion body&hellip;</p>'
   } = details;
-  return `<details class="mce-accordion"${open ? ` open="open"` : ''}><summary>${summary}</summary>${body}</details>`;
+  return `<details class="mce-accordion"${open ? ` open="open"` : ''}><summary>${summary}</summary>${body}</details>${withoutEmptySpace ? '' : '<p>&nbsp;</p>'}`;
 };
 
 // toggle is dispatched in a task of its own after the open attribute changes

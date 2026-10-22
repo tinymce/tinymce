@@ -5,7 +5,11 @@ const option = <K extends keyof EditorOptions>(name: K) => (editor: Editor) =>
   editor.options.get(name);
 
 const isDisabled = option('disabled');
+const getForcedRootBlock = option('forced_root_block');
+const getForcedRootBlockAttrs = option('forced_root_block_attrs');
 
 export {
+  getForcedRootBlock,
+  getForcedRootBlockAttrs,
   isDisabled
 };

@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
-import { TinyHooks, TinySelections, TinyAssertions } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import type Editor from 'tinymce/core/api/Editor';
 import AccordionPlugin from 'tinymce/plugins/accordion/Plugin';
@@ -26,15 +26,15 @@ describe('browser.tinymce.plugins.accordion.DirectionalityTest', () => {
     // select entire accordion
     TinySelections.setSelection(editor, [], 0, [], 1);
     editor.execCommand('mceDirectionRTL');
-    TinyAssertions.assertContent(editor, '<details class="mce-accordion" dir="rtl" open="open"><summary>Accordion summary&hellip;</summary><p>Accordion body&hellip;</p></details>');
+    TinyAssertions.assertContent(editor, '<details class="mce-accordion" dir="rtl" open="open"><summary>Accordion summary&hellip;</summary><p>Accordion body&hellip;</p></details><p>&nbsp;</p>');
     // select summary content
     TinySelections.setCursor(editor, [ 0, 0 ], 0);
     editor.execCommand('mceDirectionLTR');
-    TinyAssertions.assertContent(editor, '<details class="mce-accordion" dir="rtl" open="open"><summary dir="ltr">Accordion summary&hellip;</summary><p>Accordion body&hellip;</p></details>');
+    TinyAssertions.assertContent(editor, '<details class="mce-accordion" dir="rtl" open="open"><summary dir="ltr">Accordion summary&hellip;</summary><p>Accordion body&hellip;</p></details><p>&nbsp;</p>');
     // select accordion body content
     TinySelections.setCursor(editor, [ 0, 1, 0, 0 ], 0);
     editor.execCommand('mceDirectionLTR');
-    TinyAssertions.assertContent(editor, '<details class="mce-accordion" dir="rtl" open="open"><summary dir="ltr">Accordion summary&hellip;</summary><p dir="ltr">Accordion body&hellip;</p></details>');
+    TinyAssertions.assertContent(editor, '<details class="mce-accordion" dir="rtl" open="open"><summary dir="ltr">Accordion summary&hellip;</summary><p dir="ltr">Accordion body&hellip;</p></details><p>&nbsp;</p>');
   });
 
   it('TINY-10291: should apply RTL on nested `details` and change children directionality', () => {
@@ -45,14 +45,14 @@ describe('browser.tinymce.plugins.accordion.DirectionalityTest', () => {
     // select entire nested accordion
     TinySelections.setSelection(editor, [ 0, 1 ], 0, [ 0, 1 ], 1);
     editor.execCommand('mceDirectionRTL');
-    TinyAssertions.assertContent(editor, '<details class="mce-accordion" open="open"><summary>Accordion summary&hellip;</summary><details class="mce-accordion" dir="rtl" open="open"><summary>Accordion summary&hellip;</summary><p>Accordion body&hellip;</p></details><p>Accordion body&hellip;</p></details>');
+    TinyAssertions.assertContent(editor, '<details class="mce-accordion" open="open"><summary>Accordion summary&hellip;</summary><details class="mce-accordion" dir="rtl" open="open"><summary>Accordion summary&hellip;</summary><p>Accordion body&hellip;</p></details><p>Accordion body&hellip;</p></details><p>&nbsp;</p>');
     // select nested summary content
     TinySelections.setCursor(editor, [ 0, 1, 0, 0 ], 0);
     editor.execCommand('mceDirectionLTR');
-    TinyAssertions.assertContent(editor, '<details class="mce-accordion" open="open"><summary>Accordion summary&hellip;</summary><details class="mce-accordion" dir="rtl" open="open"><summary dir="ltr">Accordion summary&hellip;</summary><p>Accordion body&hellip;</p></details><p>Accordion body&hellip;</p></details>');
+    TinyAssertions.assertContent(editor, '<details class="mce-accordion" open="open"><summary>Accordion summary&hellip;</summary><details class="mce-accordion" dir="rtl" open="open"><summary dir="ltr">Accordion summary&hellip;</summary><p>Accordion body&hellip;</p></details><p>Accordion body&hellip;</p></details><p>&nbsp;</p>');
     // select nested accordion body content
     TinySelections.setCursor(editor, [ 0, 1, 0, 1, 0 ], 0);
     editor.execCommand('mceDirectionLTR');
-    TinyAssertions.assertContent(editor, '<details class="mce-accordion" open="open"><summary>Accordion summary&hellip;</summary><details class="mce-accordion" dir="rtl" open="open"><summary dir="ltr">Accordion summary&hellip;</summary><p dir="ltr">Accordion body&hellip;</p></details><p>Accordion body&hellip;</p></details>');
+    TinyAssertions.assertContent(editor, '<details class="mce-accordion" open="open"><summary>Accordion summary&hellip;</summary><details class="mce-accordion" dir="rtl" open="open"><summary dir="ltr">Accordion summary&hellip;</summary><p dir="ltr">Accordion body&hellip;</p></details><p>Accordion body&hellip;</p></details><p>&nbsp;</p>');
   });
 });

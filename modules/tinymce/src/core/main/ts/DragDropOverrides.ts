@@ -258,7 +258,7 @@ const start = (state: Singleton.Value<State>, editor: Editor) => (e: EditorEvent
 
 const placeCaretAt = (editor: Editor, clientX: number, clientY: number) => {
   editor._selectionOverrides.hideFakeCaret();
-  ClosestCaretCandidate.closestFakeCaretCandidate(editor.getBody(), clientX, clientY).fold(
+  ClosestCaretCandidate.closestFakeCaretCandidate(editor.dom, editor.getBody(), clientX, clientY).fold(
     () => editor.selection.placeCaretAt(clientX, clientY),
     (caretInfo) => {
       const range = editor._selectionOverrides.showCaret(1, caretInfo.node as HTMLElement, caretInfo.position === ClosestCaretCandidate.FakeCaretPosition.Before, false);

@@ -84,18 +84,20 @@ describe('browser.tinymce.core.delete.DeleteDetailsTest', () => {
   });
 
   context('Into details', () => {
-    it('Delete forward before details should do nothing', () => testDeleteForward({
+    it('Delete forward in first empty block before details should remove the block and move caret to summary', () => testDeleteForward({
       html: '<p>&nbsp;</p><details open=""><summary>s1</summary><div><p>&nbsp;</p></div></details>',
       selection: caret([ 0 ], 0),
-      expectedSelection: caret([ 0 ], 0),
-      expectedPrevented: true
+      expectedSelection: caret([ 0, 0, 0 ], 0),
+      expectedPrevented: true,
+      expectedHtml: '<details open=""><summary>s1</summary><div><p>&nbsp;</p></div></details>'
     }));
 
-    it('Delete backward after details should move caret but not change the content', () => testDeleteBackward({
+    it('Delete backward in last empty block after details should remove the block and move caret to end of body', () => testDeleteBackward({
       html: '<details open=""><summary>s1</summary><div><p>body</p></div></details><p>&nbsp;</p>',
       selection: caret([ 1 ], 0),
       expectedSelection: caret([ 0, 1, 0, 0 ], 'body'.length),
-      expectedPrevented: true
+      expectedPrevented: true,
+      expectedHtml: '<details open=""><summary>s1</summary><div><p>body</p></div></details>'
     }));
 
     it('Delete forward in last empty block after details should do nothing', () => testDeleteForward({
@@ -144,19 +146,152 @@ describe('browser.tinymce.core.delete.DeleteDetailsTest', () => {
   });
 
   context('Nested details', () => {
-    it('TINY-9965: Delete forward before in first block before nested details should do nothing', () => testDeleteForward({
+    it('TINY-9965: Delete forward in first empty block before nested details should remove the block and move caret to nested summary', () => testDeleteForward({
       html: '<details open=""><summary>s1</summary><div><p>&nbsp;</p><details open=""><summary>s2</summary><div>body</div></details></div></details>',
       selection: caret([ 0, 1, 0 ], 0),
-      expectedSelection: caret([ 0, 1, 0 ], 0),
-      expectedPrevented: true
+      expectedSelection: caret([ 0, 1, 0, 0, 0 ], 0),
+      expectedPrevented: true,
+      expectedHtml: '<details open=""><summary>s1</summary><div><details open=""><summary>s2</summary><div>body</div></details></div></details>'
     }));
 
-    it('TINY-9965: Delete backward in last block after nested details should just move caret', () => testDeleteBackward({
+    it('TINY-9965: Delete backward in last empty block after nested details should remove the block and move caret to end of nested body', () => testDeleteBackward({
       html: '<details open=""><summary>s1</summary><div><details open=""><summary>s2</summary><div>body</div></details><p>&nbsp;</p></div></details>',
       selection: caret([ 0, 1, 1 ], 0),
       expectedSelection: caret([ 0, 1, 0, 1, 0 ], 'body'.length),
-      expectedPrevented: true
+      expectedPrevented: true,
+      expectedHtml: '<details open=""><summary>s1</summary><div><details open=""><summary>s2</summary><div>body</div></details></div></details>'
     }));
+  });
+
+  context('TINYMCE-9955: Empty block wrapped in a container next to details', () => {
+    const details = '<details open=""><summary>s1</summary><div><p>body</p></div></details>';
+
+    it('TINYMCE-9955: Delete forward in empty block wrapped in a div before details should remove the wrapper', () => testDeleteForward({
+      html: '<div><p>&nbsp;</p></div>' + details,
+      selection: caret([ 0, 0 ], 0),
+      expectedSelection: caret([ 0, 0, 0 ], 0),
+      expectedPrevented: true,
+      expectedHtml: details
+    }));
+
+    it('TINYMCE-9955: Delete forward in empty list item before details should remove the list', () => {
+      testDeleteForward({
+        html: '<ul><li>&nbsp;</li></ul>' + details,
+        selection: caret([ 0, 0 ], 0),
+        expectedSelection: caret([ 0, 0, 0 ], 0),
+        expectedPrevented: true,
+        expectedHtml: details
+      });
+      // The serializer drops an empty list, so also check the live DOM
+      TinyAssertions.assertContentPresence(hook.editor(), { ul: 0 });
+    });
+
+    it('TINYMCE-9955: Delete forward in deeply nested empty block before details should remove the outermost empty ancestor', () => testDeleteForward({
+      html: '<blockquote><div><p>&nbsp;</p></div></blockquote>' + details,
+      selection: caret([ 0, 0, 0 ], 0),
+      expectedSelection: caret([ 0, 0, 0 ], 0),
+      expectedPrevented: true,
+      expectedHtml: details
+    }));
+
+    it('TINYMCE-9955: Delete backward in empty block wrapped in a div after details should remove the wrapper', () => testDeleteBackward({
+      html: details + '<div><p>&nbsp;</p></div>',
+      selection: caret([ 1, 0 ], 0),
+      expectedSelection: caret([ 0, 1, 0, 0 ], 'body'.length),
+      expectedPrevented: true,
+      expectedHtml: details
+    }));
+
+    it('TINYMCE-9955: Delete backward in empty list item after details should remove the list', () => {
+      testDeleteBackward({
+        html: details + '<ul><li>&nbsp;</li></ul>',
+        selection: caret([ 1, 0 ], 0),
+        expectedSelection: caret([ 0, 1, 0, 0 ], 'body'.length),
+        expectedPrevented: true,
+        expectedHtml: details
+      });
+      // The serializer drops an empty list, so also check the live DOM
+      TinyAssertions.assertContentPresence(hook.editor(), { ul: 0 });
+    });
+
+    it('TINYMCE-9955: Delete backward in deeply nested empty block after details should remove the outermost empty ancestor', () => testDeleteBackward({
+      html: details + '<blockquote><div><p>&nbsp;</p></div></blockquote>',
+      selection: caret([ 1, 0, 0 ], 0),
+      expectedSelection: caret([ 0, 1, 0, 0 ], 'body'.length),
+      expectedPrevented: true,
+      expectedHtml: details
+    }));
+
+    it('TINYMCE-9955: Delete forward in empty block in a wrapper with other content before details should only remove the empty block', () => testDeleteForward({
+      html: '<div><p>abc</p><p>&nbsp;</p></div>' + details,
+      selection: caret([ 0, 1 ], 0),
+      expectedSelection: caret([ 1, 0, 0 ], 0),
+      expectedPrevented: true,
+      expectedHtml: '<div><p>abc</p></div>' + details
+    }));
+
+    it('TINYMCE-9955: Delete backward in empty block in a wrapper with other content after details should only remove the empty block', () => testDeleteBackward({
+      html: details + '<div><p>&nbsp;</p><p>abc</p></div>',
+      selection: caret([ 1, 0 ], 0),
+      expectedSelection: caret([ 0, 1, 0, 0 ], 'body'.length),
+      expectedPrevented: true,
+      expectedHtml: details + '<div><p>abc</p></div>'
+    }));
+
+    it('TINYMCE-9955: Delete forward in empty last list item before details should only remove the list item', () => testDeleteForward({
+      html: '<ul><li>a</li><li>&nbsp;</li></ul>' + details,
+      selection: caret([ 0, 1 ], 0),
+      expectedSelection: caret([ 1, 0, 0 ], 0),
+      expectedPrevented: true,
+      expectedHtml: '<ul><li>a</li></ul>' + details
+    }));
+
+    it('TINYMCE-9955: Delete backward in empty first list item after details should only remove the list item', () => testDeleteBackward({
+      html: details + '<ul><li>&nbsp;</li><li>a</li></ul>',
+      selection: caret([ 1, 0 ], 0),
+      expectedSelection: caret([ 0, 1, 0, 0 ], 'body'.length),
+      expectedPrevented: true,
+      expectedHtml: details + '<ul><li>a</li></ul>'
+    }));
+  });
+
+  context('TINYMCE-9955: Details inside or next to tables', () => {
+    const details = '<details open=""><summary>s1</summary><div><p>body</p></div></details>';
+    const table = (cellHtml: string) => `<table><tbody><tr><td>${cellHtml}</td></tr></tbody></table>`;
+
+    const testDeleteKeepsTable = (forward: boolean, html: string, selection: Cursors.CursorPath) => {
+      const editor = hook.editor();
+      editor.setContent(html);
+      TinySelections.setSelection(editor, selection.startPath, selection.soffset, selection.finishPath, selection.foffset);
+      DetailsDelete.backspaceDelete(editor, forward, 'character').each((action) => action());
+      TinyAssertions.assertContent(editor, html);
+      TinyAssertions.assertContentPresence(editor, { table: 1, td: 1 });
+      TinyAssertions.assertSelection(editor, selection.startPath, selection.soffset, selection.finishPath, selection.foffset);
+    };
+
+    it('TINYMCE-9955: Delete forward in empty block before details inside a table cell should remove the block and keep the cell', () => testDeleteForward({
+      html: table('<p>&nbsp;</p>' + details),
+      selection: caret([ 0, 0, 0, 0, 0 ], 0),
+      expectedSelection: caret([ 0, 0, 0, 0, 0, 0, 0 ], 0),
+      expectedPrevented: true,
+      expectedHtml: table(details)
+    }));
+
+    it('TINYMCE-9955: Delete backward in empty block after details inside a table cell should remove the block and keep the cell', () => testDeleteBackward({
+      html: table(details + '<p>&nbsp;</p>'),
+      selection: caret([ 0, 0, 0, 0, 1 ], 0),
+      expectedSelection: caret([ 0, 0, 0, 0, 0, 1, 0, 0 ], 'body'.length),
+      expectedPrevented: true,
+      expectedHtml: table(details)
+    }));
+
+    it('TINYMCE-9955: Delete forward in empty wrapped block in a table cell before details should not delete out of the cell', () =>
+      testDeleteKeepsTable(true, table('<div><p>&nbsp;</p></div>') + details, caret([ 0, 0, 0, 0, 0, 0 ], 0))
+    );
+
+    it('TINYMCE-9955: Delete backward in empty wrapped block in a table cell after details should not delete out of the cell', () =>
+      testDeleteKeepsTable(false, details + table('<div><p>&nbsp;</p></div>'), caret([ 1, 0, 0, 0, 0, 0 ], 0))
+    );
   });
 });
 

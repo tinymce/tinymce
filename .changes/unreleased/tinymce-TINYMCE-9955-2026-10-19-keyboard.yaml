@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: It was not possible to place the caret between two adjacent accordions using the arrow keys.
+time: 2026-10-19T12:00:01.000000+02:00
+custom:
+  Issue: TINYMCE-9955

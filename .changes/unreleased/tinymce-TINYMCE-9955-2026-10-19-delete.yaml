@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Pressing Delete or Backspace did not remove an empty block before or after an accordion.
+time: 2026-10-19T12:00:02.000000+02:00
+custom:
+  Issue: TINYMCE-9955

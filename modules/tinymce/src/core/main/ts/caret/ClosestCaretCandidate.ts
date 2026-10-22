@@ -1,6 +1,8 @@
 import { Arr, Fun, Optional } from '@ephox/katamari';
 import { Compare, SugarElement, Traverse } from '@ephox/sugar';
 
+import type DOMUtils from '../api/dom/DOMUtils';
+import * as DetailsUtils from '../dom/DetailsUtils';
 import { getClientRects, type NodeClientRect } from '../dom/Dimensions';
 import * as NodeType from '../dom/NodeType';
 import * as ClientRect from '../geom/ClientRect';
@@ -135,9 +137,15 @@ const closestCaretCandidateNodeRect = (root: HTMLElement, clientX: number, clien
   return traverseUp(rootElm, element, clientX, clientY);
 };
 
-const closestFakeCaretCandidate = (root: HTMLElement, clientX: number, clientY: number): Optional<FakeCaretInfo> =>
+const fixRectForDetails = (dom: DOMUtils, rect: NodeClientRect, clientX: number): Optional<NodeClientRect> =>
+  DetailsUtils.getClosestDetails(dom, rect.node).filter((el) => {
+    const r = el.getBoundingClientRect();
+    return r.left > clientX || r.right < clientX;
+  }).map((el) => ({ ...rect, node: el }));
+
+const closestFakeCaretCandidate = (dom: DOMUtils, root: HTMLElement, clientX: number, clientY: number): Optional<FakeCaretInfo> =>
   closestCaretCandidateNodeRect(root, clientX, clientY)
-    .filter((rect) => isFakeCaretTarget(rect.node))
+    .bind((rect) => isFakeCaretTarget(rect.node) ? Optional.from(rect) : fixRectForDetails(dom, rect, clientX))
     .map((rect) => clientInfo(rect, clientX));
 
 export {

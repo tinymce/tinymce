@@ -1,7 +1,7 @@
 import { Keys, UiFinder } from '@ephox/agar';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { SugarBody, TextContent } from '@ephox/sugar';
-import { TinyHooks, TinySelections, TinyAssertions, TinyContentActions } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import type Editor from 'tinymce/core/api/Editor';
@@ -34,10 +34,10 @@ describe('browser.tinymce.plugins.accordion.AccordionNavigationTest', () => {
 
   it('TINY-9827: should move cursor below the last child accordion on ArrowDown key pressing', () => {
     const editor = hook.editor();
-    editor.execCommand('InsertAccordion');
+    editor.setContent(AccordionUtils.createAccordion({}, true));
     TinySelections.setCursor(editor, [ 0, 1, 0 ], 0);
     TinyContentActions.keystroke(editor, Keys.down());
-    TinyAssertions.assertContent(editor, AccordionUtils.createAccordion() + `<p>&nbsp;</p>`);
+    TinyAssertions.assertContent(editor, AccordionUtils.createAccordion());
     TinyAssertions.assertCursor(editor, [ 1 ], 0);
   });
 

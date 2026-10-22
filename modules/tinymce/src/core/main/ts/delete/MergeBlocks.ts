@@ -23,7 +23,7 @@ const extractChildren = (block: SugarElement<Element>, schema: Schema): SugarEle
   return children;
 };
 
-const removeEmptyRoot = (schema: Schema, rootNode: SugarElement<Node>, block: SugarElement<Element>) => {
+const removeEmptyRoot = (schema: Schema, rootNode: SugarElement<Node>, block: SugarElement<Element>): void => {
   const parents = Parents.parentsAndSelf(block, rootNode);
   return Arr.find(parents.reverse(), (element) => Empty.isEmpty(schema, element)).each(Remove.remove);
 };
@@ -124,5 +124,6 @@ const mergeBlocks = (rootNode: SugarElement<Node>, forward: boolean, block1: Sug
   forward ? mergeBlockInto(rootNode, block2, block1, schema) : mergeBlockInto(rootNode, block1, block2, schema);
 
 export {
-  mergeBlocks
+  mergeBlocks,
+  removeEmptyRoot
 };

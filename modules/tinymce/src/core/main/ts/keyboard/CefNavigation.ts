@@ -5,7 +5,7 @@ import type EditorSelection from '../api/dom/Selection';
 import type Editor from '../api/Editor';
 import * as Options from '../api/Options';
 import CaretPosition from '../caret/CaretPosition';
-import { isAfterContentEditableFalse, isAfterTable, isBeforeContentEditableFalse, isBeforeTable } from '../caret/CaretPositionPredicates';
+import { isAfterContentEditableFalse, isAfterDetails, isAfterTable, isBeforeContentEditableFalse, isBeforeDetails, isBeforeTable } from '../caret/CaretPositionPredicates';
 import * as CaretUtils from '../caret/CaretUtils';
 import { CaretWalker, HDirection } from '../caret/CaretWalker';
 import type * as LineWalker from '../caret/LineWalker';
@@ -21,8 +21,8 @@ const moveToCeFalseHorizontally = (direction: HDirection, editor: Editor, range:
   NavigationUtils.moveHorizontally(editor, direction, range, isBeforeContentEditableFalse, isAfterContentEditableFalse, isContentEditableFalse);
 
 const moveToCeFalseVertically = (direction: LineWalker.VDirection, editor: Editor, range: Range): Optional<Range> => {
-  const isBefore = (caretPosition: CaretPosition) => isBeforeContentEditableFalse(caretPosition) || isBeforeTable(caretPosition);
-  const isAfter = (caretPosition: CaretPosition) => isAfterContentEditableFalse(caretPosition) || isAfterTable(caretPosition);
+  const isBefore = (caretPosition: CaretPosition) => isBeforeContentEditableFalse(caretPosition) || isBeforeTable(caretPosition) || isBeforeDetails(caretPosition);
+  const isAfter = (caretPosition: CaretPosition) => isAfterContentEditableFalse(caretPosition) || isAfterTable(caretPosition) || isAfterDetails(caretPosition);
   return NavigationUtils.moveVertically(editor, direction, range, isBefore, isAfter, isContentEditableFalse);
 };
 

@@ -120,7 +120,7 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
         e.preventDefault();
         FakeCaretUtils.selectNode(editor, closestContentEditable).each(setElementSelection);
       } else {
-        ClosestCaretCandidate.closestFakeCaretCandidate(rootNode, e.clientX, e.clientY).each((caretInfo) => {
+        ClosestCaretCandidate.closestFakeCaretCandidate(editor.dom, rootNode, e.clientX, e.clientY).each((caretInfo) => {
           e.preventDefault();
           const range = showCaret(1, caretInfo.node as HTMLElement, caretInfo.position === ClosestCaretCandidate.FakeCaretPosition.Before, false);
           setRange(range);

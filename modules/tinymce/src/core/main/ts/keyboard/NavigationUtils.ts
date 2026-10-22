@@ -2,7 +2,9 @@ import { Arr, Fun, Optional, Type } from '@ephox/katamari';
 
 import type Editor from '../api/Editor';
 import * as CaretContainer from '../caret/CaretContainer';
+import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
+import * as CaretPositionPredicates from '../caret/CaretPositionPredicates';
 import * as CaretUtils from '../caret/CaretUtils';
 import { CaretWalker, HDirection } from '../caret/CaretWalker';
 import * as FakeCaretUtils from '../caret/FakeCaretUtils';
@@ -10,6 +12,8 @@ import * as LineReader from '../caret/LineReader';
 import * as LineUtils from '../caret/LineUtils';
 import type { LinePosClientRect } from '../caret/LineWalker';
 import * as LineWalker from '../caret/LineWalker';
+import * as DetailsUtils from '../dom/DetailsUtils';
+import * as NodeType from '../dom/NodeType';
 import * as ScrollIntoView from '../dom/ScrollIntoView';
 import * as RangeNodes from '../selection/RangeNodes';
 import * as ArrUtils from '../util/ArrUtils';
@@ -43,6 +47,7 @@ const moveHorizontally = (editor: Editor, direction: HDirection, range: Range, i
   const caretWalker = CaretWalker(editor.getBody());
   const getNextPosFn = Fun.curry(CaretUtils.getVisualCaretPosition, forwards ? caretWalker.next : caretWalker.prev);
   const isBeforeFn = forwards ? isBefore : isAfter;
+  const dom = editor.dom;
 
   if (!range.collapsed) {
     const node = RangeNodes.getSelectedNode(range);
@@ -69,9 +74,20 @@ const moveHorizontally = (editor: Editor, direction: HDirection, range: Range, i
   let nextCaretPosition = getNextPosFn(caretPosition);
   const rangeIsInContainerBlock = CaretContainer.isRangeInCaretContainerBlock(range);
   if (!nextCaretPosition) {
-    return rangeIsInContainerBlock ? Optional.some(range) : Optional.none();
+    const tryingLeaveDetails = DetailsUtils.getClosestDetails(dom, caretPosition.container());
+    if (tryingLeaveDetails.isSome()) {
+      return tryingLeaveDetails.bind((details) => FakeCaretUtils.showCaret(direction, editor, details, !forwards, false));
+    } else {
+      return rangeIsInContainerBlock ? Optional.some(range) : Optional.none();
+    }
   } else {
     nextCaretPosition = InlineUtils.normalizePosition(forwards, nextCaretPosition);
+  }
+
+  const leavingDetails = DetailsUtils.getClosestDetails(dom, caretPosition.container()).filter((details) =>
+    NodeType.isDetails(forwards ? details.nextSibling : details.previousSibling) && !details.contains(nextCaretPosition.container()));
+  if (leavingDetails.isSome()) {
+    return leavingDetails.bind((details) => FakeCaretUtils.showCaret(direction, editor, details, !forwards, false));
   }
 
   if (isBeforeFn(nextCaretPosition)) {
@@ -99,6 +115,41 @@ const moveHorizontally = (editor: Editor, direction: HDirection, range: Range, i
   return Optional.none();
 };
 
+// Closed: end of the summary; open: end of the content, or of the last visible position of a trailing nested details
+const getLastVisiblePositionIn = (details: HTMLDetailsElement): Optional<CaretPosition> => {
+  const lastChild = details.lastChild;
+  if (!details.open) {
+    return Optional.from(details.firstElementChild).bind(CaretFinder.lastPositionIn);
+  }
+  return NodeType.isDetails(lastChild) ? getLastVisiblePositionIn(lastChild) : CaretFinder.lastPositionIn(details);
+};
+
+const getVisiblePositionIn = (forwards: boolean, details: HTMLDetailsElement): Optional<CaretPosition> =>
+  forwards ? CaretFinder.firstPositionIn(details) : getLastVisiblePositionIn(details);
+
+const getPositionBeyond = (forwards: boolean, root: HTMLElement, node: Node): Optional<CaretPosition> => {
+  const sibling = forwards ? node.nextSibling : node.previousSibling;
+  return NodeType.isDetails(sibling)
+    ? getVisiblePositionIn(forwards, sibling)
+    : CaretFinder.navigate(forwards, root, forwards ? CaretPosition.after(node) : CaretPosition.before(node));
+};
+
+// From a fake caret beside a details (normalized to before/after it): move into the details or past its caret block.
+// If there is nowhere to move to, the fake caret is kept in place.
+const moveVerticallyBesideDetails = (editor: Editor, forwards: boolean, range: Range, caretPosition: CaretPosition): Optional<Range> => {
+  const before = CaretPositionPredicates.isBeforeDetails(caretPosition);
+  if (!before && !CaretPositionPredicates.isAfterDetails(caretPosition)) {
+    return Optional.none();
+  }
+
+  const details = caretPosition.getNode(!before) as HTMLDetailsElement;
+  const sibling = forwards ? details.nextSibling : details.previousSibling;
+  const block = CaretContainer.isCaretContainerBlock(sibling) ? sibling : details;
+  const target = before === forwards ? getVisiblePositionIn(forwards, details) : getPositionBeyond(forwards, editor.getBody(), block);
+
+  return target.fold(() => Optional.some(range), (pos) => renderRangeCaretOpt(editor, pos.toRange(), false));
+};
+
 const moveVertically = (editor: Editor, direction: LineWalker.VDirection, range: Range, isBefore: (caretPosition: CaretPosition) => boolean,
                         isAfter: (caretPosition: CaretPosition) => boolean, isElement: (node: Node) => node is HTMLElement): Optional<Range> => {
   const caretPosition = CaretUtils.getNormalizedRangeEndPoint(direction, editor.getBody(), range);
@@ -107,7 +158,7 @@ const moveVertically = (editor: Editor, direction: LineWalker.VDirection, range:
   const root = editor.getBody();
 
   if (!caretClientRect) {
-    return Optional.none();
+    return moveVerticallyBesideDetails(editor, forwards, range, caretPosition);
   }
 
   if (isCefAtEdgeSelected(editor)) {

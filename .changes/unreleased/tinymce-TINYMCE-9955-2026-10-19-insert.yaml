@@ -1,0 +1,6 @@
+project: tinymce
+kind: Improved
+body: Inserting an accordion at the end of the content now adds an empty paragraph after it, so the caret can be placed below the accordion.
+time: 2026-10-19T12:00:03.000000+02:00
+custom:
+  Issue: TINYMCE-9955

@@ -43,7 +43,7 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
   const pDoDelete = (modifier?: BackspaceDeleteModifier) => pDoBackspaceDelete('Delete', modifier);
 
   const getAccordionContent = ({ summary, body }: AccordionSpec = { summary: 'summary', body: '<p>body</p>' }): string =>
-    `${AccordionUtils.createAccordion({ summary, body })}`;
+    `${AccordionUtils.createAccordion({ summary, body }, true)}`;
   const assertAccordionContent = (editor: Editor, spec?: AccordionSpec) =>
     TinyAssertions.assertContent(editor, getAccordionContent(spec));
   const createAccordion = (editor: Editor, spec?: AccordionSpec) => {
@@ -102,6 +102,7 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
       TinySelections.setCursor(editor, [ 1, 0 ], 0);
       await pDoBackspace();
       TinyAssertions.assertContentPresence(editor, { 'details > div > p': 1 });
+      TinyAssertions.assertContent(editor, AccordionUtils.createAccordion({ body: '<p>&nbsp;</p>' }));
       TinyAssertions.assertCursor(editor, [ 0, 1, 0 ], 0);
     });
 
@@ -270,23 +271,23 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
         TinyAssertions.assertCursor(editor, [ 0, 1, 0, 0 ], 'body'.length);
       });
 
-      it('TINY-9965: Nothing should happen if you delete before nested details inside details', async () => {
+      it('TINY-9965: Pressing DELETE in an empty block before nested details inside details should remove the block and move the caret to the nested summary', async () => {
         const editor = hook.editor();
         const initialContent = AccordionUtils.createAccordion({ summary: 's1', body: `<div>&nbsp;</div>${AccordionUtils.createAccordion({ summary: 's2', body: 'body' })}` });
         editor.setContent(initialContent);
         TinySelections.setCursor(editor, [ 0, 1, 0 ], 0);
         await pDoDelete();
-        TinyAssertions.assertContent(editor, initialContent);
-        TinyAssertions.assertCursor(editor, [ 0, 1, 0 ], 0);
+        TinyAssertions.assertContent(editor, AccordionUtils.createAccordion({ summary: 's1', body: AccordionUtils.createAccordion({ summary: 's2', body: 'body' }) }));
+        TinyAssertions.assertCursor(editor, [ 0, 1, 0, 0, 0 ], 0);
       });
 
-      it('TINY-9965: Backspace should only move the caret to the end of the details body if you backspace in last block after a nested details', async () => {
+      it('TINY-9965: Pressing BACKSPACE in last empty block after nested details should remove the block and move the caret to the end of the nested body', async () => {
         const editor = hook.editor();
-        const initialContent = AccordionUtils.createAccordion({ summary: 's1', body: AccordionUtils.createAccordion({ summary: 's2', body: 'body' }) + '<div>&nbsp;</div>' });
+        const initialContent = AccordionUtils.createAccordion({ summary: 's1', body: AccordionUtils.createAccordion({ summary: 's2', body: 'body' }, true) + '<div>&nbsp;</div>' });
         editor.setContent(initialContent);
         TinySelections.setCursor(editor, [ 0, 1, 1 ], 0);
         await pDoBackspace();
-        TinyAssertions.assertContent(editor, initialContent);
+        TinyAssertions.assertContent(editor, AccordionUtils.createAccordion({ summary: 's1', body: AccordionUtils.createAccordion({ summary: 's2', body: 'body' }, true) }));
         TinyAssertions.assertCursor(editor, [ 0, 1, 0, 1, 0 ], 'body'.length);
       });
     });
@@ -306,7 +307,7 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
         createAccordionAndSelectAll(editor, contentLocation);
         await pDoBackspaceDelete(deletionKey);
         const isLocationSummary = contentLocation === 'summary';
-        TinyAssertions.assertContent(editor, AccordionUtils.createAccordion(isLocationSummary ? { summary: '&nbsp;', body: '<p>body</p>' } : { summary: 'summary', body: '<p>&nbsp;</p>' }));
+        TinyAssertions.assertContent(editor, AccordionUtils.createAccordion(isLocationSummary ? { summary: '&nbsp;', body: '<p>body</p>' } : { summary: 'summary', body: '<p>&nbsp;</p>' }, true));
         TinyAssertions.assertCursor(editor, isLocationSummary ? [ 0, 0 ] : [ 0, 1, 0 ], 0);
       };
 

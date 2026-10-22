@@ -90,6 +90,9 @@ const setup = (editor: Editor): void => {
 
           const hasSummaryNode = Type.isNonNullable(summaryNode);
           const newSummaryNode = hasSummaryNode ? summaryNode : new AstNode('summary', 1);
+          if (hasSummaryNode && accordionNode.firstChild && accordionNode.firstChild !== newSummaryNode) {
+            accordionNode.insert(newSummaryNode, accordionNode.firstChild, true);
+          }
           // If there is nothing in the summary, pad it with a br
           // so the cursor can be put inside the accordion summary
           if (Type.isNullable(newSummaryNode.firstChild)) {

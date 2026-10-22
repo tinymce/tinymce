@@ -1,15 +1,18 @@
 import { Arr, Fun, Optional, Optionals, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { SugarElement } from '@ephox/sugar';
+import { Compare, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
 import type DOMUtils from '../api/dom/DOMUtils';
 import type Editor from '../api/Editor';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
+import * as BlockMergeBoundary from '../delete/BlockMergeBoundary';
 import * as DeleteUtils from '../delete/DeleteUtils';
 import * as NodeType from '../dom/NodeType';
 import * as PaddingBr from '../dom/PaddingBr';
 import * as FormatUtils from '../fmt/FormatUtils';
+
+import * as MergeBlocks from './MergeBlocks';
 
 interface DetailsElements {
   readonly startSummary: Optional<HTMLElement>;
@@ -109,6 +112,11 @@ const isPartialDelete = (rng: Range, detailsElements: DetailsElements) => {
   return isInPartiallySelectedSummary || isPartiallySelectedDetailsElements;
 };
 
+const getPosElement = (root: SugarElement<HTMLElement>, pos: CaretPosition): SugarElement<Element> => {
+  const container = SugarElement.fromDom(pos.container());
+  return SugarNode.isElement(container) ? container : Traverse.parentElement(container).getOr(root);
+};
+
 const shouldPreventDeleteIntoDetails = (editor: Editor, forward: boolean, granularity: Granularity): boolean => {
   const { dom, selection } = editor;
   const root = editor.getBody();
@@ -141,19 +149,23 @@ const shouldPreventDeleteIntoDetails = (editor: Editor, forward: boolean, granul
         const parentDetailsAtNewPos = getParentDetailsElementAtPos(dom, pos);
 
         if (isInDetailsElement(dom, pos) && !Optionals.equals(parentDetailsAtCaret, parentDetailsAtNewPos)) {
+          const rootElm = SugarElement.fromDom(root);
+          const sugarParentBlockOpt = Optional.from(parentBlock).map(SugarElement.fromDom);
+          const caretHost = BlockMergeBoundary.getClosestHost(rootElm, getPosElement(rootElm, caretPos));
+          // Never delete across an editing host boundary, e.g. from a table cell into details outside the table
+          if (!Compare.eq(caretHost, BlockMergeBoundary.getClosestHost(rootElm, getPosElement(rootElm, pos)))) {
+            return true;
+          }
+
           if (!forward) {
             moveCaretToDetailsPos(editor, pos, false);
           }
 
-          if (parentBlock && inEmptyParentBlock) {
-            if (forward && isFirstBlock) {
-              return true;
-            } else if (!forward && isLastBlock) {
-              return true;
-            }
-
-            moveCaretToDetailsPos(editor, pos, forward);
-            editor.dom.remove(parentBlock);
+          if (inEmptyParentBlock) {
+            sugarParentBlockOpt.each((sugarParentBlock) => {
+              moveCaretToDetailsPos(editor, pos, forward);
+              MergeBlocks.removeEmptyRoot(editor.schema, caretHost, sugarParentBlock);
+            });
           }
 
           return true;

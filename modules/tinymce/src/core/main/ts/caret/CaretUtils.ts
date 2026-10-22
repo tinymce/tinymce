@@ -182,14 +182,14 @@ const normalizeRange = (direction: number, root: Node, range: Range): Range => {
 
     if (location === 'before') {
       node = block.nextSibling;
-      if (isFakeCaretTarget(node)) {
+      if (isFakeCaretTarget(node) || NodeType.isDetails(node)) {
         return before(node);
       }
     }
 
     if (location === 'after') {
       node = block.previousSibling;
-      if (isFakeCaretTarget(node)) {
+      if (isFakeCaretTarget(node) || NodeType.isDetails(node)) {
         return after(node);
       }
     }
