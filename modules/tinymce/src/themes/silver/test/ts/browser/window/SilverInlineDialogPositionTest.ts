@@ -13,8 +13,7 @@ import * as DialogUtils from '../../module/DialogUtils';
 import * as PageScroll from '../../module/PageScroll';
 import { resizeEditorBy, scrollRelativeEditor } from '../../module/UiUtils';
 
-// TODO TINY-10480: Investigate flaky tests
-describe.skip('browser.tinymce.themes.silver.window.SilverInlineDialogPositionTest', () => {
+describe('browser.tinymce.themes.silver.window.SilverInlineDialogPositionTest', () => {
   const dialogSpec: Dialog.DialogSpec<{}> = {
     title: 'Silver Test Inline (Toolbar) Dialog',
     body: {

@@ -202,17 +202,24 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
         },
         // Fires the default dismiss event.
         fireDismissalEventInstead: (windowParams.persistent ? { event: 'doNotDismissYet' } : { }),
+        // The default reposition would re-anchor the dialog to the toolbar and undo any docking, so
+        // reposition and then refresh the docking instead.
         // TINY-9412: The docking behaviour for inline dialogs is inconsistent
         // for toolbar_location: bottom. We need to clarify exactly what the behaviour
         // should be. The intent here might have been that they shouldn't automatically
         // reposition at all because they aren't visually connected to the toolbar
         // (i.e. inline "toolbar" dialogs still display at the top, even when the
         // toolbar_location is bottom), but it's unclear.
-        ...isToolbarLocationTop ? { } : { fireRepositionEventInstead: { }},
+        fireRepositionEventInstead: { },
         inlineBehaviours: Behaviour.derive([
           AddEventsBehaviour.config('window-manager-inline-events', [
             AlloyEvents.run(SystemEvents.dismissRequested(), (_comp, _se) => {
               AlloyTriggers.emit(dialogUi.dialog, formCancelEvent);
+            }),
+            AlloyEvents.run(SystemEvents.repositionRequested(), () => {
+              if (isToolbarLocationTop) {
+                refreshDocking();
+              }
             })
           ]),
           ...inlineAdditionalBehaviours(editor, isStickyToolbar, isToolbarLocationTop, dismissPopups)

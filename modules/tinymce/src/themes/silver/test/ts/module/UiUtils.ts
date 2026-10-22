@@ -23,17 +23,17 @@ const resizeEditorBy = async (vector: [ number, number ], delta = 10): Promise<v
   // Simulate moving the mouse, by making a number of movements
   const numMoves = vector[1] === 0 ? Math.abs(vector[0]) / delta : Math.abs(vector[1]) / delta;
 
-  // Determine the deltas based on the number of moves to make
-  const deltaX = vector[0] / numMoves;
-  const deltaY = vector[1] / numMoves;
+  // Each move is relative to where the handle ended up after the previous one, so keep the moves to whole pixels
+  // or the fractional part is lost to the editor's rounded size on every step
+  const stepAt = (total: number, move: number) => Math.round(total * (move + 1) / numMoves) - Math.round(total * move / numMoves);
 
   const resizeHandle = UiFinder.findIn(SugarBody.body(), '.tox-statusbar__resize-handle').getOrDie();
 
   await Pointer.pWithMockPointerCapture(resizeHandle, {}, () => {
     Pointer.pointerDown(resizeHandle);
     Pointer.pointerMoveBy(resizeHandle, 0, 0);
-    Arr.range(numMoves, () => {
-      Pointer.pointerMoveBy(resizeHandle, deltaX, deltaY);
+    Arr.range(numMoves, (move) => {
+      Pointer.pointerMoveBy(resizeHandle, stepAt(vector[0], move), stepAt(vector[1], move));
     });
     Pointer.pointerUp(resizeHandle);
   });

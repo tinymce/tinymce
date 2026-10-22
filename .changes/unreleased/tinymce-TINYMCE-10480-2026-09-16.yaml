@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Dialogs opened inline from the toolbar scrolled out of view with the toolbar instead of staying at the top of the window.
+time: 2026-09-16T18:30:00.000000+10:00
+custom:
+    Issue: TINYMCE-10480
