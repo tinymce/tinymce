@@ -20,6 +20,7 @@ import {
   useState,
   useMemo,
   useEffect,
+  useLayoutEffect,
   type FC,
   useCallback,
   type MouseEventHandler
@@ -182,7 +183,9 @@ const Trigger: FC<TriggerProps> = ({
 const Toolbar = forwardRef<ToolbarHandle, ToolbarProps>(({
   children,
   onMouseDown,
-  onEscape: passedOnEscape
+  onEscape: passedOnEscape,
+  onOpen,
+  autoFocus = true
 }, ref) => {
   const {
     isOpen,
@@ -199,6 +202,12 @@ const Toolbar = forwardRef<ToolbarHandle, ToolbarProps>(({
       Optional.from(toolbarRef.current).each(focusFirstEnabledControl);
     }
   }), [ toolbarRef ]);
+
+  // Kept in a ref so a new callback on each render does not count as the toolbar opening again
+  const onOpenRef = useRef(onOpen);
+  useLayoutEffect(() => {
+    onOpenRef.current = onOpen;
+  });
 
   useEffect(() => {
     const toolbar = toolbarRef.current;
@@ -218,9 +227,12 @@ const Toolbar = forwardRef<ToolbarHandle, ToolbarProps>(({
     // Defer focus using queueMicrotask to ensure it runs after
     // the Popover API's internal focus management is complete
     window.queueMicrotask(() => {
-      focusFirstEnabledControl(toolbar);
+      if (autoFocus) {
+        focusFirstEnabledControl(toolbar);
+      }
+      onOpenRef.current?.();
     });
-  }, [ usePopover, isOpen, toolbarRef ]);
+  }, [ usePopover, isOpen, toolbarRef, autoFocus ]);
 
   const onEscape = useMemo(() => {
     if (persistent) {
@@ -274,7 +286,9 @@ const Toolbar = forwardRef<ToolbarHandle, ToolbarProps>(({
 
   const anchorName = useMemo(() => `--${Id.generate('context-toolbar')}`, []);
 
-  useEffect(() => {
+  // Applied before paint: a toolbar mounting into an already open Root (a persistent one moving to a new anchor)
+  // is visible straight away, so after paint it would show for a frame where it sits unanchored
+  useLayoutEffect(() => {
     const anchorElement = getAnchorElement();
     const toolbar = toolbarRef.current;
     if (!isOpen || !Type.isNonNullable(anchorElement) || !Type.isNonNullable(toolbar)) {

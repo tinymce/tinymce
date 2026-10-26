@@ -24,6 +24,8 @@ export interface ToolbarProps {
   readonly children: ReactNode;
   readonly onMouseDown?: MouseEventHandler<HTMLDivElement>;
   readonly onEscape?: () => void;
+  readonly autoFocus?: boolean;
+  readonly onOpen?: () => void;
 }
 
 export interface ToolbarHandle {

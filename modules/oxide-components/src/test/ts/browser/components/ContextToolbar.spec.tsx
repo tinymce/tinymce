@@ -1,6 +1,6 @@
 import * as ContextToolbar from 'oxide-components/components/contexttoolbar/ContextToolbar';
 import { classes } from 'oxide-components/utils/Styles';
-import { Fragment, type ReactNode } from 'react';
+import { Fragment, useRef, type ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
@@ -584,6 +584,45 @@ describe('browser.components.ContextToolbar', () => {
     const toolbar = container.querySelector('.tox-context-toolbar');
     expect(toolbar).toBeTruthy();
     expect(toolbar).toHaveFocus();
+  });
+
+  const ManualFocusToolbar = ({ onOpen }: { onOpen?: () => void }) => {
+    const secondRef = useRef<HTMLButtonElement>(null);
+
+    return (
+      <div className='tox' style={{ position: 'relative' }}>
+        <ContextToolbar.Root>
+          <ContextToolbar.Trigger>
+            <div data-testid={triggerTestId}>Click Me</div>
+          </ContextToolbar.Trigger>
+          <ContextToolbar.Toolbar autoFocus={false} onOpen={onOpen ?? (() => secondRef.current?.focus())}>
+            <ContextToolbar.Group>
+              <button data-testid='button1'>Button 1</button>
+              <button data-testid='button2' ref={secondRef}>Button 2</button>
+            </ContextToolbar.Group>
+          </ContextToolbar.Toolbar>
+        </ContextToolbar.Root>
+      </div>
+    );
+  };
+
+  it('TINYMCE-14930: Should not focus any control on open when autoFocus is off', async () => {
+    const onOpen = vi.fn();
+    const { getByTestId } = render(<ManualFocusToolbar onOpen={onOpen} />, { wrapper: Wrapper });
+
+    await getByTestId(triggerTestId).click();
+
+    await vi.waitFor(() => expect(onOpen).toHaveBeenCalledTimes(1));
+    await expect.element(getByTestId('button1')).not.toHaveFocus();
+    await expect.element(getByTestId('button2')).not.toHaveFocus();
+  });
+
+  it('TINYMCE-14930: Should let onOpen place the focus when autoFocus is off', async () => {
+    const { getByTestId } = render(<ManualFocusToolbar />, { wrapper: Wrapper });
+
+    await getByTestId(triggerTestId).click();
+
+    await expect.element(getByTestId('button2')).toHaveFocus();
   });
 
   it('TINY-14242: Should tab to the first non-disabled control in each group', async () => {
