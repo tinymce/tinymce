@@ -14,19 +14,24 @@ jobs:
     env:
       NODE_OPTIONS: --max-old-space-size=1936
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
 
-      - uses: oven-sh/setup-bun@v2
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6  # v2.2.0
         with:
           # Pinned so CI resolves dependencies the same way on every run.
           bun-version: "1.4.2"
+          # This run's output is published to GitHub Pages, so it must not restore a cache that
+          # another workflow run could have written.
+          no-cache: true
 
       - run: bun install --frozen-lockfile
 
       - run: bun run ci-all-seq
 
       # storybook-static comes from the oxide-components build inside ci-all-seq.
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7.0.2
         with:
           name: storybook
           path: modules/oxide-components/storybook-static
@@ -45,12 +50,12 @@ jobs:
       group: storybook-publish
       cancel-in-progress: false
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333  # v8.0.2
         with:
           name: storybook
           path: storybook-static
 
-      - uses: peaceiris/actions-gh-pages@v4
+      - uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453  # v4.1.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./storybook-static
