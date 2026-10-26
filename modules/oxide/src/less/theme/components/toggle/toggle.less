@@ -1,14 +1,14 @@
 .tox {
     .tox-toggle when (@custom-properties-enabled = true) {
-      --tox-private-slider-background-color: var(--tox-private-background-color);
-      --tox-private-slider-border-color: light-dark(
+      --tox-private-toggle-slider-background-color: var(--tox-private-background-color);
+      --tox-private-toggle-slider-border-color: light-dark(
         hsl(from var(--tox-private-color-white) h s calc(l - 11)), 
         hsl(from var(--tox-private-color-white) h s l / 15%));
-      --tox-private-slider-handle-background-color: var(--tox-private-text-color);
+      --tox-private-toggle-slider-handle-background-color: var(--tox-private-text-color);
   
-      --tox-private-slider-checked-background-color: var(--tox-private-color-tint);
-      --tox-private-slider-checked-border-color: var(--tox-private-color-tint);
-      --tox-private-slider-checked-handle-background-color: var(--tox-private-color-white);
+      --tox-private-toggle-slider-checked-background-color: var(--tox-private-color-tint);
+      --tox-private-toggle-slider-checked-border-color: var(--tox-private-color-tint);
+      --tox-private-toggle-slider-checked-handle-background-color: var(--tox-private-color-white);
     }
   
     .tox-toggle {
@@ -39,9 +39,9 @@
       border-radius: 34px; 
       width: 28px;
       height: 16px;
-      background-color: var(--tox-private-slider-background-color, @background-color);
+      background-color: var(--tox-private-toggle-slider-background-color, @background-color);
       border: 1px solid var(
-        --tox-private-slider-border-color,
+        --tox-private-toggle-slider-border-color,
         .bg-luma-checker(darken(@color-white, 11%), fade(@color-white, 15%))[@result]);
     }
   
@@ -55,12 +55,12 @@
       -webkit-transition: 0.4s;
       transition: 0.4s;
       border-radius: 50%;
-      background-color: var(--tox-private-slider-handle-background-color, @text-color);
+      background-color: var(--tox-private-toggle-slider-handle-background-color, @text-color);
     }
       
     input:checked + .tox-toggle__slider {
-      background-color: var(--tox-private-slider-checked-background-color, @color-tint);
-      border: 1px solid var(--tox-private-slider-checked-border-color, @color-tint);
+      background-color: var(--tox-private-toggle-slider-checked-background-color, @color-tint);
+      border: 1px solid var(--tox-private-toggle-slider-checked-border-color, @color-tint);
     }
     
     input:focus + .tox-toggle__slider {
@@ -71,7 +71,7 @@
       -webkit-transform: translateX(12px);
       -ms-transform: translateX(12px);
       transform: translateX(12px);
-      background-color: var(--tox-private-slider-checked-handle-background-color, @color-white);
+      background-color: var(--tox-private-toggle-slider-checked-handle-background-color, @color-white);
     }
   
     input:disabled + .tox-toggle__slider::before {

@@ -34,92 +34,118 @@
 @slider-track-height: 2px;
 
 .tox {
+  .tox-slider when (@custom-properties-enabled = true) {
+    --tox-private-slider-handle-background-color: var(--tox-private-color-tint);
+    --tox-private-slider-handle-border: 2px solid hsl(from var(--tox-private-slider-handle-background-color) h s calc(l - 10));
+    --tox-private-slider-handle-box-shadow: none;
+    --tox-private-slider-handle-height: 24px;
+    --tox-private-slider-handle-width: 14px;
+    --tox-private-slider-rail-background-color: transparent;
+    --tox-private-slider-rail-border: 1px solid var(--tox-private-border-color);
+    --tox-private-slider-rail-height: 10px;
+  }
+
   .tox-slider {
     align-items: center;
     display: flex;
     flex: 1;
-    height: @slider-handle-height;
+    height: var(--tox-private-slider-handle-height, @slider-handle-height);
     justify-content: center;
     position: relative;
   }
 
   .tox-slider__rail {
-    background-color: @slider-rail-background-color;
-    border: @slider-rail-border;
-    border-radius: @slider-rail-border-radius;
-    height: @slider-rail-height;
+    background-color: var(--tox-private-slider-rail-background-color, @slider-rail-background-color);
+    border: var(--tox-private-slider-rail-border, @slider-rail-border);
+    border-radius: var(--tox-private-control-border-radius, @slider-rail-border-radius);
+    height: var(--tox-private-slider-rail-height, @slider-rail-height);
     min-width: 120px;
     width: 100%;
   }
 
   .tox-slider__handle {
-    background-color: @slider-handle-background-color;
-    border: @slider-handle-border;
-    border-radius: @slider-handle-border-radius;
-    box-shadow: @slider-handle-box-shadow;
-    height: @slider-handle-height;
+    background-color: var(--tox-private-slider-handle-background-color, @slider-handle-background-color);
+    border: var(--tox-private-slider-handle-border, @slider-handle-border);
+    border-radius: var(--tox-private-control-border-radius, @slider-handle-border-radius);
+    box-shadow: var(--tox-private-slider-handle-box-shadow, @slider-handle-box-shadow);
+    height: var(--tox-private-slider-handle-height, @slider-handle-height);
     left: 50%;
     position: absolute;
     top: 50%;
     transform: translateX(-50%) translateY(-50%);
-    width: @slider-handle-width;
+    width: var(--tox-private-slider-handle-width, @slider-handle-width);
   }
 
   // Spacing between multiple sliders in a stack
   .tox-form__controls-h-stack > .tox-slider:not(:first-of-type) {
-    margin-inline-start: @pad-sm;
+    margin-inline-start: var(--tox-private-pad-sm, @pad-sm);
   }
 
   // Spacing between form group and slider in a stack
   .tox-form__controls-h-stack > .tox-form__group + .tox-slider {
-    margin-inline-start: @pad-xl;
+    margin-inline-start: var(--tox-private-pad-xl, @pad-xl);
   }
 
   .tox-form__controls-h-stack > .tox-slider + .tox-form__group {
-    margin-inline-start: @pad-xl;
+    margin-inline-start: var(--tox-private-pad-xl, @pad-xl);
   }
 
   // Toolbar specific slider
+  .tox-toolbar-slider when (@custom-properties-enabled = true) {
+    --tox-private-toolbar-slider-width: 130px;
+    --tox-private-toolbar-slider-track-background-color: var(--tox-private-border-color);
+    --tox-private-toolbar-slider-track-height: 2px;
+    --tox-private-toolbar-slider-thumb-width: 16px;
+    --tox-private-toolbar-slider-thumb-height: 16px;
+    --tox-private-toolbar-slider-thumb-background-color: var(--tox-private-color-tint);
+    --tox-private-toolbar-slider-thumb-hover-background-color: hsl(from var(--tox-private-toolbar-slider-thumb-background-color) h s calc(l - 5));
+    --tox-private-toolbar-slider-thumb-focus-background-color: hsl(from var(--tox-private-toolbar-slider-thumb-background-color) h s calc(l - 5));
+    --tox-private-toolbar-slider-thumb-active-background-color: hsl(from var(--tox-private-toolbar-slider-thumb-background-color) h s calc(l - 10));
+    // LESS picks the color contrasting with the thumb (white, as the tint is dark) at 50%. CSS has no contrast() yet, so it's fixed to white.
+    --tox-private-toolbar-slider-thumb-disabled-background-color: hsl(from var(--tox-private-color-white) h s l / 50%);
+    --tox-private-toolbar-slider-thumb-focus-outline: var(--tox-private-control-focus-box-shadow);
+  }
+
   .tox-toolbar-slider {
     align-items: center;
     display: inline-flex;
-    height: @slider-thumb-height;
+    height: var(--tox-private-toolbar-slider-thumb-height, @slider-thumb-height);
   }
 
   .tox-toolbar-slider__input {
     appearance: none;
-    background: @slider-track-background-color;
-    border-radius: @slider-thumb-height;
-    width: @slider-width;
-    height: @slider-track-height;
+    background: var(--tox-private-toolbar-slider-track-background-color, @slider-track-background-color);
+    border-radius: var(--tox-private-toolbar-slider-thumb-height, @slider-thumb-height);
+    width: var(--tox-private-toolbar-slider-width, @slider-width);
+    height: var(--tox-private-toolbar-slider-track-height, @slider-track-height);
   }
 
   .tox-toolbar-slider__input::-webkit-slider-runnable-track {
     background-color: transparent;
-    height: @slider-thumb-height;
+    height: var(--tox-private-toolbar-slider-thumb-height, @slider-thumb-height);
   }
 
   .tox-toolbar-slider__input::-moz-range-track {
     background-color: transparent;
-    height: @slider-thumb-height;
+    height: var(--tox-private-toolbar-slider-thumb-height, @slider-thumb-height);
   }
 
   .tox-toolbar-slider__input::-webkit-slider-thumb {
     -webkit-appearance: none;
-    background-color: @slider-thumb-background-color;
-    border-radius: @slider-thumb-height;
+    background-color: var(--tox-private-toolbar-slider-thumb-background-color, @slider-thumb-background-color);
+    border-radius: var(--tox-private-toolbar-slider-thumb-height, @slider-thumb-height);
     border: none;
-    height: @slider-thumb-height;
-    width: @slider-thumb-width;
+    height: var(--tox-private-toolbar-slider-thumb-height, @slider-thumb-height);
+    width: var(--tox-private-toolbar-slider-thumb-width, @slider-thumb-width);
   }
 
   .tox-toolbar-slider__input::-moz-range-thumb {
     appearance: none;
-    background-color: @slider-thumb-background-color;
-    border-radius: @slider-thumb-height;
+    background-color: var(--tox-private-toolbar-slider-thumb-background-color, @slider-thumb-background-color);
+    border-radius: var(--tox-private-toolbar-slider-thumb-height, @slider-thumb-height);
     border: none;
-    height: @slider-thumb-height;
-    width: @slider-thumb-width;
+    height: var(--tox-private-toolbar-slider-thumb-height, @slider-thumb-height);
+    width: var(--tox-private-toolbar-slider-thumb-width, @slider-thumb-width);
   }
 
   .tox-toolbar-slider__input:focus-visible {
@@ -127,36 +153,36 @@
   }
 
   .tox-toolbar-slider__input:focus::-webkit-slider-thumb {
-    background-color: @slider-thumb-background-color-focus;
-    box-shadow: @slider-thumb-focus-outline;
+    background-color: var(--tox-private-toolbar-slider-thumb-focus-background-color, @slider-thumb-background-color-focus);
+    box-shadow: var(--tox-private-toolbar-slider-thumb-focus-outline, @slider-thumb-focus-outline);
   }
 
   .tox-toolbar-slider__input:focus::-moz-range-thumb {
-    background-color: @slider-thumb-background-color-focus;
-    box-shadow: @slider-thumb-focus-outline;
+    background-color: var(--tox-private-toolbar-slider-thumb-focus-background-color, @slider-thumb-background-color-focus);
+    box-shadow: var(--tox-private-toolbar-slider-thumb-focus-outline, @slider-thumb-focus-outline);
   }
 
   .tox-toolbar-slider__input:hover::-webkit-slider-thumb {
-    background-color: @slider-thumb-background-color-hover;
+    background-color: var(--tox-private-toolbar-slider-thumb-hover-background-color, @slider-thumb-background-color-hover);
   }
 
   .tox-toolbar-slider__input:hover::-moz-range-thumb {
-    background-color: @slider-thumb-background-color-hover;
+    background-color: var(--tox-private-toolbar-slider-thumb-hover-background-color, @slider-thumb-background-color-hover);
   }
 
   .tox-toolbar-slider__input:active::-webkit-slider-thumb {
-    background-color: @slider-thumb-background-color-active;
+    background-color: var(--tox-private-toolbar-slider-thumb-active-background-color, @slider-thumb-background-color-active);
   }
 
   .tox-toolbar-slider__input:active::-moz-range-thumb {
-    background-color: @slider-thumb-background-color-active;
+    background-color: var(--tox-private-toolbar-slider-thumb-active-background-color, @slider-thumb-background-color-active);
   }
 
   .tox-toolbar-slider__input[disabled]::-webkit-slider-thumb {
-    background-color: @slider-thumb-background-color-disabled;
+    background-color: var(--tox-private-toolbar-slider-thumb-disabled-background-color, @slider-thumb-background-color-disabled);
   }
 
   .tox-toolbar-slider__input[disabled]::-moz-range-thumb {
-    background-color: @slider-thumb-background-color-disabled;
+    background-color: var(--tox-private-toolbar-slider-thumb-disabled-background-color, @slider-thumb-background-color-disabled);
   }
 }
