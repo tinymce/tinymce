@@ -12,41 +12,49 @@
 @user-avatar-width: @user-avatar-height;
 
 .tox {
+  .tox-user when (@custom-properties-enabled = true) {
+    --tox-private-user-avatar-height: 36px;
+    --tox-private-user-avatar-width: var(--tox-private-user-avatar-height);
+    --tox-private-user-name-font-style: normal;
+    --tox-private-user-name-text-transform: none; 
+    --tox-private-user-name-line-height: calc(var(--tox-private-user-avatar-height) / 2);
+  }
+
   .tox-user {
     align-items: center;
     display: flex;
   }
 
   .tox-user__avatar svg {
-    fill: @user-avatar-color;
+    fill: var(--tox-private-text-color-muted, @user-avatar-color);
   }
 
   .tox-user__avatar img {
     border-radius: 50%;
-    height: @user-avatar-height;
+    height: var(--tox-private-user-avatar-height, @user-avatar-height);
     object-fit: cover;
     vertical-align: middle;
-    width: @user-avatar-width;
+    width: var(--tox-private-user-avatar-width, @user-avatar-width);
   }
 
   .tox-user__name {
-    color: @user-name-text-color;
-    font-size: @user-name-font-size;
-    font-style: @user-name-font-style;
-    font-weight: @user-name-font-weight;
-    line-height: (@user-avatar-height / 2);
-    text-transform: @user-name-text-transform;
+    color: var(--tox-private-text-color, @user-name-text-color);
+    font-size: var(--tox-private-font-size-sm, @user-name-font-size);
+    font-style: var(--tox-private-user-name-font-style, @user-name-font-style);
+    font-weight: var(--tox-private-font-weight-bold, @user-name-font-weight);
+    line-height: var(--tox-private-user-name-line-height, (@user-avatar-height / 2));
+    text-transform: var(--tox-private-user-name-text-transform, @user-name-text-transform);
   }
 }
 
 .tox:not([dir=rtl]) {
   .tox-user__avatar svg,
   .tox-user__avatar img {
-    margin-right: @pad-sm;
+    margin-right: var(--tox-private-pad-sm, @pad-sm);
   }
 
   .tox-user__avatar + .tox-user__name {
-    margin-left: @pad-sm;
+    margin-left: var(--tox-private-pad-sm, @pad-sm);
   }
 }
 
@@ -54,10 +62,10 @@
 .tox[dir=rtl] {
   .tox-user__avatar svg,
   .tox-user__avatar img {
-    margin-left: @pad-sm;
+    margin-left: var(--tox-private-pad-sm, @pad-sm);
   }
 
   .tox-user__avatar + .tox-user__name {
-    margin-right: @pad-sm;
+    margin-right: var(--tox-private-pad-sm, @pad-sm);
   }
 }

@@ -20,7 +20,7 @@
     // The dark skin draws a separator-colored border instead of a shadow.
     --tox-private-menu-border-color: light-dark(transparent, hsl(0 0% 100% / 15%));
 
-    // The dark skin has no shadow (`none`), but light-dark() only accepts colors, so the shadow
+    // Same as --tox-private-popup-box-shadow, except that the dark skin has no shadow (`none`). light-dark() only accepts colors, so the shadow
     // colors turn transparent instead. css-parity treats an all-transparent box-shadow as `none`.
     --tox-private-menu-box-shadow:
       0 0 2px 0 light-dark(hsl(from var(--tox-private-color-black) h s l / 20%), transparent),

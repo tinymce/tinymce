@@ -77,6 +77,12 @@
     hsl(from var(--tox-private-background-color) h s calc(l + 7))
   ); // Toolbar buttons with a dynamic text label, the toolbar number input, the context form size input
 
+  // Shadows
+  --tox-private-raised-box-shadow: 0 4px 8px 0 hsl(from var(--tox-private-color-black) h s l / 10%); // Comments, hovered cards, revision history items
+  --tox-private-popup-box-shadow:
+    0 0 2px 0 hsl(from var(--tox-private-color-black) h s l / 20%),
+    0 4px 8px 0 hsl(from var(--tox-private-color-black) h s l / 15%); // Dropdowns, pops (menus too, but the dark skin removes their shadow)
+
   // Focus outline
   --tox-private-keyboard-focus-outline-width: 2px;
   --tox-private-keyboard-focus-outline-color: light-dark(

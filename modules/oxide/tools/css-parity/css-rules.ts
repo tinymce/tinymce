@@ -180,6 +180,20 @@ const splitIntoSteps = (selector: selectorParser.Selector): { steps: SelectorSte
 // properties on those base/block elements, so without them a rule like
 // `.tox .tox-dialog__header` would only ever be compared against its var() fallback.
 // Adds the missing base classes and block ancestors — both compiles get the same DOM.
+//
+// Some markup nests one block inside another, which BEM names can't tell. List those
+// here (class -> the classes it always sits inside, outermost first) so a rule reading
+// the outer block's custom properties isn't reported as compared against its fallback.
+const KNOWN_ANCESTORS: Record<string, string[]> = {
+  // tinycomments: the thread is inside the conversation card, the date inside the user block.
+  'tox-comment-thread': [ 'tox-comment' ],
+  'tox-comment__date': [ 'tox-user' ]
+};
+
+// `cls` preceded by every class it is known to sit inside, outermost first.
+const withKnownAncestors = (cls: string): string[] =>
+  [ ...(KNOWN_ANCESTORS[cls] ?? []).flatMap(withKnownAncestors), cls ];
+
 const withBemContext = (steps: SelectorStep[]): SelectorStep[] => {
   const isNegated = (cls: string) => steps.some(({ compound }) => compound.negatedClasses.includes(cls));
 
@@ -202,8 +216,11 @@ const withBemContext = (steps: SelectorStep[]): SelectorStep[] => {
   const blocks = new Set<string>();
   withModifierBases.forEach(({ compound }, index) => {
     compound.classes
-      .filter((cls) => cls.startsWith('tox-') && cls.includes('__'))
-      .map((cls) => cls.slice(0, cls.indexOf('__')))
+      .filter((cls) => cls.startsWith('tox-'))
+      .flatMap((cls) => [
+        ...cls.includes('__') ? withKnownAncestors(cls.slice(0, cls.indexOf('__'))) : [],
+        ...(KNOWN_ANCESTORS[cls] ?? []).flatMap(withKnownAncestors)
+      ])
       .filter((block) => !isNegated(block) && !withModifierBases.slice(0, index + 1).some((step) => step.compound.classes.includes(block)))
       .forEach((block) => blocks.add(block));
   });
