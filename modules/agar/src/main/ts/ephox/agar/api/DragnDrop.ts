@@ -38,16 +38,13 @@ const checkNotDefaultPrevented = (evt: DragEvent): void => {
   }
 };
 
-const dragnDrop = (from: SugarElement<Element>, to: SugarElement<Element>, prevented: boolean = true): void => {
+// Drags any element, for custom elements and other targets that handle the drag themselves without being marked draggable
+const dragnDropAny = (from: SugarElement<Element>, to: SugarElement<Element>, prevented: boolean = true): void => {
   const fromWin = getWindowFromElement(from);
   const toWin = getWindowFromElement(to);
   const fromRect = from.dom.getBoundingClientRect();
   const toRect = from.dom.getBoundingClientRect();
   const transfer = createDataTransfer();
-
-  if (isDraggable(from) === false) {
-    throw new Error('Can not drag a non draggable element.');
-  }
 
   const check = prevented ? checkDefaultPrevented : checkNotDefaultPrevented;
 
@@ -57,6 +54,13 @@ const dragnDrop = (from: SugarElement<Element>, to: SugarElement<Element>, preve
   check(dispatchDndEvent(createDragoverEvent(toWin, toRect.left, toRect.top, transfer), to));
   check(dispatchDndEvent(createDropEvent(toWin, toRect.left, toRect.top, transfer), to));
   dispatchDndEvent(createDragendEvent(fromWin, fromRect.left, fromRect.top, transfer), from);
+};
+
+const dragnDrop = (from: SugarElement<Element>, to: SugarElement<Element>, prevented: boolean = true): void => {
+  if (isDraggable(from) === false) {
+    throw new Error('Can not drag a non draggable element.');
+  }
+  dragnDropAny(from, to, prevented);
 };
 
 const drop = (to: SugarElement<Element>, prevented: boolean, addItems: (transfer: DataTransfer) => void): void => {
@@ -131,6 +135,7 @@ const pDropItems = <T extends Element> (elm: SugarElement<T>, items: Item[], pre
 export {
   isDraggable,
   dragnDrop,
+  dragnDropAny,
   dropFiles,
   dropItems,
   cDragnDrop,

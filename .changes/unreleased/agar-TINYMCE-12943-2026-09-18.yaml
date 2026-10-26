@@ -1,0 +1,6 @@
+project: agar
+kind: Added
+body: Added `DragnDrop.dragnDropAny` to drag elements that are not marked as draggable.
+time: 2026-09-18T14:40:00.000000+10:00
+custom:
+    Issue: TINYMCE-12943
