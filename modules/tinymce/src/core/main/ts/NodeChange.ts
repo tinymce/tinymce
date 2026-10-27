@@ -3,6 +3,7 @@ import { Arr, Fun } from '@ephox/katamari';
 import type Editor from './api/Editor';
 import * as Options from './api/Options';
 import Delay from './api/util/Delay';
+import * as EditorFocus from './focus/EditorFocus';
 import * as RangeCompare from './selection/RangeCompare';
 import type { RangeLikeObject } from './selection/RangeTypes';
 import * as SelectionBookmark from './selection/SelectionBookmark';
@@ -57,6 +58,11 @@ class NodeChange {
 
     // Selection change is delayed ~200ms on IE when you click inside the current range
     editor.on('SelectionChange', () => {
+      // Every inline editor on a page receives a document selectionchange.
+      // If an unfocused editor responds it can take focus from the active editor.
+      if (editor.inline && !EditorFocus.hasFocus(editor)) {
+        return;
+      }
       const startElm = editor.selection.getStart(true);
 
       // When focusout from after cef element to other input element the startelm can be undefined

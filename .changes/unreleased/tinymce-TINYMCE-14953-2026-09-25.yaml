@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Integrations moving focus between inline editors could revert focus back to the previous editor.
+time: 2026-09-25T12:00:00.000000+10:00
+custom:
+    Issue: TINYMCE-14953
