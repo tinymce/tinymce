@@ -25,6 +25,9 @@ describe('browser.tinymce.core.fmt.NormalizeTagOrderTest', () => {
     return SugarNode.isHTMLElement(element) && SugarNode.name(element) === 'span' && Css.getRaw(element, 'font-size').isSome();
   };
   const isStrikethroughElement = SugarNode.isTag('s');
+  const isUnderlineElement = (element: SugarElement<Node>): element is SugarElement<HTMLElement> => {
+    return SugarNode.isTag('u')(element) || SugarNode.isHTMLElement(element) && SugarNode.name(element) === 'span' && Css.getRaw(element, 'text-decoration').exists((value) => value === 'underline');
+  };
   const isSub = SugarNode.isTag('sub');
   const isSup = SugarNode.isTag('sup');
 
@@ -38,6 +41,8 @@ describe('browser.tinymce.core.fmt.NormalizeTagOrderTest', () => {
           return isFontSizeElement(el);
         } else if (format === 'strikethrough') {
           return isStrikethroughElement(el);
+        } else if (format === 'underline') {
+          return isUnderlineElement(el);
         } else if (format === 'subscript') {
           return isSub(el);
         } else if (format === 'superscript') {
@@ -214,6 +219,57 @@ describe('browser.tinymce.core.fmt.NormalizeTagOrderTest', () => {
         selection: { startPath: [ 0, 0, 0 ], soffset: 0, finishPath: [ 0, 0, 2 ], foffset: 'three'.length },
         expectedHtml: '<p><s>one</s><sub><s>two</s></sub><s>three</s></p>',
         expectedSelection: { startPath: [ 0, 0, 0 ], soffset: 0, finishPath: [ 0, 2, 0 ], foffset: 'three'.length }
+      }));
+    });
+
+    context('Underline', () => {
+      it('TINYMCE-15001: Move u element inside superscript when applying superscript inside underlined text', () => testNormalizeFontSizeElementsAfterApply({
+        format: 'superscript',
+        html: '<p><u>one <sup>two</sup> three</u></p>',
+        selection: { startPath: [ 0, 0, 1, 0 ], soffset: 0, finishPath: [ 0, 0, 1, 0 ], foffset: 'two'.length },
+        expectedHtml: '<p><u>one </u><sup><u>two</u></sup><u> three</u></p>',
+        expectedSelection: { startPath: [ 0, 1, 0, 0 ], soffset: 0, finishPath: [ 0, 1, 0, 0 ], foffset: 'two'.length }
+      }));
+
+      it('TINYMCE-15001: Move underline inside subscript when applying underline on text that has subscript elements', () => testNormalizeFontSizeElementsAfterApply({
+        format: 'underline',
+        html: '<p><span style="text-decoration: underline;">one <sub>two</sub></span></p>',
+        selection: { startPath: [ 0, 0, 0 ], soffset: 0, finishPath: [ 0, 0, 1, 0 ], foffset: 'two'.length },
+        expectedHtml: '<p><span style="text-decoration: underline;">one </span><sub><span style="text-decoration: underline;">two</span></sub></p>',
+        expectedSelection: { startPath: [ 0, 0, 0 ], soffset: 0, finishPath: [ 0, 1, 0, 0 ], foffset: 'two'.length }
+      }));
+
+      it('TINYMCE-15001: Retain other styles of the underline element outside the subscript', () => testNormalizeFontSizeElementsAfterApply({
+        format: 'subscript',
+        html: '<p><span style="text-decoration: underline; color: red;">one <sub>two</sub></span></p>',
+        selection: { startPath: [ 0, 0, 1, 0 ], soffset: 0, finishPath: [ 0, 0, 1, 0 ], foffset: 'two'.length },
+        expectedHtml: '<p><span style="text-decoration: underline; color: red;">one </span><span style="color: red;"><sub><span style="text-decoration: underline;">two</span></sub></span></p>',
+        expectedSelection: { startPath: [ 0, 1, 0, 0, 0 ], soffset: 0, finishPath: [ 0, 1, 0, 0, 0 ], foffset: 'two'.length }
+      }));
+
+      it('TINYMCE-15001: Keep the underline of colored elements inside the subscript', () => testNormalizeFontSizeElementsAfterApply({
+        format: 'subscript',
+        html: '<p><span style="text-decoration: underline;"><sub><span style="color: red; text-decoration: underline;">two</span></sub></span></p>',
+        selection: { startPath: [ 0, 0, 0, 0, 0 ], soffset: 0, finishPath: [ 0, 0, 0, 0, 0 ], foffset: 'two'.length },
+        expectedHtml: '<p><sub><span style="text-decoration: underline;"><span style="color: red; text-decoration: underline;">two</span></span></sub></p>',
+        expectedSelection: { startPath: [ 0, 0, 0, 0, 0 ], soffset: 0, finishPath: [ 0, 0, 0, 0, 0 ], foffset: 'two'.length }
+      }));
+
+      it('TINYMCE-15001: Keep the underline of colored elements around the subscript for the content outside of it', () => testNormalizeFontSizeElementsAfterApply({
+        format: 'subscript',
+        html: '<p><span style="text-decoration: underline;"><span style="color: red; text-decoration: underline;">E=mc<sub>2</sub></span></span></p>',
+        selection: { startPath: [ 0, 0, 0, 0 ], soffset: 0, finishPath: [ 0, 0, 0, 1, 0 ], foffset: '2'.length },
+        expectedHtml: '<p><span style="text-decoration: underline;"><span style="color: red; text-decoration: underline;">E=mc</span></span>' +
+          '<span style="color: red;"><sub><span style="text-decoration: underline;">2</span></sub></span></p>',
+        expectedSelection: { startPath: [ 0, 0, 0, 0 ], soffset: 0, finishPath: [ 0, 1, 0, 0, 0 ], foffset: '2'.length }
+      }));
+
+      it('TINYMCE-15001: Move both strikethrough and underline inside subscript', () => testNormalizeFontSizeElementsAfterApply({
+        format: 'subscript',
+        html: '<p><s><span style="text-decoration: underline;">one <sub>two</sub></span></s></p>',
+        selection: { startPath: [ 0, 0, 0, 1, 0 ], soffset: 0, finishPath: [ 0, 0, 0, 1, 0 ], foffset: 'two'.length },
+        expectedHtml: '<p><s><span style="text-decoration: underline;">one </span></s><sub><span style="text-decoration: underline;"><s>two</s></span></sub></p>',
+        expectedSelection: { startPath: [ 0, 1, 0, 0, 0 ], soffset: 0, finishPath: [ 0, 1, 0, 0, 0 ], foffset: 'two'.length }
       }));
     });
   });

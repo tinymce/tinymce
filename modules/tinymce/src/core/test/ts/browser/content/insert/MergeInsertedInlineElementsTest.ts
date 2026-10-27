@@ -393,4 +393,29 @@ describe('browser.tinymce.core.content.insert.MergeInsertedInlineElementsTest', 
 
     testMergeNestedElements(initial, inserted, expected, [ 0, 0, 0 ], 2);
   });
+
+  it('TINYMCE-15001: Re-order underline and subscript if subscript is inserted into underline', () => {
+    const initial = '<span style="text-decoration: underline;">test</span>';
+    const inserted = '<sub>test</sub>';
+    const expected = '<span style="text-decoration: underline;">te</span><sub><span style="text-decoration: underline;">test</span></sub>' +
+      '<span style="text-decoration: underline;">st</span>';
+
+    testMergeNestedElements(initial, inserted, expected, [ 0, 0, 0 ], 2);
+  });
+
+  it('TINYMCE-15001: Re-order u element and superscript if superscript is inserted into u element', () => {
+    const initial = '<u>test</u>';
+    const inserted = '<sup>test</sup>';
+    const expected = '<u>te</u><sup><u>test</u></sup><u>st</u>';
+
+    testMergeNestedElements(initial, inserted, expected, [ 0, 0, 0 ], 2);
+  });
+
+  it('TINYMCE-15001: Retain order of underline and font size if font size is inserted into underline', () => {
+    const initial = '<span style="text-decoration: underline;">test</span>';
+    const inserted = '<span style="font-size: 36pt;">test</span>';
+    const expected = '<span style="text-decoration: underline;">te<span style="font-size: 36pt;">test</span>st</span>';
+
+    testMergeNestedElements(initial, inserted, expected, [ 0, 0, 0 ], 2);
+  });
 });

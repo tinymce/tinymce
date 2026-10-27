@@ -930,6 +930,28 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
 
       TinyAssertions.assertContent(editor, '<p><span style="font-size: 36pt;"><s>x</s></span></p>');
     });
+
+    it('TINYMCE-15001: Re-order formats for underline after subscript', async () => {
+      const editor = hook.editor();
+
+      editor.setContent('');
+      editor.formatter.apply('subscript');
+      editor.formatter.apply('underline');
+      await TinyContentActions.pType(editor, 'x');
+
+      TinyAssertions.assertContent(editor, '<p><sub><span style="text-decoration: underline;">x</span></sub></p>');
+    });
+
+    it('TINYMCE-15001: Retain order formats for subscript after underline', async () => {
+      const editor = hook.editor();
+
+      editor.setContent('');
+      editor.formatter.apply('underline');
+      editor.formatter.apply('subscript');
+      await TinyContentActions.pType(editor, 'x');
+
+      TinyAssertions.assertContent(editor, '<p><sub><span style="text-decoration: underline;">x</span></sub></p>');
+    });
   });
 
   const formatCaret = '<span id="_mce_caret" data-mce-bogus="1" data-mce-type="format-caret"><strong>&#xFEFF;</strong></span>';

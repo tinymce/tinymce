@@ -2587,6 +2587,54 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
 
       TinyAssertions.assertContent(editor, '<p><s>one</s><span style="font-size: 36pt;"><s>two</s></span><s>three</s></p>');
     });
+
+    it('TINYMCE-15001: Re-order elements when applying subscript on underlined text', () => {
+      const editor = hook.editor();
+
+      editor.setContent('<p>This is a test this is a test</p>');
+      editor.execCommand('SelectAll');
+      editor.formatter.apply('underline');
+      TinySelections.setSelection(editor, [ 0, 0, 0 ], 'This is a test '.length, [ 0, 0, 0 ], 'This is a test this is a test'.length);
+      editor.formatter.apply('subscript');
+
+      TinyAssertions.assertContent(editor, '<p><span style="text-decoration: underline;">This is a test </span><sub><span style="text-decoration: underline;">this is a test</span></sub></p>');
+    });
+
+    it('TINYMCE-15001: Re-order elements when applying underline on text that has subscript and superscript', () => {
+      const editor = hook.editor();
+
+      editor.setContent('<p>one <sub>two</sub> three <sup>four</sup></p>');
+      editor.execCommand('SelectAll');
+      editor.formatter.apply('underline');
+
+      TinyAssertions.assertContent(editor,
+        '<p><span style="text-decoration: underline;">one </span><sub><span style="text-decoration: underline;">two</span></sub>' +
+        '<span style="text-decoration: underline;"> three </span><sup><span style="text-decoration: underline;">four</span></sup></p>'
+      );
+    });
+
+    it('TINYMCE-15001: Keep colored underline of the text outside of subscript when applying underline', () => {
+      const editor = hook.editor();
+
+      editor.setContent('<p><span style="color: red;">abc</span> <sub>x</sub></p>');
+      editor.execCommand('SelectAll');
+      editor.formatter.apply('underline');
+
+      TinyAssertions.assertContent(editor,
+        '<p><span style="text-decoration: underline;"><span style="color: red; text-decoration: underline;">abc</span> </span>' +
+        '<sub><span style="text-decoration: underline;">x</span></sub></p>'
+      );
+    });
+
+    it('TINYMCE-15001: Retain order of elements when applying underline on text that has font size', () => {
+      const editor = hook.editor();
+
+      editor.setContent('<p>a<span style="font-size: 36pt;">b</span>c</p>');
+      editor.execCommand('SelectAll');
+      editor.formatter.apply('underline');
+
+      TinyAssertions.assertContent(editor, '<p><span style="text-decoration: underline;">a<span style="font-size: 36pt;">b</span>c</span></p>');
+    });
   });
 
   context('TINY-10312: should not partially apply block format when caret is positioned between words', () => {
