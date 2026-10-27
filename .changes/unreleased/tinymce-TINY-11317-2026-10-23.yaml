@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: The `editor.insertContent` API removed inline formatting when the selection covered the entire block content and the content was wrapped in an inline format element.
+time: 2026-10-23T12:15:11.997369+10:30
+custom:
+    Issue: TINY-11317
