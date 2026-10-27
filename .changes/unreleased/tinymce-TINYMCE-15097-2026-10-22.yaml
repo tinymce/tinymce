@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: 'Focusing the editor with `scrollToSelection: false` still scrolled on Safari 26 and later.'
+time: 2026-10-22T10:57:09.000000+11:00
+custom:
+    Issue: TINYMCE-15097

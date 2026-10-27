@@ -1,5 +1,5 @@
 import { Optional, Type } from '@ephox/katamari';
-import { Compare, Focus, SugarElement, SugarShadowDom } from '@ephox/sugar';
+import { Compare, Focus, Scroll, SugarElement, SugarShadowDom } from '@ephox/sugar';
 
 import type EditorSelection from '../api/dom/Selection';
 import type Editor from '../api/Editor';
@@ -50,7 +50,9 @@ const normalizeSelection = (editor: Editor, rng: Range): void => {
 
 const focusBody = (body: HTMLElement & { setActive?: VoidFunction }, preventScroll = false) => {
   if (preventScroll) {
-    body.focus({ preventScroll: true });
+    // Safari 26 and later scroll the selection into view when an editable element is focused,
+    // even with preventScroll, so measure the scroll and force it back in the same frame.
+    Scroll.preserve(SugarElement.fromDom(body.ownerDocument), () => body.focus({ preventScroll: true }));
     return;
   }
 

@@ -125,5 +125,17 @@ describe('browser.tinymce.core.focus.EditorFocusTest', () => {
       assert.equal(editor.getWin().scrollY, scrollY, 'Should not scroll the selection into view');
       McEditor.remove(editor);
     });
+
+    it('TINYMCE-15097: Focus with scrollToSelection false does not scroll the selection into view in an inline editor', async () => {
+      const editor = await pCreateInlineEditor('<div class="tinymce-editor"><p>top</p><p style="height: 1000px">spacer</p><p>bottom</p></div>');
+      TinySelections.setCursor(editor, [ 2, 0 ], 0);
+      window.scrollTo(0, 0);
+      selectBody();
+      const scrollY = window.scrollY;
+      editor.focus({ scrollToSelection: false });
+      assert.isTrue(editor.hasFocus(), 'Editor should have focus');
+      assert.equal(window.scrollY, scrollY, 'Should not scroll the selection into view');
+      McEditor.remove(editor);
+    });
   });
 });
