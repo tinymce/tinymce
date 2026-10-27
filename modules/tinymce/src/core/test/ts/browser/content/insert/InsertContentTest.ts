@@ -613,6 +613,72 @@ describe('browser.tinymce.core.content.insert.InsertContentTest', () => {
     TinyAssertions.assertContent(editor, '<p>X</p>');
   });
 
+  context('Replacing all text content wrapped in a common inline format', () => {
+    it('TINYMCE-11317: should keep the inline format', () => {
+      const editor = hook.editor();
+      editor.setContent('<p><strong>I am bold</strong></p>');
+      TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 9);
+      editor.insertContent('new');
+      TinyAssertions.assertContent(editor, '<p><strong>new</strong></p>');
+      TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 3);
+    });
+
+    it('TINYMCE-11317: should keep all the nested inline formats', () => {
+      const editor = hook.editor();
+      editor.setContent('<p><strong><em>I am bold and italic</em></strong></p>');
+      TinySelections.setSelection(editor, [ 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0 ], 20);
+      editor.insertContent('new text');
+      TinyAssertions.assertContent(editor, '<p><strong><em>new text</em></strong></p>');
+      TinyAssertions.assertCursor(editor, [ 0, 0, 0, 0 ], 8);
+    });
+
+    it('TINYMCE-11317: should only keep the most outer inline format when there is a single inline format to the right hand side', () => {
+      const editor = hook.editor();
+      editor.setContent('<p><strong>It is bold and <em>italic</em></strong></p>');
+      TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 1, 0 ], 6);
+      editor.insertContent('new text');
+      TinyAssertions.assertContent(editor, '<p><strong>new text</strong></p>');
+      TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 8);
+    });
+
+    it('TINYMCE-11317: should only keep the most outer inline format when the first word is wrapped in another inline format', () => {
+      const editor = hook.editor();
+      editor.setContent('<p><span style="text-decoration: underline;"><em>Italic</em> is underlined</span></p>');
+      TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 1 ], 14);
+      editor.insertContent('new text');
+      TinyAssertions.assertContent(editor, '<p><span style="text-decoration: underline;">new text</span></p>');
+      TinyAssertions.assertCursor(editor, [ 0, 0, 1 ], 8);
+    });
+
+    it('TINYMCE-11317: should only keep the most outer inline format when the last word is wrapped in another inline format', () => {
+      const editor = hook.editor();
+      editor.setContent('<p><span style="text-decoration: underline;">It is <em>italic</em> and underlined</span></p>');
+      TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 2 ], 15);
+      editor.insertContent('new text');
+      TinyAssertions.assertContent(editor, '<p><span style="text-decoration: underline;">new text</span></p>');
+      TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 8);
+    });
+
+    // Note: Test the current behavior of the editor, which is to remove all inline formats when inserting a block element. This is not ideal, but it is the current behavior.
+    it('TINYMCE-11317: should not keep inline formats when inserting a block element', () => {
+      const editor = hook.editor();
+      editor.setContent('<p><strong>I am bold</strong></p>');
+      TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 9);
+      editor.insertContent('<p>new</p>');
+      TinyAssertions.assertContent(editor, '<p>new</p>');
+      TinyAssertions.assertCursor(editor, [ 0, 0 ], 3);
+    });
+
+    it('TINYMCE-11317: should not keep any inline format when there is no common inline format', () => {
+      const editor = hook.editor();
+      editor.setContent('<p><strong>I am bold</strong> and <em>italic</em></p>');
+      TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 2, 0 ], 6);
+      editor.insertContent('new text');
+      TinyAssertions.assertContent(editor, '<p>new text</p>');
+      TinyAssertions.assertCursor(editor, [ 0, 0 ], 8);
+    });
+  });
+
   context('Invalid content', () => {
     it('TINY-11927: Inserting invalid content should clean away invalid children', () => {
       const editor = hook.editor();

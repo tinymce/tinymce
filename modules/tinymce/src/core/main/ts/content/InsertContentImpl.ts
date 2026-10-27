@@ -9,6 +9,7 @@ import type Schema from '../api/html/Schema';
 import HtmlSerializer from '../api/html/Serializer';
 import * as StyleUtils from '../api/html/StyleUtils';
 import Tools from '../api/util/Tools';
+import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import { CaretWalker } from '../caret/CaretWalker';
 import * as TransparentElements from '../content/TransparentElements';
@@ -17,6 +18,7 @@ import * as CefUtils from '../dom/CefUtils';
 import ElementUtils from '../dom/ElementUtils';
 import * as NodeType from '../dom/NodeType';
 import * as PaddingBr from '../dom/PaddingBr';
+import * as CaretFormat from '../fmt/CaretFormat';
 import * as NormalizeTagOrder from '../fmt/NormalizeTagOrder';
 import * as AstNodeType from '../html/AstNodeType';
 import * as FilterNode from '../html/FilterNode';
@@ -221,6 +223,22 @@ const moveSelectionToMarker = (editor: Editor, marker: HTMLElement | null): void
   selection.setRng(rng);
 };
 
+const isWholeBlockContentInInlineFormat = (editor: Editor, rng: Range): boolean => {
+  const dom = editor.dom;
+  const ancestor = rng.commonAncestorContainer;
+  const elm = NodeType.isText(ancestor) ? ancestor.parentNode : ancestor;
+
+  if (!NodeType.isElement(elm) || !dom.isEditable(elm) || !CaretFormat.isFormatElement(editor, SugarElement.fromDom(elm))) {
+    return false;
+  }
+
+  const block = dom.getParent(elm, dom.isBlock);
+
+  return Type.isNonNullable(block)
+    && CaretFinder.prevPosition(block, CaretPosition.fromRangeStart(rng)).isNone()
+    && CaretFinder.nextPosition(block, CaretPosition.fromRangeEnd(rng)).isNone();
+};
+
 const deleteSelectedContent = (editor: Editor): void => {
   const dom = editor.dom;
   // Fix for #2595 seems that delete removes one extra character on
@@ -234,7 +252,8 @@ const deleteSelectedContent = (editor: Editor): void => {
     TableDelete.deleteCellContents(editor, rng, SugarElement.fromDom(startCell as HTMLTableCellElement));
   // TINY-9193: If the selection is over the whole text node in an element then Firefox incorrectly moves the caret to the previous line
   // TINY-11953: If the selection is over the whole anchor node, then Chrome incorrectly removes parent node alongside with it's child - anchor
-  } else if (SelectionUtils.isSelectionOverWholeAnchor(rng) || SelectionUtils.isSelectionOverWholeTextNode(rng)) {
+  // TINY-11317: If the whole block content is selected inside a common inline format element, native delete removes the format element
+  } else if (SelectionUtils.isSelectionOverWholeAnchor(rng) || SelectionUtils.isSelectionOverWholeTextNode(rng) || isWholeBlockContentInInlineFormat(editor, rng)) {
     rng.deleteContents();
   } else {
     editor.getDoc().execCommand('Delete', false);
