@@ -187,7 +187,9 @@ const splitIntoSteps = (selector: selectorParser.Selector): { steps: SelectorSte
 const KNOWN_ANCESTORS: Record<string, string[]> = {
   // tinycomments: the thread is inside the conversation card, the date inside the user block.
   'tox-comment-thread': [ 'tox-comment' ],
-  'tox-comment__date': [ 'tox-user' ]
+  'tox-comment__date': [ 'tox-user' ],
+  // Color swatches are the items of the swatches menu.
+  'tox-swatch': [ 'tox-swatches' ]
 };
 
 // `cls` preceded by every class it is known to sit inside, outermost first.

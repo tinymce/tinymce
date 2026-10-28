@@ -12,6 +12,14 @@
 @color-picker-warning-frame-border: 1px solid @color-picker-warning-frame-border-color;
 
 .tox {
+  // The warning note is rendered in a tooltip, outside the color picker, so it declares its own Custom Properties.
+  .tox-rgb-warning-note when (@custom-properties-enabled = true) {
+    --tox-private-color-picker-warning-frame-background-color: color-mix(in srgb, var(--tox-private-background-color) 80%, var(--tox-private-color-error));
+    --tox-private-color-picker-warning-frame-text-color: color-mix(in srgb, var(--tox-private-text-color) 50%, var(--tox-private-color-error));
+    --tox-private-color-picker-warning-frame-border-color: color-mix(in srgb, var(--tox-private-background-color) 70%, var(--tox-private-color-error));
+    --tox-private-color-picker-warning-frame-border: 1px solid var(--tox-private-color-picker-warning-frame-border-color);
+  }
+
   .tox-hue-slider,
   .tox-rgb-form .tox-rgba-preview {
 
@@ -113,8 +121,8 @@
 
   .tox-rgb-form input.tox-invalid {
     /* Need !important to override Chrome's focus styling unfortunately */
-    border: 1px solid @color-error-element-focus-color !important;
-    box-shadow: @color-error-element-focus;
+    border: 1px solid var(--tox-private-color-error-element-focus-color, @color-error-element-focus-color) !important;
+    box-shadow: var(--tox-private-color-error-element-focus-box-shadow, @color-error-element-focus);
   }
 
   .tox-rgb-container {
@@ -136,10 +144,10 @@
   }
 
   .tox-rgb-warning-note {
-    background-color: @color-picker-warning-frame-background-color;
-    border: @color-picker-warning-frame-border;
+    background-color: var(--tox-private-color-picker-warning-frame-background-color, @color-picker-warning-frame-background-color);
+    border: var(--tox-private-color-picker-warning-frame-border, @color-picker-warning-frame-border);
     border-radius: 3px;
-    color: @color-picker-warning-frame-text-color;
+    color: var(--tox-private-color-picker-warning-frame-text-color, @color-picker-warning-frame-text-color);
     padding: 3px;
   }
 

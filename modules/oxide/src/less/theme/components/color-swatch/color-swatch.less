@@ -10,16 +10,31 @@
 @swatch-outline-color: rgba(127, 127, 127, .3);
 
 .tox {
+  // .tox-swatches holds the swatches both in the swatches menu and in the toolbar.
+  .tox-swatches when (@custom-properties-enabled = true) {
+    --tox-private-swatch-size: 30px;
+    --tox-private-swatch-picker-button-icon-height: 24px;
+    --tox-private-swatch-picker-button-icon-width: 24px;
+    --tox-private-swatch-remove-color-stroke-color: #e74c3c;
+    --tox-private-swatch-outline-color: rgb(127 127 127 / 30%);
+    --tox-private-swatches-toolbar-margin: var(--tox-private-bar-item-spacing-y) 0 calc(var(--tox-private-bar-item-spacing-y) + 1px) var(--tox-private-bar-padding-x);
+  }
+
+  .tox-swatches-menu when (@custom-properties-enabled = true) {
+    // Cancels the padding of the collection group and the menu around it.
+    --tox-private-swatches-menu-collection-margin: calc(var(--tox-private-pad-xs) * -1) calc(var(--tox-private-pad-xs) * -1);
+  }
+
   .tox-toolbar .tox-swatches,
   .tox-toolbar__primary .tox-swatches,
   .tox-toolbar__overflow .tox-swatches {
-    margin: @toolbar-button-spacing-y 0 (@toolbar-button-spacing-y + 1) @toolbar-group-padding-x;
+    margin: var(--tox-private-swatches-toolbar-margin, @toolbar-button-spacing-y 0 (@toolbar-button-spacing-y + 1) @toolbar-group-padding-x);
   }
 
   // Remove menu border/padding when swatch is used in a collection list context
   .tox-collection--list .tox-collection__group .tox-swatches-menu {
     border: 0;
-    margin: -@collection-item-separator-margin-y -@menu-item-collection-list-padding;
+    margin: var(--tox-private-swatches-menu-collection-margin, -@collection-item-separator-margin-y -@menu-item-collection-list-padding);
   }
 
   .tox-swatches__row {
@@ -32,13 +47,13 @@
   }
 
   .tox-swatch {
-    height: @swatch-size;
+    height: var(--tox-private-swatch-size, @swatch-size);
     transition: transform .15s, box-shadow .15s;
-    width: @swatch-size;
+    width: var(--tox-private-swatch-size, @swatch-size);
 
     &:hover,
     &:focus {
-      box-shadow: 0 0 0 1px @swatch-outline-color inset;
+      box-shadow: 0 0 0 1px var(--tox-private-swatch-outline-color, @swatch-outline-color) inset;
       transform: scale(.8);
     }
   }
@@ -49,7 +64,7 @@
     justify-content: center;
 
     svg path {
-      stroke: @swatch-remove-color-stroke-color;
+      stroke: var(--tox-private-swatch-remove-color-stroke-color, @swatch-remove-color-stroke-color);
     }
   }
 
@@ -59,30 +74,32 @@
     border: 0;
     cursor: pointer;
     display: flex;
-    height: @swatch-size;
+    height: var(--tox-private-swatch-size, @swatch-size);
     justify-content: center;
     outline: none;
     padding: 0;
-    width: @swatch-size;
+    width: var(--tox-private-swatch-size, @swatch-size);
 
     svg {
-      fill: @swatch-picker-button-icon-fill;
-      height: @swatch-picker-button-icon-height;
-      width: @swatch-picker-button-icon-width;
+      fill: var(--tox-private-text-color, @swatch-picker-button-icon-fill);
+      height: var(--tox-private-swatch-picker-button-icon-height, @swatch-picker-button-icon-height);
+      width: var(--tox-private-swatch-picker-button-icon-width, @swatch-picker-button-icon-width);
     }
 
     &:hover {
-      background: @toolbar-button-hover-background-color;
+      background: var(--tox-private-background-secondary, @toolbar-button-hover-background-color);
     }
   }
 
   div.tox-swatch:not(.tox-swatch--remove) {
     svg {
       display: none;
-      fill: @swatch-picker-button-icon-fill;
-      height: @swatch-picker-button-icon-height;
-      margin: calc((@swatch-size - @swatch-picker-button-icon-height) / 2) calc((@swatch-size - @swatch-picker-button-icon-width) / 2);
-      width: @swatch-picker-button-icon-width;
+      fill: var(--tox-private-text-color, @swatch-picker-button-icon-fill);
+      height: var(--tox-private-swatch-picker-button-icon-height, @swatch-picker-button-icon-height);
+      margin:
+        calc((var(--tox-private-swatch-size, @swatch-size) - var(--tox-private-swatch-picker-button-icon-height, @swatch-picker-button-icon-height)) / 2)
+        calc((var(--tox-private-swatch-size, @swatch-size) - var(--tox-private-swatch-picker-button-icon-width, @swatch-picker-button-icon-width)) / 2);
+      width: var(--tox-private-swatch-picker-button-icon-width, @swatch-picker-button-icon-width);
 
       path {
         fill: #fff;
