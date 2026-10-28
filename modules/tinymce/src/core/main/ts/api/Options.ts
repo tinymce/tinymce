@@ -909,6 +909,7 @@ const register = (editor: Editor): void => {
     default: [
       'youtube.com',
       'youtu.be',
+      'youtube-nocookie.com',
       'vimeo.com',
       'player.vimeo.com',
       'dailymotion.com',
