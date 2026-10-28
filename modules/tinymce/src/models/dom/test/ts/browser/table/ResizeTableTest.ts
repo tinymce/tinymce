@@ -1190,16 +1190,26 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
     assert.equal(resizeBars.length, 0, 'Resize bars should not exist in the editor');
   };
 
+  // A row resizer sits on the top of the next row, past the table's border spacing; the last one sits on the bottom of its row
+  const getRowSpacing = (table: HTMLTableElement): number => {
+    const tableElm = SugarElement.fromDom(table);
+    // The computed border-spacing is "<horizontal> <vertical>", or one value for both
+    const verticalSpacing = Arr.last(Css.get(tableElm, 'border-spacing').split(' ')).getOr('0');
+    return Css.get(tableElm, 'border-collapse') === 'collapse' ? 0 : parseFloat(verticalSpacing);
+  };
+
   const assertResizerPosition = (editor: Editor, table: HTMLTableElement) => {
     const editorBody = TinyDom.body(editor);
     const editorBodyRect = editorBody.dom.getBoundingClientRect();
+    const rowSpacing = getRowSpacing(table);
 
     Arr.each(table.rows, (row: HTMLTableRowElement, rowIndex: number) => {
       const resizer = SelectorFind.descendant<HTMLElement>(editorBody, `.ephox-snooker-resizer-rows[data-row="${rowIndex}"]`).getOrDie('Resizer not found');
       const rowRect = row.getBoundingClientRect();
       const resizerHeight = Height.get(resizer);
 
-      const distanceFromTop = rowRect.top + rowRect.height - editorBodyRect.top;
+      const spacingBelow = rowIndex < table.rows.length - 1 ? rowSpacing : 0;
+      const distanceFromTop = rowRect.top + rowRect.height + spacingBelow - editorBodyRect.top;
       const expectedTop = distanceFromTop - resizerHeight / 2;
 
       const actualResizerTop = parseFloat(Strings.removeTrailing(Css.get(resizer, 'top'), 'px'));
