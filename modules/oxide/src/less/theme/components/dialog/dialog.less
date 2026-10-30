@@ -90,32 +90,17 @@
       --tox-private-dialog-header-padding: var(--tox-private-pad-sm) var(--tox-private-pad-md) 0 var(--tox-private-pad-md);
       --tox-private-dialog-body-padding: var(--tox-private-pad-md) var(--tox-private-pad-md);
       --tox-private-dialog-footer-padding: var(--tox-private-pad-sm) var(--tox-private-pad-md);
-      --tox-private-dialog-background-color: light-dark(
-        var(--tox-private-background-color),
-        hsl(from var(--tox-private-background-color) h s calc(l + 5))
-      );
+      --tox-private-dialog-background-color: var(--tox-private-background-elevated);
       --tox-private-dialog-border-radius: 10px;
-      --tox-private-dialog-box-shadow:
-        0 16px 16px -10px hsl(from var(--tox-private-color-black) h s l / 15%),
-        0 0 40px 1px hsl(from var(--tox-private-color-black) h s l / 15%);
+      --tox-private-dialog-box-shadow: var(--tox-private-modal-box-shadow);
       --tox-private-dialog-tab-max-width: 13em;
       --tox-private-dialog-nav-focus-background-color: hsl(from var(--tox-private-color-tint) h s l / 10%);
       --tox-private-dialog-table-border-color: hsl(from var(--tox-private-border-color) h s calc(l - 55));
 
-      // The default skin derives the link color from a mix of black and tint; the dark skin lightens the tint instead.
-      --tox-private-dialog-body-link-color: light-dark(
-        color-mix(in srgb, var(--tox-private-color-black) 60%, var(--tox-private-color-tint)),
-        hsl(from var(--tox-private-color-tint) h s calc(l + 25))
-      );
-      --tox-private-dialog-body-link-hover-color: light-dark(
-        hsl(from color-mix(in srgb, var(--tox-private-color-black) 60%, var(--tox-private-color-tint)) h s calc(l - 20)),
-        hsl(from var(--tox-private-color-tint) h s calc(l + 45))
-      );
-      --tox-private-dialog-body-link-active-color: light-dark(
-        hsl(from color-mix(in srgb, var(--tox-private-color-black) 60%, var(--tox-private-color-tint)) h s calc(l - 30)),
-        hsl(from var(--tox-private-color-tint) h s calc(l + 55))
-      );
-      --tox-private-dialog-body-link-focus-outline-border-radius: 1px;
+      --tox-private-dialog-body-link-color: var(--tox-private-link-color);
+      --tox-private-dialog-body-link-hover-color: var(--tox-private-link-hover-color);
+      --tox-private-dialog-body-link-active-color: var(--tox-private-link-active-color);
+      --tox-private-dialog-body-link-focus-outline-border-radius: var(--tox-private-link-focus-outline-border-radius);
     }
   }
 

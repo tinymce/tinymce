@@ -77,7 +77,35 @@
     hsl(from var(--tox-private-background-color) h s calc(l + 7))
   ); // Toolbar buttons with a dynamic text label, the toolbar number input, the context form size input
 
+  // Background of surfaces raised above the editor (dialogs, menus, onboarding promotion icons).
+  --tox-private-background-elevated: light-dark(
+    var(--tox-private-background-color),
+    hsl(from var(--tox-private-background-color) h s calc(l + 5))
+  );
+
+  // Links: the default skin derives the link color from a mix of black and tint; the dark skin lightens the tint instead.
+  --tox-private-link-color: light-dark(
+    color-mix(in srgb, var(--tox-private-color-black) 60%, var(--tox-private-color-tint)),
+    hsl(from var(--tox-private-color-tint) h s calc(l + 25))
+  ); // Dialog body links, onboarding links
+  // Hover and active move away from the background: darker in light mode, lighter in dark mode.
+  --tox-private-link-hover-color: light-dark(
+    hsl(from var(--tox-private-link-color) h s calc(l - 20)),
+    hsl(from var(--tox-private-link-color) h s calc(l + 20))
+  );
+  --tox-private-link-active-color: light-dark(
+    hsl(from var(--tox-private-link-color) h s calc(l - 30)),
+    hsl(from var(--tox-private-link-color) h s calc(l + 30))
+  );
+  --tox-private-link-focus-outline-border-radius: 1px;
+
+  // Promotion buttons: the menubar promotion link and the onboarding promotion button
+  --tox-private-promotion-button-height: calc(var(--tox-private-font-size-sm) * 1.9);
+
   // Shadows
+  --tox-private-modal-box-shadow:
+    0 16px 16px -10px hsl(from var(--tox-private-color-black) h s l / 15%),
+    0 0 40px 1px hsl(from var(--tox-private-color-black) h s l / 15%); // Dialogs, the onboarding dialog
   --tox-private-raised-box-shadow: 0 4px 8px 0 hsl(from var(--tox-private-color-black) h s l / 10%); // Comments, hovered cards, revision history items
   --tox-private-popup-box-shadow:
     0 0 2px 0 hsl(from var(--tox-private-color-black) h s l / 20%),
@@ -115,6 +143,7 @@
   --tox-private-z-index-resize-handle: 1298;
   --tox-private-z-index-throbber: 1299;
   --tox-private-z-index-sink: 1300;
+  --tox-private-z-index-onboarding-overlay: 1302;
 
   // sink z-index stack
   // Note: these are rendered inside the sink so aren't affected by the other global z-index variables
