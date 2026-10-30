@@ -26,11 +26,34 @@
 .revisionhistory-focus-outline-mixin(@border-color: ~'') {
   .keyboard-focus-outline-mixin(@border-color);
 
-  border-radius: @revisionhistory-border-radius;
+  border-radius: var(--tox-private-revisionhistory-border-radius, @revisionhistory-border-radius);
   box-shadow: 0 0 0 2px @border-color;
 }
 
 .tox {
+  .tox-revisionhistory when (@custom-properties-enabled = true) {
+    --tox-private-revisionhistory-gap: 12px;
+    --tox-private-revisionhistory-border-radius: 6px;
+    --tox-private-revisionhistory-sidebar-min-width: 248px;
+    --tox-private-revisionhistory-text-line-height: 24px;
+    --tox-private-revisionhistory-avatar-height: 36px;
+
+    --tox-private-revisionhistory-secondary-color: light-dark(
+      hsl(from var(--tox-private-background-color) h s calc(l - 6)),
+      hsl(from var(--tox-private-background-color) h s calc(l + 15))
+    );
+    --tox-private-revisionhistory-sidebar-background-color: light-dark(var(--tox-private-revisionhistory-secondary-color), #2b3b4e);
+    --tox-private-revisionhistory-border-color: light-dark(var(--tox-private-revisionhistory-secondary-color), hsl(0 0% 100% / 15%));
+    --tox-private-revisionhistory-border: 1px solid var(--tox-private-revisionhistory-border-color);
+    --tox-private-revisionhistory-card-active-background-color: light-dark(#fff5cc, #1b3b60);
+    --tox-private-revisionhistory-border-color-selected: light-dark(#e3b82a, #cea215);
+    --tox-private-revisionhistory-border-color-focused: light-dark(#006ce7, #285ec7);
+    --tox-private-revisionhistory-card-label-background-color: light-dark(
+      color-mix(in srgb, var(--tox-private-color-white) 80%, var(--tox-private-color-black)),
+      color-mix(in srgb, var(--tox-private-color-black) 80%, var(--tox-private-color-white))
+    );
+  }
+
   .tox-view .tox-revisionhistory__pane {
     padding: 0;      /* Override the default padding of tox-view__pane */
   }
@@ -42,8 +65,8 @@
   }
 
   .tox-revisionhistory {
-    background-color: @background-color;
-    border-top: @revisionhistory-border;
+    background-color: var(--tox-private-background-color, @background-color);
+    border-top: var(--tox-private-revisionhistory-border, @revisionhistory-border);
     display: flex;
     flex: 1;
     height: 100%;
@@ -61,28 +84,28 @@
     display: flex;
     flex-direction: column;
     height: 100%;
-    min-width: @revisionhistory-sidebar-minwidth;
+    min-width: var(--tox-private-revisionhistory-sidebar-min-width, @revisionhistory-sidebar-minwidth);
     width: 316px;
 
     .tox-revisionhistory__sidebar-title {
-      background-color: @background-color;
-      box-shadow: @revisionhistory-box-shadow;
-      color: @revisionhistory-text-color;
-      font-size: @font-size-lg;
+      background-color: var(--tox-private-background-color, @background-color);
+      box-shadow: var(--tox-private-raised-box-shadow, @revisionhistory-box-shadow);
+      color: var(--tox-private-text-color, @revisionhistory-text-color);
+      font-size: var(--tox-private-font-size-lg, @font-size-lg);
       font-weight: 400;
       line-height: 28px;
-      padding: @revisionhistory-gap;
+      padding: var(--tox-private-revisionhistory-gap, @revisionhistory-gap);
       z-index: 1; // To get a shadow effect
     }
 
     .tox-revisionhistory__revisions {
-      background-color: @revisionhistory-sidebar-background-color;
+      background-color: var(--tox-private-revisionhistory-sidebar-background-color, @revisionhistory-sidebar-background-color);
       display: flex;
       flex: 1;
       flex-direction: column;
-      gap: @revisionhistory-gap;
+      gap: var(--tox-private-revisionhistory-gap, @revisionhistory-gap);
       overflow-y: auto;
-      padding: 10px @revisionhistory-gap;
+      padding: 10px var(--tox-private-revisionhistory-gap, @revisionhistory-gap);
 
       &:focus {
         height: 100%;
@@ -92,7 +115,7 @@
         &::after {
           .keyboard-focus-outline-mixin();
 
-          border-radius: @control-border-radius;
+          border-radius: var(--tox-private-control-border-radius, @control-border-radius);
           bottom: 1px;
           left: 1px;
           right: 1px;
@@ -101,19 +124,19 @@
       }
 
       .tox-revisionhistory__card {
-        background-color: @background-color;
-        border: @revisionhistory-border;
-        border-radius: @revisionhistory-border-radius;
-        color: @revisionhistory-text-color;
+        background-color: var(--tox-private-background-color, @background-color);
+        border: var(--tox-private-revisionhistory-border, @revisionhistory-border);
+        border-radius: var(--tox-private-revisionhistory-border-radius, @revisionhistory-border-radius);
+        color: var(--tox-private-text-color, @revisionhistory-text-color);
         cursor: pointer;
         display: flex;
         flex-direction: column;
-        font-size: @font-size-sm;
-        padding: @revisionhistory-gap;
+        font-size: var(--tox-private-font-size-sm, @font-size-sm);
+        padding: var(--tox-private-revisionhistory-gap, @revisionhistory-gap);
         width: 100%;
 
         &:hover {
-          box-shadow: @revisionhistory-box-shadow;
+          box-shadow: var(--tox-private-raised-box-shadow, @revisionhistory-box-shadow);
         }
 
         &:focus {
@@ -121,19 +144,19 @@
           z-index: 1; // Ensure focus outline is on the top of other buttons
 
           &::after {
-            .revisionhistory-focus-outline-mixin(@revisionhistory-border-color--focused);
+            .revisionhistory-focus-outline-mixin(var(--tox-private-revisionhistory-border-color-focused, @revisionhistory-border-color--focused));
 
-            box-shadow: 0 0 0 2px @revisionhistory-border-color--focused !important; // Override box-shadow set by tox-revisionhistory__card-selected when card is both selected and focused
+            box-shadow: 0 0 0 2px var(--tox-private-revisionhistory-border-color-focused, @revisionhistory-border-color--focused) !important; // Override box-shadow set by tox-revisionhistory__card-selected when card is both selected and focused
           }
         }
 
         &.tox-revisionhistory__card--selected {
-          background-color: @revisionhistory-card-active-background-color;
-          box-shadow: @revisionhistory-box-shadow;
+          background-color: var(--tox-private-revisionhistory-card-active-background-color, @revisionhistory-card-active-background-color);
+          box-shadow: var(--tox-private-raised-box-shadow, @revisionhistory-box-shadow);
           position: relative;
 
           &::after {
-            .revisionhistory-focus-outline-mixin(@revisionhistory-border-color--selected);
+            .revisionhistory-focus-outline-mixin(var(--tox-private-revisionhistory-border-color-selected, @revisionhistory-border-color--selected));
           }
         }
       }
@@ -142,19 +165,19 @@
         display: flex;
         align-items: flex-start;
         flex-direction: row;
-        gap: @pad-sm;
+        gap: var(--tox-private-pad-sm, @pad-sm);
         overflow-x: auto;
       }
 
       .tox-revisionhistory__card-label {
         display: block;
         max-width: min-content;
-        padding: @pad-xs @pad-sm;
-        margin-bottom: @pad-sm;
-        font-size: @font-size-xs;
-        font-weight: @font-weight-bold;
-        border-radius: @pad-xs;
-        background: if(@revisionhistory-dark-mode, mix(@color-black, @color-white, 80%), mix(@color-white, @color-black, 80%));
+        padding: var(--tox-private-pad-xs, @pad-xs) var(--tox-private-pad-sm, @pad-sm);
+        margin-bottom: var(--tox-private-pad-sm, @pad-sm);
+        font-size: var(--tox-private-font-size-xs, @font-size-xs);
+        font-weight: var(--tox-private-font-weight-bold, @font-weight-bold);
+        border-radius: var(--tox-private-pad-xs, @pad-xs);
+        background: var(--tox-private-revisionhistory-card-label-background-color, if(@revisionhistory-dark-mode, mix(@color-black, @color-white, 80%), mix(@color-white, @color-black, 80%)));
         text-wrap: balance;
         flex: 0 1 auto;
       }
@@ -162,7 +185,7 @@
       .tox-revisionhistory__card-content {
         display: flex;
         flex-direction: row;
-        gap: @pad-sm;
+        gap: var(--tox-private-pad-sm, @pad-sm);
         align-items: center;
       }
 
@@ -187,42 +210,42 @@
       }
 
       .tox-revisionhistory__card-date-label {
-        font-size: @font-size-sm;
-        font-weight: @font-weight-bold;
+        font-size: var(--tox-private-font-size-sm, @font-size-sm);
+        font-weight: var(--tox-private-font-weight-bold, @font-weight-bold);
         line-height: 18px;
       }
 
       .tox-revisionhistory__card-author-name {
         .overflow-text();
 
-        font-size: @font-size-xs;
-        font-weight: @font-weight-normal;
+        font-size: var(--tox-private-font-size-xs, @font-size-xs);
+        font-weight: var(--tox-private-font-weight-normal, @font-weight-normal);
       }
 
       .tox-revisionhistory__avatar {
         border-radius: 50%;
-        height: @revisionhistory-avatar-height;
+        height: var(--tox-private-revisionhistory-avatar-height, @revisionhistory-avatar-height);
         object-fit: cover;
         vertical-align: middle;
-        width: @revisionhistory-avatar-height;
+        width: var(--tox-private-revisionhistory-avatar-height, @revisionhistory-avatar-height);
       }
 
       .tox-revisionhistory__card-ai-icon {
         display: flex;
-        height: @revisionhistory-avatar-height;
-        width: @revisionhistory-avatar-height;
+        height: var(--tox-private-revisionhistory-avatar-height, @revisionhistory-avatar-height);
+        width: var(--tox-private-revisionhistory-avatar-height, @revisionhistory-avatar-height);
       }
 
       .tox-revisionhistory__norevision {
-        color: @text-color-muted;
-        font-size: @font-size-md;
-        line-height: @revisionhistory-text-lineheight;
+        color: var(--tox-private-text-color-muted, @text-color-muted);
+        font-size: var(--tox-private-font-size-md, @font-size-md);
+        line-height: var(--tox-private-revisionhistory-text-line-height, @revisionhistory-text-lineheight);
         padding: 5px 5.5px;
       }
 
       .tox-revisionhistory__card-check-icon {
-        color: @revisionhistory-text-color;
-        height: @revisionhistory-text-lineheight;
+        color: var(--tox-private-text-color, @revisionhistory-text-color);
+        height: var(--tox-private-revisionhistory-text-line-height, @revisionhistory-text-lineheight);
       }
     }
   }

@@ -1,7 +1,12 @@
+// CSS has no mixins. Options for replacing this one at the Modern CSS stage, once LESS is gone:
+// - write these declarations out in each component, reading shared Custom Properties
+// - a `:where()` selector list in a shared file
+// - a shared class added in the markup (e.g. `tox-focus-outline`)
+// - a native `outline` instead of this `::after` box-shadow
 .keyboard-focus-outline-mixin(@_inset: ~'') {
-  border-radius: @toolbar-button-border-radius;
+  border-radius: var(--tox-private-bar-item-border-radius, @toolbar-button-border-radius);
   bottom: 0;
-  box-shadow: 0 0 0 @keyboard-focus-outline-width @keyboard-focus-outline-color @_inset;
+  box-shadow: 0 0 0 var(--tox-private-keyboard-focus-outline-width, @keyboard-focus-outline-width) var(--tox-private-keyboard-focus-outline-color, @keyboard-focus-outline-color) @_inset;
   content: '';
   left: 0;
   position: absolute;
