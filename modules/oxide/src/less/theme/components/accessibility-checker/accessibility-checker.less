@@ -25,19 +25,46 @@
 @accessibility-issue-success-background-color: contrast(@dialog-background-color, fade(@color-success, 10%), fade(@color-success, 50%));
 
 .tox {
-  .accessibility-issue {
-    //
+  .tox-accessibility-issue when (@custom-properties-enabled = true) {
+    --tox-private-accessibility-issue-body-text-color: var(--tox-private-text-color);
+
+    --tox-private-accessibility-issue-info-heading-text-color: light-dark(
+      var(--tox-private-color-tint),
+      color-mix(in srgb, var(--tox-private-color-white) 60%, var(--tox-private-color-tint))
+    );
+    --tox-private-accessibility-issue-info-background-color: color-mix(in srgb, var(--tox-private-background-color) 90%, var(--tox-private-color-tint));
+
+    --tox-private-accessibility-issue-warn-heading-text-color: light-dark(
+      color-mix(in srgb, var(--tox-private-color-black) 60%, var(--tox-private-color-warning)),
+      color-mix(in srgb, var(--tox-private-color-white) 60%, var(--tox-private-color-warning))
+    );
+    --tox-private-accessibility-issue-warn-background-color: color-mix(in srgb, var(--tox-private-background-color) 90%, var(--tox-private-color-warning));
+
+    --tox-private-accessibility-issue-error-heading-text-color: light-dark(
+      var(--tox-private-color-error),
+      color-mix(in srgb, var(--tox-private-color-white) 60%, var(--tox-private-color-error))
+    );
+    --tox-private-accessibility-issue-error-background-color: color-mix(in srgb, var(--tox-private-background-color) 90%, var(--tox-private-color-error));
+
+    --tox-private-accessibility-issue-success-heading-text-color: light-dark(
+      hsl(from var(--tox-private-color-success) h s calc(l - 15)),
+      var(--tox-private-color-white)
+    );
+    --tox-private-accessibility-issue-success-background-color: light-dark(
+      hsl(from var(--tox-private-color-success) h s l / 10%),
+      hsl(from var(--tox-private-color-success) h s l / 50%)
+    );
   }
 
   .accessibility-issue__header {
     align-items: center;
     display: flex;
-    margin-bottom: @pad-xs;
+    margin-bottom: var(--tox-private-pad-xs, @pad-xs);
   }
 
   #accessibility-issue__subheader {
-    font-size: @font-size-md;
-    color: @accessibility-issue-body-text-color;
+    font-size: var(--tox-private-font-size-md, @font-size-md);
+    color: var(--tox-private-accessibility-issue-body-text-color, @accessibility-issue-body-text-color);
   }
 
   .accessbility-sr-only {
@@ -53,16 +80,16 @@
 
   .accessibility-issue__description {
     align-items: stretch;
-    border-radius: @panel-border-radius;
+    border-radius: var(--tox-private-panel-border-radius, @panel-border-radius);
     justify-content: space-between;
 
     > div {
-      padding-bottom: @pad-xs;
+      padding-bottom: var(--tox-private-pad-xs, @pad-xs);
 
       > div {
         align-items: center;
         display: flex;
-        margin-bottom: @pad-xs;
+        margin-bottom: var(--tox-private-pad-xs, @pad-xs);
 
         .tox-icon svg {
           display: block;
@@ -72,23 +99,23 @@
   }
 
   #accessibility-issue__contentID {
-    margin-top: @pad-sm;
-    margin-bottom: @pad-sm;
+    margin-top: var(--tox-private-pad-sm, @pad-sm);
+    margin-bottom: var(--tox-private-pad-sm, @pad-sm);
 
     span:first-child {
-      font-weight: @font-weight-bold;
+      font-weight: var(--tox-private-font-weight-bold, @font-weight-bold);
     }
   }
 
   #accessibility-issue__document {
-    padding-bottom: @pad-sm;
+    padding-bottom: var(--tox-private-pad-sm, @pad-sm);
   }
 
   .accessibility-issue__repair {
-    margin-top: @pad-sm;
+    margin-top: var(--tox-private-pad-sm, @pad-sm);
 
     .tox-form__group .tox-form__group--error {
-      color: @accessibility-issue-error-heading-text-color;
+      color: var(--tox-private-accessibility-issue-error-heading-text-color, @accessibility-issue-error-heading-text-color);
     }
   }
 
@@ -98,105 +125,59 @@
     // Info state
     .accessibility-issue--info {
       .accessibility-issue__description {
-        background-color: @accessibility-issue-info-background-color;
-        color: @accessibility-issue-body-text-color;
+        background-color: var(--tox-private-accessibility-issue-info-background-color, @accessibility-issue-info-background-color);
+        color: var(--tox-private-accessibility-issue-body-text-color, @accessibility-issue-body-text-color);
       }
 
       .tox-form__group h2 {
-        font-size: @font-size-sm;
-        color: @accessibility-issue-info-heading-text-color;
+        font-size: var(--tox-private-font-size-sm, @font-size-sm);
+        color: var(--tox-private-accessibility-issue-info-heading-text-color, @accessibility-issue-info-heading-text-color);
       }
 
       .tox-icon.accessibility-issue__icon svg {
-        fill: @accessibility-issue-info-heading-text-color;
-      }
-
-      a.tox-button--naked.tox-button--icon {
-        background-color: @button-background-color;
-        color: @color-white;
-
-        &:hover,
-        &:focus {
-          background-color: @button-hover-background-color;
-        }
-
-        &:active {
-          background-color: @button-active-background-color;
-        }
+        fill: var(--tox-private-accessibility-issue-info-heading-text-color, @accessibility-issue-info-heading-text-color);
       }
     }
 
     // Warn state
     .accessibility-issue--warn {
       .accessibility-issue__description {
-        background-color: @accessibility-issue-warn-background-color;
-        color: @accessibility-issue-body-text-color;
+        background-color: var(--tox-private-accessibility-issue-warn-background-color, @accessibility-issue-warn-background-color);
+        color: var(--tox-private-accessibility-issue-body-text-color, @accessibility-issue-body-text-color);
       }
 
       .tox-form__group h2 {
-        font-size: @font-size-sm;
-        color: @accessibility-issue-warn-heading-text-color;
+        font-size: var(--tox-private-font-size-sm, @font-size-sm);
+        color: var(--tox-private-accessibility-issue-warn-heading-text-color, @accessibility-issue-warn-heading-text-color);
       }
 
       .tox-icon.accessibility-issue__icon svg {
-        fill: @accessibility-issue-warn-heading-text-color;
-      }
-
-      a.tox-button--naked.tox-button--icon {
-        background-color: @accessibility-issue-warn-icon-background-color;
-        color: @color-black;
-
-        &:hover,
-        &:focus {
-          background-color: @accessibility-issue-warn-icon-hover-background-color;
-          color: @color-black;
-        }
-
-        &:active {
-          background-color: @accessibility-issue-warn-icon-active-background-color;
-          color: @color-black;
-        }
+        fill: var(--tox-private-accessibility-issue-warn-heading-text-color, @accessibility-issue-warn-heading-text-color);
       }
     }
 
     // Error state
     .accessibility-issue--error {
       .accessibility-issue__description {
-        background-color: @accessibility-issue-error-background-color;
-        color: @accessibility-issue-body-text-color;
+        background-color: var(--tox-private-accessibility-issue-error-background-color, @accessibility-issue-error-background-color);
+        color: var(--tox-private-accessibility-issue-body-text-color, @accessibility-issue-body-text-color);
       }
 
       .tox-form__group h2 {
-        font-size: @font-size-sm;
-        color: @accessibility-issue-error-heading-text-color;
+        font-size: var(--tox-private-font-size-sm, @font-size-sm);
+        color: var(--tox-private-accessibility-issue-error-heading-text-color, @accessibility-issue-error-heading-text-color);
       }
 
       .tox-icon.accessibility-issue__icon svg {
-        fill: @accessibility-issue-error-heading-text-color;
-      }
-
-      a.tox-button--naked.tox-button--icon {
-        background-color: @accessibility-issue-error-icon-background-color;
-        color: @color-black;
-
-        &:hover,
-        &:focus {
-          background-color: @accessibility-issue-error-icon-hover-background-color;
-          color: @color-black;
-        }
-
-        &:active {
-          background-color: @accessibility-issue-error-icon-active-background-color;
-          color: @color-black;
-        }
+        fill: var(--tox-private-accessibility-issue-error-heading-text-color, @accessibility-issue-error-heading-text-color);
       }
     }
 
     // Success state
     .accessibility-issue--success {
       .accessibility-issue__description {
-        background-color: @accessibility-issue-success-background-color;
-        color: @accessibility-issue-body-text-color;
+        background-color: var(--tox-private-accessibility-issue-success-background-color, @accessibility-issue-success-background-color);
+        color: var(--tox-private-accessibility-issue-body-text-color, @accessibility-issue-body-text-color);
 
         > *:last-child {
           display: none;
@@ -204,11 +185,11 @@
       }
 
       .tox-form__group h2 {
-        color: @accessibility-issue-success-heading-text-color;
+        color: var(--tox-private-accessibility-issue-success-heading-text-color, @accessibility-issue-success-heading-text-color);
       }
 
       .tox-icon.accessibility-issue__icon svg {
-        fill: @accessibility-issue-success-heading-text-color;
+        fill: var(--tox-private-accessibility-issue-success-heading-text-color, @accessibility-issue-success-heading-text-color);
       }
     }
   }
@@ -224,7 +205,7 @@
   .tox-dialog__body-content {
     .accessibility-issue__header {
       .tox-button {
-        margin-left: @pad-xs;
+        margin-left: var(--tox-private-pad-xs, @pad-xs);
       }
 
       > *:nth-last-child(2) {
@@ -233,7 +214,7 @@
     }
 
     .accessibility-issue__description {
-      padding: @pad-sm;
+      padding: var(--tox-private-pad-sm, @pad-sm);
     }
   }
 }
@@ -242,7 +223,7 @@
   .tox-dialog__body-content {
     .accessibility-issue__header {
       .tox-button {
-        margin-right: @pad-xs;
+        margin-right: var(--tox-private-pad-xs, @pad-xs);
       }
 
       > *:nth-last-child(2) {
@@ -251,7 +232,7 @@
     }
 
     .accessibility-issue__description {
-      padding: @pad-xs @pad-sm @pad-xs @pad-xs;
+      padding: var(--tox-private-pad-xs, @pad-xs) var(--tox-private-pad-sm, @pad-sm) var(--tox-private-pad-xs, @pad-xs) var(--tox-private-pad-xs, @pad-xs);
     }
   }
 }

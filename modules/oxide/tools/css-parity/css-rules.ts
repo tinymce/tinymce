@@ -182,14 +182,29 @@ const splitIntoSteps = (selector: selectorParser.Selector): { steps: SelectorSte
 // Adds the missing base classes and block ancestors — both compiles get the same DOM.
 //
 // Some markup nests one block inside another, which BEM names can't tell. List those
-// here (class -> the classes it always sits inside, outermost first) so a rule reading
-// the outer block's custom properties isn't reported as compared against its fallback.
+// here (class, or `#id` -> the classes it always sits inside, outermost first) so a rule
+// reading the outer block's custom properties isn't reported as compared against its
+// fallback. Keys don't need the `tox-` prefix, so plugin markup that doesn't use it can
+// be listed too.
 const KNOWN_ANCESTORS: Record<string, string[]> = {
   // tinycomments: the thread is inside the conversation card, the date inside the user block.
   'tox-comment-thread': [ 'tox-comment' ],
   'tox-comment__date': [ 'tox-user' ],
   // Color swatches are the items of the swatches menu.
-  'tox-swatch': [ 'tox-swatches' ]
+  'tox-swatch': [ 'tox-swatches' ],
+  // a11ychecker: the issue panel's own elements aren't `tox-` prefixed.
+  'accessibility-issue__description': [ 'tox-accessibility-issue' ],
+  'accessibility-issue__repair': [ 'tox-accessibility-issue' ],
+  '#accessibility-issue__subheader': [ 'tox-accessibility-issue' ]
+};
+
+// Modifiers whose base class isn't their prefix (class -> the class always on the same element).
+const KNOWN_BASES: Record<string, string> = {
+  // a11ychecker: the issue panel is `.tox-accessibility-issue.accessibility-issue--<level>`.
+  'accessibility-issue--info': 'tox-accessibility-issue',
+  'accessibility-issue--warn': 'tox-accessibility-issue',
+  'accessibility-issue--error': 'tox-accessibility-issue',
+  'accessibility-issue--success': 'tox-accessibility-issue'
 };
 
 // `cls` preceded by every class it is known to sit inside, outermost first.
@@ -201,8 +216,7 @@ const withBemContext = (steps: SelectorStep[]): SelectorStep[] => {
 
   const withModifierBases = steps.map(({ combinator, compound }) => {
     const bases = compound.classes
-      .filter((cls) => cls.startsWith('tox-') && cls.includes('--'))
-      .map((cls) => cls.slice(0, cls.indexOf('--')))
+      .flatMap((cls) => cls.startsWith('tox-') && cls.includes('--') ? [ cls.slice(0, cls.indexOf('--')) ] : KNOWN_BASES[cls] ?? [])
       .filter((base) => !compound.classes.includes(base) && !isNegated(base));
     return { combinator, compound: { ...compound, classes: [ ...compound.classes, ...new Set(bases) ] }};
   });
@@ -217,10 +231,10 @@ const withBemContext = (steps: SelectorStep[]): SelectorStep[] => {
 
   const blocks = new Set<string>();
   withModifierBases.forEach(({ compound }, index) => {
-    compound.classes
-      .filter((cls) => cls.startsWith('tox-'))
+    [ ...compound.classes, ...compound.id ? [ `#${compound.id}` ] : [] ]
+      .filter((cls) => cls.startsWith('tox-') || cls in KNOWN_ANCESTORS)
       .flatMap((cls) => [
-        ...cls.includes('__') ? withKnownAncestors(cls.slice(0, cls.indexOf('__'))) : [],
+        ...cls.startsWith('tox-') && cls.includes('__') ? withKnownAncestors(cls.slice(0, cls.indexOf('__'))) : [],
         ...(KNOWN_ANCESTORS[cls] ?? []).flatMap(withKnownAncestors)
       ])
       .filter((block) => !isNegated(block) && !withModifierBases.slice(0, index + 1).some((step) => step.compound.classes.includes(block)))
