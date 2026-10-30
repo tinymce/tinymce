@@ -31,60 +31,100 @@
 @card-hover-box-shadow: 0 4px 8px 0 fade(@color-black, 10%);
 
 .tox {
+  // A card can be rendered on its own, or inside a card list and optionally a card group, so each of them
+  // declares the section spacing it uses.
+  .tox-card-list,
+  .tox-card-group,
   .tox-card {
-    background-color: @card-background-color;
-    border-radius: @card-border-radius;
+    & when (@custom-properties-enabled = true) {
+      --tox-private-card-section-padding: calc(var(--tox-private-pad-sm) + var(--tox-private-pad-xs));
+      --tox-private-card-section-gap: calc(var(--tox-private-pad-sm) + var(--tox-private-pad-xs));
+    }
+  }
+
+  .tox-card when (@custom-properties-enabled = true) {
+    // The selected border is drawn inside the section padding
+    --tox-private-card-padding: calc(var(--tox-private-card-section-padding) - var(--tox-private-keyboard-focus-outline-width));
+    --tox-private-card-highlight-padding: var(--tox-private-pad-xs) calc(var(--tox-private-pad-xs) * 1.5);
+    --tox-private-card-expansion-collapsed-margin-block-start: calc(var(--tox-private-card-section-gap) * -1);
+
+    --tox-private-card-added-background-color: color-mix(in srgb, var(--tox-private-color-success) 20%, var(--tox-private-background-color));
+    --tox-private-card-deleted-background-color: color-mix(in srgb, var(--tox-private-color-error) 20%, var(--tox-private-background-color));
+    --tox-private-card-modified-background-color: color-mix(in srgb, var(--tox-private-color-tint) 20%, var(--tox-private-background-color));
+
+    // A card with a decision is darker than the background, in both light and dark mode
+    --tox-private-card-decided-background-color: hsl(from var(--tox-private-background-color) h s calc(l - 6));
+    --tox-private-card-decided-padding: calc(var(--tox-private-card-section-padding) - 1px);
+    // Each shade is used for one state's background and the previous state's border
+    --tox-private-card-decided-button-hover-background-color: hsl(from var(--tox-private-background-color) h s calc(l - 12));
+    --tox-private-card-decided-button-active-background-color: hsl(from var(--tox-private-background-color) h s calc(l - 18));
+  }
+
+  .tox-card-group when (@custom-properties-enabled = true) {
+    // Darker than the background, in both light and dark mode
+    --tox-private-card-group-background-color: hsl(from var(--tox-private-background-color) h s calc(l - 6));
+    --tox-private-card-group-title-border-width: 1px;
+    --tox-private-card-group-title-z-index: 1;
+    // Clears the title pinned over the top of the scroll port, plus the gap: title line height + padding + border
+    --tox-private-card-group-card-scroll-margin-top: calc(
+      var(--tox-private-base-value) + var(--tox-private-card-section-padding) * 2 + var(--tox-private-card-group-title-border-width) + var(--tox-private-card-section-gap)
+    );
+  }
+
+  .tox-card {
+    background-color: var(--tox-private-background-color, @card-background-color);
+    border-radius: var(--tox-private-control-border-radius, @card-border-radius);
     display: flex;
     flex-direction: column;
-    gap: @card-section-gap;
-    padding: @card-section-padding - @card-selected-border-width;
+    gap: var(--tox-private-card-section-gap, @card-section-gap);
+    padding: var(--tox-private-card-padding, @card-section-padding - @card-selected-border-width);
     cursor: pointer;
     transition: box-shadow 0.15s ease-in-out, border 0.15s ease-in-out;
-    border: @card-selected-border-width solid transparent;
+    border: var(--tox-private-keyboard-focus-outline-width, @card-selected-border-width) solid transparent;
 
     &:hover {
-      box-shadow: @card-hover-box-shadow;
+      box-shadow: var(--tox-private-raised-box-shadow, @card-hover-box-shadow);
     }
 
     &--selected {
-      border-color: @card-border-color;
+      border-color: var(--tox-private-color-tint, @card-border-color);
     }
 
     &:focus-visible {
-      outline: @keyboard-focus-outline-width solid @keyboard-focus-outline-color;
+      outline: var(--tox-private-keyboard-focus-outline-width, @keyboard-focus-outline-width) solid var(--tox-private-keyboard-focus-outline-color, @keyboard-focus-outline-color);
       border-color: transparent;
     }
 
     &--has-decision {
-      background-color: darken(@background-color, 6%);
+      background-color: var(--tox-private-card-decided-background-color, darken(@background-color, 6%));
 
       &:not(.tox-card--selected) {
         border-width: 1px;
-        border-color: @text-color-muted;
-        padding: @card-section-padding - 1px;
+        border-color: var(--tox-private-text-color-muted, @text-color-muted);
+        padding: var(--tox-private-card-decided-padding, @card-section-padding - 1px);
       }
 
       .tox-card__header {
-        font-size: @font-size-xs;
+        font-size: var(--tox-private-font-size-xs, @font-size-xs);
       }
 
       .tox-card__body {
-        color: @text-color-muted;
+        color: var(--tox-private-text-color-muted, @text-color-muted);
       }
 
       .tox-card__actions {
         .tox-button--secondary--outline {
-          border-color: darken(@background-color, 12%);
+          border-color: var(--tox-private-card-decided-button-hover-background-color, darken(@background-color, 12%));
 
           &:hover:not(:disabled),
           &:focus:not(:disabled) {
-            background-color: darken(@background-color, 12%);
-            border-color: darken(@background-color, 18%);
+            background-color: var(--tox-private-card-decided-button-hover-background-color, darken(@background-color, 12%));
+            border-color: var(--tox-private-card-decided-button-active-background-color, darken(@background-color, 18%));
           }
 
           &:active:not(:disabled) {
-            background-color: darken(@background-color, 18%);
-            border-color: darken(@background-color, 18%);
+            background-color: var(--tox-private-card-decided-button-active-background-color, darken(@background-color, 18%));
+            border-color: var(--tox-private-card-decided-button-active-background-color, darken(@background-color, 18%));
           }
         }
       }
@@ -92,21 +132,21 @@
 
     &__header {
       padding-bottom: 0;
-      color: @card-text-color;
-      font-size: @font-size-md;
+      color: var(--tox-private-text-color, @card-text-color);
+      font-size: var(--tox-private-font-size-md, @font-size-md);
 
       font-weight: bold;
       text-transform: uppercase;
 
       display: flex;
       flex-direction: column;
-      gap: @card-section-gap;
+      gap: var(--tox-private-card-section-gap, @card-section-gap);
 
       &-label {
-        font-size: @font-size-xs;
+        font-size: var(--tox-private-font-size-xs, @font-size-xs);
         font-weight: bold;
         text-transform: uppercase;
-        color: @card-text-color;
+        color: var(--tox-private-text-color, @card-text-color);
       }
 
       &-content {
@@ -119,7 +159,7 @@
       &-actions {
         display: flex;
         align-items: center;
-        gap: @pad-xs;
+        gap: var(--tox-private-pad-xs, @pad-xs);
         flex-shrink: 0;
         opacity: 1;
         pointer-events: auto;
@@ -160,13 +200,13 @@
     }
 
     &__body {
-      color: @card-text-color;
-      font-size: @font-size-sm;
+      color: var(--tox-private-text-color, @card-text-color);
+      font-size: var(--tox-private-font-size-sm, @font-size-sm);
 
       .tox-expandable-box {
         background: none;
         border: none;
-        gap: @card-section-gap;
+        gap: var(--tox-private-card-section-gap, @card-section-gap);
 
         .tox-expandable-box__content,
         > .tox-button {
@@ -176,25 +216,25 @@
     }
 
     &__highlight {
-      padding: @pad-xs (@pad-xs * 1.5);
-      border-bottom: @card-highlight-border-width solid @card-border-color;
+      padding: var(--tox-private-card-highlight-padding, @pad-xs (@pad-xs * 1.5));
+      border-bottom: var(--tox-private-keyboard-focus-outline-width, @card-highlight-border-width) solid var(--tox-private-color-tint, @card-border-color);
 
       &--added {
-        background-color: @card-added-background-color;
+        background-color: var(--tox-private-card-added-background-color, @card-added-background-color);
       }
 
       &--deleted {
-        background-color: @card-deleted-background-color;
+        background-color: var(--tox-private-card-deleted-background-color, @card-deleted-background-color);
       }
 
       &--modified {
-        background-color: @card-modified-background-color;
+        background-color: var(--tox-private-card-modified-background-color, @card-modified-background-color);
       }
     }
 
     &__actions {
       display: flex;
-      gap: @card-button-gap;
+      gap: var(--tox-private-pad-sm, @card-button-gap);
 
       &--space-between {
         justify-content: space-between;
@@ -207,30 +247,30 @@
       .tox-button,
       .tox-button--icon,
       .tox-button:has(.tox-icon:only-child) {
-        padding: @pad-xs @pad-md;
+        padding: var(--tox-private-pad-xs, @pad-xs) var(--tox-private-pad-md, @pad-md);
       }
     }
 
     &__divider {
-      margin: @card-section-gap 0;
+      margin: var(--tox-private-card-section-gap, @card-section-gap) 0;
       border: none;
-      border-top: 1px solid @border-color;
+      border-top: 1px solid var(--tox-private-border-color, @border-color);
     }
 
     &__expansion {
       display: flex;
       flex-direction: column;
-      gap: @card-section-gap;
+      gap: var(--tox-private-card-section-gap, @card-section-gap);
       width: 100%;
 
       &:has(> .tox-card__expansion-content--collapsed:only-child) {
-        margin-block-start: -@card-section-gap;
+        margin-block-start: var(--tox-private-card-expansion-collapsed-margin-block-start, -@card-section-gap);
       }
     }
 
     &__expansion-content {
       display: grid;
-      font-size: @font-size-sm;
+      font-size: var(--tox-private-font-size-sm, @font-size-sm);
       grid-template-rows: 0fr;
       transition: grid-template-rows 0.2s ease-in-out;
 
@@ -255,7 +295,7 @@
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      gap: @card-section-gap;
+      gap: var(--tox-private-card-section-gap, @card-section-gap);
     }
 
     &.tox-skeleton {
@@ -268,14 +308,14 @@
       }
 
       .tox-skeleton__line {
-        border-radius: @control-border-radius;
+        border-radius: var(--tox-private-control-border-radius, @control-border-radius);
         margin: 0;
       }
 
       .tox-card__body {
         display: flex;
         flex-direction: column;
-        gap: @pad-xs;
+        gap: var(--tox-private-pad-xs, @pad-xs);
       }
     }
   }
@@ -283,7 +323,7 @@
   .tox-card-list {
     display: flex;
     flex-direction: column;
-    gap: @card-section-gap;
+    gap: var(--tox-private-card-section-gap, @card-section-gap);
 
     // Groups butt up against each other, since each one insets its own cards from the heading bands
     &:has(.tox-card-group) {
@@ -292,7 +332,7 @@
       // Cards outside any group, such as the loading skeletons after the groups, keep the same inset as the
       // grouped ones
       > .tox-card {
-        margin-inline: @card-section-padding;
+        margin-inline: var(--tox-private-card-section-padding, @card-section-padding);
       }
     }
 
@@ -302,7 +342,7 @@
   }
 
   .tox-card-group {
-    background-color: @card-group-background-color;
+    background-color: var(--tox-private-card-group-background-color, @card-group-background-color);
     display: flex;
     flex-direction: column;
 
@@ -310,24 +350,24 @@
     // browser does not account for on its own. The gap comes along so the card lands where it sits when the
     // group is read from the top, rather than flush against the heading.
     .tox-card {
-      scroll-margin-top: @card-group-title-height + @card-section-gap;
+      scroll-margin-top: var(--tox-private-card-group-card-scroll-margin-top, @card-group-title-height + @card-section-gap);
     }
 
     &__title {
       align-items: center;
-      background-color: @card-group-title-background-color;
-      border-bottom: @card-group-title-border-width solid @card-group-title-border-color;
-      color: @text-color;
+      background-color: var(--tox-private-background-color, @card-group-title-background-color);
+      border-bottom: var(--tox-private-card-group-title-border-width, @card-group-title-border-width) solid var(--tox-private-border-color, @card-group-title-border-color);
+      color: var(--tox-private-text-color, @text-color);
       display: flex;
-      font-size: @font-size-sm;
-      font-weight: @font-weight-bold;
-      gap: @pad-sm;
-      line-height: @card-group-title-line-height;
+      font-size: var(--tox-private-font-size-sm, @font-size-sm);
+      font-weight: var(--tox-private-font-weight-bold, @font-weight-bold);
+      gap: var(--tox-private-pad-sm, @pad-sm);
+      line-height: var(--tox-private-base-value, @card-group-title-line-height);
       overflow: hidden;
-      padding: @card-section-padding;
+      padding: var(--tox-private-card-section-padding, @card-section-padding);
       position: sticky;
       top: 0;
-      z-index: @card-group-title-z-index;
+      z-index: var(--tox-private-card-group-title-z-index, @card-group-title-z-index);
     }
 
     // Only the document name ellipsises, so the status beside it is never clipped
@@ -339,10 +379,10 @@
     }
 
     &__status {
-      color: @card-group-status-text-color;
+      color: var(--tox-private-text-color-muted, @card-group-status-text-color);
       flex: 0 0 auto;
-      font-size: @font-size-xs;
-      font-weight: @font-weight-normal;
+      font-size: var(--tox-private-font-size-xs, @font-size-xs);
+      font-weight: var(--tox-private-font-weight-normal, @font-weight-normal);
       // Pushed to the far end of the heading, past the space the ellipsising title gives up
       margin-inline-start: auto;
     }
@@ -350,10 +390,10 @@
     &__content {
       display: flex;
       flex-direction: column;
-      gap: @card-section-gap;
+      gap: var(--tox-private-card-section-gap, @card-section-gap);
       // The cards are inset from the sides of the group as far as the heading text is, and from the heading band
       // above and the group below
-      padding: @card-section-padding;
+      padding: var(--tox-private-card-section-padding, @card-section-padding);
     }
   }
 }
