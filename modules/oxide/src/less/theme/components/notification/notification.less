@@ -52,6 +52,55 @@
 @_color-info: #3087eb;
 
 .tox {
+  .tox-notification when (@custom-properties-enabled = true) {
+    --tox-private-notification-color-warn: #ffcc00;
+    --tox-private-notification-color-info: #3087eb;
+
+    --tox-private-notification-border-radius: var(--tox-private-panel-border-radius);
+    --tox-private-notification-font-size: var(--tox-private-font-size-sm);
+
+    --tox-private-notification-success-background-color: color-mix(in srgb, var(--tox-private-background-color) 80%, var(--tox-private-color-success));
+    --tox-private-notification-success-border-color: color-mix(in srgb, var(--tox-private-background-color) 70%, var(--tox-private-color-success));
+    --tox-private-notification-success-text-color: var(--tox-private-text-color);
+    --tox-private-notification-success-link-color: color-mix(in srgb, var(--tox-private-text-color) 45%, var(--tox-private-color-success));
+    --tox-private-notification-success-link-hover-color: hsl(from var(--tox-private-notification-success-link-color) h s calc(l - 20));
+    --tox-private-notification-success-link-active-color: hsl(from var(--tox-private-notification-success-link-color) h s calc(l - 30));
+
+    // Yellow warning color mixes particularly bad with darker colors, hence the separate dark values
+    --tox-private-notification-warn-background-color: light-dark(
+      color-mix(in srgb, white 80%, var(--tox-private-notification-color-warn)),
+      var(--tox-private-background-color)
+    );
+    --tox-private-notification-warn-border-color: light-dark(
+      color-mix(in srgb, white 70%, var(--tox-private-notification-color-warn)),
+      var(--tox-private-separator-color)
+    );
+    --tox-private-notification-warn-text-color: light-dark(
+      var(--tox-private-text-color),
+      color-mix(in srgb, var(--tox-private-text-color) 70%, var(--tox-private-notification-color-warn))
+    );
+    --tox-private-notification-warn-link-color: light-dark(
+      color-mix(in srgb, var(--tox-private-text-color) 60%, var(--tox-private-notification-color-warn)),
+      var(--tox-private-notification-color-warn)
+    );
+    --tox-private-notification-warn-link-hover-color: hsl(from var(--tox-private-notification-warn-link-color) h s calc(l - 20));
+    --tox-private-notification-warn-link-active-color: hsl(from var(--tox-private-notification-warn-link-color) h s calc(l - 30));
+
+    --tox-private-notification-error-background-color: color-mix(in srgb, var(--tox-private-background-color) 80%, var(--tox-private-color-error));
+    --tox-private-notification-error-border-color: color-mix(in srgb, var(--tox-private-background-color) 70%, var(--tox-private-color-error));
+    --tox-private-notification-error-text-color: var(--tox-private-text-color);
+    --tox-private-notification-error-link-color: color-mix(in srgb, var(--tox-private-text-color) 50%, var(--tox-private-color-error));
+    --tox-private-notification-error-link-hover-color: hsl(from var(--tox-private-notification-error-link-color) h s calc(l - 20));
+    --tox-private-notification-error-link-active-color: hsl(from var(--tox-private-notification-error-link-color) h s calc(l - 30));
+
+    --tox-private-notification-info-background-color: color-mix(in srgb, var(--tox-private-background-color) 80%, var(--tox-private-notification-color-info));
+    --tox-private-notification-info-border-color: color-mix(in srgb, var(--tox-private-background-color) 70%, var(--tox-private-notification-color-info));
+    --tox-private-notification-info-text-color: var(--tox-private-text-color);
+    --tox-private-notification-info-link-color: color-mix(in srgb, var(--tox-private-text-color) 40%, var(--tox-private-notification-color-info));
+    --tox-private-notification-info-link-hover-color: hsl(from var(--tox-private-notification-info-link-color) h s calc(l - 20));
+    --tox-private-notification-info-link-active-color: hsl(from var(--tox-private-notification-info-link-color) h s calc(l - 30));
+  }
+
   // Wraps around many notifications
   .tox-notifications-container {
     //
@@ -59,20 +108,20 @@
 
   // An individual notification
   .tox-notification {
-    border-radius: @notification-border-radius;
+    border-radius: var(--tox-private-notification-border-radius, @notification-border-radius);
     border-style: solid;
     border-width: 1px;
     box-shadow: @notification-box-shadow;
     box-sizing: border-box;
     display: grid;
-    font-size: @notification-font-size;
-    font-weight: @notification-font-weight;
+    font-size: var(--tox-private-notification-font-size, @notification-font-size);
+    font-weight: var(--tox-private-font-weight-normal, @notification-font-weight);
     grid-template-columns: minmax(40px, 1fr) auto minmax(40px, 1fr);
     margin-left: auto;
     margin-right: auto;
-    margin-top: @pad-xs;
+    margin-top: var(--tox-private-pad-xs, @pad-xs);
     opacity: 0;
-    padding: @notification-padding;
+    padding: var(--tox-private-pad-xs, @notification-padding);
     transition: transform 100ms ease-in, opacity 150ms ease-in;
     width: max-content;
 
@@ -82,13 +131,13 @@
     }
 
     p {
-      font-size: @notification-font-size;
-      font-weight: @notification-font-weight;
+      font-size: var(--tox-private-notification-font-size, @notification-font-size);
+      font-weight: var(--tox-private-font-weight-normal, @notification-font-weight);
     }
 
     &:focus {
-      border-color: @notification-focus-border-color;
-      box-shadow: @notification-focus-box-shadow;
+      border-color: var(--tox-private-color-tint, @notification-focus-border-color);
+      box-shadow: var(--tox-private-field-focus-box-shadow, @notification-focus-box-shadow);
     }
   }
 
@@ -97,150 +146,150 @@
   }
 
   .tox-notification--success {
-    background-color: @notification-success-background-color;
-    border-color: @notification-success-border-color;
-    color: @notification-success-text-color;
+    background-color: var(--tox-private-notification-success-background-color, @notification-success-background-color);
+    border-color: var(--tox-private-notification-success-border-color, @notification-success-border-color);
+    color: var(--tox-private-notification-success-text-color, @notification-success-text-color);
 
     p {
-      color: @notification-success-text-color;
+      color: var(--tox-private-notification-success-text-color, @notification-success-text-color);
     }
 
     a {
-      color: @notification-success-link-color;
+      color: var(--tox-private-notification-success-link-color, @notification-success-link-color);
 
       &:hover,
       &:focus {
-        color: @notification-success-link-hover-color;
+        color: var(--tox-private-notification-success-link-hover-color, @notification-success-link-hover-color);
         text-decoration: @notification-link-hover-text-decoration;
       }
 
       &:focus-visible {
-        border-radius: @notification-link-focus-outline-border-radius;
-        outline: 2px solid @notification-success-link-focus-outline-color;
+        border-radius: var(--tox-private-link-focus-outline-border-radius, @notification-link-focus-outline-border-radius);
+        outline: 2px solid var(--tox-private-notification-success-link-color, @notification-success-link-focus-outline-color);
         outline-offset: 2px;
       }
 
       &:active {
-        color: @notification-success-link-active-color;
+        color: var(--tox-private-notification-success-link-active-color, @notification-success-link-active-color);
         text-decoration: @notification-link-active-text-decoration;
       }
     }
 
     svg {
-      fill: @notification-success-text-color;
+      fill: var(--tox-private-notification-success-text-color, @notification-success-text-color);
     }
   }
 
   .tox-notification--error {
-    background-color: @notification-error-background-color;
-    border-color: @notification-error-border-color;
-    color: @notification-error-text-color;
+    background-color: var(--tox-private-notification-error-background-color, @notification-error-background-color);
+    border-color: var(--tox-private-notification-error-border-color, @notification-error-border-color);
+    color: var(--tox-private-notification-error-text-color, @notification-error-text-color);
 
     p {
-      color: @notification-error-text-color;
+      color: var(--tox-private-notification-error-text-color, @notification-error-text-color);
     }
 
     a {
-      color: @notification-error-link-color;
+      color: var(--tox-private-notification-error-link-color, @notification-error-link-color);
 
       &:hover,
       &:focus {
-        color: @notification-error-link-hover-color;
+        color: var(--tox-private-notification-error-link-hover-color, @notification-error-link-hover-color);
         text-decoration: @notification-link-hover-text-decoration;
       }
 
       &:focus-visible {
-        border-radius: @notification-link-focus-outline-border-radius;
-        outline: 2px solid @notification-error-link-focus-outline-color;
+        border-radius: var(--tox-private-link-focus-outline-border-radius, @notification-link-focus-outline-border-radius);
+        outline: 2px solid var(--tox-private-notification-error-link-color, @notification-error-link-focus-outline-color);
         outline-offset: 2px;
       }
 
       &:active {
-        color: @notification-error-link-active-color;
+        color: var(--tox-private-notification-error-link-active-color, @notification-error-link-active-color);
         text-decoration: @notification-link-active-text-decoration;
       }
     }
 
     svg {
-      fill: @notification-error-text-color;
+      fill: var(--tox-private-notification-error-text-color, @notification-error-text-color);
     }
   }
 
   .tox-notification--warn,
   .tox-notification--warning {
-    background-color: @notification-warn-background-color;
-    border-color: @notification-warn-border-color;
-    color: @notification-warn-text-color;
+    background-color: var(--tox-private-notification-warn-background-color, @notification-warn-background-color);
+    border-color: var(--tox-private-notification-warn-border-color, @notification-warn-border-color);
+    color: var(--tox-private-notification-warn-text-color, @notification-warn-text-color);
 
     p {
-      color: @notification-warn-text-color;
+      color: var(--tox-private-notification-warn-text-color, @notification-warn-text-color);
     }
 
     a {
-      color: @notification-warn-link-color;
+      color: var(--tox-private-notification-warn-link-color, @notification-warn-link-color);
 
       &:hover,
       &:focus {
-        color: @notification-warn-link-hover-color;
+        color: var(--tox-private-notification-warn-link-hover-color, @notification-warn-link-hover-color);
         text-decoration: @notification-link-hover-text-decoration;
       }
 
       &:focus-visible {
-        border-radius: @notification-link-focus-outline-border-radius;
-        outline: 2px solid @notification-warn-link-focus-outline-color;
+        border-radius: var(--tox-private-link-focus-outline-border-radius, @notification-link-focus-outline-border-radius);
+        outline: 2px solid var(--tox-private-notification-warn-link-color, @notification-warn-link-focus-outline-color);
         outline-offset: 2px;
       }
 
       &:active {
-        color: @notification-warn-link-active-color;
+        color: var(--tox-private-notification-warn-link-active-color, @notification-warn-link-active-color);
         text-decoration: @notification-link-active-text-decoration;
       }
     }
 
     svg {
-      fill: @notification-warn-text-color;
+      fill: var(--tox-private-notification-warn-text-color, @notification-warn-text-color);
     }
   }
 
   .tox-notification--info {
-    background-color: @notification-info-background-color;
-    border-color: @notification-info-border-color;
-    color: @notification-info-text-color;
+    background-color: var(--tox-private-notification-info-background-color, @notification-info-background-color);
+    border-color: var(--tox-private-notification-info-border-color, @notification-info-border-color);
+    color: var(--tox-private-notification-info-text-color, @notification-info-text-color);
 
     p {
-      color: @notification-info-text-color;
+      color: var(--tox-private-notification-info-text-color, @notification-info-text-color);
     }
 
     a {
-      color: @notification-info-link-color;
+      color: var(--tox-private-notification-info-link-color, @notification-info-link-color);
 
       &:hover,
       &:focus {
-        color: @notification-info-link-hover-color;
+        color: var(--tox-private-notification-info-link-hover-color, @notification-info-link-hover-color);
         text-decoration: @notification-link-hover-text-decoration;
       }
 
       &:focus-visible {
-        border-radius: @notification-link-focus-outline-border-radius;
-        outline: 2px solid @notification-info-link-focus-outline-color;
+        border-radius: var(--tox-private-link-focus-outline-border-radius, @notification-link-focus-outline-border-radius);
+        outline: 2px solid var(--tox-private-notification-info-link-color, @notification-info-link-focus-outline-color);
         outline-offset: 2px;
       }
 
       &:active {
-        color: @notification-info-link-active-color;
+        color: var(--tox-private-notification-info-link-active-color, @notification-info-link-active-color);
         text-decoration: @notification-link-active-text-decoration;
       }
     }
 
     svg {
-      fill: @notification-info-text-color;
+      fill: var(--tox-private-notification-info-text-color, @notification-info-text-color);
     }
   }
 
   // Content within the notification
   .tox-notification__body {
     align-self: center;
-    color: @text-color;
+    color: var(--tox-private-text-color, @text-color);
     font-size: 14px;
     grid-column-end: 3;
     grid-column-start: 2;
