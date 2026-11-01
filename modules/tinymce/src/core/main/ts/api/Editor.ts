@@ -846,11 +846,15 @@ class Editor implements EditorObservable {
    * Sets the specified content to the editor instance, this will cleanup the content before it gets set using
    * the different cleanup rules options.
    * <br>
-   * <em>Note: The content return value was deprecated in TinyMCE 6.0 and has been marked for removal in TinyMCE 7.0.</em>
+   * <em>Note: This method does not add an undo level. To add one, call <code>editor.undoManager.add()</code> after setting the content.</em>
+   * <br>
+   * <em>Note: To change the content before it is set, update the <code>content</code> property in a <code>BeforeSetContent</code> event handler.</em>
    *
    * @method setContent
-   * @param {String} content Content to set to editor, normally HTML contents but can be other formats as well.
+   * @param {String} content Content to set to editor, normally HTML contents.
    * @param {Object} args Optional content object, this gets passed around through the whole set process.
+   * @param {Boolean} args.no_events If true, the BeforeSetContent and SetContent events are not dispatched. Defaults to false.
+   * @param {Boolean} args.no_selection If true, the selection is not moved to the start of the new content. Defaults to false.
    * @example
    * // Sets the HTML contents of the activeEditor editor
    * tinymce.activeEditor.setContent('<span>some</span> html');
@@ -860,6 +864,13 @@ class Editor implements EditorObservable {
    *
    * // Sets the content of the activeEditor editor using the specified format
    * tinymce.activeEditor.setContent('<p>Some html</p>', { format: 'html' });
+   *
+   * // Sets the content without dispatching the BeforeSetContent and SetContent events
+   * tinymce.activeEditor.setContent('<p>Some html</p>', { no_events: true });
+   *
+   * // Sets the content and adds an undo level so the change can be undone
+   * tinymce.activeEditor.setContent('<p>Some html</p>');
+   * tinymce.activeEditor.undoManager.add();
    */
   public setContent(content: string | AstNode, args?: Partial<EditorContent.SetContentArgs>): void;
   public setContent(content: EditorContent.Content, args?: Partial<EditorContent.SetContentArgs>): void {
