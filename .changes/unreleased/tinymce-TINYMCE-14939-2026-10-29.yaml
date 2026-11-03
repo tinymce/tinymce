@@ -1,0 +1,6 @@
+project: tinymce
+kind: Added
+body: New `getFullySelectedBlocks` function added to `tinymce.selection` which returns the blocks fully covered by the selection.
+time: 2026-10-29T12:00:00.000000+10:00
+custom:
+    Issue: TINYMCE-14939
