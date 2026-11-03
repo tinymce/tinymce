@@ -111,9 +111,9 @@ describe.skip('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolba
       position: 'selection',
       scroll: { relativeTop: true, delta: -10 },
       assertBounds: (bounds) => ({
-        x: bounds.content.x + expectedMargin,
+        x: bounds.content.x,
         y: bounds.header.bottom + expectedMargin,
-        right: bounds.content.right - expectedMargin,
+        right: bounds.content.right,
         bottom: bounds.viewport.bottom
       })
     }));
@@ -123,9 +123,9 @@ describe.skip('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolba
       position: 'selection',
       scroll: { relativeTop: true, delta: -10 },
       assertBounds: (bounds) => ({
-        x: bounds.content.x + expectedMargin,
+        x: bounds.content.x,
         y: bounds.viewport.y,
-        right: bounds.content.right - expectedMargin,
+        right: bounds.content.right,
         bottom: bounds.viewport.bottom
       })
     }));
@@ -135,9 +135,9 @@ describe.skip('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolba
       position: 'selection',
       scroll: { relativeTop: true, delta: -10 },
       assertBounds: (bounds) => ({
-        x: bounds.content.x + expectedMargin,
+        x: bounds.content.x,
         y: bounds.header.bottom + expectedMargin,
-        right: bounds.content.right - expectedMargin,
+        right: bounds.content.right,
         bottom: bounds.content.bottom - expectedMargin
       })
     }));
@@ -147,9 +147,9 @@ describe.skip('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolba
       position: 'node',
       scroll: { relativeTop: true, delta: -10 },
       assertBounds: (bounds) => ({
-        x: bounds.content.x + expectedMargin,
+        x: bounds.content.x,
         y: bounds.header.bottom + expectedMargin,
-        right: bounds.content.right - expectedMargin,
+        right: bounds.content.right,
         bottom: bounds.content.bottom - expectedMargin
       })
     }));
@@ -159,9 +159,9 @@ describe.skip('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolba
       position: 'line',
       scroll: { relativeTop: true, delta: -10 },
       assertBounds: (bounds) => ({
-        x: bounds.content.x + expectedMargin,
+        x: bounds.content.x,
         y: bounds.header.bottom + expectedMargin,
-        right: bounds.content.right - expectedMargin,
+        right: bounds.content.right,
         bottom: bounds.container.bottom - expectedMargin
       })
     }));
@@ -171,9 +171,9 @@ describe.skip('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolba
       position: 'selection',
       scroll: { relativeTop: true, delta: 200 },
       assertBounds: (bounds) => ({
-        x: bounds.content.x + expectedMargin,
+        x: bounds.content.x,
         y: bounds.viewport.y,
-        right: bounds.content.right - expectedMargin,
+        right: bounds.content.right,
         bottom: bounds.content.bottom - expectedMargin
       })
     }));
@@ -183,9 +183,9 @@ describe.skip('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolba
       position: 'selection',
       scroll: { relativeTop: false, delta: -200 },
       assertBounds: (bounds: TestBounds) => ({
-        x: bounds.content.x + expectedMargin,
+        x: bounds.content.x,
         y: bounds.content.y + expectedMargin,
-        right: bounds.content.right - expectedMargin,
+        right: bounds.content.right,
         bottom: bounds.viewport.bottom
       })
     }));
@@ -197,9 +197,9 @@ describe.skip('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolba
       position: 'node',
       scroll: { relativeTop: true, delta: -10 },
       assertBounds: (bounds: TestBounds) => ({
-        x: bounds.content.x + expectedMargin,
+        x: bounds.content.x,
         y: bounds.content.y + expectedMargin,
-        right: bounds.content.right - expectedMargin,
+        right: bounds.content.right,
         bottom: bounds.header.y - expectedMargin
       })
     }));
@@ -209,9 +209,9 @@ describe.skip('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolba
       position: 'selection',
       scroll: { relativeTop: true, delta: -10 },
       assertBounds: (bounds: TestBounds) => ({
-        x: bounds.content.x + expectedMargin,
+        x: bounds.content.x,
         y: bounds.viewport.y,
-        right: bounds.content.right - expectedMargin,
+        right: bounds.content.right,
         bottom: bounds.header.y - expectedMargin
       })
     }));

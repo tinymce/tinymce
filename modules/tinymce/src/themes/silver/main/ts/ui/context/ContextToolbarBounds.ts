@@ -48,9 +48,9 @@ const getAnchorElementBounds = (editor: Editor, lastElement: Optional<SugarEleme
     .map(Boxes.absolute)
     .getOrThunk(() => getSelectionBounds(editor));
 
-const getHorizontalBounds = (contentAreaBox: Bounds, viewportBounds: Bounds, margin: number): { x: number; width: number } => {
-  const x = Math.max(contentAreaBox.x + margin, viewportBounds.x);
-  const right = Math.min(contentAreaBox.right - margin, viewportBounds.right);
+const getHorizontalBounds = (contentAreaBox: Bounds, viewportBounds: Bounds): { x: number; width: number } => {
+  const x = Math.max(contentAreaBox.x, viewportBounds.x);
+  const right = Math.min(contentAreaBox.right, viewportBounds.right);
   return { x, width: right - x };
 };
 
@@ -112,7 +112,7 @@ const getContextToolbarBounds = (
   const contentAreaBox = Boxes.box(SugarElement.fromDom(editor.getContentAreaContainer()));
   const toolbarOrMenubarEnabled = Options.isMenubarEnabled(editor) || Options.isToolbarEnabled(editor) || Options.isMultipleToolbars(editor);
 
-  const { x, width } = getHorizontalBounds(contentAreaBox, viewportBounds, margin);
+  const { x, width } = getHorizontalBounds(contentAreaBox, viewportBounds);
 
   // Create bounds that lets the context toolbar overflow outside the content area, but remains in the viewport
   if (editor.inline && !toolbarOrMenubarEnabled) {

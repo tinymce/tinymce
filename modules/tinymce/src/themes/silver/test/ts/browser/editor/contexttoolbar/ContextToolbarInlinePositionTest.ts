@@ -41,6 +41,18 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarInli
         items: 'alpha',
         position: 'node'
       });
+      Arr.each([ 'beta', 'gamma', 'delta' ], (name) => {
+        ed.ui.registry.addButton(name, {
+          text: name.charAt(0).toUpperCase() + name.slice(1),
+          onAction: Fun.noop
+        });
+      });
+      // TINY-13900: Deliberately wide, so that it is wider than the narrow node it anchors to
+      ed.ui.registry.addContextToolbar('test-image-toolbar', {
+        predicate: (node) => node.nodeName.toLowerCase() === 'img',
+        items: 'alpha beta gamma delta',
+        position: 'node'
+      });
     }
   }, [], true);
 
@@ -154,5 +166,24 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarInli
     // Select the 5th row in the table, then make sure the toolbar appears at the bottom due to the overlap
     TinySelections.setCursor(editor, [ 0, 0, 4, 0, 0 ], 0);
     await UiFinder.pWaitForVisible('Waiting for toolbar to appear at the bottom inside content', SugarBody.body(), bottomInsetSelector);
+  });
+
+  it('TINY-13900: Node toolbar stays attached to a node that is narrower than the toolbar and flush with the content area edge', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p style="height: 300px"></p><p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" style="width: 20px; height: 20px"></p><p style="height: 300px"></p>');
+    scrollTo(editor, 0, -200, 300);
+    TinySelections.select(editor, 'img', []);
+
+    await UiFinder.pWaitForVisible('Waiting for a non-inset toolbar above the image', SugarBody.body(), topSelector);
+    await Waiter.pTryUntil('Toolbar should be aligned to the left edge of the image', () => {
+      const pop = UiFinder.findIn<HTMLElement>(SugarBody.body(), '.tox-pop').getOrDie();
+      const image = UiFinder.findIn<HTMLElement>(TinyDom.body(editor), 'img').getOrDie();
+      assert.approximately(
+        pop.dom.getBoundingClientRect().left,
+        image.dom.getBoundingClientRect().left,
+        2,
+        'Toolbar left should line up with the image left'
+      );
+    });
   });
 });

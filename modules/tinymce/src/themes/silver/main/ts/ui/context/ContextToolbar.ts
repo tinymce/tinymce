@@ -282,7 +282,8 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
 
   editor.on('init', () => {
     editor.on('remove', close);
-    editor.on('ScrollContent ScrollWindow ObjectResized ResizeEditor longpress', hideOrRepositionIfNecessary);
+    editor.on('ScrollContent ScrollWindow longpress', hideOrRepositionIfNecessary);
+    editor.on('ObjectResized ResizeEditor', instantReposition);
 
     // FIX: Make it go away when the action makes it go away. E.g. deleting a column deletes the table.
     editor.on('click focus SetContent', launchContextToolbar.throttle);
