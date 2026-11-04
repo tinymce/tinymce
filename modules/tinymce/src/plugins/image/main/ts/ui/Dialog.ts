@@ -239,25 +239,28 @@ const changeFileInput = (helpers: Helpers, info: ImageDialogInfo, state: ImageDi
         api.focus('src');
       };
 
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      Utils.blobToDataUri(file).then((dataUrl) => {
-        const blobInfo = helpers.createBlobCache(file, blobUri, dataUrl);
-        if (info.automaticUploads) {
-          helpers.uploadImage(blobInfo).then((result) => {
-            updateSrcAndSwitchTab(result.url);
-            finalize();
-          }).catch((err) => {
-            finalize();
-            info.alertErr(err, () => {
-              api.focus('fileinput');
-            });
-          });
-        } else {
-          helpers.addToBlobCache(blobInfo);
-          updateSrcAndSwitchTab(blobInfo.blobUri());
-          api.unblock();
-        }
-      });
+      const handleError = (err: string) => {
+        finalize();
+        info.alertErr(err, () => {
+          api.focus('fileinput');
+        });
+      };
+
+      Utils.blobToDataUri(file)
+        .then((dataUrl) => helpers.createBlobCache(file, blobUri, dataUrl))
+        .then((blobInfo) => {
+          if (info.automaticUploads) {
+            helpers.uploadImage(blobInfo).then((result) => {
+              updateSrcAndSwitchTab(result.url);
+              finalize();
+            }).catch(handleError);
+          } else {
+            helpers.addToBlobCache(blobInfo);
+            updateSrcAndSwitchTab(blobInfo.blobUri());
+            api.unblock();
+          }
+        })
+        .catch(() => handleError('Failed to upload image'));
     });
 };
 

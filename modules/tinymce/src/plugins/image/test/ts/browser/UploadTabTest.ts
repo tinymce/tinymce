@@ -1,6 +1,6 @@
 import { Assertions, FileInput, Files, FocusTools, Mouse, UiFinder, Waiter } from '@ephox/agar';
-import { afterEach, describe, it } from '@ephox/bedrock-client';
-import { Strings } from '@ephox/katamari';
+import { afterEach, Assert, describe, it } from '@ephox/bedrock-client';
+import { Arr, Strings } from '@ephox/katamari';
 import { SugarBody, SugarDocument, Value } from '@ephox/sugar';
 import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -42,13 +42,16 @@ describe('browser.tinymce.plugins.image.UploadTabTest', () => {
     closeDialog(editor);
   };
 
-  const pTriggerUpload = async (editor: Editor, fileExtension: string = 'png') => {
-    const blob = await Conversions.uriToBlob(b64);
-    await FileInput.pRunOnPatchedFileInput([ Files.createFile(`logo.${fileExtension}`, 0, blob) ], async () => {
+  const pTriggerUploadWithFile = (editor: Editor, file: File) =>
+    FileInput.pRunOnPatchedFileInput([ file ], async () => {
       const dialog = await TinyUiActions.pWaitForDialog(editor);
       const button = UiFinder.findIn(dialog, 'button:contains("Browse for an image")').getOrDie();
       Mouse.click(button);
     });
+
+  const pTriggerUpload = async (editor: Editor, fileExtension: string = 'png') => {
+    const blob = await Conversions.uriToBlob(b64);
+    await pTriggerUploadWithFile(editor, Files.createFile(`logo.${fileExtension}`, 0, blob));
   };
 
   const pAssertSrcTextValue = (expectedValue: string) => Waiter.pTryUntil('Waited for input to change to expected value', () => {
@@ -223,5 +226,29 @@ describe('browser.tinymce.plugins.image.UploadTabTest', () => {
     TinyUiActions.clickOnUi(editor, 'button:contains("OK")');
     await FocusTools.pTryOnSelector('After closing the error alert the focus should be on the browse files button', SugarDocument.getDocument(), 'button:contains("Browse for an image")');
     closeDialog(editor);
+  });
+
+  Arr.each([ true, false ], (automaticUploads) => {
+    it(`TINYMCE-7202: Uploading an empty file should show an error and unblock the dialog (automatic_uploads: ${automaticUploads})`, async () => {
+      const editor = hook.editor();
+      editor.setContent('');
+      editor.options.set('automatic_uploads', automaticUploads);
+      let handlerCalled = false;
+      editor.options.set('images_upload_handler', () => {
+        handlerCalled = true;
+        return Promise.resolve('file.jpg');
+      });
+      TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Insert/edit image"]');
+      await TinyUiActions.pWaitForDialog(editor);
+      TinyUiActions.clickOnUi(editor, '.tox-tab:contains("Upload")');
+      await pTriggerUploadWithFile(editor, Files.createFileFromString('this_is_not_a_png.png', 0, '', 'image/png'));
+      await TinyUiActions.pWaitForDialog(editor, '[role="alertdialog"] p:contains("Failed to upload image")');
+      TinyUiActions.clickOnUi(editor, 'button:contains("OK")');
+      await FocusTools.pTryOnSelector('After closing the error alert the focus should be on the browse files button', SugarDocument.getDocument(), 'button:contains("Browse for an image")');
+      UiFinder.notExists(SugarBody.body(), '.tox-dialog__busy-spinner');
+      UiFinder.exists(SugarBody.body(), '.tox-dialog__body-nav-item--active:contains("Upload")');
+      Assert.eq('Upload handler should not be called for an empty file', false, handlerCalled);
+      closeDialog(editor);
+    });
   });
 });
