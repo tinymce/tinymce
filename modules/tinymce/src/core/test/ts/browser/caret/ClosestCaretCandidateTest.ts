@@ -22,7 +22,7 @@ interface TestArgs<T> {
 
 describe('browser.tinymce.core.ClosestCaretCandidateTest', () => {
   const drawHelperPoint = (container: SugarElement<Element>, x: number, y: number, color: string) => {
-    const cpos = SugarLocation.absolute(container);
+    const cpos = SugarLocation.viewport(container);
     const elm = SugarElement.fromTag('div');
 
     Css.setAll(elm, {
@@ -59,7 +59,7 @@ describe('browser.tinymce.core.ClosestCaretCandidateTest', () => {
     const testClosestCaretCandidate = (args: TestArgs<number[]>) => {
       const container = createContainer(args.html);
       const target = Cursors.calculateOne(container, args.targetPath) as SugarElement<Element>;
-      const pos = SugarLocation.absolute(target);
+      const pos = SugarLocation.viewport(target);
       const actualDomRect = closestCaretCandidateNodeRect(container.dom, pos.left + args.dx, pos.top + args.dy);
 
       drawHelperPoint(container, pos.left + args.dx, pos.top + args.dy, 'red');
@@ -305,7 +305,7 @@ describe('browser.tinymce.core.ClosestCaretCandidateTest', () => {
     const testClosestFakeCaret = (args: TestArgs<TestCaretInfo>) => {
       const container = createContainer(args.html);
       const target = Cursors.calculateOne(container, args.targetPath) as SugarElement<Element>;
-      const pos = SugarLocation.absolute(target);
+      const pos = SugarLocation.viewport(target);
       const dom = DOMUtils(document, { root_element: container.dom });
       const actualCaretInfo = closestFakeCaretCandidate(dom, container.dom, pos.left + args.dx, pos.top + args.dy);
 

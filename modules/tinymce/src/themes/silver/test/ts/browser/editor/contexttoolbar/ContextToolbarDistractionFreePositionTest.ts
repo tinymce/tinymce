@@ -17,8 +17,7 @@ interface Scenario {
   readonly classes: string;
 }
 
-// TODO TINY-10480: Investigate flaky tests
-describe.skip('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarDistractionFreePositionTest', () => {
+describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarDistractionFreePositionTest', () => {
   const topSelector = '.tox-pop.tox-pop--bottom:not(.tox-pop--inset):not(.tox-pop--transition)';
   const bottomSelector = '.tox-pop.tox-pop--top:not(.tox-pop--inset):not(.tox-pop--transition)';
 
@@ -75,8 +74,8 @@ describe.skip('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolba
     scrollTo(editor, 0, 100);
     await UiFinder.pWaitForHidden('Waiting for toolbar to be hidden', SugarBody.body(), '.tox-pop');
 
-    // Position the element just back into view
-    scrollTo(editor, 0, -60);
+    // Position the element just back into view, with room for the toolbar above it
+    scrollTo(editor, 0, -100);
     await UiFinder.pWaitForVisible('Waiting for toolbar to appear above content', SugarBody.body(), topSelector + scenario.classes);
     assertPosition('bottom', 1537);
 

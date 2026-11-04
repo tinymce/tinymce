@@ -7,8 +7,7 @@ import { assert } from 'chai';
 import type Editor from 'tinymce/core/api/Editor';
 import * as ScrollIntoView from 'tinymce/core/dom/ScrollIntoView';
 
-// TODO TINY-10480: Investigate flaky tests
-describe.skip('browser.tinymce.themes.silver.editor.header.StickyHeaderScrollIntoViewTest', () => {
+describe('browser.tinymce.themes.silver.editor.header.StickyHeaderScrollIntoViewTest', () => {
 
   const hook = TinyHooks.bddSetup<Editor>({
     add_unload_trigger: false,
@@ -50,6 +49,8 @@ describe.skip('browser.tinymce.themes.silver.editor.header.StickyHeaderScrollInt
   };
 
   const headerHeight = 85;
+  // ScrollIntoView leaves this much room after the element when aligning to the bottom
+  const scrollMargin = 30;
   let initialContainerPos: SugarPosition;
   let expectedSecondParaScrollBottomPos: number;
   let expectedSecondParaScrollTopPos: number;
@@ -69,7 +70,7 @@ describe.skip('browser.tinymce.themes.silver.editor.header.StickyHeaderScrollInt
       const editor = hook.editor();
       await pSetContent(editor, '<p style="height: 2000px">a</p><p style="height: 50px">b</p><p style="height: 2000px">c</p>');
       scrollElementIntoView(editor, 'p:nth-child(2)', false);
-      assertApproxScrollPosition(editor, 0, expectedSecondParaScrollBottomPos + 50); // expected pos + para height
+      assertApproxScrollPosition(editor, 0, expectedSecondParaScrollBottomPos + 50 + scrollMargin); // expected pos + para height
     });
 
     it('Scroll to element align to top', async () => {
@@ -86,13 +87,13 @@ describe.skip('browser.tinymce.themes.silver.editor.header.StickyHeaderScrollInt
       await pSetContent(editor, '<p style="height: 2000px">a</p><p style="height: 50px">b</p><p style="height: 2000px">c</p>');
       // Scroll to second paragraph
       scrollRangeIntoView(editor, [ 1, 0 ], 0);
-      assertApproxScrollPosition(editor, 0, expectedSecondParaScrollBottomPos + 17); // expected pos + para line height
+      assertApproxScrollPosition(editor, 0, expectedSecondParaScrollBottomPos + 17 + scrollMargin); // expected pos + para line height
       // Scroll back to first paragraph
       scrollRangeIntoView(editor, [ 0, 0 ], 0);
       assertApproxScrollPosition(editor, 0, initialContainerPos.top - headerHeight);
       // Scroll to last paragraph
       scrollRangeIntoView(editor, [ 2, 0 ], 0);
-      assertApproxScrollPosition(editor, 0, expectedSecondParaScrollBottomPos + 50 + 17); // expected pos + second para height + para line height,
+      assertApproxScrollPosition(editor, 0, expectedSecondParaScrollBottomPos + 50 + 17 + scrollMargin); // expected pos + second para height + para line height,
       // Scroll back to first paragraph
       scrollRangeIntoView(editor, [ 0, 0 ], 0);
       assertApproxScrollPosition(editor, 0, initialContainerPos.top - headerHeight);

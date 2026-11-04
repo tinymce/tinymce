@@ -33,8 +33,7 @@ describe('headless.tinymce.themes.silver.window.WindowManagerAlertTest', () => {
     () => UiFinder.exists(SugarBody.body(), '.tox-dialog__body')
   );
 
-  // TODO TINY-10480: Investigate flaky tests
-  it.skip('Check the basic structure of the alert dialog', async () => {
+  it('Check the basic structure of the alert dialog', async () => {
     createAlert('The alert dialog loads with the basic structure', Fun.noop);
     await pWaitForDialog();
     const sink = extrasHook.access().getDialogSink();
@@ -55,7 +54,7 @@ describe('headless.tinymce.themes.silver.window.WindowManagerAlertTest', () => {
                       display: str.is('none')
                     },
                     children: [
-                      s.element('h1', {
+                      s.element('div', {
                         classes: [ arr.has('tox-dialog__title') ],
                         styles: {
                           display: str.is('none')
@@ -128,8 +127,7 @@ describe('headless.tinymce.themes.silver.window.WindowManagerAlertTest', () => {
     await pTeardown();
   });
 
-  // TODO TINY-10480: Investigate flaky tests
-  it.skip('Should display a HTML error message', async () => {
+  it('Should display a HTML error message', async () => {
     const label = 'should display this <strong>message</strong>';
     createAlert(label, Fun.noop);
     const dialogBody = SelectorFind.descendant(SugarDocument.getDocument(), '.tox-dialog__body').getOrDie('Cannot find dialog body element');
@@ -152,8 +150,7 @@ describe('headless.tinymce.themes.silver.window.WindowManagerAlertTest', () => {
     await pTeardown();
   });
 
-  // TODO TINY-10480: Investigate flaky tests
-  it.skip('The callback should fire when ok is invoked', async () => {
+  it('The callback should fire when ok is invoked', async () => {
     let calls = 0;
     const testCallback = () => {
       calls++;
@@ -168,15 +165,13 @@ describe('headless.tinymce.themes.silver.window.WindowManagerAlertTest', () => {
     assert.equal(calls, 1, 'Clicking on close should call the callback fn once');
   });
 
-  // TODO TINY-10480: Investigate flaky tests
-  it.skip('Should focus on the ok button initially', async () => {
+  it('Should focus on the ok button initially', async () => {
     createAlert('initial focus should be on ok button', Fun.noop);
-    FocusTools.sTryOnSelector('When the alert dialog loads, focus should be on the ok button', SugarDocument.getDocument(), 'button:contains(OK)');
+    await FocusTools.pTryOnSelector('When the alert dialog loads, focus should be on the ok button', SugarDocument.getDocument(), 'button:contains(OK)');
     await pTeardown();
   });
 
-  // TODO TINY-10480: Investigate flaky tests
-  it.skip('Should focus the first button when the dialog is clicked', async () => {
+  it('Should focus the first button when the dialog is clicked', async () => {
     createAlert('Click should focus ok button', Fun.noop);
     await FocusTools.pTryOnSelector('When the alert dialog loads, focus should be on the ok button', SugarDocument.getDocument(), 'button:contains(OK)');
     Mouse.trueClickOn(SugarDocument.getDocument(), '.tox-dialog');
@@ -184,15 +179,13 @@ describe('headless.tinymce.themes.silver.window.WindowManagerAlertTest', () => {
     await pTeardown();
   });
 
-  // TODO TINY-10480: Investigate flaky tests
-  it.skip('Check that clicking ok in the dialog makes the dialog go away', () => {
+  it('Check that clicking ok in the dialog makes the dialog go away', () => {
     createAlert('Showing an alert', Fun.noop);
     Mouse.clickOn(SugarBody.body(), '.tox-button:contains("OK")');
     UiFinder.notExists(SugarBody.body(), '[role="dialog"]');
   });
 
-  // TODO TINY-10480: Investigate flaky tests
-  it.skip('TINY-3548: sanitize message', async () => {
+  it('TINY-3548: sanitize message', async () => {
     createAlert('<a href="javascript:alert(1)">invalid link</a><script>alert(1)</script><a href="http://tiny.cloud">valid link</a>', Fun.noop);
     const dialogBody = SelectorFind.descendant(SugarDocument.getDocument(), '.tox-dialog__body').getOrDie('Cannot find dialog body element');
     Assertions.assertStructure('A basic alert dialog should have these components',

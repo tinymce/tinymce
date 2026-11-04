@@ -1,5 +1,6 @@
 import { FocusTools, Keys, UiFinder, Waiter } from '@ephox/agar';
 import { after, describe, it } from '@ephox/bedrock-client';
+import { Arr } from '@ephox/katamari';
 import { Attribute, SugarBody, SugarDocument, SugarElement } from '@ephox/sugar';
 import { TinyAssertions, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -11,8 +12,7 @@ import Plugin from 'tinymce/plugins/emoticons/Plugin';
 
 declare let tinymce: TinyMCE;
 
-// TODO TINY-10480: Investigate flaky tests
-describe.skip('browser.tinymce.plugins.emoticons.ImageEmojiTest', () => {
+describe('browser.tinymce.plugins.emoticons.ImageEmojiTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'emoticons',
     toolbar: 'emoticons',
@@ -38,11 +38,11 @@ describe.skip('browser.tinymce.plugins.emoticons.ImageEmojiTest', () => {
     await Waiter.pTryUntil(
       'Wait until dog is the first choice (search should filter)',
       () => {
-        const item = UiFinder.findIn(SugarBody.body(), '.tox-collection__item:first').getOrDie();
+        const item = Arr.head(UiFinder.findAllIn(SugarBody.body(), '.tox-collection__item')).getOrDie('No emoji items found');
         const attr = Attribute.get(item, 'data-collection-item-value') as string;
         const img = SugarElement.fromHtml<HTMLImageElement>(attr);
         const src = Attribute.get(img, 'src');
-        assert.equal(src, 'https://twemoji.maxcdn.com/v/13.0.1/72x72/1f436.png', 'Search should show a dog');
+        assert.equal(src, 'https://cdnjs.cloudflare.com/ajax/libs/twemoji/15.1.0/72x72/1f436.png', 'Search should show a dog');
       }
     );
     TinyUiActions.keydown(editor, Keys.tab());
@@ -55,7 +55,7 @@ describe.skip('browser.tinymce.plugins.emoticons.ImageEmojiTest', () => {
         'img[data-mce-resize="false"]': 1,
         'img[data-mce-placeholder="1"]': 1,
         'img[alt="\ud83d\udc36"]': 1,
-        'img[src="https://twemoji.maxcdn.com/v/13.0.1/72x72/1f436.png"]': 1
+        'img[src="https://cdnjs.cloudflare.com/ajax/libs/twemoji/15.1.0/72x72/1f436.png"]': 1
       })
     );
   });

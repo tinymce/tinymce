@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, UiFinder } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun, Type } from '@ephox/katamari';
-import { Css, Scroll, SugarBody, type SugarElement } from '@ephox/sugar';
+import { Css, Scroll, SugarBody, type SugarElement, SugarLocation, WindowVisualViewport } from '@ephox/sugar';
 import { McEditor, TinyDom } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -11,8 +11,7 @@ import { ToolbarMode } from 'tinymce/themes/silver/api/Options';
 
 import { pOpenMore } from '../../module/MenuUtils';
 
-// TODO TINY-10480: Investigate flaky tests
-describe.skip('browser.tinymce.themes.silver.editor.SilverInlineEditorWidthTest', () => {
+describe('browser.tinymce.themes.silver.editor.SilverInlineEditorWidthTest', () => {
 
   const structureTest = (editor: Editor, container: SugarElement<Node>, maxWidth: number) =>
     Assertions.assertStructure(
@@ -54,9 +53,10 @@ describe.skip('browser.tinymce.themes.silver.editor.SilverInlineEditorWidthTest'
     const width = parseInt(widthString.replace('px', ''), 10);
     assert.isAtMost(width, maxWidth, `Toolbar with should be less than ${maxWidth}px - ${width}<=${maxWidth}`);
     assert.isAtLeast(width, minWidth, `Toolbar with should be greater than ${minWidth}px - ${width}>=${minWidth}`);
+    assert.isAbove(width, 0, 'Toolbar should not be collapsed');
   };
 
-  const testRender = (options: RawEditorOptions, expectedWidth: number, pActions?: (editor: Editor) => Promise<void>) => async () => {
+  const testRender = (options: RawEditorOptions, getExpectedWidth: number | ((editor: Editor) => number), pActions?: (editor: Editor) => Promise<void>, minWidthBelow = 100) => async () => {
     Scroll.to(0, 0);
     const editor = await McEditor.pFromSettings<Editor>({
       menubar: false,
@@ -68,13 +68,14 @@ describe.skip('browser.tinymce.themes.silver.editor.SilverInlineEditorWidthTest'
     editor.focus();
     await UiFinder.pWaitForVisible('Wait for the editor to show', SugarBody.body(), '.tox-editor-header');
     const uiContainer = TinyDom.container(editor);
+    const expectedWidth = Type.isFunction(getExpectedWidth) ? getExpectedWidth(editor) : getExpectedWidth;
 
     structureTest(editor, uiContainer, expectedWidth);
-    assertWidth(uiContainer, expectedWidth, expectedWidth - 100);
+    assertWidth(uiContainer, expectedWidth, expectedWidth - minWidthBelow);
     editor.setContent(Arr.range(100, Fun.constant('<p></p>')).join(''));
     Scroll.to(0, 500);
     await UiFinder.pWaitForVisible('Wait to be docked', SugarBody.body(), '.tox-tinymce--toolbar-sticky-on .tox-editor-header');
-    assertWidth(uiContainer, expectedWidth, expectedWidth - 100);
+    assertWidth(uiContainer, expectedWidth, expectedWidth - minWidthBelow);
 
     // Run optional additional actions
     if (Type.isNonNullable(pActions)) {
@@ -92,16 +93,13 @@ describe.skip('browser.tinymce.themes.silver.editor.SilverInlineEditorWidthTest'
     }
   }, 400));
 
-  it('Check max-width is constrained to the body width when no width set', testRender({
-    setup: (ed: Editor) => {
-      ed.on('PreInit', () => {
-        Css.set(SugarBody.body(), 'width', '400px');
-      });
-      ed.on('remove', () => {
-        Css.remove(SugarBody.body(), 'width');
-      });
-    }
-  }, 400));
+  // TINY-10684: with no width set the toolbar is capped to the visual viewport, less the target's left offset and a 10px
+  // margin. The toolbar itself only takes its natural width, so no lower bound applies.
+  it('Check max-width is constrained to the viewport width when no width set', testRender({},
+    (editor) => WindowVisualViewport.getBounds().width - SugarLocation.viewport(TinyDom.targetElement(editor)).left - 10,
+    undefined,
+    Number.MAX_SAFE_INTEGER
+  ));
 
   it('Check width when expanding sliding toolbar while docked', testRender({
     toolbar_mode: 'sliding',

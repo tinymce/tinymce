@@ -9,8 +9,7 @@ import Plugin from 'tinymce/plugins/table/Plugin';
 
 const findAll = (selector: string) => UiFinder.findAllIn(SugarBody.body(), selector);
 
-// TODO TINY-10480: Investigate flaky tests
-describe.skip('browser.tinymce.plugins.table.InlineEditorInsideTableTest', () => {
+describe('browser.tinymce.plugins.table.InlineEditorInsideTableTest', () => {
   const setupElement = () => {
     const containerHtml = '<table>' +
       '<tbody>' +
@@ -50,7 +49,7 @@ describe.skip('browser.tinymce.plugins.table.InlineEditorInsideTableTest', () =>
   const pWaitForMenuBar = (editor: Editor) => TinyUiActions.pWaitForUi(editor, '.tox-menubar');
 
   const pAssertMenuButtonDisabled = (editor: Editor, selector: string, disabled: boolean) =>
-    TinyUiActions.pWaitForUi(editor, `div.tox-collection__item[title="${selector}"][aria-disabled="${disabled}"]`);
+    TinyUiActions.pWaitForUi(editor, `[role="menu"] [aria-label="${selector}"][aria-disabled="${disabled}"]`);
 
   it('TBA: Table outside of inline editor should not become resizable', () => {
     const editor = hook.editor();

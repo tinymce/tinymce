@@ -33,8 +33,7 @@ describe('headless.tinymce.themes.silver.window.WindowManagerConfirmTest', () =>
     () => UiFinder.exists(SugarBody.body(), '.tox-dialog__body')
   );
 
-  // TODO TINY-10480: Investigate flaky tests
-  it.skip('Check the basic structure of the confirm dialog', async () => {
+  it('Check the basic structure of the confirm dialog', async () => {
     createConfirm('The confirm dialog loads with the basic structure', Fun.noop);
     await pWaitForDialog();
     const sink = extrasHook.access().getDialogSink();
@@ -55,7 +54,7 @@ describe('headless.tinymce.themes.silver.window.WindowManagerConfirmTest', () =>
                       display: str.is('none')
                     },
                     children: [
-                      s.element('h1', {
+                      s.element('div', {
                         classes: [ arr.has('tox-dialog__title') ],
                         styles: {
                           display: str.is('none')
@@ -139,8 +138,7 @@ describe('headless.tinymce.themes.silver.window.WindowManagerConfirmTest', () =>
     await pTeardown();
   });
 
-  // TODO TINY-10480: Investigate flaky tests
-  it.skip('Should display a HTML error message', async () => {
+  it('Should display a HTML error message', async () => {
     const label = 'should display this <strong>message</strong>';
     createConfirm(label, Fun.noop);
     const dialogBody = SelectorFind.descendant(SugarDocument.getDocument(), '.tox-dialog__body').getOrDie('Cannot find dialog body element');
@@ -163,8 +161,7 @@ describe('headless.tinymce.themes.silver.window.WindowManagerConfirmTest', () =>
     await pTeardown();
   });
 
-  // TODO TINY-10480: Investigate flaky tests
-  it.skip('The callback should fire when close is invoked', async () => {
+  it('The callback should fire when close is invoked', async () => {
     let calls = 0;
     const testCallback = () => {
       calls++;
@@ -179,15 +176,13 @@ describe('headless.tinymce.themes.silver.window.WindowManagerConfirmTest', () =>
     assert.equal(calls, 1, 'Clicking on close should call the callback fn once');
   });
 
-  // TODO TINY-10480: Investigate flaky tests
-  it.skip('Should focus on the yes button initially', async () => {
+  it('Should focus on the yes button initially', async () => {
     createConfirm('initial focus should be on the yes button', Fun.noop);
     await FocusTools.pTryOnSelector('When the confirm dialog loads, focus should be on the yes button', SugarDocument.getDocument(), 'button:contains(Yes)');
     await pTeardown();
   });
 
-  // TODO TINY-10480: Investigate flaky tests
-  it.skip('Should focus the first button when the dialog is clicked', async () => {
+  it('Should focus the first button when the dialog is clicked', async () => {
     createConfirm('Click should focus the yes button', Fun.noop);
     await FocusTools.pTryOnSelector('When the confirm dialog loads, focus should be on the yes button', SugarDocument.getDocument(), 'button:contains(Yes)');
     Mouse.trueClickOn(SugarDocument.getDocument(), '.tox-dialog');
@@ -195,15 +190,13 @@ describe('headless.tinymce.themes.silver.window.WindowManagerConfirmTest', () =>
     await pTeardown();
   });
 
-  // TODO TINY-10480: Investigate flaky tests
-  it.skip('Check that clicking close in the dialog makes the dialog go away', () => {
+  it('Check that clicking close in the dialog makes the dialog go away', () => {
     createConfirm('Showing an confirm', Fun.noop);
     Mouse.clickOn(SugarBody.body(), '.tox-button:contains("Yes")');
     UiFinder.notExists(SugarBody.body(), '[role="dialog"]');
   });
 
-  // TODO TINY-10480: Investigate flaky tests
-  it.skip('TINY-3548: sanitize message', async () => {
+  it('TINY-3548: sanitize message', async () => {
     createConfirm('<a href="javascript:alert(1)">invalid link</a><script>alert(1)</script><a href="http://tiny.cloud">valid link</a>', Fun.noop);
     const dialogBody = SelectorFind.descendant(SugarDocument.getDocument(), '.tox-dialog__body').getOrDie('Cannot find dialog body element');
     Assertions.assertStructure('A basic alert dialog should have these components',

@@ -7,8 +7,7 @@ import type Editor from 'tinymce/core/api/Editor';
 
 import * as UiUtils from '../../module/UiUtils';
 
-// TODO TINY-10480: Investigate flaky tests
-describe.skip('browser.tinymce.themes.silver.editor.SilverFixedToolbarContainerTest', () => {
+describe('browser.tinymce.themes.silver.editor.SilverFixedToolbarContainerTest', () => {
   let toolbar: SugarElement<HTMLDivElement>;
   before(() => {
     toolbar = SugarElement.fromHtml('<div id="toolbar" style="margin: 50px 0;"></div>');
@@ -21,6 +20,7 @@ describe.skip('browser.tinymce.themes.silver.editor.SilverFixedToolbarContainerT
 
   const hook = TinyHooks.bddSetup<Editor>({
     inline: true,
+    promotion: false,
     fixed_toolbar_container: '#toolbar',
     menubar: 'file',
     toolbar: 'undo bold',
@@ -46,6 +46,9 @@ describe.skip('browser.tinymce.themes.silver.editor.SilverFixedToolbarContainerT
                   s.element('div', {
                     classes: [ arr.has('tox-editor-header') ],
                     children: [
+                      s.element('div', {
+                        classes: [ arr.has('tox-promotion') ]
+                      }),
                       s.element('div', {
                         classes: [ arr.has('tox-menubar') ],
                         attrs: { role: str.is('menubar') },
@@ -74,7 +77,7 @@ describe.skip('browser.tinymce.themes.silver.editor.SilverFixedToolbarContainerT
                         children: [
                           s.element('div', {
                             classes: [ arr.has('tox-toolbar__primary') ],
-                            attrs: { role: str.is('group') },
+                            attrs: { role: str.is('toolbar') },
                             children: [
                               s.element('div', {
                                 classes: [ arr.has('tox-toolbar__group') ],

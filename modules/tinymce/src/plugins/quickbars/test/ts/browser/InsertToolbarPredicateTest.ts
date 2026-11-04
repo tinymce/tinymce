@@ -6,8 +6,7 @@ import Plugin from 'tinymce/plugins/quickbars/Plugin';
 
 import { pAssertToolbarNotVisible, pAssertToolbarVisible } from '../module/test/Utils';
 
-// TODO TINY-10480: Investigate flaky tests
-describe.skip('browser.tinymce.plugins.quickbars.InsertToolbarPredicateTest', () => {
+describe('browser.tinymce.plugins.quickbars.InsertToolbarPredicateTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
     plugins: 'quickbars link code',
     inline: true,

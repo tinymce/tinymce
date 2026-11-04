@@ -17,6 +17,8 @@ describe('browser.tinymce.themes.silver.editor.header.InlineHeaderTest', () => {
       inline: true,
       width: '400px'
     }, () => {
+      // Room for the tallest header above the target, which would otherwise depend on the test runner's own content
+      Css.set(wrapper, 'margin-top', '200px');
       Insert.append(wrapper, editorTarget);
       Insert.append(SugarBody.body(), wrapper);
 
@@ -33,9 +35,23 @@ describe('browser.tinymce.themes.silver.editor.header.InlineHeaderTest', () => {
 
       editor.setContent('<p>Content</p>');
       editor.focus();
-      editor.fire('ScrollWindow');
+      // Moving the target sideways is not a scroll or a node change, so tell the header the layout changed
+      editor.dispatch('ResizeWindow');
 
       await pAssertHeaderWidth(expectedWidth, '400px');
+    };
+
+    // The header is only repositioned on scroll, resize and node change, so announce a resize and wait for it to sit on
+    // the content before measuring anything
+    const pSettleHeader = async (editor: Editor) => {
+      editor.focus();
+      editor.dispatch('ResizeWindow');
+      await Waiter.pTryUntil('The toolbar should sit on top of the content', () => {
+        const toolbar = SelectorFind.descendant<HTMLElement>(SugarBody.body(), '.tox-editor-header').getOrDie();
+        const toolbarBottom = toolbar.dom.getBoundingClientRect().bottom;
+        const targetTop = editorTarget.dom.getBoundingClientRect().top;
+        assert.approximately(toolbarBottom, targetTop, 5, `Toolbar bottom ${toolbarBottom} should be at the content top ${targetTop}`);
+      });
     };
 
     const setupEditor = (remainingWidth: number) => {
@@ -61,23 +77,25 @@ describe('browser.tinymce.themes.silver.editor.header.InlineHeaderTest', () => {
         }
       });
 
-    // TODO TINY-10480: Investigate flaky tests
-    it.skip('TINY-9646: The width should remain on the editor', () =>
-      pRunToolbarWidthTest(500, '400px')
-    );
+    it('TINY-9646: The width should remain on the editor', async () => {
+      // The toolbar is written at its natural width, which depends on the font, so take it from the editor before moving it
+      const editor = hook.editor();
+      editor.setContent('<p>Content</p>');
+      await pSettleHeader(editor);
+      const headerWrapper = SelectorFind.descendant(SugarBody.body(), '.tox-tinymce--toolbar-sticky-off').getOrDie();
+      const naturalWidth = Css.getRaw(headerWrapper, 'width').getOrDie('The toolbar should have its width set');
+      await pRunToolbarWidthTest(500, naturalWidth);
+    });
 
-    // TODO TINY-10480: Investigate flaky tests
-    it.skip('TINY-8977: If the editor does not fit within the view', () =>
+    it('TINY-8977: If the editor does not fit within the view', () =>
       pRunToolbarWidthTest(200, '200px')
     );
 
-    // TODO TINY-10480: Investigate flaky tests
-    it.skip('TINY-8977: If the visible editor is smaller than the minimum', () =>
+    it('TINY-8977: If the visible editor is smaller than the minimum', () =>
       pRunToolbarWidthTest(50, '150px')
     );
 
-    // TODO TINY-10480: Investigate flaky tests
-    it.skip('TINY-8977: If the editor is not visible at all', () =>
+    it('TINY-8977: If the editor is not visible at all', () =>
       pRunToolbarWidthTest(-50, '150px')
     );
 
@@ -86,16 +104,7 @@ describe('browser.tinymce.themes.silver.editor.header.InlineHeaderTest', () => {
       editor.setContent('<p>Content</p>');
       const totalWidth = editor.getDoc().documentElement.clientWidth;
       Css.set(editorTarget, 'margin-left', totalWidth - 250 + 'px');
-      editor.focus();
-
-      const toolbar = await UiFinder.pWaitFor('the toolbar should be visible', SugarBody.body(), '.tox-editor-header');
-      const toolbarRect = editor.dom.getRect(toolbar.dom as HTMLElement);
-      const toolbarBottom = toolbarRect.y + toolbarRect.h;
-
-      const editorTargetRect = editor.dom.getRect(editorTarget.dom);
-      const editorTargetTop = editorTargetRect.y;
-
-      assert.approximately(editorTargetTop, toolbarBottom, 5, 'toolbarBottom should be above editorBodyTop');
+      await pSettleHeader(editor);
     });
   });
 

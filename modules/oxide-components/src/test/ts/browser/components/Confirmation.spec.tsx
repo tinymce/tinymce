@@ -3,7 +3,7 @@ import { Confirmation } from 'oxide-components/components/confirmation/Confirmat
 import { ConfirmationHost, type ConfirmationHostHandle } from 'oxide-components/components/confirmation/internals/ConfirmationHost';
 import { UniverseProvider } from 'oxide-components/contexts/universecontext/UniverseProvider';
 import * as Bem from 'oxide-components/utils/Bem';
-import { createRef } from 'react';
+import { act, createRef } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
@@ -47,6 +47,33 @@ describe('browser.ConfirmationTest', () => {
 
     expect(onConfirm).not.toHaveBeenCalled();
     await expect.poll(() => document.querySelector(Bem.blockSelector('tox-dialog-wrap'))).toBeNull();
+  });
+
+  it('TINYMCE-14775: a pending confirmation settling should not close a newer confirmation', async () => {
+    const ref = createRef<ConfirmationHostHandle>();
+    let resolveFirst: () => void = Fun.noop;
+    const firstConfirm = vi.fn(() => new Promise<void>((resolve) => {
+      resolveFirst = resolve;
+    }));
+
+    const { getByLabelText } = render(
+      <ConfirmationHost ref={ref} />,
+      { wrapper }
+    );
+
+    ref.current?.confirm({ text: 'First?', onConfirm: firstConfirm });
+    await expect.poll(() => document.querySelector(Bem.blockSelector('tox-dialog-wrap'))).not.toBeNull();
+    await userEvent.click(getByLabelText('Yes'));
+    await expect.poll(Fun.constant(firstConfirm)).toHaveBeenCalledOnce();
+
+    ref.current?.confirm({ text: 'Second?', onConfirm: vi.fn().mockResolvedValue(undefined) });
+    await expect.poll(() => document.querySelector(Bem.elementSelector('tox-dialog', 'body-content'))?.textContent).toBe('Second?');
+    expect(getByLabelText('Yes').element().hasAttribute('disabled'), 'The newer confirmation should not inherit the pending state').toBe(false);
+
+    await act(async () => {
+      resolveFirst();
+    });
+    expect(document.querySelector(Bem.elementSelector('tox-dialog', 'body-content'))?.textContent).toBe('Second?');
   });
 
   it('TINY-13783: should focus the confirm button when the dialog opens', async () => {

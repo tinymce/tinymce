@@ -1,6 +1,8 @@
 import { after, before } from '@ephox/bedrock-client';
 import { Singleton } from '@ephox/katamari';
 
+import * as Timeouts from '../api/Timeouts';
+
 import * as HttpHandler from './HttpHandler';
 import * as MockClient from './MockClient';
 import type * as Shared from './Shared';
@@ -21,8 +23,7 @@ export const mockHttpHook = <T>(
   const state = Singleton.value<T>();
 
   before(async function () {
-    // The default timeout is 2s, that isn't enough on slow connections
-    this.timeout(10000);
+    this.timeout(Timeouts.slowHook);
 
     if (!window.isSecureContext) {
       this.skip();
@@ -37,7 +38,7 @@ export const mockHttpHook = <T>(
   });
 
   after(async function () {
-    this.timeout(10000);
+    this.timeout(Timeouts.slowHook);
     await MockClient.stopMocking();
   });
 

@@ -213,7 +213,7 @@ export const InlineHeader = (
       const baseProperties = {
         position: 'absolute',
         left: Math.round(left) + 'px',
-        top: getTop() + 'px'
+        top: Math.round(getTop()) + 'px'
       };
 
       Css.setAll(mainUi.outerContainer.element, {

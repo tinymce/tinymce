@@ -10,8 +10,7 @@ import * as GuiSetup from '../../../module/GuiSetup';
 import * as RepresentingUtils from '../../../module/RepresentingUtils';
 import TestBackstage from '../../../module/TestBackstage';
 
-// TODO TINY-10480: Investigate flaky tests
-describe.skip('headless.tinymce.themes.silver.components.sizeinput.SizeInputTest', () => {
+describe('headless.tinymce.themes.silver.components.sizeinput.SizeInputTest', () => {
   const backstage = TestBackstage();
   const hook = GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
     renderSizeInput({
@@ -110,7 +109,7 @@ describe.skip('headless.tinymce.themes.silver.components.sizeinput.SizeInputTest
     const component = hook.component();
     assertLocked(component, true);
     setDimensions(component, '100px', '200px');
-    FocusTools.setFocus(component.element, 'input:first');
+    FocusTools.setFocus(component.element, 'input');
     FocusTools.setActiveValue(doc, '50');
     triggerInput(component);
     assertDimensions(component, '50', '100px');
@@ -125,7 +124,7 @@ describe.skip('headless.tinymce.themes.silver.components.sizeinput.SizeInputTest
     Mouse.clickOn(component.element, 'button.tox-lock');
     assertLocked(component, false);
     // now when we update the first field it will not update the second field
-    FocusTools.setFocus(component.element, 'input:first');
+    FocusTools.setFocus(component.element, 'input');
     FocusTools.setActiveValue(doc, '300px');
     triggerInput(component);
     assertDimensions(component, '300px', '100px');

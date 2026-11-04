@@ -13,7 +13,8 @@ describe('browser.tinymce.plugins.media.core.PlaceholderTest', () => {
     plugins: [ 'media' ],
     toolbar: 'media',
     extended_valid_elements: 'script[src|type]',
-    sandbox_iframes_exclusions: []
+    sandbox_iframes_exclusions: [],
+    base_url: '/project/tinymce/js/tinymce'
   };
 
   const pTestPlaceholder = async (editor: Editor, url: string, expected: string, struct: StructAssert) => {
@@ -65,10 +66,7 @@ describe('browser.tinymce.plugins.media.core.PlaceholderTest', () => {
   });
 
   context('hook', () => {
-    const hook = TinyHooks.bddSetupLight<Editor>({
-      ...baseSettings,
-      base_url: '/project/tinymce/js/tinymce'
-    }, [ Plugin ]);
+    const hook = TinyHooks.bddSetupLight<Editor>(baseSettings, [ Plugin ]);
 
     context('media_live_embeds=false', () => {
       before(() => {

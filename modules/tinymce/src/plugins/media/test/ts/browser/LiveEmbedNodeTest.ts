@@ -9,7 +9,8 @@ import Plugin from 'tinymce/plugins/media/Plugin';
 describe('browser.tinymce.plugins.media.core.LiveEmbedNodeTest', () => {
   const baseSettings = {
     plugins: [ 'media' ],
-    toolbar: 'media'
+    toolbar: 'media',
+    base_url: '/project/tinymce/js/tinymce'
   };
 
   const assertStructure = (
@@ -52,10 +53,7 @@ describe('browser.tinymce.plugins.media.core.LiveEmbedNodeTest', () => {
   };
 
   context('hook', () => {
-    const hook = TinyHooks.bddSetupLight<Editor>({
-      ...baseSettings,
-      base_url: '/project/tinymce/js/tinymce'
-    }, [ Plugin ]);
+    const hook = TinyHooks.bddSetupLight<Editor>(baseSettings, [ Plugin ]);
 
     it('TBA: iframe with class and style, no width & height attribs', () => {
       const editor = hook.editor();

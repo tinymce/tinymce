@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Waiter } from '@ephox/agar';
 import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
-import { Arr, Fun, Optional } from '@ephox/katamari';
-import { Class, Css, Html, Insert, InsertAll, Remove, SelectorFind, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
+import { Arr, Fun, Optional, Singleton } from '@ephox/katamari';
+import { Class, Css, Html, Insert, InsertAll, Remove, SelectorFind, SugarBody, SugarElement, SugarShadowDom, Traverse } from '@ephox/sugar';
 import { TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -26,8 +26,7 @@ enum TriggerWaitDecision {
   Succeed
 }
 
-// TODO TINY-10480: Investigate flaky tests
-describe.skip('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContainerTest', () => {
+describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContainerTest', () => {
   const sharedSettings = {
     menubar: 'file',
     toolbar: 'undo bold opendialog',
@@ -87,8 +86,26 @@ describe.skip('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingC
   const resetScrolls = (editor: Editor) => {
     const scroller = getAncestorUi(editor, ui.ancestors.scrollingWrapper);
     scroller.dom.scrollTo(0, 0);
+    SelectorFind.ancestor<HTMLElement>(scroller, ui.ancestors.outerScroller.selector).each((outer) => outer.dom.scrollTo(0, 0));
     window.scrollTo(0, 0);
     editor.getWin().scrollTo(0, 0);
+  };
+
+  // The inline header is only repositioned on scroll, resize and node change events, so a layout shift after the last
+  // event (the test runner's own status text wrapping, for example) leaves it where the content used to be. A synthetic
+  // Ui click can also blur the editor, hiding the header. Tests that measure the header first need it shown and settled.
+  const pSettleInlineHeader = async (editor: Editor) => {
+    if (editor.inline) {
+      if (!editor.hasFocus()) {
+        editor.focus();
+      }
+      editor.nodeChanged();
+      await Waiter.pTryUntil('Inline header should sit on top of the content', () => {
+        const headerBottom = getEditorUi(editor, ui.editor.stickyHeader).dom.getBoundingClientRect().bottom;
+        const contentTop = editor.getBody().getBoundingClientRect().top;
+        assert.approximately(headerBottom, contentTop, 5, `Header bottom ${headerBottom} should be at the content top ${contentTop}`);
+      });
+    }
   };
 
   const pResetScrollsAndAssertPosition = async (editor: Editor) => {
@@ -320,6 +337,8 @@ describe.skip('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingC
     );
 
     const target = setupTargetElement(scenario);
+    // The 'inside' layout puts the shadow host on the body outside the scroller, so it needs its own removal
+    const shadowHost = Singleton.destroyable();
 
     if (scenario.settings.shadow === 'none') {
       InsertAll.append(
@@ -335,6 +354,10 @@ describe.skip('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingC
     } else if (scenario.settings.shadow === 'inside') {
       // The scroller is being appended to the ShadowRoot
       const root = setupRoot(scenario, SugarBody.body());
+      if (SugarShadowDom.isShadowRoot(root)) {
+        const host = SugarShadowDom.getShadowHost(root);
+        shadowHost.set({ destroy: () => Remove.remove(host) });
+      }
       InsertAll.append(
         scroller,
         [
@@ -359,6 +382,7 @@ describe.skip('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingC
       element: target,
       teardown: () => {
         Remove.remove(scroller);
+        shadowHost.clear();
       }
     };
   };
@@ -432,7 +456,9 @@ describe.skip('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingC
             );
           });
 
-          it('When scrolling the editor itself', async () => {
+          // An inline editor has no scroller of its own, its window is the page
+          const itIframeOnly = scenario.settings.inline ? it.skip : it;
+          itIframeOnly('When scrolling the editor itself', async () => {
             const editor = hook.editor();
             const paragraphs = Arr.range(100, (x) => `<p>This is line #${x}</p>`).join('\n');
             editor.setContent(paragraphs);
@@ -449,6 +475,7 @@ describe.skip('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingC
         context('Testing stickiness', () => {
           it('When scrolling the outer page', async () => {
             const editor = hook.editor();
+            await pSettleInlineHeader(editor);
             const header = getEditorUi(editor, ui.editor.stickyHeader);
             const headerTop = header.dom.getBoundingClientRect().top;
 
@@ -532,6 +559,7 @@ describe.skip('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingC
 
           it('When combining scrolling the outer page and the scroller', async () => {
             const editor = hook.editor();
+            await pSettleInlineHeader(editor);
             const scroller = getAncestorUi(editor, ui.ancestors.scrollingWrapper);
             const header = getEditorUi(editor, ui.editor.stickyHeader);
             const scrollerTop = scroller.dom.getBoundingClientRect().top;
@@ -586,6 +614,7 @@ describe.skip('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingC
 
           it('When scrolling the outer page', async () => {
             const editor = hook.editor();
+            await pSettleInlineHeader(editor);
             const header = getEditorUi(editor, ui.editor.stickyHeader);
             const scroller = getAncestorUi(editor, ui.ancestors.scrollingWrapper);
             const headerTop = header.dom.getBoundingClientRect().top;
@@ -790,13 +819,16 @@ describe.skip('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingC
           };
         };
 
+        // With toolbar_location: auto the inline header picks the bottom when focusing scrolls the content above the
+        // container top, which Firefox does here
         const hook = TinyHooks.bddSetupFromElement<Editor>(
           {
             ...sharedSettings,
             ui_mode: 'split',
             toolbar_sticky: true,
             height: heights.editor,
-            inline: scenario.settings.inline
+            inline: scenario.settings.inline,
+            toolbar_location: 'top'
           },
           () => setupElement(),
           [],
@@ -866,6 +898,7 @@ describe.skip('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingC
             toolbar_sticky: true,
             height: heights.editor,
             inline: scenario.settings.inline,
+            toolbar_location: 'top'
           },
           () => setupSingleScrollerElement(scenario, heights.largeBanner),
           [],

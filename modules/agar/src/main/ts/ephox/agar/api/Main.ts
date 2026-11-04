@@ -38,6 +38,7 @@ import { Step } from './Step';
 import * as StepSequence from './StepSequence';
 import { TestLogs } from './TestLogs';
 import { TestStore } from './TestStore';
+import * as Timeouts from './Timeouts';
 import * as Touch from './Touch';
 import * as UiControls from './UiControls';
 import * as UiFinder from './UiFinder';
@@ -93,5 +94,6 @@ export {
   DragnDrop,
   Files,
   FileInput,
-  TestStore
+  TestStore,
+  Timeouts
 };

@@ -6,8 +6,7 @@ import Plugin from 'tinymce/plugins/media/Plugin';
 
 import * as Utils from '../module/test/Utils';
 
-// TODO TINY-10480: Investigate flaky tests
-describe.skip('browser.tinymce.plugins.media.UpdateMediaPosterAttributeTest', () => {
+describe('browser.tinymce.plugins.media.UpdateMediaPosterAttributeTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: [ 'media' ],
     toolbar: 'media',

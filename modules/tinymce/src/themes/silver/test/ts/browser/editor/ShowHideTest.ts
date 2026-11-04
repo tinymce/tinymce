@@ -7,8 +7,7 @@ import type Editor from 'tinymce/core/api/Editor';
 
 import * as UiUtils from '../../module/UiUtils';
 
-// TODO TINY-10480: Investigate flaky tests
-describe.skip('browser.tinymce.themes.silver.editor.ShowHideTest', () => {
+describe('browser.tinymce.themes.silver.editor.ShowHideTest', () => {
   const base_url = '/project/tinymce/js/tinymce';
 
   const pWaitForVisible = (label: string, selector: string) => UiFinder.pWaitForVisible(label, SugarBody.body(), selector);

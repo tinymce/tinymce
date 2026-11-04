@@ -1,3 +1,4 @@
+import { Timeouts } from '@ephox/agar';
 import { after, before, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun, Strings } from '@ephox/katamari';
 import { Insert, Remove, SelectorFilter, SugarBody, SugarElement, SugarHead, SugarShadowDom } from '@ephox/sugar';
@@ -193,7 +194,8 @@ describe('browser.tinymce.core.dom.BundledCssTest', () => {
                       skinUiContentJs(skin, true),
                     ];
 
-                    before(async () => {
+                    before(async function () {
+                      this.timeout(Timeouts.slowHook);
                       const scriptsLoaded = tinymce.ScriptLoader.loadScripts(jsScripts)
                         .catch((errors) => {
                           // eslint-disable-next-line no-console

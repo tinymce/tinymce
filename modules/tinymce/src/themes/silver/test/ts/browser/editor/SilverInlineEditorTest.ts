@@ -11,8 +11,7 @@ import type Editor from 'tinymce/core/api/Editor';
 
 import * as UiUtils from '../../module/UiUtils';
 
-// TODO TINY-10480: Investigate flaky tests
-describe.skip('browser.tinymce.themes.silver.editor.SilverInlineEditorTest', () => {
+describe('browser.tinymce.themes.silver.editor.SilverInlineEditorTest', () => {
   const os = PlatformDetection.detect().os;
   const store = Cell<string[]>([ ]);
   const hook = TinyHooks.bddSetup<Editor>({
@@ -155,6 +154,9 @@ describe.skip('browser.tinymce.themes.silver.editor.SilverInlineEditorTest', () 
                 classes: [ arr.has('tox-editor-header') ],
                 children: [
                   s.element('div', {
+                    classes: [ arr.has('tox-promotion') ]
+                  }),
+                  s.element('div', {
                     classes: [ arr.has('tox-menubar') ],
                     attrs: { role: str.is('menubar') },
                     children: [
@@ -183,7 +185,7 @@ describe.skip('browser.tinymce.themes.silver.editor.SilverInlineEditorTest', () 
                     children: [
                       s.element('div', {
                         classes: [ arr.has('tox-toolbar__primary') ],
-                        attrs: { role: str.is('group') },
+                        attrs: { role: str.is('toolbar') },
                         children: [
                           s.element('div', {
                             classes: [ arr.has('tox-toolbar__group') ],

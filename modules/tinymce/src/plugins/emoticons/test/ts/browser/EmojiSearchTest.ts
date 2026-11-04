@@ -1,6 +1,5 @@
 import { FocusTools, Keys, UiFinder, Waiter } from '@ephox/agar';
-import { after, before, describe, it } from '@ephox/bedrock-client';
-import { PlatformDetection } from '@ephox/sand';
+import { after, describe, it } from '@ephox/bedrock-client';
 import { Attribute, SugarBody, SugarDocument } from '@ephox/sugar';
 import { TinyAssertions, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -12,14 +11,6 @@ import Plugin from 'tinymce/plugins/emoticons/Plugin';
 declare let tinymce: TinyMCE;
 
 describe('browser.tinymce.plugins.emoticons.EmojiSearchTest', () => {
-  before(function () {
-    // TODO: TINY-6905: Test is flaking on Chromium Edge 86, so we need to investigate
-    const platform = PlatformDetection.detect();
-    if (platform.browser.isChromium() && platform.os.isWindows()) {
-      this.skip();
-    }
-  });
-
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'emoticons',
     toolbar: 'emoticons',

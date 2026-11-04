@@ -7,8 +7,7 @@ import { assert } from 'chai';
 
 import type Editor from 'tinymce/core/api/Editor';
 
-// TODO TINY-10480: Investigate flaky tests
-describe.skip('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarLookupTest', () => {
+describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarLookupTest', () => {
   const predicateNodeNames = Cell<Record<string, string[]>>({ });
   const hook = TinyHooks.bddSetup<Editor>({
     inline: true,

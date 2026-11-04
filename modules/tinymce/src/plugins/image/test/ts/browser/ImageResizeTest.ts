@@ -7,8 +7,7 @@ import Plugin from 'tinymce/plugins/image/Plugin';
 
 import { assertCleanHtml, assertInputValue, generalTabLabels, setInputValue } from '../module/Helpers';
 
-// TODO TINY-10480: Investigate flaky tests
-describe.skip('browser.tinymce.plugins.image.ImageResizeTest', () => {
+describe('browser.tinymce.plugins.image.ImageResizeTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'image',
     toolbar: 'image',

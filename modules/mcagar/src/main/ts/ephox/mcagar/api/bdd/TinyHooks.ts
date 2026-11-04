@@ -1,3 +1,4 @@
+import { Timeouts } from '@ephox/agar';
 import { after, afterEach, before } from '@ephox/bedrock-client';
 import { Arr, Fun, Optional, Singleton, Type } from '@ephox/katamari';
 import { Insert, Remove, SugarBody, SugarElement, SugarHead, TextContent } from '@ephox/sugar';
@@ -72,8 +73,7 @@ const setupHooks = <T extends EditorType = EditorType>(
   const fastAnimationsHooks = setupFastAnimations();
 
   before(function (done) {
-    // The default timeout is 2s, that isn't enough on slow connections
-    this.timeout(10000);
+    this.timeout(Timeouts.slowHook);
     setup = setupElement();
 
     if (fastAnimations) {

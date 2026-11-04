@@ -1,15 +1,14 @@
-import { ApproxStructure, RealKeys } from '@ephox/agar';
+import { ApproxStructure, RealKeys, type StructAssert, Waiter } from '@ephox/agar';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { Unicode } from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
+import { assert } from 'chai';
 
 import type Editor from 'tinymce/core/api/Editor';
 import NonbreakingPlugin from 'tinymce/plugins/nonbreaking/Plugin';
 import VisualCharsPlugin from 'tinymce/plugins/visualchars/Plugin';
 
-// TODO TINY-10480: Investigate flaky tests
-describe.skip('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTypingTest', () => {
+describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTypingTest', () => {
   // Note: Uses RealKeys, so needs a browser. Headless won't work.
   const hook = TinyHooks.bddSetup<Editor>({
     plugins: 'nonbreaking visualchars',
@@ -18,7 +17,21 @@ describe.skip('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTypin
     base_url: '/project/tinymce/js/tinymce'
   }, [ NonbreakingPlugin, VisualCharsPlugin ], true);
 
-  const isFirefox = PlatformDetection.detect().browser.isFirefox();
+  // Webdriver resolves before the browser has applied the keys, and visualchars re-wraps the content 300ms after the
+  // first keydown, dropping the zero-width space and wrapping any typed nbsp in a bogus span
+  const pAssertSettledContentStructure = (editor: Editor, expected: StructAssert) =>
+    Waiter.pTryUntil('Wait for the typed text to be applied', () => TinyAssertions.assertContentStructure(editor, expected));
+
+  const nbspWrap = (s: ApproxStructure.StructApi, str: ApproxStructure.StringApi, arr: ApproxStructure.ArrayApi) => s.element('span', {
+    classes: [ arr.has('mce-nbsp-wrap'), arr.has('mce-nbsp') ],
+    children: [ s.text(str.is(Unicode.nbsp)) ]
+  });
+
+  const visualNbsp = (s: ApproxStructure.StructApi, str: ApproxStructure.StringApi, arr: ApproxStructure.ArrayApi) => s.element('span', {
+    classes: [ arr.has('mce-nbsp') ],
+    attrs: { 'data-mce-bogus': str.is('1') },
+    children: [ s.text(str.is(Unicode.nbsp)) ]
+  });
 
   const clickNbspToolbarButton = (editor: Editor) => TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Nonbreaking space"]');
 
@@ -31,17 +44,12 @@ describe.skip('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTypin
     const editor = hook.editor();
     clickNbspToolbarButton(editor);
     await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text('test') ]);
-    TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str, arr) => s.element('body', {
+    await pAssertSettledContentStructure(editor, ApproxStructure.build((s, str, arr) => s.element('body', {
       children: [
         s.element('p', {
           children: [
-            s.element('span', {
-              classes: [ arr.has('mce-nbsp-wrap'), arr.has('mce-nbsp') ],
-              children: [
-                s.text(str.is(Unicode.nbsp))
-              ]
-            }),
-            s.text(str.is(Unicode.zeroWidth + 'test'))
+            nbspWrap(s, str, arr),
+            s.text(str.is('test'))
           ]
         })
       ]
@@ -58,12 +66,7 @@ describe.skip('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTypin
         s.element('p', {
           children: [
             s.text(str.is('test')),
-            s.element('span', {
-              classes: [ arr.has('mce-nbsp-wrap'), arr.has('mce-nbsp') ],
-              children: [
-                s.text(str.is(Unicode.nbsp))
-              ]
-            }),
+            nbspWrap(s, str, arr),
             s.text(str.is(Unicode.zeroWidth))
           ]
         })
@@ -77,18 +80,13 @@ describe.skip('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTypin
     TinySelections.setCursor(editor, [ 0, 0 ], 4);
     clickNbspToolbarButton(editor);
     await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text('test') ]);
-    TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str, arr) => s.element('body', {
+    await pAssertSettledContentStructure(editor, ApproxStructure.build((s, str, arr) => s.element('body', {
       children: [
         s.element('p', {
           children: [
             s.text(str.is('test')),
-            s.element('span', {
-              classes: [ arr.has('mce-nbsp-wrap'), arr.has('mce-nbsp') ],
-              children: [
-                s.text(str.is(Unicode.nbsp))
-              ]
-            }),
-            s.text(str.is(Unicode.zeroWidth + 'test'))
+            nbspWrap(s, str, arr),
+            s.text(str.is('test'))
           ]
         })
       ]
@@ -99,18 +97,13 @@ describe.skip('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTypin
     const editor = hook.editor();
     clickNbspToolbarButton(editor);
     await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text(' ') ]);
-    TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str, arr) => s.element('body', {
+    await pAssertSettledContentStructure(editor, ApproxStructure.build((s, str, arr) => s.element('body', {
       children: [
         s.element('p', {
           children: [
-            s.element('span', {
-              classes: [ arr.has('mce-nbsp-wrap'), arr.has('mce-nbsp') ],
-              children: [
-                s.text(str.is(Unicode.nbsp))
-              ]
-            }),
-            s.text(str.is(Unicode.zeroWidth + Unicode.nbsp))
-          ].concat(isFirefox ? [ s.element('br', {}) ] : [])
+            nbspWrap(s, str, arr),
+            visualNbsp(s, str, arr)
+          ]
         })
       ]
     })));
@@ -126,31 +119,22 @@ describe.skip('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTypin
         s.element('p', {
           children: [
             s.text(str.is('test')),
-            s.element('span', {
-              classes: [ arr.has('mce-nbsp-wrap'), arr.has('mce-nbsp') ],
-              children: [
-                s.text(str.is(Unicode.nbsp))
-              ]
-            }),
+            nbspWrap(s, str, arr),
             s.text(str.is(Unicode.zeroWidth))
           ]
         })
       ]
     })));
     await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text('test ') ]);
-    TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str, arr) => s.element('body', {
+    await pAssertSettledContentStructure(editor, ApproxStructure.build((s, str, arr) => s.element('body', {
       children: [
         s.element('p', {
           children: [
             s.text(str.is('test')),
-            s.element('span', {
-              classes: [ arr.has('mce-nbsp-wrap'), arr.has('mce-nbsp') ],
-              children: [
-                s.text(str.is(Unicode.nbsp))
-              ]
-            }),
-            s.text(str.is(Unicode.zeroWidth + 'test' + Unicode.nbsp))
-          ].concat(isFirefox ? [ s.element('br', {}) ] : [])
+            nbspWrap(s, str, arr),
+            s.text(str.is('test')),
+            visualNbsp(s, str, arr)
+          ]
         })
       ]
     })));
@@ -166,50 +150,32 @@ describe.skip('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTypin
         s.element('p', {
           children: [
             s.text(str.is('test')),
-            s.element('span', {
-              classes: [ arr.has('mce-nbsp-wrap'), arr.has('mce-nbsp') ],
-              children: [
-                s.text(str.is(Unicode.nbsp))
-              ]
-            }),
+            nbspWrap(s, str, arr),
             s.text(str.is(Unicode.zeroWidth))
           ]
         })
       ]
     })));
     await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text('test ') ]);
-    TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str, arr) => s.element('body', {
+    await pAssertSettledContentStructure(editor, ApproxStructure.build((s, str, arr) => s.element('body', {
       children: [
         s.element('p', {
           children: [
             s.text(str.is('test')),
-            s.element('span', {
-              classes: [ arr.has('mce-nbsp-wrap'), arr.has('mce-nbsp') ],
-              children: [
-                s.text(str.is(Unicode.nbsp))
-              ]
-            }),
-            s.text(str.is(Unicode.zeroWidth + 'test' + Unicode.nbsp))
-          ].concat(isFirefox ? [ s.element('br', {}) ] : [])
+            nbspWrap(s, str, arr),
+            s.text(str.is('test')),
+            visualNbsp(s, str, arr)
+          ]
         })
       ]
     })));
     await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text('test ') ]);
-    TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str, arr) => s.element('body', {
-      children: [
-        s.element('p', {
-          children: [
-            s.text(str.is('test')),
-            s.element('span', {
-              classes: [ arr.has('mce-nbsp-wrap'), arr.has('mce-nbsp') ],
-              children: [
-                s.text(str.is(Unicode.nbsp))
-              ]
-            }),
-            s.text(str.is(Unicode.zeroWidth + 'test test' + Unicode.nbsp))
-          ].concat(isFirefox ? [ s.element('br', {}) ] : [])
-        })
-      ]
-    })));
+    // Chrome turns the earlier trailing nbsp into a plain space once text follows it and Firefox keeps it, so check the
+    // serialised content rather than the split text nodes
+    const nbspWrapHtml = '<span class="mce-nbsp-wrap mce-nbsp" contenteditable="false">&nbsp;</span>';
+    await Waiter.pTryUntil('Wait for the typed text to be applied', () => assert.include([
+      `<p>test${nbspWrapHtml}test test&nbsp;</p>`,
+      `<p>test${nbspWrapHtml}test&nbsp;test&nbsp;</p>`
+    ], editor.getContent()));
   });
 });

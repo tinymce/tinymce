@@ -10,8 +10,7 @@ import type Editor from 'tinymce/core/api/Editor';
 
 import * as PageScroll from '../../../module/PageScroll';
 
-// TODO TINY-10480: Investigate flaky tests
-describe.skip('browser.tinymce.themes.silver.editor.toolbar.InlineToolbarPositionTest', () => {
+describe('browser.tinymce.themes.silver.editor.toolbar.InlineToolbarPositionTest', () => {
   const options = {
     inline: true,
     menubar: false,

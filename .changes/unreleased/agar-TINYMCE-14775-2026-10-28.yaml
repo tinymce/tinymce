@@ -1,0 +1,6 @@
+project: agar
+kind: Added
+body: Added `Timeouts.slowHook` for bedrock hooks that load an editor, skin or mock service.
+time: 2026-10-28T15:00:00.000000+11:00
+custom:
+    Issue: TINYMCE-14775

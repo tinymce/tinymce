@@ -11,8 +11,14 @@ export interface ConfirmationHostHandle {
   confirm: (options: ConfirmOptions) => void;
 }
 
+interface ConfirmRequest {
+  readonly id: number;
+  readonly options: ConfirmOptions;
+}
+
 export const ConfirmationHost = forwardRef<ConfirmationHostHandle>((_props, ref) => {
-  const [ request, setRequest ] = useState<ConfirmOptions | null>(null);
+  const [ request, setRequest ] = useState<ConfirmRequest | null>(null);
+  const nextIdRef = useRef(0);
   const mountedRef = useRef(true);
 
   useEffect(() => {
@@ -22,13 +28,19 @@ export const ConfirmationHost = forwardRef<ConfirmationHostHandle>((_props, ref)
   }, []);
 
   useImperativeHandle(ref, () => ({
-    confirm: (options) => setRequest(options),
+    confirm: (options) => {
+      nextIdRef.current += 1;
+      setRequest({ id: nextIdRef.current, options });
+    },
   }), []);
 
+  // Keyed by request so a newer one gets a fresh dialog, not the previous one's pending confirm state
   return request ? <Confirmation
-    text={request.text}
+    key={request.id}
+    text={request.options.text}
     onConfirm={() => mountedRef.current ?
-      request.onConfirm().finally(() => setRequest(null)) :
+      // A newer request may have replaced this one while it was pending
+      request.options.onConfirm().finally(() => setRequest((current) => current?.id === request.id ? null : current)) :
       Promise.resolve()
     }
     onCancel={() => {

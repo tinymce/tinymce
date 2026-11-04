@@ -6,8 +6,7 @@ import { assert } from 'chai';
 
 import type Editor from 'tinymce/core/api/Editor';
 
-// TODO TINY-10480: Investigate flaky tests
-describe.skip('browser.tinymce.themes.silver.throbber.ThrobberFocusTest', () => {
+describe('browser.tinymce.themes.silver.throbber.ThrobberFocusTest', () => {
   const pAssertFocus = (label: string, selector: string) =>
     FocusTools.pTryOnSelector(label, SugarDocument.getDocument(), selector);
 
@@ -170,7 +169,8 @@ describe.skip('browser.tinymce.themes.silver.throbber.ThrobberFocusTest', () => 
 
     it('TINY-7373: should have correct focus transitions when opening and closing notification', async () => {
       const editor = hook.editor();
-      const pAssertNotificationFocus = () => pAssertFocus('Notification close button has focus', 'button.tox-notification__dismiss');
+      // TINY-6925: notifications are focusable themselves, so focus lands on the notification rather than its close button
+      const pAssertNotificationFocus = () => pAssertFocus('Notification has focus', 'div.tox-notification');
 
       const notification = editor.notificationManager.open({
         text: 'Test',
