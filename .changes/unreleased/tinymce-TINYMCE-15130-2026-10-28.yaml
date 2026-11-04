@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Formatting text in Firefox 158 and later removed quotes around font names that contain spaces.
+time: 2026-10-28T12:00:00.000000+11:00
+custom:
+  Issue: TINYMCE-15130

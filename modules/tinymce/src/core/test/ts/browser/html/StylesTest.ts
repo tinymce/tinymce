@@ -248,6 +248,17 @@ describe('browser.tinymce.core.html.StylesTest', () => {
     assertStyles(styles, 'font-weight: 700', 'font-weight: bold;');
   });
 
+  it('TINYMCE-15130: Multi-word font names are quoted', () => {
+    const styles = Styles();
+    assertStyles(styles, 'font-family: arial black', `font-family: 'arial black';`);
+    assertStyles(styles, 'font-family: Lucida Sans Unicode, sans-serif', `font-family: 'Lucida Sans Unicode', sans-serif;`);
+    assertStyles(styles, 'font-family: arial,  times new roman ,serif', `font-family: arial,  'times new roman' ,serif;`);
+    assertStyles(styles, `font-family: 'arial black', "Foo, Bar", courier new`, `font-family: 'arial black', 'Foo, Bar', 'courier new';`);
+    assertStyles(styles, 'font-family: arial, sans-serif', 'font-family: arial, sans-serif;');
+    assertStyles(styles, 'font-family: arial black !important', 'font-family: arial black !important;');
+    assertStyles(styles, 'font-family: var(--font, arial black)', 'font-family: var(--font, arial black);');
+  });
+
   it('Valid styles', () => {
     const styles = Styles({}, Schema({ valid_styles: { '*': 'color,font-size', 'a': 'margin-left' }}));
 

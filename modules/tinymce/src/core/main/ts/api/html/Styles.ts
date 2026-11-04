@@ -17,7 +17,7 @@
  */
 
 import { RgbaColour, Transformations } from '@ephox/acid';
-import { Obj, Unicode } from '@ephox/katamari';
+import { Arr, Obj, Unicode } from '@ephox/katamari';
 
 import type { URLConverter } from '../OptionTypes';
 
@@ -36,6 +36,12 @@ interface Styles {
   parse: (css: string | undefined) => Record<string, string>;
   serialize: (styles: StyleMap, elementName?: string) => string;
 }
+
+// Quoted names, functions and !important are left alone; a quoted name containing a comma splits into parts that still contain the quotes
+const quoteFontName = (font: string): string => {
+  const name = font.trim();
+  return /\s/.test(name) && !/['"()!]/.test(name) ? font.replace(name, `'${name}'`) : font;
+};
 
 const Styles = (settings: StylesSettings = {}, schema?: Schema): Styles => {
   /* jshint maxlen:255 */
@@ -273,6 +279,10 @@ const Styles = (settings: StylesSettings = {}, schema?: Schema): Styles => {
               RgbaColour.fromString(value).each((rgba) => {
                 value = Transformations.rgbaToHexString(RgbaColour.toString(rgba)).toLowerCase();
               });
+            }
+
+            if (name === 'font-family') {
+              value = Arr.map(value.split(','), quoteFontName).join(',');
             }
 
             // Convert URLs and force them into url('value') format

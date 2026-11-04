@@ -27,9 +27,6 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     return editor.getContent().toLowerCase().replace(/[\r]+/g, '');
   };
 
-  // Firefox 158 and later drop the quotes around multi-word font names when they rewrite a style attribute
-  const unquoteFontFamilies = (html: string) => html.replace(/font-family: '([^';]+)'/g, 'font-family: $1');
-
   it('apply inline to a list', () => {
     const editor = hook.editor();
     editor.focus();
@@ -1347,8 +1344,8 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     editor.execCommand('SelectAll');
     editor.formatter.apply('format');
     assert.equal(
-      unquoteFontFamilies(editor.getContent()),
-      unquoteFontFamilies(`<p><span style="color: #ff0000; font-family: 'arial black'; text-decoration: underline;">test</span></p>`),
+      editor.getContent(),
+      `<p><span style="color: #ff0000; font-family: 'arial black'; text-decoration: underline;">test</span></p>`,
       'Coloring an underlined text should result in a colored underline'
     );
   });
@@ -1366,9 +1363,9 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     editor.execCommand('SelectAll');
     editor.formatter.apply('format');
     assert.equal(
-      unquoteFontFamilies(editor.getContent()),
-      unquoteFontFamilies('<p><span style="text-decoration: underline;"><span style="color: #ff0000; font-family: ' +
-      `'arial black'; text-decoration: underline;">test</span></span></p>`),
+      editor.getContent(),
+      '<p><span style="text-decoration: underline;"><span style="color: #ff0000; font-family: ' +
+      `'arial black'; text-decoration: underline;">test</span></span></p>`,
       'Underlining colored text should result in a colored underline'
     );
   });
@@ -1389,10 +1386,10 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     editor.execCommand('SelectAll');
     editor.formatter.apply('format');
     assert.equal(
-      unquoteFontFamilies(editor.getContent()),
-      unquoteFontFamilies(`<p><span style="text-decoration: underline;"><span style="font-family: 'arial black';"><em>` +
+      editor.getContent(),
+      `<p><span style="text-decoration: underline;"><span style="font-family: 'arial black';"><em>` +
       '<strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong>' +
-      '</em> text</span></span></p>'), 'Underlining colored and underlined text should result in a colored underline'
+      '</em> text</span></span></p>', 'Underlining colored and underlined text should result in a colored underline'
     );
   });
 
