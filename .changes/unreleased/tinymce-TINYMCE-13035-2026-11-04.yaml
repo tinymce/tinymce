@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Leaving a list with Enter copied the list item's styles onto the new paragraph.
+time: 2026-11-04T08:20:55.333516+10:00
+custom:
+  Issue: TINYMCE-13035

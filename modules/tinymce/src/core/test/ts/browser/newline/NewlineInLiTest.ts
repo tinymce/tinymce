@@ -1,5 +1,6 @@
 import { Keys } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
+import { Arr } from '@ephox/katamari';
 import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -224,5 +225,57 @@ describe('browser.tinymce.core.newline.NewlineInLiTest', () => {
     ].join('\n');
     TinyAssertions.assertContent(editor, expectedContent);
     TinyAssertions.assertCursor(editor, [ 0, 2, 0, 0, 0, 0, 0 ], 'abc'.length);
+  });
+
+  Arr.each([
+    { command: 'Bold', tag: 'strong', style: 'font-weight: bold;' },
+    { command: 'Italic', tag: 'em', style: 'font-style: italic;' }
+  ], ({ command, tag, style }) => {
+    it(`TINYMCE-13035: leaving a list item formatted with ${command} should not carry the style into the new paragraph`, async () => {
+      const editor = hook.editor();
+      const list = `<ul>\n<li style="${style}"><${tag}>abc</${tag}></li>\n</ul>`;
+      editor.setContent('<ul><li>abc</li></ul>');
+      TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 'abc'.length);
+      editor.execCommand(command);
+      TinyAssertions.assertContent(editor, list);
+
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 'abc'.length);
+      TinyContentActions.keydown(editor, Keys.enter());
+      TinyContentActions.keydown(editor, Keys.enter());
+      editor.execCommand(command);
+      await TinyContentActions.pType(editor, 'def');
+      TinyAssertions.assertContent(editor, `${list}\n<p>def</p>`);
+
+      TinySelections.select(editor, 'p', []);
+      editor.execCommand(command);
+      TinyAssertions.assertContent(editor, `${list}\n<p><${tag}>def</${tag}></p>`);
+    });
+  });
+
+  it('TINYMCE-13035: leaving the first list item should not copy its styles to the new paragraph', () => {
+    const editor = hook.editor();
+    editor.setContent('<ul><li style="font-weight: bold;">&nbsp;</li><li>abc</li></ul>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 0);
+    TinyContentActions.keydown(editor, Keys.enter());
+
+    TinyAssertions.assertContent(editor, '<p>&nbsp;</p>\n<ul>\n<li>abc</li>\n</ul>');
+  });
+
+  it('TINYMCE-13035: leaving the last list item should not copy its styles to the new paragraph', () => {
+    const editor = hook.editor();
+    editor.setContent('<ul><li style="font-style: italic; color: red;">abc</li><li style="font-style: italic; color: red;">&nbsp;</li></ul>');
+    TinySelections.setCursor(editor, [ 0, 1 ], 0);
+    TinyContentActions.keydown(editor, Keys.enter());
+
+    TinyAssertions.assertContent(editor, '<ul>\n<li style="font-style: italic; color: red;">abc</li>\n</ul>\n<p>&nbsp;</p>');
+  });
+
+  it('TINYMCE-13035: leaving a middle list item should not copy its styles to the paragraph that splits the list', () => {
+    const editor = hook.editor();
+    editor.setContent('<ul><li>a</li><li style="font-weight: bold;">&nbsp;</li><li>b</li></ul>');
+    TinySelections.setCursor(editor, [ 0, 1 ], 0);
+    TinyContentActions.keydown(editor, Keys.enter());
+
+    TinyAssertions.assertContent(editor, '<ul>\n<li>a</li>\n</ul>\n<p>&nbsp;</p>\n<ul>\n<li>b</li>\n</ul>');
   });
 });
