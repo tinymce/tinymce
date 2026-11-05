@@ -115,9 +115,9 @@ describe('browser.tinymce.core.paste.SmartPasteTest', () => {
       LegacyUnit.setSelection(editor, 'p', 0);
       editor.undoManager.add();
 
-      // svg not detected as an image
+      // svg not detected as an image, so it is inserted as a link
       editor.execCommand('mceInsertClipboardContent', false, { html: 'http://www.site.com/my.svg' });
-      TinyAssertions.assertContent(editor, '<p>http://www.site.com/my.svg</p>');
+      TinyAssertions.assertContent(editor, '<p><a href="http://www.site.com/my.svg">http://www.site.com/my.svg</a></p>');
 
       editor.resetContent('<p></p>');
       LegacyUnit.setSelection(editor, 'p', 0);
@@ -140,6 +140,26 @@ describe('browser.tinymce.core.paste.SmartPasteTest', () => {
       editor.execCommand('mceInsertClipboardContent', false, { html: 'http://www.site.com' });
       TinyAssertions.assertContent(editor, '<p><a href="http://www.site.com">abc</a></p>');
       assert.lengthOf(editor.undoManager.data, 3);
+    });
+
+    it('TBA: paste as content, paste url on collapsed selection', () => {
+      const editor = hook.editor();
+      editor.resetContent('<p>abc</p>');
+      LegacyUnit.setSelection(editor, 'p', 1);
+      editor.undoManager.add();
+
+      editor.execCommand('mceInsertClipboardContent', false, { html: 'http://www.site.com?a=1&b=2' });
+      TinyAssertions.assertContent(editor, '<p>a<a href="http://www.site.com?a=1&amp;b=2">http://www.site.com?a=1&amp;b=2</a>bc</p>');
+    });
+
+    it('TBA: paste as text, paste url on collapsed selection', () => {
+      const editor = hook.editor();
+      editor.resetContent('<p>abc</p>');
+      LegacyUnit.setSelection(editor, 'p', 1);
+      editor.undoManager.add();
+
+      editor.execCommand('mceInsertClipboardContent', false, { text: 'http://www.site.com' });
+      TinyAssertions.assertContent(editor, '<p>ahttp://www.site.combc</p>');
     });
 
     it('TBA: paste as content, paste image url', () => {
