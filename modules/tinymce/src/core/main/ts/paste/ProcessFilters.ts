@@ -15,6 +15,7 @@ const preProcess = (editor: Editor, html: string): string => {
     sanitize: Options.shouldSanitizeXss(editor),
     sandbox_iframes: Options.shouldSandboxIframes(editor),
     sandbox_iframes_exclusions: Options.getSandboxIframesExclusions(editor),
+    allow_mathml_annotation_encodings: Options.getAllowedMathmlAnnotationEncodings(editor),
     convert_unsafe_embeds: Options.shouldConvertUnsafeEmbeds(editor)
   }, editor.schema);
 
