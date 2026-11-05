@@ -21,23 +21,113 @@ table:not([cellpadding]) td {
 
 /* Set default table styles if a table has a positive border attribute
    and no inline css */
-table[border]:not([border="0"]):not([style*="border-width"]) th,
-table[border]:not([border="0"]):not([style*="border-width"]) td {
+table[border]:where(:not([border="0"]):not([style*="border-width"])) th,
+table[border]:where(:not([border="0"]):not([style*="border-width"])) td {
   border-width: 1px;
 }
 
 /* Set default table styles if a table has a positive border attribute
    and no inline css */
-table[border]:not([border="0"]):not([style*="border-style"]) th,
-table[border]:not([border="0"]):not([style*="border-style"]) td {
+table[border]:where(:not([border="0"]):not([style*="border-style"])) th,
+table[border]:where(:not([border="0"]):not([style*="border-style"])) td {
   border-style: solid;
 }
 
 /* Set default table styles if a table has a positive border attribute
    and no inline css */
-table[border]:not([border="0"]):not([style*="border-color"]) th,
-table[border]:not([border="0"]):not([style*="border-color"]) td {
+table[border]:where(:not([border="0"]):not([style*="border-color"])) th,
+table[border]:where(:not([border="0"]):not([style*="border-color"])) td {
   border-color: #ccc;
+}
+
+/* Set default table styles if a table has a positive border attribute
+   and no inline css */
+table[border]:where([style*="border-style: dashed"]) td,
+table[border]:where([style*="border-style: dashed"]) th,
+table[border]:where([style*=" dashed "]) td,
+table[border]:where([style*=" dashed "]) th {
+   border-style: dashed;
+}
+
+/* Set default table styles if a table has a positive border attribute
+   and no inline css */
+table[border]:where([style*="border-style: none"]) td,
+table[border]:where([style*="border-style: none"]) th,
+table[border]:where([style*=" none "]) td,
+table[border]:where([style*=" none "]) th {
+   border-style: none;
+}
+
+/* Set default table styles if a table has a positive border attribute
+   and no inline css */
+table[border]:where([style*="border-style: solid"]) td,
+table[border]:where([style*="border-style: solid"]) th,
+table[border]:where([style*=" solid "]) td,
+table[border]:where([style*=" solid "]) th {
+   border-style: solid;
+}
+
+/* Set default table styles if a table has a positive border attribute
+   and no inline css */
+table[border]:where([style*="border-style: dotted"]) td,
+table[border]:where([style*="border-style: dotted"]) th,
+table[border]:where([style*=" dotted "]) td,
+table[border]:where([style*=" dotted "]) th {
+   border-style: dotted;
+}
+
+/* Set default table styles if a table has a positive border attribute
+   and no inline css */
+table[border]:where([style*="border-style: double"]) td,
+table[border]:where([style*="border-style: double"]) th,
+table[border]:where([style*=" double "]) td,
+table[border]:where([style*=" double "]) th {
+   border-style: double;
+}
+
+/* Set default table styles if a table has a positive border attribute
+   and no inline css */
+table[border]:where([style*="border-style: groove"]) td,
+table[border]:where([style*="border-style: groove"]) th,
+table[border]:where([style*=" groove "]) td,
+table[border]:where([style*=" groove "]) th {
+   border-style: groove;
+}
+
+/* Set default table styles if a table has a positive border attribute
+   and no inline css */
+table[border]:where([style*="border-style: ridge"]) td,
+table[border]:where([style*="border-style: ridge"]) th,
+table[border]:where([style*=" ridge "]) td,
+table[border]:where([style*=" ridge "]) th {
+   border-style: ridge;
+}
+
+/* Set default table styles if a table has a positive border attribute
+   and no inline css */
+table[border]:where([style*="border-style: inset"]) td,
+table[border]:where([style*="border-style: inset"]) th,
+table[border]:where([style*=" inset "]) td,
+table[border]:where([style*=" inset "]) th {
+   border-style: inset;
+}
+
+/* Set default table styles if a table has a positive border attribute
+   and no inline css */
+table[border]:where([style*="border-style: outset"]) td,
+table[border]:where([style*="border-style: outset"]) th,
+table[border]:where([style*=" outset "]) td,
+table[border]:where([style*=" outset "]) th {
+   border-style: outset;
+}
+
+/* Set default table styles if a table has a positive border attribute
+   and no inline css */
+table[border]:where([style*="border-style: hidden"]) td,
+table[border]:where([style*="border-style: hidden"]) th,
+table[border]:where([style*=" hidden "]) td,
+table[border]:where([style*=" hidden "]) th {
+   border-style: hidden;
 }
 
 figure {
