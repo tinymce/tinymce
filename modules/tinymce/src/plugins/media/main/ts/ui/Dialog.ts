@@ -210,7 +210,7 @@ const showDialog = (editor: Editor): void => {
         ? { ...dialogData, embed: '' }
         : dialogData;
 
-    const embed = dataToHtml(editor, data);
+    const embed = dataToHtml(editor, data.embed ? { ...data, source: HtmlToData.htmlToData(data.embed, editor.schema).source } : data);
     api.setData(wrap({
       ...data,
       embed
