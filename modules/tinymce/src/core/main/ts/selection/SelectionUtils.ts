@@ -8,6 +8,8 @@ import type Editor from '../api/Editor';
 import Tools from '../api/util/Tools';
 import type { IdBookmark, IndexBookmark } from '../bookmark/BookmarkTypes';
 import * as GetBookmark from '../bookmark/GetBookmark';
+import * as CaretFinder from '../caret/CaretFinder';
+import CaretPosition from '../caret/CaretPosition';
 import * as NodeType from '../dom/NodeType';
 
 import * as TableCellSelection from './TableCellSelection';
@@ -147,6 +149,27 @@ const isSelectionOverWholeTextNode = (range: Range): boolean => isSelectionOverW
 
 const isSelectionOverWholeAnchor = (range: Range): boolean => isSelectionOverWholeNode(range, NodeType.isAnchor);
 
+const isRngStartAtStartOfElement = (rng: Range, elm: Element): boolean => CaretFinder.prevPosition(elm, CaretPosition.fromRangeStart(rng)).isNone();
+
+const isRngEndAtEndOfElement = (rng: Range, elm: Element): boolean => {
+  return CaretFinder.nextPosition(elm, CaretPosition.fromRangeEnd(rng))
+    .exists((pos) => !NodeType.isBr(pos.getNode()) || CaretFinder.nextPosition(elm, pos).isSome()) === false;
+};
+
+const getFullySelectedBlocksFromRange = (rng: Range, blocks: Element[]): Element[] => {
+  if (blocks.length === 1) {
+    return isRngStartAtStartOfElement(rng, blocks[0]) && isRngEndAtEndOfElement(rng, blocks[0]) ? blocks : [];
+  } else {
+    const first = Arr.head(blocks).filter((elm) => isRngStartAtStartOfElement(rng, elm)).toArray();
+    const last = Arr.last(blocks).filter((elm) => isRngEndAtEndOfElement(rng, elm)).toArray();
+    const middle = blocks.slice(1, -1);
+    return first.concat(middle).concat(last);
+  }
+};
+
+const getFullySelectedBlocks = (selection: EditorSelection): Element[] =>
+  selection.isCollapsed() ? [] : getFullySelectedBlocksFromRange(selection.getRng(), selection.getSelectedBlocks());
+
 export {
   hasAllContentsSelected,
   moveEndPoint,
@@ -155,5 +178,9 @@ export {
   preserve,
   isSelectionOverWholeHTMLElement,
   isSelectionOverWholeTextNode,
-  isSelectionOverWholeAnchor
+  isSelectionOverWholeAnchor,
+  isRngStartAtStartOfElement,
+  isRngEndAtEndOfElement,
+  getFullySelectedBlocksFromRange,
+  getFullySelectedBlocks
 };

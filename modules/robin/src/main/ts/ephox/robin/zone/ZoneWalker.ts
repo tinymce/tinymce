@@ -110,7 +110,7 @@ const walk = <E, D>(
       .filter(shouldContinue);
   }
 
-  if (universe.property().isText(finish)) {
+  if (universe.property().isText(finish) && universe.up().predicate(finish, universe.property().isSpecial).isNone()) {
     stack.addDetail(transform(universe, finish));
   }
 

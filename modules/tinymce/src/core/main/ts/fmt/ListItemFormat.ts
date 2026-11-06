@@ -5,9 +5,8 @@ import type DOMUtils from '../api/dom/DOMUtils';
 import type EditorSelection from '../api/dom/Selection';
 import type Editor from '../api/Editor';
 import type Formatter from '../api/Formatter';
-import * as CaretFinder from '../caret/CaretFinder';
-import CaretPosition from '../caret/CaretPosition';
 import * as NodeType from '../dom/NodeType';
+import * as SelectionUtils from '../selection/SelectionUtils';
 import * as TableCellSelection from '../selection/TableCellSelection';
 
 import type { Format, InlineFormat } from './FormatTypes';
@@ -24,13 +23,6 @@ export const getExpandedListItemFormat = (formatter: Formatter, format: string):
   const formatList = formatter.get(format);
 
   return Type.isArray(formatList) ? findExpandedListItemFormat(formatList) : Optional.none();
-};
-
-const isRngStartAtStartOfElement = (rng: Range, elm: Element) => CaretFinder.prevPosition(elm, CaretPosition.fromRangeStart(rng)).isNone();
-
-const isRngEndAtEndOfElement = (rng: Range, elm: Element) => {
-  return CaretFinder.nextPosition(elm, CaretPosition.fromRangeEnd(rng))
-    .exists((pos) => !NodeType.isBr(pos.getNode()) || CaretFinder.nextPosition(elm, pos).isSome()) === false;
 };
 
 const isEditableListItem = (dom: DOMUtils) => (elm: Element) => NodeType.isListItem(elm) && dom.isEditable(elm);
@@ -66,17 +58,10 @@ const getFullySelectedBlocks = (selection: EditorSelection) => {
   const rng = selection.getRng();
   const blocks = getAndOnlyNormalizeFirstBlockIf(
     selection,
-    (el) => isRngStartAtStartOfElement(rng, el) && !NodeType.isListItem(el)
+    (el) => SelectionUtils.isRngStartAtStartOfElement(rng, el) && !NodeType.isListItem(el)
   );
 
-  if (blocks.length === 1) {
-    return isRngStartAtStartOfElement(rng, blocks[0]) && isRngEndAtEndOfElement(rng, blocks[0]) ? blocks : [];
-  } else {
-    const first = Arr.head(blocks).filter((elm) => isRngStartAtStartOfElement(rng, elm)).toArray();
-    const last = Arr.last(blocks).filter((elm) => isRngEndAtEndOfElement(rng, elm)).toArray();
-    const middle = blocks.slice(1, -1);
-    return first.concat(middle).concat(last);
-  }
+  return SelectionUtils.getFullySelectedBlocksFromRange(rng, blocks);
 };
 
 export const getFullySelectedListItems = (editor: Editor): Element[] => {

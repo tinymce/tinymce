@@ -55,6 +55,8 @@ export interface CommonDropdownSpec<T> {
   readonly classes: string[];
   readonly dropdownBehaviours: Behaviour.NamedConfiguredBehaviour<any, any, any>[];
   readonly searchable?: boolean;
+  readonly useMinWidth?: boolean;
+  readonly sandboxClasses?: string[];
   readonly ariaLabel: Optional<string>;
   readonly context: string;
 }
@@ -156,7 +158,8 @@ const renderCommonDropdown = <T>(
         Optional.some(iconSpec)
       ]),
       matchWidth: true,
-      useMinWidth: true,
+      useMinWidth: spec.useMinWidth ?? true,
+      sandboxClasses: spec.sandboxClasses ?? [],
 
       // When the dropdown opens, if we are in search mode, then we want to
       // focus our searcher.

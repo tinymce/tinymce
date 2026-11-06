@@ -16,7 +16,7 @@ import * as GetSelectionContent from '../../selection/GetSelectionContent';
 import * as MultiRange from '../../selection/MultiRange';
 import * as NormalizeRange from '../../selection/NormalizeRange';
 import * as SelectionBookmark from '../../selection/SelectionBookmark';
-import { hasAnyRanges, moveEndPoint } from '../../selection/SelectionUtils';
+import * as SelectionUtils from '../../selection/SelectionUtils';
 import * as SetSelectionContent from '../../selection/SetSelectionContent';
 import type Editor from '../Editor';
 import type AstNode from '../html/Node';
@@ -94,6 +94,7 @@ interface EditorSelection {
   getStart: (real?: boolean) => Element;
   getEnd: (real?: boolean) => Element;
   getSelectedBlocks: (startElm?: Element, endElm?: Element) => Element[];
+  getFullySelectedBlocks: () => Element[];
   normalize: () => Range;
   selectorChanged: (selector: string, callback: (active: boolean, args: {
     node: Node;
@@ -148,7 +149,7 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
       setRng(rng);
       collapse(false);
     } else {
-      moveEndPoint(dom, rng, editor.getBody(), true);
+      SelectionUtils.moveEndPoint(dom, rng, editor.getBody(), true);
       setRng(rng);
     }
   };
@@ -489,6 +490,18 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
   const getSelectedBlocks = (startElm?: Element, endElm?: Element) =>
     ElementSelection.getSelectedBlocks(dom, getRng(), startElm, endElm);
 
+  /**
+   * Returns the blocks whose whole content is inside the current selection. Blocks that are only
+   * partially selected are not included, and a collapsed selection returns an empty array.
+   *
+   * @method getFullySelectedBlocks
+   * @return {Array} Array with the fully selected block elements.
+   * @example
+   * // Alerts the number of blocks that are entirely selected
+   * alert(tinymce.activeEditor.selection.getFullySelectedBlocks().length);
+   */
+  const getFullySelectedBlocks = (): Element[] => SelectionUtils.getFullySelectedBlocks(exports);
+
   const isForward = (): boolean => {
     const sel = getSel();
 
@@ -522,7 +535,7 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
     const rng = getRng();
     const sel = getSel();
 
-    if (!MultiRange.hasMultipleRanges(sel) && hasAnyRanges(editor)) {
+    if (!MultiRange.hasMultipleRanges(sel) && SelectionUtils.hasAnyRanges(editor)) {
       const normRng = NormalizeRange.normalize(dom, rng);
 
       normRng.each((normRng) => {
@@ -619,6 +632,7 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
     getStart,
     getEnd,
     getSelectedBlocks,
+    getFullySelectedBlocks,
     normalize,
     selectorChanged,
     selectorChangedWithUnbind,

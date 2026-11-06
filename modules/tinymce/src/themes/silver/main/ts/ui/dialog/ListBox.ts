@@ -93,6 +93,8 @@ export const renderListBox = (spec: ListBoxSpec, backstage: UiFactoryBackstage, 
         columns: 1,
         presets: 'normal',
         classes: [],
+        useMinWidth: false,
+        sandboxClasses: [ 'tox-listbox__menu' ],
         dropdownBehaviours: [
           Tabstopping.config({}),
           RepresentingConfigs.withComp(

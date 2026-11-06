@@ -1,0 +1,6 @@
+project: robin
+kind: Fixed
+body: Text inside a special element, such as `script`, was included in text zones when the zone was entirely inside that element.
+time: 2026-10-29T10:00:00.000000+01:00
+custom:
+    Issue: TINYMCE-15087

@@ -3,6 +3,7 @@ import { Gene, SpecialGene, TestUniverse, TextGene } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 import { assert } from 'chai';
 
+import * as TextZones from 'ephox/robin/api/general/TextZones';
 import { ZoneViewports } from 'ephox/robin/api/general/ZoneViewports';
 import { WordDecision } from 'ephox/robin/words/WordDecision';
 import type { ZoneDetails } from 'ephox/robin/zone/LanguageZones';
@@ -52,5 +53,30 @@ describe('atomic.robin.zone.AvoidSpecialTest', () => {
     assert.isTrue(doc.property().isNonEditable(ele), 'Ensure nobody changed the document without updating this test');
     const zones = ZoneWalker.walk(doc, ele, ele, 'en_us', WordDecision.fromItem, ZoneViewports.anything());
     assert.isEmpty(zones);
+  });
+
+  it('TINYMCE-15087: does not include text when the walk starts and finishes on the same text inside a special element', () => {
+    const text = doc.find(root, '2.1').getOrDie();
+    const zones = ZoneWalker.walk(doc, text, text, 'en_us', WordDecision.fromItem, ZoneViewports.anything());
+    assert.deepEqual(Arr.bind(zones, (zone) => Arr.map(zone.details, (detail) => detail.item.id)), [], 'Zone details');
+    assert.equal(zones.length, 0, 'Number of zones');
+  });
+
+  it('TINYMCE-15087: returns no zones from TextZones.range on a special element whose only content is a single text', () => {
+    const universe = TestUniverse(Gene('root', 'root', [
+      Gene('1', 'p', [
+        TextGene('1.1', 'Before')
+      ]),
+      SpecialGene('2', [
+        TextGene('2.1', 'Only text inside the special element')
+      ]),
+      Gene('3', 'p', [
+        TextGene('3.1', 'After')
+      ])
+    ]));
+    const special = universe.find(universe.get(), '2').getOrDie();
+    const result = TextZones.range(universe, special, 0, special, 1, 'en_us', ZoneViewports.anything());
+    assert.deepEqual(Arr.bind(result.zones, (zone) => Arr.map(zone.elements, (element) => element.id)), [], 'Zone elements');
+    assert.equal(result.zones.length, 0, 'Number of zones');
   });
 });

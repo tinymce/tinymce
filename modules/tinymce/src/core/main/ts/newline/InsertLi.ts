@@ -1,4 +1,4 @@
-import { Arr, Fun, Obj, Type } from '@ephox/katamari';
+import { Arr, Fun, Obj, Strings, Type } from '@ephox/katamari';
 import { Css, Insert, SugarElement, SugarNode } from '@ephox/sugar';
 
 import type Editor from '../api/Editor';
@@ -70,9 +70,9 @@ const insert = (editor: Editor, createNewBlock: (name: string, styles?: Record<s
     newBlockName = 'LI';
   }
 
-  const parentBlockStyles = isListItem(parentBlock) ? getStyles(parentBlock) : undefined;
-  let newBlock = isListItem(parentBlock) && parentBlockStyles
-    ? createNewBlock(newBlockName, { style: getStyles(parentBlock) })
+  const parentBlockStyles = isListItem(parentBlock) && newBlockName === 'LI' ? getStyles(parentBlock) : '';
+  let newBlock = Strings.isNotEmpty(parentBlockStyles)
+    ? createNewBlock(newBlockName, { style: parentBlockStyles })
     : createNewBlock(newBlockName);
 
   if (isFirstOrLastLi(containerBlock, parentBlock, true) && isFirstOrLastLi(containerBlock, parentBlock, false)) {
@@ -124,7 +124,7 @@ const insert = (editor: Editor, createNewBlock: (name: string, styles?: Record<s
       dom.insertAfter(fragment, containerBlock);
 
       Arr.each(previousChildren, (child) => Insert.prepend(SugarElement.fromDom(newBlock), child));
-      if (parentBlockStyles) {
+      if (Strings.isNotEmpty(parentBlockStyles)) {
         newBlock.setAttribute('style', parentBlockStyles);
       }
     } else {
