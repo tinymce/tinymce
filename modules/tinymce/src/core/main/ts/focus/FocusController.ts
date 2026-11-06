@@ -103,6 +103,9 @@ const registerEvents = (editorManager: EditorManager, e: { editor: Editor }) => 
     });
   });
 
+  // The body of a disabled editor is not focusable, so focus leaving it fires no focusout and only this blur clears the highlight
+  editor.on('blur', () => toggleContentAreaOnFocus(editor, Class.remove));
+
   // Check if focus is moved to an element outside the active editor by checking if the target node
   // isn't within the body of the activeEditor nor a UI element such as a dialog child control
   if (!documentFocusInHandler) {

@@ -239,7 +239,7 @@ const autoFocus = (editor: Editor) => {
         focusEditor = editor.editorManager.get(autoFocus);
       }
 
-      if (focusEditor && !focusEditor.destroyed) {
+      if (focusEditor && !focusEditor.destroyed && !Disabled.isDisabled(focusEditor)) {
         focusEditor.focus();
         focusEditor.selection.scrollIntoView();
       }

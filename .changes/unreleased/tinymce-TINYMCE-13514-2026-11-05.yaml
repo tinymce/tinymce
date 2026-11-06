@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Pressing Tab could move focus into a disabled editor, which showed no focus indicator.
+time: 2026-11-05T11:30:19.860161096+11:00
+custom:
+    Issue: TINYMCE-13514

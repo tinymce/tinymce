@@ -1,4 +1,4 @@
-import { Arr, type Optional, Strings } from '@ephox/katamari';
+import { Arr, Optional, Strings } from '@ephox/katamari';
 import { Attribute, Compare, ContentEditable, SelectorExists, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import type Editor from '../api/Editor';
@@ -24,6 +24,54 @@ const switchOnContentEditableTrue = (elm: SugarElement<Node>) => {
   });
 };
 
+const internalTabindexAttr = 'data-mce-tabindex';
+
+const getTabStop = (editor: Editor): Optional<SugarElement<HTMLElement>> =>
+  Optional.from<HTMLElement>(editor.inline ? editor.getBody() : editor.iframeElement).map(SugarElement.fromDom);
+
+const removeFromTabOrder = (editor: Editor) => {
+  getTabStop(editor).each((elm) => {
+    const tabindex = Attribute.getOpt(elm, 'tabindex');
+    if (tabindex.exists((value) => value === '-1')) {
+      return;
+    }
+    // A non-editable inline body is only focusable through its tabindex, and -1 would still let a click focus it
+    if (editor.inline) {
+      tabindex.each((value) => {
+        Attribute.set(elm, internalTabindexAttr, value);
+        Attribute.remove(elm, 'tabindex');
+      });
+    } else {
+      // An empty backup records that the iframe had no tabindex
+      Attribute.set(elm, internalTabindexAttr, tabindex.getOr(''));
+      Attribute.set(elm, 'tabindex', -1);
+    }
+  });
+};
+
+const restoreTabOrder = (editor: Editor) => {
+  getTabStop(editor).each((elm) => {
+    Attribute.getOpt(elm, internalTabindexAttr).each((backup) => {
+      if (backup === '') {
+        Attribute.remove(elm, 'tabindex');
+      } else {
+        Attribute.set(elm, 'tabindex', backup);
+      }
+      Attribute.remove(elm, internalTabindexAttr);
+    });
+  });
+};
+
+const setAriaDisabled = (body: SugarElement<HTMLElement>, state: boolean) => {
+  if (Attribute.get(body, 'role') === 'textbox') {
+    if (state) {
+      Attribute.set(body, 'aria-disabled', 'true');
+    } else {
+      Attribute.remove(body, 'aria-disabled');
+    }
+  }
+};
+
 const toggleDisabled = (editor: Editor, state: boolean): void => {
   const body = SugarElement.fromDom(editor.getBody());
 
@@ -31,10 +79,13 @@ const toggleDisabled = (editor: Editor, state: boolean): void => {
     ModeUtils.disableEditor(editor);
     ContentEditable.set(body, false);
     switchOffContentEditableTrue(body);
+    removeFromTabOrder(editor);
   } else {
+    restoreTabOrder(editor);
     switchOnContentEditableTrue(body);
     ModeUtils.enableEditor(editor);
   }
+  setAriaDisabled(body, state);
 };
 
 const registerDisabledContentFilters = (editor: Editor): void => {
