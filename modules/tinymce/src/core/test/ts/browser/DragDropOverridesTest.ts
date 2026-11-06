@@ -20,19 +20,24 @@ interface DataTransferSpec {
 describe('browser.tinymce.core.DragDropOverridesTest', () => {
   // The edge scrolling tests hold the mouse down and stop at the first sign of scrolling, but the autoscroll is a smooth
   // scroll that keeps moving after the drag ends, so release the mouse and let it finish before the next test
-  const pEndDragAndSettleScroll = async (editor: Editor) => {
-    Mouse.mouseUp(SugarBody.body());
+  const pWaitForScrollToSettle = (editor: Editor, label: string) => {
     const positions = () => [ window.scrollX, window.scrollY, editor.getWin().scrollX, editor.getWin().scrollY ];
-    // Starts empty so the first attempt only records the positions
+    // Starts empty so the first attempt only records the positions. Sampling further apart than the 100ms autoscroll
+    // interval means an autoscroll that is still running can never look settled.
     const previous = Cell<number[]>([]);
-    await Waiter.pTryUntil('Wait for the scroll positions to settle after the drag ended', () => {
+    return Waiter.pTryUntil(label, () => {
       const current = positions();
       const settled = Arr.equal(current, previous.get());
       previous.set(current);
       if (!settled) {
-        throw new Error(`The scroll positions kept changing after the drag ended: ${current.join(', ')}`);
+        throw new Error(`The scroll positions kept changing: ${current.join(', ')}`);
       }
-    }, 100, 2000);
+    }, 150, 2000);
+  };
+
+  const pEndDragAndSettleScroll = async (editor: Editor) => {
+    Mouse.mouseUp(SugarBody.body());
+    await pWaitForScrollToSettle(editor, 'Wait for the scroll positions to settle after the drag ended');
   };
 
   // Safari fires a mousemove at the real cursor shortly after the drag changes the layout, which counts as the mouse
@@ -511,7 +516,7 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
       editor.setContent(`
       <p contenteditable="false" style="height: 200px; background-color: black; color: white">Draggable CEF</p>
       <p id="separator" style="height: 100px"></p>
-      <p id="hidden" style="height: 300px"></p>
+      <p id="hidden" style="height: 2000px"></p>
       <p contenteditable="false" style="height: 50px; background-color: black; color: white">Other CEF</p>
     `);
       const target = UiFinder.findIn(TinyDom.body(editor), 'p:contains("Draggable CEF")').getOrDie();
@@ -526,10 +531,7 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
 
       Mouse.mouseDown(other);
       assert.deepEqual(Arr.map(events, (e) => e.type), [ 'dragstart', 'dragend' ], 'The old drag should end when the new one starts');
-      await Waiter.pWait(400); // let the smooth scroll of the last tick finish
-      const scrollAfterNewDrag = editor.getWin().scrollY;
-      await Waiter.pWait(350); // longer than the scroll interval
-      assert.equal(editor.getWin().scrollY, scrollAfterNewDrag, 'The old drag should not scroll the editor any more');
+      await pWaitForScrollToSettle(editor, 'The old drag should not scroll the editor any more');
     });
 
     it('TINY-8874: Dragging CEF element towards the upper edge causes scrolling', async () => {
