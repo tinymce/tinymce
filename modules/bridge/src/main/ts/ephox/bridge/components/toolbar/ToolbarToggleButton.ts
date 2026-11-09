@@ -21,12 +21,14 @@ export interface BaseToolbarToggleButtonInstanceApi extends BaseToolbarButtonIns
 export interface ToolbarToggleButtonSpec extends BaseToolbarToggleButtonSpec<ToolbarToggleButtonInstanceApi> {
   type?: 'togglebutton';
   onAction: (api: ToolbarToggleButtonInstanceApi) => void;
+  onDoubleClick?: (api: ToolbarToggleButtonInstanceApi) => void;
   shortcut?: string;
 }
 
 export interface ToolbarToggleButton extends BaseToolbarToggleButton<ToolbarToggleButtonInstanceApi> {
   type: 'togglebutton';
   onAction: (api: ToolbarToggleButtonInstanceApi) => void;
+  onDoubleClick: Optional<(api: ToolbarToggleButtonInstanceApi) => void>;
   shortcut: Optional<string>;
 }
 
@@ -43,6 +45,7 @@ export const toggleButtonSchema = StructureSchema.objOf(
   baseToolbarToggleButtonFields.concat([
     ComponentSchema.type,
     ComponentSchema.onAction,
+    ComponentSchema.optionalOnDoubleClick,
     ComponentSchema.optionalShortcut
   ])
 );

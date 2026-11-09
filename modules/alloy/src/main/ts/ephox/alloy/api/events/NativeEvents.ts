@@ -22,6 +22,7 @@ const input = constant('input' as const);
 const change = constant('change' as const);
 const focus = constant('focus' as const);
 const click = constant('click' as const);
+const dblclick = constant('dblclick' as const);
 const transitioncancel = constant('transitioncancel' as const);
 const transitionend = constant('transitionend' as const);
 const transitionstart = constant('transitionstart' as const);
@@ -63,6 +64,7 @@ export {
   focus,
 
   click,
+  dblclick,
 
   transitioncancel,
   transitionend,

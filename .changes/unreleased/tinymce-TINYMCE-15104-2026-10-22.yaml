@@ -1,0 +1,6 @@
+project: tinymce
+kind: Added
+body: New `onDoubleClick` option for toolbar toggle buttons, called when the button is double clicked.
+time: 2026-10-22T12:00:00.000000+02:00
+custom:
+  Issue: TINYMCE-15104

@@ -35,6 +35,7 @@ const setup = (container: SugarElement, rawSettings: GuiEventSettings): { unbind
     'mousemove',
     'mouseout',
     'click',
+    'dblclick',
     'pointerdown',
     'pointermove',
     'pointerup',

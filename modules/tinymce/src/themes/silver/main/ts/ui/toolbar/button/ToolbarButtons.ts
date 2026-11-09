@@ -283,7 +283,15 @@ const renderToolbarToggleButtonWith = (spec: Toolbar.ToolbarToggleButton, provid
       ].concat(bonusEvents.length > 0 ? [
         // TODO: May have to pass through eventOrder if events start clashing
         AddEventsBehaviour.config('toolbarToggleButtonWith', bonusEvents)
-      ] : [ ]),
+      ] : [ ]).concat(spec.onDoubleClick.map((onDoubleClick) =>
+        AddEventsBehaviour.config('toolbarToggleButtonDoubleClick', [
+          AlloyEvents.run(NativeEvents.dblclick(), (comp) => {
+            if (!Disabling.isDisabled(comp)) {
+              onDoubleClick(getToggleApi(comp));
+            }
+          })
+        ])
+      ).toArray()),
       getApi: getToggleApi,
       onSetup: spec.onSetup
     },

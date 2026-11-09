@@ -72,7 +72,8 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
               store.adder('onToggleAction.2')();
               api.setEnabled(!shouldDisable.get());
               api.setActive(shouldActivate.get());
-            }
+            },
+            onDoubleClick: Optional.none()
           }, TestBackstage().shared.providers)
         ]
       },

@@ -25,6 +25,7 @@ export const optionalChevronTooltip = FieldSchema.optionString('chevronTooltip')
 export const optionalLabel = FieldSchema.optionString('label');
 export const optionalShortcut = FieldSchema.optionString('shortcut');
 export const optionalSelect = FieldSchema.optionFunction('select');
+export const optionalOnDoubleClick = FieldSchema.optionFunction('onDoubleClick');
 
 export const active = FieldSchema.defaultedBoolean('active', false);
 export const borderless = FieldSchema.defaultedBoolean('borderless', false);
