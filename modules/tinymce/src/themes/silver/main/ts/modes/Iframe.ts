@@ -5,6 +5,7 @@ import { Css, DomEvent, SugarElement, SugarPosition, SugarShadowDom } from '@eph
 
 import type { EventUtilsEvent } from 'tinymce/core/api/dom/EventUtils';
 import type Editor from 'tinymce/core/api/Editor';
+import type { ExecCommandArgs } from 'tinymce/core/api/EditorCommands';
 import type { EditorUiApi } from 'tinymce/core/api/ui/Ui';
 
 import * as Events from '../api/Events';
@@ -170,18 +171,21 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
 
   editor.addQueryValueHandler('ToggleSidebar', () => OuterContainer.whichSidebar(outerContainer) ?? '');
 
-  editor.addCommand('ToggleView', (_ui: boolean, value: string) => {
+  editor.addCommand('ToggleView', (_ui: boolean, value: string, args?: ExecCommandArgs) => {
+    const skipFocus = args?.skip_focus === true;
     const sidebarBefore = OuterContainer.whichSidebar(outerContainer);
-    if (OuterContainer.toggleView(outerContainer, value)) {
+    if (OuterContainer.toggleView(outerContainer, value, skipFocus)) {
       const target = outerContainer.element;
       mainUi.mothership.broadcastOn([ Channels.dismissPopups() ], { target });
       Arr.each(uiMotherships, (m) => {
         m.broadcastOn([ Channels.dismissPopups() ], { target });
       });
 
-      // Switching back to main view should focus the editor and update any UIs
+      // Switching back to main view should focus the editor, unless the caller asked to skip it, and update any UIs
       if (Type.isNull(OuterContainer.whichView(outerContainer))) {
-        editor.focus({ scrollToSelection: false });
+        if (!skipFocus) {
+          editor.focus({ scrollToSelection: false });
+        }
         editor.nodeChanged();
         OuterContainer.refreshToolbar(outerContainer);
       }

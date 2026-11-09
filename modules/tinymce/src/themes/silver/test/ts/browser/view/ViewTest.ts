@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, FocusTools, Keys, type StructAssert, TestStore, UiFinder, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
-import { Attribute, Class, Css, Html, Scroll, SugarBody, SugarShadowDom } from '@ephox/sugar';
+import { Attribute, Class, Css, Focus, Html, Insert, Remove, Scroll, SugarBody, SugarElement, SugarShadowDom } from '@ephox/sugar';
 import { TinyApis, TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -317,6 +317,56 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
       apis.hasFocus(false);
       toggleView('myview1');
       apis.hasFocus(true);
+    });
+
+    it('TINYMCE-15108: ToggleView does not focus the editor when closing the view with skip_focus', () => {
+      const editor = hook.editor();
+      const outsideInput = SugarElement.fromTag('input');
+      Insert.append(SugarBody.body(), outsideInput);
+
+      try {
+        editor.execCommand('ToggleView', false, 'myview1');
+        Focus.focus(outsideInput);
+
+        editor.execCommand('ToggleView', false, 'myview1', { skip_focus: true });
+
+        assert.equal(editor.queryCommandValue('ToggleView'), '', 'The view should be closed');
+        assert.isFalse(editor.hasFocus(), 'Editor should not be focused after closing the view');
+        assert.isTrue(Focus.hasFocus(outsideInput), 'Focus should stay on the outside input');
+      } finally {
+        Remove.remove(outsideInput);
+      }
+    });
+
+    it('TINYMCE-15108: ToggleView does not focus the restored toolbar drawer when closing the view with skip_focus', async () => {
+      const editor = hook.editor();
+      const outsideInput = SugarElement.fromTag('input');
+      Insert.append(SugarBody.body(), outsideInput);
+
+      const drawerWasOpen = UiFinder.findIn(SugarBody.body(), '.tox-toolbar__overflow').isValue();
+
+      try {
+        if (!drawerWasOpen) {
+          editor.execCommand('ToggleToolbarDrawer');
+        }
+        await pAssertToolbarDrawerVisibleState(true);
+
+        editor.execCommand('ToggleView', false, 'myview1');
+        await pAssertToolbarDrawerVisibleState(false);
+        Focus.focus(outsideInput);
+
+        editor.execCommand('ToggleView', false, 'myview1', { skip_focus: true });
+
+        await pAssertToolbarDrawerVisibleState(true);
+        await Waiter.pWait(100);
+        assert.isTrue(Focus.hasFocus(outsideInput), 'Focus should stay on the outside input');
+      } finally {
+        Remove.remove(outsideInput);
+        if (!drawerWasOpen) {
+          editor.execCommand('ToggleToolbarDrawer');
+          await pAssertToolbarDrawerVisibleState(false);
+        }
+      }
     });
 
     it('TINY-9259: Should retain range selection when main view is hidden', () => {

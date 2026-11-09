@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: The `ToggleView` command ignored the `skip_focus` argument.
+time: 2026-10-29T10:00:00.000000+01:00
+custom:
+    Issue: TINYMCE-15108

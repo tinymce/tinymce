@@ -76,9 +76,9 @@ interface OuterContainerApis {
   readonly setMenubar: (comp: AlloyComponent, groups: MenubarItemSpec[]) => void;
   readonly focusMenubar: (comp: AlloyComponent) => void;
   readonly setViews: (comp: AlloyComponent, viewConfigs: ViewTypes.ViewConfig, showView?: string) => void;
-  readonly toggleView: (comp: AlloyComponent, name: string) => boolean;
+  readonly toggleView: (comp: AlloyComponent, name: string, skipFocus: boolean) => boolean;
   readonly whichView: (comp: AlloyComponent) => string | null;
-  readonly showMainView: (comp: AlloyComponent) => void;
+  readonly showMainView: (comp: AlloyComponent, skipFocus: boolean) => void;
   readonly hideMainView: (comp: AlloyComponent, keepToolbar: boolean) => void;
 }
 
@@ -201,12 +201,12 @@ const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, Out
       });
       const configKey = showView?.toLowerCase();
       if (Type.isString(configKey) && Obj.has(viewConfigs, configKey)) {
-        apis.toggleView(comp, configKey);
+        apis.toggleView(comp, configKey, false);
       }
     },
-    toggleView: (comp, name) => {
+    toggleView: (comp, name, skipFocus) => {
       return Composite.parts.getPart(comp, detail, 'viewWrapper').exists(
-        (wrapper) => ViewWrapper.toggleView(wrapper, () => apis.showMainView(comp), (keepToolbar) => apis.hideMainView(comp, keepToolbar), name)
+        (wrapper) => ViewWrapper.toggleView(wrapper, () => apis.showMainView(comp, skipFocus), (keepToolbar) => apis.hideMainView(comp, keepToolbar), name)
       );
     },
     whichView: (comp) => {
@@ -246,9 +246,13 @@ const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, Out
         apis.toggleToolbarDrawerWithoutFocusing(comp);
       }
     },
-    showMainView: (comp: AlloyComponent) => {
+    showMainView: (comp: AlloyComponent, skipFocus: boolean) => {
       if (toolbarDrawerOpenState) {
-        apis.toggleToolbarDrawer(comp);
+        if (skipFocus) {
+          apis.toggleToolbarDrawerWithoutFocusing(comp);
+        } else {
+          apis.toggleToolbarDrawer(comp);
+        }
         toolbarDrawerOpenState = false;
       }
       toolbarVisible = true;
@@ -509,8 +513,8 @@ export default Sketcher.composite<OuterContainerSketchSpec, OuterContainerSketch
     setViews: (apis, comp, views, showView) => {
       apis.setViews(comp, views, showView);
     },
-    toggleView: (apis, comp, name) => {
-      return apis.toggleView(comp, name);
+    toggleView: (apis, comp, name, skipFocus) => {
+      return apis.toggleView(comp, name, skipFocus);
     },
     whichView: (apis, comp) => {
       return apis.whichView(comp);
