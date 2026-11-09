@@ -14,7 +14,7 @@
 // Two blue lines next to each other do not look good, so we remove one from the sidebar.
 .tox.tox-edit-focus .tox-sidebar__resize-handle {
   &:hover::before {
-    border-left: 0px solid transparent; 
+    border-inline-start: 0px solid transparent;
   }
 }
 
@@ -96,12 +96,12 @@
       bottom: 0;
       width: 8px;
       box-sizing: border-box;
-      border-left: 0px solid transparent;
-      transition: border-left-width .15s ease, border-left-color .15s ease;
+      border-inline-start: 0px solid transparent;
+      transition: border-inline-start-width .15s ease, border-inline-start-color .15s ease;
     }
 
     &:hover::before {
-      border-left: 3px solid @color-tint;
+      border-inline-start: 3px solid @color-tint;
     }
   }
 

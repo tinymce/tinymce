@@ -1,6 +1,6 @@
 import { type AlloyComponent, type AlloySpec, Behaviour, Dragging, Resizing } from '@ephox/alloy';
-import { Optionals, type Optional } from '@ephox/katamari';
-import { Height, SelectorFind, type SugarElement, SugarPosition, Width } from '@ephox/sugar';
+import { Cell, Optionals, type Optional } from '@ephox/katamari';
+import { Direction, Height, SelectorFind, type SugarElement, SugarPosition, Width } from '@ephox/sugar';
 
 import type { EditorEventMap } from 'tinymce/core/api/EventTypes';
 import type Observable from 'tinymce/core/api/util/Observable';
@@ -18,6 +18,7 @@ const findSidebarWrap = (handle: AlloyComponent): Optional<SugarElement<HTMLElem
 
 export const makeSidebarResizeHandle = (sizeConstraints: SidebarSizeConstraints, eventDispatcher: Observable<EditorEventMap>): AlloySpec => {
   const { minWidth, maxWidth } = sizeConstraints;
+  const growSign = Cell(-1);
 
   return {
     dom: {
@@ -41,14 +42,14 @@ export const makeSidebarResizeHandle = (sizeConstraints: SidebarSizeConstraints,
             // and the editing area's minimum, the range is unsatisfiable. Skip the resize so a
             // drag can't clobber the preserved requested width with the clamped value.
             if (effectiveMax >= minWidth) {
+              growSign.set(Direction.getDirection(handle.element) === 'ltr' ? -1 : 1);
               Resizing.start(handle, sidebarWidth, Height.get(sidebar), { minWidth, maxWidth: effectiveMax });
               Events.fireSidebarResizeStart(eventDispatcher);
             }
           });
         },
         onDrag: (handle, _target, delta) => {
-          // The handle sits on the sidebar's left edge, so dragging left should grow it: invert the horizontal delta.
-          Resizing.moveBy(handle, SugarPosition(delta.left * -1, 0)).each(({ width }) => {
+          Resizing.moveBy(handle, SugarPosition(growSign.get() * delta.left, 0)).each(({ width }) => {
             findSidebar(handle).each((sidebar) => SidebarResize.applyWidth(sidebar, width));
           });
         },

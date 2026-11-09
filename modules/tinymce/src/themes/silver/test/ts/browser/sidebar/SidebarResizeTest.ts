@@ -1,12 +1,13 @@
 import { Pointer, TestStore, UiFinder } from '@ephox/agar';
-import { afterEach, beforeEach, context, describe, it } from '@ephox/bedrock-client';
+import { afterEach, before, beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import type { Sidebar } from '@ephox/bridge';
 import { Fun } from '@ephox/katamari';
-import { Class, Css, Insert, Remove, SugarBody, SugarElement, Visibility, Width } from '@ephox/sugar';
+import { Class, Css, Direction, Insert, Remove, SugarBody, SugarElement, Visibility, Width } from '@ephox/sugar';
 import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import type Editor from 'tinymce/core/api/Editor';
+import EditorManager from 'tinymce/core/api/EditorManager';
 
 import * as SidebarUtils from '../../module/SidebarUtils';
 import { resizeEditorBy } from '../../module/UiUtils';
@@ -52,6 +53,10 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
 
   const store = TestStore<SidebarResizeEvent>();
 
+  before(() => {
+    EditorManager.addI18n('ar', { _dir: 'rtl' });
+  });
+
   beforeEach(() => store.clear());
 
   const setupEditorHook = (configOverrides: {
@@ -62,6 +67,7 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
     width?: number;
     resize?: boolean | 'both';
     statusbar?: boolean;
+    language?: string;
     setupElement?: () => TinyHooks.SetupElement;
   } = {}) => {
     const { setupElement, ...settings } = configOverrides;
@@ -115,7 +121,9 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
 
   const resetSidebarWidth = async (initialWidth: number) => {
     const sidebar = SidebarUtils.getSidebar();
-    await SidebarUtils.resizeSidebarBy([ Width.get(sidebar) - initialWidth, 0 ]);
+    const excessWidth = Width.get(sidebar) - initialWidth;
+    const dragX = Direction.onDirection(excessWidth, -excessWidth)(sidebar);
+    await SidebarUtils.resizeSidebarBy([ dragX, 0 ]);
   };
 
   const resetEditorWidth = async (editor: Editor, initialWidth: number) => {
@@ -125,61 +133,94 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
 
   context('TINYMCE-14527: Resizing the sidebar', () => {
     const initialWidth = 440;
-    setupEditorHook({ sidebar_show: 'sidebarone', sidebar_width: initialWidth, sidebar_min_width: 300, sidebar_max_width: 800 });
     afterEach(async () => resetSidebarWidth(initialWidth));
 
-    it('TINYMCE-14527: should resize the sidebar by dragging the handle', async () => {
-      const resizeHandle = SidebarUtils.getSidebarResizeHandle();
+    context('LTR', () => {
+      setupEditorHook({ sidebar_show: 'sidebarone', sidebar_width: initialWidth, sidebar_min_width: 300, sidebar_max_width: 800 });
 
-      await Pointer.pWithMockPointerCapture(resizeHandle, {}, async () => {
-        Pointer.pointerDown(resizeHandle);
-        Pointer.pointerMoveBy(resizeHandle, 0, 0);
+      it('TINYMCE-14527: should resize the sidebar by dragging the handle', async () => {
+        const resizeHandle = SidebarUtils.getSidebarResizeHandle();
 
-        Pointer.pointerMoveBy(resizeHandle, -40, 0);
-        assertSidebarWidth(480, 'Dragging the handle left should grow the sidebar');
+        await Pointer.pWithMockPointerCapture(resizeHandle, {}, async () => {
+          Pointer.pointerDown(resizeHandle);
+          Pointer.pointerMoveBy(resizeHandle, 0, 0);
 
-        Pointer.pointerMoveBy(resizeHandle, -40, 0);
-        Pointer.pointerUp(resizeHandle);
-        assertSidebarWidth(520, 'Releasing the handle should keep the grown width');
+          Pointer.pointerMoveBy(resizeHandle, -40, 0);
+          assertSidebarWidth(480, 'Dragging the handle left should grow the sidebar');
 
-        Pointer.pointerDown(resizeHandle);
-        Pointer.pointerMoveBy(resizeHandle, 0, 0);
+          Pointer.pointerMoveBy(resizeHandle, -40, 0);
+          Pointer.pointerUp(resizeHandle);
+          assertSidebarWidth(520, 'Releasing the handle should keep the grown width');
 
-        Pointer.pointerMoveBy(resizeHandle, 80, 0);
-        assertSidebarWidth(440, 'Dragging the handle right should shrink the sidebar');
+          Pointer.pointerDown(resizeHandle);
+          Pointer.pointerMoveBy(resizeHandle, 0, 0);
 
-        Pointer.pointerMoveBy(resizeHandle, 40, 0);
-        Pointer.pointerUp(resizeHandle);
-        assertSidebarWidth(400, 'Releasing the handle should keep the shrunk width');
+          Pointer.pointerMoveBy(resizeHandle, 80, 0);
+          assertSidebarWidth(440, 'Dragging the handle right should shrink the sidebar');
+
+          Pointer.pointerMoveBy(resizeHandle, 40, 0);
+          Pointer.pointerUp(resizeHandle);
+          assertSidebarWidth(400, 'Releasing the handle should keep the shrunk width');
+        });
+      });
+
+      it('TINYMCE-14527: should not resume resizing after over-dragging until the pointer returns to the handle', async () => {
+        const resizeHandle = SidebarUtils.getSidebarResizeHandle();
+
+        await Pointer.pWithMockPointerCapture(resizeHandle, {}, async () => {
+          Pointer.pointerDown(resizeHandle);
+          Pointer.pointerMoveBy(resizeHandle, 0, 0);
+
+          Pointer.pointerMoveBy(resizeHandle, -360, 0);
+          assertSidebarWidth(800, 'Dragging left should grow the sidebar up to its max width');
+
+          Pointer.pointerMoveBy(resizeHandle, -150, 0);
+          assertSidebarWidth(800, 'Over-dragging past the max should keep the sidebar clamped at the max width');
+
+          Pointer.pointerMoveBy(resizeHandle, 0, 0);
+          assertSidebarWidth(800, 'Dragging back towards the handle should be ignored until the pointer reaches it, so the sidebar stays at the max width');
+
+          Pointer.pointerMoveBy(resizeHandle, 500, 0);
+          assertSidebarWidth(300, 'Dragging right past the handle should shrink the sidebar down to its min width');
+
+          Pointer.pointerMoveBy(resizeHandle, 150, 0);
+          assertSidebarWidth(300, 'Over-dragging past the min should keep the sidebar clamped at the min width');
+
+          Pointer.pointerMoveBy(resizeHandle, 0, 0);
+          assertSidebarWidth(300, 'Dragging back towards the handle should be ignored until the pointer reaches it, so the sidebar stays at the min width');
+
+          Pointer.pointerUp(resizeHandle);
+        });
       });
     });
 
-    it('TINYMCE-14527: should not resume resizing after over-dragging until the pointer returns to the handle', async () => {
-      const resizeHandle = SidebarUtils.getSidebarResizeHandle();
+    context('RTL', () => {
+      setupEditorHook({ language: 'ar', sidebar_show: 'sidebarone', sidebar_width: initialWidth, sidebar_min_width: 300, sidebar_max_width: 800 });
 
-      await Pointer.pWithMockPointerCapture(resizeHandle, {}, async () => {
-        Pointer.pointerDown(resizeHandle);
-        Pointer.pointerMoveBy(resizeHandle, 0, 0);
+      it('TINYMCE-14904: should resize the sidebar by dragging the handle', async () => {
+        const resizeHandle = SidebarUtils.getSidebarResizeHandle();
 
-        Pointer.pointerMoveBy(resizeHandle, -360, 0);
-        assertSidebarWidth(800, 'Dragging left should grow the sidebar up to its max width');
+        await Pointer.pWithMockPointerCapture(resizeHandle, {}, async () => {
+          Pointer.pointerDown(resizeHandle);
+          Pointer.pointerMoveBy(resizeHandle, 0, 0);
 
-        Pointer.pointerMoveBy(resizeHandle, -150, 0);
-        assertSidebarWidth(800, 'Over-dragging past the max should keep the sidebar clamped at the max width');
+          Pointer.pointerMoveBy(resizeHandle, 40, 0);
+          assertSidebarWidth(480, 'Dragging the handle right should grow the sidebar');
 
-        Pointer.pointerMoveBy(resizeHandle, 0, 0);
-        assertSidebarWidth(800, 'Dragging back towards the handle should be ignored until the pointer reaches it, so the sidebar stays at the max width');
+          Pointer.pointerMoveBy(resizeHandle, 40, 0);
+          Pointer.pointerUp(resizeHandle);
+          assertSidebarWidth(520, 'Releasing the handle should keep the grown width');
 
-        Pointer.pointerMoveBy(resizeHandle, 500, 0);
-        assertSidebarWidth(300, 'Dragging right past the handle should shrink the sidebar down to its min width');
+          Pointer.pointerDown(resizeHandle);
+          Pointer.pointerMoveBy(resizeHandle, 0, 0);
 
-        Pointer.pointerMoveBy(resizeHandle, 150, 0);
-        assertSidebarWidth(300, 'Over-dragging past the min should keep the sidebar clamped at the min width');
+          Pointer.pointerMoveBy(resizeHandle, -80, 0);
+          assertSidebarWidth(440, 'Dragging the handle left should shrink the sidebar');
 
-        Pointer.pointerMoveBy(resizeHandle, 0, 0);
-        assertSidebarWidth(300, 'Dragging back towards the handle should be ignored until the pointer reaches it, so the sidebar stays at the min width');
-
-        Pointer.pointerUp(resizeHandle);
+          Pointer.pointerMoveBy(resizeHandle, -40, 0);
+          Pointer.pointerUp(resizeHandle);
+          assertSidebarWidth(400, 'Releasing the handle should keep the shrunk width');
+        });
       });
     });
   });
@@ -278,15 +319,32 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
     const minEditingAreaWidth = 280;
 
     context('TINYMCE-14530: Editing area minimum width constraint', () => {
-      setupEditorHook({ sidebar_show: 'sidebarone', sidebar_width: 200, sidebar_min_width: 100, sidebar_max_width: 5000, width: 1200 });
+      const editorConfig = { sidebar_show: 'sidebarone', sidebar_width: 200, sidebar_min_width: 100, sidebar_max_width: 5000, width: 1200 };
+      const remainingSpace = editorConfig.width - (editorBorderLeft + editorBorderRight) - minEditingAreaWidth;
 
-      it('TINYMCE-14530: should not let the sidebar grow to the point where the editing area shrinks below its minimum width', async () => {
-        const remainingSpace = 1200 - (editorBorderLeft + editorBorderRight) - minEditingAreaWidth;
-        await SidebarUtils.resizeSidebarBy([ -1000, 0 ]);
+      const assertCappedAtEditingAreaMinimum = () => {
         assertSidebarWidth(remainingSpace, 'The sidebar should be capped so the editing area keeps its minimum width');
         assert.equal(SidebarUtils.getSidebarRequestedWidth(), remainingSpace, 'The requested width should also be capped, since the drag logic clamps it directly rather than relying on the CSS clamp');
         store.assertEq('Dragging past the editing-area limit should emit start and resized with the effective-max-clamped width', [ resizeStartEvent(), resizedEvent(remainingSpace) ]);
         assert.equal(Width.get(SidebarUtils.getEditArea()), minEditingAreaWidth, 'The editing area must not shrink below its minimum width');
+      };
+
+      context('LTR', () => {
+        setupEditorHook(editorConfig);
+
+        it('TINYMCE-14530: should not let the sidebar grow to the point where the editing area shrinks below its minimum width', async () => {
+          await SidebarUtils.resizeSidebarBy([ -1000, 0 ]);
+          assertCappedAtEditingAreaMinimum();
+        });
+      });
+
+      context('RTL', () => {
+        setupEditorHook({ ...editorConfig, language: 'ar' });
+
+        it('TINYMCE-14904: should not let the sidebar grow to the point where the editing area shrinks below its minimum width', async () => {
+          await SidebarUtils.resizeSidebarBy([ 1000, 0 ]);
+          assertCappedAtEditingAreaMinimum();
+        });
       });
     });
 
@@ -335,17 +393,9 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
     context('TINYMCE-14530: Editing area minimum width when the editor is resized', () => {
       const editorInitialWidth = 1500;
       const sidebarInitialWidth = 1000;
-      const hook = setupEditorHook({ sidebar_show: 'sidebarone', sidebar_width: sidebarInitialWidth, sidebar_max_width: 1000, resize: 'both', statusbar: true, width: editorInitialWidth });
+      const editorConfig = { sidebar_show: 'sidebarone', sidebar_width: sidebarInitialWidth, sidebar_max_width: 1000, resize: 'both' as const, statusbar: true, width: editorInitialWidth };
 
-      afterEach(async () => {
-        const editor = hook.editor();
-        await resetEditorWidth(editor, editorInitialWidth);
-        await resetSidebarWidth(sidebarInitialWidth);
-      });
-
-      it('TINYMCE-14530: should clamp the sidebar when the editor shrinks and restore it when the editor grows back', async () => {
-        const editor = hook.editor();
-
+      const testClampAndRestoreOnEditorResize = async (editor: Editor) => {
         assert.equal(Width.get(TinyDom.container(editor)), 1500, 'The editor should start at its configured width');
         assertSidebarWidth(1000, 'The sidebar should start at its configured width');
         assert.equal(SidebarUtils.getSidebarRequestedWidth(), 1000, 'The requested width should match the configured width');
@@ -362,26 +412,54 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarResizeTest', () => {
         assert.equal(Width.get(TinyDom.container(editor)), 1500, 'The editor should grow back');
         assertSidebarWidth(1000, 'The sidebar should return to its requested width once there is room again');
         assert.equal(SidebarUtils.getSidebarRequestedWidth(), 1000, 'The requested width should have been preserved throughout');
+      };
+
+      context('LTR', () => {
+        const hook = setupEditorHook(editorConfig);
+
+        afterEach(async () => {
+          const editor = hook.editor();
+          await resetEditorWidth(editor, editorInitialWidth);
+          await resetSidebarWidth(sidebarInitialWidth);
+        });
+
+        it('TINYMCE-14530: should clamp the sidebar when the editor shrinks and restore it when the editor grows back', () =>
+          testClampAndRestoreOnEditorResize(hook.editor())
+        );
+
+        it('TINYMCE-14530: should still resize the sidebar by dragging while the editing area is clamped at its minimum', async () => {
+          const editor = hook.editor();
+
+          assert.equal(Width.get(TinyDom.container(editor)), 1500, 'The editor should start at its configured width');
+          assertSidebarWidth(1000, 'The sidebar should start at its configured width');
+          assert.equal(SidebarUtils.getSidebarRequestedWidth(), 1000, 'The requested width should match the configured width');
+
+          await resizeEditorBy([ -400, 0 ]);
+
+          assert.equal(Width.get(TinyDom.container(editor)), 1100, 'The editor should shrink');
+          assert.equal(Width.get(SidebarUtils.getEditArea()), minEditingAreaWidth, 'The editing area must not shrink below its minimum width');
+          assertSidebarWidth(1100 - minEditingAreaWidth - editorBorderLeft - editorBorderRight, 'The sidebar should be clamped so the editing area keeps its minimum width');
+          assert.equal(SidebarUtils.getSidebarRequestedWidth(), 1000, 'The requested width should be preserved while the rendered width is clamped');
+
+          await SidebarUtils.resizeSidebarBy([ 40, 0 ]);
+
+          assertSidebarWidth(1100 - minEditingAreaWidth - editorBorderLeft - editorBorderRight - 40, 'Dragging the handle should shrink the rendered sidebar');
+          assert.equal(SidebarUtils.getSidebarRequestedWidth(), 1100 - minEditingAreaWidth - editorBorderLeft - editorBorderRight - 40, 'Dragging the handle should update the requested width even while the editing area was clamped');
+        });
       });
 
-      it('TINYMCE-14530: should still resize the sidebar by dragging while the editing area is clamped at its minimum', async () => {
-        const editor = hook.editor();
+      context('RTL', () => {
+        const hook = setupEditorHook({ ...editorConfig, language: 'ar' });
 
-        assert.equal(Width.get(TinyDom.container(editor)), 1500, 'The editor should start at its configured width');
-        assertSidebarWidth(1000, 'The sidebar should start at its configured width');
-        assert.equal(SidebarUtils.getSidebarRequestedWidth(), 1000, 'The requested width should match the configured width');
+        afterEach(async () => {
+          const editor = hook.editor();
+          await resetEditorWidth(editor, editorInitialWidth);
+          await resetSidebarWidth(sidebarInitialWidth);
+        });
 
-        await resizeEditorBy([ -400, 0 ]);
-
-        assert.equal(Width.get(TinyDom.container(editor)), 1100, 'The editor should shrink');
-        assert.equal(Width.get(SidebarUtils.getEditArea()), minEditingAreaWidth, 'The editing area must not shrink below its minimum width');
-        assertSidebarWidth(1100 - minEditingAreaWidth - editorBorderLeft - editorBorderRight, 'The sidebar should be clamped so the editing area keeps its minimum width');
-        assert.equal(SidebarUtils.getSidebarRequestedWidth(), 1000, 'The requested width should be preserved while the rendered width is clamped');
-
-        await SidebarUtils.resizeSidebarBy([ 40, 0 ]);
-
-        assertSidebarWidth(1100 - minEditingAreaWidth - editorBorderLeft - editorBorderRight - 40, 'Dragging the handle should shrink the rendered sidebar');
-        assert.equal(SidebarUtils.getSidebarRequestedWidth(), 1100 - minEditingAreaWidth - editorBorderLeft - editorBorderRight - 40, 'Dragging the handle should update the requested width even while the editing area was clamped');
+        it('TINYMCE-14904: should clamp the sidebar when the editor shrinks and restore it when the editor grows back', () =>
+          testClampAndRestoreOnEditorResize(hook.editor())
+        );
       });
     });
 

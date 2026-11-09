@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Resizing the sidebar in a right-to-left editor resized it in the opposite direction to the drag.
+time: 2026-10-15T08:09:57.973063894Z
+custom:
+    Issue: TINYMCE-14904
