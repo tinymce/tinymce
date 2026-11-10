@@ -1,8 +1,0 @@
-project: tinymce
-kind: Fixed
-body: The image dialog got stuck on "Uploading image" when an empty or unreadable
-  file was selected on the Upload tab. An error message is now shown and the dialog
-  can be used again.
-time: 2026-11-03T11:02:35.828526+10:00
-custom:
-  Issue: TINYMCE-7202
