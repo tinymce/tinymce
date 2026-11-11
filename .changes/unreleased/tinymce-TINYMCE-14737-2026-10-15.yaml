@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Following an anchor link to a target inside a collapsed `details` element, such as a closed accordion, now expands it, as browsers do when navigating to an in-page link.
-time: 2026-10-15T18:23:13+00:00
-custom:
-  Issue: TINYMCE-14737

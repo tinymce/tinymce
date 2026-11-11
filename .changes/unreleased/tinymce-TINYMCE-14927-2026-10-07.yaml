@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Image and table resize handles are now hidden from screen readers with `aria-hidden="true"`.
-time: 2026-10-07T17:34:52+02:00
-custom:
-  Issue: TINYMCE-14927

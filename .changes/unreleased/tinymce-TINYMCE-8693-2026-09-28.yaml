@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: A new line inside an indented TD prevented the `Decrease Indent` of the content.
-time: 2026-09-28T13:50:01.807583816+02:00
-custom:
-  Issue: TINYMCE-8693

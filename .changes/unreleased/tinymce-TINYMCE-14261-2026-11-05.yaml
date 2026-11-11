@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Long item text in dialog listboxes overflowed the dialog.
-time: 2026-11-05T08:39:50.294839+10:00
-custom:
-  Issue: TINYMCE-14261
