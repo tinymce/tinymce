@@ -24,5 +24,8 @@
     "LICENSE.txt"
   ],
   "author": "Ephox Corporation DBA Tiny Technologies, Inc",
-  "license": "GPL-2.0-or-later"
+  "license": "GPL-2.0-or-later",
+  "devDependencies": {
+    "@ephox/oxide-icons-tools": "workspace:^"
+  }
 }

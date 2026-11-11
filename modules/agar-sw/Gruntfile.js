@@ -47,7 +47,7 @@ module.exports = function (grunt) {
   require('load-grunt-tasks')(grunt, {
     requireResolution: true,
     config: "../../package.json",
-    pattern: ['grunt-*', '@ephox/swag']
+    pattern: ['grunt-*', '@tinymce/build-tools']
   });
 
   grunt.registerTask('default', ['compare-shared', 'shell:tsc', 'rollup']);

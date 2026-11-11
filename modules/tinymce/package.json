@@ -41,6 +41,7 @@
   },
   "devDependencies": {
     "@rollup/plugin-alias": "^5.1.1",
-    "@rollup/plugin-node-resolve": "^16.0.1"
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@tinymce/build-tools": "workspace:^"
   }
 }

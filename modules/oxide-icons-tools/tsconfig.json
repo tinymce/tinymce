@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo",
+    "moduleResolution": "nodenext",
+    "strict": true,
+    "noUnusedLocals": true,
+    "target": "es2018",
+    "module": "NodeNext",
+    "lib": ["es2018"],
+    "declaration": true,
+    "sourceMap": true,
+    "outDir": "lib",
+    "rootDir": "src",
+    "types": [
+      "node"
+    ],
+    "esModuleInterop": true
+  },
+  "include": [
+    "src/"
+  ]
+}

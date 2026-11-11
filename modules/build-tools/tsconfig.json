@@ -1,0 +1,20 @@
+{
+  "extends": "../../tsconfig.shared.json",
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "nodenext",
+    "lib": ["es2022"],
+    "types": ["node", "grunt"],
+    "esModuleInterop": true,
+    "importHelpers": false,
+    "noUnusedLocals": true,
+    "strict": false,
+    "outDir": "lib",
+    "rootDir": "src",
+    "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo"
+  },
+  "include": [
+    "src/main/ts",
+    "src/test/ts"
+  ]
+}

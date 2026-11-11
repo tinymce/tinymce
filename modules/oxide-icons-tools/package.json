@@ -1,0 +1,40 @@
+{
+  "name": "@ephox/oxide-icons-tools",
+  "version": "4.0.1-rc",
+  "main": "lib/main/ts/api/Main.js",
+  "types": "lib/main/ts/api/Main.d.ts",
+  "scripts": {
+    "prepublishOnly": "tsc",
+    "build": "bun run clean && tsc",
+    "clean": "git clean -fdx lib scratch",
+    "test": "bun run clean && tsc && mocha",
+    "lint": "eslint --max-warnings=0 'src/**/*.{ts,mts}'"
+  },
+  "author": "Tiny Technologies",
+  "license": "GPL-2.0-or-later",
+  "devDependencies": {
+    "@ephox/katamari": "workspace:^",
+    "@types/esm": "^3.2.0",
+    "@types/fancy-log": "^2.0.0",
+    "@types/svgo": "^2.6.2",
+    "@types/vinyl": "^2.0.7",
+    "esm": "^3.2.0"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "dependencies": {
+    "@xmldom/xmldom": "^0.8.15",
+    "chalk": "^4.1.0",
+    "fancy-log": "^2.0.0",
+    "plugin-error": "^2.0.1",
+    "svgo": "^2.8.4",
+    "vinyl": "^3.0.0"
+  },
+  "files": [
+    "lib",
+    "oxide-svgo",
+    "oxide-verify-composition",
+    "oxide-verify-set"
+  ]
+}

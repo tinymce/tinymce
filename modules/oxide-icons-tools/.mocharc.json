@@ -1,0 +1,5 @@
+ 
+{
+  "extension": ["mjs"],
+  "spec": "lib/test/ts/**/*Test.mjs"
+}

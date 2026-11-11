@@ -1,0 +1,40 @@
+{
+  "name": "@tinymce/build-tools",
+  "version": "1.0.0",
+  "description": "Rollup build tooling shared by the TinyMCE Gruntfiles",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tinymce/tinymce.git",
+    "directory": "modules/build-tools"
+  },
+  "scripts": {
+    "prepublishOnly": "bun run build",
+    "build": "tsc",
+    "test": "tsc && mocha 'lib/test/**/*.spec.mjs'",
+    "lint": "eslint --max-warnings=0 'src/**/*.{ts,mts}'"
+  },
+  "author": "Ephox Corporation DBA Tiny Technologies, Inc",
+  "license": "GPL-2.0-or-later",
+  "main": "./lib/main/ts/api/Main.js",
+  "types": "./lib/main/ts/api/Main.d.ts",
+  "files": [
+    "lib/main",
+    "tasks"
+  ],
+  "dependencies": {
+    "rollup-plugin-dts": "^6.1.1"
+  },
+  "peerDependencies": {
+    "rollup": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/chai": "^5.2.3",
+    "@types/grunt": "^0.4.32",
+    "@types/mocha": "^10.0.10",
+    "chai": "^6.2.1",
+    "mocha": "11.1.0"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  }
+}

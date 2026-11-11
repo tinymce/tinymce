@@ -44,6 +44,7 @@
     "./package.json": "./package.json"
   },
   "devDependencies": {
-    "@rollup/plugin-node-resolve": "^16.0.1"
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@tinymce/build-tools": "workspace:^"
   }
 }

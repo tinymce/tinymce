@@ -6,7 +6,7 @@ const FilesAsStrings = PluginString({
 
 let zipUtils = require('./tools/modules/zip-helper');
 let gruntUtils = require('./tools/modules/grunt-utils');
-let swag = require('@ephox/swag');
+const buildTools = require('@tinymce/build-tools');
 const nodeResolve = require('@rollup/plugin-node-resolve');
 const alias = require('@rollup/plugin-alias');
 let path = require('path');
@@ -75,7 +75,7 @@ module.exports = function (grunt) {
         core: {
           options: {
             format: 'iife',
-            onwarn: swag.onwarn,
+            onwarn: buildTools.onwarn,
             plugins: [
               FilesAsStrings,
               nodeResolve(),
@@ -99,12 +99,12 @@ module.exports = function (grunt) {
             onwarn: (warning) => {
               // Ignore circular deps in types
               if (warning.code !== 'CIRCULAR_DEPENDENCY') {
-                swag.onwarn(warning)
+                buildTools.onwarn(warning)
               }
             },
             plugins: [
               FilesAsStrings,
-              swag.dts({
+              buildTools.dts({
                 respectExternal: true,
                 keepVariables: [ 'tinymce' ],
                 keepComments: false
@@ -123,7 +123,7 @@ module.exports = function (grunt) {
         return {
           options: {
             format: 'iife',
-            onwarn: swag.onwarn,
+            onwarn: buildTools.onwarn,
             plugins: [
               FilesAsStrings,
               nodeResolve(),
@@ -142,7 +142,7 @@ module.exports = function (grunt) {
         return {
           options: {
             format: 'iife',
-            onwarn: swag.onwarn,
+            onwarn: buildTools.onwarn,
             plugins: [
               FilesAsStrings,
               nodeResolve(),
@@ -167,7 +167,7 @@ module.exports = function (grunt) {
         return {
           options: {
             format: 'iife',
-            onwarn: swag.onwarn,
+            onwarn: buildTools.onwarn,
             plugins: [
               FilesAsStrings,
               nodeResolve(),
@@ -900,7 +900,7 @@ module.exports = function (grunt) {
   require('load-grunt-tasks')(grunt, {
     requireResolution: true,
     config: "../../package.json",
-    pattern: ['grunt-*', '@ephox/bedrock-server', '@ephox/swag']
+    pattern: ['grunt-*', '@ephox/bedrock-server', '@tinymce/build-tools']
   });
   grunt.loadTasks('tools/tasks');
 
