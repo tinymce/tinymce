@@ -1,4 +1,4 @@
-import { describe, it } from '@ephox/bedrock-client';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { Fun, Optional } from '@ephox/katamari';
 import { assert } from 'chai';
 
@@ -90,5 +90,28 @@ describe('DeviceTypeTest', () => {
     checkTablet(false, userAgent);
     checkIsWebView(false, userAgent);
     checkDesktop(true, userAgent);
+  });
+
+  // TINYMCE-14668: hybrid touch/mouse Windows devices were incorrectly treated as touch-only,
+  // which hid the image/table resize handles even though a fine pointer (mouse/trackpad) was available.
+  context('hybrid touch/mouse Windows devices', () => {
+    const windowsUserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36';
+    const assertIsTouch = (expected: boolean, userAgent: string, mediaResponses: Record<string, boolean>) => {
+      const mediaMatch = (query: string) => mediaResponses[query] ?? false;
+      const platform = PlatformDetection.detect(userAgent, Optional.none(), mediaMatch);
+      assert.equal(expected, platform.deviceType.isTouch(), 'Touch incorrect: ' + userAgent);
+    };
+
+    it('TINYMCE-14668: Windows device with any fine pointer (mouse) is not touch', () => {
+      assertIsTouch(false, windowsUserAgent, { '(any-pointer:fine)': true });
+    });
+
+    it('TINYMCE-14668: Windows hybrid laptop with a primary touchscreen and any fine pointer (mouse/trackpad) is not touch', () => {
+      assertIsTouch(false, windowsUserAgent, { '(any-pointer:fine)': true, '(pointer:coarse)': true });
+    });
+
+    it('TINYMCE-14668: Windows touch-only device with no fine pointer available is touch', () => {
+      assertIsTouch(true, windowsUserAgent, { '(any-pointer:fine)': false, '(pointer:coarse)': true });
+    });
   });
 });

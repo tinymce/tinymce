@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Image resize handler was not shown on hybrid devices with both a touchscreen and a mouse or trackpad.
+time: 2026-11-09T11:08:36.962738+10:30
+custom:
+  Issue: TINYMCE-14668

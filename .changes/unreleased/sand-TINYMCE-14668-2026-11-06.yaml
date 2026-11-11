@@ -1,0 +1,6 @@
+project: sand
+kind: Improved
+body: 'The `DeviceType.isTouch()` now uses the `(any-pointer:fine)` to determine touch capability, so any device with fine pointer (mouse/trackpad) will not be treated as touch-only even if it has a touchscreen.'
+time: 2026-11-06T15:14:18.000000+10:30
+custom:
+  Issue: TINYMCE-14668

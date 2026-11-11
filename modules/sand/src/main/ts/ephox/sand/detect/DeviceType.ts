@@ -17,9 +17,10 @@ export interface DeviceType {
 
 export const DeviceType = (os: OperatingSystem, browser: Browser, userAgent: string, mediaMatch: (query: string) => boolean): DeviceType => {
   const isiPad = os.isiOS() && /ipad/i.test(userAgent) === true;
+
   const isiPhone = os.isiOS() && !isiPad;
   const isMobile = os.isiOS() || os.isAndroid();
-  const isTouch = isMobile || mediaMatch('(pointer:coarse)');
+  const isTouch = isMobile || !mediaMatch('(any-pointer:fine)');
   const isTablet = isiPad || !isiPhone && isMobile && mediaMatch('(min-device-width:768px)');
   const isPhone = isiPhone || isMobile && !isTablet;
 
