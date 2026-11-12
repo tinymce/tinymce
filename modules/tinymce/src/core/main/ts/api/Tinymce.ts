@@ -1,14 +1,13 @@
-import type { RangeLikeObject } from '../selection/RangeTypes';
 import type { UndoManager as UndoManagerType } from '../undo/UndoManagerTypes';
 
 import AddOnManager from './AddOnManager';
 import Annotator from './Annotator';
 import AriaAnnouncer from './dom/AriaAnnouncer';
-import BookmarkManager from './dom/BookmarkManager';
+import BookmarkManager, { type BookmarkManagerNamespace } from './dom/BookmarkManager';
 import ControlSelection from './dom/ControlSelection';
-import DOMUtils, { type DOMUtilsSettings } from './dom/DOMUtils';
+import DOMUtils, { type DOMUtilsNamespace } from './dom/DOMUtils';
 import EventUtils, { type EventUtilsConstructor } from './dom/EventUtils';
-import RangeUtils from './dom/RangeUtils';
+import RangeUtils, { type RangeUtilsNamespace } from './dom/RangeUtils';
 import ScriptLoader, { type ScriptLoaderConstructor } from './dom/ScriptLoader';
 import EditorSelection from './dom/Selection';
 import DomSerializer, { type DomSerializerSettings } from './dom/Serializer';
@@ -50,22 +49,6 @@ import URI, { type URIConstructor } from './util/URI';
 import VK from './util/VK';
 import WindowManager from './WindowManager';
 
-interface DOMUtilsNamespace {
-  (doc: Document, settings: Partial<DOMUtilsSettings>): DOMUtils;
-
-  DOM: DOMUtils;
-  nodeIndex: (node: Node, normalized?: boolean) => number;
-}
-
-interface RangeUtilsNamespace {
-  (dom: DOMUtils): RangeUtils;
-
-  compareRanges: (rng1: RangeLikeObject, rng2: RangeLikeObject) => boolean;
-  getCaretRangeFromPoint: (clientX: number, clientY: number, doc: Document) => Range;
-  getSelectedNode: (range: Range) => Node;
-  getNode: (container: Node, offset: number) => Node;
-}
-
 interface AddOnManagerNamespace {
   <T>(): AddOnManager<T>;
 
@@ -75,12 +58,6 @@ interface AddOnManagerNamespace {
   PluginManager: PluginManager;
   ThemeManager: ThemeManager;
   ModelManager: ModelManager;
-}
-
-interface BookmarkManagerNamespace {
-  (selection: EditorSelection): BookmarkManager;
-
-  isBookmarkNode: (node: Node) => boolean;
 }
 
 interface TinyMCE extends EditorManager {

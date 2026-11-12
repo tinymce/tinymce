@@ -18,12 +18,21 @@ interface RangeUtils {
   expand: (rng: Range, options?: { type: 'word' }) => Range;
 }
 
+export interface RangeUtilsNamespace {
+  (dom: DOMUtils): RangeUtils;
+
+  compareRanges: (rng1: RangeLikeObject | undefined, rng2: RangeLikeObject | undefined) => boolean;
+  getCaretRangeFromPoint: (clientX: number, clientY: number, doc: Document) => Range | undefined;
+  getSelectedNode: (range: Range) => Node | null;
+  getNode: (container: Node, offset: number) => Node;
+}
+
 /**
  * This class contains a few utility methods for ranges.
  *
  * @class tinymce.dom.RangeUtils
  */
-const RangeUtils = (dom: DOMUtils): RangeUtils => {
+const RangeUtils: RangeUtilsNamespace = (dom) => {
   /**
    * Walks the specified range like object and executes the callback for each sibling collection it finds.
    *

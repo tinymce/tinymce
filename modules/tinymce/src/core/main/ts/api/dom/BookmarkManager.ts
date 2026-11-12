@@ -16,6 +16,12 @@ interface BookmarkManager {
   moveToBookmark: (bookmark: Bookmark) => void;
 }
 
+export interface BookmarkManagerNamespace {
+  (selection: EditorSelection): BookmarkManager;
+
+  isBookmarkNode: (node: Node | null) => boolean;
+}
+
 /**
  * Constructs a new BookmarkManager instance for a specific selection instance.
  *
@@ -23,7 +29,7 @@ interface BookmarkManager {
  * @method BookmarkManager
  * @param {tinymce.dom.Selection} selection Selection instance to handle bookmarks for.
  */
-const BookmarkManager = (selection: EditorSelection): BookmarkManager => {
+const BookmarkManager: BookmarkManagerNamespace = (selection) => {
   return {
     /**
      * Returns a bookmark location for the current selection. This bookmark object
