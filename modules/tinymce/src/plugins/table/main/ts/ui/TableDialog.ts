@@ -42,6 +42,17 @@ const styleTDTH = (dom: DOMUtils, elm: Element, name: string | StyleMap, value?:
   }
 };
 
+const defaultKeyToField: Record<string, 'border' | 'cellspacing' | 'cellpadding'> = {
+  'border': 'border',
+  'border-width': 'border',
+  'cellspacing': 'cellspacing',
+  'border-spacing': 'cellspacing',
+  'cellpadding': 'cellpadding'
+};
+
+const getApplicableDefaults = (defaults: Record<string, string>, data: TableData): Record<string, string> =>
+  Obj.filter(defaults, (_value, key) => Obj.get(defaultKeyToField, key).forall((field) => Type.isNonNullable(data[field])));
+
 const applyDataToElement = (editor: Editor, tableElm: HTMLTableElement, data: TableData, shouldApplyOnCell: ApplicableCellProperties): void => {
   const dom = editor.dom;
   const attrs: Record<string, string | number | null> = {};
@@ -49,7 +60,7 @@ const applyDataToElement = (editor: Editor, tableElm: HTMLTableElement, data: Ta
 
   const shouldStyleWithCss = Options.shouldStyleWithCss(editor);
   const hasAdvancedTableTab = Options.hasAdvancedTableTab(editor);
-  const borderIsZero = parseFloat(data.border) === 0;
+  const borderIsZero = Type.isNonNullable(data.border) && parseFloat(data.border) === 0;
 
   if (!Type.isUndefined(data.class) && data.class !== 'mce-no-match') {
     attrs.class = data.class;
@@ -67,18 +78,28 @@ const applyDataToElement = (editor: Editor, tableElm: HTMLTableElement, data: Ta
   }
 
   if (shouldStyleWithCss) {
-    if (borderIsZero) {
-      attrs.border = 0;
-      styles['border-width'] = '';
-    } else {
-      styles['border-width'] = Utils.addPxSuffix(data.border);
-      attrs.border = 1;
+    if (Type.isNonNullable(data.border)) {
+      if (borderIsZero) {
+        attrs.border = 0;
+        styles['border-width'] = '';
+      } else {
+        styles['border-width'] = Utils.addPxSuffix(data.border);
+        attrs.border = 1;
+      }
     }
-    styles['border-spacing'] = Utils.addPxSuffix(data.cellspacing);
+    if (Type.isNonNullable(data.cellspacing)) {
+      styles['border-spacing'] = Utils.addPxSuffix(data.cellspacing);
+    }
   } else {
-    attrs.border = borderIsZero ? 0 : data.border;
-    attrs.cellpadding = data.cellpadding;
-    attrs.cellspacing = data.cellspacing;
+    if (Type.isNonNullable(data.border)) {
+      attrs.border = borderIsZero ? 0 : data.border;
+    }
+    if (Type.isNonNullable(data.cellpadding)) {
+      attrs.cellpadding = data.cellpadding;
+    }
+    if (Type.isNonNullable(data.cellspacing)) {
+      attrs.cellspacing = data.cellspacing;
+    }
   }
 
   // TINY-9837: Relevant data are applied on child TD/THs only if they have been modified since the previous dialog submission
@@ -86,10 +107,10 @@ const applyDataToElement = (editor: Editor, tableElm: HTMLTableElement, data: Ta
     const cellStyles: StyleMap = {};
     if (borderIsZero) {
       cellStyles['border-width'] = '';
-    } else if (shouldApplyOnCell.border) {
+    } else if (shouldApplyOnCell.border && Type.isNonNullable(data.border)) {
       cellStyles['border-width'] = Utils.addPxSuffix(data.border);
     }
-    if (shouldApplyOnCell.cellpadding) {
+    if (shouldApplyOnCell.cellpadding && Type.isNonNullable(data.cellpadding)) {
       cellStyles.padding = Utils.addPxSuffix(data.cellpadding);
     }
     if (hasAdvancedTableTab && shouldApplyOnCell.bordercolor) {
@@ -109,8 +130,8 @@ const applyDataToElement = (editor: Editor, tableElm: HTMLTableElement, data: Ta
     styles['border-style'] = advData.borderstyle;
   }
 
-  dom.setStyles(tableElm, { ...Options.getDefaultStyles(editor), ...styles });
-  dom.setAttribs(tableElm, { ...Options.getDefaultAttributes(editor), ...attrs });
+  dom.setStyles(tableElm, { ...getApplicableDefaults(Options.getDefaultStyles(editor), data), ...styles });
+  dom.setAttribs(tableElm, { ...getApplicableDefaults(Options.getDefaultAttributes(editor), data), ...attrs });
 };
 
 const onSubmitTableForm = (editor: Editor, tableElm: HTMLTableElement | null | undefined, oldData: TableData, api: Dialog.DialogInstanceApi<TableData>): void => {
@@ -144,7 +165,7 @@ const onSubmitTableForm = (editor: Editor, tableElm: HTMLTableElement | null | u
       // Toggle caption on/off
       const captionElm = dom.select('caption', tableElm)[0];
 
-      if (captionElm && !data.caption || !captionElm && data.caption) {
+      if (Type.isNonNullable(data.caption) && (captionElm && !data.caption || !captionElm && data.caption)) {
         editor.execCommand('mceTableToggleCaption');
       }
 

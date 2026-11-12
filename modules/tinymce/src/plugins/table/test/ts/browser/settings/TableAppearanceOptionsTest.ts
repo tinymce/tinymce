@@ -1,7 +1,8 @@
 import { Assertions } from '@ephox/agar';
 import { afterEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Obj } from '@ephox/katamari';
-import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
+import { Attribute, SelectorFind, type SugarElement, TextContent } from '@ephox/sugar';
+import { TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import type Editor from 'tinymce/core/api/Editor';
@@ -9,6 +10,13 @@ import type { AppearanceField } from 'tinymce/plugins/table/api/Options';
 import Plugin from 'tinymce/plugins/table/Plugin';
 
 import * as TableTestUtils from '../../module/test/TableTestUtils';
+
+interface TableState {
+  readonly attrs: Record<string, string>;
+  readonly styles: Record<string, string>;
+  readonly cellStyles: Record<string, string>;
+  readonly caption: string | null;
+}
 
 describe('browser.tinymce.plugins.table.TableAppearanceOptionsTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -26,6 +34,9 @@ describe('browser.tinymce.plugins.table.TableAppearanceOptionsTest', () => {
 
   afterEach(() => {
     hook.editor().options.unset('table_appearance_options');
+    hook.editor().options.unset('table_style_by_css');
+    hook.editor().options.unset('table_default_styles');
+    hook.editor().options.unset('table_default_attributes');
   });
 
   const pOpenDialog = async (editor: Editor, html: string) => {
@@ -174,6 +185,158 @@ describe('browser.tinymce.plugins.table.TableAppearanceOptionsTest', () => {
       const editor = hook.editor();
       assert.isFalse(editor.options.set('table_appearance_options', [ 'caption' ]));
       assert.deepEqual<Record<AppearanceField, boolean>>(editor.options.get('table_appearance_options'), allVisible);
+    });
+  });
+
+  context('TINYMCE-15197: Hidden fields keep the existing values on save', () => {
+    const getAttrs = (elm: SugarElement<Element>): Record<string, string> =>
+      Obj.filter(Attribute.clone(elm), (_value, key) => key !== 'style' && !key.startsWith('data-mce-'));
+
+    const getStyles = (editor: Editor, elm: SugarElement<Element>): Record<string, string> =>
+      editor.dom.parseStyle(editor.dom.getAttrib(elm.dom, 'style'));
+
+    const getTableState = (editor: Editor): TableState => {
+      const table = SelectorFind.descendant(TinyDom.body(editor), 'table').getOrDie();
+      const cell = SelectorFind.descendant(table, 'td').getOrDie();
+      return {
+        attrs: getAttrs(table),
+        styles: getStyles(editor, table),
+        cellStyles: getStyles(editor, cell),
+        caption: SelectorFind.child(table, 'caption').map(TextContent.get).getOrNull()
+      };
+    };
+
+    const pSaveWithNewWidth = async (editor: Editor, html: string): Promise<void> => {
+      await pOpenDialog(editor, html);
+      TableTestUtils.setInputValue('Width', '50%');
+      await TableTestUtils.pClickDialogButton(editor, true);
+    };
+
+    it('TINYMCE-15197: border-spacing is kept when cellspacing is hidden', async () => {
+      const editor = hook.editor();
+      editor.options.set('table_appearance_options', { cellspacing: false });
+      await pSaveWithNewWidth(editor, '<table style="width: 100%; border-spacing: 5px;"><tbody><tr><td>x</td></tr></tbody></table>');
+      assert.deepEqual<TableState>(getTableState(editor), {
+        attrs: { border: '1' },
+        styles: { 'width': '50%', 'border-spacing': '5px', 'border-collapse': 'collapse' },
+        cellStyles: {},
+        caption: null
+      });
+    });
+
+    it('TINYMCE-15197: table border width and border attribute are kept when borderwidth is hidden', async () => {
+      const editor = hook.editor();
+      editor.options.set('table_appearance_options', { borderwidth: false });
+      await pSaveWithNewWidth(editor, '<table style="width: 100%; border-width: 3px;" border="3"><tbody><tr><td>x</td></tr></tbody></table>');
+      assert.deepEqual<TableState>(getTableState(editor), {
+        attrs: { border: '3' },
+        styles: { 'width': '50%', 'border-width': '3px', 'border-collapse': 'collapse' },
+        cellStyles: {},
+        caption: null
+      });
+    });
+
+    it('TINYMCE-15197: caption is kept when caption is hidden', async () => {
+      const editor = hook.editor();
+      editor.options.set('table_appearance_options', { caption: false });
+      await pSaveWithNewWidth(editor, '<table style="width: 100%;"><caption>Caption</caption><tbody><tr><td>x</td></tr></tbody></table>');
+      assert.deepEqual<TableState>(getTableState(editor), {
+        attrs: { border: '1' },
+        styles: { 'width': '50%', 'border-collapse': 'collapse' },
+        cellStyles: {},
+        caption: 'Caption'
+      });
+    });
+
+    it('TINYMCE-15197: cell padding is kept when cellpadding is hidden', async () => {
+      const editor = hook.editor();
+      editor.options.set('table_appearance_options', { cellpadding: false });
+      await pSaveWithNewWidth(editor, '<table style="width: 100%;"><tbody><tr><td style="padding: 4px;">x</td></tr></tbody></table>');
+      assert.deepEqual<TableState>(getTableState(editor), {
+        attrs: { border: '1' },
+        styles: { 'width': '50%', 'border-collapse': 'collapse' },
+        cellStyles: { padding: '4px' },
+        caption: null
+      });
+    });
+
+    it('TINYMCE-15197: cellspacing attribute is kept when cellspacing is hidden', async () => {
+      const editor = hook.editor();
+      editor.options.set('table_appearance_options', { cellspacing: false });
+      await pSaveWithNewWidth(editor, '<table style="width: 100%;" cellspacing="4"><tbody><tr><td>x</td></tr></tbody></table>');
+      assert.deepEqual<TableState>(getTableState(editor), {
+        attrs: { border: '1', cellspacing: '4' },
+        styles: { 'width': '50%', 'border-collapse': 'collapse' },
+        cellStyles: {},
+        caption: null
+      });
+    });
+
+    it('TINYMCE-15197: every appearance value is kept when all fields are hidden', async () => {
+      const editor = hook.editor();
+      editor.options.set('table_appearance_options', false);
+      await pSaveWithNewWidth(editor,
+        '<table style="width: 100%; border-spacing: 5px; border-width: 3px;" border="3" cellspacing="4">' +
+        '<caption>Caption</caption><tbody><tr><td style="padding: 4px;">x</td></tr></tbody></table>'
+      );
+      assert.deepEqual<TableState>(getTableState(editor), {
+        attrs: { border: '3', cellspacing: '4' },
+        styles: { 'width': '50%', 'border-spacing': '5px', 'border-width': '3px', 'border-collapse': 'collapse' },
+        cellStyles: { padding: '4px' },
+        caption: 'Caption'
+      });
+    });
+
+    it('TINYMCE-15197: border, cellpadding and cellspacing attributes are kept when all fields are hidden and table_style_by_css is false', async () => {
+      const editor = hook.editor();
+      editor.options.set('table_style_by_css', false);
+      editor.options.set('table_appearance_options', false);
+      await pSaveWithNewWidth(editor, '<table width="100%" border="3" cellpadding="4" cellspacing="5"><tbody><tr><td>x</td></tr></tbody></table>');
+      assert.deepEqual<TableState>(getTableState(editor), {
+        attrs: { width: '50%', border: '3', cellpadding: '4', cellspacing: '5' },
+        styles: { 'border-collapse': 'collapse' },
+        cellStyles: {},
+        caption: null
+      });
+    });
+
+    it('TINYMCE-15197: configured default styles do not overwrite border-width and border-spacing when all fields are hidden', async () => {
+      const editor = hook.editor();
+      editor.options.set('table_default_styles', { 'border-collapse': 'collapse', 'border-width': '1px', 'border-spacing': '2px' });
+      editor.options.set('table_appearance_options', false);
+      await pSaveWithNewWidth(editor, '<table style="width: 100%; border-spacing: 5px; border-width: 3px;" border="3"><tbody><tr><td>x</td></tr></tbody></table>');
+      assert.deepEqual<TableState>(getTableState(editor), {
+        attrs: { border: '3' },
+        styles: { 'width': '50%', 'border-spacing': '5px', 'border-width': '3px', 'border-collapse': 'collapse' },
+        cellStyles: {},
+        caption: null
+      });
+    });
+
+    it('TINYMCE-15197: configured default attributes do not overwrite border, cellpadding and cellspacing when all fields are hidden', async () => {
+      const editor = hook.editor();
+      editor.options.set('table_style_by_css', false);
+      editor.options.set('table_default_attributes', { border: '1', cellpadding: '1', cellspacing: '2' });
+      editor.options.set('table_appearance_options', false);
+      await pSaveWithNewWidth(editor, '<table width="100%" border="3" cellpadding="4" cellspacing="5"><tbody><tr><td>x</td></tr></tbody></table>');
+      assert.deepEqual<TableState>(getTableState(editor), {
+        attrs: { width: '50%', border: '3', cellpadding: '4', cellspacing: '5' },
+        styles: { 'border-collapse': 'collapse' },
+        cellStyles: {},
+        caption: null
+      });
+    });
+
+    it('TINYMCE-15197: configured default attributes are still applied when the fields are shown', async () => {
+      const editor = hook.editor();
+      editor.options.set('table_default_attributes', { border: '1', cellpadding: '1', cellspacing: '2' });
+      await pSaveWithNewWidth(editor, '<table style="width: 100%;"><tbody><tr><td>x</td></tr></tbody></table>');
+      assert.deepEqual<TableState>(getTableState(editor), {
+        attrs: { border: '1', cellpadding: '1', cellspacing: '2' },
+        styles: { 'width': '50%', 'border-collapse': 'collapse' },
+        cellStyles: {},
+        caption: null
+      });
     });
   });
 });

@@ -27,11 +27,11 @@ interface AdvancedStyles {
 export type TableData = {
   readonly height: string;
   readonly width: string;
-  readonly cellspacing: string;
-  readonly cellpadding: string;
-  readonly caption: boolean;
+  readonly cellspacing?: string;
+  readonly cellpadding?: string;
+  readonly caption?: boolean;
   readonly align: string;
-  readonly border: string;
+  readonly border?: string;
   class?: string;
   cols?: string;
   rows?: string;

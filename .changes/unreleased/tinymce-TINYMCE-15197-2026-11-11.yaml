@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Saving the Table Properties dialog with `table_appearance_options` hiding fields no longer removes the table's existing cell spacing, border width or caption.
+time: 2026-11-11T12:00:00.000000+10:30
+custom:
+    Issue: TINYMCE-15197
