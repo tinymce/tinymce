@@ -1,6 +1,6 @@
 import { Arr, Fun, Obj, type Optional } from '@ephox/katamari';
-import { TableLookup, Warehouse } from '@ephox/snooker';
-import { Compare, type SugarElement } from '@ephox/sugar';
+import { Adjustments, ResizeBehaviour, TableLookup, TableSize, Warehouse } from '@ephox/snooker';
+import { Compare, Dimension, type SugarElement } from '@ephox/sugar';
 
 import type Editor from 'tinymce/core/api/Editor';
 import type { Dialog } from 'tinymce/core/api/ui/Ui';
@@ -39,15 +39,49 @@ const getSelectedCells = (table: SugarElement<HTMLTableElement>, cells: SugarEle
   }));
 };
 
-const updateSimpleProps = (modifier: DomModifier, colModifier: DomModifier, data: CellData, shouldUpdate: (key: string) => boolean): void => {
+const getTargetPixelWidth = (tableSize: TableSize, width: string): Optional<number> =>
+  Dimension.parse(width, [ 'fixed', 'relative', 'empty' ])
+    .filter(({ value, unit }) => tableSize.label !== 'none' && unit !== 'pt' && value >= 0)
+    .map(({ value, unit }) => unit === '%' ? value / 100 * tableSize.pixelWidth() : value);
+
+const resizeColumns = (table: SugarElement<HTMLTableElement>, selectedCells: SugarElement<HTMLTableCellElement>[], target: number, tableSize: TableSize): boolean => {
+  const warehouse = Warehouse.fromTable(table);
+  const selectedDetails = Arr.bind(selectedCells, (cell) => Warehouse.findItem(warehouse, cell, Compare.eq).toArray());
+  const ranges = Arr.unique(selectedDetails, (a, b) => a.column === b.column && a.colspan === b.colspan);
+  const toPixels = (width: number) => tableSize.label === 'percent' ? width / 100 * tableSize.pixelWidth() : width;
+
+  Arr.each(ranges, (range) => {
+    const widths = tableSize.getWidths(Warehouse.fromTable(table), tableSize);
+    const end = range.column + range.colspan - 1;
+    const width = Arr.foldl(widths.slice(range.column, end + 1), (acc, w) => acc + w, 0);
+    const delta = target - toPixels(width);
+    if (end < widths.length - 1) {
+      Adjustments.adjustWidth(table, delta, end, ResizeBehaviour.preserveTable(), tableSize);
+    } else if (range.column > 0) {
+      Adjustments.adjustWidth(table, -delta, range.column - 1, ResizeBehaviour.preserveTable(), tableSize);
+    }
+  });
+
+  return ranges.length > 0;
+};
+
+const setColumnWidths = (table: SugarElement<HTMLTableElement>, selectedCells: SugarElement<HTMLTableCellElement>[], width: string): boolean => {
+  const tableSize = TableSize.getTableSize(table);
+  return getTargetPixelWidth(tableSize, width).exists((target) => {
+    const isApplied = resizeColumns(table, selectedCells, target, tableSize);
+    if (isApplied) {
+      Utils.removeDataStyle(table);
+    }
+    return isApplied;
+  });
+};
+
+const updateSimpleProps = (modifier: DomModifier, data: CellData, shouldUpdate: (key: string) => boolean): void => {
   if (shouldUpdate('scope')) {
     modifier.setAttrib('scope', data.scope);
   }
   if (shouldUpdate('class') && data.class !== 'mce-no-match') {
     modifier.setAttrib('class', data.class);
-  }
-  if (shouldUpdate('width')) {
-    colModifier.setStyle('width', Utils.addPxSuffix(data.width));
   }
 };
 
@@ -66,15 +100,19 @@ const updateAdvancedProps = (modifier: DomModifier, data: Required<CellData>, sh
   }
 };
 
-const applyStyleData = (editor: Editor, cells: SelectedCell[], data: CellData, wasChanged: (key: string) => boolean): void => {
+const applyStyleData = (editor: Editor, cells: SelectedCell[], data: CellData, wasChanged: (key: string) => boolean, isColumnResized: boolean): void => {
   const isSingleCell = cells.length === 1;
   Arr.each(cells, (item) => {
     const cellElm = item.element;
     const shouldOverrideCurrentValue = isSingleCell ? Fun.always : wasChanged;
     const modifier = DomModifier.normal(editor, cellElm);
-    const colModifier = item.column.map((col) => DomModifier.normal(editor, col)).getOr(modifier);
 
-    updateSimpleProps(modifier, colModifier, data, shouldOverrideCurrentValue);
+    updateSimpleProps(modifier, data, shouldOverrideCurrentValue);
+
+    if (!isColumnResized && shouldOverrideCurrentValue('width')) {
+      const colModifier = item.column.map((col) => DomModifier.normal(editor, col)).getOr(modifier);
+      colModifier.setStyle('width', Utils.addPxSuffix(data.width));
+    }
 
     if (Options.hasAdvancedCellTab(editor)) {
       updateAdvancedProps(modifier, data as Required<CellData>, shouldOverrideCurrentValue);
@@ -113,7 +151,8 @@ const applyCellData = (editor: Editor, cells: SugarElement<HTMLTableCellElement>
 
       // Update the cells styling using the dialog data
       if (styleModified || Obj.has(modifiedData, 'scope')) {
-        applyStyleData(editor, selectedCells, data, Fun.curry(Obj.has, modifiedData));
+        const isColumnResized = Obj.has(modifiedData, 'width') && setColumnWidths(table, cells, data.width);
+        applyStyleData(editor, selectedCells, data, Fun.curry(Obj.has, modifiedData), isColumnResized);
       }
 
       // Update the cells structure using the dialog data

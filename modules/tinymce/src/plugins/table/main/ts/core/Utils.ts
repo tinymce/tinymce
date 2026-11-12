@@ -5,7 +5,9 @@
  Make sure that if making changes to this file, the other files are updated as well
  */
 
-import { Compare, ContentEditable, PredicateFind, SugarElement, SugarNode } from '@ephox/sugar';
+import { Arr } from '@ephox/katamari';
+import { TableLookup } from '@ephox/snooker';
+import { Attribute, Compare, ContentEditable, PredicateFind, SugarElement, SugarNode } from '@ephox/sugar';
 
 import type Editor from 'tinymce/core/api/Editor';
 
@@ -17,6 +19,15 @@ const getBody = (editor: Editor): SugarElement<HTMLElement> =>
 
 const getIsRoot = (editor: Editor) => (element: SugarElement<Node>): boolean =>
   Compare.eq(element, getBody(editor));
+
+const removeDataStyle = (table: SugarElement<HTMLTableElement>): void => {
+  const removeStyleAttribute = (element: SugarElement<HTMLElement>) => Attribute.remove(element, 'data-mce-style');
+
+  removeStyleAttribute(table);
+  Arr.each(TableLookup.cells(table), removeStyleAttribute);
+  Arr.each(TableLookup.columns(table), removeStyleAttribute);
+  Arr.each(TableLookup.rows(table), removeStyleAttribute);
+};
 
 const removePxSuffix = (size: string): string =>
   size ? size.replace(/px$/, '') : '';
@@ -37,6 +48,7 @@ export {
   getNodeName,
   getBody,
   getIsRoot,
+  removeDataStyle,
   addPxSuffix,
   removePxSuffix,
   getSelectionStart,

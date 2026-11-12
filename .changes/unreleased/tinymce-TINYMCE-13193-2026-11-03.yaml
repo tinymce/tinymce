@@ -1,0 +1,6 @@
+project: tinymce
+kind: Improved
+body: Changing the width in the Cell Properties dialog now uses the inline column resize logic to ensure the table width does not change.
+time: 2026-11-03T14:02:42.000000+08:00
+custom:
+  Issue: TINYMCE-13193
