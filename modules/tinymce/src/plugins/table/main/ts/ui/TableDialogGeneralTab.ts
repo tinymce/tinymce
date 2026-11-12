@@ -32,25 +32,29 @@ const getItems = (editor: Editor, classes: Dialog.ListBoxItemSpec[], insertNewTa
     }
   ];
 
-  const appearanceItems: Dialog.BodyComponentSpec[] = Options.hasAppearanceOptions(editor) ? [
-    {
+  const appearanceOptions = Options.getAppearanceOptions(editor);
+  const appearanceItem = (field: Options.AppearanceField, spec: Dialog.BodyComponentSpec): Dialog.BodyComponentSpec[] =>
+    appearanceOptions[field] ? [ spec ] : [];
+
+  const appearanceItems: Dialog.BodyComponentSpec[] = [
+    ...appearanceItem('cellspacing', {
       type: 'input',
       name: 'cellspacing',
       label: 'Cell spacing',
       inputMode: 'numeric'
-    },
-    {
+    }),
+    ...appearanceItem('cellpadding', {
       type: 'input',
       name: 'cellpadding',
       label: 'Cell padding',
       inputMode: 'numeric'
-    },
-    {
+    }),
+    ...appearanceItem('borderwidth', {
       type: 'input',
       name: 'border',
       label: 'Border width'
-    },
-    {
+    }),
+    ...appearanceItem('caption', {
       type: 'label',
       label: 'Caption',
       items: [
@@ -60,8 +64,8 @@ const getItems = (editor: Editor, classes: Dialog.ListBoxItemSpec[], insertNewTa
           label: 'Show caption'
         }
       ]
-    }
-  ] : [];
+    })
+  ];
 
   const alignmentItem: Dialog.ListBoxSpec[] = [
     {

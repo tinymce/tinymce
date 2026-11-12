@@ -1,4 +1,4 @@
-import { Arr } from '@ephox/katamari';
+import { Arr, Fun, Type } from '@ephox/katamari';
 import { SugarElement, Width } from '@ephox/sugar';
 
 import type Editor from 'tinymce/core/api/Editor';
@@ -6,6 +6,17 @@ import Env from 'tinymce/core/api/Env';
 import type { EditorOptions } from 'tinymce/core/api/OptionTypes';
 
 import type { UserListItem, UserListValue } from '../ui/UiUtils';
+
+type AppearanceField = 'cellspacing' | 'cellpadding' | 'borderwidth' | 'caption';
+type AppearanceOptions = Record<AppearanceField, boolean>;
+
+const appearanceFields: AppearanceField[] = [ 'cellspacing', 'cellpadding', 'borderwidth', 'caption' ];
+
+const isAppearanceOptions = (value: unknown): value is Partial<AppearanceOptions> =>
+  Type.isPlainObject(value) && Arr.forall(appearanceFields, (field) => {
+    const fieldValue = (value as Record<string, unknown>)[field];
+    return Type.isUndefined(fieldValue) || Type.isBoolean(fieldValue);
+  });
 
 const defaultTableToolbar = 'tableprops tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol';
 
@@ -85,7 +96,16 @@ const register = (editor: Editor): void => {
   });
 
   registerOption('table_appearance_options', {
-    processor: 'boolean',
+    processor: (value) => {
+      // Accept boolean value as applied to all options
+      if (Type.isBoolean(value)) {
+        return { valid: true, value: Arr.mapToObject(appearanceFields, Fun.constant(value)) };
+      } else if (isAppearanceOptions(value)) {
+        return { valid: true, value: Arr.mapToObject(appearanceFields, (field) => value[field] !== false) };
+      } else {
+        return { valid: false, message: `Must be a boolean or an object with boolean values for: ${appearanceFields.join(', ')}.` };
+      }
+    },
     default: true
   });
 
@@ -132,7 +152,7 @@ const getTableBorderStyles = option<UserListValue[]>('table_border_styles');
 const hasAdvancedCellTab = option<boolean>('table_cell_advtab');
 const hasAdvancedRowTab = option<boolean>('table_row_advtab');
 const hasAdvancedTableTab = option<boolean>('table_advtab');
-const hasAppearanceOptions = option<boolean>('table_appearance_options');
+const getAppearanceOptions = option<AppearanceOptions>('table_appearance_options');
 const hasTableGrid = option<boolean>('table_grid');
 const shouldStyleWithCss = option<boolean>('table_style_by_css');
 const getCellClassList = option<UserListItem[]>('table_cell_class_list');
@@ -162,6 +182,8 @@ const getDefaultAttributes = (editor: Editor): Record<string, string> => {
   return options.isSet('table_default_attributes') ? defaultAttributes : determineDefaultAttributes(editor, defaultAttributes);
 };
 
+export type { AppearanceField };
+
 export {
   register,
   getDefaultAttributes,
@@ -169,7 +191,7 @@ export {
   hasAdvancedCellTab,
   hasAdvancedRowTab,
   hasAdvancedTableTab,
-  hasAppearanceOptions,
+  getAppearanceOptions,
   hasTableGrid,
   shouldStyleWithCss,
   getCellClassList,

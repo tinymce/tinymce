@@ -1,0 +1,6 @@
+project: tinymce
+kind: Added
+body: The `table_appearance_options` option now also accepts an object with `cellspacing`, `cellpadding`, `borderwidth` and `caption` keys, to hide individual fields in the Table Properties dialog.
+time: 2026-10-27T12:00:00.000000+10:30
+custom:
+    Issue: TINYMCE-11998
