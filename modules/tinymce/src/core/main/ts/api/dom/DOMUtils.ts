@@ -207,13 +207,6 @@ interface DOMUtils {
   dumpRng: (r: Range) => string;
 }
 
-export interface DOMUtilsNamespace {
-  (doc: Document, settings?: Partial<DOMUtilsSettings>): DOMUtils;
-
-  DOM: DOMUtils;
-  nodeIndex: (node: Node | null, normalized?: boolean) => number;
-}
-
 const legacySetAttribute = (elm: SugarElement<Element>, name: string, value: string | number | boolean | null) => {
   if (Type.isNullable(value) || value === '') {
     Attribute.remove(elm, name);
@@ -331,7 +324,7 @@ const setupAttrHooks = (styles: Styles, settings: Partial<DOMUtilsSettings>, get
  * @param {Document} doc Document reference to bind the utility class to.
  * @param {settings} settings Optional settings collection.
  */
-const DOMUtils: DOMUtilsNamespace = (doc, settings = {}) => {
+const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMUtils => {
   const addedStyles: Record<string, boolean> = {};
   const win = window;
   const files: Record<string, boolean> = {};
