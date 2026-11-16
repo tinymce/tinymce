@@ -133,7 +133,7 @@ const pasteImage = async (editor: Editor, imageItem: FileResult): Promise<void> 
       const blobInfo = existingBlobInfo ?? createBlobInfo(editor, blobCache, file, base64);
 
       const imgUrl = blobInfo.blobUri();
-      return ImageSize.getImageSize(imgUrl).then(({ width, height }) => {
+      return ImageSize.getImageSizeFromUrl(imgUrl).then(({ width, height }) => {
         pasteHtml(editor, `<img width="${width}" height="${height}" src="${imgUrl}">`, false, true);
       }).catch(() => {
         pasteHtml(editor, `<img src="${imgUrl}">`, false, true);

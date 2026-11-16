@@ -325,7 +325,7 @@ const imageSize = (editor: Editor) => (url: string): Promise<Size> => {
   if (!Utils.isSafeImageUrl(editor, url)) {
     return Promise.resolve({ width: '', height: '' });
   } else {
-    return ImageSize.getImageSize(editor.documentBaseURI.toAbsolute(url)).then((dimensions) => ({
+    return ImageSize.getImageSizeFromUrl(editor.documentBaseURI.toAbsolute(url)).then((dimensions) => ({
       width: String(dimensions.width),
       height: String(dimensions.height)
     }));

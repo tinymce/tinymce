@@ -1,4 +1,5 @@
 import { Assert, describe, it } from '@ephox/bedrock-client';
+import { Fun } from '@ephox/katamari';
 
 import * as ImageSize from 'ephox/sugar/api/view/ImageSize';
 
@@ -13,10 +14,44 @@ describe('browser.sugar.ImageSizeTest', () => {
     '2RCmQpkHaSLEKPKdzYU4c+78VzCo0KFEixo9ijSp0qVMmzp9CjWq1KlUq1q9eqEAADs='
   ].join('');
   const imgUrl = 'data:image/jpeg;base64,' + base64ImgSrc;
+  const invalidImgUrl = 'data:image/png;base64,invalid';
 
-  it('TINY-14411: getImageSize should return width and height for a valid URL', async () => {
-    const { width, height } = await ImageSize.getImageSize(imgUrl);
+  const pGetRejection = (promise: Promise<unknown>): Promise<Error> =>
+    promise.then(() => Promise.reject(new Error('Expected the promise to reject')), Fun.identity);
+
+  it('TINY-14411: getImageSizeFromUrl should return width and height for a valid URL', async () => {
+    const { width, height } = await ImageSize.getImageSizeFromUrl(imgUrl);
     Assert.eq('width should be 100', 100, width);
     Assert.eq('height should be 100', 100, height);
+  });
+
+  it('TINY-14411: getImageSizeFromUrl should reject for an invalid URL', async () => {
+    const error = await pGetRejection(ImageSize.getImageSizeFromUrl(invalidImgUrl));
+    Assert.eq('Should reject with the URL in the message', `Failed to get image dimensions for: ${invalidImgUrl}`, error.message);
+  });
+
+  it('TINYMCE-14866: getImageSizeFromImg should wait for an image that is not loaded yet', async () => {
+    const img = document.createElement('img');
+    img.src = imgUrl;
+    const { width, height } = await ImageSize.getImageSizeFromImg(img);
+    Assert.eq('width should be 100', 100, width);
+    Assert.eq('height should be 100', 100, height);
+  });
+
+  it('TINYMCE-14866: getImageSizeFromImg should resolve immediately for an image that is already loaded', async () => {
+    const img = document.createElement('img');
+    img.src = imgUrl;
+    await ImageSize.getImageSizeFromImg(img);
+    Assert.eq('Image should be complete', true, img.complete);
+    const { width, height } = await ImageSize.getImageSizeFromImg(img);
+    Assert.eq('width should be 100', 100, width);
+    Assert.eq('height should be 100', 100, height);
+  });
+
+  it('TINYMCE-14866: getImageSizeFromImg should reject for an image with an invalid src', async () => {
+    const img = document.createElement('img');
+    img.src = invalidImgUrl;
+    const error = await pGetRejection(ImageSize.getImageSizeFromImg(img));
+    Assert.eq('Should reject with the src in the message', `Failed to get image dimensions for: ${invalidImgUrl}`, error.message);
   });
 });
