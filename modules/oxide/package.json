@@ -11,6 +11,7 @@
     "test": "echo 'No tests'",
     "build": "grunt build",
     "start": "grunt start",
+    "watch-custom-properties": "grunt watch --custom-properties",
     "prepublishOnly": "bun ci",
     "ci": "grunt build",
     "css-parity": "bun tools/css-parity/cli.ts",

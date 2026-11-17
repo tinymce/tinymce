@@ -7,6 +7,7 @@ import * as Dropdown from 'oxide-components/components/dropdown/Dropdown';
 import { Icon } from 'oxide-components/components/icon/Icon';
 import * as Menu from 'oxide-components/components/menu/Menu';
 import { UniverseProvider } from 'oxide-components/contexts/universecontext/UniverseProvider';
+import type { CustomPropertyGroup } from 'oxide-components/utils/CustomProperties';
 import { useState } from 'react';
 
 import * as Accordion from './Accordion';
@@ -34,6 +35,8 @@ const meta = {
     )
   ],
   parameters: {
+    // The dropdown menu inside an accordion item renders after it is opened.
+    cssProperties: { groups: [ 'menu' ] satisfies CustomPropertyGroup[] },
     layout: 'centered',
     docs: {
       description: {

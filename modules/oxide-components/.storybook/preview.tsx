@@ -6,10 +6,14 @@ import {
   Title
 } from '@storybook/addon-docs/blocks';
 import type { Preview, ReactRenderer } from '@storybook/react-vite';
+import skinCss from '@tinymce/oxide/build/skins/ui/default/skin.css?inline';
 import type { PartialStoryFn } from 'storybook/internal/csf';
 
-import '@tinymce/oxide/build/skins/ui/default/skin.css';
 import { classes } from '../src/main/ts/utils/Styles';
+
+import { setSkinCss } from './SkinStylesheet';
+
+setSkinCss(skinCss);
 
 const preview: Preview = {
   decorators: [

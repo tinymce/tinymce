@@ -1,10 +1,10 @@
 const path = require('node:path');
 
-const { compileSkin, buildManifest, buildTypes, missingFromDefault } = require('../tools/custom-properties/manifest');
+const { compileSkin, buildManifest, buildTypes, buildManifestTypes, missingFromDefault } = require('../tools/custom-properties/manifest');
 const { CUSTOM_PROPERTY_SKINS } = require('../tools/less-options');
 
-// Generates the custom property manifest and types.ts for oxide-components. Fails the
-// build on undeclared properties (same check as custom-properties-check).
+// Generates the custom property manifests and their TypeScript types. Fails the build on
+// undeclared properties (same check as custom-properties-check).
 module.exports = function (grunt) {
   grunt.registerTask('generateCustomProperties', 'Generate the CSS custom property manifest', function () {
     const done = this.async();
@@ -19,6 +19,7 @@ module.exports = function (grunt) {
       // values of the default skin's properties, not declare new ones (see missingFromDefault).
       if (skin === 'default') {
         grunt.file.write(path.join(outDir, 'types.ts'), buildTypes(manifest));
+        grunt.file.write(path.join(outDir, 'manifest.ts'), buildManifestTypes());
       }
       return manifest;
     })).then((manifests) => {

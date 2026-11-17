@@ -6,6 +6,7 @@ import { Icon } from 'oxide-components/components/icon/Icon';
 import { IconButton } from 'oxide-components/components/iconbutton/IconButton';
 import * as Tooltip from 'oxide-components/components/tooltip/Tooltip';
 import { UniverseProvider } from 'oxide-components/contexts/universecontext/UniverseProvider';
+import type { CustomPropertyGroup } from 'oxide-components/utils/CustomProperties';
 
 import type { ToggleMenuItemInstanceApi } from './internals/Types';
 import * as Menu from './Menu';
@@ -24,6 +25,8 @@ const meta = {
   ],
   argTypes: {},
   parameters: {
+    // Menus inside a Dropdown only render after the trigger is clicked.
+    cssProperties: { groups: [ 'menu' ] satisfies CustomPropertyGroup[] },
     layout: 'centered',
     docs: {
       description: {

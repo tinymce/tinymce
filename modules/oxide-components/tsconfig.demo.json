@@ -20,6 +20,9 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
+    "types": [
+      "vite/client"
+    ],
     "paths": {
       "oxide-components/*": ["./src/main/ts/*"]
     }
@@ -27,7 +30,13 @@
   "include": [
     "src/demo/ts",
     "src/**/*.stories.*",
-    ".storybook/preview.tsx"
+    ".storybook/preview.tsx",
+    ".storybook/SkinStylesheet.ts",
+    ".storybook/vitest.setup.ts",
+    ".storybook/css-properties"
+  ],
+  "exclude": [
+    ".storybook/css-properties/preset.ts"
   ],
   "references": [
     {

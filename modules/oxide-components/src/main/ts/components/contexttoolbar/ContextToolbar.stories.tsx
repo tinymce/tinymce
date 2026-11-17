@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Button } from 'oxide-components/components/button/Button';
 import { IconButton } from 'oxide-components/components/iconbutton/IconButton';
 import { UniverseProvider } from 'oxide-components/contexts/universecontext/UniverseProvider';
+import type { CustomPropertyGroup } from 'oxide-components/utils/CustomProperties';
 import React, { useMemo, useRef, useState } from 'react';
 import { fn } from 'storybook/test';
 
@@ -22,6 +23,8 @@ const mockUniverse = {
 const meta = {
   title: 'components/ContextToolbar',
   parameters: {
+    // The context toolbar renders after its trigger is clicked.
+    cssProperties: { groups: [ 'toolbar' ] satisfies CustomPropertyGroup[] },
     layout: 'centered',
     docs: {
       description: {
