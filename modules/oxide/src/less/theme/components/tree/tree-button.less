@@ -52,29 +52,58 @@
 @tree-button-disabled-text-color: fade(@tree-button-text-color, 50%);
 
 .tox .tox-tree {
+  & when (@custom-properties-enabled = true) {
+    --tox-private-tree-button-background-color: transparent;
+    --tox-private-tree-button-border-radius: 4px;
+    --tox-private-tree-button-border: 0;
+    --tox-private-tree-button-box-shadow: none;
+    --tox-private-tree-button-font-style: normal;
+    --tox-private-tree-button-height: 28px;
+    --tox-private-tree-button-text-transform: none;
+
+    --tox-private-tree-button-hover-border: var(--tox-private-tree-button-border);
+    --tox-private-tree-button-hover-box-shadow: var(--tox-private-tree-button-box-shadow);
+
+    --tox-private-tree-button-focus-border: var(--tox-private-tree-button-hover-border);
+    --tox-private-tree-button-focus-box-shadow: var(--tox-private-tree-button-hover-box-shadow);
+
+    --tox-private-tree-button-enabled-border: var(--tox-private-tree-button-hover-border);
+    --tox-private-tree-button-enabled-box-shadow: var(--tox-private-tree-button-box-shadow);
+    --tox-private-tree-button-enabled-transform: none;
+
+    --tox-private-tree-button-active-border: var(--tox-private-tree-button-enabled-border);
+    --tox-private-tree-button-active-box-shadow: var(--tox-private-tree-button-box-shadow); // Set to `0 1px 1px 0 rgba(0, 0, 0, .1) inset` for a small push in effect
+    --tox-private-tree-button-active-transform: none; // Set to `translateY(1px)` for a small push down effect
+
+    --tox-private-tree-button-disabled-background-color: var(--tox-private-tree-button-background-color);
+    --tox-private-tree-button-disabled-border: var(--tox-private-tree-button-border);
+    --tox-private-tree-button-disabled-box-shadow: var(--tox-private-tree-button-box-shadow);
+    --tox-private-tree-button-disabled-text-color: hsl(from var(--tox-private-text-color) h s l / 50%);
+  }
+
   display: flex;
   flex-direction: column;
 
   .tox-trbtn {
     align-items: center;
-    background: @tree-button-background-color;
-    border: @tree-button-border;
-    border-radius: @tree-button-border-radius;
-    box-shadow: @tree-button-box-shadow;
-    color: @tree-button-text-color;
+    background: var(--tox-private-tree-button-background-color, @tree-button-background-color);
+    border: var(--tox-private-tree-button-border, @tree-button-border);
+    border-radius: var(--tox-private-tree-button-border-radius, @tree-button-border-radius);
+    box-shadow: var(--tox-private-tree-button-box-shadow, @tree-button-box-shadow);
+    color: var(--tox-private-text-color, @tree-button-text-color);
     display: flex;
     flex: 0 0 auto;
-    font-size: @tree-button-font-size;
-    font-style: @tree-button-font-style;
-    font-weight: @tree-button-font-weight;
-    height: @tree-button-height;
+    font-size: var(--tox-private-font-size-sm, @tree-button-font-size);
+    font-style: var(--tox-private-tree-button-font-style, @tree-button-font-style);
+    font-weight: var(--tox-private-font-weight-normal, @tree-button-font-weight);
+    height: var(--tox-private-tree-button-height, @tree-button-height);
     margin-bottom: 4px;
     margin-top: 4px;
     outline: none;
     overflow: hidden;
     padding: 0;
     padding-left: 8px;
-    text-transform: @tree-button-text-transform;
+    text-transform: var(--tox-private-tree-button-text-transform, @tree-button-text-transform);
 
     .tox-tree__label {
       cursor: default;
@@ -85,35 +114,35 @@
 
     svg {
       display: block;
-      fill: @tree-button-icon-color;
+      fill: var(--tox-private-text-color, @tree-button-icon-color);
     }
   }
 
   .tox-trbtn:focus {
-    background: @tree-button-focus-background-color;
-    border: @tree-button-focus-border;
-    box-shadow: @tree-button-focus-box-shadow;
+    background: var(--tox-private-background-secondary, @tree-button-focus-background-color);
+    border: var(--tox-private-tree-button-focus-border, @tree-button-focus-border);
+    box-shadow: var(--tox-private-tree-button-focus-box-shadow, @tree-button-focus-box-shadow);
   }
 
   .tox-trbtn:hover {
-    background: @tree-button-hover-background-color;
-    border: @tree-button-hover-border;
-    box-shadow: @tree-button-hover-box-shadow;
-    color: @tree-button-hover-text-color;
+    background: var(--tox-private-background-secondary, @tree-button-hover-background-color);
+    border: var(--tox-private-tree-button-hover-border, @tree-button-hover-border);
+    box-shadow: var(--tox-private-tree-button-hover-box-shadow, @tree-button-hover-box-shadow);
+    color: var(--tox-private-text-color, @tree-button-hover-text-color);
 
     svg {
-      fill: @tree-button-hover-icon-color;
+      fill: var(--tox-private-text-color, @tree-button-hover-icon-color);
     }
   }
 
   .tox-trbtn:active {
-    background: @tree-button-active-background-color;
-    border: @tree-button-active-border;
-    box-shadow: @tree-button-active-box-shadow;
-    color: @tree-button-active-text-color;
+    background: var(--tox-private-toggled-background-color, @tree-button-active-background-color);
+    border: var(--tox-private-tree-button-active-border, @tree-button-active-border);
+    box-shadow: var(--tox-private-tree-button-active-box-shadow, @tree-button-active-box-shadow);
+    color: var(--tox-private-text-color, @tree-button-active-text-color);
 
     svg {
-      fill: @tree-button-active-icon-color;
+      fill: var(--tox-private-text-color, @tree-button-active-icon-color);
     }
   }
 
@@ -121,44 +150,44 @@
   .tox-trbtn--disabled:hover,
   .tox-trbtn:disabled,
   .tox-trbtn:disabled:hover {
-    background: @tree-button-disabled-background-color;
-    border: @tree-button-disabled-border;
-    box-shadow: @tree-button-disabled-box-shadow;
-    color: @tree-button-disabled-text-color;
+    background: var(--tox-private-tree-button-disabled-background-color, @tree-button-disabled-background-color);
+    border: var(--tox-private-tree-button-disabled-border, @tree-button-disabled-border);
+    box-shadow: var(--tox-private-tree-button-disabled-box-shadow, @tree-button-disabled-box-shadow);
+    color: var(--tox-private-tree-button-disabled-text-color, @tree-button-disabled-text-color);
     cursor: not-allowed;
 
     svg {
-      fill: @tree-button-disabled-icon-color;
+      fill: var(--tox-private-tree-button-disabled-text-color, @tree-button-disabled-icon-color);
     }
   }
 
   // An toggle on/off button's on state.
   .tox-trbtn--enabled,
   .tox-trbtn--enabled:hover {
-    background: @tree-button-enabled-background-color;
-    border: @tree-button-enabled-border;
-    box-shadow: @tree-button-enabled-box-shadow;
-    color: @tree-button-enabled-text-color;
+    background: var(--tox-private-toggled-background-color, @tree-button-enabled-background-color);
+    border: var(--tox-private-tree-button-enabled-border, @tree-button-enabled-border);
+    box-shadow: var(--tox-private-tree-button-enabled-box-shadow, @tree-button-enabled-box-shadow);
+    color: var(--tox-private-text-color, @tree-button-enabled-text-color);
 
     > * {
-      transform: @tree-button-enabled-transform;
+      transform: var(--tox-private-tree-button-enabled-transform, @tree-button-enabled-transform);
     }
 
     svg {
-      fill: @tree-button-enabled-icon-color;
+      fill: var(--tox-private-text-color, @tree-button-enabled-icon-color);
     }
   }
 
   .tox-trbtn:focus:not(.tox-trbtn--disabled) {
-    color: @tree-button-focus-text-color;
+    color: var(--tox-private-text-color, @tree-button-focus-text-color);
 
     svg {
-      fill: @tree-button-focus-icon-color;
+      fill: var(--tox-private-text-color, @tree-button-focus-icon-color);
     }
   }
 
   .tox-trbtn:active > * {
-    transform: @tree-button-active-transform;
+    transform: var(--tox-private-tree-button-active-transform, @tree-button-active-transform);
   }
 
   .tox-trbtn--return {
@@ -177,9 +206,9 @@
   .tox-trbtn__vlabel {
     display: block;
     font-size: 10px;
-    font-weight: @font-weight-normal;
+    font-weight: var(--tox-private-font-weight-normal, @font-weight-normal);
     letter-spacing: -.025em;
-    margin-bottom: @pad-xs;
+    margin-bottom: var(--tox-private-pad-xs, @pad-xs);
     white-space: nowrap;
   }
 
@@ -199,23 +228,23 @@
 
         &.tox-mbtn--active svg,
         &:focus svg {
-          fill: @tree-button-menu-icon-color;
+          fill: var(--tox-private-text-color, @tree-button-menu-icon-color);
         }
       }
 
       &:hover .tox-mbtn,
       &:focus .tox-mbtn {
         svg {
-          fill: @tree-button-menu-icon-color;
+          fill: var(--tox-private-text-color, @tree-button-menu-icon-color);
         }
       }
 
       &:hover:has(.tox-mbtn:hover) {
-        background-color: @tree-button-background-color;
-        color: @tree-button-text-color;
+        background-color: var(--tox-private-tree-button-background-color, @tree-button-background-color);
+        color: var(--tox-private-text-color, @tree-button-text-color);
 
         .tox-chevron svg {
-          fill: @tree-button-icon-color;
+          fill: var(--tox-private-text-color, @tree-button-icon-color);
         }
       }
 
@@ -251,22 +280,22 @@
 
       &.tox-mbtn--active svg,
       &:focus svg {
-        fill: @tree-button-menu-icon-color;
+        fill: var(--tox-private-text-color, @tree-button-menu-icon-color);
       }
     }
 
     &:hover .tox-mbtn {
       svg {
-        fill: @tree-button-menu-icon-color;
+        fill: var(--tox-private-text-color, @tree-button-menu-icon-color);
       }
     }
 
     &:hover:has(.tox-mbtn:hover) {
-      background-color: @tree-button-background-color;
-      color: @tree-button-text-color;
+      background-color: var(--tox-private-tree-button-background-color, @tree-button-background-color);
+      color: var(--tox-private-text-color, @tree-button-text-color);
 
       .tox-chevron svg {
-        fill: @tree-button-icon-color;
+        fill: var(--tox-private-text-color, @tree-button-icon-color);
       }
     }
   }
