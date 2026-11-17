@@ -5,6 +5,10 @@
 @dropzone-border: 2px dashed @border-color;
 
 .tox {
+  .tox-dropzone-container when (@custom-properties-enabled = true) {
+    --tox-private-dropzone-border: 2px dashed var(--tox-private-border-color);
+  }
+
   .tox-dropzone-container {
     display: flex;
     flex: 1;
@@ -14,7 +18,7 @@
     // moving justify-content to unknown.less
     align-items: center;
     background: #fff;
-    border: @dropzone-border;
+    border: var(--tox-private-dropzone-border, @dropzone-border);
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -25,7 +29,7 @@
   }
 
   .tox-dropzone p {
-    color: @text-color-muted;
-    margin: 0 0 @pad-md 0;
+    color: var(--tox-private-text-color-muted, @text-color-muted);
+    margin: 0 0 var(--tox-private-pad-md, @pad-md) 0;
   }
 }

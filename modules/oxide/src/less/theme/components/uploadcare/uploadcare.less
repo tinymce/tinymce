@@ -4,7 +4,11 @@
 
 @uploadcare-toolbar-button-remove-color: @image-selector-remove-color-stroke-color;
 
+[data-mce-name="uploadcare-enhance-filter"] when (@custom-properties-enabled = true) {
+  --tox-private-uploadcare-toolbar-button-remove-color: var(--tox-private-color-error);
+}
+
 [data-mce-name="uploadcare-enhance-filter"] .color-swatch-remove-color path {
-  fill: @uploadcare-toolbar-button-remove-color;
-  stroke: @uploadcare-toolbar-button-remove-color;
+  fill: var(--tox-private-uploadcare-toolbar-button-remove-color, @uploadcare-toolbar-button-remove-color);
+  stroke: var(--tox-private-uploadcare-toolbar-button-remove-color, @uploadcare-toolbar-button-remove-color);
 }

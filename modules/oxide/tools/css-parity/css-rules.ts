@@ -192,6 +192,12 @@ const KNOWN_ANCESTORS: Record<string, string[]> = {
   'tox-comment__date': [ 'tox-user' ],
   // Color swatches are the items of the swatches menu.
   'tox-swatch': [ 'tox-swatches' ],
+  // The dialog dropzone is inside its container.
+  'tox-dropzone': [ 'tox-dropzone-container' ],
+  // The image selector is inside its menu, and the item images and their loading spinners inside the image selector.
+  'tox-image-selector': [ 'tox-image-selector-menu' ],
+  'tox-image-selector-image-wrapper': [ 'tox-image-selector' ],
+  'tox-image-selector-loading-spinner': [ 'tox-image-selector' ],
   // a11ychecker: the issue panel's own elements aren't `tox-` prefixed.
   'accessibility-issue__description': [ 'tox-accessibility-issue' ],
   'accessibility-issue__repair': [ 'tox-accessibility-issue' ],

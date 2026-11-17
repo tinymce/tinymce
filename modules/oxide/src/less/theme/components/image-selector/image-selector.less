@@ -17,6 +17,24 @@
 @image-selector-outline-color: rgba(127, 127, 127, .3);
 
 .tox {
+  // The image selector (.tox-image-selector) is always rendered inside .tox-image-selector-menu.
+  .tox-image-selector-menu when (@custom-properties-enabled = true) {
+    --tox-private-image-selector-loading-element-border: 3px solid var(--tox-private-color-tint);
+    --tox-private-image-selector-loading-element-width: ~"min(24px, 30%)";
+
+    --tox-private-image-selector-size: 30px;
+    --tox-private-image-selector-menu-padding: var(--tox-private-pad-xs);
+    --tox-private-image-selector-menu-margin: calc(var(--tox-private-pad-xs) * -1) calc(var(--tox-private-pad-xs) * -1);
+    --tox-private-image-selector-icon-margin: var(--tox-private-pad-xs);
+    --tox-private-image-selector-image-side: 48px;
+    --tox-private-image-selector-image-wrapper-side: calc(var(--tox-private-image-selector-image-side) - 2px);
+    --tox-private-image-selector-item-icon-border-color: var(--tox-private-border-color);
+    --tox-private-image-selector-picker-button-icon-height: 24px;
+    --tox-private-image-selector-picker-button-icon-width: 24px;
+    --tox-private-image-selector-remove-color-stroke-color: var(--tox-private-color-error);
+    --tox-private-image-selector-toolbar-margin: var(--tox-private-bar-item-spacing-y) 0 calc(var(--tox-private-bar-item-spacing-y) + 1px) var(--tox-private-bar-padding-x);
+  }
+
   .tox-image-selector-loading-spinner-wrapper {
     display: flex;
     justify-content: center;
@@ -25,10 +43,10 @@
 
   .tox-image-selector-loading-spinner {
     position: absolute;
-    width: @image-selector-loading-element-width;
+    width: var(--tox-private-image-selector-loading-element-width, @image-selector-loading-element-width);
     aspect-ratio: 1 / 1;
     border-radius: 50%;
-    border: @image-selector-loading-element-border;
+    border: var(--tox-private-image-selector-loading-element-border, @image-selector-loading-element-border);
     border-bottom-color: transparent;
 
     animation: tox-rotation 1s linear infinite;
@@ -37,34 +55,34 @@
   .tox-toolbar .tox-image-selector,
   .tox-toolbar__primary .tox-image-selector,
   .tox-toolbar__overflow .tox-image-selector {
-    margin: @toolbar-button-spacing-y 0 (@toolbar-button-spacing-y + 1) @toolbar-group-padding-x;
+    margin: var(--tox-private-image-selector-toolbar-margin, @toolbar-button-spacing-y 0 (@toolbar-button-spacing-y + 1) @toolbar-group-padding-x);
   }
 
   .tox-image-selector-menu {
     border: 0;
-    border-radius: @collection-item-radius;
-    margin: -@collection-item-separator-margin-y -@menu-item-collection-list-padding;
-    padding: @image-selector-menu-padding;
+    border-radius: var(--tox-private-bar-item-border-radius, @collection-item-radius);
+    margin: var(--tox-private-image-selector-menu-margin, -@collection-item-separator-margin-y -@menu-item-collection-list-padding);
+    padding: var(--tox-private-image-selector-menu-padding, @image-selector-menu-padding);
 
     // Remove menu border/padding when image-selector is used in a collection list context
     .tox-collection--list .tox-collection__group {
       border: 0;
       padding: 0;
-      margin: -@collection-item-separator-margin-y -@menu-item-collection-list-padding;
+      margin: var(--tox-private-image-selector-menu-margin, -@collection-item-separator-margin-y -@menu-item-collection-list-padding);
     }
 
     .tox-collection__item {
-      max-width: @image-selector-image-side;
+      max-width: var(--tox-private-image-selector-image-side, @image-selector-image-side);
     }
 
     .tox-collection__item-icon {
-      border: 1px solid @image-selector-item-icon-border-color;
-      border-radius: @collection-item-radius;
-      margin-bottom: @image-selector-icon-margin;
+      border: 1px solid var(--tox-private-image-selector-item-icon-border-color, @image-selector-item-icon-border-color);
+      border-radius: var(--tox-private-bar-item-border-radius, @collection-item-radius);
+      margin-bottom: var(--tox-private-image-selector-icon-margin, @image-selector-icon-margin);
       width: 100%;
 
       svg path {
-        stroke: @image-selector-remove-color-stroke-color;
+        stroke: var(--tox-private-image-selector-remove-color-stroke-color, @image-selector-remove-color-stroke-color);
       }
     }
   }
@@ -79,13 +97,13 @@
     justify-content: center;
 
     svg path {
-      stroke: @image-selector-remove-color-stroke-color;
+      stroke: var(--tox-private-image-selector-remove-color-stroke-color, @image-selector-remove-color-stroke-color);
     }
   }
 
   .tox-image-selector-image-wrapper {
-    width: @image-selector-image-side - 2px;
-    height: @image-selector-image-side - 2px;
+    width: var(--tox-private-image-selector-image-wrapper-side, @image-selector-image-side - 2px);
+    height: var(--tox-private-image-selector-image-wrapper-side, @image-selector-image-side - 2px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -102,20 +120,20 @@
     border: 0;
     cursor: pointer;
     display: flex;
-    height: @image-selector-size;
+    height: var(--tox-private-image-selector-size, @image-selector-size);
     justify-content: center;
     outline: none;
     padding: 0;
-    width: @image-selector-size;
+    width: var(--tox-private-image-selector-size, @image-selector-size);
 
     svg {
-      fill: @image-selector-picker-button-icon-fill;
-      height: @image-selector-picker-button-icon-height;
-      width: @image-selector-picker-button-icon-width;
+      fill: var(--tox-private-text-color, @image-selector-picker-button-icon-fill);
+      height: var(--tox-private-image-selector-picker-button-icon-height, @image-selector-picker-button-icon-height);
+      width: var(--tox-private-image-selector-picker-button-icon-width, @image-selector-picker-button-icon-width);
     }
 
     &:hover {
-      background: @toolbar-button-hover-background-color;
+      background: var(--tox-private-background-secondary, @toolbar-button-hover-background-color);
     }
   }
 }

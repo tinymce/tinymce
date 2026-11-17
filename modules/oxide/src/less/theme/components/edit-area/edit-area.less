@@ -8,13 +8,21 @@
 @edit-area-border-width: 2px;
 
 .tox {
+  .tox-edit-area when (@custom-properties-enabled = true) {
+    --tox-private-edit-area-iframe-background-color: var(--tox-private-color-white);
+    --tox-private-edit-area-iframe-border: 0;
+    // The focus outline drawn around the edit area
+    --tox-private-edit-area-border-color: var(--tox-private-keyboard-focus-outline-color);
+    --tox-private-edit-area-border-width: 2px;
+  }
+
   .tox-edit-area {
     display: flex;
     flex: 1;
     overflow: hidden;
     position: relative; // Required for the iframe to resize in IE and Edge
     &::before {
-      border: @edit-area-border-width solid @edit-area-border-color;
+      border: var(--tox-private-edit-area-border-width, @edit-area-border-width) solid var(--tox-private-edit-area-border-color, @edit-area-border-color);
       border-radius: 4px;
       content: '';
       inset: 0;
@@ -25,14 +33,14 @@
       z-index: 1;
 
       @media (forced-colors: active) {
-        border: @edit-area-border-width solid highlight;
+        border: var(--tox-private-edit-area-border-width, @edit-area-border-width) solid highlight;
       }
     }
   }
 
   .tox-edit-area__iframe {
-    background-color: @edit-area-iframe-background-color;
-    border: @edit-area-border;
+    background-color: var(--tox-private-edit-area-iframe-background-color, @edit-area-iframe-background-color);
+    border: var(--tox-private-edit-area-iframe-border, @edit-area-border);
     box-sizing: border-box;
     flex: 1;
     height: 100%;
