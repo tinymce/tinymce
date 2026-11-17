@@ -7,14 +7,13 @@ import { performance } from 'node:perf_hooks';
 import { styleText } from 'node:util';
 import { chromium, type Browser } from 'playwright';
 
+import { CUSTOM_PROPERTY_SKINS } from '../less-options.js';
+
 import { bakeSkin, type BakedTarget } from './bake';
 import { extractTargets } from './css-rules';
 import { diffComputed } from './diff';
 import { compileSkin } from './less-compile';
 import type { DiffMismatch, SkippedRule } from './types';
-
-// Only these skins are built with custom properties so far.
-const SKINS = [ 'default', 'dark' ];
 
 const useColor = Boolean(process.env.FORCE_COLOR) || (Boolean(process.stdout.isTTY) && !process.env.NO_COLOR);
 const paint = (format: Parameters<typeof styleText>[0]) => (text: string): string => useColor ? styleText(format, text) : text;
@@ -111,10 +110,10 @@ const printSkin = (report: SkinReport): void => {
 
 const main = async (): Promise<void> => {
   const started = performance.now();
-  console.log(bold('css-parity') + dim(` — LESS (flag off) vs CSS custom properties (flag on), computed in Chromium, skins: ${SKINS.join(', ')}`));
+  console.log(bold('css-parity') + dim(` — LESS (flag off) vs CSS custom properties (flag on), computed in Chromium, skins: ${CUSTOM_PROPERTY_SKINS.join(', ')}`));
 
   const browser = await chromium.launch();
-  const reports = await Promise.all(SKINS.map((skin) => checkSkin(browser, skin))).finally(() => browser.close());
+  const reports = await Promise.all(CUSTOM_PROPERTY_SKINS.map((skin) => checkSkin(browser, skin))).finally(() => browser.close());
   reports.forEach(printSkin);
 
   const seconds = ((performance.now() - started) / 1000).toFixed(1);
@@ -131,7 +130,7 @@ const main = async (): Promise<void> => {
     console.log(`${red(`❌ FAIL — computed values differ in: ${failedSkins.join(', ')}`)}${warning}  ${dim(`${seconds}s`)}`);
     process.exitCode = 1;
   } else {
-    console.log(`${green(`✅ PASS — ${SKINS.join(' and ')} match`)}${warning}  ${dim(`${seconds}s`)}`);
+    console.log(`${green(`✅ PASS — ${CUSTOM_PROPERTY_SKINS.join(' and ')} match`)}${warning}  ${dim(`${seconds}s`)}`);
   }
 };
 

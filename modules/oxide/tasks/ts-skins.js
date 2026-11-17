@@ -4,16 +4,17 @@ const { default: DtsCreator } = require('typed-css-modules');
 
 module.exports = function(grunt) {
 
-  grunt.registerTask('generateTsDefinitions', function() {
+  grunt.registerTask('generateClassDefinitions', function() {
 
     const done = this.async();
     let creator = new DtsCreator();
 
     const directory = './build';
 
+    // build/custom-properties holds generateCustomProperties output, not skins
     const files = fs.readdirSync(directory, {
       recursive: true,
-    });
+    }).filter(file => !file.startsWith('custom-properties' + path.sep));
 
     let processed = 0;
 

@@ -84,13 +84,9 @@
       top: calc(-1 * var(--tox-private-button-border-width, @button-border-width));
     }
   
+    // Focus colours are set by the variants. button-primary.less styles the bare .tox-button,
+    // so it also covers buttons without a variant class.
     &:focus:not(:disabled) {
-      background-color: var(--tox-private-button-focus-background-color, @button-focus-background-color);
-      background-image: @button-focus-background-image;
-      border-color: var(--tox-private-button-focus-border-color, @button-focus-border-color);
-      box-shadow: var(--tox-private-button-focus-box-shadow, @button-focus-box-shadow);
-      color: var(--tox-private-button-focus-text-color, @button-focus-text-color);
-    
       &::before {
         opacity: 1;
       }

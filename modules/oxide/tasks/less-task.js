@@ -1,24 +1,15 @@
 const less = require('less');
 const fs = require('node:fs');
 const path = require('path');
-const LessPluginPresetEnv = require('less-plugin-preset-env');
 
-const presetEnv = new LessPluginPresetEnv({
-  browsers: ['last 2 Safari versions', 'last 2 iOS major versions', 'last 2 Chrome versions', 'Firefox ESR'],
-  grid: 'no-autoplace'
-});
+const { lessOptions } = require('../tools/less-options');
 
 module.exports = function (grunt) {
 
   // Read package data and set build version
   grunt.registerTask('compileLess', 'Compile LESS files', function() {
     const done = this.async();
-    const opts = {
-      relativeUrls: true,
-      math: 'parens-division',
-      plugins: [ presetEnv ],
-      paths: ['./src/less/skins'] // Define the path(s) where LESS should look for files
-    };
+    const opts = lessOptions(['./src/less/skins']);
 
     const files = grunt.file.expand({cwd: './src/less/skins'}, '**/*.less');
     let processed = 0;

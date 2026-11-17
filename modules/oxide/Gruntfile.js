@@ -95,7 +95,8 @@ module.exports = function (grunt) {
     'cssmin',
     'generateJsSkins',
     'addLicenseHeaders',
-    'generateTsDefinitions'
+    'generateCustomProperties',
+    'generateClassDefinitions'
   ]);
 
   grunt.registerTask('start', [

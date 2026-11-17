@@ -3,9 +3,9 @@ import type { Property } from 'csstype';
 import { forwardRef, useCallback, type CSSProperties, type PropsWithChildren } from 'react';
 
 import * as Bem from '../../utils/Bem';
+import * as CustomProperties from '../../utils/CustomProperties';
 import * as Draggable from '../draggable/Draggable';
 
-import '../../module/Css';
 export interface FloatingSidebarProps extends PropsWithChildren {
   isOpen?: boolean;
   origin?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
@@ -23,7 +23,7 @@ const Root = forwardRef<HTMLDivElement, FloatingSidebarProps>(({ isOpen = true, 
       origin={origin}
       initialPosition={initialPosition}
       allowedOverflow={{ horizontal: 0.8 }}
-      declaredSize={{ width: 'var(--tox-private-floating-sidebar-width)', height: 'var(--tox-private-floating-sidebar-height)' }}
+      declaredSize={{ width: CustomProperties.ref('--tox-private-floating-sidebar-width'), height: CustomProperties.ref('--tox-private-floating-sidebar-height') }}
       onDragStart={onDragStart}
       onDragEnd={onDragEnd}
       style={style}
