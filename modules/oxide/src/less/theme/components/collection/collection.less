@@ -52,6 +52,32 @@
 @collection-horizontal-border-radius: @panel-border-radius;
 
 .tox {
+  // Swatches opened from a toolbar split button are collection items inside .tox-swatches-menu, outside any .tox-collection.
+  .tox-collection,
+  .tox-swatches-menu {
+    & when (@custom-properties-enabled = true) {
+      --tox-private-collection-item-padding: var(--tox-private-pad-xs) var(--tox-private-pad-sm);
+      --tox-private-collection-item-label-font-style: normal;
+      --tox-private-collection-item-label-text-transform: none;
+      --tox-private-collection-item-disabled-text-color: hsl(from var(--tox-private-text-color) h s l / 50%);
+      --tox-private-collection-list-item-active-background-color: var(--tox-private-color-tint);
+      --tox-private-collection-list-item-active-text-color: var(--tox-private-color-white);
+      --tox-private-collection-item-list-icon-height: 24px;
+      --tox-private-collection-item-list-icon-width: 24px;
+      --tox-private-collection-item-lg-icon-height: calc(var(--tox-private-collection-item-list-icon-height) * 2);
+      --tox-private-collection-item-lg-icon-width: calc(var(--tox-private-collection-item-list-icon-width) * 2);
+      --tox-private-collection-image-selector-label-width: calc(var(--tox-private-collection-item-list-icon-width) * 2);
+
+      --tox-private-collection-group-label-background-color: hsl(from var(--tox-private-separator-color) h s calc(l + 10));
+      --tox-private-collection-group-label-font-style: normal;
+      --tox-private-collection-group-label-text-transform: none;
+      // Pulls the heading up over the padding of its group.
+      --tox-private-collection-group-label-margin-top: calc(var(--tox-private-pad-xs) * -1);
+
+      --tox-private-collection-horizontal-item-margin: calc(var(--tox-private-bar-item-spacing-y) + 1px) var(--tox-private-bar-item-spacing-x) var(--tox-private-bar-item-spacing-y) 0;
+    }
+  }
+
   .tox-collection {
     //
   }
@@ -84,12 +110,12 @@
 
   .tox-collection--list .tox-collection__group {
     border-bottom-width: 0;
-    border-color: @collection-item-separator-color;
+    border-color: var(--tox-private-separator-color, @collection-item-separator-color);
     border-left-width: 0;
     border-right-width: 0;
     border-style: solid;
     border-top-width: 1px;
-    padding: @collection-item-separator-margin-y 0;
+    padding: var(--tox-private-pad-xs, @collection-item-separator-margin-y) 0;
     display: flex;
     flex-direction: column;
 
@@ -100,24 +126,24 @@
 
   // Group headings should only be used on collection lists.
   .tox-collection__group-heading {
-    background-color: @collection-group-label-background-color;
-    color: @collection-group-label-text-color;
+    background-color: var(--tox-private-collection-group-label-background-color, @collection-group-label-background-color);
+    color: var(--tox-private-text-color-muted, @collection-group-label-text-color);
     cursor: default;
-    font-size: @collection-group-label-font-size;
-    font-style: @collection-group-label-font-style;
-    font-weight: @collection-group-label-font-weight;
-    margin-bottom: @collection-item-separator-margin-y;
-    margin-top: -@collection-item-separator-margin-y;
-    padding: @collection-item-padding;
-    text-transform: @collection-group-label-text-transform;
+    font-size: var(--tox-private-font-size-xs, @collection-group-label-font-size);
+    font-style: var(--tox-private-collection-group-label-font-style, @collection-group-label-font-style);
+    font-weight: var(--tox-private-font-weight-normal, @collection-group-label-font-weight);
+    margin-bottom: var(--tox-private-pad-xs, @collection-item-separator-margin-y);
+    margin-top: var(--tox-private-collection-group-label-margin-top, -@collection-item-separator-margin-y);
+    padding: var(--tox-private-collection-item-padding, @collection-item-padding);
+    text-transform: var(--tox-private-collection-group-label-text-transform, @collection-group-label-text-transform);
     -webkit-touch-callout: none;
     user-select: none;
   }
 
   .tox-collection__item {
     align-items: center;
-    border-radius: @collection-item-radius;
-    color: @collection-item-label-text-color;
+    border-radius: var(--tox-private-bar-item-border-radius, @collection-item-radius);
+    color: var(--tox-private-text-color, @collection-item-label-text-color);
     display: flex;
     -webkit-touch-callout: none;
     user-select: none;
@@ -134,65 +160,65 @@
       }
   
       label {
-        width: @collection-item-list-icon-width * 2;
+        width: var(--tox-private-collection-image-selector-label-width, @collection-item-list-icon-width * 2);
         white-space: nowrap;
         overflow: hidden;
-        font-size: @font-size-xs;
-        color: @collection-item-label-text-color;
+        font-size: var(--tox-private-font-size-xs, @font-size-xs);
+        color: var(--tox-private-text-color, @collection-item-label-text-color);
         text-align: center;
         align-self: flex-end;
       }
     }
 
     .tox-collection__item-checkmark {
-      height: @collection-item-list-icon-height;
-      width: @collection-item-list-icon-width;
+      height: var(--tox-private-collection-item-list-icon-height, @collection-item-list-icon-height);
+      width: var(--tox-private-collection-item-list-icon-width, @collection-item-list-icon-width);
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
 
       svg path {
-        fill: @color-tint;
-        stroke: @color-tint;
+        fill: var(--tox-private-color-tint, @color-tint);
+        stroke: var(--tox-private-color-tint, @color-tint);
       }
     }
 
     .tox-image-selector__row .tox-collection__item-image-selector.tox-collection__item--active:not(.tox-collection__item--state-disabled) {
-      background-color: @background-color;
+      background-color: var(--tox-private-background-color, @background-color);
     }
 
     .tox-image-selector__row .tox-collection__item-image-selector.tox-collection__item--enabled:not(.tox-collection__item--state-disabled) {
       z-index: 2;
-      background-color: @background-color;
+      background-color: var(--tox-private-background-color, @background-color);
       opacity: 0.8;
       background-clip: content-box;
     }
   }
 
   .tox-collection--list .tox-collection__item {
-    padding: @collection-item-padding;
+    padding: var(--tox-private-collection-item-padding, @collection-item-padding);
   }
 
   .tox-collection--toolbar .tox-collection__item {
-    border-radius: @toolbar-button-border-radius;
-    padding: @pad-xs;
+    border-radius: var(--tox-private-bar-item-border-radius, @toolbar-button-border-radius);
+    padding: var(--tox-private-pad-xs, @pad-xs);
   }
 
   .tox-collection--grid .tox-collection__item {
-    border-radius: @toolbar-button-border-radius;
-    padding: @pad-xs;
+    border-radius: var(--tox-private-bar-item-border-radius, @toolbar-button-border-radius);
+    padding: var(--tox-private-pad-xs, @pad-xs);
   }
 
   // Note: Ensure "enabled" is before "active", as active styles should have a higher precedence
   .tox-collection--list .tox-collection__item--enabled:not(.tox-collection__item--state-disabled) {
-    background-color: @collection-list-item-enabled-background-color;
-    color: @collection-list-item-label-enabled-text-color;
+    background-color: var(--tox-private-background-elevated, @collection-list-item-enabled-background-color);
+    color: var(--tox-private-text-color, @collection-list-item-label-enabled-text-color);
   }
 
   .tox-collection--list .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
-    background-color: @collection-list-item-active-background-color;
-    color: @collection-list-item-label-active-text-color;
+    background-color: var(--tox-private-collection-list-item-active-background-color, @collection-list-item-active-background-color);
+    color: var(--tox-private-collection-list-item-active-text-color, @collection-list-item-label-active-text-color);
 
     @media (forced-colors: active) {
       border: solid 1px;
@@ -200,13 +226,13 @@
   }
 
   .tox-collection--grid .tox-collection__item--enabled:not(.tox-collection__item--state-disabled) {
-    background-color: @collection-grid-item-enabled-background-color;
-    color: @collection-grid-item-label-enabled-text-color;
+    background-color: var(--tox-private-toggled-background-color, @collection-grid-item-enabled-background-color);
+    color: var(--tox-private-text-color, @collection-grid-item-label-enabled-text-color);
   }
 
   .tox-collection--grid .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
-    background-color: @collection-grid-item-active-background-color;
-    color: @collection-grid-item-label-active-text-color;
+    background-color: var(--tox-private-background-secondary, @collection-grid-item-active-background-color);
+    color: var(--tox-private-text-color, @collection-grid-item-label-active-text-color);
     position: relative;
     z-index: 1;
 
@@ -216,8 +242,8 @@
   }
 
   .tox-collection--toolbar .tox-collection__item--enabled:not(.tox-collection__item--state-disabled) {
-    background-color: @collection-toolbar-item-enabled-background-color;
-    color: @collection-toolbar-item-label-enabled-text-color;
+    background-color: var(--tox-private-toggled-background-color, @collection-toolbar-item-enabled-background-color);
+    color: var(--tox-private-text-color, @collection-toolbar-item-label-enabled-text-color);
 
     @media (forced-colors: active) {
       border-radius: 3px;
@@ -226,18 +252,18 @@
   }
 
   .tox-collection--toolbar .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
-    color: @collection-toolbar-item-label-active-text-color;
-    background-color: @collection-toolbar-item-active-background-color;
+    color: var(--tox-private-text-color, @collection-toolbar-item-label-active-text-color);
+    background-color: var(--tox-private-background-elevated, @collection-toolbar-item-active-background-color);
     position: relative;
 
     &:hover {
-      background-color: @collection-toolbar-item-active-hover-background-color;
-      color: @collection-toolbar-item-label-active-hover-text-color;
+      background-color: var(--tox-private-background-secondary, @collection-toolbar-item-active-hover-background-color);
+      color: var(--tox-private-text-color, @collection-toolbar-item-label-active-hover-text-color);
     }
 
     &:focus {
-      background-color: @collection-toolbar-item-active-hover-background-color;
-      color: @collection-toolbar-item-label-active-hover-text-color;
+      background-color: var(--tox-private-background-secondary, @collection-toolbar-item-active-hover-background-color);
+      color: var(--tox-private-text-color, @collection-toolbar-item-label-active-hover-text-color);
 
       &::after {
         .keyboard-focus-outline-mixin();
@@ -253,12 +279,12 @@
   }
 
   .tox-collection__item-image {
-    border: 1px solid @collection-item-image-border-color;
-    border-radius: @control-border-radius;
+    border: 1px solid var(--tox-private-border-color, @collection-item-image-border-color);
+    border-radius: var(--tox-private-control-border-radius, @control-border-radius);
     display: flex;
     flex-direction: column;
     justify-content: center;
-    margin-bottom: @collection-item-image-margin-bottom;
+    margin-bottom: var(--tox-private-pad-xs, @collection-item-image-margin-bottom);
     position: relative;
   }
 
@@ -266,9 +292,9 @@
   .tox-collection__item-checkmark {
     align-items: center;
     display: flex;
-    height: @collection-item-list-icon-height;
+    height: var(--tox-private-collection-item-list-icon-height, @collection-item-list-icon-height);
     justify-content: center;
-    width: @collection-item-list-icon-width;
+    width: var(--tox-private-collection-item-list-icon-width, @collection-item-list-icon-width);
 
     svg {
       fill: currentColor;
@@ -276,42 +302,42 @@
   }
 
   .tox-collection--toolbar-lg .tox-collection__item-icon {
-    height: @collection-item-list-icon-height * 2;
-    width: @collection-item-list-icon-width * 2;
+    height: var(--tox-private-collection-item-lg-icon-height, @collection-item-list-icon-height * 2);
+    width: var(--tox-private-collection-item-lg-icon-width, @collection-item-list-icon-width * 2);
   }
 
   .tox-collection__item-label {
     color: currentColor;
     display: inline-block;
     flex: 1;
-    font-size: @collection-item-label-font-size;
-    font-style: @collection-item-label-font-style;
-    font-weight: @collection-item-label-font-weight;
-    line-height: @collection-item-list-icon-height;
+    font-size: var(--tox-private-font-size-sm, @collection-item-label-font-size);
+    font-style: var(--tox-private-collection-item-label-font-style, @collection-item-label-font-style);
+    font-weight: var(--tox-private-font-weight-normal, @collection-item-label-font-weight);
+    line-height: var(--tox-private-collection-item-list-icon-height, @collection-item-list-icon-height);
     max-width: 100%;
-    text-transform: @collection-item-label-text-transform;
+    text-transform: var(--tox-private-collection-item-label-text-transform, @collection-item-label-text-transform);
     word-break: break-all;
   }
 
   .tox-collection__item-separator {
-    border-bottom: 1px solid @collection-item-separator-color;
+    border-bottom: 1px solid var(--tox-private-separator-color, @collection-item-separator-color);
     height: 0;
-    margin: @collection-item-separator-margin-y 0;
+    margin: var(--tox-private-pad-xs, @collection-item-separator-margin-y) 0;
   }
 
   .tox-collection__item-accessory {
     color: currentColor;
     display: inline-block;
-    font-size: @font-size-sm;
-    height: @collection-item-list-icon-height;
-    line-height: @collection-item-list-icon-height;
+    font-size: var(--tox-private-font-size-sm, @font-size-sm);
+    height: var(--tox-private-collection-item-list-icon-height, @collection-item-list-icon-height);
+    line-height: var(--tox-private-collection-item-list-icon-height, @collection-item-list-icon-height);
     text-transform: none;
   }
 
   .tox-collection__item-caret {
     align-items: center;
     display: flex;
-    min-height: @collection-item-list-icon-height;
+    min-height: var(--tox-private-collection-item-list-icon-height, @collection-item-list-icon-height);
 
     // Workaround for the above not centering items in IE11. See https://github.com/philipwalton/flexbugs/issues/231#issuecomment-362790042
     &::after {
@@ -328,11 +354,11 @@
   // Disabled item
   .tox-collection__item--state-disabled {
     background-color: transparent;
-    color: @collection-item-label-disabled-text-color;
+    color: var(--tox-private-collection-item-disabled-text-color, @collection-item-label-disabled-text-color);
     cursor: not-allowed;
 
     .tox-collection__item-caret svg {
-      fill: @collection-item-caret-disabled-text-color;
+      fill: var(--tox-private-collection-item-disabled-text-color, @collection-item-caret-disabled-text-color);
     }
   }
 
@@ -347,10 +373,10 @@
   }
 
   .tox-collection--horizontal {
-    background-color: @menu-background-color;
-    border: 1px solid @collection-item-separator-color;
-    border-radius: @collection-horizontal-border-radius;
-    box-shadow: @pop-box-shadow;
+    background-color: var(--tox-private-background-elevated, @menu-background-color);
+    border: 1px solid var(--tox-private-separator-color, @collection-item-separator-color);
+    border-radius: var(--tox-private-panel-border-radius, @collection-horizontal-border-radius);
+    box-shadow: var(--tox-private-popup-box-shadow, @pop-box-shadow);
     display: flex;
     flex: 0 0 auto;
     flex-shrink: 0;
@@ -365,12 +391,12 @@
     display: flex;
     flex-wrap: nowrap;
     margin: 0;
-    padding: 0 @pad-xs;
+    padding: 0 var(--tox-private-pad-xs, @pad-xs);
   }
 
   .tox-collection--horizontal .tox-collection__item {
-    height: @toolbar-button-height; // 28px
-    margin: (@toolbar-button-spacing-y + 1px) @toolbar-button-spacing-x @toolbar-button-spacing-y 0; // 4px 0 3px 0
+    height: var(--tox-private-bar-item-height, @toolbar-button-height); // 28px
+    margin: var(--tox-private-collection-horizontal-item-margin, (@toolbar-button-spacing-y + 1px) @toolbar-button-spacing-x @toolbar-button-spacing-y 0); // 4px 0 3px 0
     padding: 0 4px;
   }
 
@@ -444,52 +470,52 @@
 
 .tox:not([dir=rtl]) {
   .tox-collection--horizontal .tox-collection__group:not(:last-of-type) {
-    border-right: 1px solid @toolbar-group-separator-color;
+    border-right: 1px solid var(--tox-private-bar-group-separator-color, @toolbar-group-separator-color);
   }
 
   // Make a space between all elements within a list item
   .tox-collection--list .tox-collection__item>*:not(:first-child) {
-    margin-left: @pad-sm;
+    margin-left: var(--tox-private-pad-sm, @pad-sm);
   }
 
   // Create a slight padding for lists containing no icons
   .tox-collection--list .tox-collection__item>.tox-collection__item-label:first-child {
-    margin-left: @pad-xs;
+    margin-left: var(--tox-private-pad-xs, @pad-xs);
   }
 
   .tox-collection__item-accessory {
-    margin-left: @pad-md;
+    margin-left: var(--tox-private-pad-md, @pad-md);
     text-align: right;
   }
 
   .tox-collection .tox-collection__item-caret {
-    margin-left: @pad-md;
+    margin-left: var(--tox-private-pad-md, @pad-md);
   }
 }
 
 // RTL
 .tox[dir=rtl] {
   .tox-collection--horizontal .tox-collection__group:not(:last-of-type) {
-    border-left: 1px solid @toolbar-group-separator-color;
+    border-left: 1px solid var(--tox-private-bar-group-separator-color, @toolbar-group-separator-color);
   }
 
   // Make a space between all elements within a list item
   .tox-collection--list .tox-collection__item>*:not(:first-child) {
-    margin-right: @pad-sm;
+    margin-right: var(--tox-private-pad-sm, @pad-sm);
   }
 
   // Create a slight padding for lists containing no icons
   .tox-collection--list .tox-collection__item>.tox-collection__item-label:first-child {
-    margin-right: @pad-xs;
+    margin-right: var(--tox-private-pad-xs, @pad-xs);
   }
 
   .tox-collection__item-accessory {
-    margin-right: @pad-md;
+    margin-right: var(--tox-private-pad-md, @pad-md);
     text-align: left;
   }
 
   .tox-collection .tox-collection__item-caret {
-    margin-right: @pad-md;
+    margin-right: var(--tox-private-pad-md, @pad-md);
     transform: rotateY(180deg);
   }
 
