@@ -20,20 +20,39 @@
 @statusbar-resize-handle-radius: @tinymce-border-radius - @tinymce-border-width - 3px; // Minus handle padding
 
 .tox {
+  .tox-statusbar when (@custom-properties-enabled = true) {
+    --tox-private-statusbar-background-color: var(--tox-private-background-color);
+    --tox-private-statusbar-text-color: light-dark(
+      var(--tox-private-text-color-muted),
+      hsl(from var(--tox-private-color-white) h s l / 75%)
+    );
+    --tox-private-statusbar-height: 25px;
+    --tox-private-statusbar-text-height: 16px;
+    --tox-private-statusbar-padding-x: var(--tox-private-pad-sm);
+    --tox-private-statusbar-text-transform: none;
+    --tox-private-statusbar-logo-color: hsl(from var(--tox-private-text-color) h s l / 80%);
+    --tox-private-statusbar-resize-handle-color: hsl(from var(--tox-private-text-color) h s l / 50%);
+    // The handle sits in the editor's bottom right corner: its border radius, minus its border width and the 3px handle padding.
+    --tox-private-statusbar-resize-handle-radius: calc(var(--tox-private-tinymce-border-radius) - var(--tox-private-tinymce-border-width) - 3px);
+    // Pulls the handle into the statusbar's padding, leaving 3px to the edge.
+    --tox-private-statusbar-resize-handle-margin-right: calc(3px - var(--tox-private-statusbar-padding-x));
+    --tox-private-statusbar-focus-background-color: transparent;
+  }
+
   .tox-statusbar {
     align-items: center;
-    background-color: @statusbar-background-color;
-    border-top: 1px solid @statusbar-separator-color;
-    color: @statusbar-text-color;
+    background-color: var(--tox-private-statusbar-background-color, @statusbar-background-color);
+    border-top: 1px solid var(--tox-private-separator-color, @statusbar-separator-color);
+    color: var(--tox-private-statusbar-text-color, @statusbar-text-color);
     display: flex;
     flex: 0 0 auto;
-    font-size: @statusbar-font-size;
-    font-weight: @statusbar-font-weight;
-    height: @statusbar-height;
+    font-size: var(--tox-private-font-size-sm, @statusbar-font-size);
+    font-weight: var(--tox-private-font-weight-normal, @statusbar-font-weight);
+    height: var(--tox-private-statusbar-height, @statusbar-height);
     overflow: hidden;
-    padding: 0 @statusbar-padding-x;
+    padding: 0 var(--tox-private-statusbar-padding-x, @statusbar-padding-x);
     position: relative;
-    text-transform: @statusbar-text-transform;
+    text-transform: var(--tox-private-statusbar-text-transform, @statusbar-text-transform);
   }
 
   .tox-statusbar__path {
@@ -57,7 +76,7 @@
     align-items: flex-start;
     display: flex;
     flex: 1 1 auto;
-    height: @statusbar-text-height;
+    height: var(--tox-private-statusbar-text-height, @statusbar-text-height);
     justify-content: space-between;
 
     @media @breakpoint-gt-sm {
@@ -106,14 +125,14 @@
   .tox-statusbar a,
   .tox-statusbar__path-item,
   .tox-statusbar__wordcount {
-    color: @statusbar-text-color;
+    color: var(--tox-private-statusbar-text-color, @statusbar-text-color);
     position: relative;
     text-decoration: none;
 
     &:hover,
     &:focus {
       @{statusbar-not-disabled-selector} {
-        color: @statusbar-focus-text-color;
+        color: var(--tox-private-text-color, @statusbar-focus-text-color);
         cursor: pointer;
       }
     }
@@ -130,7 +149,7 @@
         fill: currentColor;
       }
 
-      fill: @statusbar-logo-color;
+      fill: var(--tox-private-statusbar-logo-color, @statusbar-logo-color);
       height: 1em;
       margin-left: .3em;
       width: auto;
@@ -145,7 +164,7 @@
     a:focus {
       @{statusbar-not-disabled-selector} {
         svg {
-          fill: @statusbar-logo-active-color;
+          fill: var(--tox-private-text-color, @statusbar-logo-active-color);
         }
       }
     }
@@ -166,8 +185,8 @@
     flex: 0 0 auto;
     justify-content: flex-end;
     margin-bottom: 3px;
-    margin-left: @pad-xs;
-    margin-right: calc(3px - @statusbar-padding-x);
+    margin-left: var(--tox-private-pad-xs, @pad-xs);
+    margin-right: var(--tox-private-statusbar-resize-handle-margin-right, calc(3px - @statusbar-padding-x));
     margin-top: 3px;
     padding-bottom: 0;
     padding-left: 0;
@@ -176,20 +195,20 @@
 
     svg {
       display: block;
-      fill: @statusbar-resize-handle-color;
+      fill: var(--tox-private-statusbar-resize-handle-color, @statusbar-resize-handle-color);
     }
 
     &:hover,
     &:focus {
       svg {
-        fill: @statusbar-focus-text-color;
+        fill: var(--tox-private-text-color, @statusbar-focus-text-color);
       }
     }
 
     &:focus-visible {
-      background-color: @statusbar-focus-background-color;
-      border-radius: 1px 1px @statusbar-resize-handle-radius 1px;
-      box-shadow: 0 0 0 2px @statusbar-focus-background-color;
+      background-color: var(--tox-private-statusbar-focus-background-color, @statusbar-focus-background-color);
+      border-radius: 1px 1px var(--tox-private-statusbar-resize-handle-radius, @statusbar-resize-handle-radius) 1px;
+      box-shadow: 0 0 0 2px var(--tox-private-statusbar-focus-background-color, @statusbar-focus-background-color);
 
       &::after {
         .keyboard-focus-outline-mixin();
@@ -204,7 +223,7 @@
 
 .tox:not([dir=rtl]) {
   .tox-statusbar__path > * {
-    margin-right: @pad-xs;
+    margin-right: var(--tox-private-pad-xs, @pad-xs);
   }
 
   .tox-statusbar__branding {
@@ -219,7 +238,7 @@
   }
 
   .tox-statusbar__path > * {
-    margin-left: @pad-xs;
+    margin-left: var(--tox-private-pad-xs, @pad-xs);
   }
 
   .tox-statusbar__branding {

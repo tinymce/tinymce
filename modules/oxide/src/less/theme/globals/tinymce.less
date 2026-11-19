@@ -2,7 +2,6 @@
 // Global styling
 //
 
-// To be decided if we want CSS Custom Properties out of these.
 @tinymce-border-color: @border-color;
 @tinymce-border-radius: 10px;
 @tinymce-border-width: 2px;
@@ -20,9 +19,9 @@
 }
 
 .tox-tinymce {
-  border: @tinymce-border-width solid @tinymce-border-color;
-  border-radius: @tinymce-border-radius;
-  box-shadow: @tinymce-box-shadow;
+  border: var(--tox-private-tinymce-border-width, @tinymce-border-width) solid var(--tox-private-tinymce-border-color, @tinymce-border-color);
+  border-radius: var(--tox-private-tinymce-border-radius, @tinymce-border-radius);
+  box-shadow: var(--tox-private-tinymce-box-shadow, @tinymce-box-shadow);
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -43,10 +42,10 @@
   }
 
   .tox-editor-header {
-    background-color: @editor-header-inline-background-color;
-    border: @tinymce-border-width solid @tinymce-border-color;
-    border-radius: @tinymce-border-radius;
-    box-shadow: @tinymce-box-shadow;
+    background-color: var(--tox-private-background-color, @editor-header-inline-background-color);
+    border: var(--tox-private-tinymce-border-width, @tinymce-border-width) solid var(--tox-private-tinymce-border-color, @tinymce-border-color);
+    border-radius: var(--tox-private-tinymce-border-radius, @tinymce-border-radius);
+    box-shadow: var(--tox-private-tinymce-box-shadow, @tinymce-box-shadow);
     overflow: hidden;
   }
 }

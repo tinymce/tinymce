@@ -29,7 +29,7 @@
   --tox-private-border-color: hsl(from var(--tox-private-background-color) h s calc(l - 6.5));
   --tox-private-separator-color: light-dark(
     hsl(from var(--tox-private-border-color) h s calc(l - 4.5)),
-    hsl(0 0% 100% / 15%);
+    hsl(0 0% 100% / 15%)
   );
 
   --tox-private-border-color-light: light-dark(
@@ -42,6 +42,12 @@
       hsl(from var(--tox-private-color-black) h s l / 70%),
       hsl(from var(--tox-private-color-white) h s l / 50%)
     );
+
+  // The editor frame: the border around .tox-tinymce, or around the header in inline mode.
+  --tox-private-tinymce-border-color: var(--tox-private-border-color);
+  --tox-private-tinymce-border-radius: 10px;
+  --tox-private-tinymce-border-width: 2px;
+  --tox-private-tinymce-box-shadow: none;
 
   // Some useful generic variables
   --tox-private-panel-border-radius: 6px; // Dialogs, menues etc.
