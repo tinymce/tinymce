@@ -1,0 +1,6 @@
+project: tinymce
+kind: Added
+body: New `ratio` option for the `sizeinput` dialog component, used to keep proportions when the width or height is blank.
+time: 2026-11-19T17:08:38.51971+10:00
+custom:
+    Issue: TINYMCE-9866

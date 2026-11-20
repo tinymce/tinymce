@@ -3,11 +3,18 @@ import { Arr, Optional, Type } from '@ephox/katamari';
 import type Editor from 'tinymce/core/api/Editor';
 
 import * as Options from '../api/Options';
-import { readImageDataFromSelection } from '../core/ImageSelection';
+import { isImage } from '../core/ImageData';
+import { getSelectedImage, readImageDataFromSelection } from '../core/ImageSelection';
 import { ListUtils } from '../core/ListUtils';
 import * as Utils from '../core/Utils';
 
-import type { ImageDialogInfo, ListItem } from './DialogTypes';
+import type { ImageDialogInfo, ListItem, NaturalSize } from './DialogTypes';
+
+const getNaturalSize = (editor: Editor): Optional<NaturalSize> =>
+  Optional.from(getSelectedImage(editor))
+    .filter(isImage)
+    .filter((image) => image.naturalWidth > 0 && image.naturalHeight > 0)
+    .map((image) => ({ width: image.naturalWidth, height: image.naturalHeight }));
 
 const collect = (editor: Editor): Promise<ImageDialogInfo> => {
   const urlListSanitizer = ListUtils.sanitizer((item) => editor.convertURL(item.value || item.url || '', 'src'));
@@ -35,6 +42,7 @@ const collect = (editor: Editor): Promise<ImageDialogInfo> => {
   const hasUploadUrl = Options.hasUploadUrl(editor);
   const hasUploadHandler = Options.hasUploadHandler(editor);
   const image = readImageDataFromSelection(editor);
+  const naturalSize = getNaturalSize(editor);
   const hasDescription = Options.hasDescription(editor);
   const hasImageTitle = Options.hasImageTitle(editor);
   const hasDimensions = Options.hasDimensions(editor);
@@ -47,6 +55,7 @@ const collect = (editor: Editor): Promise<ImageDialogInfo> => {
   return futureImageList.then((imageList): ImageDialogInfo => ({
     alertErr,
     image,
+    naturalSize,
     imageList,
     classList,
     hasAdvTab,

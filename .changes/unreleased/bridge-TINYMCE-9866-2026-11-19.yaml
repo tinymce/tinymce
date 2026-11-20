@@ -1,0 +1,6 @@
+project: bridge
+kind: Added
+body: New `ratio` optional property on `SizeInputSpec`, a number or a function that returns the width divided by the height.
+time: 2026-11-19T17:13:37.217053+10:00
+custom:
+    Issue: TINYMCE-9866

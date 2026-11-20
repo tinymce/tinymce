@@ -1,4 +1,4 @@
-import { Obj, Optional, Optionals, Result } from '@ephox/katamari';
+import { Obj, Optional, Optionals, Result, Strings } from '@ephox/katamari';
 
 export type SizeUnit = '' | 'cm' | 'mm' | 'in' | 'px' | 'pt' | 'pc' | 'em' | 'ex' | 'ch' | 'rem' | 'vw' | 'vh' | 'vmin' | 'vmax' | '%';
 
@@ -78,7 +78,23 @@ export const noSizeConversion: SizeConversion = (_input: Size) => Optional.none(
 export const ratioSizeConversion = (scale: number, unit: SizeUnit): SizeConversion =>
   (size: Size) => convertUnit(size, unit).map((value) => ({ value: value * scale, unit }));
 
-export const makeRatioConverter = (currentFieldText: string, otherFieldText: string): SizeConversion => {
+const isPixelUnit = (unit: SizeUnit): boolean => unit === '' || unit === 'px';
+
+// Relative units like % don't scale the same way for width and height, so only pixel sizes are converted
+export const pixelRatioSizeConversion = (scale: number, unit: SizeUnit): SizeConversion =>
+  (size: Size) => isPixelUnit(size.unit) ? Optional.some({ value: size.value * scale, unit }) : Optional.none();
+
+// Used when the current field is blank, so there's no ratio between the two fields to keep.
+// The scale converts the current field's size to the other field's size.
+export const makeFallbackRatioConverter = (otherFieldText: string, fallbackScale: Optional<number>): SizeConversion => {
+  const oValue = parseSize(otherFieldText).toOptional().filter((oSize) => isPixelUnit(oSize.unit));
+  return Optionals.lift2(oValue, fallbackScale, (oSize, scale) => pixelRatioSizeConversion(scale, oSize.unit)).getOr(noSizeConversion);
+};
+
+export const makeRatioConverter = (currentFieldText: string, otherFieldText: string, fallbackScale: Optional<number> = Optional.none()): SizeConversion => {
+  if (Strings.isEmpty(Strings.trim(currentFieldText))) {
+    return makeFallbackRatioConverter(otherFieldText, fallbackScale);
+  }
   const cValue = parseSize(currentFieldText).toOptional();
   const oValue = parseSize(otherFieldText).toOptional();
   return Optionals.lift2(cValue, oValue, (cSize: Size, oSize: Size) => convertUnit(cSize, oSize.unit).map((val) => oSize.value / val).map(

@@ -8,7 +8,7 @@ import {
   NativeEvents, Representing, type SketchSpec, Tabstopping, Tooltipping
 } from '@ephox/alloy';
 import type { Dialog } from '@ephox/bridge';
-import { Id, Unicode } from '@ephox/katamari';
+import { Id, type Optional, Type, Unicode } from '@ephox/katamari';
 
 import { formChangeEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
 
@@ -21,10 +21,17 @@ interface RatioEvent extends CustomEvent {
   readonly isField1: boolean;
 }
 
+// The ratio is width divided by height
+const isValidRatio = (ratio: number | undefined): ratio is number => Type.isNumber(ratio) && ratio > 0 && isFinite(ratio);
+
 type SizeInputSpec = Omit<Dialog.SizeInput, 'type'>;
 
 export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
   let converter: SizeConversion = noSizeConversion;
+  // A function ratio is read each time a field gets focus, so the dialog can change it while open
+  const getRatio = (): Optional<number> => spec.ratio
+    .map((ratio) => Type.isFunction(ratio) ? ratio() : ratio)
+    .filter(isValidRatio);
 
   const ratioEvent = Id.generate('ratio-event');
 
@@ -164,7 +171,9 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
           const optOther = isField1 ? AlloyFormCoupledInputs.getField2(component) : AlloyFormCoupledInputs.getField1(component);
           const value1 = optCurrent.map<string>(Representing.getValue).getOr('');
           const value2 = optOther.map<string>(Representing.getValue).getOr('');
-          converter = makeRatioConverter(value1, value2);
+          // Used when the current field is blank: height = width / ratio, width = height * ratio
+          const fallbackScale = getRatio().map((ratio) => isField1 ? 1 / ratio : ratio);
+          converter = makeRatioConverter(value1, value2, fallbackScale);
         })
       ])
     ])

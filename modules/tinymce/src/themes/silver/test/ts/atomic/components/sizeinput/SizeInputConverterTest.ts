@@ -5,7 +5,8 @@ import { assert } from 'chai';
 import * as fc from 'fast-check';
 
 import {
-  makeRatioConverter, noSizeConversion, nuSize, ratioSizeConversion, type Size, type SizeConversion, type SizeUnit
+  makeFallbackRatioConverter, makeRatioConverter, noSizeConversion, nuSize, pixelRatioSizeConversion, ratioSizeConversion, type Size, type SizeConversion,
+  type SizeUnit
 } from 'tinymce/themes/silver/ui/sizeinput/SizeInputModel';
 
 import { largeSensible, units } from './SizeInputShared';
@@ -69,5 +70,34 @@ describe('atomic.tinymce.themes.silver.components.sizeinput.SizeInputConverterTe
     checkNoRatio(Optional.none(), nuSize(1, 'em'));
     checkNoRatio(Optional.none(), nuSize(50, 'px'));
     checkNoRatio(Optional.none(), nuSize(2, 'cm'));
+  });
+
+  it('TINYMCE-9866: pixel ratio size conversion only converts pixel sizes', () => {
+    const checkPixelRatio = check(pixelRatioSizeConversion(0.5, 'px'));
+    checkPixelRatio(Optional.some(nuSize(50, 'px')), nuSize(100, 'px'));
+    checkPixelRatio(Optional.some(nuSize(50, 'px')), nuSize(100, ''));
+    checkPixelRatio(Optional.none(), nuSize(100, '%'));
+    checkPixelRatio(Optional.none(), nuSize(1, 'in'));
+  });
+
+  it('TINYMCE-9866: make ratio converter uses the fallback scale when the current field is blank', () => {
+    const checkFallback = check(makeRatioConverter('', '100', Optional.some(2)));
+    checkFallback(Optional.some(nuSize(60, '')), nuSize(30, ''));
+    checkFallback(Optional.some(nuSize(60, '')), nuSize(30, 'px'));
+    checkFallback(Optional.none(), nuSize(30, '%'));
+    const checkFallbackWithUnit = check(makeRatioConverter(' ', '100px', Optional.some(0.5)));
+    checkFallbackWithUnit(Optional.some(nuSize(20, 'px')), nuSize(40, ''));
+  });
+
+  it('TINYMCE-9866: make ratio converter ignores the fallback scale when the current field has a value', () => {
+    check(makeRatioConverter('100', '', Optional.some(2)))(Optional.none(), nuSize(30, ''));
+    check(makeRatioConverter('100', '100', Optional.some(2)))(Optional.some(nuSize(50, '')), nuSize(50, ''));
+  });
+
+  it('TINYMCE-9866: fallback ratio converter does nothing without a pixel value in the other field', () => {
+    check(makeFallbackRatioConverter('', Optional.some(2)))(Optional.none(), nuSize(30, ''));
+    check(makeFallbackRatioConverter('50%', Optional.some(2)))(Optional.none(), nuSize(30, ''));
+    check(makeFallbackRatioConverter('2em', Optional.some(2)))(Optional.none(), nuSize(30, ''));
+    check(makeFallbackRatioConverter('100', Optional.none()))(Optional.none(), nuSize(30, ''));
   });
 });

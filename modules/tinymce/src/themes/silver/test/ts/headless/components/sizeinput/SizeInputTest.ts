@@ -18,7 +18,8 @@ describe('headless.tinymce.themes.silver.components.sizeinput.SizeInputTest', ()
       context: 'any',
       label: Optional.some('size'),
       constrain: true,
-      enabled: true
+      enabled: true,
+      ratio: Optional.none()
     }, backstage.shared.providers)
   ));
 

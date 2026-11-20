@@ -16,6 +16,7 @@ describe('webdriver.tinymce.themes.silver.dialogs.SizeInputSpaceTest', () => {
       context: 'any',
       name: 'dimensions',
       label: Optional.some('size'),
+      ratio: Optional.none(),
       constrain: true,
       enabled: true
     }, extrasHook.access().extras.backstages.popup.shared.providers)

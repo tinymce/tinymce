@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: The image dialog's constrain proportions lock had no effect when the image was missing a width or height.
+time: 2026-11-11T11:50:07.568343+10:00
+custom:
+    Issue: TINYMCE-9866

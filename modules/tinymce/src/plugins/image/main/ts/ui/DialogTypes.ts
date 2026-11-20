@@ -16,9 +16,15 @@ export interface UserListItem {
   readonly menu?: UserListItem[];
 }
 
+export interface NaturalSize {
+  readonly width: number;
+  readonly height: number;
+}
+
 export interface ImageDialogInfo {
   readonly alertErr: (message: string, callback: () => void) => void;
   readonly image: ImageData;
+  readonly naturalSize: Optional<NaturalSize>;
   readonly imageList: Optional<ListItem[]>;
   readonly classList: Optional<ListItem[]>;
   readonly hasAdvTab: boolean;

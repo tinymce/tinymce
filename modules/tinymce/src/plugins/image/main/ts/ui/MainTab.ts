@@ -4,7 +4,7 @@ import type { Dialog } from 'tinymce/core/api/ui/Ui';
 
 import type { ImageDialogInfo, ListItem } from './DialogTypes';
 
-const makeItems = (info: ImageDialogInfo): Dialog.BodyComponentSpec[] => {
+const makeItems = (info: ImageDialogInfo, getRatio: () => number | undefined): Dialog.BodyComponentSpec[] => {
   const imageUrl = {
     name: 'src',
     type: 'urlinput',
@@ -31,7 +31,9 @@ const makeItems = (info: ImageDialogInfo): Dialog.BodyComponentSpec[] => {
   };
   const imageDimensions = {
     name: 'dimensions',
-    type: 'sizeinput'
+    type: 'sizeinput',
+    // Lets constrain proportions work when the image is missing a width or height
+    ratio: getRatio
   };
   const isDecorative = {
     type: 'label',
@@ -87,10 +89,10 @@ const makeItems = (info: ImageDialogInfo): Dialog.BodyComponentSpec[] => {
   ]);
 };
 
-const makeTab = (info: ImageDialogInfo): Dialog.TabSpec => ({
+const makeTab = (info: ImageDialogInfo, getRatio: () => number | undefined): Dialog.TabSpec => ({
   title: 'General',
   name: 'general',
-  items: makeItems(info)
+  items: makeItems(info, getRatio)
 });
 
 export const MainTab = {

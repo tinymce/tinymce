@@ -41,12 +41,15 @@ interface ImageDialogState {
   prevImage: Optional<ListValue>;
   prevAlt: string | null;
   open: boolean;
+  // The ratio of the current image, used by the size input when one size is blank
+  ratio: Optional<number>;
 }
 
 const createState = (info: ImageDialogInfo): ImageDialogState => ({
   prevImage: ListUtils.findEntry(info.imageList, info.image.src),
   prevAlt: info.image.alt,
-  open: true
+  open: true,
+  ratio: info.naturalSize.map((size) => size.width / size.height)
 });
 
 const fromImageData = (image: ImageData): ImageDialogData => ({
@@ -165,22 +168,35 @@ const formFillFromMeta = (info: ImageDialogInfo, api: API): void => {
   }
 };
 
+const getRatioFromSize = (size: Size): Optional<number> => {
+  const width = parseFloat(size.width);
+  const height = parseFloat(size.height);
+  return width > 0 && height > 0 ? Optional.some(width / height) : Optional.none();
+};
+
 const calculateImageSize = (helpers: Helpers, info: ImageDialogInfo, state: ImageDialogState, api: API): void => {
   const data = api.getData();
   const url = data.src.value;
   const meta = data.src.meta || {};
 
-  if (!meta.width && !meta.height && info.hasDimensions) {
+  const hasMetaSize = Boolean(meta.width || meta.height);
+
+  if (info.hasDimensions) {
     if (Strings.isNotEmpty(url)) {
       helpers.imageSize(url)
         .then((size) => {
-          if (state.open) {
-            api.setData({ dimensions: size });
+          // Ignore the size if the source has changed again while the image was loading
+          if (state.open && api.getData().src.value === url) {
+            // The ratio is still needed when the meta only gives one size
+            state.ratio = getRatioFromSize(size);
+            if (!hasMetaSize) {
+              api.setData({ dimensions: size });
+            }
           }
         })
         // eslint-disable-next-line no-console
         .catch((e) => console.error(e));
-    } else {
+    } else if (!hasMetaSize) {
       api.setData({ dimensions: { width: '', height: '' }});
     }
   }
@@ -194,6 +210,8 @@ const updateImagesDropdown = (info: ImageDialogInfo, state: ImageDialogState, ap
 };
 
 const changeSrc = (helpers: Helpers, info: ImageDialogInfo, state: ImageDialogState, api: API): void => {
+  // The ratio came from the previous image, so drop it until the new image's size is known
+  state.ratio = Optional.none();
   addPrependUrl(info, api);
   formFillFromMeta(info, api);
   calculateImageSize(helpers, info, state, api);
@@ -282,12 +300,13 @@ const closeHandler = (state: ImageDialogState) => (): void => {
   state.open = false;
 };
 
-const makeDialogBody = (info: ImageDialogInfo): DialogType.TabPanelSpec | DialogType.PanelSpec => {
+const makeDialogBody = (info: ImageDialogInfo, state: ImageDialogState): DialogType.TabPanelSpec | DialogType.PanelSpec => {
+  const getRatio = () => state.ratio.getOrUndefined();
   if (info.hasAdvTab || info.hasUploadUrl || info.hasUploadHandler) {
     const tabPanel: DialogType.TabPanelSpec = {
       type: 'tabpanel',
       tabs: Arr.flatten([
-        [ MainTab.makeTab(info) ],
+        [ MainTab.makeTab(info, getRatio) ],
         info.hasAdvTab ? [ AdvTab.makeTab(info) ] : [],
         info.hasUploadTab && (info.hasUploadUrl || info.hasUploadHandler) ? [ UploadTab.makeTab(info, () => new Promise((r) => info.alertErr('Selected images do not have allowed extensions', r))) ] : []
       ])
@@ -296,7 +315,7 @@ const makeDialogBody = (info: ImageDialogInfo): DialogType.TabPanelSpec | Dialog
   } else {
     const panel: DialogType.PanelSpec = {
       type: 'panel',
-      items: MainTab.makeItems(info)
+      items: MainTab.makeItems(info, getRatio)
     };
     return panel;
   }
@@ -383,7 +402,7 @@ export const Dialog = (editor: Editor): { open: () => void } => {
         return {
           title: 'Insert/Edit Image',
           size: 'normal',
-          body: makeDialogBody(info),
+          body: makeDialogBody(info, state),
           buttons: [
             {
               type: 'cancel',
