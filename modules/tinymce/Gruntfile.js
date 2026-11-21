@@ -463,6 +463,7 @@ module.exports = function (grunt) {
             cwd: '../../',
             src: [
               'modules/*/src',
+              'modules/*/tasks',
               'modules/*/CHANGELOG.md',
               'modules/*/Gruntfile.js',
               'modules/*/gulpfile.js',
