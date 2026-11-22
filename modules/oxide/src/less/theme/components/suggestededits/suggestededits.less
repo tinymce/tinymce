@@ -216,7 +216,6 @@
             padding: 6px;
           }
 
-          .tox-card__header,
           .tox-suggestededits__card--header {
             display: flex;
             flex: auto;
@@ -224,7 +223,15 @@
             align-items: center;
             gap: 8px;
             width: 100%;
+          }
 
+          .tox-card__header {
+            flex: auto;
+            width: 100%;
+          }
+
+          .tox-card__header,
+          .tox-suggestededits__card--header {
             .tox-suggestededits__card--timestamp {
               color: var(--tox-private-text-color, @suggestededits-text-color);
 
@@ -232,45 +239,8 @@
                 fill: var(--tox-private-suggestededits-timestamp-icon-color, contrast(@suggestededits-background-color, fade(@color-black, 50%), fade(@color-white, 50%)));
               }
             }
-
-            .tox-suggestededits__resolution {
-              align-items: center;
-              border: 0;
-              border-radius: 20px;
-              color: var(--tox-private-text-color-muted, @text-color-muted);
-              height: 20px;
-              width: 20px;
-              display: flex;
-              flex: 0 0 auto;
-              justify-content: center;
-              text-align: center;
-            }
-
-            .tox-suggestededits__resolution--button {
-              padding: var(--tox-private-control-padding-y, @button-padding-y) var(--tox-private-pad-md, @button-padding-x);
-
-              .tox-suggestededits__resolution--label {
-                display: none;
-              }
-
-              &:not(:hover):not(:focus-visible) {
-                border-color: transparent;
-              }
-
-              &:hover,
-              &:focus-visible {
-                .tox-suggestededits__resolution {
-                  display: none;
-                }
-
-                .tox-suggestededits__resolution--label {
-                  display: inline;
-                }
-              }
-            }
           }
 
-          .tox-card__body,
           .tox-suggestededits__card--content {
             display: flex;
             flex-direction: column;
@@ -278,7 +248,16 @@
             flex: auto;
             gap: 6px;
             width: 100%;
+          }
 
+          .tox-card__body {
+            align-self: stretch;
+            flex: auto;
+            width: 100%;
+          }
+
+          .tox-card__body,
+          .tox-suggestededits__card--content {
             .tox-suggestededits__operations {
               display: flex;
               gap: 8px;
@@ -317,7 +296,6 @@
             }
           }
 
-          .tox-card__actions,
           .tox-suggestededits__card--buttons {
             display: flex;
             align-items: center;

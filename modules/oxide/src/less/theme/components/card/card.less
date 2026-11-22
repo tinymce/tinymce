@@ -24,7 +24,10 @@
 
 @card-section-padding: @pad-sm + @pad-xs;
 @card-section-gap: @pad-sm + @pad-xs;
+@card-header-gap: @pad-sm;
+@card-body-gap: (@card-section-gap / 2);
 @card-button-gap: @pad-sm;
+@card-resolution-size: 20px;
 @card-border-radius: @control-border-radius;
 @card-selected-border-width: @keyboard-focus-outline-width;
 @card-highlight-border-width: @keyboard-focus-outline-width;
@@ -47,6 +50,8 @@
     --tox-private-card-padding: calc(var(--tox-private-card-section-padding) - var(--tox-private-keyboard-focus-outline-width));
     --tox-private-card-highlight-padding: var(--tox-private-pad-xs) calc(var(--tox-private-pad-xs) * 1.5);
     --tox-private-card-expansion-collapsed-margin-block-start: calc(var(--tox-private-card-section-gap) * -1);
+    --tox-private-card-header-gap: var(--tox-private-pad-sm);
+    --tox-private-card-body-gap: calc(var(--tox-private-card-section-gap) / 2);
 
     --tox-private-card-added-background-color: color-mix(in srgb, var(--tox-private-color-success) 20%, var(--tox-private-background-color));
     --tox-private-card-deleted-background-color: color-mix(in srgb, var(--tox-private-color-error) 20%, var(--tox-private-background-color));
@@ -175,6 +180,49 @@
           opacity: 1;
           pointer-events: auto;
         }
+
+        .tox-card__resolution-button.tox-button {
+          padding: var(--tox-private-control-padding-y, @button-padding-y) var(--tox-private-pad-md, @button-padding-x);
+
+          .tox-card__resolution-label {
+            display: none;
+          }
+
+          .tox-card__resolution {
+            margin-block: calc((var(--tox-private-control-line-height, @button-line-height) - @card-resolution-size) / 2);
+          }
+
+          &:not(:hover):not(:focus-visible) {
+            border-color: transparent;
+          }
+
+          &:hover,
+          &:focus-visible {
+            .tox-card__resolution {
+              display: none;
+            }
+
+            .tox-card__resolution-label {
+              display: inline;
+            }
+          }
+        }
+      }
+    }
+
+    &__resolution {
+      align-items: center;
+      border-radius: @card-resolution-size;
+      display: flex;
+      flex: 0 0 auto;
+      height: @card-resolution-size;
+      justify-content: center;
+      text-align: center;
+      width: @card-resolution-size;
+
+      &--accepted,
+      &--rejected {
+        color: var(--tox-private-text-color-muted, @text-color-muted);
       }
     }
 
@@ -182,6 +230,7 @@
     &__header:has(.tox-card__header-actions) {
       flex-direction: row;
       align-items: center;
+      gap: var(--tox-private-card-header-gap, @card-header-gap);
     }
 
     &__header:has(.tox-card__header-content) {
@@ -201,7 +250,10 @@
 
     &__body {
       color: var(--tox-private-text-color, @card-text-color);
+      display: flex;
+      flex-direction: column;
       font-size: var(--tox-private-font-size-sm, @font-size-sm);
+      gap: var(--tox-private-card-body-gap, @card-body-gap);
 
       .tox-expandable-box {
         background: none;

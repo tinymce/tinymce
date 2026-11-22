@@ -1,4 +1,4 @@
-import { Fun, Obj } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optional } from '@ephox/katamari';
 import { getAll as getAllIcons } from '@tinymce/oxide-icons-default';
 import { AutoResizingTextarea } from 'oxide-components/components/autoresizingtextarea/AutoResizingTextarea';
 import { Button } from 'oxide-components/components/button/Button';
@@ -7,11 +7,18 @@ import { Icon } from 'oxide-components/components/icon/Icon';
 import { IconButton } from 'oxide-components/components/iconbutton/IconButton';
 import * as Profile from 'oxide-components/components/profile/Profile';
 import { UniverseProvider } from 'oxide-components/Main';
+import * as Bem from 'oxide-components/utils/Bem';
 import { useState, type FC, type ReactElement } from 'react';
-import { describe, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { userEvent } from 'vitest/browser';
 
 import { renderVisual } from './utils/VisualTestUtils';
+
+interface SuggestedEditsCardOptions {
+  readonly index: number;
+  readonly active?: boolean;
+  readonly resolution?: Card.CardResolution;
+}
 
 // eslint-disable-next-line max-len
 const AVATAR_URL = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="36" height="36"%3E%3Ccircle cx="18" cy="18" r="18" fill="%234A90E2"/%3E%3Ctext x="18" y="24" text-anchor="middle" fill="white" font-size="14" font-family="sans-serif"%3EJM%3C/text%3E%3C/svg%3E';
@@ -516,5 +523,169 @@ describe('visual.CardGroupTest', () => {
       </Card.CardGroup>
     ));
     await screen.expectScreenshot('card-group-title-truncated');
+  });
+});
+
+const renderSuggestedEditsCard = ({ index, active = false, resolution }: SuggestedEditsCardOptions): ReactElement => (
+  <Card.Root
+    key={index}
+    index={index}
+    ariaLabel={`Suggestion ${index + 1}`}
+    selected={active}
+    hasDecision={resolution !== undefined}
+    className={Bem.element('tox-suggestededits', 'card', { active })}
+  >
+    <div tabIndex={-1} className="tox-suggestededits__card--single">
+      <Card.Header>
+        <Card.HeaderContent>
+          <Profile.Root>
+            <Profile.Image src={AVATAR_URL} alt="John Mac Giolla" />
+            <Profile.Body>
+              <Profile.Heading>John Mac Giolla</Profile.Heading>
+              <Profile.Subheading>
+                <span className="tox-suggestededits__card--timestamp">
+                  May 18, 9:12 AM • 2 <Icon icon="feedback" />
+                </span>
+              </Profile.Subheading>
+            </Profile.Body>
+          </Profile.Root>
+        </Card.HeaderContent>
+        {resolution === undefined ? (
+          <Card.HeaderActions visibilityMode={active ? 'always' : 'hover'}>
+            <IconButton variant="secondary" icon="close" aria-label="Reject" tabIndex={-1} />
+            <IconButton variant="secondary" icon="checkmark" aria-label="Accept" tabIndex={-1} />
+          </Card.HeaderActions>
+        ) : (
+          <Card.HeaderActions visibilityMode="always">
+            <Card.ResolutionButton resolution={resolution} label="Revert" tabIndex={-1} />
+          </Card.HeaderActions>
+        )}
+      </Card.Header>
+      <Card.Body>
+        <div className={Bem.element('tox-suggestededits', 'operations')}>
+          <div className={Bem.element('tox-suggestededits', 'operations-details')}>
+            <span className={Bem.element('tox-suggestededits', 'operations-text')}>Modified</span>
+            <div className={Bem.element('tox-suggestededits', 'operations-content-text')}>
+              “Barcelona is football&apos;s most exceptional institution club”
+            </div>
+          </div>
+        </div>
+      </Card.Body>
+    </div>
+    {resolution === undefined && (
+      <Card.Expansion open={active}>
+        <Card.ExpansionContent ariaLabel="Feedback">
+          <Button variant="outlined" className="tox-button--stretch">Provide feedback</Button>
+        </Card.ExpansionContent>
+      </Card.Expansion>
+    )}
+  </Card.Root>
+);
+
+const renderSuggestedEditsSidebar = (cards: SuggestedEditsCardOptions[]) =>
+  renderVisual(
+    <UniverseProvider resources={mockUniverse}>
+      <div className={Bem.element('tox-suggestededits', 'container')}>
+        <div className={Bem.block('tox-suggestededits')}>
+          <div className={Bem.element('tox-suggestededits', 'sidebar')}>
+            <Card.CardList
+              className={Bem.element('tox-suggestededits', 'sidebar-content')}
+              defaultFocusedIndex={-1}
+              ariaLabel="Review changes"
+            >
+              {Arr.map(cards, renderSuggestedEditsCard)}
+            </Card.CardList>
+          </div>
+        </div>
+      </div>
+    </UniverseProvider>
+  );
+
+const strictScreenshot = { comparatorOptions: { allowedMismatchedPixelRatio: 0 }};
+
+describe('visual.CardSuggestedEditsTest', () => {
+  it('TINYMCE-15187: renders pending cards, inactive and active', async () => {
+    const screen = renderSuggestedEditsSidebar([
+      { index: 0 },
+      { index: 1, active: true }
+    ]);
+    await screen.expectScreenshot('card-se-pending', strictScreenshot);
+  });
+
+  it('TINYMCE-15187: reveals header actions on an inactive pending card on hover', async () => {
+    const screen = renderSuggestedEditsSidebar([{ index: 0 }]);
+    await userEvent.hover(screen.getByRole('option'));
+    await screen.expectScreenshot('card-se-pending-hover', strictScreenshot);
+  });
+
+  it('TINYMCE-15187: renders accepted and rejected cards', async () => {
+    const screen = renderSuggestedEditsSidebar([
+      { index: 0, resolution: 'accept' },
+      { index: 1, resolution: 'reject' }
+    ]);
+    await screen.expectScreenshot('card-se-decided', strictScreenshot);
+  });
+
+  it('TINYMCE-15187: swaps the resolution icon for the revert label on hover', async () => {
+    const screen = renderSuggestedEditsSidebar([{ index: 0, resolution: 'accept' }]);
+    await userEvent.hover(screen.getByRole('button', { name: 'Revert' }));
+    await screen.expectScreenshot('card-se-decided-revert-hover', strictScreenshot);
+  });
+
+  it('TINYMCE-15187: renders an active decided card', async () => {
+    const screen = renderSuggestedEditsSidebar([{ index: 0, active: true, resolution: 'reject' }]);
+    await screen.expectScreenshot('card-se-decided-active', strictScreenshot);
+  });
+});
+
+const renderResolutionCard = (resolution: Card.CardResolution) =>
+  renderVisual(
+    <UniverseProvider resources={mockUniverse}>
+      <div style={{ width: '440px' }}>
+        <Card.Root hasDecision={true}>
+          <Card.Header>
+            <Card.HeaderActions visibilityMode="always">
+              <Card.ResolutionButton resolution={resolution} label="Revert" />
+            </Card.HeaderActions>
+          </Card.Header>
+          <Card.Body>
+            <p style={{ margin: 0 }}>Barcelona is football&apos;s most exceptional institution club.</p>
+          </Card.Body>
+        </Card.Root>
+      </div>
+    </UniverseProvider>
+  );
+
+const getCardHeight = (container: HTMLElement): number =>
+  Optional.from(container.querySelector(Bem.blockSelector('tox-card')))
+    .map((card) => card.getBoundingClientRect().height)
+    .getOr(0);
+
+describe('visual.CardResolutionButtonTest', () => {
+  it('TINYMCE-15187: renders the tick for an accepted card without an avatar', async () => {
+    const screen = renderResolutionCard('accept');
+    await screen.expectScreenshot('card-resolution-accepted', strictScreenshot);
+  });
+
+  it('TINYMCE-15187: renders the cross for a rejected card without an avatar', async () => {
+    const screen = renderResolutionCard('reject');
+    await screen.expectScreenshot('card-resolution-rejected', strictScreenshot);
+  });
+
+  it('TINYMCE-15187: swaps the icon for the label on hover', async () => {
+    const screen = renderResolutionCard('accept');
+    await userEvent.hover(screen.getByRole('button', { name: 'Revert' }));
+    await screen.expectScreenshot('card-resolution-revert-hover', strictScreenshot);
+  });
+
+  it('TINYMCE-15187: keeps the card the same height when the label replaces the icon on hover', async () => {
+    const screen = renderResolutionCard('accept');
+    const idleHeight = getCardHeight(screen.container);
+    expect(idleHeight > 0, 'Card should have a measurable height before hover').toBe(true);
+
+    await userEvent.hover(screen.getByRole('button', { name: 'Revert' }));
+    await expect.element(screen.getByText('Revert')).toBeVisible();
+
+    expect(getCardHeight(screen.container), 'Card height should not change when the label replaces the icon').toBe(idleHeight);
   });
 });

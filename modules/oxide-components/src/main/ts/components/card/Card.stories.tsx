@@ -1,4 +1,5 @@
-import { Arr, Fun, Obj } from '@ephox/katamari';
+import { Arr, Fun, Obj, Type } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { getAll as getAllIcons } from '@tinymce/oxide-icons-default';
 import { AutoResizingTextarea } from 'oxide-components/components/autoresizingtextarea/AutoResizingTextarea';
@@ -8,11 +9,20 @@ import { Icon } from 'oxide-components/components/icon/Icon';
 import { IconButton } from 'oxide-components/components/iconbutton/IconButton';
 import { UniverseProvider } from 'oxide-components/contexts/universecontext/UniverseProvider';
 import * as Bem from 'oxide-components/utils/Bem';
+import * as FocusHelpers from 'oxide-components/utils/FocusHelpers';
 import { useEffect, useState } from 'react';
 
 import * as Profile from '../profile/Profile';
 
 import * as Card from './Card';
+
+interface AiChange {
+  readonly label: string;
+  readonly before: string;
+  readonly removed?: string;
+  readonly added?: string;
+  readonly after: string;
+}
 
 const allIcons = getAllIcons();
 const icons: Record<string, string> = {
@@ -790,6 +800,268 @@ This is useful for simple cards that only need action buttons without user info 
             </Button>
           </Card.Actions>
         </Card.Root>
+      </div>
+    );
+  }
+};
+
+export const ResolutionButton: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: `
+**Card with a Decision**
+
+A card with a decision shows \`Card.ResolutionButton\` in its \`Card.HeaderActions\`: a greyed tick for an accepted card
+and a greyed cross for a rejected one. Hovering or focusing the button swaps the icon for its label so the decision can
+be reverted. The label is passed in already translated, and the button forwards every button prop.
+
+The card has no \`Card.HeaderContent\`, so the button is aligned to the right of the header.
+
+**Try it:** Hover over the tick or the cross.
+        `
+      }
+    }
+  },
+  render: () => (
+    <div style={{ width: '440px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+      {Arr.map([ 'accept', 'reject' ] as const, (resolution) => (
+        <Card.Root key={resolution} hasDecision={true}>
+          <Card.Header>
+            <Card.HeaderActions visibilityMode="always">
+              <Card.ResolutionButton resolution={resolution} label="Revert" />
+            </Card.HeaderActions>
+          </Card.Header>
+          <Card.Body>
+            <p style={{ margin: 0 }}>
+              Barcelona is football&apos;s most exceptional institution club.
+            </p>
+          </Card.Body>
+        </Card.Root>
+      ))}
+    </div>
+  )
+};
+
+const sidebarStyle = {
+  width: '440px',
+  boxSizing: 'border-box',
+  padding: '12px',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '12px',
+  backgroundColor: '#f5f5f5',
+  borderRadius: '6px'
+} as const;
+
+const aiChanges: AiChange[] = [
+  {
+    label: 'Text added',
+    before: '...Since the 1950s, Scandinavian ',
+    added: 'has',
+    after: ' architecture offered a calm, humane alternative to postwar...'
+  },
+  {
+    label: 'Text deleted',
+    before: '...and industrial methods. ',
+    removed: 'In many ways',
+    after: ' it has been about people first, and the designers sought to...'
+  },
+  {
+    label: 'Text replaced',
+    before: '...and industrial methods. It ',
+    removed: 'was',
+    added: 'has been',
+    after: ' about people first, and the designers sought to make...'
+  },
+  {
+    label: 'Text replaced',
+    before: 'about people first, and the designers ',
+    removed: 'tried',
+    added: 'sought',
+    after: ' to make buildings that feels comfortable and'
+  }
+];
+
+const inlineHighlightStyle = { padding: '0 2px' } as const;
+
+const renderChangeSnippet = ({ before, removed, added, after }: AiChange) => (
+  <p style={{ margin: 0 }}>
+    {before}
+    {Type.isNonNullable(removed) && (
+      <del
+        className={Bem.element('tox-card', 'highlight', { deleted: true })}
+        style={{ ...inlineHighlightStyle, textDecoration: 'line-through', borderBottomColor: 'var(--tox-private-color-error, #c00)' }}
+      >
+        {removed}
+      </del>
+    )}
+    {Type.isNonNullable(added) && (
+      <ins
+        className={Bem.element('tox-card', 'highlight', { added: true })}
+        style={{ ...inlineHighlightStyle, textDecoration: 'none', borderBottomColor: 'var(--tox-private-color-success, #78ab46)' }}
+      >
+        {added}
+      </ins>
+    )}
+    {after}
+  </p>
+);
+
+const renderChangeLabel = (label: string) => (
+  <span style={{ fontWeight: 'bold', fontSize: 'var(--tox-private-font-size-sm, 14px)' }}>{label}</span>
+);
+
+export const AiReviewCardPending: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: `
+**AI Review Card: Pending**
+
+How a TinyMCE AI review card will look. The header says what kind of change it is ("Text added", "Text deleted",
+"Text replaced"), and the body shows the change in its surrounding text. There is no avatar.
+The header actions use the same Skip and Apply buttons as Suggested Edits: they appear on hover, and stay visible
+once the card is selected. The header always holds the label, so the card doesn't resize when the buttons appear.
+
+\`Card.Highlight\` renders a block element, so it can't highlight text inside a sentence. The inline change here is
+built in the story from \`ins\` and \`del\` elements with the highlight classes, to show the layout. The real card
+renders its own change snippet. The 14px bold header label is styled in the story for the same reason.
+
+**Try it:** Hover over a card, then click one to select it.
+        `
+      }
+    }
+  },
+  render: () => {
+    const [ selected, setSelected ] = useState<number | undefined>(1);
+
+    return (
+      <div style={sidebarStyle}>
+        {Arr.map(aiChanges, (change, index) => (
+          <Card.Root key={index} selected={selected === index} onSelect={() => setSelected(index)}>
+            <Card.Header>
+              <Card.HeaderContent>{renderChangeLabel(change.label)}</Card.HeaderContent>
+              <Card.HeaderActions visibilityMode={selected === index ? 'always' : 'hover'}>
+                <IconButton variant="secondary" icon="close" aria-label="Skip" />
+                <IconButton variant="secondary" icon="checkmark" aria-label="Apply" />
+              </Card.HeaderActions>
+            </Card.Header>
+            <Card.Body>{renderChangeSnippet(change)}</Card.Body>
+          </Card.Root>
+        ))}
+      </div>
+    );
+  }
+};
+
+export const AiReviewCardResolved: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: `
+**AI Review Card: Resolved**
+
+A card that has a decision shows a greyed tick (applied) or cross (skipped) through \`Card.ResolutionButton\`, in place of
+Skip and Apply. Hovering or focusing it swaps the icon for the revert label.
+
+Resolving a card doesn't add an avatar or an "Applied" or "Skipped" label: the header keeps the change type and only
+the button changes.
+        `
+      }
+    }
+  },
+  render: () => {
+    const resolutions = [ 'accept', 'reject', 'accept', 'accept' ] as const;
+
+    return (
+      <div style={sidebarStyle}>
+        {Arr.map(aiChanges, (change, index) => (
+          <Card.Root key={index} hasDecision={true}>
+            <Card.Header>
+              <Card.HeaderContent>{renderChangeLabel(change.label)}</Card.HeaderContent>
+              <Card.HeaderActions visibilityMode="always">
+                <Card.ResolutionButton resolution={resolutions[index]} label="Revert" />
+              </Card.HeaderActions>
+            </Card.Header>
+            <Card.Body>{renderChangeSnippet(change)}</Card.Body>
+          </Card.Root>
+        ))}
+      </div>
+    );
+  }
+};
+
+export const AiReviewCardList: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: `
+**AI Review Card: List**
+
+A list of review cards in a 440px sidebar, with each card's decision kept in state so the whole flow can be tried:
+skip or apply a card to resolve it, then revert it from the greyed button.
+
+Cards are reached with the arrow keys, and Tab from a focused card moves onto its buttons. After a button is used,
+focus goes back to the card.
+        `
+      }
+    }
+  },
+  render: () => {
+    const [ focusedIndex, setFocusedIndex ] = useState(0);
+    const [ selectedIndex, setSelectedIndex ] = useState<number | undefined>(undefined);
+    const [ decisions, setDecisions ] = useState<Record<string, Card.CardResolution>>({});
+
+    const focusCard = (button: HTMLElement) =>
+      FocusHelpers.focusAncestor(SugarElement.fromDom(button), Bem.blockSelector('tox-card'));
+
+    const decide = (index: number, decision: Card.CardResolution, button: HTMLElement) => {
+      focusCard(button);
+      setDecisions((current) => ({ ...current, [String(index)]: decision }));
+    };
+
+    const revert = (index: number, button: HTMLElement) => {
+      focusCard(button);
+      setDecisions((current) => Obj.filter(current, (_, key) => key !== String(index)));
+    };
+
+    return (
+      <div style={{ ...sidebarStyle, maxHeight: '500px', overflowY: 'auto' }}>
+        <Card.CardListController
+          focusedIndex={focusedIndex}
+          onFocusedIndexChange={setFocusedIndex}
+          selectedIndex={selectedIndex}
+          onSelectCard={setSelectedIndex}
+        >
+          <Card.CardList ariaLabel="AI review suggestions">
+            {Arr.map(aiChanges, (change, index) => {
+              const decision = Obj.get(decisions, String(index));
+
+              return (
+                <Card.Root key={index} index={index} hasDecision={decision.isSome()}>
+                  <Card.Header>
+                    <Card.HeaderContent>{renderChangeLabel(change.label)}</Card.HeaderContent>
+                    {decision.fold(
+                      () => (
+                        <Card.HeaderActions visibilityMode={selectedIndex === index ? 'always' : 'hover'}>
+                          <IconButton variant="secondary" icon="close" aria-label="Skip" onClick={(event) => decide(index, 'reject', event.currentTarget)} />
+                          <IconButton variant="secondary" icon="checkmark" aria-label="Apply" onClick={(event) => decide(index, 'accept', event.currentTarget)} />
+                        </Card.HeaderActions>
+                      ),
+                      (resolution) => (
+                        <Card.HeaderActions visibilityMode="always">
+                          <Card.ResolutionButton resolution={resolution} label="Revert" onClick={(event) => revert(index, event.currentTarget)} />
+                        </Card.HeaderActions>
+                      )
+                    )}
+                  </Card.Header>
+                  <Card.Body>{renderChangeSnippet(change)}</Card.Body>
+                </Card.Root>
+              );
+            })}
+          </Card.CardList>
+        </Card.CardListController>
       </div>
     );
   }

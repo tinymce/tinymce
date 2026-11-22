@@ -1,10 +1,15 @@
 import { Arr, Type } from '@ephox/katamari';
-import { Children, cloneElement, createContext, forwardRef, isValidElement, useCallback, useContext, useId, useLayoutEffect, useMemo, useRef, type FC, type MouseEvent as ReactMouseEvent, type PropsWithChildren, type ReactElement } from 'react';
+import {
+  Children, cloneElement, createContext, forwardRef, isValidElement, useCallback, useContext, useId, useLayoutEffect, useMemo, useRef,
+  type ButtonHTMLAttributes, type FC, type MouseEvent as ReactMouseEvent, type PropsWithChildren, type ReactElement
+} from 'react';
 
 import * as Bem from '../../utils/Bem';
+import { Button } from '../button/Button';
+import { Icon } from '../icon/Icon';
 
 import { useCardListContext } from './CardListContext';
-import type { CardHeaderActionsVisibility, CardHighlightType, CardLayout } from './CardTypes';
+import type { CardHeaderActionsVisibility, CardHighlightType, CardLayout, CardResolution } from './CardTypes';
 
 export interface CardRootProps extends PropsWithChildren {
   readonly id?: string;
@@ -36,6 +41,21 @@ export interface CardHeaderActionsProps extends PropsWithChildren {
    * Controls when header actions are revealed. Defaults to hover (also revealed on focus-within).
    */
   readonly visibilityMode?: CardHeaderActionsVisibility;
+}
+
+/**
+ * Props for `Card.ResolutionButton`. The button is styled when it is rendered inside `Card.HeaderActions`.
+ */
+export interface CardResolutionButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children' | 'className' | 'aria-label'> {
+  /**
+   * The decision the card has, which picks the icon shown: a tick for `accept`, a cross for `reject`.
+   */
+  readonly resolution: CardResolution;
+  /**
+   * Accessible name of the button, shown in place of the icon while the button is hovered or focused.
+   * Already translated by the caller.
+   */
+  readonly label: string;
 }
 
 export interface CardBodyProps extends PropsWithChildren {}
@@ -220,6 +240,27 @@ const HeaderActions: FC<CardHeaderActionsProps> = ({ children, visibilityMode = 
     </div>
   );
 };
+
+const ResolutionButton = forwardRef<HTMLButtonElement, CardResolutionButtonProps>(({ resolution, label, ...rest }, ref) => {
+  const isAccepted = resolution === 'accept';
+
+  return (
+    <Button
+      ref={ref}
+      variant="outlined"
+      aria-label={label}
+      {...rest}
+      className={Bem.element('tox-card', 'resolution-button')}
+    >
+      <span className={Bem.element('tox-card', 'resolution', { accepted: isAccepted, rejected: !isAccepted })}>
+        <Icon icon={isAccepted ? 'checkmark' : 'close'} />
+      </span>
+      <span className={Bem.element('tox-card', 'resolution-label')}>{label}</span>
+    </Button>
+  );
+});
+
+ResolutionButton.displayName = 'Card.ResolutionButton';
 
 const Body: FC<CardBodyProps> = ({ children }) => {
   return (
@@ -425,6 +466,7 @@ export {
   Header,
   HeaderContent,
   HeaderActions,
+  ResolutionButton,
   Body,
   Actions,
   Highlight,
@@ -437,4 +479,4 @@ export {
 export { CardList, CardListController } from './CardList';
 export { CardGroup } from './CardGroup';
 export type { CardGroupProps } from './CardGroup';
-export type { CardLayout, CardHighlightType, CardHeaderActionsVisibility } from './CardTypes';
+export type { CardLayout, CardHighlightType, CardHeaderActionsVisibility, CardResolution } from './CardTypes';

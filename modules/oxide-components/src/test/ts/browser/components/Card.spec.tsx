@@ -994,6 +994,67 @@ describe('browser.components.CardTest', () => {
     });
   });
 
+  describe('Resolution Button Tests', () => {
+    it('TINYMCE-15187: Should render an accepted button with a tick and the label as its name', () => {
+      const { container, getByRole } = render(
+        <Card.ResolutionButton resolution="accept" label="Revert" />,
+        { wrapper }
+      );
+
+      expect(getByRole('button', { name: 'Revert' }).element(), 'Button should be named by the label').toBeTruthy();
+      expect(container.querySelector(Bem.elementSelector('tox-card', 'resolution', { accepted: true })), 'Accepted modifier should be applied').toBeTruthy();
+      expect(container.querySelector('svg#checkmark'), 'Accepted button should show the tick icon').toBeTruthy();
+      expect(container.querySelector('svg#close'), 'Accepted button should not show the cross icon').toBeNull();
+    });
+
+    it('TINYMCE-15187: Should render a rejected button with a cross', () => {
+      const { container } = render(
+        <Card.ResolutionButton resolution="reject" label="Revert" />,
+        { wrapper }
+      );
+
+      expect(container.querySelector(Bem.elementSelector('tox-card', 'resolution', { rejected: true })), 'Rejected modifier should be applied').toBeTruthy();
+      expect(container.querySelector('svg#close'), 'Rejected button should show the cross icon').toBeTruthy();
+      expect(container.querySelector('svg#checkmark'), 'Rejected button should not show the tick icon').toBeNull();
+    });
+
+    it('TINYMCE-15187: Should render the label next to the icon', () => {
+      const { container } = render(
+        <Card.ResolutionButton resolution="accept" label="Revert" />,
+        { wrapper }
+      );
+
+      expect(
+        container.querySelector(Bem.elementSelector('tox-card', 'resolution-label'))?.textContent,
+        'Label element should hold the translated label'
+      ).toBe('Revert');
+    });
+
+    it('TINYMCE-15187: Should call onClick when clicked', async () => {
+      const onClick = vi.fn();
+      const { getByRole } = render(
+        <Card.ResolutionButton resolution="accept" label="Revert" onClick={onClick} />,
+        { wrapper }
+      );
+
+      await userEvent.click(getByRole('button', { name: 'Revert' }));
+
+      expect(onClick, 'onClick should be called once per click').toHaveBeenCalledTimes(1);
+    });
+
+    it('TINYMCE-15187: Should forward button props and the ref', () => {
+      const ref = createRef<HTMLButtonElement>();
+      const { getByRole } = render(
+        <Card.ResolutionButton ref={ref} resolution="accept" label="Revert" tabIndex={-1} />,
+        { wrapper }
+      );
+
+      const button = getByRole('button', { name: 'Revert' }).element();
+      expect(ref.current, 'Ref should point at the button element').toBe(button);
+      expect(button.getAttribute('tabindex'), 'tabIndex should be forwarded to the button').toBe('-1');
+    });
+  });
+
   describe('Header Tests', () => {
     it('TINYMCE-14722: Should render Card.HeaderContent', async () => {
       const { getByText, container } = render(
