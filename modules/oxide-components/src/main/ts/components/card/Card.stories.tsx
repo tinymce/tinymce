@@ -856,26 +856,26 @@ const sidebarStyle = {
 
 const aiChanges: AiChange[] = [
   {
-    label: 'Text added',
+    label: 'Added text',
     before: '...Since the 1950s, Scandinavian ',
     added: 'has',
     after: ' architecture offered a calm, humane alternative to postwar...'
   },
   {
-    label: 'Text deleted',
+    label: 'Deleted text',
     before: '...and industrial methods. ',
     removed: 'In many ways',
     after: ' it has been about people first, and the designers sought to...'
   },
   {
-    label: 'Text replaced',
+    label: 'Replaced text',
     before: '...and industrial methods. It ',
     removed: 'was',
     added: 'has been',
     after: ' about people first, and the designers sought to make...'
   },
   {
-    label: 'Text replaced',
+    label: 'Replaced text',
     before: 'about people first, and the designers ',
     removed: 'tried',
     added: 'sought',
@@ -919,8 +919,8 @@ export const AiReviewCardPending: Story = {
         story: `
 **AI Review Card: Pending**
 
-How a TinyMCE AI review card will look. The header says what kind of change it is ("Text added", "Text deleted",
-"Text replaced"), and the body shows the change in its surrounding text. There is no avatar.
+How a TinyMCE AI review card will look. The header says what kind of change it is ("Added text", "Deleted text",
+"Replaced text"), and the body shows the change in its surrounding text. There is no avatar.
 The header actions use the same Skip and Apply buttons as Suggested Edits: they appear on hover, and stay visible
 once the card is selected. The header always holds the label, so the card doesn't resize when the buttons appear.
 

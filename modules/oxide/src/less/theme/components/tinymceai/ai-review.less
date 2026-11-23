@@ -40,6 +40,20 @@
         gap: @pad-sm;
       }
 
+      .tox-ai__review-card-label {
+        font-size: var(--tox-private-font-size-md, @font-size-md);
+        font-weight: var(--tox-private-font-weight-bold, @font-weight-bold);
+        line-height: 20px;
+      }
+
+      .tox-card__body {
+        font-size: var(--tox-private-font-size-md, @font-size-md);
+      }
+
+      .tox-card--has-decision .tox-card__body {
+        color: var(--tox-private-text-color, @text-color);
+      }
+
       .tox-ai__review-initializing {
         padding: var(--tox-private-pad-md, @pad-md);
       }
