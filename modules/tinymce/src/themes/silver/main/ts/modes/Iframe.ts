@@ -173,7 +173,6 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
 
   editor.addCommand('ToggleView', (_ui: boolean, value: string, args?: ExecCommandArgs) => {
     const skipFocus = args?.skip_focus === true;
-    const sidebarBefore = OuterContainer.whichSidebar(outerContainer);
     if (OuterContainer.toggleView(outerContainer, value, skipFocus)) {
       const target = outerContainer.element;
       mainUi.mothership.broadcastOn([ Channels.dismissPopups() ], { target });
@@ -188,10 +187,6 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
         }
         editor.nodeChanged();
         OuterContainer.refreshToolbar(outerContainer);
-      }
-
-      if (sidebarBefore !== OuterContainer.whichSidebar(outerContainer)) {
-        Events.fireToggleSidebar(editor);
       }
 
       Events.fireToggleView(editor);

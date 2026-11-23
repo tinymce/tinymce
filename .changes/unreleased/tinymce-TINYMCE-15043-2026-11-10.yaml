@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: In Firefox, `editor.queryCommandValue('ToggleSidebar')` returned an empty string in place of the open sidebar name while a view was open or the editor content had no selection.
+time: 2026-11-10T17:22:10.283533+10:00
+custom:
+    Issue: TINYMCE-15043

@@ -173,13 +173,6 @@ const toggleSidebar = (sidebar: AlloyComponent, name: string): void => {
   });
 };
 
-const closeSidebar = (sidebar: AlloyComponent): void => {
-  Composing.getCurrent(sidebar).each((slider) => {
-    Sliding.immediateShrink(slider);
-    updateSidebarRoleOnToggle(sidebar.element, SidebarStateRoleAttr.Shrunk);
-  });
-};
-
 const whichSidebar = (sidebar: AlloyComponent): Optional<string> => {
   const optSlider = Composing.getCurrent(sidebar);
   return optSlider.bind((slider) => {
@@ -288,7 +281,6 @@ const renderSidebar = (spec: SidebarSpec): AlloySpec => ({
 export {
   setSidebar,
   toggleSidebar,
-  closeSidebar,
   whichSidebar,
   renderSidebar,
   setup

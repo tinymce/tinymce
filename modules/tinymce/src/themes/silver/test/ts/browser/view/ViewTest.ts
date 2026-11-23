@@ -774,7 +774,7 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
       await pAssertToolbarDrawerVisibleState(true);
     });
 
-    it('closes an open sidebar when a keep-toolbar view opens', async () => {
+    it('leaves an open sidebar in place for a keep-toolbar view', async () => {
       const editor = hook.editor();
 
       editor.execCommand('ToggleSidebar', false, 'mysidebar');
@@ -783,19 +783,13 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
 
       editor.execCommand('ToggleView', false, 'toolbarview');
 
-      assert.equal(editor.queryCommandValue('ToggleSidebar'), '', 'No sidebar should be active while the keep-toolbar view is open');
-      UiFinder.exists(SugarBody.body(), closedSidebarSelector);
-      UiFinder.exists(SugarBody.body(), 'button[data-mce-name="mysidebar"][aria-pressed="false"]');
-      store.assertEq('The sidebar should be hidden and announced before the view opens', [ 'mysidebar:hide', 'ToggleSidebar', 'ToggleView' ]);
+      assert.equal(editor.queryCommandValue('ToggleSidebar'), 'mysidebar', 'The sidebar should stay active while the keep-toolbar view is open');
+      store.assertEq('A keep-toolbar view should not touch the sidebar', [ 'ToggleView' ]);
+      UiFinder.exists(SugarBody.body(), 'button[data-mce-name="mysidebar"][aria-pressed="true"]');
 
       editor.execCommand('ToggleView', false, 'toolbarview');
+      UiFinder.exists(SugarBody.body(), openedSidebarSelector);
 
-      assert.equal(editor.queryCommandValue('ToggleSidebar'), '', 'The sidebar should stay closed once the view has closed');
-      const sidebar = UiFinder.findIn(SugarBody.body(), '.tox-sidebar').getOrDie();
-      assert.isTrue(Css.getRaw(sidebar, 'width').isNone(), 'The sidebar should not be left with a pinned width');
-
-      editor.execCommand('ToggleSidebar', false, 'mysidebar');
-      await pWaitForSidebarOpened();
       editor.execCommand('ToggleSidebar', false, 'mysidebar');
       await pWaitForSidebarClosed();
     });
@@ -813,6 +807,19 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
       store.assertEq('A plain view should not touch the sidebar', [ 'ToggleView' ]);
 
       editor.execCommand('ToggleView', false, 'plainview');
+      editor.execCommand('ToggleSidebar', false, 'mysidebar');
+      await pWaitForSidebarClosed();
+    });
+
+    it('TINYMCE-15043: queries the open sidebar when the iframe selection has no range', async () => {
+      const editor = hook.editor();
+
+      editor.execCommand('ToggleSidebar', false, 'mysidebar');
+      await pWaitForSidebarOpened();
+      editor.selection.getSel()?.removeAllRanges();
+
+      assert.equal(editor.queryCommandValue('ToggleSidebar'), 'mysidebar');
+
       editor.execCommand('ToggleSidebar', false, 'mysidebar');
       await pWaitForSidebarClosed();
     });

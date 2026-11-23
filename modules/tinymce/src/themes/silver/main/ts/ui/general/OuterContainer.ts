@@ -231,7 +231,6 @@ const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, Out
         setStatusbarHidden(element, !keepToolbar);
 
         if (keepToolbar) {
-          Composite.parts.getPart(comp, detail, 'sidebar').each(Sidebar.closeSidebar);
           Class.add(element, keepToolbarClass);
           setHidden(element, false);
           setSidebarWrapHidden(element, true);

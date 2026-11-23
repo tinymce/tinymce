@@ -26,7 +26,8 @@ export interface ExecCommandArgs {
 }
 
 // List of commands that are considered safe even if the editor has no selection when the iframe is hidden in Firefox. See TINY-9210 for details.
-const selectionSafeCommands = [ 'toggleview' ];
+// TINYMCE-15237: investigate whether the Firefox isHidden guard is still needed now that native command queries are gone.
+const selectionSafeCommands = [ 'toggleview', 'togglesidebar' ];
 
 const isSelectionSafeCommand = (command: string) => Arr.contains(selectionSafeCommands, command.toLowerCase());
 
