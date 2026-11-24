@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: In Firefox, pressing the Up or Down arrow keys skipped the content of an open accordion or the summary of a closed one.
+time: 2026-11-16T12:00:00.000000+01:00
+custom:
+  Issue: TINYMCE-15129
