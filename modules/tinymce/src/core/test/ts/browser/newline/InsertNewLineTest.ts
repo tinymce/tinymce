@@ -371,9 +371,16 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
       });
 
       context('Is set to "div"', () => {
+        before(() => {
+          hook.editor().options.set('end_container_on_empty_block', 'div');
+        });
+
+        after(() => {
+          hook.editor().options.unset('end_container_on_empty_block');
+        });
+
         it('TINY-6559: Press Enter in blockquote', () => {
           const editor = hook.editor();
-          editor.options.set('end_container_on_empty_block', 'div');
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
           insertNewline(editor, {});
@@ -383,7 +390,6 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
 
         it('TINY-6559: Press Shift+Enter in blockquote', () => {
           const editor = hook.editor();
-          editor.options.set('end_container_on_empty_block', 'div');
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
           insertNewline(editor, { shiftKey: true });
@@ -393,7 +399,6 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
 
         it('TINY-6559: Press Enter twice in blockquote', () => {
           const editor = hook.editor();
-          editor.options.set('end_container_on_empty_block', 'div');
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
           insertNewline(editor, {});
@@ -404,7 +409,6 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
 
         it('TINY-6559: Press Enter twice in blockquote while between two lines', () => {
           const editor = hook.editor();
-          editor.options.set('end_container_on_empty_block', 'div');
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
           TinySelections.setCursor(editor, [ 0, 0 ], 1);
           insertNewline(editor, {});
@@ -415,7 +419,6 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
 
         it('TINY-6559: Press Enter twice in a div', () => {
           const editor = hook.editor();
-          editor.options.set('end_container_on_empty_block', 'div');
           editor.setContent('<div><p>Line 1</p><p>Line 2</p></div>');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
           insertNewline(editor, {});
@@ -436,9 +439,16 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
       });
 
       context('Is set to "div,blockquote"', () => {
+        before(() => {
+          hook.editor().options.set('end_container_on_empty_block', 'div,blockquote');
+        });
+
+        after(() => {
+          hook.editor().options.unset('end_container_on_empty_block');
+        });
+
         it('TINY-6559: Press Enter in blockquote', () => {
           const editor = hook.editor();
-          editor.options.set('end_container_on_empty_block', 'div,blockquote');
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
           insertNewline(editor, {});
@@ -448,7 +458,6 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
 
         it('TINY-6559: Press Shift+Enter in blockquote', () => {
           const editor = hook.editor();
-          editor.options.set('end_container_on_empty_block', 'div,blockquote');
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
           insertNewline(editor, { shiftKey: true });
@@ -458,7 +467,6 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
 
         it('TINY-6559: Press Enter twice in blockquote', () => {
           const editor = hook.editor();
-          editor.options.set('end_container_on_empty_block', 'div,blockquote');
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
           insertNewline(editor, {});
@@ -469,7 +477,6 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
 
         it('TINY-6559: Press Enter twice in blockquote while between two lines', () => {
           const editor = hook.editor();
-          editor.options.set('end_container_on_empty_block', 'div,blockquote');
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
           TinySelections.setCursor(editor, [ 0, 0 ], 1);
           insertNewline(editor, {});
@@ -480,7 +487,6 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
 
         it('TINY-6559: Press Enter twice in a div', () => {
           const editor = hook.editor();
-          editor.options.set('end_container_on_empty_block', 'div,blockquote');
           editor.setContent('<div><p>Line 1</p><p>Line 2</p></div>');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
           insertNewline(editor, {});
@@ -501,9 +507,16 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
       });
 
       context('Is set to true', () => {
+        before(() => {
+          hook.editor().options.set('end_container_on_empty_block', true);
+        });
+
+        after(() => {
+          hook.editor().options.unset('end_container_on_empty_block');
+        });
+
         it('TINY-6559: Press Enter in blockquote', () => {
           const editor = hook.editor();
-          editor.options.set('end_container_on_empty_block', true);
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
           insertNewline(editor, {});
@@ -513,7 +526,6 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
 
         it('TINY-6559: Press Shift+Enter in blockquote', () => {
           const editor = hook.editor();
-          editor.options.set('end_container_on_empty_block', true);
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
           insertNewline(editor, { shiftKey: true });
@@ -523,7 +535,6 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
 
         it('TINY-6559: Press Enter twice in blockquote', () => {
           const editor = hook.editor();
-          editor.options.set('end_container_on_empty_block', true);
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
           insertNewline(editor, {});
@@ -534,7 +545,6 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
 
         it('TINY-6559: Press Enter twice in blockquote while between two lines', () => {
           const editor = hook.editor();
-          editor.options.set('end_container_on_empty_block', true);
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
           TinySelections.setCursor(editor, [ 0, 0 ], 1);
           insertNewline(editor, {});
@@ -545,7 +555,6 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
 
         it('TINY-6559: Press Enter twice in a div', () => {
           const editor = hook.editor();
-          editor.options.set('end_container_on_empty_block', true);
           editor.setContent('<div><p>Line 1</p><p>Line 2</p></div>');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
           insertNewline(editor, {});
@@ -566,9 +575,16 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
       });
 
       context('Is set to false', () => {
+        before(() => {
+          hook.editor().options.set('end_container_on_empty_block', false);
+        });
+
+        after(() => {
+          hook.editor().options.unset('end_container_on_empty_block');
+        });
+
         it('TINY-6559: Press Enter in blockquote', () => {
           const editor = hook.editor();
-          editor.options.set('end_container_on_empty_block', false);
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
           insertNewline(editor, {});
@@ -578,7 +594,6 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
 
         it('TINY-6559: Press Shift+Enter in blockquote', () => {
           const editor = hook.editor();
-          editor.options.set('end_container_on_empty_block', false);
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
           insertNewline(editor, { shiftKey: true });
@@ -588,7 +603,6 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
 
         it('TINY-6559: Press Enter twice in blockquote', () => {
           const editor = hook.editor();
-          editor.options.set('end_container_on_empty_block', false);
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
           insertNewline(editor, {});
@@ -599,7 +613,6 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
 
         it('TINY-6559: Press Enter twice in blockquote while between two lines', () => {
           const editor = hook.editor();
-          editor.options.set('end_container_on_empty_block', false);
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
           TinySelections.setCursor(editor, [ 0, 0 ], 1);
           insertNewline(editor, {});
@@ -610,7 +623,6 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
 
         it('TINY-6559: Press Enter twice in a div', () => {
           const editor = hook.editor();
-          editor.options.set('end_container_on_empty_block', false);
           editor.setContent('<div><p>Line 1</p><p>Line 2</p></div>');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
           insertNewline(editor, {});
@@ -1134,9 +1146,16 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
       });
 
       context('Is set to "div"', () => {
+        before(() => {
+          hook.editor().options.set('end_container_on_empty_block', 'div');
+        });
+
+        after(() => {
+          hook.editor().options.unset('end_container_on_empty_block');
+        });
+
         it('TINY-6559: Press Enter in blockquote', () => {
           const editor = hook.editor();
-          editor.options.set('end_container_on_empty_block', 'div');
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
           editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
@@ -1147,7 +1166,6 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
 
         it('TINY-6559: Press Shift+Enter in blockquote', () => {
           const editor = hook.editor();
-          editor.options.set('end_container_on_empty_block', 'div');
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
           editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
@@ -1158,7 +1176,6 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
 
         it('TINY-6559: Press Enter twice in blockquote', () => {
           const editor = hook.editor();
-          editor.options.set('end_container_on_empty_block', 'div');
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
           editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
@@ -1170,7 +1187,6 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
 
         it('TINY-6559: Press Enter twice in blockquote while between two lines', () => {
           const editor = hook.editor();
-          editor.options.set('end_container_on_empty_block', 'div');
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
           editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 0 ], 1);
@@ -1182,7 +1198,6 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
 
         it('TINY-6559: Press Enter twice in a div', () => {
           const editor = hook.editor();
-          editor.options.set('end_container_on_empty_block', 'div');
           editor.setContent('<div><p>Line 1</p><p>Line 2</p></div>');
           editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
@@ -1205,9 +1220,16 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
       });
 
       context('Is set to "div,blockquote"', () => {
+        before(() => {
+          hook.editor().options.set('end_container_on_empty_block', 'div,blockquote');
+        });
+
+        after(() => {
+          hook.editor().options.unset('end_container_on_empty_block');
+        });
+
         it('TINY-6559: Press Enter in blockquote', () => {
           const editor = hook.editor();
-          editor.options.set('end_container_on_empty_block', 'div,blockquote');
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
           editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
@@ -1218,7 +1240,6 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
 
         it('TINY-6559: Press Shift+Enter in blockquote', () => {
           const editor = hook.editor();
-          editor.options.set('end_container_on_empty_block', 'div,blockquote');
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
           editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
@@ -1229,7 +1250,6 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
 
         it('TINY-6559: Press Enter twice in blockquote', () => {
           const editor = hook.editor();
-          editor.options.set('end_container_on_empty_block', 'div,blockquote');
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
           editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
@@ -1241,7 +1261,6 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
 
         it('TINY-6559: Press Enter twice in blockquote while between two lines', () => {
           const editor = hook.editor();
-          editor.options.set('end_container_on_empty_block', 'div,blockquote');
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
           editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 0 ], 1);
@@ -1253,7 +1272,6 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
 
         it('TINY-6559: Press Enter twice in a div', () => {
           const editor = hook.editor();
-          editor.options.set('end_container_on_empty_block', 'div,blockquote');
           editor.setContent('<div><p>Line 1</p><p>Line 2</p></div>');
           editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
@@ -1276,9 +1294,16 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
       });
 
       context('Is set to true', () => {
+        before(() => {
+          hook.editor().options.set('end_container_on_empty_block', true);
+        });
+
+        after(() => {
+          hook.editor().options.unset('end_container_on_empty_block');
+        });
+
         it('TINY-6559: Press Enter in blockquote', () => {
           const editor = hook.editor();
-          editor.options.set('end_container_on_empty_block', true);
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
           editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
@@ -1289,7 +1314,6 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
 
         it('TINY-6559: Press Shift+Enter in blockquote', () => {
           const editor = hook.editor();
-          editor.options.set('end_container_on_empty_block', true);
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
           editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
@@ -1300,7 +1324,6 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
 
         it('TINY-6559: Press Enter twice in blockquote', () => {
           const editor = hook.editor();
-          editor.options.set('end_container_on_empty_block', true);
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
           editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
@@ -1312,7 +1335,6 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
 
         it('TINY-6559: Press Enter twice in blockquote while between two lines', () => {
           const editor = hook.editor();
-          editor.options.set('end_container_on_empty_block', true);
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
           editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 0 ], 1);
@@ -1324,7 +1346,6 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
 
         it('TINY-6559: Press Enter twice in a div', () => {
           const editor = hook.editor();
-          editor.options.set('end_container_on_empty_block', true);
           editor.setContent('<div><p>Line 1</p><p>Line 2</p></div>');
           editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
@@ -1347,9 +1368,16 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
       });
 
       context('Is set to false', () => {
+        before(() => {
+          hook.editor().options.set('end_container_on_empty_block', false);
+        });
+
+        after(() => {
+          hook.editor().options.unset('end_container_on_empty_block');
+        });
+
         it('TINY-6559: Press Enter in blockquote', () => {
           const editor = hook.editor();
-          editor.options.set('end_container_on_empty_block', false);
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
           editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
@@ -1360,7 +1388,6 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
 
         it('TINY-6559: Press Shift+Enter in blockquote', () => {
           const editor = hook.editor();
-          editor.options.set('end_container_on_empty_block', false);
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
           editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
@@ -1371,7 +1398,6 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
 
         it('TINY-6559: Press Enter twice in blockquote', () => {
           const editor = hook.editor();
-          editor.options.set('end_container_on_empty_block', false);
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
           editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
@@ -1383,7 +1409,6 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
 
         it('TINY-6559: Press Enter twice in blockquote while between two lines', () => {
           const editor = hook.editor();
-          editor.options.set('end_container_on_empty_block', false);
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
           editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 0 ], 1);
@@ -1395,7 +1420,6 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
 
         it('TINY-6559: Press Enter twice in a div', () => {
           const editor = hook.editor();
-          editor.options.set('end_container_on_empty_block', false);
           editor.setContent('<div><p>Line 1</p><p>Line 2</p></div>');
           editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
