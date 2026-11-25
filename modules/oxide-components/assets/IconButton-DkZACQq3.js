@@ -1,0 +1,1 @@
+import{r as a,j as o,c}from"./iframe-m8jlWi5a.js";import{B as e}from"./Button-C4Pj9Hl_.js";import{I as m}from"./Icon-B82XuRAQ.js";const f=a.forwardRef((s,t)=>{const{icon:r,...n}=s;return o.jsx(e,{ref:t,...n,className:c(["tox-button--icon"]),children:o.jsx(m,{icon:r})})});export{f as I};

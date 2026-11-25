@@ -1,0 +1,1 @@
+import{j as n,c as t}from"./iframe-m8jlWi5a.js";import{u as r}from"./Universe-DM4c6Udm.js";const m=({icon:s,...o})=>{const{getIcon:e}=r();return n.jsx("span",{className:t(["tox-icon"]),dangerouslySetInnerHTML:{__html:e(s)},...o})};export{m as I};

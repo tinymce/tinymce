@@ -9,11 +9,20 @@ var __require = /* @__PURE__ */ ((x2) => typeof require < "u" ? require : typeof
   if (typeof require < "u") return require.apply(this, arguments);
   throw Error('Dynamic require of "' + x2 + '" is not supported');
 });
-var __esm = (fn, res) => function() {
-  return fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res;
+var __esm = (fn, res, err) => function() {
+  if (err) throw err[0];
+  try {
+    return fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res;
+  } catch (e2) {
+    throw err = [e2], e2;
+  }
 };
 var __commonJS = (cb, mod) => function() {
-  return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
+  try {
+    return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
+  } catch (e2) {
+    throw mod = 0, e2;
+  }
 };
 var __export = (target, all) => {
   for (var name in all)
@@ -100,7 +109,7 @@ var require_factoryWithThrowingShims = __commonJS({
     }
     emptyFunctionWithReset.resetWarningCache = emptyFunction;
     module.exports = function() {
-      function shim(props, propName, componentName, location2, propFullName, secret) {
+      function shim(props, propName, componentName2, location2, propFullName, secret) {
         if (secret !== ReactPropTypesSecret) {
           var err = new Error(
             "Calling PropTypes validators directly is not supported by the `prop-types` package. Use PropTypes.checkPropTypes() to call them. Read more at http://fb.me/use-check-prop-types"
@@ -152,7 +161,7 @@ var require_prop_types = __commonJS({
 var require_react_fast_compare = __commonJS({
   "../../node_modules/react-fast-compare/index.js"(exports, module) {
     var hasElementType = typeof Element < "u", hasMap = typeof Map == "function", hasSet = typeof Set == "function", hasArrayBuffer = typeof ArrayBuffer == "function" && !!ArrayBuffer.isView;
-    function equal4(a2, b2) {
+    function equal3(a2, b2) {
       if (a2 === b2) return !0;
       if (a2 && b2 && typeof a2 == "object" && typeof b2 == "object") {
         if (a2.constructor !== b2.constructor) return !1;
@@ -160,7 +169,7 @@ var require_react_fast_compare = __commonJS({
         if (Array.isArray(a2)) {
           if (length = a2.length, length != b2.length) return !1;
           for (i2 = length; i2-- !== 0; )
-            if (!equal4(a2[i2], b2[i2])) return !1;
+            if (!equal3(a2[i2], b2[i2])) return !1;
           return !0;
         }
         var it;
@@ -169,7 +178,7 @@ var require_react_fast_compare = __commonJS({
           for (it = a2.entries(); !(i2 = it.next()).done; )
             if (!b2.has(i2.value[0])) return !1;
           for (it = a2.entries(); !(i2 = it.next()).done; )
-            if (!equal4(i2.value[1], b2.get(i2.value[0]))) return !1;
+            if (!equal3(i2.value[1], b2.get(i2.value[0]))) return !1;
           return !0;
         }
         if (hasSet && a2 instanceof Set && b2 instanceof Set) {
@@ -192,7 +201,7 @@ var require_react_fast_compare = __commonJS({
           if (!Object.prototype.hasOwnProperty.call(b2, keys[i2])) return !1;
         if (hasElementType && a2 instanceof Element) return !1;
         for (i2 = length; i2-- !== 0; )
-          if (!((keys[i2] === "_owner" || keys[i2] === "__v" || keys[i2] === "__o") && a2.$$typeof) && !equal4(a2[keys[i2]], b2[keys[i2]]))
+          if (!((keys[i2] === "_owner" || keys[i2] === "__v" || keys[i2] === "__o") && a2.$$typeof) && !equal3(a2[keys[i2]], b2[keys[i2]]))
             return !1;
         return !0;
       }
@@ -200,7 +209,7 @@ var require_react_fast_compare = __commonJS({
     }
     module.exports = function(a2, b2) {
       try {
-        return equal4(a2, b2);
+        return equal3(a2, b2);
       } catch (error) {
         if ((error.message || "").match(/stack|recursion/i))
           return console.warn("react-fast-compare cannot handle circular refs"), !1;
@@ -328,7 +337,7 @@ var require_memoizerific = __commonJS({
       }
     })(function() {
       var define2, module2, exports2;
-      return (function e2(t2, n3, r3) {
+      return (function e2(t2, n3, r4) {
         function s2(o4, u2) {
           if (!n3[o4]) {
             if (!t2[o4]) {
@@ -342,11 +351,11 @@ var require_memoizerific = __commonJS({
             t2[o4][0].call(l3.exports, function(e3) {
               var n4 = t2[o4][1][e3];
               return s2(n4 || e3);
-            }, l3, l3.exports, e2, t2, n3, r3);
+            }, l3, l3.exports, e2, t2, n3, r4);
           }
           return n3[o4].exports;
         }
-        for (var i2 = typeof __require == "function" && __require, o3 = 0; o3 < r3.length; o3++) s2(r3[o3]);
+        for (var i2 = typeof __require == "function" && __require, o3 = 0; o3 < r4.length; o3++) s2(r4[o3]);
         return s2;
       })({ 1: [function(_dereq_, module3, exports3) {
         module3.exports = function(forceSimilar) {
@@ -420,7 +429,7 @@ var require_memoizerific = __commonJS({
           var lruLen = lru.length, lruPathLen = lruPath.length, isMatch, i2, ii;
           for (i2 = 0; i2 < lruLen; i2++) {
             for (isMatch = !0, ii = 0; ii < lruPathLen; ii++)
-              if (!isEqual(lru[i2][ii].arg, lruPath[ii].arg)) {
+              if (!isEqual2(lru[i2][ii].arg, lruPath[ii].arg)) {
                 isMatch = !1;
                 break;
               }
@@ -434,7 +443,7 @@ var require_memoizerific = __commonJS({
           for (currentLru.cacheItem.delete(currentLru.arg), i2 = removedLruLen - 2; i2 >= 0 && (currentLru = removedLru[i2], tmp = currentLru.cacheItem.get(currentLru.arg), !tmp || !tmp.size); i2--)
             currentLru.cacheItem.delete(currentLru.arg);
         }
-        function isEqual(val1, val2) {
+        function isEqual2(val1, val2) {
           return val1 === val2 || val1 !== val1 && val2 !== val2;
         }
       }, { "map-or-similar": 1 }] }, {}, [3])(3);
@@ -442,79 +451,14 @@ var require_memoizerific = __commonJS({
   }
 });
 
-// ../../node_modules/toggle-selection/index.js
-var require_toggle_selection = __commonJS({
-  "../../node_modules/toggle-selection/index.js"(exports, module) {
-    module.exports = function() {
-      var selection = document.getSelection();
-      if (!selection.rangeCount)
-        return function() {
-        };
-      for (var active = document.activeElement, ranges = [], i2 = 0; i2 < selection.rangeCount; i2++)
-        ranges.push(selection.getRangeAt(i2));
-      switch (active.tagName.toUpperCase()) {
-        // .toUpperCase handles XHTML
-        case "INPUT":
-        case "TEXTAREA":
-          active.blur();
-          break;
-        default:
-          active = null;
-          break;
-      }
-      return selection.removeAllRanges(), function() {
-        selection.type === "Caret" && selection.removeAllRanges(), selection.rangeCount || ranges.forEach(function(range) {
-          selection.addRange(range);
-        }), active && active.focus();
-      };
+// ../../node_modules/picocolors/picocolors.browser.js
+var require_picocolors_browser = __commonJS({
+  "../../node_modules/picocolors/picocolors.browser.js"(exports, module) {
+    var x2 = String, create4 = function() {
+      return { isColorSupported: !1, reset: x2, bold: x2, dim: x2, italic: x2, underline: x2, inverse: x2, hidden: x2, strikethrough: x2, black: x2, red: x2, green: x2, yellow: x2, blue: x2, magenta: x2, cyan: x2, white: x2, gray: x2, bgBlack: x2, bgRed: x2, bgGreen: x2, bgYellow: x2, bgBlue: x2, bgMagenta: x2, bgCyan: x2, bgWhite: x2, blackBright: x2, redBright: x2, greenBright: x2, yellowBright: x2, blueBright: x2, magentaBright: x2, cyanBright: x2, whiteBright: x2, bgBlackBright: x2, bgRedBright: x2, bgGreenBright: x2, bgYellowBright: x2, bgBlueBright: x2, bgMagentaBright: x2, bgCyanBright: x2, bgWhiteBright: x2 };
     };
-  }
-});
-
-// ../../node_modules/copy-to-clipboard/index.js
-var require_copy_to_clipboard = __commonJS({
-  "../../node_modules/copy-to-clipboard/index.js"(exports, module) {
-    "use strict";
-    var deselectCurrent = require_toggle_selection(), clipboardToIE11Formatting = {
-      "text/plain": "Text",
-      "text/html": "Url",
-      default: "Text"
-    }, defaultMessage = "Copy to clipboard: #{key}, Enter";
-    function format(message) {
-      var copyKey = (/mac os x/i.test(navigator.userAgent) ? "\u2318" : "Ctrl") + "+C";
-      return message.replace(/#{\s*key\s*}/g, copyKey);
-    }
-    function copy3(text, options2) {
-      var debug, message, reselectPrevious, range, selection, mark, success = !1;
-      options2 || (options2 = {}), debug = options2.debug || !1;
-      try {
-        reselectPrevious = deselectCurrent(), range = document.createRange(), selection = document.getSelection(), mark = document.createElement("span"), mark.textContent = text, mark.ariaHidden = "true", mark.style.all = "unset", mark.style.position = "fixed", mark.style.top = 0, mark.style.clip = "rect(0, 0, 0, 0)", mark.style.whiteSpace = "pre", mark.style.webkitUserSelect = "text", mark.style.MozUserSelect = "text", mark.style.msUserSelect = "text", mark.style.userSelect = "text", mark.addEventListener("copy", function(e2) {
-          if (e2.stopPropagation(), options2.format)
-            if (e2.preventDefault(), typeof e2.clipboardData > "u") {
-              debug && console.warn("unable to use e.clipboardData"), debug && console.warn("trying IE specific stuff"), window.clipboardData.clearData();
-              var format2 = clipboardToIE11Formatting[options2.format] || clipboardToIE11Formatting.default;
-              window.clipboardData.setData(format2, text);
-            } else
-              e2.clipboardData.clearData(), e2.clipboardData.setData(options2.format, text);
-          options2.onCopy && (e2.preventDefault(), options2.onCopy(e2.clipboardData));
-        }), document.body.appendChild(mark), range.selectNodeContents(mark), selection.addRange(range);
-        var successful = document.execCommand("copy");
-        if (!successful)
-          throw new Error("copy command was unsuccessful");
-        success = !0;
-      } catch (err) {
-        debug && console.error("unable to copy using execCommand: ", err), debug && console.warn("trying IE specific stuff");
-        try {
-          window.clipboardData.setData(options2.format || "text", text), options2.onCopy && options2.onCopy(window.clipboardData), success = !0;
-        } catch (err2) {
-          debug && console.error("unable to copy using clipboardData: ", err2), debug && console.error("falling back to prompt"), message = format("message" in options2 ? options2.message : defaultMessage), window.prompt(message, text);
-        }
-      } finally {
-        selection && (typeof selection.removeRange == "function" ? selection.removeRange(range) : selection.removeAllRanges()), mark && document.body.removeChild(mark), reselectPrevious();
-      }
-      return success;
-    }
-    module.exports = copy3;
+    module.exports = create4();
+    module.exports.createColors = create4;
   }
 });
 
@@ -528,7 +472,7 @@ var require_scroll = __commonJS({
     };
     function make(prop) {
       return function(el, to, opts, cb) {
-        opts = opts || {}, typeof opts == "function" && (cb = opts, opts = {}), typeof cb != "function" && (cb = noop5);
+        opts = opts || {}, typeof opts == "function" && (cb = opts, opts = {}), typeof cb != "function" && (cb = noop6);
         var start = ms(), from = el[prop], ease = opts.ease || inOutSine, duration = isNaN(opts.duration) ? 350 : +opts.duration, cancelled = !1;
         return from === to ? cb(E_NOSCROLL, el[prop]) : requestAnimationFrame(animate), cancel;
         function cancel() {
@@ -546,7 +490,7 @@ var require_scroll = __commonJS({
     function inOutSine(n3) {
       return 0.5 * (1 - Math.cos(Math.PI * n3));
     }
-    function noop5() {
+    function noop6() {
     }
   }
 });
@@ -606,7 +550,7 @@ var require_cjs = __commonJS({
       var stringValue = Object.prototype.toString.call(value);
       return stringValue === "[object RegExp]" || stringValue === "[object Date]" || isReactElement(value);
     }
-    var canUseSymbol = typeof Symbol == "function" && Symbol.for, REACT_ELEMENT_TYPE = canUseSymbol ? Symbol.for("react.element") : 60103;
+    var canUseSymbol = typeof Symbol == "function" && Symbol.for, REACT_ELEMENT_TYPE = canUseSymbol ? /* @__PURE__ */ Symbol.for("react.element") : 60103;
     function isReactElement(value) {
       return value.$$typeof === REACT_ELEMENT_TYPE;
     }
@@ -674,12 +618,12 @@ var require_cjs = __commonJS({
 var require_react_is_production_min = __commonJS({
   "../../node_modules/downshift/node_modules/react-is/cjs/react-is.production.min.js"(exports) {
     "use strict";
-    var b2 = Symbol.for("react.element"), c2 = Symbol.for("react.portal"), d2 = Symbol.for("react.fragment"), e2 = Symbol.for("react.strict_mode"), f2 = Symbol.for("react.profiler"), g2 = Symbol.for("react.provider"), h2 = Symbol.for("react.context"), k2 = Symbol.for("react.server_context"), l3 = Symbol.for("react.forward_ref"), m2 = Symbol.for("react.suspense"), n3 = Symbol.for("react.suspense_list"), p2 = Symbol.for("react.memo"), q2 = Symbol.for("react.lazy"), t2 = Symbol.for("react.offscreen"), u2;
-    u2 = Symbol.for("react.module.reference");
+    var b2 = /* @__PURE__ */ Symbol.for("react.element"), c2 = /* @__PURE__ */ Symbol.for("react.portal"), d2 = /* @__PURE__ */ Symbol.for("react.fragment"), e2 = /* @__PURE__ */ Symbol.for("react.strict_mode"), f2 = /* @__PURE__ */ Symbol.for("react.profiler"), g2 = /* @__PURE__ */ Symbol.for("react.provider"), h2 = /* @__PURE__ */ Symbol.for("react.context"), k2 = /* @__PURE__ */ Symbol.for("react.server_context"), l3 = /* @__PURE__ */ Symbol.for("react.forward_ref"), m2 = /* @__PURE__ */ Symbol.for("react.suspense"), n3 = /* @__PURE__ */ Symbol.for("react.suspense_list"), p2 = /* @__PURE__ */ Symbol.for("react.memo"), q2 = /* @__PURE__ */ Symbol.for("react.lazy"), t2 = /* @__PURE__ */ Symbol.for("react.offscreen"), u2;
+    u2 = /* @__PURE__ */ Symbol.for("react.module.reference");
     function v2(a2) {
       if (typeof a2 == "object" && a2 !== null) {
-        var r3 = a2.$$typeof;
-        switch (r3) {
+        var r4 = a2.$$typeof;
+        switch (r4) {
           case b2:
             switch (a2 = a2.type, a2) {
               case d2:
@@ -698,11 +642,11 @@ var require_react_is_production_min = __commonJS({
                   case g2:
                     return a2;
                   default:
-                    return r3;
+                    return r4;
                 }
             }
           case c2:
-            return r3;
+            return r4;
         }
       }
     }
@@ -783,33 +727,33 @@ var require_fuse = __commonJS({
     })(exports, function() {
       return (function(e2) {
         var t2 = {};
-        function r3(n3) {
+        function r4(n3) {
           if (t2[n3]) return t2[n3].exports;
           var o3 = t2[n3] = { i: n3, l: !1, exports: {} };
-          return e2[n3].call(o3.exports, o3, o3.exports, r3), o3.l = !0, o3.exports;
+          return e2[n3].call(o3.exports, o3, o3.exports, r4), o3.l = !0, o3.exports;
         }
-        return r3.m = e2, r3.c = t2, r3.d = function(e3, t3, n3) {
-          r3.o(e3, t3) || Object.defineProperty(e3, t3, { enumerable: !0, get: n3 });
-        }, r3.r = function(e3) {
+        return r4.m = e2, r4.c = t2, r4.d = function(e3, t3, n3) {
+          r4.o(e3, t3) || Object.defineProperty(e3, t3, { enumerable: !0, get: n3 });
+        }, r4.r = function(e3) {
           typeof Symbol < "u" && Symbol.toStringTag && Object.defineProperty(e3, Symbol.toStringTag, { value: "Module" }), Object.defineProperty(e3, "__esModule", { value: !0 });
-        }, r3.t = function(e3, t3) {
-          if (1 & t3 && (e3 = r3(e3)), 8 & t3 || 4 & t3 && typeof e3 == "object" && e3 && e3.__esModule) return e3;
+        }, r4.t = function(e3, t3) {
+          if (1 & t3 && (e3 = r4(e3)), 8 & t3 || 4 & t3 && typeof e3 == "object" && e3 && e3.__esModule) return e3;
           var n3 = /* @__PURE__ */ Object.create(null);
-          if (r3.r(n3), Object.defineProperty(n3, "default", { enumerable: !0, value: e3 }), 2 & t3 && typeof e3 != "string") for (var o3 in e3) r3.d(n3, o3, function(t4) {
+          if (r4.r(n3), Object.defineProperty(n3, "default", { enumerable: !0, value: e3 }), 2 & t3 && typeof e3 != "string") for (var o3 in e3) r4.d(n3, o3, function(t4) {
             return e3[t4];
           }.bind(null, o3));
           return n3;
-        }, r3.n = function(e3) {
+        }, r4.n = function(e3) {
           var t3 = e3 && e3.__esModule ? function() {
             return e3.default;
           } : function() {
             return e3;
           };
-          return r3.d(t3, "a", t3), t3;
-        }, r3.o = function(e3, t3) {
+          return r4.d(t3, "a", t3), t3;
+        }, r4.o = function(e3, t3) {
           return Object.prototype.hasOwnProperty.call(e3, t3);
-        }, r3.p = "", r3(r3.s = 0);
-      })([function(e2, t2, r3) {
+        }, r4.p = "", r4(r4.s = 0);
+      })([function(e2, t2, r4) {
         function n3(e3) {
           return (n3 = typeof Symbol == "function" && typeof Symbol.iterator == "symbol" ? function(e4) {
             return typeof e4;
@@ -818,25 +762,25 @@ var require_fuse = __commonJS({
           })(e3);
         }
         function o3(e3, t3) {
-          for (var r4 = 0; r4 < t3.length; r4++) {
-            var n4 = t3[r4];
+          for (var r5 = 0; r5 < t3.length; r5++) {
+            var n4 = t3[r5];
             n4.enumerable = n4.enumerable || !1, n4.configurable = !0, "value" in n4 && (n4.writable = !0), Object.defineProperty(e3, n4.key, n4);
           }
         }
-        var i2 = r3(1), a2 = r3(7), s2 = a2.get, c2 = (a2.deepValue, a2.isArray), h2 = (function() {
-          function e3(t4, r5) {
-            var n4 = r5.location, o4 = n4 === void 0 ? 0 : n4, i3 = r5.distance, a4 = i3 === void 0 ? 100 : i3, c3 = r5.threshold, h3 = c3 === void 0 ? 0.6 : c3, l3 = r5.maxPatternLength, u2 = l3 === void 0 ? 32 : l3, f2 = r5.caseSensitive, v2 = f2 !== void 0 && f2, p2 = r5.tokenSeparator, d2 = p2 === void 0 ? / +/g : p2, g2 = r5.findAllMatches, y2 = g2 !== void 0 && g2, m2 = r5.minMatchCharLength, k2 = m2 === void 0 ? 1 : m2, b2 = r5.id, S2 = b2 === void 0 ? null : b2, x2 = r5.keys, M2 = x2 === void 0 ? [] : x2, _2 = r5.shouldSort, w2 = _2 === void 0 || _2, L3 = r5.getFn, A3 = L3 === void 0 ? s2 : L3, O2 = r5.sortFn, C2 = O2 === void 0 ? function(e4, t5) {
+        var i2 = r4(1), a2 = r4(7), s2 = a2.get, c2 = (a2.deepValue, a2.isArray), h2 = (function() {
+          function e3(t4, r6) {
+            var n4 = r6.location, o4 = n4 === void 0 ? 0 : n4, i3 = r6.distance, a4 = i3 === void 0 ? 100 : i3, c3 = r6.threshold, h3 = c3 === void 0 ? 0.6 : c3, l3 = r6.maxPatternLength, u2 = l3 === void 0 ? 32 : l3, f2 = r6.caseSensitive, v2 = f2 !== void 0 && f2, p2 = r6.tokenSeparator, d2 = p2 === void 0 ? / +/g : p2, g2 = r6.findAllMatches, y2 = g2 !== void 0 && g2, m2 = r6.minMatchCharLength, k2 = m2 === void 0 ? 1 : m2, b2 = r6.id, S2 = b2 === void 0 ? null : b2, x2 = r6.keys, M2 = x2 === void 0 ? [] : x2, _2 = r6.shouldSort, w2 = _2 === void 0 || _2, L3 = r6.getFn, A3 = L3 === void 0 ? s2 : L3, O2 = r6.sortFn, C2 = O2 === void 0 ? function(e4, t5) {
               return e4.score - t5.score;
-            } : O2, j2 = r5.tokenize, P3 = j2 !== void 0 && j2, I2 = r5.matchAllTokens, F2 = I2 !== void 0 && I2, T3 = r5.includeMatches, N2 = T3 !== void 0 && T3, z2 = r5.includeScore, E2 = z2 !== void 0 && z2, W2 = r5.verbose, K2 = W2 !== void 0 && W2;
+            } : O2, j2 = r6.tokenize, P3 = j2 !== void 0 && j2, I2 = r6.matchAllTokens, F2 = I2 !== void 0 && I2, T3 = r6.includeMatches, N2 = T3 !== void 0 && T3, z2 = r6.includeScore, E2 = z2 !== void 0 && z2, W2 = r6.verbose, K2 = W2 !== void 0 && W2;
             (function(e4, t5) {
               if (!(e4 instanceof t5)) throw new TypeError("Cannot call a class as a function");
             })(this, e3), this.options = { location: o4, distance: a4, threshold: h3, maxPatternLength: u2, isCaseSensitive: v2, tokenSeparator: d2, findAllMatches: y2, minMatchCharLength: k2, id: S2, keys: M2, includeMatches: N2, includeScore: E2, shouldSort: w2, getFn: A3, sortFn: C2, verbose: K2, tokenize: P3, matchAllTokens: F2 }, this.setCollection(t4), this._processKeys(M2);
           }
-          var t3, r4, a3;
-          return t3 = e3, (r4 = [{ key: "setCollection", value: function(e4) {
+          var t3, r5, a3;
+          return t3 = e3, (r5 = [{ key: "setCollection", value: function(e4) {
             return this.list = e4, e4;
           } }, { key: "_processKeys", value: function(e4) {
-            if (this._keyWeights = {}, this._keyNames = [], e4.length && typeof e4[0] == "string") for (var t4 = 0, r5 = e4.length; t4 < r5; t4 += 1) {
+            if (this._keyWeights = {}, this._keyNames = [], e4.length && typeof e4[0] == "string") for (var t4 = 0, r6 = e4.length; t4 < r6; t4 += 1) {
               var n4 = e4[t4];
               this._keyWeights[n4] = 1, this._keyNames.push(n4);
             }
@@ -856,54 +800,54 @@ var require_fuse = __commonJS({
             var t4 = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : { limit: !1 };
             this._log(`---------
 Search pattern: "`.concat(e4, '"'));
-            var r5 = this._prepareSearchers(e4), n4 = r5.tokenSearchers, o4 = r5.fullSearcher, i3 = this._search(n4, o4);
+            var r6 = this._prepareSearchers(e4), n4 = r6.tokenSearchers, o4 = r6.fullSearcher, i3 = this._search(n4, o4);
             return this._computeScore(i3), this.options.shouldSort && this._sort(i3), t4.limit && typeof t4.limit == "number" && (i3 = i3.slice(0, t4.limit)), this._format(i3);
           } }, { key: "_prepareSearchers", value: function() {
             var e4 = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : "", t4 = [];
-            if (this.options.tokenize) for (var r5 = e4.split(this.options.tokenSeparator), n4 = 0, o4 = r5.length; n4 < o4; n4 += 1) t4.push(new i2(r5[n4], this.options));
+            if (this.options.tokenize) for (var r6 = e4.split(this.options.tokenSeparator), n4 = 0, o4 = r6.length; n4 < o4; n4 += 1) t4.push(new i2(r6[n4], this.options));
             return { tokenSearchers: t4, fullSearcher: new i2(e4, this.options) };
           } }, { key: "_search", value: function() {
-            var e4 = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : [], t4 = arguments.length > 1 ? arguments[1] : void 0, r5 = this.list, n4 = {}, o4 = [];
-            if (typeof r5[0] == "string") {
-              for (var i3 = 0, a4 = r5.length; i3 < a4; i3 += 1) this._analyze({ key: "", value: r5[i3], record: i3, index: i3 }, { resultMap: n4, results: o4, tokenSearchers: e4, fullSearcher: t4 });
+            var e4 = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : [], t4 = arguments.length > 1 ? arguments[1] : void 0, r6 = this.list, n4 = {}, o4 = [];
+            if (typeof r6[0] == "string") {
+              for (var i3 = 0, a4 = r6.length; i3 < a4; i3 += 1) this._analyze({ key: "", value: r6[i3], record: i3, index: i3 }, { resultMap: n4, results: o4, tokenSearchers: e4, fullSearcher: t4 });
               return o4;
             }
-            for (var s3 = 0, c3 = r5.length; s3 < c3; s3 += 1) for (var h3 = r5[s3], l3 = 0, u2 = this._keyNames.length; l3 < u2; l3 += 1) {
+            for (var s3 = 0, c3 = r6.length; s3 < c3; s3 += 1) for (var h3 = r6[s3], l3 = 0, u2 = this._keyNames.length; l3 < u2; l3 += 1) {
               var f2 = this._keyNames[l3];
               this._analyze({ key: f2, value: this.options.getFn(h3, f2), record: h3, index: s3 }, { resultMap: n4, results: o4, tokenSearchers: e4, fullSearcher: t4 });
             }
             return o4;
           } }, { key: "_analyze", value: function(e4, t4) {
-            var r5 = this, n4 = e4.key, o4 = e4.arrayIndex, i3 = o4 === void 0 ? -1 : o4, a4 = e4.value, s3 = e4.record, h3 = e4.index, l3 = t4.tokenSearchers, u2 = l3 === void 0 ? [] : l3, f2 = t4.fullSearcher, v2 = t4.resultMap, p2 = v2 === void 0 ? {} : v2, d2 = t4.results, g2 = d2 === void 0 ? [] : d2;
+            var r6 = this, n4 = e4.key, o4 = e4.arrayIndex, i3 = o4 === void 0 ? -1 : o4, a4 = e4.value, s3 = e4.record, h3 = e4.index, l3 = t4.tokenSearchers, u2 = l3 === void 0 ? [] : l3, f2 = t4.fullSearcher, v2 = t4.resultMap, p2 = v2 === void 0 ? {} : v2, d2 = t4.results, g2 = d2 === void 0 ? [] : d2;
             (function e5(t5, o5, i4, a5) {
               if (o5 != null) {
                 if (typeof o5 == "string") {
                   var s4 = !1, h4 = -1, l4 = 0;
-                  r5._log(`
+                  r6._log(`
 Key: `.concat(n4 === "" ? "--" : n4));
                   var v3 = f2.search(o5);
-                  if (r5._log('Full text: "'.concat(o5, '", score: ').concat(v3.score)), r5.options.tokenize) {
-                    for (var d3 = o5.split(r5.options.tokenSeparator), y2 = d3.length, m2 = [], k2 = 0, b2 = u2.length; k2 < b2; k2 += 1) {
+                  if (r6._log('Full text: "'.concat(o5, '", score: ').concat(v3.score)), r6.options.tokenize) {
+                    for (var d3 = o5.split(r6.options.tokenSeparator), y2 = d3.length, m2 = [], k2 = 0, b2 = u2.length; k2 < b2; k2 += 1) {
                       var S2 = u2[k2];
-                      r5._log(`
+                      r6._log(`
 Pattern: "`.concat(S2.pattern, '"'));
                       for (var x2 = !1, M2 = 0; M2 < y2; M2 += 1) {
                         var _2 = d3[M2], w2 = S2.search(_2), L3 = {};
-                        w2.isMatch ? (L3[_2] = w2.score, s4 = !0, x2 = !0, m2.push(w2.score)) : (L3[_2] = 1, r5.options.matchAllTokens || m2.push(1)), r5._log('Token: "'.concat(_2, '", score: ').concat(L3[_2]));
+                        w2.isMatch ? (L3[_2] = w2.score, s4 = !0, x2 = !0, m2.push(w2.score)) : (L3[_2] = 1, r6.options.matchAllTokens || m2.push(1)), r6._log('Token: "'.concat(_2, '", score: ').concat(L3[_2]));
                       }
                       x2 && (l4 += 1);
                     }
                     h4 = m2[0];
                     for (var A3 = m2.length, O2 = 1; O2 < A3; O2 += 1) h4 += m2[O2];
-                    h4 /= A3, r5._log("Token score average:", h4);
+                    h4 /= A3, r6._log("Token score average:", h4);
                   }
                   var C2 = v3.score;
-                  h4 > -1 && (C2 = (C2 + h4) / 2), r5._log("Score average:", C2);
-                  var j2 = !r5.options.tokenize || !r5.options.matchAllTokens || l4 >= u2.length;
-                  if (r5._log(`
+                  h4 > -1 && (C2 = (C2 + h4) / 2), r6._log("Score average:", C2);
+                  var j2 = !r6.options.tokenize || !r6.options.matchAllTokens || l4 >= u2.length;
+                  if (r6._log(`
 Check Matches: `.concat(j2)), (s4 || v3.isMatch) && j2) {
                     var P3 = { key: n4, arrayIndex: t5, value: o5, score: C2 };
-                    r5.options.includeMatches && (P3.matchedIndices = v3.matchedIndices);
+                    r6.options.includeMatches && (P3.matchedIndices = v3.matchedIndices);
                     var I2 = p2[a5];
                     I2 ? I2.output.push(P3) : (p2[a5] = { item: i4, output: [P3] }, g2.push(p2[a5]));
                   }
@@ -915,9 +859,9 @@ Check Matches: `.concat(j2)), (s4 || v3.isMatch) && j2) {
 
 Computing score:
 `);
-            for (var t4 = this._keyWeights, r5 = !!Object.keys(t4).length, n4 = 0, o4 = e4.length; n4 < o4; n4 += 1) {
+            for (var t4 = this._keyWeights, r6 = !!Object.keys(t4).length, n4 = 0, o4 = e4.length; n4 < o4; n4 += 1) {
               for (var i3 = e4[n4], a4 = i3.output, s3 = a4.length, c3 = 1, h3 = 0; h3 < s3; h3 += 1) {
-                var l3 = a4[h3], u2 = l3.key, f2 = r5 ? t4[u2] : 1, v2 = l3.score === 0 && t4 && t4[u2] > 0 ? Number.EPSILON : l3.score;
+                var l3 = a4[h3], u2 = l3.key, f2 = r6 ? t4[u2] : 1, v2 = l3.score === 0 && t4 && t4[u2] > 0 ? Number.EPSILON : l3.score;
                 c3 *= Math.pow(v2, f2);
               }
               i3.score = c3, this._log(i3);
@@ -929,25 +873,25 @@ Sorting....`), e4.sort(this.options.sortFn);
           } }, { key: "_format", value: function(e4) {
             var t4 = [];
             if (this.options.verbose) {
-              var r5 = [];
+              var r6 = [];
               this._log(`
 
 Output:
 
 `, JSON.stringify(e4, function(e5, t5) {
                 if (n3(t5) === "object" && t5 !== null) {
-                  if (r5.indexOf(t5) !== -1) return;
-                  r5.push(t5);
+                  if (r6.indexOf(t5) !== -1) return;
+                  r6.push(t5);
                 }
                 return t5;
-              }, 2)), r5 = null;
+              }, 2)), r6 = null;
             }
             var o4 = [];
             this.options.includeMatches && o4.push(function(e5, t5) {
-              var r6 = e5.output;
+              var r7 = e5.output;
               t5.matches = [];
-              for (var n4 = 0, o5 = r6.length; n4 < o5; n4 += 1) {
-                var i4 = r6[n4];
+              for (var n4 = 0, o5 = r7.length; n4 < o5; n4 += 1) {
+                var i4 = r7[n4];
                 if (i4.matchedIndices.length !== 0) {
                   var a5 = { indices: i4.matchedIndices, value: i4.value };
                   i4.key && (a5.key = i4.key), i4.hasOwnProperty("arrayIndex") && i4.arrayIndex > -1 && (a5.arrayIndex = i4.arrayIndex), t5.matches.push(a5);
@@ -967,27 +911,27 @@ Output:
           } }, { key: "_log", value: function() {
             var e4;
             this.options.verbose && (e4 = console).log.apply(e4, arguments);
-          } }]) && o3(t3.prototype, r4), a3 && o3(t3, a3), e3;
+          } }]) && o3(t3.prototype, r5), a3 && o3(t3, a3), e3;
         })();
         e2.exports = h2;
-      }, function(e2, t2, r3) {
+      }, function(e2, t2, r4) {
         function n3(e3, t3) {
-          for (var r4 = 0; r4 < t3.length; r4++) {
-            var n4 = t3[r4];
+          for (var r5 = 0; r5 < t3.length; r5++) {
+            var n4 = t3[r5];
             n4.enumerable = n4.enumerable || !1, n4.configurable = !0, "value" in n4 && (n4.writable = !0), Object.defineProperty(e3, n4.key, n4);
           }
         }
-        var o3 = r3(2), i2 = r3(3), a2 = r3(6), s2 = (function() {
-          function e3(t4, r5) {
-            var n4 = r5.location, o4 = n4 === void 0 ? 0 : n4, i3 = r5.distance, s4 = i3 === void 0 ? 100 : i3, c2 = r5.threshold, h2 = c2 === void 0 ? 0.6 : c2, l3 = r5.maxPatternLength, u2 = l3 === void 0 ? 32 : l3, f2 = r5.isCaseSensitive, v2 = f2 !== void 0 && f2, p2 = r5.tokenSeparator, d2 = p2 === void 0 ? / +/g : p2, g2 = r5.findAllMatches, y2 = g2 !== void 0 && g2, m2 = r5.minMatchCharLength, k2 = m2 === void 0 ? 1 : m2, b2 = r5.includeMatches, S2 = b2 !== void 0 && b2;
+        var o3 = r4(2), i2 = r4(3), a2 = r4(6), s2 = (function() {
+          function e3(t4, r6) {
+            var n4 = r6.location, o4 = n4 === void 0 ? 0 : n4, i3 = r6.distance, s4 = i3 === void 0 ? 100 : i3, c2 = r6.threshold, h2 = c2 === void 0 ? 0.6 : c2, l3 = r6.maxPatternLength, u2 = l3 === void 0 ? 32 : l3, f2 = r6.isCaseSensitive, v2 = f2 !== void 0 && f2, p2 = r6.tokenSeparator, d2 = p2 === void 0 ? / +/g : p2, g2 = r6.findAllMatches, y2 = g2 !== void 0 && g2, m2 = r6.minMatchCharLength, k2 = m2 === void 0 ? 1 : m2, b2 = r6.includeMatches, S2 = b2 !== void 0 && b2;
             (function(e4, t5) {
               if (!(e4 instanceof t5)) throw new TypeError("Cannot call a class as a function");
             })(this, e3), this.options = { location: o4, distance: s4, threshold: h2, maxPatternLength: u2, isCaseSensitive: v2, tokenSeparator: d2, findAllMatches: y2, includeMatches: S2, minMatchCharLength: k2 }, this.pattern = v2 ? t4 : t4.toLowerCase(), this.pattern.length <= u2 && (this.patternAlphabet = a2(this.pattern));
           }
-          var t3, r4, s3;
-          return t3 = e3, (r4 = [{ key: "search", value: function(e4) {
-            var t4 = this.options, r5 = t4.isCaseSensitive, n4 = t4.includeMatches;
-            if (r5 || (e4 = e4.toLowerCase()), this.pattern === e4) {
+          var t3, r5, s3;
+          return t3 = e3, (r5 = [{ key: "search", value: function(e4) {
+            var t4 = this.options, r6 = t4.isCaseSensitive, n4 = t4.includeMatches;
+            if (r6 || (e4 = e4.toLowerCase()), this.pattern === e4) {
               var a3 = { isMatch: !0, score: 0 };
               return n4 && (a3.matchedIndices = [[0, e4.length - 1]]), a3;
             }
@@ -995,22 +939,22 @@ Output:
             if (this.pattern.length > c2) return o3(e4, this.pattern, h2);
             var l3 = this.options, u2 = l3.location, f2 = l3.distance, v2 = l3.threshold, p2 = l3.findAllMatches, d2 = l3.minMatchCharLength;
             return i2(e4, this.pattern, this.patternAlphabet, { location: u2, distance: f2, threshold: v2, findAllMatches: p2, minMatchCharLength: d2, includeMatches: n4 });
-          } }]) && n3(t3.prototype, r4), s3 && n3(t3, s3), e3;
+          } }]) && n3(t3.prototype, r5), s3 && n3(t3, s3), e3;
         })();
         e2.exports = s2;
       }, function(e2, t2) {
-        var r3 = /[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g;
+        var r4 = /[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g;
         e2.exports = function(e3, t3) {
-          var n3 = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : / +/g, o3 = new RegExp(t3.replace(r3, "\\$&").replace(n3, "|")), i2 = e3.match(o3), a2 = !!i2, s2 = [];
+          var n3 = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : / +/g, o3 = new RegExp(t3.replace(r4, "\\$&").replace(n3, "|")), i2 = e3.match(o3), a2 = !!i2, s2 = [];
           if (a2) for (var c2 = 0, h2 = i2.length; c2 < h2; c2 += 1) {
             var l3 = i2[c2];
             s2.push([e3.indexOf(l3), l3.length - 1]);
           }
           return { score: a2 ? 0.5 : 1, isMatch: a2, matchedIndices: s2 };
         };
-      }, function(e2, t2, r3) {
-        var n3 = r3(4), o3 = r3(5);
-        e2.exports = function(e3, t3, r4, i2) {
+      }, function(e2, t2, r4) {
+        var n3 = r4(4), o3 = r4(5);
+        e2.exports = function(e3, t3, r5, i2) {
           for (var a2 = i2.location, s2 = a2 === void 0 ? 0 : a2, c2 = i2.distance, h2 = c2 === void 0 ? 100 : c2, l3 = i2.threshold, u2 = l3 === void 0 ? 0.6 : l3, f2 = i2.findAllMatches, v2 = f2 !== void 0 && f2, p2 = i2.minMatchCharLength, d2 = p2 === void 0 ? 1 : p2, g2 = i2.includeMatches, y2 = g2 !== void 0 && g2, m2 = s2, k2 = e3.length, b2 = u2, S2 = e3.indexOf(t3, m2), x2 = t3.length, M2 = [], _2 = 0; _2 < k2; _2 += 1) M2[_2] = 0;
           if (S2 !== -1) {
             var w2 = n3(t3, { errors: 0, currentLocation: S2, expectedLocation: m2, distance: h2 });
@@ -1027,7 +971,7 @@ Output:
             var T3 = Math.max(1, m2 - F2 + 1), N2 = v2 ? k2 : Math.min(m2 + F2, k2) + x2, z2 = Array(N2 + 2);
             z2[N2 + 1] = (1 << P3) - 1;
             for (var E2 = N2; E2 >= T3; E2 -= 1) {
-              var W2 = E2 - 1, K2 = r4[e3.charAt(W2)];
+              var W2 = E2 - 1, K2 = r5[e3.charAt(W2)];
               if (K2 && (M2[W2] = 1), z2[E2] = (z2[E2 + 1] << 1 | 1) & K2, P3 !== 0 && (z2[E2] |= (A3[E2 + 1] | A3[E2]) << 1 | 1 | A3[E2 + 1]), z2[E2] & j2 && (O2 = n3(t3, { errors: P3, currentLocation: W2, expectedLocation: m2, distance: h2 })) <= b2) {
                 if (b2 = O2, (S2 = W2) <= m2) break;
                 T3 = Math.max(1, 2 * m2 - S2);
@@ -1041,25 +985,25 @@ Output:
         };
       }, function(e2, t2) {
         e2.exports = function(e3, t3) {
-          var r3 = t3.errors, n3 = r3 === void 0 ? 0 : r3, o3 = t3.currentLocation, i2 = o3 === void 0 ? 0 : o3, a2 = t3.expectedLocation, s2 = a2 === void 0 ? 0 : a2, c2 = t3.distance, h2 = c2 === void 0 ? 100 : c2, l3 = n3 / e3.length, u2 = Math.abs(s2 - i2);
+          var r4 = t3.errors, n3 = r4 === void 0 ? 0 : r4, o3 = t3.currentLocation, i2 = o3 === void 0 ? 0 : o3, a2 = t3.expectedLocation, s2 = a2 === void 0 ? 0 : a2, c2 = t3.distance, h2 = c2 === void 0 ? 100 : c2, l3 = n3 / e3.length, u2 = Math.abs(s2 - i2);
           return h2 ? l3 + u2 / h2 : u2 ? 1 : l3;
         };
       }, function(e2, t2) {
         e2.exports = function() {
-          for (var e3 = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : [], t3 = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : 1, r3 = [], n3 = -1, o3 = -1, i2 = 0, a2 = e3.length; i2 < a2; i2 += 1) {
+          for (var e3 = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : [], t3 = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : 1, r4 = [], n3 = -1, o3 = -1, i2 = 0, a2 = e3.length; i2 < a2; i2 += 1) {
             var s2 = e3[i2];
-            s2 && n3 === -1 ? n3 = i2 : s2 || n3 === -1 || ((o3 = i2 - 1) - n3 + 1 >= t3 && r3.push([n3, o3]), n3 = -1);
+            s2 && n3 === -1 ? n3 = i2 : s2 || n3 === -1 || ((o3 = i2 - 1) - n3 + 1 >= t3 && r4.push([n3, o3]), n3 = -1);
           }
-          return e3[i2 - 1] && i2 - n3 >= t3 && r3.push([n3, i2 - 1]), r3;
+          return e3[i2 - 1] && i2 - n3 >= t3 && r4.push([n3, i2 - 1]), r4;
         };
       }, function(e2, t2) {
         e2.exports = function(e3) {
-          for (var t3 = {}, r3 = e3.length, n3 = 0; n3 < r3; n3 += 1) t3[e3.charAt(n3)] = 0;
-          for (var o3 = 0; o3 < r3; o3 += 1) t3[e3.charAt(o3)] |= 1 << r3 - o3 - 1;
+          for (var t3 = {}, r4 = e3.length, n3 = 0; n3 < r4; n3 += 1) t3[e3.charAt(n3)] = 0;
+          for (var o3 = 0; o3 < r4; o3 += 1) t3[e3.charAt(o3)] |= 1 << r4 - o3 - 1;
           return t3;
         };
       }, function(e2, t2) {
-        var r3 = function(e3) {
+        var r4 = function(e3) {
           return Array.isArray ? Array.isArray(e3) : Object.prototype.toString.call(e3) === "[object Array]";
         }, n3 = function(e3) {
           return e3 == null ? "" : (function(e4) {
@@ -1079,12 +1023,12 @@ Output:
               var c2 = s2.indexOf("."), h2 = s2, l3 = null;
               c2 !== -1 && (h2 = s2.slice(0, c2), l3 = s2.slice(c2 + 1));
               var u2 = t4[h2];
-              if (u2 != null) if (l3 || !o3(u2) && !i2(u2)) if (r3(u2)) for (var f2 = 0, v2 = u2.length; f2 < v2; f2 += 1) e4(u2[f2], l3);
+              if (u2 != null) if (l3 || !o3(u2) && !i2(u2)) if (r4(u2)) for (var f2 = 0, v2 = u2.length; f2 < v2; f2 += 1) e4(u2[f2], l3);
               else l3 && e4(u2, l3);
               else a2.push(n3(u2));
             } else a2.push(t4);
           })(e3, t3), a2;
-        }, isArray: r3, isString: o3, isNum: i2, toString: n3 };
+        }, isArray: r4, isString: o3, isNum: i2, toString: n3 };
       }]);
     });
   }
@@ -1314,10 +1258,10 @@ var require_store2 = __commonJS({
 init_react();
 
 // global-externals:storybook/internal/channels
-var channels_default = __STORYBOOK_CHANNELS__, { Channel, HEARTBEAT_INTERVAL, HEARTBEAT_MAX_LATENCY, PostMessageTransport, WebsocketTransport, createBrowserChannel } = __STORYBOOK_CHANNELS__;
+var channels_default = __STORYBOOK_CHANNELS__, { Channel, HEARTBEAT_INTERVAL, HEARTBEAT_MAX_LATENCY, PostMessageTransport, SERVER_CHANNEL_PATH, WebsocketTransport, clearChannel, createBrowserChannel, ensureChannel, getChannel, installNoopChannel, requireChannel, setChannel } = __STORYBOOK_CHANNELS__;
 
 // global-externals:storybook/internal/core-events
-var core_events_default = __STORYBOOK_CORE_EVENTS__, { ARGTYPES_INFO_REQUEST, ARGTYPES_INFO_RESPONSE, CHANNEL_CREATED, CHANNEL_WS_DISCONNECT, CONFIG_ERROR, CREATE_NEW_STORYFILE_REQUEST, CREATE_NEW_STORYFILE_RESPONSE, CURRENT_STORY_WAS_SET, DOCS_PREPARED, DOCS_RENDERED, FILE_COMPONENT_SEARCH_REQUEST, FILE_COMPONENT_SEARCH_RESPONSE, FORCE_REMOUNT, FORCE_RE_RENDER, GHOST_STORIES_REQUEST, GHOST_STORIES_RESPONSE, GLOBALS_UPDATED, MANAGER_INERT_ATTRIBUTE_CHANGED, NAVIGATE_URL, OPEN_IN_EDITOR_REQUEST, OPEN_IN_EDITOR_RESPONSE, PLAY_FUNCTION_THREW_EXCEPTION, PRELOAD_ENTRIES, PREVIEW_BUILDER_PROGRESS, PREVIEW_INITIALIZED, PREVIEW_KEYDOWN, REGISTER_SUBSCRIPTION, REQUEST_WHATS_NEW_DATA, RESET_STORY_ARGS, RESULT_WHATS_NEW_DATA, SAVE_STORY_REQUEST, SAVE_STORY_RESPONSE, SELECT_STORY, SET_CONFIG, SET_CURRENT_STORY, SET_FILTER, SET_GLOBALS, SET_INDEX, SET_STORIES, SET_WHATS_NEW_CACHE, SHARED_STATE_CHANGED, SHARED_STATE_SET, STORIES_COLLAPSE_ALL, STORIES_EXPAND_ALL, STORY_ARGS_UPDATED, STORY_CHANGED, STORY_ERRORED, STORY_FINISHED, STORY_HOT_UPDATED, STORY_INDEX_INVALIDATED, STORY_MISSING, STORY_PREPARED, STORY_RENDERED, STORY_RENDER_PHASE_CHANGED, STORY_SPECIFIED, STORY_THREW_EXCEPTION, STORY_UNCHANGED, TELEMETRY_ERROR, TOGGLE_WHATS_NEW_NOTIFICATIONS, UNHANDLED_ERRORS_WHILE_PLAYING, UPDATE_GLOBALS, UPDATE_QUERY_PARAMS, UPDATE_STORY_ARGS } = __STORYBOOK_CORE_EVENTS__;
+var core_events_default = __STORYBOOK_CORE_EVENTS__, { AI_PROMPT_NUDGE, AI_SETUP_ANALYTICS_REQUEST, AI_SETUP_ANALYTICS_RESPONSE, ARGTYPES_INFO_REQUEST, ARGTYPES_INFO_RESPONSE, CHANNEL_CREATED, CHANNEL_WS_DISCONNECT, CONFIG_ERROR, CREATE_NEW_STORYFILE_REQUEST, CREATE_NEW_STORYFILE_RESPONSE, CURRENT_STORY_WAS_SET, DOCS_PREPARED, DOCS_RENDERED, FILE_COMPONENT_SEARCH_REQUEST, FILE_COMPONENT_SEARCH_RESPONSE, FORCE_REMOUNT, FORCE_RE_RENDER, GHOST_STORIES_REQUEST, GHOST_STORIES_RESPONSE, GLOBALS_UPDATED, MANAGER_INERT_ATTRIBUTE_CHANGED, NAVIGATE_URL, OPEN_IN_EDITOR_REQUEST, OPEN_IN_EDITOR_RESPONSE, PLAY_FUNCTION_THREW_EXCEPTION, PRELOAD_ENTRIES, PREVIEW_BUILDER_PROGRESS, PREVIEW_INITIALIZED, PREVIEW_KEYDOWN, REGISTER_SUBSCRIPTION, REQUEST_WHATS_NEW_DATA, RESET_STORY_ARGS, RESULT_WHATS_NEW_DATA, SAVE_STORY_REQUEST, SAVE_STORY_RESPONSE, SELECT_STORY, SET_CONFIG, SET_CURRENT_STORY, SET_FILTER, SET_GLOBALS, SET_INDEX, SET_STORIES, SET_WHATS_NEW_CACHE, SHARED_STATE_CHANGED, SHARED_STATE_SET, SHARE_ISOLATE_MODE, SIDEBAR_FILTER_CHANGED, STORIES_COLLAPSE_ALL, STORIES_EXPAND_ALL, STORY_ARGS_UPDATED, STORY_CHANGED, STORY_ERRORED, STORY_FINISHED, STORY_HOT_UPDATED, STORY_INDEX_INVALIDATED, STORY_MISSING, STORY_PREPARED, STORY_RENDERED, STORY_RENDER_PHASE_CHANGED, STORY_SPECIFIED, STORY_THREW_EXCEPTION, STORY_UNCHANGED, TELEMETRY_ERROR, TOGGLE_WHATS_NEW_NOTIFICATIONS, UNHANDLED_ERRORS_WHILE_PLAYING, UPDATE_GLOBALS, UPDATE_QUERY_PARAMS, UPDATE_STORY_ARGS } = __STORYBOOK_CORE_EVENTS__;
 
 // ../../node_modules/@storybook/global/dist/index.mjs
 var scope = (() => {
@@ -1378,6 +1322,7 @@ __export(icons_exports, {
   ChangedIcon: () => ChangedIcon,
   ChatIcon: () => ChatIcon,
   CheckIcon: () => CheckIcon,
+  ChecklistIcon: () => ChecklistIcon,
   ChevronDownIcon: () => ChevronDownIcon,
   ChevronLeftIcon: () => ChevronLeftIcon,
   ChevronRightIcon: () => ChevronRightIcon,
@@ -1437,6 +1382,7 @@ __export(icons_exports, {
   FailedIcon: () => FailedIcon,
   FastForwardIcon: () => FastForwardIcon,
   FigmaIcon: () => FigmaIcon,
+  FilesIcon: () => FilesIcon,
   FilterIcon: () => FilterIcon,
   FlagIcon: () => FlagIcon,
   FolderIcon: () => FolderIcon,
@@ -1502,6 +1448,7 @@ __export(icons_exports, {
   PlusIcon: () => PlusIcon,
   PointerDefaultIcon: () => PointerDefaultIcon,
   PointerHandIcon: () => PointerHandIcon,
+  PopOutIcon: () => PopOutIcon,
   PowerIcon: () => PowerIcon,
   PrintIcon: () => PrintIcon,
   ProceedIcon: () => ProceedIcon,
@@ -1535,6 +1482,7 @@ __export(icons_exports, {
   StarIcon: () => StarIcon,
   StatusFailIcon: () => StatusFailIcon,
   StatusIcon: () => StatusIcon,
+  StatusNewIcon: () => StatusNewIcon,
   StatusPassIcon: () => StatusPassIcon,
   StatusWarnIcon: () => StatusWarnIcon,
   StickerIcon: () => StickerIcon,
@@ -1582,19 +1530,19 @@ __export(icons_exports, {
   default: () => icons_default,
   iconList: () => iconList
 });
-var icons_default = __STORYBOOK_ICONS__, { AccessibilityAltIcon, AccessibilityIcon, AccessibilityIgnoredIcon, AddIcon, AdminIcon, AlertAltIcon, AlertIcon, AlignLeftIcon, AlignRightIcon, AppleIcon, ArrowBottomLeftIcon, ArrowBottomRightIcon, ArrowDownIcon, ArrowLeftIcon, ArrowRightIcon, ArrowSolidDownIcon, ArrowSolidLeftIcon, ArrowSolidRightIcon, ArrowSolidUpIcon, ArrowTopLeftIcon, ArrowTopRightIcon, ArrowUpIcon, AzureDevOpsIcon, BackIcon, BasketIcon, BatchAcceptIcon, BatchDenyIcon, BeakerIcon, BellIcon, BitbucketIcon, BoldIcon, BookIcon, BookmarkHollowIcon, BookmarkIcon, BottomBarIcon, BottomBarToggleIcon, BoxIcon, BranchIcon, BrowserIcon, BugIcon, ButtonIcon, CPUIcon, CalendarIcon, CameraIcon, CameraStabilizeIcon, CategoryIcon, CertificateIcon, ChangedIcon, ChatIcon, CheckIcon, ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, ChevronSmallDownIcon, ChevronSmallLeftIcon, ChevronSmallRightIcon, ChevronSmallUpIcon, ChevronUpIcon, ChromaticIcon, ChromeIcon, CircleHollowIcon, CircleIcon, ClearIcon, CloseAltIcon, CloseIcon, CloudHollowIcon, CloudIcon, CogIcon, CollapseIcon, CommandIcon, CommentAddIcon, CommentIcon, CommentsIcon, CommitIcon, CompassIcon, ComponentDrivenIcon, ComponentIcon, ContrastIcon, ContrastIgnoredIcon, ControlsIcon, CopyIcon, CreditIcon, CrossIcon, DashboardIcon, DatabaseIcon, DeleteIcon, DiamondIcon, DirectionIcon, DiscordIcon, DocChartIcon, DocListIcon, DocumentIcon, DownloadIcon, DragIcon, EditIcon, EditorIcon, EllipsisIcon, EmailIcon, ExpandAltIcon, ExpandIcon, EyeCloseIcon, EyeIcon, FaceHappyIcon, FaceNeutralIcon, FaceSadIcon, FacebookIcon, FailedIcon, FastForwardIcon, FigmaIcon, FilterIcon, FlagIcon, FolderIcon, FormIcon, GDriveIcon, GiftIcon, GithubIcon, GitlabIcon, GlobeIcon, GoogleIcon, GraphBarIcon, GraphLineIcon, GraphqlIcon, GridAltIcon, GridIcon, GrowIcon, HeartHollowIcon, HeartIcon, HomeIcon, HourglassIcon, InfoIcon, ItalicIcon, JumpToIcon, KeyIcon, LightningIcon, LightningOffIcon, LinkBrokenIcon, LinkIcon, LinkedinIcon, LinuxIcon, ListOrderedIcon, ListUnorderedIcon, LocationIcon, LockIcon, MarkdownIcon, MarkupIcon, MediumIcon, MemoryIcon, MenuIcon, MergeIcon, MirrorIcon, MobileIcon, MoonIcon, NutIcon, OutboxIcon, OutlineIcon, PaintBrushAltIcon, PaintBrushIcon, PaperClipIcon, ParagraphIcon, PassedIcon, PhoneIcon, PhotoDragIcon, PhotoIcon, PhotoStabilizeIcon, PinAltIcon, PinIcon, PlayAllHollowIcon, PlayBackIcon, PlayHollowIcon, PlayIcon, PlayNextIcon, PlusIcon, PointerDefaultIcon, PointerHandIcon, PowerIcon, PrintIcon, ProceedIcon, ProfileIcon, PullRequestIcon, QuestionIcon, RSSIcon, RedirectIcon, ReduxIcon, RefreshIcon, ReplyIcon, RepoIcon, RequestChangeIcon, RewindIcon, RulerIcon, SaveIcon, SearchIcon, ShareAltIcon, ShareIcon, ShieldIcon, SideBySideIcon, SidebarAltIcon, SidebarAltToggleIcon, SidebarIcon, SidebarToggleIcon, SortDownIcon, SortUpIcon, SpeakerIcon, StackedIcon, StarHollowIcon, StarIcon, StatusFailIcon, StatusIcon, StatusPassIcon, StatusWarnIcon, StickerIcon, StopAltHollowIcon, StopAltIcon, StopIcon, StorybookIcon, StructureIcon, SubtractIcon, SunIcon, SupportIcon, SweepIcon, SwitchAltIcon, SyncIcon, TabletIcon, ThumbsUpIcon, TimeIcon, TimerIcon, TransferIcon, TrashIcon, TwitterIcon, TypeIcon, UbuntuIcon, UndoIcon, UnfoldIcon, UnlockIcon, UnpinIcon, UploadIcon, UserAddIcon, UserAltIcon, UserIcon, UsersIcon, VSCodeIcon, VerifiedIcon, VideoIcon, WandIcon, WatchIcon, WindowsIcon, WrenchIcon, XIcon, YoutubeIcon, ZoomIcon, ZoomOutIcon, ZoomResetIcon, iconList } = __STORYBOOK_ICONS__;
+var icons_default = __STORYBOOK_ICONS__, { AccessibilityAltIcon, AccessibilityIcon, AccessibilityIgnoredIcon, AddIcon, AdminIcon, AlertAltIcon, AlertIcon, AlignLeftIcon, AlignRightIcon, AppleIcon, ArrowBottomLeftIcon, ArrowBottomRightIcon, ArrowDownIcon, ArrowLeftIcon, ArrowRightIcon, ArrowSolidDownIcon, ArrowSolidLeftIcon, ArrowSolidRightIcon, ArrowSolidUpIcon, ArrowTopLeftIcon, ArrowTopRightIcon, ArrowUpIcon, AzureDevOpsIcon, BackIcon, BasketIcon, BatchAcceptIcon, BatchDenyIcon, BeakerIcon, BellIcon, BitbucketIcon, BoldIcon, BookIcon, BookmarkHollowIcon, BookmarkIcon, BottomBarIcon, BottomBarToggleIcon, BoxIcon, BranchIcon, BrowserIcon, BugIcon, ButtonIcon, CPUIcon, CalendarIcon, CameraIcon, CameraStabilizeIcon, CategoryIcon, CertificateIcon, ChangedIcon, ChatIcon, CheckIcon, ChecklistIcon, ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, ChevronSmallDownIcon, ChevronSmallLeftIcon, ChevronSmallRightIcon, ChevronSmallUpIcon, ChevronUpIcon, ChromaticIcon, ChromeIcon, CircleHollowIcon, CircleIcon, ClearIcon, CloseAltIcon, CloseIcon, CloudHollowIcon, CloudIcon, CogIcon, CollapseIcon, CommandIcon, CommentAddIcon, CommentIcon, CommentsIcon, CommitIcon, CompassIcon, ComponentDrivenIcon, ComponentIcon, ContrastIcon, ContrastIgnoredIcon, ControlsIcon, CopyIcon, CreditIcon, CrossIcon, DashboardIcon, DatabaseIcon, DeleteIcon, DiamondIcon, DirectionIcon, DiscordIcon, DocChartIcon, DocListIcon, DocumentIcon, DownloadIcon, DragIcon, EditIcon, EditorIcon, EllipsisIcon, EmailIcon, ExpandAltIcon, ExpandIcon, EyeCloseIcon, EyeIcon, FaceHappyIcon, FaceNeutralIcon, FaceSadIcon, FacebookIcon, FailedIcon, FastForwardIcon, FigmaIcon, FilesIcon, FilterIcon, FlagIcon, FolderIcon, FormIcon, GDriveIcon, GiftIcon, GithubIcon, GitlabIcon, GlobeIcon, GoogleIcon, GraphBarIcon, GraphLineIcon, GraphqlIcon, GridAltIcon, GridIcon, GrowIcon, HeartHollowIcon, HeartIcon, HomeIcon, HourglassIcon, InfoIcon, ItalicIcon, JumpToIcon, KeyIcon, LightningIcon, LightningOffIcon, LinkBrokenIcon, LinkIcon, LinkedinIcon, LinuxIcon, ListOrderedIcon, ListUnorderedIcon, LocationIcon, LockIcon, MarkdownIcon, MarkupIcon, MediumIcon, MemoryIcon, MenuIcon, MergeIcon, MirrorIcon, MobileIcon, MoonIcon, NutIcon, OutboxIcon, OutlineIcon, PaintBrushAltIcon, PaintBrushIcon, PaperClipIcon, ParagraphIcon, PassedIcon, PhoneIcon, PhotoDragIcon, PhotoIcon, PhotoStabilizeIcon, PinAltIcon, PinIcon, PlayAllHollowIcon, PlayBackIcon, PlayHollowIcon, PlayIcon, PlayNextIcon, PlusIcon, PointerDefaultIcon, PointerHandIcon, PopOutIcon, PowerIcon, PrintIcon, ProceedIcon, ProfileIcon, PullRequestIcon, QuestionIcon, RSSIcon, RedirectIcon, ReduxIcon, RefreshIcon, ReplyIcon, RepoIcon, RequestChangeIcon, RewindIcon, RulerIcon, SaveIcon, SearchIcon, ShareAltIcon, ShareIcon, ShieldIcon, SideBySideIcon, SidebarAltIcon, SidebarAltToggleIcon, SidebarIcon, SidebarToggleIcon, SortDownIcon, SortUpIcon, SpeakerIcon, StackedIcon, StarHollowIcon, StarIcon, StatusFailIcon, StatusIcon, StatusNewIcon, StatusPassIcon, StatusWarnIcon, StickerIcon, StopAltHollowIcon, StopAltIcon, StopIcon, StorybookIcon, StructureIcon, SubtractIcon, SunIcon, SupportIcon, SweepIcon, SwitchAltIcon, SyncIcon, TabletIcon, ThumbsUpIcon, TimeIcon, TimerIcon, TransferIcon, TrashIcon, TwitterIcon, TypeIcon, UbuntuIcon, UndoIcon, UnfoldIcon, UnlockIcon, UnpinIcon, UploadIcon, UserAddIcon, UserAltIcon, UserIcon, UsersIcon, VSCodeIcon, VerifiedIcon, VideoIcon, WandIcon, WatchIcon, WindowsIcon, WrenchIcon, XIcon, YoutubeIcon, ZoomIcon, ZoomOutIcon, ZoomResetIcon, iconList } = __STORYBOOK_ICONS__;
 
 // global-externals:storybook/manager-api
-var manager_api_default = __STORYBOOK_API__, { ActiveTabs, Consumer, ManagerContext, Provider, RequestResponseError, Tag, addons, combineParameters, controlOrMetaKey, controlOrMetaSymbol, eventMatchesShortcut, eventToShortcut, experimental_MockUniversalStore, experimental_UniversalStore, experimental_getStatusStore, experimental_getTestProviderStore, experimental_requestResponse, experimental_useStatusStore, experimental_useTestProviderStore, experimental_useUniversalStore, internal_checklistStore, internal_fullStatusStore, internal_fullTestProviderStore, internal_universalChecklistStore, internal_universalStatusStore, internal_universalTestProviderStore, isMacLike, isShortcutTaken, keyToSymbol, merge, mockChannel, optionOrAltSymbol, shortcutMatchesShortcut, shortcutToAriaKeyshortcuts, shortcutToHumanString, types, useAddonState, useArgTypes, useArgs, useChannel, useGlobalTypes, useGlobals, useParameter, useSharedState, useStoryPrepared, useStorybookApi, useStorybookState } = __STORYBOOK_API__;
+var manager_api_default = __STORYBOOK_API__, { ActiveTabs, Consumer, ManagerContext, Provider, RequestResponseError, Tag, addons, combineParameters, controlOrMetaKey, controlOrMetaSymbol, eventMatchesShortcut, eventToShortcut, experimental_MockUniversalStore, experimental_UniversalStore, experimental_getStatusStore, experimental_getTestProviderStore, experimental_requestResponse, experimental_useStatusStore, experimental_useTestProviderStore, experimental_useUniversalStore, getService, internal_checklistStore, internal_fullStatusStore, internal_fullTestProviderStore, internal_universalChecklistStore, internal_universalStatusStore, internal_universalTestProviderStore, isMacLike, isShortcutTaken, keyToSymbol, merge, mockChannel, optionOrAltSymbol, registerService, shortcutMatchesShortcut, shortcutToAriaKeyshortcuts, shortcutToHumanString, types, useAddonState, useArgTypes, useArgs, useChannel, useGlobalTypes, useGlobals, useParameter, useServiceCommand, useServiceQuery, useSharedState, useStoryPrepared, useStorybookApi, useStorybookState } = __STORYBOOK_API__;
 
 // global-externals:storybook/theming
-var theming_default = __STORYBOOK_THEMING__, { CacheProvider, ClassNames, Global, ThemeProvider, background, color, convert, create, createCache, createGlobal, createReset, css, darken, ensure, getPreferredColorScheme, ignoreSsrWarning, isPropValid, jsx, keyframes, lighten, styled, themes, tokens, typography, useTheme, withTheme } = __STORYBOOK_THEMING__;
+var theming_default = __STORYBOOK_THEMING__, { CacheProvider, ClassNames, Global, ThemeProvider, background, color, convert, create, createCache, createGlobal, createReset, css, darken, ensure, getPreferredColorScheme, ignoreSsrWarning, isPropValid, jsx, keyframes, lighten, srOnlyStyles, srOnlyUnsetStyles, styled, themes, tokens, typography, useTheme, withTheme } = __STORYBOOK_THEMING__;
 
 // src/toolbar/components/ToolbarManager.tsx
 init_react();
 
 // global-externals:storybook/internal/components
-var components_default = __STORYBOOK_COMPONENTS__, { A, AbstractToolbar, ActionBar, ActionList, AddonPanel, Badge, Bar, Blockquote, Button, Card, ClipboardCode, Code, Collapsible, DL, Div, DocumentWrapper, EmptyTabContent, ErrorFormatter, FlexBar, Form, H1, H2, H3, H4, H5, H6, HR, IconButton, Img, LI, Link, ListItem, Loader, Modal, ModalDecorator, OL, P, Placeholder, Popover, PopoverProvider, Pre, ProgressSpinner, ResetWrapper, ScrollArea, Select, Separator, Spaced, Span, StatelessTab, StatelessTabList, StatelessTabPanel, StatelessTabsView, StorybookIcon: StorybookIcon2, StorybookLogo, SyntaxHighlighter, TT, TabBar, TabButton, TabList, TabPanel, TabWrapper, Table, Tabs, TabsState, TabsView, ToggleButton, Toolbar, Tooltip, TooltipLinkList, TooltipMessage, TooltipNote, TooltipProvider, UL, WithTooltip, WithTooltipPure, Zoom, codeCommon, components, convertToReactAriaPlacement, createCopyToClipboardFunction, getStoryHref, interleaveSeparators, nameSpaceClassNames, resetComponents, useTabsState, withReset } = __STORYBOOK_COMPONENTS__;
+var components_default = __STORYBOOK_COMPONENTS__, { A, AbstractToolbar, ActionBar, ActionList, AddonPanel, Badge, Bar, Blockquote, Button, Card, ClipboardCode, Code, Collapsible, DL, Div, DocumentWrapper, EmptyTabContent, ErrorFormatter, FlexBar, Form, H1, H2, H3, H4, H5, H6, HR, IconButton, Img, LI, Link, ListItem, Loader, Modal, ModalDecorator, OL, P, Placeholder, Popover, PopoverProvider, Pre, ProgressSpinner, ResetWrapper, ScrollArea, Select, Separator, Spaced, Span, StatelessTab, StatelessTabList, StatelessTabPanel, StatelessTabsView, StorybookIcon: StorybookIcon2, StorybookLogo, SyntaxHighlighter, TT, TabBar, TabButton, TabList, TabPanel, TabWrapper, Table, Tabs, TabsState, TabsView, ToggleButton, Toolbar, Tooltip, TooltipLinkList, TooltipMessage, TooltipNote, TooltipProvider, UL, WithTooltip, WithTooltipPure, Zoom, codeCommon, components, convertToReactAriaPlacement, createCopyToClipboardFunction, getStoryHref, interleaveSeparators, nameSpaceClassNames, resetComponents, useCopyButton, useTabsState, withReset } = __STORYBOOK_COMPONENTS__;
 
 // src/toolbar/utils/normalize-toolbar-arg-type.ts
 var defaultItemValues = {
@@ -1671,6 +1619,7 @@ var NEW_ICON_MAP = icons_exports, Svg = styled.svg`
   facesad: "FaceSadIcon",
   accessibility: "AccessibilityIcon",
   accessibilityalt: "AccessibilityAltIcon",
+  accessibilityignored: "AccessibilityIgnoredIcon",
   arrowup: "ChevronUpIcon",
   arrowdown: "ChevronDownIcon",
   arrowleft: "ChevronLeftIcon",
@@ -1679,22 +1628,38 @@ var NEW_ICON_MAP = icons_exports, Svg = styled.svg`
   arrowdownalt: "ArrowDownIcon",
   arrowleftalt: "ArrowLeftIcon",
   arrowrightalt: "ArrowRightIcon",
+  arrowtopleft: "ArrowTopLeftIcon",
+  arrowtopright: "ArrowTopRightIcon",
+  arrowbottomleft: "ArrowBottomLeftIcon",
+  arrowbottomright: "ArrowBottomRightIcon",
+  arrowsolidup: "ArrowSolidUpIcon",
+  arrowsoliddown: "ArrowSolidDownIcon",
+  arrowsolidleft: "ArrowSolidLeftIcon",
+  arrowsolidright: "ArrowSolidRightIcon",
+  chevronsmallup: "ChevronSmallUpIcon",
+  chevronsmalldown: "ChevronSmallDownIcon",
+  chevronsmallleft: "ChevronSmallLeftIcon",
+  chevronsmallright: "ChevronSmallRightIcon",
   expandalt: "ExpandAltIcon",
   collapse: "CollapseIcon",
   expand: "ExpandIcon",
   unfold: "UnfoldIcon",
   transfer: "TransferIcon",
   redirect: "RedirectIcon",
+  jumpto: "JumpToIcon",
+  popout: "PopOutIcon",
   undo: "UndoIcon",
   reply: "ReplyIcon",
   sync: "SyncIcon",
   upload: "UploadIcon",
   download: "DownloadIcon",
+  save: "SaveIcon",
   back: "BackIcon",
   proceed: "ProceedIcon",
   refresh: "RefreshIcon",
   globe: "GlobeIcon",
   compass: "CompassIcon",
+  direction: "DirectionIcon",
   location: "LocationIcon",
   pin: "PinIcon",
   time: "TimeIcon",
@@ -1705,7 +1670,9 @@ var NEW_ICON_MAP = icons_exports, Svg = styled.svg`
   info: "InfoIcon",
   question: "QuestionIcon",
   support: "SupportIcon",
+  bug: "BugIcon",
   alert: "AlertIcon",
+  alertalt: "AlertAltIcon",
   email: "EmailIcon",
   phone: "PhoneIcon",
   link: "LinkIcon",
@@ -1716,6 +1683,7 @@ var NEW_ICON_MAP = icons_exports, Svg = styled.svg`
   share: "ShareIcon",
   circle: "CircleIcon",
   circlehollow: "CircleHollowIcon",
+  diamond: "DiamondIcon",
   bookmarkhollow: "BookmarkHollowIcon",
   bookmark: "BookmarkIcon",
   hearthollow: "HeartHollowIcon",
@@ -1730,13 +1698,19 @@ var NEW_ICON_MAP = icons_exports, Svg = styled.svg`
   beaker: "BeakerIcon",
   hourglass: "HourglassIcon",
   flag: "FlagIcon",
+  gift: "GiftIcon",
+  sticker: "StickerIcon",
   cloudhollow: "CloudHollowIcon",
+  cloud: "CloudIcon",
   edit: "EditIcon",
+  editor: "EditorIcon",
   cog: "CogIcon",
   nut: "NutIcon",
   wrench: "WrenchIcon",
+  wand: "WandIcon",
   ellipsis: "EllipsisIcon",
   check: "CheckIcon",
+  checklist: "ChecklistIcon",
   form: "FormIcon",
   batchdeny: "BatchDenyIcon",
   batchaccept: "BatchAcceptIcon",
@@ -1754,14 +1728,22 @@ var NEW_ICON_MAP = icons_exports, Svg = styled.svg`
   passed: "PassedIcon",
   changed: "ChangedIcon",
   failed: "FailedIcon",
+  status: "StatusIcon",
+  statuspass: "StatusPassIcon",
+  statusfail: "StatusFailIcon",
+  statuswarn: "StatusWarnIcon",
+  statusnew: "StatusNewIcon",
   clear: "ClearIcon",
+  sweep: "SweepIcon",
   comment: "CommentIcon",
   commentadd: "CommentAddIcon",
   requestchange: "RequestChangeIcon",
   comments: "CommentsIcon",
+  chat: "ChatIcon",
   lock: "LockIcon",
   unlock: "UnlockIcon",
   key: "KeyIcon",
+  command: "CommandIcon",
   outbox: "OutboxIcon",
   credit: "CreditIcon",
   button: "ButtonIcon",
@@ -1787,8 +1769,11 @@ var NEW_ICON_MAP = icons_exports, Svg = styled.svg`
   photo: "PhotoIcon",
   component: "ComponentIcon",
   grid: "GridIcon",
+  gridalt: "GridAltIcon",
   outline: "OutlineIcon",
   photodrag: "PhotoDragIcon",
+  photostabilize: "PhotoStabilizeIcon",
+  drag: "DragIcon",
   search: "SearchIcon",
   zoom: "ZoomIcon",
   zoomout: "ZoomOutIcon",
@@ -1798,21 +1783,27 @@ var NEW_ICON_MAP = icons_exports, Svg = styled.svg`
   lightning: "LightningIcon",
   lightningoff: "LightningOffIcon",
   contrast: "ContrastIcon",
+  contrastignored: "ContrastIgnoredIcon",
   switchalt: "SwitchAltIcon",
   mirror: "MirrorIcon",
   grow: "GrowIcon",
   paintbrush: "PaintBrushIcon",
+  paintbrushalt: "PaintBrushAltIcon",
   ruler: "RulerIcon",
   stop: "StopIcon",
   camera: "CameraIcon",
+  camerastabilize: "CameraStabilizeIcon",
   video: "VideoIcon",
   speaker: "SpeakerIcon",
   play: "PlayIcon",
   playback: "PlayBackIcon",
   playnext: "PlayNextIcon",
+  playhollow: "PlayHollowIcon",
+  playallhollow: "PlayAllHollowIcon",
   rewind: "RewindIcon",
   fastforward: "FastForwardIcon",
   stopalt: "StopAltIcon",
+  stopalthollow: "StopAltHollowIcon",
   sidebyside: "SideBySideIcon",
   stacked: "StackedIcon",
   sun: "SunIcon",
@@ -1822,6 +1813,7 @@ var NEW_ICON_MAP = icons_exports, Svg = styled.svg`
   copy: "CopyIcon",
   category: "CategoryIcon",
   folder: "FolderIcon",
+  files: "FilesIcon",
   print: "PrintIcon",
   graphline: "GraphLineIcon",
   calendar: "CalendarIcon",
@@ -1829,10 +1821,15 @@ var NEW_ICON_MAP = icons_exports, Svg = styled.svg`
   menu: "MenuIcon",
   menualt: "MenuIcon",
   filter: "FilterIcon",
+  sortup: "SortUpIcon",
+  sortdown: "SortDownIcon",
   docchart: "DocChartIcon",
   doclist: "DocListIcon",
   markup: "MarkupIcon",
   bold: "BoldIcon",
+  italic: "ItalicIcon",
+  alignleft: "AlignLeftIcon",
+  alignright: "AlignRightIcon",
   paperclip: "PaperClipIcon",
   listordered: "ListOrderedIcon",
   listunordered: "ListUnorderedIcon",
@@ -1861,9 +1858,11 @@ var NEW_ICON_MAP = icons_exports, Svg = styled.svg`
   gitlab: "GitlabIcon",
   google: "GoogleIcon",
   graphql: "GraphqlIcon",
+  linkedin: "LinkedinIcon",
   medium: "MediumIcon",
   redux: "ReduxIcon",
   twitter: "TwitterIcon",
+  x: "XIcon",
   youtube: "YoutubeIcon",
   vscode: "VSCodeIcon"
 };
@@ -1906,7 +1905,14 @@ var ToolbarMenuItemContainer = styled("div")({
   id,
   name,
   description,
-  toolbar: { icon: _icon, items, title: _title, preventDynamicIcon, dynamicTitle, shortcuts }
+  toolbar: {
+    icon: _icon,
+    items,
+    title: _title,
+    preventDynamicIcon,
+    dynamicTitle = !0,
+    shortcuts
+  }
 }) => {
   let api = useStorybookApi(), [globals, updateGlobals, storyGlobals] = useGlobals(), currentValue = globals[id], isOverridden = id in storyGlobals, icon = _icon, title2 = _title;
   preventDynamicIcon || (icon = getSelectedItem({ currentValue, items })?.icon || icon), dynamicTitle && (title2 = getSelectedItem({ currentValue, items })?.title || title2), !title2 && !icon && console.warn(`Toolbar '${name}' has no title or icon`);
@@ -1964,7 +1970,8 @@ var ToolbarMenuItemContainer = styled("div")({
       resetLabel,
       onReset: resetItem ? () => updateGlobals({ [id]: resetItem?.value }) : void 0,
       onSelect: (selected) => updateGlobals({ [id]: selected }),
-      icon: icon && react_default.createElement(Icons, { icon, __suppressDeprecationWarning: !0 })
+      icon: icon && react_default.createElement(Icons, { icon, __suppressDeprecationWarning: !0 }),
+      showSelectedOptionTitle: dynamicTitle
     },
     title2
   );
@@ -1986,10 +1993,10 @@ init_react();
 var client_default = __REACT_DOM_CLIENT__, { createRoot, hydrateRoot } = __REACT_DOM_CLIENT__;
 
 // global-externals:storybook/internal/manager-errors
-var manager_errors_default = __STORYBOOK_CORE_EVENTS_MANAGER_ERRORS__, { Category, ProviderDoesNotExtendBaseProviderError, StatusTypeIdMismatchError, UncaughtManagerError } = __STORYBOOK_CORE_EVENTS_MANAGER_ERRORS__;
+var manager_errors_default = __STORYBOOK_CORE_EVENTS_MANAGER_ERRORS__, { Category, OpenServiceStaticSnapshotInvalidError, OpenServiceStaticSnapshotLoadError, ProviderDoesNotExtendBaseProviderError, StatusTypeIdMismatchError, UncaughtManagerError, UniversalStoreFollowerTimeoutError } = __STORYBOOK_CORE_EVENTS_MANAGER_ERRORS__;
 
 // global-externals:storybook/internal/router
-var router_default = __STORYBOOK_ROUTER__, { BaseLocationProvider, DEEPLY_EQUAL, Link: Link2, Location, LocationProvider, Match, Route, buildArgsParam, deepDiff, getMatch, parsePath, queryFromLocation, stringifyQuery, useNavigate } = __STORYBOOK_ROUTER__;
+var router_default = __STORYBOOK_ROUTER__, { BaseLocationProvider, DEEPLY_EQUAL, Link: Link2, Location, LocationProvider, Match, MemoryRouter, Route, buildArgsParam, deepDiff, getMatch, parsePath, queryFromLocation, stringifyQuery, useNavigate } = __STORYBOOK_ROUTER__;
 
 // ../../node_modules/react-helmet-async/lib/index.module.js
 init_react();
@@ -1997,8 +2004,8 @@ var import_prop_types = __toESM(require_prop_types()), import_react_fast_compare
 function a() {
   return a = Object.assign || function(t2) {
     for (var e2 = 1; e2 < arguments.length; e2++) {
-      var r3 = arguments[e2];
-      for (var n3 in r3) Object.prototype.hasOwnProperty.call(r3, n3) && (t2[n3] = r3[n3]);
+      var r4 = arguments[e2];
+      for (var n3 in r4) Object.prototype.hasOwnProperty.call(r4, n3) && (t2[n3] = r4[n3]);
     }
     return t2;
   }, a.apply(this, arguments);
@@ -2013,8 +2020,8 @@ function c(t2, e2) {
 }
 function u(t2, e2) {
   if (t2 == null) return {};
-  var r3, n3, i2 = {}, o3 = Object.keys(t2);
-  for (n3 = 0; n3 < o3.length; n3++) e2.indexOf(r3 = o3[n3]) >= 0 || (i2[r3] = t2[r3]);
+  var r4, n3, i2 = {}, o3 = Object.keys(t2);
+  for (n3 = 0; n3 < o3.length; n3++) e2.indexOf(r4 = o3[n3]) >= 0 || (i2[r4] = t2[r4]);
   return i2;
 }
 var l = { BASE: "base", BODY: "body", HEAD: "head", HTML: "html", LINK: "link", META: "meta", NOSCRIPT: "noscript", SCRIPT: "script", STYLE: "style", TITLE: "title", FRAGMENT: "Symbol(react.fragment)" }, p = { rel: ["amphtml", "canonical", "alternate"] }, f = { type: ["application/ld+json"] }, d = { charset: "", name: ["robots", "description"], property: ["og:type", "og:title", "og:url", "og:image", "og:image:alt", "og:description", "twitter:url", "twitter:title", "twitter:description", "twitter:image", "twitter:image:alt", "twitter:card", "twitter:site"] }, h = Object.keys(l).map(function(t2) {
@@ -2022,14 +2029,14 @@ var l = { BASE: "base", BODY: "body", HEAD: "head", HTML: "html", LINK: "link", 
 }), m = { accesskey: "accessKey", charset: "charSet", class: "className", contenteditable: "contentEditable", contextmenu: "contextMenu", "http-equiv": "httpEquiv", itemprop: "itemProp", tabindex: "tabIndex" }, y = Object.keys(m).reduce(function(t2, e2) {
   return t2[m[e2]] = e2, t2;
 }, {}), T = function(t2, e2) {
-  for (var r3 = t2.length - 1; r3 >= 0; r3 -= 1) {
-    var n3 = t2[r3];
+  for (var r4 = t2.length - 1; r4 >= 0; r4 -= 1) {
+    var n3 = t2[r4];
     if (Object.prototype.hasOwnProperty.call(n3, e2)) return n3[e2];
   }
   return null;
 }, g = function(t2) {
-  var e2 = T(t2, l.TITLE), r3 = T(t2, "titleTemplate");
-  if (Array.isArray(e2) && (e2 = e2.join("")), r3 && e2) return r3.replace(/%s/g, function() {
+  var e2 = T(t2, l.TITLE), r4 = T(t2, "titleTemplate");
+  if (Array.isArray(e2) && (e2 = e2.join("")), r4 && e2) return r4.replace(/%s/g, function() {
     return e2;
   });
   var n3 = T(t2, "defaultTitle");
@@ -2050,29 +2057,29 @@ var l = { BASE: "base", BODY: "body", HEAD: "head", HTML: "html", LINK: "link", 
     return t3[l.BASE] !== void 0;
   }).map(function(t3) {
     return t3[l.BASE];
-  }).reverse().reduce(function(e3, r3) {
-    if (!e3.length) for (var n3 = Object.keys(r3), i2 = 0; i2 < n3.length; i2 += 1) {
+  }).reverse().reduce(function(e3, r4) {
+    if (!e3.length) for (var n3 = Object.keys(r4), i2 = 0; i2 < n3.length; i2 += 1) {
       var o3 = n3[i2].toLowerCase();
-      if (t2.indexOf(o3) !== -1 && r3[o3]) return e3.concat(r3);
+      if (t2.indexOf(o3) !== -1 && r4[o3]) return e3.concat(r4);
     }
     return e3;
   }, []);
-}, C = function(t2, e2, r3) {
+}, C = function(t2, e2, r4) {
   var n3 = {};
-  return r3.filter(function(e3) {
+  return r4.filter(function(e3) {
     return !!Array.isArray(e3[t2]) || (e3[t2] !== void 0 && console && typeof console.warn == "function" && console.warn("Helmet: " + t2 + ' should be of type "Array". Instead found type "' + typeof e3[t2] + '"'), !1);
   }).map(function(e3) {
     return e3[t2];
-  }).reverse().reduce(function(t3, r4) {
+  }).reverse().reduce(function(t3, r5) {
     var i2 = {};
-    r4.filter(function(t4) {
-      for (var r5, o4 = Object.keys(t4), a2 = 0; a2 < o4.length; a2 += 1) {
+    r5.filter(function(t4) {
+      for (var r6, o4 = Object.keys(t4), a2 = 0; a2 < o4.length; a2 += 1) {
         var s3 = o4[a2], c3 = s3.toLowerCase();
-        e2.indexOf(c3) === -1 || r5 === "rel" && t4[r5].toLowerCase() === "canonical" || c3 === "rel" && t4[c3].toLowerCase() === "stylesheet" || (r5 = c3), e2.indexOf(s3) === -1 || s3 !== "innerHTML" && s3 !== "cssText" && s3 !== "itemprop" || (r5 = s3);
+        e2.indexOf(c3) === -1 || r6 === "rel" && t4[r6].toLowerCase() === "canonical" || c3 === "rel" && t4[c3].toLowerCase() === "stylesheet" || (r6 = c3), e2.indexOf(s3) === -1 || s3 !== "innerHTML" && s3 !== "cssText" && s3 !== "itemprop" || (r6 = s3);
       }
-      if (!r5 || !t4[r5]) return !1;
-      var u3 = t4[r5].toLowerCase();
-      return n3[r5] || (n3[r5] = {}), i2[r5] || (i2[r5] = {}), !n3[r5][u3] && (i2[r5][u3] = !0, !0);
+      if (!r6 || !t4[r6]) return !1;
+      var u3 = t4[r6].toLowerCase();
+      return n3[r6] || (n3[r6] = {}), i2[r6] || (i2[r6] = {}), !n3[r6][u3] && (i2[r6][u3] = !0, !0);
     }).reverse().forEach(function(e3) {
       return t3.push(e3);
     });
@@ -2084,84 +2091,84 @@ var l = { BASE: "base", BODY: "body", HEAD: "head", HTML: "html", LINK: "link", 
   }, []).reverse();
 }, O = function(t2, e2) {
   if (Array.isArray(t2) && t2.length) {
-    for (var r3 = 0; r3 < t2.length; r3 += 1) if (t2[r3][e2]) return !0;
+    for (var r4 = 0; r4 < t2.length; r4 += 1) if (t2[r4][e2]) return !0;
   }
   return !1;
 }, S = function(t2) {
   return Array.isArray(t2) ? t2.join("") : t2;
 }, E = function(t2, e2) {
-  return Array.isArray(t2) ? t2.reduce(function(t3, r3) {
+  return Array.isArray(t2) ? t2.reduce(function(t3, r4) {
     return (function(t4, e3) {
-      for (var r4 = Object.keys(t4), n3 = 0; n3 < r4.length; n3 += 1) if (e3[r4[n3]] && e3[r4[n3]].includes(t4[r4[n3]])) return !0;
+      for (var r5 = Object.keys(t4), n3 = 0; n3 < r5.length; n3 += 1) if (e3[r5[n3]] && e3[r5[n3]].includes(t4[r5[n3]])) return !0;
       return !1;
-    })(r3, e2) ? t3.priority.push(r3) : t3.default.push(r3), t3;
+    })(r4, e2) ? t3.priority.push(r4) : t3.default.push(r4), t3;
   }, { priority: [], default: [] }) : { default: t2 };
 }, I = function(t2, e2) {
-  var r3;
-  return a({}, t2, ((r3 = {})[e2] = void 0, r3));
+  var r4;
+  return a({}, t2, ((r4 = {})[e2] = void 0, r4));
 }, P2 = [l.NOSCRIPT, l.SCRIPT, l.STYLE], w = function(t2, e2) {
   return e2 === void 0 && (e2 = !0), e2 === !1 ? String(t2) : String(t2).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#x27;");
 }, x = function(t2) {
-  return Object.keys(t2).reduce(function(e2, r3) {
-    var n3 = t2[r3] !== void 0 ? r3 + '="' + t2[r3] + '"' : "" + r3;
+  return Object.keys(t2).reduce(function(e2, r4) {
+    var n3 = t2[r4] !== void 0 ? r4 + '="' + t2[r4] + '"' : "" + r4;
     return e2 ? e2 + " " + n3 : n3;
   }, "");
 }, L = function(t2, e2) {
-  return e2 === void 0 && (e2 = {}), Object.keys(t2).reduce(function(e3, r3) {
-    return e3[m[r3] || r3] = t2[r3], e3;
+  return e2 === void 0 && (e2 = {}), Object.keys(t2).reduce(function(e3, r4) {
+    return e3[m[r4] || r4] = t2[r4], e3;
   }, e2);
-}, j = function(e2, r3) {
-  return r3.map(function(r4, n3) {
+}, j = function(e2, r4) {
+  return r4.map(function(r5, n3) {
     var i2, o3 = ((i2 = { key: n3 })["data-rh"] = !0, i2);
-    return Object.keys(r4).forEach(function(t2) {
+    return Object.keys(r5).forEach(function(t2) {
       var e3 = m[t2] || t2;
-      e3 === "innerHTML" || e3 === "cssText" ? o3.dangerouslySetInnerHTML = { __html: r4.innerHTML || r4.cssText } : o3[e3] = r4[t2];
+      e3 === "innerHTML" || e3 === "cssText" ? o3.dangerouslySetInnerHTML = { __html: r5.innerHTML || r5.cssText } : o3[e3] = r5[t2];
     }), react_default.createElement(e2, o3);
   });
-}, M = function(e2, r3, n3) {
+}, M = function(e2, r4, n3) {
   switch (e2) {
     case l.TITLE:
       return { toComponent: function() {
-        return n4 = r3.titleAttributes, (i2 = { key: e3 = r3.title })["data-rh"] = !0, o3 = L(n4, i2), [react_default.createElement(l.TITLE, o3, e3)];
+        return n4 = r4.titleAttributes, (i2 = { key: e3 = r4.title })["data-rh"] = !0, o3 = L(n4, i2), [react_default.createElement(l.TITLE, o3, e3)];
         var e3, n4, i2, o3;
       }, toString: function() {
-        return (function(t2, e3, r4, n4) {
-          var i2 = x(r4), o3 = S(e3);
+        return (function(t2, e3, r5, n4) {
+          var i2 = x(r5), o3 = S(e3);
           return i2 ? "<" + t2 + ' data-rh="true" ' + i2 + ">" + w(o3, n4) + "</" + t2 + ">" : "<" + t2 + ' data-rh="true">' + w(o3, n4) + "</" + t2 + ">";
-        })(e2, r3.title, r3.titleAttributes, n3);
+        })(e2, r4.title, r4.titleAttributes, n3);
       } };
     case "bodyAttributes":
     case "htmlAttributes":
       return { toComponent: function() {
-        return L(r3);
+        return L(r4);
       }, toString: function() {
-        return x(r3);
+        return x(r4);
       } };
     default:
       return { toComponent: function() {
-        return j(e2, r3);
+        return j(e2, r4);
       }, toString: function() {
-        return (function(t2, e3, r4) {
+        return (function(t2, e3, r5) {
           return e3.reduce(function(e4, n4) {
             var i2 = Object.keys(n4).filter(function(t3) {
               return !(t3 === "innerHTML" || t3 === "cssText");
             }).reduce(function(t3, e5) {
-              var i3 = n4[e5] === void 0 ? e5 : e5 + '="' + w(n4[e5], r4) + '"';
+              var i3 = n4[e5] === void 0 ? e5 : e5 + '="' + w(n4[e5], r5) + '"';
               return t3 ? t3 + " " + i3 : i3;
             }, ""), o3 = n4.innerHTML || n4.cssText || "", a2 = P2.indexOf(t2) === -1;
             return e4 + "<" + t2 + ' data-rh="true" ' + i2 + (a2 ? "/>" : ">" + o3 + "</" + t2 + ">");
           }, "");
-        })(e2, r3, n3);
+        })(e2, r4, n3);
       } };
   }
 }, k = function(t2) {
-  var e2 = t2.baseTag, r3 = t2.bodyAttributes, n3 = t2.encode, i2 = t2.htmlAttributes, o3 = t2.noscriptTags, a2 = t2.styleTags, s2 = t2.title, c2 = s2 === void 0 ? "" : s2, u2 = t2.titleAttributes, h2 = t2.linkTags, m2 = t2.metaTags, y2 = t2.scriptTags, T3 = { toComponent: function() {
+  var e2 = t2.baseTag, r4 = t2.bodyAttributes, n3 = t2.encode, i2 = t2.htmlAttributes, o3 = t2.noscriptTags, a2 = t2.styleTags, s2 = t2.title, c2 = s2 === void 0 ? "" : s2, u2 = t2.titleAttributes, h2 = t2.linkTags, m2 = t2.metaTags, y2 = t2.scriptTags, T3 = { toComponent: function() {
   }, toString: function() {
     return "";
   } };
   if (t2.prioritizeSeoTags) {
     var g2 = (function(t3) {
-      var e3 = t3.linkTags, r4 = t3.scriptTags, n4 = t3.encode, i3 = E(t3.metaTags, d), o4 = E(e3, p), a3 = E(r4, f);
+      var e3 = t3.linkTags, r5 = t3.scriptTags, n4 = t3.encode, i3 = E(t3.metaTags, d), o4 = E(e3, p), a3 = E(r5, f);
       return { priorityMethods: { toComponent: function() {
         return [].concat(j(l.META, i3.priority), j(l.LINK, o4.priority), j(l.SCRIPT, a3.priority));
       }, toString: function() {
@@ -2170,79 +2177,79 @@ var l = { BASE: "base", BODY: "body", HEAD: "head", HTML: "html", LINK: "link", 
     })(t2);
     T3 = g2.priorityMethods, h2 = g2.linkTags, m2 = g2.metaTags, y2 = g2.scriptTags;
   }
-  return { priority: T3, base: M(l.BASE, e2, n3), bodyAttributes: M("bodyAttributes", r3, n3), htmlAttributes: M("htmlAttributes", i2, n3), link: M(l.LINK, h2, n3), meta: M(l.META, m2, n3), noscript: M(l.NOSCRIPT, o3, n3), script: M(l.SCRIPT, y2, n3), style: M(l.STYLE, a2, n3), title: M(l.TITLE, { title: c2, titleAttributes: u2 }, n3) };
+  return { priority: T3, base: M(l.BASE, e2, n3), bodyAttributes: M("bodyAttributes", r4, n3), htmlAttributes: M("htmlAttributes", i2, n3), link: M(l.LINK, h2, n3), meta: M(l.META, m2, n3), noscript: M(l.NOSCRIPT, o3, n3), script: M(l.SCRIPT, y2, n3), style: M(l.STYLE, a2, n3), title: M(l.TITLE, { title: c2, titleAttributes: u2 }, n3) };
 }, H = [], N = function(t2, e2) {
-  var r3 = this;
+  var r4 = this;
   e2 === void 0 && (e2 = typeof document < "u"), this.instances = [], this.value = { setHelmet: function(t3) {
-    r3.context.helmet = t3;
+    r4.context.helmet = t3;
   }, helmetInstances: { get: function() {
-    return r3.canUseDOM ? H : r3.instances;
+    return r4.canUseDOM ? H : r4.instances;
   }, add: function(t3) {
-    (r3.canUseDOM ? H : r3.instances).push(t3);
+    (r4.canUseDOM ? H : r4.instances).push(t3);
   }, remove: function(t3) {
-    var e3 = (r3.canUseDOM ? H : r3.instances).indexOf(t3);
-    (r3.canUseDOM ? H : r3.instances).splice(e3, 1);
+    var e3 = (r4.canUseDOM ? H : r4.instances).indexOf(t3);
+    (r4.canUseDOM ? H : r4.instances).splice(e3, 1);
   } } }, this.context = t2, this.canUseDOM = e2, e2 || (t2.helmet = k({ baseTag: [], bodyAttributes: {}, encodeSpecialCharacters: !0, htmlAttributes: {}, linkTags: [], metaTags: [], noscriptTags: [], scriptTags: [], styleTags: [], title: "", titleAttributes: {} }));
 }, R = react_default.createContext({}), D = import_prop_types.default.shape({ setHelmet: import_prop_types.default.func, helmetInstances: import_prop_types.default.shape({ get: import_prop_types.default.func, add: import_prop_types.default.func, remove: import_prop_types.default.func }) }), U = typeof document < "u", q = (function(e2) {
-  function r3(t2) {
+  function r4(t2) {
     var n3;
-    return (n3 = e2.call(this, t2) || this).helmetData = new N(n3.props.context, r3.canUseDOM), n3;
+    return (n3 = e2.call(this, t2) || this).helmetData = new N(n3.props.context, r4.canUseDOM), n3;
   }
-  return s(r3, e2), r3.prototype.render = function() {
+  return s(r4, e2), r4.prototype.render = function() {
     return react_default.createElement(R.Provider, { value: this.helmetData.value }, this.props.children);
-  }, r3;
+  }, r4;
 })(Component);
 q.canUseDOM = U, q.propTypes = { context: import_prop_types.default.shape({ helmet: import_prop_types.default.shape() }), children: import_prop_types.default.node.isRequired }, q.defaultProps = { context: {} }, q.displayName = "HelmetProvider";
 var Y = function(t2, e2) {
-  var r3, n3 = document.head || document.querySelector(l.HEAD), i2 = n3.querySelectorAll(t2 + "[data-rh]"), o3 = [].slice.call(i2), a2 = [];
+  var r4, n3 = document.head || document.querySelector(l.HEAD), i2 = n3.querySelectorAll(t2 + "[data-rh]"), o3 = [].slice.call(i2), a2 = [];
   return e2 && e2.length && e2.forEach(function(e3) {
     var n4 = document.createElement(t2);
     for (var i3 in e3) Object.prototype.hasOwnProperty.call(e3, i3) && (i3 === "innerHTML" ? n4.innerHTML = e3.innerHTML : i3 === "cssText" ? n4.styleSheet ? n4.styleSheet.cssText = e3.cssText : n4.appendChild(document.createTextNode(e3.cssText)) : n4.setAttribute(i3, e3[i3] === void 0 ? "" : e3[i3]));
     n4.setAttribute("data-rh", "true"), o3.some(function(t3, e4) {
-      return r3 = e4, n4.isEqualNode(t3);
-    }) ? o3.splice(r3, 1) : a2.push(n4);
+      return r4 = e4, n4.isEqualNode(t3);
+    }) ? o3.splice(r4, 1) : a2.push(n4);
   }), o3.forEach(function(t3) {
     return t3.parentNode.removeChild(t3);
   }), a2.forEach(function(t3) {
     return n3.appendChild(t3);
   }), { oldTags: o3, newTags: a2 };
 }, B = function(t2, e2) {
-  var r3 = document.getElementsByTagName(t2)[0];
-  if (r3) {
-    for (var n3 = r3.getAttribute("data-rh"), i2 = n3 ? n3.split(",") : [], o3 = [].concat(i2), a2 = Object.keys(e2), s2 = 0; s2 < a2.length; s2 += 1) {
+  var r4 = document.getElementsByTagName(t2)[0];
+  if (r4) {
+    for (var n3 = r4.getAttribute("data-rh"), i2 = n3 ? n3.split(",") : [], o3 = [].concat(i2), a2 = Object.keys(e2), s2 = 0; s2 < a2.length; s2 += 1) {
       var c2 = a2[s2], u2 = e2[c2] || "";
-      r3.getAttribute(c2) !== u2 && r3.setAttribute(c2, u2), i2.indexOf(c2) === -1 && i2.push(c2);
+      r4.getAttribute(c2) !== u2 && r4.setAttribute(c2, u2), i2.indexOf(c2) === -1 && i2.push(c2);
       var l3 = o3.indexOf(c2);
       l3 !== -1 && o3.splice(l3, 1);
     }
-    for (var p2 = o3.length - 1; p2 >= 0; p2 -= 1) r3.removeAttribute(o3[p2]);
-    i2.length === o3.length ? r3.removeAttribute("data-rh") : r3.getAttribute("data-rh") !== a2.join(",") && r3.setAttribute("data-rh", a2.join(","));
+    for (var p2 = o3.length - 1; p2 >= 0; p2 -= 1) r4.removeAttribute(o3[p2]);
+    i2.length === o3.length ? r4.removeAttribute("data-rh") : r4.getAttribute("data-rh") !== a2.join(",") && r4.setAttribute("data-rh", a2.join(","));
   }
 }, K = function(t2, e2) {
-  var r3 = t2.baseTag, n3 = t2.htmlAttributes, i2 = t2.linkTags, o3 = t2.metaTags, a2 = t2.noscriptTags, s2 = t2.onChangeClientState, c2 = t2.scriptTags, u2 = t2.styleTags, p2 = t2.title, f2 = t2.titleAttributes;
+  var r4 = t2.baseTag, n3 = t2.htmlAttributes, i2 = t2.linkTags, o3 = t2.metaTags, a2 = t2.noscriptTags, s2 = t2.onChangeClientState, c2 = t2.scriptTags, u2 = t2.styleTags, p2 = t2.title, f2 = t2.titleAttributes;
   B(l.BODY, t2.bodyAttributes), B(l.HTML, n3), (function(t3, e3) {
     t3 !== void 0 && document.title !== t3 && (document.title = S(t3)), B(l.TITLE, e3);
   })(p2, f2);
-  var d2 = { baseTag: Y(l.BASE, r3), linkTags: Y(l.LINK, i2), metaTags: Y(l.META, o3), noscriptTags: Y(l.NOSCRIPT, a2), scriptTags: Y(l.SCRIPT, c2), styleTags: Y(l.STYLE, u2) }, h2 = {}, m2 = {};
+  var d2 = { baseTag: Y(l.BASE, r4), linkTags: Y(l.LINK, i2), metaTags: Y(l.META, o3), noscriptTags: Y(l.NOSCRIPT, a2), scriptTags: Y(l.SCRIPT, c2), styleTags: Y(l.STYLE, u2) }, h2 = {}, m2 = {};
   Object.keys(d2).forEach(function(t3) {
-    var e3 = d2[t3], r4 = e3.newTags, n4 = e3.oldTags;
-    r4.length && (h2[t3] = r4), n4.length && (m2[t3] = d2[t3].oldTags);
+    var e3 = d2[t3], r5 = e3.newTags, n4 = e3.oldTags;
+    r5.length && (h2[t3] = r5), n4.length && (m2[t3] = d2[t3].oldTags);
   }), e2 && e2(), s2(t2, h2, m2);
 }, _ = null, z = (function(t2) {
   function e2() {
-    for (var e3, r4 = arguments.length, n3 = new Array(r4), i2 = 0; i2 < r4; i2++) n3[i2] = arguments[i2];
+    for (var e3, r5 = arguments.length, n3 = new Array(r5), i2 = 0; i2 < r5; i2++) n3[i2] = arguments[i2];
     return (e3 = t2.call.apply(t2, [this].concat(n3)) || this).rendered = !1, e3;
   }
   s(e2, t2);
-  var r3 = e2.prototype;
-  return r3.shouldComponentUpdate = function(t3) {
+  var r4 = e2.prototype;
+  return r4.shouldComponentUpdate = function(t3) {
     return !(0, import_shallowequal.default)(t3, this.props);
-  }, r3.componentDidUpdate = function() {
+  }, r4.componentDidUpdate = function() {
     this.emitChange();
-  }, r3.componentWillUnmount = function() {
+  }, r4.componentWillUnmount = function() {
     this.props.context.helmetInstances.remove(this), this.emitChange();
-  }, r3.emitChange = function() {
-    var t3, e3, r4 = this.props.context, n3 = r4.setHelmet, i2 = null, o3 = (t3 = r4.helmetInstances.get().map(function(t4) {
+  }, r4.emitChange = function() {
+    var t3, e3, r5 = this.props.context, n3 = r5.setHelmet, i2 = null, o3 = (t3 = r5.helmetInstances.get().map(function(t4) {
       var e4 = a({}, t4.props);
       return delete e4.context, e4;
     }), { baseTag: A2(["href"], t3), bodyAttributes: v("bodyAttributes", t3), defer: T(t3, "defer"), encode: T(t3, "encodeSpecialCharacters"), htmlAttributes: v("htmlAttributes", t3), linkTags: C(l.LINK, ["rel", "href"], t3), metaTags: C(l.META, ["name", "charset", "http-equiv", "property", "itemprop"], t3), noscriptTags: C(l.NOSCRIPT, ["innerHTML"], t3), onChangeClientState: b(t3), scriptTags: C(l.SCRIPT, ["src", "innerHTML"], t3), styleTags: C(l.STYLE, ["cssText"], t3), title: g(t3), titleAttributes: v("titleAttributes", t3), prioritizeSeoTags: O(t3, "prioritizeSeoTags") });
@@ -2251,19 +2258,19 @@ var Y = function(t2, e2) {
         _ = null;
       });
     }) : (K(e3), _ = null)) : k && (i2 = k(o3)), n3(i2);
-  }, r3.init = function() {
+  }, r4.init = function() {
     this.rendered || (this.rendered = !0, this.props.context.helmetInstances.add(this), this.emitChange());
-  }, r3.render = function() {
+  }, r4.render = function() {
     return this.init(), null;
   }, e2;
 })(Component);
 z.propTypes = { context: D.isRequired }, z.displayName = "HelmetDispatcher";
 var F = ["children"], G = ["children"], W = (function(e2) {
-  function r3() {
+  function r4() {
     return e2.apply(this, arguments) || this;
   }
-  s(r3, e2);
-  var o3 = r3.prototype;
+  s(r4, e2);
+  var o3 = r4.prototype;
   return o3.shouldComponentUpdate = function(t2) {
     return !(0, import_react_fast_compare.default)(I(this.props, "helmetData"), I(t2, "helmetData"));
   }, o3.mapNestedChildrenToProps = function(t2, e3) {
@@ -2278,10 +2285,10 @@ var F = ["children"], G = ["children"], W = (function(e2) {
         throw new Error("<" + t2.type + " /> elements are self-closing and can not contain children. Refer to our API for more information.");
     }
   }, o3.flattenArrayTypeChildren = function(t2) {
-    var e3, r4 = t2.child, n3 = t2.arrayTypeChildren;
-    return a({}, n3, ((e3 = {})[r4.type] = [].concat(n3[r4.type] || [], [a({}, t2.newChildProps, this.mapNestedChildrenToProps(r4, t2.nestedChildren))]), e3));
+    var e3, r5 = t2.child, n3 = t2.arrayTypeChildren;
+    return a({}, n3, ((e3 = {})[r5.type] = [].concat(n3[r5.type] || [], [a({}, t2.newChildProps, this.mapNestedChildrenToProps(r5, t2.nestedChildren))]), e3));
   }, o3.mapObjectTypeChildren = function(t2) {
-    var e3, r4, n3 = t2.child, i2 = t2.newProps, o4 = t2.newChildProps, s2 = t2.nestedChildren;
+    var e3, r5, n3 = t2.child, i2 = t2.newProps, o4 = t2.newChildProps, s2 = t2.nestedChildren;
     switch (n3.type) {
       case l.TITLE:
         return a({}, i2, ((e3 = {})[n3.type] = s2, e3.titleAttributes = a({}, o4), e3));
@@ -2290,21 +2297,21 @@ var F = ["children"], G = ["children"], W = (function(e2) {
       case l.HTML:
         return a({}, i2, { htmlAttributes: a({}, o4) });
       default:
-        return a({}, i2, ((r4 = {})[n3.type] = a({}, o4), r4));
+        return a({}, i2, ((r5 = {})[n3.type] = a({}, o4), r5));
     }
   }, o3.mapArrayTypeChildrenToProps = function(t2, e3) {
-    var r4 = a({}, e3);
+    var r5 = a({}, e3);
     return Object.keys(t2).forEach(function(e4) {
       var n3;
-      r4 = a({}, r4, ((n3 = {})[e4] = t2[e4], n3));
-    }), r4;
+      r5 = a({}, r5, ((n3 = {})[e4] = t2[e4], n3));
+    }), r5;
   }, o3.warnOnInvalidChildren = function(t2, e3) {
     return (0, import_invariant.default)(h.some(function(e4) {
       return t2.type === e4;
     }), typeof t2.type == "function" ? "You may be attempting to nest <Helmet> components within each other, which is not allowed. Refer to our API for more information." : "Only elements types " + h.join(", ") + " are allowed. Helmet does not support rendering <" + t2.type + "> elements. Refer to our API for more information."), (0, import_invariant.default)(!e3 || typeof e3 == "string" || Array.isArray(e3) && !e3.some(function(t3) {
       return typeof t3 != "string";
     }), "Helmet expects a string as a child of <" + t2.type + ">. Did you forget to wrap your children in braces? ( <" + t2.type + ">{``}</" + t2.type + "> ) Refer to our API for more information."), !0;
-  }, o3.mapChildrenToProps = function(e3, r4) {
+  }, o3.mapChildrenToProps = function(e3, r5) {
     var n3 = this, i2 = {};
     return react_default.Children.forEach(e3, function(t2) {
       if (t2 && t2.props) {
@@ -2313,7 +2320,7 @@ var F = ["children"], G = ["children"], W = (function(e2) {
         }, {}), c2 = t2.type;
         switch (typeof c2 == "symbol" ? c2 = c2.toString() : n3.warnOnInvalidChildren(t2, o4), c2) {
           case l.FRAGMENT:
-            r4 = n3.mapChildrenToProps(o4, r4);
+            r5 = n3.mapChildrenToProps(o4, r5);
             break;
           case l.LINK:
           case l.META:
@@ -2323,21 +2330,24 @@ var F = ["children"], G = ["children"], W = (function(e2) {
             i2 = n3.flattenArrayTypeChildren({ child: t2, arrayTypeChildren: i2, newChildProps: s2, nestedChildren: o4 });
             break;
           default:
-            r4 = n3.mapObjectTypeChildren({ child: t2, newProps: r4, newChildProps: s2, nestedChildren: o4 });
+            r5 = n3.mapObjectTypeChildren({ child: t2, newProps: r5, newChildProps: s2, nestedChildren: o4 });
         }
       }
-    }), this.mapArrayTypeChildrenToProps(i2, r4);
+    }), this.mapArrayTypeChildrenToProps(i2, r5);
   }, o3.render = function() {
-    var e3 = this.props, r4 = e3.children, n3 = u(e3, G), i2 = a({}, n3), o4 = n3.helmetData;
-    return r4 && (i2 = this.mapChildrenToProps(r4, i2)), !o4 || o4 instanceof N || (o4 = new N(o4.context, o4.instances)), o4 ? react_default.createElement(z, a({}, i2, { context: o4.value, helmetData: void 0 })) : react_default.createElement(R.Consumer, null, function(e4) {
+    var e3 = this.props, r5 = e3.children, n3 = u(e3, G), i2 = a({}, n3), o4 = n3.helmetData;
+    return r5 && (i2 = this.mapChildrenToProps(r5, i2)), !o4 || o4 instanceof N || (o4 = new N(o4.context, o4.instances)), o4 ? react_default.createElement(z, a({}, i2, { context: o4.value, helmetData: void 0 })) : react_default.createElement(R.Consumer, null, function(e4) {
       return react_default.createElement(z, a({}, i2, { context: e4 }));
     });
-  }, r3;
+  }, r4;
 })(Component);
 W.propTypes = { base: import_prop_types.default.object, bodyAttributes: import_prop_types.default.object, children: import_prop_types.default.oneOfType([import_prop_types.default.arrayOf(import_prop_types.default.node), import_prop_types.default.node]), defaultTitle: import_prop_types.default.string, defer: import_prop_types.default.bool, encodeSpecialCharacters: import_prop_types.default.bool, htmlAttributes: import_prop_types.default.object, link: import_prop_types.default.arrayOf(import_prop_types.default.object), meta: import_prop_types.default.arrayOf(import_prop_types.default.object), noscript: import_prop_types.default.arrayOf(import_prop_types.default.object), onChangeClientState: import_prop_types.default.func, script: import_prop_types.default.arrayOf(import_prop_types.default.object), style: import_prop_types.default.arrayOf(import_prop_types.default.object), title: import_prop_types.default.string, titleAttributes: import_prop_types.default.object, titleTemplate: import_prop_types.default.string, prioritizeSeoTags: import_prop_types.default.bool, helmetData: import_prop_types.default.object }, W.defaultProps = { defer: !0, encodeSpecialCharacters: !0, prioritizeSeoTags: !1 }, W.displayName = "Helmet";
 
 // src/manager/App.tsx
 init_react();
+
+// src/shared/review/features.ts
+var isReviewFeatureEnabled = (features) => features?.experimentalReview !== !1 && !!features?.changeDetection;
 
 // src/manager/components/error-boundary/ManagerErrorBoundary.tsx
 init_react();
@@ -2347,7 +2357,7 @@ function _extends() {
   return _extends = Object.assign ? Object.assign.bind() : function(n3) {
     for (var e2 = 1; e2 < arguments.length; e2++) {
       var t2 = arguments[e2];
-      for (var r3 in t2) ({}).hasOwnProperty.call(t2, r3) && (n3[r3] = t2[r3]);
+      for (var r4 in t2) ({}).hasOwnProperty.call(t2, r4) && (n3[r4] = t2[r4]);
     }
     return n3;
   }, _extends.apply(null, arguments);
@@ -2400,35 +2410,35 @@ function _isNativeReflectConstruct() {
 }
 
 // ../../node_modules/@babel/runtime/helpers/esm/construct.js
-function _construct(t2, e2, r3) {
+function _construct(t2, e2, r4) {
   if (_isNativeReflectConstruct()) return Reflect.construct.apply(null, arguments);
   var o3 = [null];
   o3.push.apply(o3, e2);
   var p2 = new (t2.bind.apply(t2, o3))();
-  return r3 && _setPrototypeOf(p2, r3.prototype), p2;
+  return r4 && _setPrototypeOf(p2, r4.prototype), p2;
 }
 
 // ../../node_modules/@babel/runtime/helpers/esm/wrapNativeSuper.js
 function _wrapNativeSuper(t2) {
-  var r3 = typeof Map == "function" ? /* @__PURE__ */ new Map() : void 0;
+  var r4 = typeof Map == "function" ? /* @__PURE__ */ new Map() : void 0;
   return _wrapNativeSuper = function(t3) {
     if (t3 === null || !_isNativeFunction(t3)) return t3;
     if (typeof t3 != "function") throw new TypeError("Super expression must either be null or a function");
-    if (r3 !== void 0) {
-      if (r3.has(t3)) return r3.get(t3);
-      r3.set(t3, Wrapper8);
+    if (r4 !== void 0) {
+      if (r4.has(t3)) return r4.get(t3);
+      r4.set(t3, Wrapper9);
     }
-    function Wrapper8() {
+    function Wrapper9() {
       return _construct(t3, arguments, _getPrototypeOf(this).constructor);
     }
-    return Wrapper8.prototype = Object.create(t3.prototype, {
+    return Wrapper9.prototype = Object.create(t3.prototype, {
       constructor: {
-        value: Wrapper8,
+        value: Wrapper9,
         enumerable: !1,
         writable: !0,
         configurable: !0
       }
-    }), _setPrototypeOf(Wrapper8, t3);
+    }), _setPrototypeOf(Wrapper9, t3);
   }, _wrapNativeSuper(t2);
 }
 
@@ -3048,7 +3058,7 @@ Component Stack:${errorInfo.componentStack}`)
     return { hasError: !0, error };
   }
   componentDidCatch(error, errorInfo) {
-    console.error("Storybook Manager UI Error:", error), console.error("Component Stack:", errorInfo.componentStack), this.setState({ errorInfo });
+    console.error("Storybook Manager UI Error:", error), console.error("Component Stack:", errorInfo.componentStack), this.setState({ errorInfo }), typeof globalThis.sendTelemetryError == "function" && globalThis.sendTelemetryError(error);
   }
   render() {
     let { hasError, error, errorInfo } = this.state, { children } = this.props;
@@ -3058,6 +3068,186 @@ Component Stack:${errorInfo.componentStack}`)
 
 // src/manager/components/layout/Layout.tsx
 init_react();
+
+// ../../node_modules/es-toolkit/dist/compat/_internal/getSymbols.mjs
+function getSymbols(object) {
+  return Object.getOwnPropertySymbols(object).filter((symbol) => Object.prototype.propertyIsEnumerable.call(object, symbol));
+}
+
+// ../../node_modules/es-toolkit/dist/compat/_internal/getTag.mjs
+function getTag(value) {
+  return value == null ? value === void 0 ? "[object Undefined]" : "[object Null]" : Object.prototype.toString.call(value);
+}
+
+// ../../node_modules/es-toolkit/dist/compat/_internal/tags.mjs
+var regexpTag = "[object RegExp]", stringTag = "[object String]", numberTag = "[object Number]", booleanTag = "[object Boolean]", argumentsTag = "[object Arguments]", symbolTag = "[object Symbol]", dateTag = "[object Date]", mapTag = "[object Map]", setTag = "[object Set]", arrayTag = "[object Array]", functionTag = "[object Function]", arrayBufferTag = "[object ArrayBuffer]", objectTag = "[object Object]", errorTag = "[object Error]", dataViewTag = "[object DataView]", uint8ArrayTag = "[object Uint8Array]", uint8ClampedArrayTag = "[object Uint8ClampedArray]", uint16ArrayTag = "[object Uint16Array]", uint32ArrayTag = "[object Uint32Array]", bigUint64ArrayTag = "[object BigUint64Array]", int8ArrayTag = "[object Int8Array]", int16ArrayTag = "[object Int16Array]", int32ArrayTag = "[object Int32Array]", bigInt64ArrayTag = "[object BigInt64Array]", float32ArrayTag = "[object Float32Array]", float64ArrayTag = "[object Float64Array]";
+
+// ../../node_modules/es-toolkit/dist/predicate/isPlainObject.mjs
+function isPlainObject(value) {
+  if (!value || typeof value != "object")
+    return !1;
+  let proto = Object.getPrototypeOf(value);
+  return proto === null || proto === Object.prototype || Object.getPrototypeOf(proto) === null ? Object.prototype.toString.call(value) === "[object Object]" : !1;
+}
+
+// ../../node_modules/es-toolkit/dist/string/words.mjs
+var CASE_SPLIT_PATTERN = new RegExp("\\p{Lu}?\\p{Ll}+|[0-9]+|\\p{Lu}+(?!\\p{Ll})|\\p{Emoji_Presentation}|\\p{Extended_Pictographic}|\\p{L}+", "gu");
+
+// ../../node_modules/es-toolkit/dist/compat/util/eq.mjs
+function eq(value, other) {
+  return value === other || Number.isNaN(value) && Number.isNaN(other);
+}
+
+// ../../node_modules/es-toolkit/dist/predicate/isEqualWith.mjs
+function isEqualWith(a2, b2, areValuesEqual) {
+  return isEqualWithImpl(a2, b2, void 0, void 0, void 0, void 0, areValuesEqual);
+}
+function isEqualWithImpl(a2, b2, property, aParent, bParent, stack, areValuesEqual) {
+  let result = areValuesEqual(a2, b2, property, aParent, bParent, stack);
+  if (result !== void 0)
+    return result;
+  if (typeof a2 == typeof b2)
+    switch (typeof a2) {
+      case "bigint":
+      case "string":
+      case "boolean":
+      case "symbol":
+      case "undefined":
+        return a2 === b2;
+      case "number":
+        return a2 === b2 || Object.is(a2, b2);
+      case "function":
+        return a2 === b2;
+      case "object":
+        return areObjectsEqual(a2, b2, stack, areValuesEqual);
+    }
+  return areObjectsEqual(a2, b2, stack, areValuesEqual);
+}
+function areObjectsEqual(a2, b2, stack, areValuesEqual) {
+  if (Object.is(a2, b2))
+    return !0;
+  let aTag = getTag(a2), bTag = getTag(b2);
+  if (aTag === argumentsTag && (aTag = objectTag), bTag === argumentsTag && (bTag = objectTag), aTag !== bTag)
+    return !1;
+  switch (aTag) {
+    case stringTag:
+      return a2.toString() === b2.toString();
+    case numberTag: {
+      let x2 = a2.valueOf(), y2 = b2.valueOf();
+      return eq(x2, y2);
+    }
+    case booleanTag:
+    case dateTag:
+    case symbolTag:
+      return Object.is(a2.valueOf(), b2.valueOf());
+    case regexpTag:
+      return a2.source === b2.source && a2.flags === b2.flags;
+    case functionTag:
+      return a2 === b2;
+  }
+  stack = stack ?? /* @__PURE__ */ new Map();
+  let aStack = stack.get(a2), bStack = stack.get(b2);
+  if (aStack != null && bStack != null)
+    return aStack === b2;
+  stack.set(a2, b2), stack.set(b2, a2);
+  try {
+    switch (aTag) {
+      case mapTag: {
+        if (a2.size !== b2.size)
+          return !1;
+        for (let [key, value] of a2.entries())
+          if (!b2.has(key) || !isEqualWithImpl(value, b2.get(key), key, a2, b2, stack, areValuesEqual))
+            return !1;
+        return !0;
+      }
+      case setTag: {
+        if (a2.size !== b2.size)
+          return !1;
+        let aValues = Array.from(a2.values()), bValues = Array.from(b2.values());
+        for (let i2 = 0; i2 < aValues.length; i2++) {
+          let aValue = aValues[i2], index = bValues.findIndex((bValue) => isEqualWithImpl(aValue, bValue, void 0, a2, b2, stack, areValuesEqual));
+          if (index === -1)
+            return !1;
+          bValues.splice(index, 1);
+        }
+        return !0;
+      }
+      case arrayTag:
+      case uint8ArrayTag:
+      case uint8ClampedArrayTag:
+      case uint16ArrayTag:
+      case uint32ArrayTag:
+      case bigUint64ArrayTag:
+      case int8ArrayTag:
+      case int16ArrayTag:
+      case int32ArrayTag:
+      case bigInt64ArrayTag:
+      case float32ArrayTag:
+      case float64ArrayTag: {
+        if (typeof Buffer < "u" && Buffer.isBuffer(a2) !== Buffer.isBuffer(b2) || a2.length !== b2.length)
+          return !1;
+        for (let i2 = 0; i2 < a2.length; i2++)
+          if (!isEqualWithImpl(a2[i2], b2[i2], i2, a2, b2, stack, areValuesEqual))
+            return !1;
+        return !0;
+      }
+      case arrayBufferTag:
+        return a2.byteLength !== b2.byteLength ? !1 : areObjectsEqual(new Uint8Array(a2), new Uint8Array(b2), stack, areValuesEqual);
+      case dataViewTag:
+        return a2.byteLength !== b2.byteLength || a2.byteOffset !== b2.byteOffset ? !1 : areObjectsEqual(new Uint8Array(a2), new Uint8Array(b2), stack, areValuesEqual);
+      case errorTag:
+        return a2.name === b2.name && a2.message === b2.message;
+      case objectTag: {
+        if (!(areObjectsEqual(a2.constructor, b2.constructor, stack, areValuesEqual) || isPlainObject(a2) && isPlainObject(b2)))
+          return !1;
+        let aKeys = [...Object.keys(a2), ...getSymbols(a2)], bKeys = [...Object.keys(b2), ...getSymbols(b2)];
+        if (aKeys.length !== bKeys.length)
+          return !1;
+        for (let i2 = 0; i2 < aKeys.length; i2++) {
+          let propKey = aKeys[i2], aProp = a2[propKey];
+          if (!Object.hasOwn(b2, propKey))
+            return !1;
+          let bProp = b2[propKey];
+          if (!isEqualWithImpl(aProp, bProp, propKey, a2, b2, stack, areValuesEqual))
+            return !1;
+        }
+        return !0;
+      }
+      default:
+        return !1;
+    }
+  } finally {
+    stack.delete(a2), stack.delete(b2);
+  }
+}
+
+// ../../node_modules/es-toolkit/dist/function/noop.mjs
+function noop() {
+}
+
+// ../../node_modules/es-toolkit/dist/predicate/isEqual.mjs
+function isEqual(a2, b2) {
+  return isEqualWith(a2, b2, noop);
+}
+
+// global-externals:storybook/theming/create
+var create_default = __STORYBOOK_THEMING_CREATE__, { create: create2, themes: themes2 } = __STORYBOOK_THEMING_CREATE__;
+
+// src/shared/review/routes.ts
+var REVIEW_COLLECTION_QUERY_PARAM = "collection", isReviewSummaryPath = (path) => path === "/review/" || path === "/review", isReviewCollectionStoryRoute = (path, customQueryParams) => !!path && path.startsWith("/story/") && customQueryParams?.[REVIEW_COLLECTION_QUERY_PARAM] !== void 0;
+
+// src/manager-api/modules/layout.ts
+var { document: document2 } = scope;
+var isPagesViewMode = (viewMode) => viewMode !== void 0 && viewMode !== "story" && viewMode !== "docs" && viewMode !== "review";
+var focusableUIElements = {
+  addonPanel: "storybook-panel-region",
+  storySearchField: "storybook-explorer-searchfield",
+  storyListMenu: "storybook-explorer-menu",
+  storyPanelRoot: "storybook-panel-root",
+  showAddonPanel: "storybook-show-addon-panel",
+  sidebarRegion: "storybook-sidebar-region",
+  showSidebar: "storybook-show-sidebar"
+};
 
 // src/manager/constants.ts
 var MEDIA_DESKTOP_BREAKPOINT = "@media (min-width: 600px)";
@@ -3088,9 +3278,6 @@ function useMediaQuery(query) {
 
 // src/manager/components/layout/LayoutProvider.tsx
 var LayoutContext = createContext({
-  isMobileMenuOpen: !1,
-  setMobileMenuOpen: () => {
-  },
   isMobileAboutOpen: !1,
   setMobileAboutOpen: () => {
   },
@@ -3100,10 +3287,8 @@ var LayoutContext = createContext({
   isDesktop: !1,
   isMobile: !1
 }), LayoutProvider = ({ children, forceDesktop }) => {
-  let [isMobileMenuOpen, setMobileMenuOpen] = useState(!1), [isMobileAboutOpen, setMobileAboutOpen] = useState(!1), [isMobilePanelOpen, setMobilePanelOpen] = useState(!1), isDesktop = forceDesktop ?? useMediaQuery(`(min-width: ${600}px)`), isMobile2 = !isDesktop, contextValue = useMemo(
+  let [isMobileAboutOpen, setMobileAboutOpen] = useState(!1), [isMobilePanelOpen, setMobilePanelOpen] = useState(!1), isDesktop = forceDesktop ?? useMediaQuery(`(min-width: ${600}px)`), isMobile2 = !isDesktop, contextValue = useMemo(
     () => ({
-      isMobileMenuOpen,
-      setMobileMenuOpen,
       isMobileAboutOpen,
       setMobileAboutOpen,
       isMobilePanelOpen,
@@ -3111,16 +3296,7 @@ var LayoutContext = createContext({
       isDesktop,
       isMobile: isMobile2
     }),
-    [
-      isMobileMenuOpen,
-      setMobileMenuOpen,
-      isMobileAboutOpen,
-      setMobileAboutOpen,
-      isMobilePanelOpen,
-      setMobilePanelOpen,
-      isDesktop,
-      isMobile2
-    ]
+    [isMobileAboutOpen, isMobilePanelOpen, isDesktop, isMobile2]
   );
   return react_default.createElement(LayoutContext.Provider, { value: contextValue }, children);
 }, useLayout = () => useContext(LayoutContext);
@@ -3379,9 +3555,9 @@ function $bdb11010cef70236$export$f680877a34711e37(defaultId) {
     ]);
   }
   return $f0a04ccd8dbdd83b$export$e5c5a5f917a5871c(() => {
-    let r3 = res;
+    let r4 = res;
     return () => {
-      $bdb11010cef70236$var$registry && $bdb11010cef70236$var$registry.unregister(cleanupRef), $bdb11010cef70236$export$d41a04c74483c6ef.delete(r3);
+      $bdb11010cef70236$var$registry && $bdb11010cef70236$var$registry.unregister(cleanupRef), $bdb11010cef70236$export$d41a04c74483c6ef.delete(r4);
     };
   }, [
     res
@@ -3391,6 +3567,178 @@ function $bdb11010cef70236$export$f680877a34711e37(defaultId) {
       newId && (nextId.current = null);
     };
   }), res;
+}
+function $bdb11010cef70236$export$cd8c9cb68f842629(idA, idB) {
+  if (idA === idB) return idA;
+  let setIdsA = $bdb11010cef70236$export$d41a04c74483c6ef.get(idA);
+  if (setIdsA)
+    return setIdsA.forEach((ref) => ref.current = idB), idB;
+  let setIdsB = $bdb11010cef70236$export$d41a04c74483c6ef.get(idB);
+  return setIdsB ? (setIdsB.forEach((ref) => ref.current = idA), idA) : idB;
+}
+
+// ../../node_modules/@react-aria/utils/dist/chain.mjs
+function $ff5963eb1fccf552$export$e08e3b67e392101e(...callbacks) {
+  return (...args) => {
+    for (let callback of callbacks) typeof callback == "function" && callback(...args);
+  };
+}
+
+// ../../node_modules/@react-aria/utils/dist/domHelpers.mjs
+var $431fbd86ca7dc216$export$b204af158042fbac = (el) => {
+  var _el_ownerDocument;
+  return (_el_ownerDocument = el?.ownerDocument) !== null && _el_ownerDocument !== void 0 ? _el_ownerDocument : document;
+}, $431fbd86ca7dc216$export$f21a1ffae260145a = (el) => el && "window" in el && el.window === el ? el : $431fbd86ca7dc216$export$b204af158042fbac(el).defaultView || window;
+function $431fbd86ca7dc216$var$isNode(value) {
+  return value !== null && typeof value == "object" && "nodeType" in value && typeof value.nodeType == "number";
+}
+function $431fbd86ca7dc216$export$af51f0f06c0f328a(node) {
+  return $431fbd86ca7dc216$var$isNode(node) && node.nodeType === Node.DOCUMENT_FRAGMENT_NODE && "host" in node;
+}
+
+// ../../node_modules/@react-stately/flags/dist/import.mjs
+var $f4e2df6bd15f8569$var$_shadowDOM = !1;
+function $f4e2df6bd15f8569$export$98658e8c59125e6a() {
+  return $f4e2df6bd15f8569$var$_shadowDOM;
+}
+
+// ../../node_modules/@react-aria/utils/dist/DOMFunctions.mjs
+function $d4ee10de306f2510$export$4282f70798064fe0(node, otherNode) {
+  if (!$f4e2df6bd15f8569$export$98658e8c59125e6a()) return otherNode && node ? node.contains(otherNode) : !1;
+  if (!node || !otherNode) return !1;
+  let currentNode = otherNode;
+  for (; currentNode !== null; ) {
+    if (currentNode === node) return !0;
+    currentNode.tagName === "SLOT" && currentNode.assignedSlot ? currentNode = currentNode.assignedSlot.parentNode : $431fbd86ca7dc216$export$af51f0f06c0f328a(currentNode) ? currentNode = currentNode.host : currentNode = currentNode.parentNode;
+  }
+  return !1;
+}
+var $d4ee10de306f2510$export$cd4e5573fbe2b576 = (doc = document) => {
+  var _activeElement_shadowRoot;
+  if (!$f4e2df6bd15f8569$export$98658e8c59125e6a()) return doc.activeElement;
+  let activeElement = doc.activeElement;
+  for (; activeElement && "shadowRoot" in activeElement && (!((_activeElement_shadowRoot = activeElement.shadowRoot) === null || _activeElement_shadowRoot === void 0) && _activeElement_shadowRoot.activeElement); ) activeElement = activeElement.shadowRoot.activeElement;
+  return activeElement;
+};
+function $d4ee10de306f2510$export$e58f029f0fbfdb29(event) {
+  return $f4e2df6bd15f8569$export$98658e8c59125e6a() && event.target.shadowRoot && event.composedPath ? event.composedPath()[0] : event.target;
+}
+
+// ../../node_modules/clsx/dist/clsx.mjs
+function r2(e2) {
+  var t2, f2, n3 = "";
+  if (typeof e2 == "string" || typeof e2 == "number") n3 += e2;
+  else if (typeof e2 == "object") if (Array.isArray(e2)) {
+    var o3 = e2.length;
+    for (t2 = 0; t2 < o3; t2++) e2[t2] && (f2 = r2(e2[t2])) && (n3 && (n3 += " "), n3 += f2);
+  } else for (f2 in e2) e2[f2] && (n3 && (n3 += " "), n3 += f2);
+  return n3;
+}
+function clsx() {
+  for (var e2, t2, f2 = 0, n3 = "", o3 = arguments.length; f2 < o3; f2++) (e2 = arguments[f2]) && (t2 = r2(e2)) && (n3 && (n3 += " "), n3 += t2);
+  return n3;
+}
+var clsx_default = clsx;
+
+// ../../node_modules/@react-aria/utils/dist/mergeProps.mjs
+function $3ef42575df84b30b$export$9d1611c77c2fe928(...args) {
+  let result = {
+    ...args[0]
+  };
+  for (let i2 = 1; i2 < args.length; i2++) {
+    let props = args[i2];
+    for (let key in props) {
+      let a2 = result[key], b2 = props[key];
+      typeof a2 == "function" && typeof b2 == "function" && // This is a lot faster than a regex.
+      key[0] === "o" && key[1] === "n" && key.charCodeAt(2) >= /* 'A' */
+      65 && key.charCodeAt(2) <= /* 'Z' */
+      90 ? result[key] = $ff5963eb1fccf552$export$e08e3b67e392101e(a2, b2) : (key === "className" || key === "UNSAFE_className") && typeof a2 == "string" && typeof b2 == "string" ? result[key] = clsx_default(a2, b2) : key === "id" && a2 && b2 ? result.id = $bdb11010cef70236$export$cd8c9cb68f842629(a2, b2) : result[key] = b2 !== void 0 ? b2 : a2;
+    }
+  }
+  return result;
+}
+
+// ../../node_modules/@react-aria/utils/dist/mergeRefs.mjs
+function $5dc95899b306f630$export$c9058316764c140e(...refs) {
+  return refs.length === 1 && refs[0] ? refs[0] : (value) => {
+    let hasCleanup = !1, cleanups = refs.map((ref) => {
+      let cleanup = $5dc95899b306f630$var$setRef(ref, value);
+      return hasCleanup || (hasCleanup = typeof cleanup == "function"), cleanup;
+    });
+    if (hasCleanup) return () => {
+      cleanups.forEach((cleanup, i2) => {
+        typeof cleanup == "function" ? cleanup() : $5dc95899b306f630$var$setRef(refs[i2], null);
+      });
+    };
+  };
+}
+function $5dc95899b306f630$var$setRef(ref, value) {
+  if (typeof ref == "function") return ref(value);
+  ref != null && (ref.current = value);
+}
+
+// ../../node_modules/@react-aria/utils/dist/filterDOMProps.mjs
+var $65484d02dcb7eb3e$var$DOMPropNames = /* @__PURE__ */ new Set([
+  "id"
+]), $65484d02dcb7eb3e$var$labelablePropNames = /* @__PURE__ */ new Set([
+  "aria-label",
+  "aria-labelledby",
+  "aria-describedby",
+  "aria-details"
+]), $65484d02dcb7eb3e$var$linkPropNames = /* @__PURE__ */ new Set([
+  "href",
+  "hrefLang",
+  "target",
+  "rel",
+  "download",
+  "ping",
+  "referrerPolicy"
+]), $65484d02dcb7eb3e$var$globalAttrs = /* @__PURE__ */ new Set([
+  "dir",
+  "lang",
+  "hidden",
+  "inert",
+  "translate"
+]), $65484d02dcb7eb3e$var$globalEvents = /* @__PURE__ */ new Set([
+  "onClick",
+  "onAuxClick",
+  "onContextMenu",
+  "onDoubleClick",
+  "onMouseDown",
+  "onMouseEnter",
+  "onMouseLeave",
+  "onMouseMove",
+  "onMouseOut",
+  "onMouseOver",
+  "onMouseUp",
+  "onTouchCancel",
+  "onTouchEnd",
+  "onTouchMove",
+  "onTouchStart",
+  "onPointerDown",
+  "onPointerMove",
+  "onPointerUp",
+  "onPointerCancel",
+  "onPointerEnter",
+  "onPointerLeave",
+  "onPointerOver",
+  "onPointerOut",
+  "onGotPointerCapture",
+  "onLostPointerCapture",
+  "onScroll",
+  "onWheel",
+  "onAnimationStart",
+  "onAnimationEnd",
+  "onAnimationIteration",
+  "onTransitionCancel",
+  "onTransitionEnd",
+  "onTransitionRun",
+  "onTransitionStart"
+]), $65484d02dcb7eb3e$var$propRe = /^(data-.*)$/;
+function $65484d02dcb7eb3e$export$457c3d6518dd4c6f(props, opts = {}) {
+  let { labelable, isLink, global: global2, events: events2 = global2, propNames } = opts, filteredProps = {};
+  for (let prop in props) Object.prototype.hasOwnProperty.call(props, prop) && ($65484d02dcb7eb3e$var$DOMPropNames.has(prop) || labelable && $65484d02dcb7eb3e$var$labelablePropNames.has(prop) || isLink && $65484d02dcb7eb3e$var$linkPropNames.has(prop) || global2 && $65484d02dcb7eb3e$var$globalAttrs.has(prop) || events2 && ($65484d02dcb7eb3e$var$globalEvents.has(prop) || prop.endsWith("Capture") && $65484d02dcb7eb3e$var$globalEvents.has(prop.slice(0, -7))) || propNames?.has(prop) || $65484d02dcb7eb3e$var$propRe.test(prop)) && (filteredProps[prop] = props[prop]);
+  return filteredProps;
 }
 
 // ../../node_modules/@react-aria/utils/dist/focusWithoutScrolling.mjs
@@ -3438,15 +3786,15 @@ function $7215afc6de606d6b$var$restoreScrollPosition(scrollableElements) {
 }
 
 // ../../node_modules/@react-aria/utils/dist/platform.mjs
-function $c87311424ea30a05$var$testUserAgent(re) {
+function $c87311424ea30a05$var$testUserAgent(re2) {
   var _window_navigator_userAgentData;
   if (typeof window > "u" || window.navigator == null) return !1;
   let brands = (_window_navigator_userAgentData = window.navigator.userAgentData) === null || _window_navigator_userAgentData === void 0 ? void 0 : _window_navigator_userAgentData.brands;
-  return Array.isArray(brands) && brands.some((brand) => re.test(brand.brand)) || re.test(window.navigator.userAgent);
+  return Array.isArray(brands) && brands.some((brand) => re2.test(brand.brand)) || re2.test(window.navigator.userAgent);
 }
-function $c87311424ea30a05$var$testPlatform(re) {
+function $c87311424ea30a05$var$testPlatform(re2) {
   var _window_navigator_userAgentData;
-  return typeof window < "u" && window.navigator != null ? re.test(((_window_navigator_userAgentData = window.navigator.userAgentData) === null || _window_navigator_userAgentData === void 0 ? void 0 : _window_navigator_userAgentData.platform) || window.navigator.platform) : !1;
+  return typeof window < "u" && window.navigator != null ? re2.test(((_window_navigator_userAgentData = window.navigator.userAgentData) === null || _window_navigator_userAgentData === void 0 ? void 0 : _window_navigator_userAgentData.platform) || window.navigator.platform) : !1;
 }
 function $c87311424ea30a05$var$cached(fn) {
   let res = null;
@@ -3537,19 +3885,94 @@ function $bbed8b41f857bcc0$var$setupGlobalEvents() {
   document.body.addEventListener("transitionrun", onTransitionStart), document.body.addEventListener("transitionend", onTransitionEnd);
 }
 typeof document < "u" && (document.readyState !== "loading" ? $bbed8b41f857bcc0$var$setupGlobalEvents() : document.addEventListener("DOMContentLoaded", $bbed8b41f857bcc0$var$setupGlobalEvents));
+function $bbed8b41f857bcc0$var$cleanupDetachedElements() {
+  for (let [eventTarget] of $bbed8b41f857bcc0$var$transitionsByElement)
+    "isConnected" in eventTarget && !eventTarget.isConnected && $bbed8b41f857bcc0$var$transitionsByElement.delete(eventTarget);
+}
+function $bbed8b41f857bcc0$export$24490316f764c430(fn) {
+  requestAnimationFrame(() => {
+    $bbed8b41f857bcc0$var$cleanupDetachedElements(), $bbed8b41f857bcc0$var$transitionsByElement.size === 0 ? fn() : $bbed8b41f857bcc0$var$transitionCallbacks.add(fn);
+  });
+}
 
 // ../../node_modules/@react-aria/utils/dist/useDrag1D.mjs
 init_react();
 
 // ../../node_modules/@react-aria/utils/dist/useGlobalListeners.mjs
 init_react();
+function $03deb23ff14920c4$export$4eaf04e54aa8eed6() {
+  let globalListeners = useRef(/* @__PURE__ */ new Map()), addGlobalListener = useCallback((eventTarget, type, listener, options2) => {
+    let fn = options2?.once ? (...args) => {
+      globalListeners.current.delete(listener), listener(...args);
+    } : listener;
+    globalListeners.current.set(listener, {
+      type,
+      eventTarget,
+      fn,
+      options: options2
+    }), eventTarget.addEventListener(type, fn, options2);
+  }, []), removeGlobalListener = useCallback((eventTarget, type, listener, options2) => {
+    var _globalListeners_current_get;
+    let fn = ((_globalListeners_current_get = globalListeners.current.get(listener)) === null || _globalListeners_current_get === void 0 ? void 0 : _globalListeners_current_get.fn) || listener;
+    eventTarget.removeEventListener(type, fn, options2), globalListeners.current.delete(listener);
+  }, []), removeAllGlobalListeners = useCallback(() => {
+    globalListeners.current.forEach((value, key) => {
+      removeGlobalListener(value.eventTarget, value.type, key, value.options);
+    });
+  }, [
+    removeGlobalListener
+  ]);
+  return useEffect(() => removeAllGlobalListeners, [
+    removeAllGlobalListeners
+  ]), {
+    addGlobalListener,
+    removeGlobalListener,
+    removeAllGlobalListeners
+  };
+}
 
 // ../../node_modules/@react-aria/utils/dist/useObjectRef.mjs
 init_react();
+function $df56164dff5785e2$export$4338b53315abf666(ref) {
+  let objRef = useRef(null), cleanupRef = useRef(void 0), refEffect = useCallback((instance) => {
+    if (typeof ref == "function") {
+      let refCallback = ref, refCleanup = refCallback(instance);
+      return () => {
+        typeof refCleanup == "function" ? refCleanup() : refCallback(null);
+      };
+    } else if (ref)
+      return ref.current = instance, () => {
+        ref.current = null;
+      };
+  }, [
+    ref
+  ]);
+  return useMemo(() => ({
+    get current() {
+      return objRef.current;
+    },
+    set current(value) {
+      objRef.current = value, cleanupRef.current && (cleanupRef.current(), cleanupRef.current = void 0), value != null && (cleanupRef.current = refEffect(value));
+    }
+  }), [
+    refEffect
+  ]);
+}
 
 // ../../node_modules/@react-aria/utils/dist/useEffectEvent.mjs
 init_react();
 var $8ae05eaa5c114e9c$var$_React_useInsertionEffect, $8ae05eaa5c114e9c$var$useEarlyEffect = ($8ae05eaa5c114e9c$var$_React_useInsertionEffect = react_default.useInsertionEffect) !== null && $8ae05eaa5c114e9c$var$_React_useInsertionEffect !== void 0 ? $8ae05eaa5c114e9c$var$_React_useInsertionEffect : $f0a04ccd8dbdd83b$export$e5c5a5f917a5871c;
+function $8ae05eaa5c114e9c$export$7f54fc3180508a52(fn) {
+  let ref = useRef(null);
+  return $8ae05eaa5c114e9c$var$useEarlyEffect(() => {
+    ref.current = fn;
+  }, [
+    fn
+  ]), useCallback((...args) => {
+    let f2 = ref.current;
+    return f2?.(...args);
+  }, []);
+}
 
 // ../../node_modules/@react-aria/utils/dist/useUpdateEffect.mjs
 init_react();
@@ -3559,6 +3982,42 @@ init_react();
 
 // ../../node_modules/@react-aria/utils/dist/useResizeObserver.mjs
 init_react();
+function $9daab02d461809db$var$hasResizeObserver() {
+  return typeof window.ResizeObserver < "u";
+}
+function $9daab02d461809db$export$683480f191c0e3ea(options2) {
+  let { ref, box, onResize } = options2, onResizeEvent = $8ae05eaa5c114e9c$export$7f54fc3180508a52(onResize);
+  useEffect(() => {
+    let element = ref?.current;
+    if (element)
+      if ($9daab02d461809db$var$hasResizeObserver()) {
+        let resizeObserverInstance = new window.ResizeObserver((entries) => {
+          entries.length && onResizeEvent();
+        });
+        return resizeObserverInstance.observe(element, {
+          box
+        }), () => {
+          element && resizeObserverInstance.unobserve(element);
+        };
+      } else
+        return window.addEventListener("resize", onResizeEvent, !1), () => {
+          window.removeEventListener("resize", onResizeEvent, !1);
+        };
+  }, [
+    ref,
+    box
+  ]);
+}
+
+// ../../node_modules/@react-aria/utils/dist/useSyncRef.mjs
+function $e7801be82b4b2a53$export$4debdb1a3f0fa79e(context, ref) {
+  $f0a04ccd8dbdd83b$export$e5c5a5f917a5871c(() => {
+    if (context && context.ref && ref)
+      return context.ref.current = ref.current, () => {
+        context.ref && (context.ref.current = null);
+      };
+  });
+}
 
 // ../../node_modules/@react-aria/utils/dist/useViewportSize.mjs
 init_react();
@@ -3569,6 +4028,14 @@ init_react();
 
 // ../../node_modules/@react-aria/utils/dist/useEvent.mjs
 init_react();
+
+// ../../node_modules/@react-aria/utils/dist/isVirtualEvent.mjs
+function $6a7db85432448f7f$export$60278871457622de(event) {
+  return event.pointerType === "" && event.isTrusted ? !0 : $c87311424ea30a05$export$a11b0059900ceec8() && event.pointerType ? event.type === "click" && event.buttons === 1 : event.detail === 0 && !event.pointerType;
+}
+function $6a7db85432448f7f$export$29bf1b5f2c56cf63(event) {
+  return !$c87311424ea30a05$export$a11b0059900ceec8() && event.width === 0 && event.height === 0 || event.width === 1 && event.height === 1 && event.pressure === 0 && event.detail === 0 && event.pointerType === "mouse";
+}
 
 // ../../node_modules/@react-aria/utils/dist/useDeepMemo.mjs
 init_react();
@@ -3590,9 +4057,82 @@ var react_dom_default = __REACT_DOM__, { __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WI
 
 // ../../node_modules/@react-aria/utils/dist/animation.mjs
 init_react();
+function $d3f049242431219c$export$6d3443f2c48bfc20(ref, isReady = !0) {
+  let [isEntering, setEntering] = useState(!0), isAnimationReady = isEntering && isReady;
+  return $f0a04ccd8dbdd83b$export$e5c5a5f917a5871c(() => {
+    if (isAnimationReady && ref.current && "getAnimations" in ref.current)
+      for (let animation of ref.current.getAnimations()) animation instanceof CSSTransition && animation.cancel();
+  }, [
+    ref,
+    isAnimationReady
+  ]), $d3f049242431219c$var$useAnimation(ref, isAnimationReady, useCallback(() => setEntering(!1), [])), isAnimationReady;
+}
+function $d3f049242431219c$export$45fda7c47f93fd48(ref, isOpen) {
+  let [exitState, setExitState] = useState(isOpen ? "open" : "closed");
+  switch (exitState) {
+    case "open":
+      isOpen || setExitState("exiting");
+      break;
+    case "closed":
+    case "exiting":
+      isOpen && setExitState("open");
+      break;
+  }
+  let isExiting = exitState === "exiting";
+  return $d3f049242431219c$var$useAnimation(ref, isExiting, useCallback(() => {
+    setExitState((state) => state === "exiting" ? "closed" : state);
+  }, [])), isExiting;
+}
+function $d3f049242431219c$var$useAnimation(ref, isActive, onEnd) {
+  $f0a04ccd8dbdd83b$export$e5c5a5f917a5871c(() => {
+    if (isActive && ref.current) {
+      if (!("getAnimations" in ref.current)) {
+        onEnd();
+        return;
+      }
+      let animations = ref.current.getAnimations();
+      if (animations.length === 0) {
+        onEnd();
+        return;
+      }
+      let canceled = !1;
+      return Promise.all(animations.map((a2) => a2.finished)).then(() => {
+        canceled || flushSync(() => {
+          onEnd();
+        });
+      }).catch(() => {
+      }), () => {
+        canceled = !0;
+      };
+    }
+  }, [
+    ref,
+    isActive,
+    onEnd
+  ]);
+}
 
 // ../../node_modules/@react-aria/utils/dist/isElementVisible.mjs
 var $7d2416ea0959daaa$var$supportsCheckVisibility = typeof Element < "u" && "checkVisibility" in Element.prototype;
+function $7d2416ea0959daaa$var$isStyleVisible(element) {
+  let windowObject = $431fbd86ca7dc216$export$f21a1ffae260145a(element);
+  if (!(element instanceof windowObject.HTMLElement) && !(element instanceof windowObject.SVGElement)) return !1;
+  let { display, visibility } = element.style, isVisible = display !== "none" && visibility !== "hidden" && visibility !== "collapse";
+  if (isVisible) {
+    let { getComputedStyle: getComputedStyle2 } = element.ownerDocument.defaultView, { display: computedDisplay, visibility: computedVisibility } = getComputedStyle2(element);
+    isVisible = computedDisplay !== "none" && computedVisibility !== "hidden" && computedVisibility !== "collapse";
+  }
+  return isVisible;
+}
+function $7d2416ea0959daaa$var$isAttributeVisible(element, childElement) {
+  return !element.hasAttribute("hidden") && // Ignore HiddenSelect when tree walking.
+  !element.hasAttribute("data-react-aria-prevent-focus") && (element.nodeName === "DETAILS" && childElement && childElement.nodeName !== "SUMMARY" ? element.hasAttribute("open") : !0);
+}
+function $7d2416ea0959daaa$export$e989c0fffaa6b27a(element, childElement) {
+  return $7d2416ea0959daaa$var$supportsCheckVisibility ? element.checkVisibility({
+    visibilityProperty: !0
+  }) && !element.closest("[data-react-aria-prevent-focus]") : element.nodeName !== "#comment" && $7d2416ea0959daaa$var$isStyleVisible(element) && $7d2416ea0959daaa$var$isAttributeVisible(element, childElement) && (!element.parentElement || $7d2416ea0959daaa$export$e989c0fffaa6b27a(element.parentElement, element));
+}
 
 // ../../node_modules/@react-aria/utils/dist/isFocusable.mjs
 var $b4b717babfbb907b$var$focusableElements = [
@@ -3613,15 +4153,54 @@ var $b4b717babfbb907b$var$focusableElements = [
 ], $b4b717babfbb907b$var$FOCUSABLE_ELEMENT_SELECTOR = $b4b717babfbb907b$var$focusableElements.join(":not([hidden]),") + ",[tabindex]:not([disabled]):not([hidden])";
 $b4b717babfbb907b$var$focusableElements.push('[tabindex]:not([tabindex="-1"]):not([disabled])');
 var $b4b717babfbb907b$var$TABBABLE_ELEMENT_SELECTOR = $b4b717babfbb907b$var$focusableElements.join(':not([hidden]):not([tabindex="-1"]),');
+function $b4b717babfbb907b$export$4c063cf1350e6fed(element) {
+  return element.matches($b4b717babfbb907b$var$FOCUSABLE_ELEMENT_SELECTOR) && $7d2416ea0959daaa$export$e989c0fffaa6b27a(element) && !$b4b717babfbb907b$var$isInert(element);
+}
+function $b4b717babfbb907b$var$isInert(element) {
+  let node = element;
+  for (; node != null; ) {
+    if (node instanceof node.ownerDocument.defaultView.HTMLElement && node.inert) return !0;
+    node = node.parentElement;
+  }
+  return !1;
+}
 
 // ../../node_modules/@react-stately/utils/dist/useControlledState.mjs
 init_react();
 var $458b0a5536c1a7cf$var$_React_useInsertionEffect, $458b0a5536c1a7cf$var$useEarlyEffect = typeof document < "u" ? ($458b0a5536c1a7cf$var$_React_useInsertionEffect = react_default.useInsertionEffect) !== null && $458b0a5536c1a7cf$var$_React_useInsertionEffect !== void 0 ? $458b0a5536c1a7cf$var$_React_useInsertionEffect : react_default.useLayoutEffect : () => {
 };
+function $458b0a5536c1a7cf$export$40bfa8c7b0832715(value, defaultValue, onChange) {
+  let [stateValue, setStateValue] = useState(value || defaultValue), valueRef = useRef(stateValue), isControlledRef = useRef(value !== void 0), isControlled = value !== void 0;
+  useEffect(() => {
+    let wasControlled = isControlledRef.current;
+    isControlledRef.current = isControlled;
+  }, [
+    isControlled
+  ]);
+  let currentValue = isControlled ? value : stateValue;
+  $458b0a5536c1a7cf$var$useEarlyEffect(() => {
+    valueRef.current = currentValue;
+  });
+  let [, forceUpdate] = useReducer(() => ({}), {}), setValue = useCallback((value2, ...args) => {
+    let newValue = typeof value2 == "function" ? value2(valueRef.current) : value2;
+    Object.is(valueRef.current, newValue) || (valueRef.current = newValue, setStateValue(newValue), forceUpdate(), onChange?.(newValue, ...args));
+  }, [
+    onChange
+  ]);
+  return [
+    currentValue,
+    setValue
+  ];
+}
+
+// ../../node_modules/@react-stately/utils/dist/number.mjs
+function $9446cca9a3875146$export$7d15b64cf5a3a4c4(value, min = -1 / 0, max = 1 / 0) {
+  return Math.min(Math.max(value, min), max);
+}
 
 // ../../node_modules/@react-aria/landmark/dist/useLandmark.mjs
 init_react();
-var import_shim = __toESM(require_shim(), 1), $a86207c5d7f7e1fb$var$LANDMARK_API_VERSION = 1, $a86207c5d7f7e1fb$var$landmarkSymbol = Symbol.for("react-aria-landmark-manager");
+var import_shim = __toESM(require_shim(), 1), $a86207c5d7f7e1fb$var$LANDMARK_API_VERSION = 1, $a86207c5d7f7e1fb$var$landmarkSymbol = /* @__PURE__ */ Symbol.for("react-aria-landmark-manager");
 function $a86207c5d7f7e1fb$var$subscribe(fn) {
   return document.addEventListener("react-aria-landmark-manager-change", fn), () => document.removeEventListener("react-aria-landmark-manager-change", fn);
 }
@@ -3903,7 +4482,7 @@ var MobileAddonsDrawer = ({
     ariaLabel: "Addon panel",
     transitionDuration: 300,
     variant: "bottom-drawer",
-    height: "42vh",
+    height: "42dvh",
     id,
     open: isOpen,
     onOpenChange
@@ -4214,7 +4793,7 @@ var MobileMenuDrawer = ({
     ariaLabel: "Menu",
     transitionDuration: 300,
     variant: "bottom-drawer",
-    height: "80vh",
+    height: "80dvh",
     id,
     open: isOpen,
     onOpenChange
@@ -4234,21 +4813,65 @@ var useFullStoryName = () => {
   let { index, refs } = useStorybookState(), api = useStorybookApi(), currentStory = api.getCurrentStoryData();
   if (!currentStory)
     return "";
-  let combinedIndex = combineIndexes(index, refs || {}), fullStoryName = currentStory.renderLabel?.(currentStory, api) || currentStory.name, node = combinedIndex[currentStory.id];
-  for (; node && "parent" in node && node.parent && combinedIndex[node.parent] && fullStoryName.length < 24; )
-    node = combinedIndex[node.parent], fullStoryName = `${node.renderLabel?.(node, api) || node.name}/${fullStoryName}`;
+  let combinedIndex = combineIndexes(index, refs || {}), storyLabel = currentStory.renderLabel?.(currentStory, api), fullStoryName = typeof storyLabel == "string" ? storyLabel : currentStory.name, node = combinedIndex[currentStory.id];
+  for (; node && "parent" in node && node.parent && combinedIndex[node.parent] && fullStoryName.length < 24; ) {
+    node = combinedIndex[node.parent];
+    let parentLabel = node.renderLabel?.(node, api);
+    fullStoryName = `${typeof parentLabel == "string" ? parentLabel : node.name}/${fullStoryName}`;
+  }
   return fullStoryName;
-}, MobileNavigation = ({
-  menu,
-  panel,
+}, MobileBottomBarContent = ({
+  fullStoryName,
+  isMobileMenuOpen,
+  setMobileMenuOpen,
+  isMobilePanelOpen,
+  setMobilePanelOpen,
+  showMenu,
   showPanel,
-  ...props
+  navShortcut
 }) => {
-  let { isMobileMenuOpen, isMobilePanelOpen, setMobileMenuOpen, setMobilePanelOpen } = useLayout(), fullStoryName = useFullStoryName(), headingId = $bdb11010cef70236$export$f680877a34711e37(), sectionRef = useRef(null), { landmarkProps } = useLandmark(
+  let headingId = $bdb11010cef70236$export$f680877a34711e37(), sectionRef = useRef(null), { landmarkProps } = useLandmark(
     { "aria-labelledby": headingId, role: "banner" },
     sectionRef
   );
-  return react_default.createElement(Container4, { ...props }, react_default.createElement(
+  return react_default.createElement(MobileBottomBar, { className: "sb-bar", ...landmarkProps, ref: sectionRef }, react_default.createElement("h2", { id: headingId, className: "sb-sr-only" }, "Navigation controls"), showMenu && react_default.createElement(
+    BottomBarButton,
+    {
+      padding: "small",
+      variant: "ghost",
+      onClick: () => setMobileMenuOpen(!isMobileMenuOpen),
+      ariaLabel: "Open navigation menu",
+      "aria-expanded": isMobileMenuOpen,
+      "aria-controls": isMobileMenuOpen ? "storybook-mobile-menu" : void 0,
+      shortcut: navShortcut
+    },
+    react_default.createElement(MenuIcon, null),
+    react_default.createElement(Text, null, fullStoryName)
+  ), react_default.createElement("span", { className: "sb-sr-only", "aria-current": "page" }, fullStoryName), showPanel && react_default.createElement(
+    BottomBarButton,
+    {
+      padding: "small",
+      variant: "ghost",
+      onClick: () => setMobilePanelOpen(!0),
+      ariaLabel: "Open addon panel",
+      "aria-expanded": isMobilePanelOpen,
+      "aria-controls": isMobilePanelOpen ? "storybook-mobile-addon-panel" : void 0
+    },
+    react_default.createElement(BottomBarToggleIcon, null)
+  ));
+}, MobileNavigation = ({
+  menu,
+  panel,
+  showMenu = !0,
+  showPanel,
+  ...props
+}) => {
+  let { isMobilePanelOpen, setMobilePanelOpen } = useLayout(), fullStoryName = useFullStoryName(), api = useStorybookApi(), { layout, ui } = useStorybookState(), isMobileMenuOpen = layout.showMobileNavigation, setMobileMenuOpen = useCallback((open) => api.setMobileNavigation(open), [api]), apiRef = useRef(api);
+  apiRef.current = api, useEffect(() => () => apiRef.current.setMobileNavigation(!1), []);
+  let navShortcut = ui.enableShortcuts ?? !0 ? api.getShortcutKeys().toggleNav : void 0;
+  return useLayoutEffect(() => {
+    showMenu || setMobileMenuOpen(!1);
+  }, [showMenu, setMobileMenuOpen]), react_default.createElement(Container4, { ...props }, showMenu && react_default.createElement(
     MobileMenuDrawer,
     {
       id: "storybook-mobile-menu",
@@ -4264,30 +4887,19 @@ var useFullStoryName = () => {
       onOpenChange: setMobilePanelOpen
     },
     panel
-  ), !isMobilePanelOpen && react_default.createElement(MobileBottomBar, { className: "sb-bar", ...landmarkProps, ref: sectionRef }, react_default.createElement("h2", { id: headingId, className: "sb-sr-only" }, "Navigation controls"), react_default.createElement(
-    BottomBarButton,
+  ), !isMobilePanelOpen && (showMenu || showPanel) && react_default.createElement(
+    MobileBottomBarContent,
     {
-      padding: "small",
-      variant: "ghost",
-      onClick: () => setMobileMenuOpen(!isMobileMenuOpen),
-      ariaLabel: "Open navigation menu",
-      "aria-expanded": isMobileMenuOpen,
-      "aria-controls": "storybook-mobile-menu"
-    },
-    react_default.createElement(MenuIcon, null),
-    react_default.createElement(Text, null, fullStoryName)
-  ), react_default.createElement("span", { className: "sb-sr-only", "aria-current": "page" }, fullStoryName), showPanel && react_default.createElement(
-    BottomBarButton,
-    {
-      padding: "small",
-      variant: "ghost",
-      onClick: () => setMobilePanelOpen(!0),
-      ariaLabel: "Open addon panel",
-      "aria-expanded": isMobilePanelOpen,
-      "aria-controls": "storybook-mobile-addon-panel"
-    },
-    react_default.createElement(BottomBarToggleIcon, null)
-  )));
+      fullStoryName,
+      isMobileMenuOpen,
+      setMobileMenuOpen,
+      isMobilePanelOpen,
+      setMobilePanelOpen,
+      showMenu,
+      showPanel,
+      navShortcut
+    }
+  ));
 }, Container4 = styled.section(({ theme }) => ({
   bottom: 0,
   left: 0,
@@ -4327,43 +4939,5209 @@ var useFullStoryName = () => {
   overflow: "hidden"
 });
 
+// src/manager/components/layout/MainAreaContainer.tsx
+init_react();
+var PagesInnerContainer = styled.main(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+  gridRowStart: "sidebar-start",
+  gridRowEnd: "-1",
+  gridColumnStart: "sidebar-end",
+  gridColumnEnd: "-1",
+  backgroundColor: theme.appContentBg,
+  zIndex: 1
+})), PagesContainer = react_default.memo(function(props) {
+  let { children } = props, mainRef = useRef(null), { landmarkProps } = useLandmark(
+    { "aria-labelledby": "main-content-heading", role: "main" },
+    mainRef
+  );
+  return react_default.createElement(PagesInnerContainer, { id: "main-content-wrapper", ref: mainRef, ...landmarkProps }, react_default.createElement("h2", { id: "main-content-heading", className: "sb-sr-only" }, "Main content"), children);
+}), MainInnerContainer = styled.div(({ theme, shown }) => ({
+  flex: 1,
+  position: "relative",
+  backgroundColor: theme.appContentBg,
+  display: shown ? "grid" : "none",
+  // This is needed to make the content container fill the available space
+  overflow: "auto",
+  [MEDIA_DESKTOP_BREAKPOINT]: {
+    flex: "auto",
+    gridArea: "content"
+  }
+})), MainAreaContainer = react_default.memo(function({
+  showPages,
+  slotMain,
+  slotPages
+}) {
+  return react_default.createElement(react_default.Fragment, null, showPages ? react_default.createElement(PagesContainer, null, slotPages) : react_default.createElement(Match, { path: /(^\/story|docs|onboarding\/|^\/$)/, startsWith: !1 }, ({ match }) => react_default.createElement(MainInnerContainer, { shown: !!match }, slotMain)));
+});
+
+// src/manager/components/layout/PanelContainer.tsx
+init_react();
+
+// src/manager/components/layout/Drag.tsx
+init_react();
+
+// src/components/components/tooltip/TooltipNote.tsx
+init_react();
+var DEFAULT_MAX_WIDTH = 260, Note = styled.div(
+  ({ theme }) => ({
+    fontFamily: theme.typography.fonts.base,
+    padding: "2px 6px",
+    lineHeight: "16px",
+    fontSize: 10,
+    fontWeight: theme.typography.weight.bold,
+    color: theme.color.lightest,
+    boxShadow: "0 0 5px 0 rgba(0, 0, 0, 0.3)",
+    borderRadius: 4,
+    pointerEvents: "none",
+    zIndex: -1,
+    background: theme.base === "light" ? "rgba(60, 60, 60, 0.9)" : "rgba(0, 0, 0, 0.95)"
+  }),
+  ({ maxWidth }) => ({ maxWidth })
+), TooltipNote2 = ({ note, maxWidth = DEFAULT_MAX_WIDTH, ...props }) => react_default.createElement(Note, { maxWidth, ...props }, note);
+
+// src/components/components/tooltip/TooltipProvider.tsx
+init_react();
+
+// ../../node_modules/@react-aria/interactions/dist/utils.mjs
+init_react();
+function $8a9cb279dc87e130$export$525bc4921d56d4a(nativeEvent) {
+  let event = nativeEvent;
+  return event.nativeEvent = nativeEvent, event.isDefaultPrevented = () => event.defaultPrevented, event.isPropagationStopped = () => event.cancelBubble, event.persist = () => {
+  }, event;
+}
+function $8a9cb279dc87e130$export$c2b7abe5d61ec696(event, target) {
+  Object.defineProperty(event, "target", {
+    value: target
+  }), Object.defineProperty(event, "currentTarget", {
+    value: target
+  });
+}
+function $8a9cb279dc87e130$export$715c682d09d639cc(onBlur) {
+  let stateRef = useRef({
+    isFocused: !1,
+    observer: null
+  });
+  $f0a04ccd8dbdd83b$export$e5c5a5f917a5871c(() => {
+    let state = stateRef.current;
+    return () => {
+      state.observer && (state.observer.disconnect(), state.observer = null);
+    };
+  }, []);
+  let dispatchBlur = $8ae05eaa5c114e9c$export$7f54fc3180508a52((e2) => {
+    onBlur?.(e2);
+  });
+  return useCallback((e2) => {
+    if (e2.target instanceof HTMLButtonElement || e2.target instanceof HTMLInputElement || e2.target instanceof HTMLTextAreaElement || e2.target instanceof HTMLSelectElement) {
+      stateRef.current.isFocused = !0;
+      let target = e2.target, onBlurHandler = (e3) => {
+        if (stateRef.current.isFocused = !1, target.disabled) {
+          let event = $8a9cb279dc87e130$export$525bc4921d56d4a(e3);
+          dispatchBlur(event);
+        }
+        stateRef.current.observer && (stateRef.current.observer.disconnect(), stateRef.current.observer = null);
+      };
+      target.addEventListener("focusout", onBlurHandler, {
+        once: !0
+      }), stateRef.current.observer = new MutationObserver(() => {
+        if (stateRef.current.isFocused && target.disabled) {
+          var _stateRef_current_observer;
+          (_stateRef_current_observer = stateRef.current.observer) === null || _stateRef_current_observer === void 0 || _stateRef_current_observer.disconnect();
+          let relatedTargetEl = target === document.activeElement ? null : document.activeElement;
+          target.dispatchEvent(new FocusEvent("blur", {
+            relatedTarget: relatedTargetEl
+          })), target.dispatchEvent(new FocusEvent("focusout", {
+            bubbles: !0,
+            relatedTarget: relatedTargetEl
+          }));
+        }
+      }), stateRef.current.observer.observe(target, {
+        attributes: !0,
+        attributeFilter: [
+          "disabled"
+        ]
+      });
+    }
+  }, [
+    dispatchBlur
+  ]);
+}
+var $8a9cb279dc87e130$export$fda7da73ab5d4c48 = !1;
+function $8a9cb279dc87e130$export$cabe61c495ee3649(target) {
+  for (; target && !$b4b717babfbb907b$export$4c063cf1350e6fed(target); ) target = target.parentElement;
+  let window2 = $431fbd86ca7dc216$export$f21a1ffae260145a(target), activeElement = window2.document.activeElement;
+  if (!activeElement || activeElement === target) return;
+  $8a9cb279dc87e130$export$fda7da73ab5d4c48 = !0;
+  let isRefocusing = !1, onBlur = (e2) => {
+    (e2.target === activeElement || isRefocusing) && e2.stopImmediatePropagation();
+  }, onFocusOut = (e2) => {
+    (e2.target === activeElement || isRefocusing) && (e2.stopImmediatePropagation(), !target && !isRefocusing && (isRefocusing = !0, $7215afc6de606d6b$export$de79e2c695e052f3(activeElement), cleanup()));
+  }, onFocus = (e2) => {
+    (e2.target === target || isRefocusing) && e2.stopImmediatePropagation();
+  }, onFocusIn = (e2) => {
+    (e2.target === target || isRefocusing) && (e2.stopImmediatePropagation(), isRefocusing || (isRefocusing = !0, $7215afc6de606d6b$export$de79e2c695e052f3(activeElement), cleanup()));
+  };
+  window2.addEventListener("blur", onBlur, !0), window2.addEventListener("focusout", onFocusOut, !0), window2.addEventListener("focusin", onFocusIn, !0), window2.addEventListener("focus", onFocus, !0);
+  let cleanup = () => {
+    cancelAnimationFrame(raf), window2.removeEventListener("blur", onBlur, !0), window2.removeEventListener("focusout", onFocusOut, !0), window2.removeEventListener("focusin", onFocusIn, !0), window2.removeEventListener("focus", onFocus, !0), $8a9cb279dc87e130$export$fda7da73ab5d4c48 = !1, isRefocusing = !1;
+  }, raf = requestAnimationFrame(cleanup);
+  return cleanup;
+}
+
+// ../../node_modules/@react-aria/interactions/dist/textSelection.mjs
+var $14c0b72509d70225$var$state = "default", $14c0b72509d70225$var$savedUserSelect = "", $14c0b72509d70225$var$modifiedElementMap = /* @__PURE__ */ new WeakMap();
+function $14c0b72509d70225$export$16a4697467175487(target) {
+  if ($c87311424ea30a05$export$fedb369cb70207f1()) {
+    if ($14c0b72509d70225$var$state === "default") {
+      let documentObject = $431fbd86ca7dc216$export$b204af158042fbac(target);
+      $14c0b72509d70225$var$savedUserSelect = documentObject.documentElement.style.webkitUserSelect, documentObject.documentElement.style.webkitUserSelect = "none";
+    }
+    $14c0b72509d70225$var$state = "disabled";
+  } else if (target instanceof HTMLElement || target instanceof SVGElement) {
+    let property = "userSelect" in target.style ? "userSelect" : "webkitUserSelect";
+    $14c0b72509d70225$var$modifiedElementMap.set(target, target.style[property]), target.style[property] = "none";
+  }
+}
+function $14c0b72509d70225$export$b0d6fa1ab32e3295(target) {
+  if ($c87311424ea30a05$export$fedb369cb70207f1()) {
+    if ($14c0b72509d70225$var$state !== "disabled") return;
+    $14c0b72509d70225$var$state = "restoring", setTimeout(() => {
+      $bbed8b41f857bcc0$export$24490316f764c430(() => {
+        if ($14c0b72509d70225$var$state === "restoring") {
+          let documentObject = $431fbd86ca7dc216$export$b204af158042fbac(target);
+          documentObject.documentElement.style.webkitUserSelect === "none" && (documentObject.documentElement.style.webkitUserSelect = $14c0b72509d70225$var$savedUserSelect || ""), $14c0b72509d70225$var$savedUserSelect = "", $14c0b72509d70225$var$state = "default";
+        }
+      });
+    }, 300);
+  } else if ((target instanceof HTMLElement || target instanceof SVGElement) && target && $14c0b72509d70225$var$modifiedElementMap.has(target)) {
+    let targetOldUserSelect = $14c0b72509d70225$var$modifiedElementMap.get(target), property = "userSelect" in target.style ? "userSelect" : "webkitUserSelect";
+    target.style[property] === "none" && (target.style[property] = targetOldUserSelect), target.getAttribute("style") === "" && target.removeAttribute("style"), $14c0b72509d70225$var$modifiedElementMap.delete(target);
+  }
+}
+
+// ../../node_modules/@react-aria/interactions/dist/context.mjs
+init_react();
+var $ae1eeba8b9eafd08$export$5165eccb35aaadb5 = react_default.createContext({
+  register: () => {
+  }
+});
+$ae1eeba8b9eafd08$export$5165eccb35aaadb5.displayName = "PressResponderContext";
+
+// ../../node_modules/@swc/helpers/esm/_class_apply_descriptor_get.js
+function _class_apply_descriptor_get(receiver, descriptor) {
+  return descriptor.get ? descriptor.get.call(receiver) : descriptor.value;
+}
+
+// ../../node_modules/@swc/helpers/esm/_class_extract_field_descriptor.js
+function _class_extract_field_descriptor(receiver, privateMap, action) {
+  if (!privateMap.has(receiver)) throw new TypeError("attempted to " + action + " private field on non-instance");
+  return privateMap.get(receiver);
+}
+
+// ../../node_modules/@swc/helpers/esm/_class_private_field_get.js
+function _class_private_field_get(receiver, privateMap) {
+  var descriptor = _class_extract_field_descriptor(receiver, privateMap, "get");
+  return _class_apply_descriptor_get(receiver, descriptor);
+}
+
+// ../../node_modules/@swc/helpers/esm/_check_private_redeclaration.js
+function _check_private_redeclaration(obj, privateCollection) {
+  if (privateCollection.has(obj))
+    throw new TypeError("Cannot initialize the same private elements twice on an object");
+}
+
+// ../../node_modules/@swc/helpers/esm/_class_private_field_init.js
+function _class_private_field_init(obj, privateMap, value) {
+  _check_private_redeclaration(obj, privateMap), privateMap.set(obj, value);
+}
+
+// ../../node_modules/@swc/helpers/esm/_class_apply_descriptor_set.js
+function _class_apply_descriptor_set(receiver, descriptor, value) {
+  if (descriptor.set) descriptor.set.call(receiver, value);
+  else {
+    if (!descriptor.writable)
+      throw new TypeError("attempted to set read only private field");
+    descriptor.value = value;
+  }
+}
+
+// ../../node_modules/@swc/helpers/esm/_class_private_field_set.js
+function _class_private_field_set(receiver, privateMap, value) {
+  var descriptor = _class_extract_field_descriptor(receiver, privateMap, "set");
+  return _class_apply_descriptor_set(receiver, descriptor, value), value;
+}
+
+// ../../node_modules/@react-aria/interactions/dist/usePress.mjs
+init_react();
+function $f6c31cce2adf654f$var$usePressResponderContext(props) {
+  let context = useContext($ae1eeba8b9eafd08$export$5165eccb35aaadb5);
+  if (context) {
+    let { register, ...contextProps } = context;
+    props = $3ef42575df84b30b$export$9d1611c77c2fe928(contextProps, props), register();
+  }
+  return $e7801be82b4b2a53$export$4debdb1a3f0fa79e(context, props.ref), props;
+}
+var $f6c31cce2adf654f$var$_shouldStopPropagation = /* @__PURE__ */ new WeakMap(), $f6c31cce2adf654f$var$PressEvent = class {
+  continuePropagation() {
+    _class_private_field_set(this, $f6c31cce2adf654f$var$_shouldStopPropagation, !1);
+  }
+  get shouldStopPropagation() {
+    return _class_private_field_get(this, $f6c31cce2adf654f$var$_shouldStopPropagation);
+  }
+  constructor(type, pointerType, originalEvent, state) {
+    _class_private_field_init(this, $f6c31cce2adf654f$var$_shouldStopPropagation, {
+      writable: !0,
+      value: void 0
+    }), _class_private_field_set(this, $f6c31cce2adf654f$var$_shouldStopPropagation, !0);
+    var _state_target;
+    let currentTarget = (_state_target = state?.target) !== null && _state_target !== void 0 ? _state_target : originalEvent.currentTarget, rect = currentTarget?.getBoundingClientRect(), x2, y2 = 0, clientX, clientY = null;
+    originalEvent.clientX != null && originalEvent.clientY != null && (clientX = originalEvent.clientX, clientY = originalEvent.clientY), rect && (clientX != null && clientY != null ? (x2 = clientX - rect.left, y2 = clientY - rect.top) : (x2 = rect.width / 2, y2 = rect.height / 2)), this.type = type, this.pointerType = pointerType, this.target = originalEvent.currentTarget, this.shiftKey = originalEvent.shiftKey, this.metaKey = originalEvent.metaKey, this.ctrlKey = originalEvent.ctrlKey, this.altKey = originalEvent.altKey, this.x = x2, this.y = y2;
+  }
+}, $f6c31cce2adf654f$var$LINK_CLICKED = /* @__PURE__ */ Symbol("linkClicked"), $f6c31cce2adf654f$var$STYLE_ID = "react-aria-pressable-style", $f6c31cce2adf654f$var$PRESSABLE_ATTRIBUTE = "data-react-aria-pressable";
+function $f6c31cce2adf654f$export$45712eceda6fad21(props) {
+  let { onPress, onPressChange, onPressStart, onPressEnd, onPressUp, onClick, isDisabled, isPressed: isPressedProp, preventFocusOnPress, shouldCancelOnPointerExit, allowTextSelectionOnPress, ref: domRef, ...domProps } = $f6c31cce2adf654f$var$usePressResponderContext(props), [isPressed, setPressed] = useState(!1), ref = useRef({
+    isPressed: !1,
+    ignoreEmulatedMouseEvents: !1,
+    didFirePressStart: !1,
+    isTriggeringEvent: !1,
+    activePointerId: null,
+    target: null,
+    isOverTarget: !1,
+    pointerType: null,
+    disposables: []
+  }), { addGlobalListener, removeAllGlobalListeners } = $03deb23ff14920c4$export$4eaf04e54aa8eed6(), triggerPressStart = $8ae05eaa5c114e9c$export$7f54fc3180508a52((originalEvent, pointerType) => {
+    let state = ref.current;
+    if (isDisabled || state.didFirePressStart) return !1;
+    let shouldStopPropagation = !0;
+    if (state.isTriggeringEvent = !0, onPressStart) {
+      let event = new $f6c31cce2adf654f$var$PressEvent("pressstart", pointerType, originalEvent);
+      onPressStart(event), shouldStopPropagation = event.shouldStopPropagation;
+    }
+    return onPressChange && onPressChange(!0), state.isTriggeringEvent = !1, state.didFirePressStart = !0, setPressed(!0), shouldStopPropagation;
+  }), triggerPressEnd = $8ae05eaa5c114e9c$export$7f54fc3180508a52((originalEvent, pointerType, wasPressed = !0) => {
+    let state = ref.current;
+    if (!state.didFirePressStart) return !1;
+    state.didFirePressStart = !1, state.isTriggeringEvent = !0;
+    let shouldStopPropagation = !0;
+    if (onPressEnd) {
+      let event = new $f6c31cce2adf654f$var$PressEvent("pressend", pointerType, originalEvent);
+      onPressEnd(event), shouldStopPropagation = event.shouldStopPropagation;
+    }
+    if (onPressChange && onPressChange(!1), setPressed(!1), onPress && wasPressed && !isDisabled) {
+      let event = new $f6c31cce2adf654f$var$PressEvent("press", pointerType, originalEvent);
+      onPress(event), shouldStopPropagation && (shouldStopPropagation = event.shouldStopPropagation);
+    }
+    return state.isTriggeringEvent = !1, shouldStopPropagation;
+  }), triggerPressUp = $8ae05eaa5c114e9c$export$7f54fc3180508a52((originalEvent, pointerType) => {
+    let state = ref.current;
+    if (isDisabled) return !1;
+    if (onPressUp) {
+      state.isTriggeringEvent = !0;
+      let event = new $f6c31cce2adf654f$var$PressEvent("pressup", pointerType, originalEvent);
+      return onPressUp(event), state.isTriggeringEvent = !1, event.shouldStopPropagation;
+    }
+    return !0;
+  }), cancel = $8ae05eaa5c114e9c$export$7f54fc3180508a52((e2) => {
+    let state = ref.current;
+    if (state.isPressed && state.target) {
+      state.didFirePressStart && state.pointerType != null && triggerPressEnd($f6c31cce2adf654f$var$createEvent(state.target, e2), state.pointerType, !1), state.isPressed = !1, state.isOverTarget = !1, state.activePointerId = null, state.pointerType = null, removeAllGlobalListeners(), allowTextSelectionOnPress || $14c0b72509d70225$export$b0d6fa1ab32e3295(state.target);
+      for (let dispose of state.disposables) dispose();
+      state.disposables = [];
+    }
+  }), cancelOnPointerExit = $8ae05eaa5c114e9c$export$7f54fc3180508a52((e2) => {
+    shouldCancelOnPointerExit && cancel(e2);
+  }), triggerClick = $8ae05eaa5c114e9c$export$7f54fc3180508a52((e2) => {
+    isDisabled || onClick?.(e2);
+  }), triggerSyntheticClick = $8ae05eaa5c114e9c$export$7f54fc3180508a52((e2, target) => {
+    if (!isDisabled && onClick) {
+      let event = new MouseEvent("click", e2);
+      $8a9cb279dc87e130$export$c2b7abe5d61ec696(event, target), onClick($8a9cb279dc87e130$export$525bc4921d56d4a(event));
+    }
+  }), pressProps = useMemo(() => {
+    let state = ref.current, pressProps2 = {
+      onKeyDown(e2) {
+        if ($f6c31cce2adf654f$var$isValidKeyboardEvent(e2.nativeEvent, e2.currentTarget) && $d4ee10de306f2510$export$4282f70798064fe0(e2.currentTarget, $d4ee10de306f2510$export$e58f029f0fbfdb29(e2.nativeEvent))) {
+          var _state_metaKeyEvents;
+          $f6c31cce2adf654f$var$shouldPreventDefaultKeyboard($d4ee10de306f2510$export$e58f029f0fbfdb29(e2.nativeEvent), e2.key) && e2.preventDefault();
+          let shouldStopPropagation = !0;
+          if (!state.isPressed && !e2.repeat) {
+            state.target = e2.currentTarget, state.isPressed = !0, state.pointerType = "keyboard", shouldStopPropagation = triggerPressStart(e2, "keyboard");
+            let originalTarget = e2.currentTarget, pressUp = (e3) => {
+              $f6c31cce2adf654f$var$isValidKeyboardEvent(e3, originalTarget) && !e3.repeat && $d4ee10de306f2510$export$4282f70798064fe0(originalTarget, $d4ee10de306f2510$export$e58f029f0fbfdb29(e3)) && state.target && triggerPressUp($f6c31cce2adf654f$var$createEvent(state.target, e3), "keyboard");
+            };
+            addGlobalListener($431fbd86ca7dc216$export$b204af158042fbac(e2.currentTarget), "keyup", $ff5963eb1fccf552$export$e08e3b67e392101e(pressUp, onKeyUp), !0);
+          }
+          shouldStopPropagation && e2.stopPropagation(), e2.metaKey && $c87311424ea30a05$export$9ac100e40613ea10() && ((_state_metaKeyEvents = state.metaKeyEvents) === null || _state_metaKeyEvents === void 0 || _state_metaKeyEvents.set(e2.key, e2.nativeEvent));
+        } else e2.key === "Meta" && (state.metaKeyEvents = /* @__PURE__ */ new Map());
+      },
+      onClick(e2) {
+        if (!(e2 && !$d4ee10de306f2510$export$4282f70798064fe0(e2.currentTarget, $d4ee10de306f2510$export$e58f029f0fbfdb29(e2.nativeEvent))) && e2 && e2.button === 0 && !state.isTriggeringEvent && !$ea8dcbcb9ea1b556$export$95185d699e05d4d7.isOpening) {
+          let shouldStopPropagation = !0;
+          if (isDisabled && e2.preventDefault(), !state.ignoreEmulatedMouseEvents && !state.isPressed && (state.pointerType === "virtual" || $6a7db85432448f7f$export$60278871457622de(e2.nativeEvent))) {
+            let stopPressStart = triggerPressStart(e2, "virtual"), stopPressUp = triggerPressUp(e2, "virtual"), stopPressEnd = triggerPressEnd(e2, "virtual");
+            triggerClick(e2), shouldStopPropagation = stopPressStart && stopPressUp && stopPressEnd;
+          } else if (state.isPressed && state.pointerType !== "keyboard") {
+            let pointerType = state.pointerType || e2.nativeEvent.pointerType || "virtual", stopPressUp = triggerPressUp($f6c31cce2adf654f$var$createEvent(e2.currentTarget, e2), pointerType), stopPressEnd = triggerPressEnd($f6c31cce2adf654f$var$createEvent(e2.currentTarget, e2), pointerType, !0);
+            shouldStopPropagation = stopPressUp && stopPressEnd, state.isOverTarget = !1, triggerClick(e2), cancel(e2);
+          }
+          state.ignoreEmulatedMouseEvents = !1, shouldStopPropagation && e2.stopPropagation();
+        }
+      }
+    }, onKeyUp = (e2) => {
+      var _state_metaKeyEvents;
+      if (state.isPressed && state.target && $f6c31cce2adf654f$var$isValidKeyboardEvent(e2, state.target)) {
+        var _state_metaKeyEvents1;
+        $f6c31cce2adf654f$var$shouldPreventDefaultKeyboard($d4ee10de306f2510$export$e58f029f0fbfdb29(e2), e2.key) && e2.preventDefault();
+        let target = $d4ee10de306f2510$export$e58f029f0fbfdb29(e2), wasPressed = $d4ee10de306f2510$export$4282f70798064fe0(state.target, $d4ee10de306f2510$export$e58f029f0fbfdb29(e2));
+        triggerPressEnd($f6c31cce2adf654f$var$createEvent(state.target, e2), "keyboard", wasPressed), wasPressed && triggerSyntheticClick(e2, state.target), removeAllGlobalListeners(), e2.key !== "Enter" && $f6c31cce2adf654f$var$isHTMLAnchorLink(state.target) && $d4ee10de306f2510$export$4282f70798064fe0(state.target, target) && !e2[$f6c31cce2adf654f$var$LINK_CLICKED] && (e2[$f6c31cce2adf654f$var$LINK_CLICKED] = !0, $ea8dcbcb9ea1b556$export$95185d699e05d4d7(state.target, e2, !1)), state.isPressed = !1, (_state_metaKeyEvents1 = state.metaKeyEvents) === null || _state_metaKeyEvents1 === void 0 || _state_metaKeyEvents1.delete(e2.key);
+      } else if (e2.key === "Meta" && (!((_state_metaKeyEvents = state.metaKeyEvents) === null || _state_metaKeyEvents === void 0) && _state_metaKeyEvents.size)) {
+        var _state_target;
+        let events2 = state.metaKeyEvents;
+        state.metaKeyEvents = void 0;
+        for (let event of events2.values()) (_state_target = state.target) === null || _state_target === void 0 || _state_target.dispatchEvent(new KeyboardEvent("keyup", event));
+      }
+    };
+    if (typeof PointerEvent < "u") {
+      pressProps2.onPointerDown = (e2) => {
+        if (e2.button !== 0 || !$d4ee10de306f2510$export$4282f70798064fe0(e2.currentTarget, $d4ee10de306f2510$export$e58f029f0fbfdb29(e2.nativeEvent))) return;
+        if ($6a7db85432448f7f$export$29bf1b5f2c56cf63(e2.nativeEvent)) {
+          state.pointerType = "virtual";
+          return;
+        }
+        state.pointerType = e2.pointerType;
+        let shouldStopPropagation = !0;
+        if (!state.isPressed) {
+          state.isPressed = !0, state.isOverTarget = !0, state.activePointerId = e2.pointerId, state.target = e2.currentTarget, allowTextSelectionOnPress || $14c0b72509d70225$export$16a4697467175487(state.target), shouldStopPropagation = triggerPressStart(e2, state.pointerType);
+          let target = $d4ee10de306f2510$export$e58f029f0fbfdb29(e2.nativeEvent);
+          "releasePointerCapture" in target && target.releasePointerCapture(e2.pointerId), addGlobalListener($431fbd86ca7dc216$export$b204af158042fbac(e2.currentTarget), "pointerup", onPointerUp, !1), addGlobalListener($431fbd86ca7dc216$export$b204af158042fbac(e2.currentTarget), "pointercancel", onPointerCancel, !1);
+        }
+        shouldStopPropagation && e2.stopPropagation();
+      }, pressProps2.onMouseDown = (e2) => {
+        if ($d4ee10de306f2510$export$4282f70798064fe0(e2.currentTarget, $d4ee10de306f2510$export$e58f029f0fbfdb29(e2.nativeEvent)) && e2.button === 0) {
+          if (preventFocusOnPress) {
+            let dispose = $8a9cb279dc87e130$export$cabe61c495ee3649(e2.target);
+            dispose && state.disposables.push(dispose);
+          }
+          e2.stopPropagation();
+        }
+      }, pressProps2.onPointerUp = (e2) => {
+        !$d4ee10de306f2510$export$4282f70798064fe0(e2.currentTarget, $d4ee10de306f2510$export$e58f029f0fbfdb29(e2.nativeEvent)) || state.pointerType === "virtual" || e2.button === 0 && !state.isPressed && triggerPressUp(e2, state.pointerType || e2.pointerType);
+      }, pressProps2.onPointerEnter = (e2) => {
+        e2.pointerId === state.activePointerId && state.target && !state.isOverTarget && state.pointerType != null && (state.isOverTarget = !0, triggerPressStart($f6c31cce2adf654f$var$createEvent(state.target, e2), state.pointerType));
+      }, pressProps2.onPointerLeave = (e2) => {
+        e2.pointerId === state.activePointerId && state.target && state.isOverTarget && state.pointerType != null && (state.isOverTarget = !1, triggerPressEnd($f6c31cce2adf654f$var$createEvent(state.target, e2), state.pointerType, !1), cancelOnPointerExit(e2));
+      };
+      let onPointerUp = (e2) => {
+        if (e2.pointerId === state.activePointerId && state.isPressed && e2.button === 0 && state.target) {
+          if ($d4ee10de306f2510$export$4282f70798064fe0(state.target, $d4ee10de306f2510$export$e58f029f0fbfdb29(e2)) && state.pointerType != null) {
+            let clicked = !1, timeout = setTimeout(() => {
+              state.isPressed && state.target instanceof HTMLElement && (clicked ? cancel(e2) : ($7215afc6de606d6b$export$de79e2c695e052f3(state.target), state.target.click()));
+            }, 80);
+            addGlobalListener(e2.currentTarget, "click", () => clicked = !0, !0), state.disposables.push(() => clearTimeout(timeout));
+          } else cancel(e2);
+          state.isOverTarget = !1;
+        }
+      }, onPointerCancel = (e2) => {
+        cancel(e2);
+      };
+      pressProps2.onDragStart = (e2) => {
+        $d4ee10de306f2510$export$4282f70798064fe0(e2.currentTarget, $d4ee10de306f2510$export$e58f029f0fbfdb29(e2.nativeEvent)) && cancel(e2);
+      };
+    }
+    return pressProps2;
+  }, [
+    addGlobalListener,
+    isDisabled,
+    preventFocusOnPress,
+    removeAllGlobalListeners,
+    allowTextSelectionOnPress,
+    cancel,
+    cancelOnPointerExit,
+    triggerPressEnd,
+    triggerPressStart,
+    triggerPressUp,
+    triggerClick,
+    triggerSyntheticClick
+  ]);
+  return useEffect(() => {
+    if (!domRef) return;
+    let ownerDocument = $431fbd86ca7dc216$export$b204af158042fbac(domRef.current);
+    if (!ownerDocument || !ownerDocument.head || ownerDocument.getElementById($f6c31cce2adf654f$var$STYLE_ID)) return;
+    let style = ownerDocument.createElement("style");
+    style.id = $f6c31cce2adf654f$var$STYLE_ID, style.textContent = `
+@layer {
+  [${$f6c31cce2adf654f$var$PRESSABLE_ATTRIBUTE}] {
+    touch-action: pan-x pan-y pinch-zoom;
+  }
+}
+    `.trim(), ownerDocument.head.prepend(style);
+  }, [
+    domRef
+  ]), useEffect(() => {
+    let state = ref.current;
+    return () => {
+      var _state_target;
+      allowTextSelectionOnPress || $14c0b72509d70225$export$b0d6fa1ab32e3295((_state_target = state.target) !== null && _state_target !== void 0 ? _state_target : void 0);
+      for (let dispose of state.disposables) dispose();
+      state.disposables = [];
+    };
+  }, [
+    allowTextSelectionOnPress
+  ]), {
+    isPressed: isPressedProp || isPressed,
+    pressProps: $3ef42575df84b30b$export$9d1611c77c2fe928(domProps, pressProps, {
+      [$f6c31cce2adf654f$var$PRESSABLE_ATTRIBUTE]: !0
+    })
+  };
+}
+function $f6c31cce2adf654f$var$isHTMLAnchorLink(target) {
+  return target.tagName === "A" && target.hasAttribute("href");
+}
+function $f6c31cce2adf654f$var$isValidKeyboardEvent(event, currentTarget) {
+  let { key, code } = event, element = currentTarget, role = element.getAttribute("role");
+  return (key === "Enter" || key === " " || key === "Spacebar" || code === "Space") && !(element instanceof $431fbd86ca7dc216$export$f21a1ffae260145a(element).HTMLInputElement && !$f6c31cce2adf654f$var$isValidInputKey(element, key) || element instanceof $431fbd86ca7dc216$export$f21a1ffae260145a(element).HTMLTextAreaElement || element.isContentEditable) && // Links should only trigger with Enter key
+  !((role === "link" || !role && $f6c31cce2adf654f$var$isHTMLAnchorLink(element)) && key !== "Enter");
+}
+function $f6c31cce2adf654f$var$createEvent(target, e2) {
+  let clientX = e2.clientX, clientY = e2.clientY;
+  return {
+    currentTarget: target,
+    shiftKey: e2.shiftKey,
+    ctrlKey: e2.ctrlKey,
+    metaKey: e2.metaKey,
+    altKey: e2.altKey,
+    clientX,
+    clientY
+  };
+}
+function $f6c31cce2adf654f$var$shouldPreventDefaultUp(target) {
+  return target instanceof HTMLInputElement ? !1 : target instanceof HTMLButtonElement ? target.type !== "submit" && target.type !== "reset" : !$f6c31cce2adf654f$var$isHTMLAnchorLink(target);
+}
+function $f6c31cce2adf654f$var$shouldPreventDefaultKeyboard(target, key) {
+  return target instanceof HTMLInputElement ? !$f6c31cce2adf654f$var$isValidInputKey(target, key) : $f6c31cce2adf654f$var$shouldPreventDefaultUp(target);
+}
+var $f6c31cce2adf654f$var$nonTextInputTypes = /* @__PURE__ */ new Set([
+  "checkbox",
+  "radio",
+  "range",
+  "color",
+  "file",
+  "image",
+  "button",
+  "submit",
+  "reset"
+]);
+function $f6c31cce2adf654f$var$isValidInputKey(target, key) {
+  return target.type === "checkbox" || target.type === "radio" ? key === " " : $f6c31cce2adf654f$var$nonTextInputTypes.has(target.type);
+}
+
+// ../../node_modules/@react-aria/interactions/dist/useFocusVisible.mjs
+init_react();
+var $507fabe10e71c6fb$var$currentModality = null, $507fabe10e71c6fb$var$changeHandlers = /* @__PURE__ */ new Set(), $507fabe10e71c6fb$export$d90243b58daecda7 = /* @__PURE__ */ new Map(), $507fabe10e71c6fb$var$hasEventBeforeFocus = !1, $507fabe10e71c6fb$var$hasBlurredWindowRecently = !1;
+function $507fabe10e71c6fb$var$triggerChangeHandlers(modality, e2) {
+  for (let handler of $507fabe10e71c6fb$var$changeHandlers) handler(modality, e2);
+}
+function $507fabe10e71c6fb$var$isValidKey(e2) {
+  return !(e2.metaKey || !$c87311424ea30a05$export$9ac100e40613ea10() && e2.altKey || e2.ctrlKey || e2.key === "Control" || e2.key === "Shift" || e2.key === "Meta");
+}
+function $507fabe10e71c6fb$var$handleKeyboardEvent(e2) {
+  $507fabe10e71c6fb$var$hasEventBeforeFocus = !0, $507fabe10e71c6fb$var$isValidKey(e2) && ($507fabe10e71c6fb$var$currentModality = "keyboard", $507fabe10e71c6fb$var$triggerChangeHandlers("keyboard", e2));
+}
+function $507fabe10e71c6fb$var$handlePointerEvent(e2) {
+  $507fabe10e71c6fb$var$currentModality = "pointer", (e2.type === "mousedown" || e2.type === "pointerdown") && ($507fabe10e71c6fb$var$hasEventBeforeFocus = !0, $507fabe10e71c6fb$var$triggerChangeHandlers("pointer", e2));
+}
+function $507fabe10e71c6fb$var$handleClickEvent(e2) {
+  $6a7db85432448f7f$export$60278871457622de(e2) && ($507fabe10e71c6fb$var$hasEventBeforeFocus = !0, $507fabe10e71c6fb$var$currentModality = "virtual");
+}
+function $507fabe10e71c6fb$var$handleFocusEvent(e2) {
+  e2.target === window || e2.target === document || $8a9cb279dc87e130$export$fda7da73ab5d4c48 || !e2.isTrusted || (!$507fabe10e71c6fb$var$hasEventBeforeFocus && !$507fabe10e71c6fb$var$hasBlurredWindowRecently && ($507fabe10e71c6fb$var$currentModality = "virtual", $507fabe10e71c6fb$var$triggerChangeHandlers("virtual", e2)), $507fabe10e71c6fb$var$hasEventBeforeFocus = !1, $507fabe10e71c6fb$var$hasBlurredWindowRecently = !1);
+}
+function $507fabe10e71c6fb$var$handleWindowBlur() {
+  $8a9cb279dc87e130$export$fda7da73ab5d4c48 || ($507fabe10e71c6fb$var$hasEventBeforeFocus = !1, $507fabe10e71c6fb$var$hasBlurredWindowRecently = !0);
+}
+function $507fabe10e71c6fb$var$setupGlobalFocusEvents(element) {
+  if (typeof window > "u" || typeof document > "u" || $507fabe10e71c6fb$export$d90243b58daecda7.get($431fbd86ca7dc216$export$f21a1ffae260145a(element))) return;
+  let windowObject = $431fbd86ca7dc216$export$f21a1ffae260145a(element), documentObject = $431fbd86ca7dc216$export$b204af158042fbac(element), focus = windowObject.HTMLElement.prototype.focus;
+  windowObject.HTMLElement.prototype.focus = function() {
+    $507fabe10e71c6fb$var$hasEventBeforeFocus = !0, focus.apply(this, arguments);
+  }, documentObject.addEventListener("keydown", $507fabe10e71c6fb$var$handleKeyboardEvent, !0), documentObject.addEventListener("keyup", $507fabe10e71c6fb$var$handleKeyboardEvent, !0), documentObject.addEventListener("click", $507fabe10e71c6fb$var$handleClickEvent, !0), windowObject.addEventListener("focus", $507fabe10e71c6fb$var$handleFocusEvent, !0), windowObject.addEventListener("blur", $507fabe10e71c6fb$var$handleWindowBlur, !1), typeof PointerEvent < "u" && (documentObject.addEventListener("pointerdown", $507fabe10e71c6fb$var$handlePointerEvent, !0), documentObject.addEventListener("pointermove", $507fabe10e71c6fb$var$handlePointerEvent, !0), documentObject.addEventListener("pointerup", $507fabe10e71c6fb$var$handlePointerEvent, !0)), windowObject.addEventListener("beforeunload", () => {
+    $507fabe10e71c6fb$var$tearDownWindowFocusTracking(element);
+  }, {
+    once: !0
+  }), $507fabe10e71c6fb$export$d90243b58daecda7.set(windowObject, {
+    focus
+  });
+}
+var $507fabe10e71c6fb$var$tearDownWindowFocusTracking = (element, loadListener) => {
+  let windowObject = $431fbd86ca7dc216$export$f21a1ffae260145a(element), documentObject = $431fbd86ca7dc216$export$b204af158042fbac(element);
+  loadListener && documentObject.removeEventListener("DOMContentLoaded", loadListener), $507fabe10e71c6fb$export$d90243b58daecda7.has(windowObject) && (windowObject.HTMLElement.prototype.focus = $507fabe10e71c6fb$export$d90243b58daecda7.get(windowObject).focus, documentObject.removeEventListener("keydown", $507fabe10e71c6fb$var$handleKeyboardEvent, !0), documentObject.removeEventListener("keyup", $507fabe10e71c6fb$var$handleKeyboardEvent, !0), documentObject.removeEventListener("click", $507fabe10e71c6fb$var$handleClickEvent, !0), windowObject.removeEventListener("focus", $507fabe10e71c6fb$var$handleFocusEvent, !0), windowObject.removeEventListener("blur", $507fabe10e71c6fb$var$handleWindowBlur, !1), typeof PointerEvent < "u" && (documentObject.removeEventListener("pointerdown", $507fabe10e71c6fb$var$handlePointerEvent, !0), documentObject.removeEventListener("pointermove", $507fabe10e71c6fb$var$handlePointerEvent, !0), documentObject.removeEventListener("pointerup", $507fabe10e71c6fb$var$handlePointerEvent, !0)), $507fabe10e71c6fb$export$d90243b58daecda7.delete(windowObject));
+};
+function $507fabe10e71c6fb$export$2f1888112f558a7d(element) {
+  let documentObject = $431fbd86ca7dc216$export$b204af158042fbac(element), loadListener;
+  return documentObject.readyState !== "loading" ? $507fabe10e71c6fb$var$setupGlobalFocusEvents(element) : (loadListener = () => {
+    $507fabe10e71c6fb$var$setupGlobalFocusEvents(element);
+  }, documentObject.addEventListener("DOMContentLoaded", loadListener)), () => $507fabe10e71c6fb$var$tearDownWindowFocusTracking(element, loadListener);
+}
+typeof document < "u" && $507fabe10e71c6fb$export$2f1888112f558a7d();
+function $507fabe10e71c6fb$export$b9b3dfddab17db27() {
+  return $507fabe10e71c6fb$var$currentModality !== "pointer";
+}
+function $507fabe10e71c6fb$export$630ff653c5ada6a9() {
+  return $507fabe10e71c6fb$var$currentModality;
+}
+
+// ../../node_modules/@react-aria/interactions/dist/focusSafely.mjs
+function $3ad3f6e1647bc98d$export$80f3e147d781571c(element) {
+  let ownerDocument = $431fbd86ca7dc216$export$b204af158042fbac(element), activeElement = $d4ee10de306f2510$export$cd4e5573fbe2b576(ownerDocument);
+  if ($507fabe10e71c6fb$export$630ff653c5ada6a9() === "virtual") {
+    let lastFocusedElement = activeElement;
+    $bbed8b41f857bcc0$export$24490316f764c430(() => {
+      $d4ee10de306f2510$export$cd4e5573fbe2b576(ownerDocument) === lastFocusedElement && element.isConnected && $7215afc6de606d6b$export$de79e2c695e052f3(element);
+    });
+  } else $7215afc6de606d6b$export$de79e2c695e052f3(element);
+}
+
+// ../../node_modules/@react-aria/interactions/dist/useFocus.mjs
+init_react();
+function $a1ea59d68270f0dd$export$f8168d8dd8fd66e6(props) {
+  let { isDisabled, onFocus: onFocusProp, onBlur: onBlurProp, onFocusChange } = props, onBlur = useCallback((e2) => {
+    if (e2.target === e2.currentTarget)
+      return onBlurProp && onBlurProp(e2), onFocusChange && onFocusChange(!1), !0;
+  }, [
+    onBlurProp,
+    onFocusChange
+  ]), onSyntheticFocus = $8a9cb279dc87e130$export$715c682d09d639cc(onBlur), onFocus = useCallback((e2) => {
+    let ownerDocument = $431fbd86ca7dc216$export$b204af158042fbac(e2.target), activeElement = ownerDocument ? $d4ee10de306f2510$export$cd4e5573fbe2b576(ownerDocument) : $d4ee10de306f2510$export$cd4e5573fbe2b576();
+    e2.target === e2.currentTarget && activeElement === $d4ee10de306f2510$export$e58f029f0fbfdb29(e2.nativeEvent) && (onFocusProp && onFocusProp(e2), onFocusChange && onFocusChange(!0), onSyntheticFocus(e2));
+  }, [
+    onFocusChange,
+    onFocusProp,
+    onSyntheticFocus
+  ]);
+  return {
+    focusProps: {
+      onFocus: !isDisabled && (onFocusProp || onFocusChange || onBlurProp) ? onFocus : void 0,
+      onBlur: !isDisabled && (onBlurProp || onFocusChange) ? onBlur : void 0
+    }
+  };
+}
+
+// ../../node_modules/@react-aria/interactions/dist/createEventHandler.mjs
+function $93925083ecbb358c$export$48d1ea6320830260(handler) {
+  if (!handler) return;
+  let shouldStopPropagation = !0;
+  return (e2) => {
+    let event = {
+      ...e2,
+      preventDefault() {
+        e2.preventDefault();
+      },
+      isDefaultPrevented() {
+        return e2.isDefaultPrevented();
+      },
+      stopPropagation() {
+        shouldStopPropagation = !0;
+      },
+      continuePropagation() {
+        shouldStopPropagation = !1;
+      },
+      isPropagationStopped() {
+        return shouldStopPropagation;
+      }
+    };
+    handler(event), shouldStopPropagation && e2.stopPropagation();
+  };
+}
+
+// ../../node_modules/@react-aria/interactions/dist/useKeyboard.mjs
+function $46d819fcbaf35654$export$8f71654801c2f7cd(props) {
+  return {
+    keyboardProps: props.isDisabled ? {} : {
+      onKeyDown: $93925083ecbb358c$export$48d1ea6320830260(props.onKeyDown),
+      onKeyUp: $93925083ecbb358c$export$48d1ea6320830260(props.onKeyUp)
+    }
+  };
+}
+
+// ../../node_modules/@react-aria/interactions/dist/useFocusable.mjs
+init_react();
+var $f645667febf57a63$export$f9762fab77588ecb = react_default.createContext(null);
+function $f645667febf57a63$var$useFocusableContext(ref) {
+  let context = useContext($f645667febf57a63$export$f9762fab77588ecb) || {};
+  $e7801be82b4b2a53$export$4debdb1a3f0fa79e(context, ref);
+  let { ref: _2, ...otherProps } = context;
+  return otherProps;
+}
+var $f645667febf57a63$export$13f3202a3e5ddd5 = react_default.forwardRef(function(props, ref) {
+  let { children, ...otherProps } = props, objRef = $df56164dff5785e2$export$4338b53315abf666(ref), context = {
+    ...otherProps,
+    ref: objRef
+  };
+  return react_default.createElement($f645667febf57a63$export$f9762fab77588ecb.Provider, {
+    value: context
+  }, children);
+});
+function $f645667febf57a63$export$4c014de7c8940b4c(props, domRef) {
+  let { focusProps } = $a1ea59d68270f0dd$export$f8168d8dd8fd66e6(props), { keyboardProps } = $46d819fcbaf35654$export$8f71654801c2f7cd(props), interactions = $3ef42575df84b30b$export$9d1611c77c2fe928(focusProps, keyboardProps), domProps = $f645667febf57a63$var$useFocusableContext(domRef), interactionProps = props.isDisabled ? {} : domProps, autoFocusRef = useRef(props.autoFocus);
+  useEffect(() => {
+    autoFocusRef.current && domRef.current && $3ad3f6e1647bc98d$export$80f3e147d781571c(domRef.current), autoFocusRef.current = !1;
+  }, [
+    domRef
+  ]);
+  let tabIndex = props.excludeFromTabOrder ? -1 : 0;
+  return props.isDisabled && (tabIndex = void 0), {
+    focusableProps: $3ef42575df84b30b$export$9d1611c77c2fe928({
+      ...interactions,
+      tabIndex
+    }, interactionProps)
+  };
+}
+var $f645667febf57a63$export$35a3bebf7ef2d934 = forwardRef(({ children, ...props }, ref) => {
+  ref = $df56164dff5785e2$export$4338b53315abf666(ref);
+  let { focusableProps } = $f645667febf57a63$export$4c014de7c8940b4c(props, ref), child = react_default.Children.only(children);
+  useEffect(() => {
+  }, [
+    ref,
+    props.isDisabled
+  ]);
+  let childRef = parseInt(react_default.version, 10) < 19 ? child.ref : child.props.ref;
+  return react_default.cloneElement(child, {
+    ...$3ef42575df84b30b$export$9d1611c77c2fe928(focusableProps, child.props),
+    // @ts-ignore
+    ref: $5dc95899b306f630$export$c9058316764c140e(childRef, ref)
+  });
+});
+
+// ../../node_modules/@react-aria/interactions/dist/Pressable.mjs
+init_react();
+var $3b117e43dc0ca95d$export$27c701ed9e449e99 = react_default.forwardRef(({ children, ...props }, ref) => {
+  ref = $df56164dff5785e2$export$4338b53315abf666(ref);
+  let { pressProps } = $f6c31cce2adf654f$export$45712eceda6fad21({
+    ...props,
+    ref
+  }), { focusableProps } = $f645667febf57a63$export$4c014de7c8940b4c(props, ref), child = react_default.Children.only(children);
+  useEffect(() => {
+  }, [
+    ref,
+    props.isDisabled
+  ]);
+  let childRef = parseInt(react_default.version, 10) < 19 ? child.ref : child.props.ref;
+  return react_default.cloneElement(child, {
+    ...$3ef42575df84b30b$export$9d1611c77c2fe928(pressProps, focusableProps, child.props),
+    // @ts-ignore
+    ref: $5dc95899b306f630$export$c9058316764c140e(childRef, ref)
+  });
+});
+
+// ../../node_modules/@react-aria/interactions/dist/PressResponder.mjs
+init_react();
+var $f1ab8c75478c6f73$export$3351871ee4b288b8 = react_default.forwardRef(({ children, ...props }, ref) => {
+  let isRegistered = useRef(!1), prevContext = useContext($ae1eeba8b9eafd08$export$5165eccb35aaadb5);
+  ref = $df56164dff5785e2$export$4338b53315abf666(ref || prevContext?.ref);
+  let context = $3ef42575df84b30b$export$9d1611c77c2fe928(prevContext || {}, {
+    ...props,
+    ref,
+    register() {
+      isRegistered.current = !0, prevContext && prevContext.register();
+    }
+  });
+  return $e7801be82b4b2a53$export$4debdb1a3f0fa79e(prevContext, ref), useEffect(() => {
+    isRegistered.current || (isRegistered.current = !0);
+  }, []), react_default.createElement($ae1eeba8b9eafd08$export$5165eccb35aaadb5.Provider, {
+    value: context
+  }, children);
+});
+
+// ../../node_modules/@react-aria/interactions/dist/useFocusWithin.mjs
+init_react();
+
+// ../../node_modules/@react-aria/interactions/dist/useHover.mjs
+init_react();
+var $6179b936705e76d3$var$globalIgnoreEmulatedMouseEvents = !1, $6179b936705e76d3$var$hoverCount = 0;
+function $6179b936705e76d3$var$setGlobalIgnoreEmulatedMouseEvents() {
+  $6179b936705e76d3$var$globalIgnoreEmulatedMouseEvents = !0, setTimeout(() => {
+    $6179b936705e76d3$var$globalIgnoreEmulatedMouseEvents = !1;
+  }, 50);
+}
+function $6179b936705e76d3$var$handleGlobalPointerEvent(e2) {
+  e2.pointerType === "touch" && $6179b936705e76d3$var$setGlobalIgnoreEmulatedMouseEvents();
+}
+function $6179b936705e76d3$var$setupGlobalTouchEvents() {
+  if (!(typeof document > "u"))
+    return $6179b936705e76d3$var$hoverCount === 0 && typeof PointerEvent < "u" && document.addEventListener("pointerup", $6179b936705e76d3$var$handleGlobalPointerEvent), $6179b936705e76d3$var$hoverCount++, () => {
+      $6179b936705e76d3$var$hoverCount--, !($6179b936705e76d3$var$hoverCount > 0) && typeof PointerEvent < "u" && document.removeEventListener("pointerup", $6179b936705e76d3$var$handleGlobalPointerEvent);
+    };
+}
+function $6179b936705e76d3$export$ae780daf29e6d456(props) {
+  let { onHoverStart, onHoverChange, onHoverEnd, isDisabled } = props, [isHovered, setHovered] = useState(!1), state = useRef({
+    isHovered: !1,
+    ignoreEmulatedMouseEvents: !1,
+    pointerType: "",
+    target: null
+  }).current;
+  useEffect($6179b936705e76d3$var$setupGlobalTouchEvents, []);
+  let { addGlobalListener, removeAllGlobalListeners } = $03deb23ff14920c4$export$4eaf04e54aa8eed6(), { hoverProps, triggerHoverEnd } = useMemo(() => {
+    let triggerHoverStart = (event, pointerType) => {
+      if (state.pointerType = pointerType, isDisabled || pointerType === "touch" || state.isHovered || !event.currentTarget.contains(event.target)) return;
+      state.isHovered = !0;
+      let target = event.currentTarget;
+      state.target = target, addGlobalListener($431fbd86ca7dc216$export$b204af158042fbac(event.target), "pointerover", (e2) => {
+        state.isHovered && state.target && !$d4ee10de306f2510$export$4282f70798064fe0(state.target, e2.target) && triggerHoverEnd2(e2, e2.pointerType);
+      }, {
+        capture: !0
+      }), onHoverStart && onHoverStart({
+        type: "hoverstart",
+        target,
+        pointerType
+      }), onHoverChange && onHoverChange(!0), setHovered(!0);
+    }, triggerHoverEnd2 = (event, pointerType) => {
+      let target = state.target;
+      state.pointerType = "", state.target = null, !(pointerType === "touch" || !state.isHovered || !target) && (state.isHovered = !1, removeAllGlobalListeners(), onHoverEnd && onHoverEnd({
+        type: "hoverend",
+        target,
+        pointerType
+      }), onHoverChange && onHoverChange(!1), setHovered(!1));
+    }, hoverProps2 = {};
+    return typeof PointerEvent < "u" && (hoverProps2.onPointerEnter = (e2) => {
+      $6179b936705e76d3$var$globalIgnoreEmulatedMouseEvents && e2.pointerType === "mouse" || triggerHoverStart(e2, e2.pointerType);
+    }, hoverProps2.onPointerLeave = (e2) => {
+      !isDisabled && e2.currentTarget.contains(e2.target) && triggerHoverEnd2(e2, e2.pointerType);
+    }), {
+      hoverProps: hoverProps2,
+      triggerHoverEnd: triggerHoverEnd2
+    };
+  }, [
+    onHoverStart,
+    onHoverChange,
+    onHoverEnd,
+    isDisabled,
+    state,
+    addGlobalListener,
+    removeAllGlobalListeners
+  ]);
+  return useEffect(() => {
+    isDisabled && triggerHoverEnd({
+      currentTarget: state.target
+    }, state.pointerType);
+  }, [
+    isDisabled
+  ]), {
+    hoverProps,
+    isHovered
+  };
+}
+
+// ../../node_modules/@react-aria/interactions/dist/useInteractOutside.mjs
+init_react();
+
+// ../../node_modules/@react-aria/interactions/dist/useMove.mjs
+init_react();
+
+// ../../node_modules/@react-aria/interactions/dist/useScrollWheel.mjs
+init_react();
+
+// ../../node_modules/@react-aria/interactions/dist/useLongPress.mjs
+init_react();
+
+// ../../node_modules/react-aria-components/dist/utils.mjs
+init_react();
+var $64fa3d84918910a7$export$c62b8e45d58ddad9 = /* @__PURE__ */ Symbol("default");
+function $64fa3d84918910a7$export$2881499e37b75b9a({ values, children }) {
+  for (let [Context2, value] of values)
+    children = react_default.createElement(Context2.Provider, {
+      value
+    }, children);
+  return children;
+}
+function $64fa3d84918910a7$export$4d86445c2cf5e3(props) {
+  let { className, style, children, defaultClassName, defaultChildren, defaultStyle, values } = props;
+  return useMemo(() => {
+    let computedClassName, computedStyle, computedChildren;
+    return typeof className == "function" ? computedClassName = className({
+      ...values,
+      defaultClassName
+    }) : computedClassName = className, typeof style == "function" ? computedStyle = style({
+      ...values,
+      defaultStyle: defaultStyle || {}
+    }) : computedStyle = style, typeof children == "function" ? computedChildren = children({
+      ...values,
+      defaultChildren
+    }) : children == null ? computedChildren = defaultChildren : computedChildren = children, {
+      className: computedClassName ?? defaultClassName,
+      style: computedStyle || defaultStyle ? {
+        ...defaultStyle,
+        ...computedStyle
+      } : void 0,
+      children: computedChildren ?? defaultChildren,
+      "data-rac": ""
+    };
+  }, [
+    className,
+    style,
+    children,
+    defaultClassName,
+    defaultChildren,
+    defaultStyle,
+    values
+  ]);
+}
+function $64fa3d84918910a7$export$fabf2dc03a41866e(context, slot) {
+  let ctx = useContext(context);
+  if (slot === null)
+    return null;
+  if (ctx && typeof ctx == "object" && "slots" in ctx && ctx.slots) {
+    let slotKey = slot || $64fa3d84918910a7$export$c62b8e45d58ddad9;
+    if (!ctx.slots[slotKey]) {
+      let availableSlots = new Intl.ListFormat().format(Object.keys(ctx.slots).map((p2) => `"${p2}"`)), errorMessage = slot ? `Invalid slot "${slot}".` : "A slot prop is required.";
+      throw new Error(`${errorMessage} Valid slot names are ${availableSlots}.`);
+    }
+    return ctx.slots[slotKey];
+  }
+  return ctx;
+}
+function $64fa3d84918910a7$export$29f1550f4b0d4415(props, ref, context) {
+  let ctx = $64fa3d84918910a7$export$fabf2dc03a41866e(context, props.slot) || {}, { ref: contextRef, ...contextProps } = ctx, mergedRef = $df56164dff5785e2$export$4338b53315abf666(useMemo(() => $5dc95899b306f630$export$c9058316764c140e(ref, contextRef), [
+    ref,
+    contextRef
+  ])), mergedProps = $3ef42575df84b30b$export$9d1611c77c2fe928(contextProps, props);
+  return "style" in contextProps && contextProps.style && "style" in props && props.style && (typeof contextProps.style == "function" || typeof props.style == "function" ? mergedProps.style = (renderProps) => {
+    let contextStyle = typeof contextProps.style == "function" ? contextProps.style(renderProps) : contextProps.style, defaultStyle = {
+      ...renderProps.defaultStyle,
+      ...contextStyle
+    }, style = typeof props.style == "function" ? props.style({
+      ...renderProps,
+      defaultStyle
+    }) : props.style;
+    return {
+      ...defaultStyle,
+      ...style
+    };
+  } : mergedProps.style = {
+    ...contextProps.style,
+    ...props.style
+  }), [
+    mergedProps,
+    mergedRef
+  ];
+}
+
+// ../../node_modules/react-aria-components/dist/OverlayArrow.mjs
+init_react();
+var $44f671af83e7d9e0$export$2de4954e8ae13b9f = createContext({
+  placement: "bottom"
+}), $44f671af83e7d9e0$export$746d02f47f4d381 = forwardRef(function(props, ref) {
+  [props, ref] = $64fa3d84918910a7$export$29f1550f4b0d4415(props, ref, $44f671af83e7d9e0$export$2de4954e8ae13b9f);
+  let placement = props.placement, style = {
+    position: "absolute",
+    transform: placement === "top" || placement === "bottom" ? "translateX(-50%)" : "translateY(-50%)"
+  };
+  placement != null && (style[placement] = "100%");
+  let renderProps = $64fa3d84918910a7$export$4d86445c2cf5e3({
+    ...props,
+    defaultClassName: "react-aria-OverlayArrow",
+    values: {
+      placement
+    }
+  });
+  renderProps.style && Object.keys(renderProps.style).forEach((key) => renderProps.style[key] === void 0 && delete renderProps.style[key]);
+  let DOMProps = $65484d02dcb7eb3e$export$457c3d6518dd4c6f(props);
+  return react_default.createElement("div", {
+    ...DOMProps,
+    ...renderProps,
+    style: {
+      ...style,
+      ...renderProps.style
+    },
+    ref,
+    "data-placement": placement
+  });
+});
+
+// ../../node_modules/@react-aria/tooltip/dist/useTooltip.mjs
+function $326e436e94273fe1$export$1c4b08e0eca38426(props, state) {
+  let domProps = $65484d02dcb7eb3e$export$457c3d6518dd4c6f(props, {
+    labelable: !0
+  }), { hoverProps } = $6179b936705e76d3$export$ae780daf29e6d456({
+    onHoverStart: () => state?.open(!0),
+    onHoverEnd: () => state?.close()
+  });
+  return {
+    tooltipProps: $3ef42575df84b30b$export$9d1611c77c2fe928(domProps, hoverProps, {
+      role: "tooltip"
+    })
+  };
+}
+
+// ../../node_modules/@react-aria/tooltip/dist/useTooltipTrigger.mjs
+init_react();
+function $4e1b34546679e357$export$a6da6c504e4bba8b(props, state, ref) {
+  let { isDisabled, trigger } = props, tooltipId = $bdb11010cef70236$export$f680877a34711e37(), isHovered = useRef(!1), isFocused = useRef(!1), handleShow = () => {
+    (isHovered.current || isFocused.current) && state.open(isFocused.current);
+  }, handleHide = (immediate) => {
+    !isHovered.current && !isFocused.current && state.close(immediate);
+  };
+  useEffect(() => {
+    let onKeyDown = (e2) => {
+      ref && ref.current && e2.key === "Escape" && (e2.stopPropagation(), state.close(!0));
+    };
+    if (state.isOpen)
+      return document.addEventListener("keydown", onKeyDown, !0), () => {
+        document.removeEventListener("keydown", onKeyDown, !0);
+      };
+  }, [
+    ref,
+    state
+  ]);
+  let onHoverStart = () => {
+    trigger !== "focus" && ($507fabe10e71c6fb$export$630ff653c5ada6a9() === "pointer" ? isHovered.current = !0 : isHovered.current = !1, handleShow());
+  }, onHoverEnd = () => {
+    trigger !== "focus" && (isFocused.current = !1, isHovered.current = !1, handleHide());
+  }, onPressStart = () => {
+    isFocused.current = !1, isHovered.current = !1, handleHide(!0);
+  }, onFocus = () => {
+    $507fabe10e71c6fb$export$b9b3dfddab17db27() && (isFocused.current = !0, handleShow());
+  }, onBlur = () => {
+    isFocused.current = !1, isHovered.current = !1, handleHide(!0);
+  }, { hoverProps } = $6179b936705e76d3$export$ae780daf29e6d456({
+    isDisabled,
+    onHoverStart,
+    onHoverEnd
+  }), { focusableProps } = $f645667febf57a63$export$4c014de7c8940b4c({
+    isDisabled,
+    onFocus,
+    onBlur
+  }, ref);
+  return {
+    triggerProps: {
+      "aria-describedby": state.isOpen ? tooltipId : void 0,
+      ...$3ef42575df84b30b$export$9d1611c77c2fe928(focusableProps, hoverProps, {
+        onPointerDown: onPressStart,
+        onKeyDown: onPressStart
+      }),
+      tabIndex: void 0
+    },
+    tooltipProps: {
+      id: tooltipId
+    }
+  };
+}
+
+// ../../node_modules/@react-aria/overlays/dist/calculatePosition.mjs
+var $edcf132a9284368a$var$AXIS = {
+  top: "top",
+  bottom: "top",
+  left: "left",
+  right: "left"
+}, $edcf132a9284368a$var$FLIPPED_DIRECTION = {
+  top: "bottom",
+  bottom: "top",
+  left: "right",
+  right: "left"
+}, $edcf132a9284368a$var$CROSS_AXIS = {
+  top: "left",
+  left: "top"
+}, $edcf132a9284368a$var$AXIS_SIZE = {
+  top: "height",
+  left: "width"
+}, $edcf132a9284368a$var$TOTAL_SIZE = {
+  width: "totalWidth",
+  height: "totalHeight"
+}, $edcf132a9284368a$var$PARSED_PLACEMENT_CACHE = {}, $edcf132a9284368a$var$visualViewport = typeof document < "u" ? window.visualViewport : null;
+function $edcf132a9284368a$var$getContainerDimensions(containerNode) {
+  let width = 0, height = 0, totalWidth = 0, totalHeight = 0, top = 0, left = 0, scroll2 = {};
+  var _visualViewport_scale;
+  let isPinchZoomedIn = ((_visualViewport_scale = $edcf132a9284368a$var$visualViewport?.scale) !== null && _visualViewport_scale !== void 0 ? _visualViewport_scale : 1) > 1;
+  if (containerNode.tagName === "BODY") {
+    let documentElement = document.documentElement;
+    totalWidth = documentElement.clientWidth, totalHeight = documentElement.clientHeight;
+    var _visualViewport_width;
+    width = (_visualViewport_width = $edcf132a9284368a$var$visualViewport?.width) !== null && _visualViewport_width !== void 0 ? _visualViewport_width : totalWidth;
+    var _visualViewport_height;
+    height = (_visualViewport_height = $edcf132a9284368a$var$visualViewport?.height) !== null && _visualViewport_height !== void 0 ? _visualViewport_height : totalHeight, scroll2.top = documentElement.scrollTop || containerNode.scrollTop, scroll2.left = documentElement.scrollLeft || containerNode.scrollLeft, $edcf132a9284368a$var$visualViewport && (top = $edcf132a9284368a$var$visualViewport.offsetTop, left = $edcf132a9284368a$var$visualViewport.offsetLeft);
+  } else
+    ({ width, height, top, left } = $edcf132a9284368a$var$getOffset(containerNode, !1)), scroll2.top = containerNode.scrollTop, scroll2.left = containerNode.scrollLeft, totalWidth = width, totalHeight = height;
+  if ($c87311424ea30a05$export$78551043582a6a98() && (containerNode.tagName === "BODY" || containerNode.tagName === "HTML") && isPinchZoomedIn) {
+    scroll2.top = 0, scroll2.left = 0;
+    var _visualViewport_pageTop;
+    top = (_visualViewport_pageTop = $edcf132a9284368a$var$visualViewport?.pageTop) !== null && _visualViewport_pageTop !== void 0 ? _visualViewport_pageTop : 0;
+    var _visualViewport_pageLeft;
+    left = (_visualViewport_pageLeft = $edcf132a9284368a$var$visualViewport?.pageLeft) !== null && _visualViewport_pageLeft !== void 0 ? _visualViewport_pageLeft : 0;
+  }
+  return {
+    width,
+    height,
+    totalWidth,
+    totalHeight,
+    scroll: scroll2,
+    top,
+    left
+  };
+}
+function $edcf132a9284368a$var$getScroll(node) {
+  return {
+    top: node.scrollTop,
+    left: node.scrollLeft,
+    width: node.scrollWidth,
+    height: node.scrollHeight
+  };
+}
+function $edcf132a9284368a$var$getDelta(axis, offset2, size, boundaryDimensions, containerDimensions, padding, containerOffsetWithBoundary) {
+  var _containerDimensions_scroll_axis;
+  let containerScroll = (_containerDimensions_scroll_axis = containerDimensions.scroll[axis]) !== null && _containerDimensions_scroll_axis !== void 0 ? _containerDimensions_scroll_axis : 0, boundarySize = boundaryDimensions[$edcf132a9284368a$var$AXIS_SIZE[axis]], boundaryStartEdge = boundaryDimensions.scroll[$edcf132a9284368a$var$AXIS[axis]] + padding, boundaryEndEdge = boundarySize + boundaryDimensions.scroll[$edcf132a9284368a$var$AXIS[axis]] - padding, startEdgeOffset = offset2 - containerScroll + containerOffsetWithBoundary[axis] - boundaryDimensions[$edcf132a9284368a$var$AXIS[axis]], endEdgeOffset = offset2 - containerScroll + size + containerOffsetWithBoundary[axis] - boundaryDimensions[$edcf132a9284368a$var$AXIS[axis]];
+  return startEdgeOffset < boundaryStartEdge ? boundaryStartEdge - startEdgeOffset : endEdgeOffset > boundaryEndEdge ? Math.max(boundaryEndEdge - endEdgeOffset, boundaryStartEdge - startEdgeOffset) : 0;
+}
+function $edcf132a9284368a$var$getMargins(node) {
+  let style = window.getComputedStyle(node);
+  return {
+    top: parseInt(style.marginTop, 10) || 0,
+    bottom: parseInt(style.marginBottom, 10) || 0,
+    left: parseInt(style.marginLeft, 10) || 0,
+    right: parseInt(style.marginRight, 10) || 0
+  };
+}
+function $edcf132a9284368a$var$parsePlacement(input) {
+  if ($edcf132a9284368a$var$PARSED_PLACEMENT_CACHE[input]) return $edcf132a9284368a$var$PARSED_PLACEMENT_CACHE[input];
+  let [placement, crossPlacement] = input.split(" "), axis = $edcf132a9284368a$var$AXIS[placement] || "right", crossAxis = $edcf132a9284368a$var$CROSS_AXIS[axis];
+  $edcf132a9284368a$var$AXIS[crossPlacement] || (crossPlacement = "center");
+  let size = $edcf132a9284368a$var$AXIS_SIZE[axis], crossSize = $edcf132a9284368a$var$AXIS_SIZE[crossAxis];
+  return $edcf132a9284368a$var$PARSED_PLACEMENT_CACHE[input] = {
+    placement,
+    crossPlacement,
+    axis,
+    crossAxis,
+    size,
+    crossSize
+  }, $edcf132a9284368a$var$PARSED_PLACEMENT_CACHE[input];
+}
+function $edcf132a9284368a$var$computePosition(childOffset, boundaryDimensions, overlaySize, placementInfo, offset2, crossOffset, containerOffsetWithBoundary, isContainerPositioned, arrowSize, arrowBoundaryOffset) {
+  let { placement, crossPlacement, axis, crossAxis, size, crossSize } = placementInfo, position = {};
+  var _childOffset_crossAxis;
+  position[crossAxis] = (_childOffset_crossAxis = childOffset[crossAxis]) !== null && _childOffset_crossAxis !== void 0 ? _childOffset_crossAxis : 0;
+  var _childOffset_crossSize, _overlaySize_crossSize, _childOffset_crossSize1, _overlaySize_crossSize1;
+  crossPlacement === "center" ? position[crossAxis] += (((_childOffset_crossSize = childOffset[crossSize]) !== null && _childOffset_crossSize !== void 0 ? _childOffset_crossSize : 0) - ((_overlaySize_crossSize = overlaySize[crossSize]) !== null && _overlaySize_crossSize !== void 0 ? _overlaySize_crossSize : 0)) / 2 : crossPlacement !== crossAxis && (position[crossAxis] += ((_childOffset_crossSize1 = childOffset[crossSize]) !== null && _childOffset_crossSize1 !== void 0 ? _childOffset_crossSize1 : 0) - ((_overlaySize_crossSize1 = overlaySize[crossSize]) !== null && _overlaySize_crossSize1 !== void 0 ? _overlaySize_crossSize1 : 0)), position[crossAxis] += crossOffset;
+  let minPosition = childOffset[crossAxis] - overlaySize[crossSize] + arrowSize + arrowBoundaryOffset, maxPosition = childOffset[crossAxis] + childOffset[crossSize] - arrowSize - arrowBoundaryOffset;
+  if (position[crossAxis] = $9446cca9a3875146$export$7d15b64cf5a3a4c4(position[crossAxis], minPosition, maxPosition), placement === axis) {
+    let containerHeight = isContainerPositioned ? containerOffsetWithBoundary[size] : boundaryDimensions[$edcf132a9284368a$var$TOTAL_SIZE[size]];
+    position[$edcf132a9284368a$var$FLIPPED_DIRECTION[axis]] = Math.floor(containerHeight - childOffset[axis] + offset2);
+  } else position[axis] = Math.floor(childOffset[axis] + childOffset[size] + offset2);
+  return position;
+}
+function $edcf132a9284368a$var$getMaxHeight(position, boundaryDimensions, containerOffsetWithBoundary, isContainerPositioned, margins, padding, overlayHeight, heightGrowthDirection) {
+  let containerHeight = isContainerPositioned ? containerOffsetWithBoundary.height : boundaryDimensions[$edcf132a9284368a$var$TOTAL_SIZE.height];
+  var _position_bottom;
+  let overlayTop = position.top != null ? containerOffsetWithBoundary.top + position.top : containerOffsetWithBoundary.top + (containerHeight - ((_position_bottom = position.bottom) !== null && _position_bottom !== void 0 ? _position_bottom : 0) - overlayHeight);
+  var _boundaryDimensions_scroll_top, _margins_top, _margins_bottom, _boundaryDimensions_scroll_top1, _margins_top1, _margins_bottom1;
+  let maxHeight = heightGrowthDirection !== "top" ? (
+    // We want the distance between the top of the overlay to the bottom of the boundary
+    Math.max(0, boundaryDimensions.height + boundaryDimensions.top + ((_boundaryDimensions_scroll_top = boundaryDimensions.scroll.top) !== null && _boundaryDimensions_scroll_top !== void 0 ? _boundaryDimensions_scroll_top : 0) - overlayTop - (((_margins_top = margins.top) !== null && _margins_top !== void 0 ? _margins_top : 0) + ((_margins_bottom = margins.bottom) !== null && _margins_bottom !== void 0 ? _margins_bottom : 0) + padding))
+  ) : Math.max(0, overlayTop + overlayHeight - (boundaryDimensions.top + ((_boundaryDimensions_scroll_top1 = boundaryDimensions.scroll.top) !== null && _boundaryDimensions_scroll_top1 !== void 0 ? _boundaryDimensions_scroll_top1 : 0)) - (((_margins_top1 = margins.top) !== null && _margins_top1 !== void 0 ? _margins_top1 : 0) + ((_margins_bottom1 = margins.bottom) !== null && _margins_bottom1 !== void 0 ? _margins_bottom1 : 0) + padding));
+  return Math.min(boundaryDimensions.height - padding * 2, maxHeight);
+}
+function $edcf132a9284368a$var$getAvailableSpace(boundaryDimensions, containerOffsetWithBoundary, childOffset, margins, padding, placementInfo) {
+  let { placement, axis, size } = placementInfo;
+  var _boundaryDimensions_scroll_axis, _margins_axis;
+  if (placement === axis) return Math.max(0, childOffset[axis] - boundaryDimensions[axis] - ((_boundaryDimensions_scroll_axis = boundaryDimensions.scroll[axis]) !== null && _boundaryDimensions_scroll_axis !== void 0 ? _boundaryDimensions_scroll_axis : 0) + containerOffsetWithBoundary[axis] - ((_margins_axis = margins[axis]) !== null && _margins_axis !== void 0 ? _margins_axis : 0) - margins[$edcf132a9284368a$var$FLIPPED_DIRECTION[axis]] - padding);
+  var _margins_axis1;
+  return Math.max(0, boundaryDimensions[size] + boundaryDimensions[axis] + boundaryDimensions.scroll[axis] - containerOffsetWithBoundary[axis] - childOffset[axis] - childOffset[size] - ((_margins_axis1 = margins[axis]) !== null && _margins_axis1 !== void 0 ? _margins_axis1 : 0) - margins[$edcf132a9284368a$var$FLIPPED_DIRECTION[axis]] - padding);
+}
+function $edcf132a9284368a$export$6839422d1f33cee9(placementInput, childOffset, overlaySize, scrollSize, margins, padding, flip2, boundaryDimensions, containerDimensions, containerOffsetWithBoundary, offset2, crossOffset, isContainerPositioned, userSetMaxHeight, arrowSize, arrowBoundaryOffset) {
+  let placementInfo = $edcf132a9284368a$var$parsePlacement(placementInput), { size, crossAxis, crossSize, placement, crossPlacement } = placementInfo, position = $edcf132a9284368a$var$computePosition(childOffset, boundaryDimensions, overlaySize, placementInfo, offset2, crossOffset, containerOffsetWithBoundary, isContainerPositioned, arrowSize, arrowBoundaryOffset), normalizedOffset = offset2, space = $edcf132a9284368a$var$getAvailableSpace(boundaryDimensions, containerOffsetWithBoundary, childOffset, margins, padding + offset2, placementInfo);
+  if (flip2 && scrollSize[size] > space) {
+    let flippedPlacementInfo = $edcf132a9284368a$var$parsePlacement(`${$edcf132a9284368a$var$FLIPPED_DIRECTION[placement]} ${crossPlacement}`), flippedPosition = $edcf132a9284368a$var$computePosition(childOffset, boundaryDimensions, overlaySize, flippedPlacementInfo, offset2, crossOffset, containerOffsetWithBoundary, isContainerPositioned, arrowSize, arrowBoundaryOffset);
+    $edcf132a9284368a$var$getAvailableSpace(boundaryDimensions, containerOffsetWithBoundary, childOffset, margins, padding + offset2, flippedPlacementInfo) > space && (placementInfo = flippedPlacementInfo, position = flippedPosition, normalizedOffset = offset2);
+  }
+  let heightGrowthDirection = "bottom";
+  placementInfo.axis === "top" ? placementInfo.placement === "top" ? heightGrowthDirection = "top" : placementInfo.placement === "bottom" && (heightGrowthDirection = "bottom") : placementInfo.crossAxis === "top" && (placementInfo.crossPlacement === "top" ? heightGrowthDirection = "bottom" : placementInfo.crossPlacement === "bottom" && (heightGrowthDirection = "top"));
+  let delta = $edcf132a9284368a$var$getDelta(crossAxis, position[crossAxis], overlaySize[crossSize], boundaryDimensions, containerDimensions, padding, containerOffsetWithBoundary);
+  position[crossAxis] += delta;
+  let maxHeight = $edcf132a9284368a$var$getMaxHeight(position, boundaryDimensions, containerOffsetWithBoundary, isContainerPositioned, margins, padding, overlaySize.height, heightGrowthDirection);
+  userSetMaxHeight && userSetMaxHeight < maxHeight && (maxHeight = userSetMaxHeight), overlaySize.height = Math.min(overlaySize.height, maxHeight), position = $edcf132a9284368a$var$computePosition(childOffset, boundaryDimensions, overlaySize, placementInfo, normalizedOffset, crossOffset, containerOffsetWithBoundary, isContainerPositioned, arrowSize, arrowBoundaryOffset), delta = $edcf132a9284368a$var$getDelta(crossAxis, position[crossAxis], overlaySize[crossSize], boundaryDimensions, containerDimensions, padding, containerOffsetWithBoundary), position[crossAxis] += delta;
+  let arrowPosition = {}, origin = childOffset[crossAxis] - position[crossAxis] - margins[$edcf132a9284368a$var$AXIS[crossAxis]], preferredArrowPosition = origin + 0.5 * childOffset[crossSize], arrowMinPosition = arrowSize / 2 + arrowBoundaryOffset;
+  var _margins_left, _margins_right, _margins_top, _margins_bottom;
+  let overlayMargin = $edcf132a9284368a$var$AXIS[crossAxis] === "left" ? ((_margins_left = margins.left) !== null && _margins_left !== void 0 ? _margins_left : 0) + ((_margins_right = margins.right) !== null && _margins_right !== void 0 ? _margins_right : 0) : ((_margins_top = margins.top) !== null && _margins_top !== void 0 ? _margins_top : 0) + ((_margins_bottom = margins.bottom) !== null && _margins_bottom !== void 0 ? _margins_bottom : 0), arrowMaxPosition = overlaySize[crossSize] - overlayMargin - arrowSize / 2 - arrowBoundaryOffset, arrowOverlappingChildMinEdge = childOffset[crossAxis] + arrowSize / 2 - (position[crossAxis] + margins[$edcf132a9284368a$var$AXIS[crossAxis]]), arrowOverlappingChildMaxEdge = childOffset[crossAxis] + childOffset[crossSize] - arrowSize / 2 - (position[crossAxis] + margins[$edcf132a9284368a$var$AXIS[crossAxis]]), arrowPositionOverlappingChild = $9446cca9a3875146$export$7d15b64cf5a3a4c4(preferredArrowPosition, arrowOverlappingChildMinEdge, arrowOverlappingChildMaxEdge);
+  arrowPosition[crossAxis] = $9446cca9a3875146$export$7d15b64cf5a3a4c4(arrowPositionOverlappingChild, arrowMinPosition, arrowMaxPosition), { placement, crossPlacement } = placementInfo, arrowSize ? origin = arrowPosition[crossAxis] : crossPlacement === "right" ? origin += childOffset[crossSize] : crossPlacement === "center" && (origin += childOffset[crossSize] / 2);
+  let crossOrigin = placement === "left" || placement === "top" ? overlaySize[size] : 0, triggerAnchorPoint = {
+    x: placement === "top" || placement === "bottom" ? origin : crossOrigin,
+    y: placement === "left" || placement === "right" ? origin : crossOrigin
+  };
+  return {
+    position,
+    maxHeight,
+    arrowOffsetLeft: arrowPosition.left,
+    arrowOffsetTop: arrowPosition.top,
+    placement,
+    triggerAnchorPoint
+  };
+}
+function $edcf132a9284368a$export$b3ceb0cbf1056d98(opts) {
+  let { placement, targetNode, overlayNode, scrollNode, padding, shouldFlip, boundaryElement, offset: offset2, crossOffset, maxHeight, arrowSize = 0, arrowBoundaryOffset = 0 } = opts, container = overlayNode instanceof HTMLElement ? $edcf132a9284368a$var$getContainingBlock(overlayNode) : document.documentElement, isViewportContainer = container === document.documentElement, containerPositionStyle = window.getComputedStyle(container).position, isContainerPositioned = !!containerPositionStyle && containerPositionStyle !== "static", childOffset = isViewportContainer ? $edcf132a9284368a$var$getOffset(targetNode, !1) : $edcf132a9284368a$var$getPosition(targetNode, container, !1);
+  if (!isViewportContainer) {
+    let { marginTop, marginLeft } = window.getComputedStyle(targetNode);
+    childOffset.top += parseInt(marginTop, 10) || 0, childOffset.left += parseInt(marginLeft, 10) || 0;
+  }
+  let overlaySize = $edcf132a9284368a$var$getOffset(overlayNode, !0), margins = $edcf132a9284368a$var$getMargins(overlayNode);
+  var _margins_left, _margins_right;
+  overlaySize.width += ((_margins_left = margins.left) !== null && _margins_left !== void 0 ? _margins_left : 0) + ((_margins_right = margins.right) !== null && _margins_right !== void 0 ? _margins_right : 0);
+  var _margins_top, _margins_bottom;
+  overlaySize.height += ((_margins_top = margins.top) !== null && _margins_top !== void 0 ? _margins_top : 0) + ((_margins_bottom = margins.bottom) !== null && _margins_bottom !== void 0 ? _margins_bottom : 0);
+  let scrollSize = $edcf132a9284368a$var$getScroll(scrollNode), boundaryDimensions = $edcf132a9284368a$var$getContainerDimensions(boundaryElement), containerDimensions = $edcf132a9284368a$var$getContainerDimensions(container), containerOffsetWithBoundary = boundaryElement.tagName === "BODY" ? $edcf132a9284368a$var$getOffset(container, !1) : $edcf132a9284368a$var$getPosition(container, boundaryElement, !1);
+  return container.tagName === "HTML" && boundaryElement.tagName === "BODY" && (containerDimensions.scroll.top = 0, containerDimensions.scroll.left = 0), $edcf132a9284368a$export$6839422d1f33cee9(placement, childOffset, overlaySize, scrollSize, margins, padding, shouldFlip, boundaryDimensions, containerDimensions, containerOffsetWithBoundary, offset2, crossOffset, isContainerPositioned, maxHeight, arrowSize, arrowBoundaryOffset);
+}
+function $edcf132a9284368a$export$4b834cebd9e5cebe(node, ignoreScale) {
+  let { top, left, width, height } = node.getBoundingClientRect();
+  return ignoreScale && node instanceof node.ownerDocument.defaultView.HTMLElement && (width = node.offsetWidth, height = node.offsetHeight), {
+    top,
+    left,
+    width,
+    height
+  };
+}
+function $edcf132a9284368a$var$getOffset(node, ignoreScale) {
+  let { top, left, width, height } = $edcf132a9284368a$export$4b834cebd9e5cebe(node, ignoreScale), { scrollTop, scrollLeft, clientTop, clientLeft } = document.documentElement;
+  return {
+    top: top + scrollTop - clientTop,
+    left: left + scrollLeft - clientLeft,
+    width,
+    height
+  };
+}
+function $edcf132a9284368a$var$getPosition(node, parent, ignoreScale) {
+  let style = window.getComputedStyle(node), offset2;
+  if (style.position === "fixed") offset2 = $edcf132a9284368a$export$4b834cebd9e5cebe(node, ignoreScale);
+  else {
+    offset2 = $edcf132a9284368a$var$getOffset(node, ignoreScale);
+    let parentOffset = $edcf132a9284368a$var$getOffset(parent, ignoreScale), parentStyle = window.getComputedStyle(parent);
+    parentOffset.top += (parseInt(parentStyle.borderTopWidth, 10) || 0) - parent.scrollTop, parentOffset.left += (parseInt(parentStyle.borderLeftWidth, 10) || 0) - parent.scrollLeft, offset2.top -= parentOffset.top, offset2.left -= parentOffset.left;
+  }
+  return offset2.top -= parseInt(style.marginTop, 10) || 0, offset2.left -= parseInt(style.marginLeft, 10) || 0, offset2;
+}
+function $edcf132a9284368a$var$getContainingBlock(node) {
+  let offsetParent = node.offsetParent;
+  if (offsetParent && offsetParent === document.body && window.getComputedStyle(offsetParent).position === "static" && !$edcf132a9284368a$var$isContainingBlock(offsetParent) && (offsetParent = document.documentElement), offsetParent == null)
+    for (offsetParent = node.parentElement; offsetParent && !$edcf132a9284368a$var$isContainingBlock(offsetParent); ) offsetParent = offsetParent.parentElement;
+  return offsetParent || document.documentElement;
+}
+function $edcf132a9284368a$var$isContainingBlock(node) {
+  let style = window.getComputedStyle(node);
+  return style.transform !== "none" || /transform|perspective/.test(style.willChange) || style.filter !== "none" || style.contain === "paint" || "backdropFilter" in style && style.backdropFilter !== "none" || "WebkitBackdropFilter" in style && style.WebkitBackdropFilter !== "none";
+}
+
+// ../../node_modules/@react-aria/overlays/dist/useCloseOnScroll.mjs
+init_react();
+var $dd149f63282afbbf$export$f6211563215e3b37 = /* @__PURE__ */ new WeakMap();
+function $dd149f63282afbbf$export$18fc8428861184da(opts) {
+  let { triggerRef, isOpen, onClose } = opts;
+  useEffect(() => {
+    if (!isOpen || onClose === null) return;
+    let onScroll = (e2) => {
+      let target = e2.target;
+      if (!triggerRef.current || target instanceof Node && !target.contains(triggerRef.current) || e2.target instanceof HTMLInputElement || e2.target instanceof HTMLTextAreaElement) return;
+      let onCloseHandler = onClose || $dd149f63282afbbf$export$f6211563215e3b37.get(triggerRef.current);
+      onCloseHandler && onCloseHandler();
+    };
+    return window.addEventListener("scroll", onScroll, !0), () => {
+      window.removeEventListener("scroll", onScroll, !0);
+    };
+  }, [
+    isOpen,
+    onClose,
+    triggerRef
+  ]);
+}
+
+// ../../node_modules/@react-aria/overlays/dist/useOverlayPosition.mjs
+init_react();
+
+// ../../node_modules/@react-aria/i18n/dist/utils.mjs
+var $148a7a147e38ea7f$var$RTL_SCRIPTS = /* @__PURE__ */ new Set([
+  "Arab",
+  "Syrc",
+  "Samr",
+  "Mand",
+  "Thaa",
+  "Mend",
+  "Nkoo",
+  "Adlm",
+  "Rohg",
+  "Hebr"
+]), $148a7a147e38ea7f$var$RTL_LANGS = /* @__PURE__ */ new Set([
+  "ae",
+  "ar",
+  "arc",
+  "bcc",
+  "bqi",
+  "ckb",
+  "dv",
+  "fa",
+  "glk",
+  "he",
+  "ku",
+  "mzn",
+  "nqo",
+  "pnb",
+  "ps",
+  "sd",
+  "ug",
+  "ur",
+  "yi"
+]);
+function $148a7a147e38ea7f$export$702d680b21cbd764(localeString) {
+  if (Intl.Locale) {
+    let locale = new Intl.Locale(localeString).maximize(), textInfo = typeof locale.getTextInfo == "function" ? locale.getTextInfo() : locale.textInfo;
+    if (textInfo) return textInfo.direction === "rtl";
+    if (locale.script) return $148a7a147e38ea7f$var$RTL_SCRIPTS.has(locale.script);
+  }
+  let lang = localeString.split("-")[0];
+  return $148a7a147e38ea7f$var$RTL_LANGS.has(lang);
+}
+
+// ../../node_modules/@react-aria/i18n/dist/useDefaultLocale.mjs
+init_react();
+var $1e5a04cdaf7d1af8$var$localeSymbol = /* @__PURE__ */ Symbol.for("react-aria.i18n.locale");
+function $1e5a04cdaf7d1af8$export$f09106e7c6677ec5() {
+  let locale = typeof window < "u" && window[$1e5a04cdaf7d1af8$var$localeSymbol] || typeof navigator < "u" && (navigator.language || navigator.userLanguage) || "en-US";
+  try {
+    Intl.DateTimeFormat.supportedLocalesOf([
+      locale
+    ]);
+  } catch {
+    locale = "en-US";
+  }
+  return {
+    locale,
+    direction: $148a7a147e38ea7f$export$702d680b21cbd764(locale) ? "rtl" : "ltr"
+  };
+}
+var $1e5a04cdaf7d1af8$var$currentLocale = $1e5a04cdaf7d1af8$export$f09106e7c6677ec5(), $1e5a04cdaf7d1af8$var$listeners = /* @__PURE__ */ new Set();
+function $1e5a04cdaf7d1af8$var$updateLocale() {
+  $1e5a04cdaf7d1af8$var$currentLocale = $1e5a04cdaf7d1af8$export$f09106e7c6677ec5();
+  for (let listener of $1e5a04cdaf7d1af8$var$listeners) listener($1e5a04cdaf7d1af8$var$currentLocale);
+}
+function $1e5a04cdaf7d1af8$export$188ec29ebc2bdc3a() {
+  let isSSR = $b5e257d569688ac6$export$535bd6ca7f90a273(), [defaultLocale2, setDefaultLocale] = useState($1e5a04cdaf7d1af8$var$currentLocale);
+  return useEffect(() => ($1e5a04cdaf7d1af8$var$listeners.size === 0 && window.addEventListener("languagechange", $1e5a04cdaf7d1af8$var$updateLocale), $1e5a04cdaf7d1af8$var$listeners.add(setDefaultLocale), () => {
+    $1e5a04cdaf7d1af8$var$listeners.delete(setDefaultLocale), $1e5a04cdaf7d1af8$var$listeners.size === 0 && window.removeEventListener("languagechange", $1e5a04cdaf7d1af8$var$updateLocale);
+  }), []), isSSR ? {
+    locale: "en-US",
+    direction: "ltr"
+  } : defaultLocale2;
+}
+
+// ../../node_modules/@react-aria/i18n/dist/context.mjs
+init_react();
+var $18f2051aff69b9bf$var$I18nContext = react_default.createContext(null);
+function $18f2051aff69b9bf$export$43bb16f9c6d9e3f7() {
+  let defaultLocale2 = $1e5a04cdaf7d1af8$export$188ec29ebc2bdc3a();
+  return useContext($18f2051aff69b9bf$var$I18nContext) || defaultLocale2;
+}
+
+// ../../node_modules/tslib/tslib.es6.mjs
+var extendStatics = function(d2, b2) {
+  return extendStatics = Object.setPrototypeOf || { __proto__: [] } instanceof Array && function(d3, b3) {
+    d3.__proto__ = b3;
+  } || function(d3, b3) {
+    for (var p2 in b3) Object.prototype.hasOwnProperty.call(b3, p2) && (d3[p2] = b3[p2]);
+  }, extendStatics(d2, b2);
+};
+function __extends(d2, b2) {
+  if (typeof b2 != "function" && b2 !== null)
+    throw new TypeError("Class extends value " + String(b2) + " is not a constructor or null");
+  extendStatics(d2, b2);
+  function __() {
+    this.constructor = d2;
+  }
+  d2.prototype = b2 === null ? Object.create(b2) : (__.prototype = b2.prototype, new __());
+}
+var __assign = function() {
+  return __assign = Object.assign || function(t2) {
+    for (var s2, i2 = 1, n3 = arguments.length; i2 < n3; i2++) {
+      s2 = arguments[i2];
+      for (var p2 in s2) Object.prototype.hasOwnProperty.call(s2, p2) && (t2[p2] = s2[p2]);
+    }
+    return t2;
+  }, __assign.apply(this, arguments);
+};
+function __rest(s2, e2) {
+  var t2 = {};
+  for (var p2 in s2) Object.prototype.hasOwnProperty.call(s2, p2) && e2.indexOf(p2) < 0 && (t2[p2] = s2[p2]);
+  if (s2 != null && typeof Object.getOwnPropertySymbols == "function")
+    for (var i2 = 0, p2 = Object.getOwnPropertySymbols(s2); i2 < p2.length; i2++)
+      e2.indexOf(p2[i2]) < 0 && Object.prototype.propertyIsEnumerable.call(s2, p2[i2]) && (t2[p2[i2]] = s2[p2[i2]]);
+  return t2;
+}
+function __spreadArray(to, from, pack) {
+  if (pack || arguments.length === 2) for (var i2 = 0, l3 = from.length, ar; i2 < l3; i2++)
+    (ar || !(i2 in from)) && (ar || (ar = Array.prototype.slice.call(from, 0, i2)), ar[i2] = from[i2]);
+  return to.concat(ar || Array.prototype.slice.call(from));
+}
+
+// ../../node_modules/@formatjs/fast-memoize/lib/index.js
+function memoize(fn, options2) {
+  var cache = options2 && options2.cache ? options2.cache : cacheDefault, serializer = options2 && options2.serializer ? options2.serializer : serializerDefault, strategy = options2 && options2.strategy ? options2.strategy : strategyDefault;
+  return strategy(fn, {
+    cache,
+    serializer
+  });
+}
+function isPrimitive2(value) {
+  return value == null || typeof value == "number" || typeof value == "boolean";
+}
+function monadic(fn, cache, serializer, arg) {
+  var cacheKey = isPrimitive2(arg) ? arg : serializer(arg), computedValue = cache.get(cacheKey);
+  return typeof computedValue > "u" && (computedValue = fn.call(this, arg), cache.set(cacheKey, computedValue)), computedValue;
+}
+function variadic(fn, cache, serializer) {
+  var args = Array.prototype.slice.call(arguments, 3), cacheKey = serializer(args), computedValue = cache.get(cacheKey);
+  return typeof computedValue > "u" && (computedValue = fn.apply(this, args), cache.set(cacheKey, computedValue)), computedValue;
+}
+function assemble(fn, context, strategy, cache, serialize) {
+  return strategy.bind(context, fn, cache, serialize);
+}
+function strategyDefault(fn, options2) {
+  var strategy = fn.length === 1 ? monadic : variadic;
+  return assemble(fn, this, strategy, options2.cache.create(), options2.serializer);
+}
+function strategyVariadic(fn, options2) {
+  return assemble(fn, this, variadic, options2.cache.create(), options2.serializer);
+}
+function strategyMonadic(fn, options2) {
+  return assemble(fn, this, monadic, options2.cache.create(), options2.serializer);
+}
+var serializerDefault = function() {
+  return JSON.stringify(arguments);
+}, ObjectWithoutPrototypeCache = (
+  /** @class */
+  (function() {
+    function ObjectWithoutPrototypeCache2() {
+      this.cache = /* @__PURE__ */ Object.create(null);
+    }
+    return ObjectWithoutPrototypeCache2.prototype.get = function(key) {
+      return this.cache[key];
+    }, ObjectWithoutPrototypeCache2.prototype.set = function(key, value) {
+      this.cache[key] = value;
+    }, ObjectWithoutPrototypeCache2;
+  })()
+), cacheDefault = {
+  create: function() {
+    return new ObjectWithoutPrototypeCache();
+  }
+}, strategies = {
+  variadic: strategyVariadic,
+  monadic: strategyMonadic
+};
+
+// ../../node_modules/@formatjs/icu-messageformat-parser/lib/error.js
+var ErrorKind;
+(function(ErrorKind2) {
+  ErrorKind2[ErrorKind2.EXPECT_ARGUMENT_CLOSING_BRACE = 1] = "EXPECT_ARGUMENT_CLOSING_BRACE", ErrorKind2[ErrorKind2.EMPTY_ARGUMENT = 2] = "EMPTY_ARGUMENT", ErrorKind2[ErrorKind2.MALFORMED_ARGUMENT = 3] = "MALFORMED_ARGUMENT", ErrorKind2[ErrorKind2.EXPECT_ARGUMENT_TYPE = 4] = "EXPECT_ARGUMENT_TYPE", ErrorKind2[ErrorKind2.INVALID_ARGUMENT_TYPE = 5] = "INVALID_ARGUMENT_TYPE", ErrorKind2[ErrorKind2.EXPECT_ARGUMENT_STYLE = 6] = "EXPECT_ARGUMENT_STYLE", ErrorKind2[ErrorKind2.INVALID_NUMBER_SKELETON = 7] = "INVALID_NUMBER_SKELETON", ErrorKind2[ErrorKind2.INVALID_DATE_TIME_SKELETON = 8] = "INVALID_DATE_TIME_SKELETON", ErrorKind2[ErrorKind2.EXPECT_NUMBER_SKELETON = 9] = "EXPECT_NUMBER_SKELETON", ErrorKind2[ErrorKind2.EXPECT_DATE_TIME_SKELETON = 10] = "EXPECT_DATE_TIME_SKELETON", ErrorKind2[ErrorKind2.UNCLOSED_QUOTE_IN_ARGUMENT_STYLE = 11] = "UNCLOSED_QUOTE_IN_ARGUMENT_STYLE", ErrorKind2[ErrorKind2.EXPECT_SELECT_ARGUMENT_OPTIONS = 12] = "EXPECT_SELECT_ARGUMENT_OPTIONS", ErrorKind2[ErrorKind2.EXPECT_PLURAL_ARGUMENT_OFFSET_VALUE = 13] = "EXPECT_PLURAL_ARGUMENT_OFFSET_VALUE", ErrorKind2[ErrorKind2.INVALID_PLURAL_ARGUMENT_OFFSET_VALUE = 14] = "INVALID_PLURAL_ARGUMENT_OFFSET_VALUE", ErrorKind2[ErrorKind2.EXPECT_SELECT_ARGUMENT_SELECTOR = 15] = "EXPECT_SELECT_ARGUMENT_SELECTOR", ErrorKind2[ErrorKind2.EXPECT_PLURAL_ARGUMENT_SELECTOR = 16] = "EXPECT_PLURAL_ARGUMENT_SELECTOR", ErrorKind2[ErrorKind2.EXPECT_SELECT_ARGUMENT_SELECTOR_FRAGMENT = 17] = "EXPECT_SELECT_ARGUMENT_SELECTOR_FRAGMENT", ErrorKind2[ErrorKind2.EXPECT_PLURAL_ARGUMENT_SELECTOR_FRAGMENT = 18] = "EXPECT_PLURAL_ARGUMENT_SELECTOR_FRAGMENT", ErrorKind2[ErrorKind2.INVALID_PLURAL_ARGUMENT_SELECTOR = 19] = "INVALID_PLURAL_ARGUMENT_SELECTOR", ErrorKind2[ErrorKind2.DUPLICATE_PLURAL_ARGUMENT_SELECTOR = 20] = "DUPLICATE_PLURAL_ARGUMENT_SELECTOR", ErrorKind2[ErrorKind2.DUPLICATE_SELECT_ARGUMENT_SELECTOR = 21] = "DUPLICATE_SELECT_ARGUMENT_SELECTOR", ErrorKind2[ErrorKind2.MISSING_OTHER_CLAUSE = 22] = "MISSING_OTHER_CLAUSE", ErrorKind2[ErrorKind2.INVALID_TAG = 23] = "INVALID_TAG", ErrorKind2[ErrorKind2.INVALID_TAG_NAME = 25] = "INVALID_TAG_NAME", ErrorKind2[ErrorKind2.UNMATCHED_CLOSING_TAG = 26] = "UNMATCHED_CLOSING_TAG", ErrorKind2[ErrorKind2.UNCLOSED_TAG = 27] = "UNCLOSED_TAG";
+})(ErrorKind || (ErrorKind = {}));
+
+// ../../node_modules/@formatjs/icu-messageformat-parser/lib/types.js
+var TYPE;
+(function(TYPE2) {
+  TYPE2[TYPE2.literal = 0] = "literal", TYPE2[TYPE2.argument = 1] = "argument", TYPE2[TYPE2.number = 2] = "number", TYPE2[TYPE2.date = 3] = "date", TYPE2[TYPE2.time = 4] = "time", TYPE2[TYPE2.select = 5] = "select", TYPE2[TYPE2.plural = 6] = "plural", TYPE2[TYPE2.pound = 7] = "pound", TYPE2[TYPE2.tag = 8] = "tag";
+})(TYPE || (TYPE = {}));
+var SKELETON_TYPE;
+(function(SKELETON_TYPE2) {
+  SKELETON_TYPE2[SKELETON_TYPE2.number = 0] = "number", SKELETON_TYPE2[SKELETON_TYPE2.dateTime = 1] = "dateTime";
+})(SKELETON_TYPE || (SKELETON_TYPE = {}));
+function isLiteralElement(el) {
+  return el.type === TYPE.literal;
+}
+function isArgumentElement(el) {
+  return el.type === TYPE.argument;
+}
+function isNumberElement(el) {
+  return el.type === TYPE.number;
+}
+function isDateElement(el) {
+  return el.type === TYPE.date;
+}
+function isTimeElement(el) {
+  return el.type === TYPE.time;
+}
+function isSelectElement(el) {
+  return el.type === TYPE.select;
+}
+function isPluralElement(el) {
+  return el.type === TYPE.plural;
+}
+function isPoundElement(el) {
+  return el.type === TYPE.pound;
+}
+function isTagElement(el) {
+  return el.type === TYPE.tag;
+}
+function isNumberSkeleton(el) {
+  return !!(el && typeof el == "object" && el.type === SKELETON_TYPE.number);
+}
+function isDateTimeSkeleton(el) {
+  return !!(el && typeof el == "object" && el.type === SKELETON_TYPE.dateTime);
+}
+
+// ../../node_modules/@formatjs/icu-messageformat-parser/lib/regex.generated.js
+var SPACE_SEPARATOR_REGEX = /[ \xA0\u1680\u2000-\u200A\u202F\u205F\u3000]/;
+
+// ../../node_modules/@formatjs/icu-skeleton-parser/lib/date-time.js
+var DATE_TIME_REGEX = /(?:[Eec]{1,6}|G{1,5}|[Qq]{1,5}|(?:[yYur]+|U{1,5})|[ML]{1,5}|d{1,2}|D{1,3}|F{1}|[abB]{1,5}|[hkHK]{1,2}|w{1,2}|W{1}|m{1,2}|s{1,2}|[zZOvVxX]{1,4})(?=([^']*'[^']*')*[^']*$)/g;
+function parseDateTimeSkeleton(skeleton) {
+  var result = {};
+  return skeleton.replace(DATE_TIME_REGEX, function(match) {
+    var len = match.length;
+    switch (match[0]) {
+      // Era
+      case "G":
+        result.era = len === 4 ? "long" : len === 5 ? "narrow" : "short";
+        break;
+      // Year
+      case "y":
+        result.year = len === 2 ? "2-digit" : "numeric";
+        break;
+      case "Y":
+      case "u":
+      case "U":
+      case "r":
+        throw new RangeError("`Y/u/U/r` (year) patterns are not supported, use `y` instead");
+      // Quarter
+      case "q":
+      case "Q":
+        throw new RangeError("`q/Q` (quarter) patterns are not supported");
+      // Month
+      case "M":
+      case "L":
+        result.month = ["numeric", "2-digit", "short", "long", "narrow"][len - 1];
+        break;
+      // Week
+      case "w":
+      case "W":
+        throw new RangeError("`w/W` (week) patterns are not supported");
+      case "d":
+        result.day = ["numeric", "2-digit"][len - 1];
+        break;
+      case "D":
+      case "F":
+      case "g":
+        throw new RangeError("`D/F/g` (day) patterns are not supported, use `d` instead");
+      // Weekday
+      case "E":
+        result.weekday = len === 4 ? "long" : len === 5 ? "narrow" : "short";
+        break;
+      case "e":
+        if (len < 4)
+          throw new RangeError("`e..eee` (weekday) patterns are not supported");
+        result.weekday = ["short", "long", "narrow", "short"][len - 4];
+        break;
+      case "c":
+        if (len < 4)
+          throw new RangeError("`c..ccc` (weekday) patterns are not supported");
+        result.weekday = ["short", "long", "narrow", "short"][len - 4];
+        break;
+      // Period
+      case "a":
+        result.hour12 = !0;
+        break;
+      case "b":
+      // am, pm, noon, midnight
+      case "B":
+        throw new RangeError("`b/B` (period) patterns are not supported, use `a` instead");
+      // Hour
+      case "h":
+        result.hourCycle = "h12", result.hour = ["numeric", "2-digit"][len - 1];
+        break;
+      case "H":
+        result.hourCycle = "h23", result.hour = ["numeric", "2-digit"][len - 1];
+        break;
+      case "K":
+        result.hourCycle = "h11", result.hour = ["numeric", "2-digit"][len - 1];
+        break;
+      case "k":
+        result.hourCycle = "h24", result.hour = ["numeric", "2-digit"][len - 1];
+        break;
+      case "j":
+      case "J":
+      case "C":
+        throw new RangeError("`j/J/C` (hour) patterns are not supported, use `h/H/K/k` instead");
+      // Minute
+      case "m":
+        result.minute = ["numeric", "2-digit"][len - 1];
+        break;
+      // Second
+      case "s":
+        result.second = ["numeric", "2-digit"][len - 1];
+        break;
+      case "S":
+      case "A":
+        throw new RangeError("`S/A` (second) patterns are not supported, use `s` instead");
+      // Zone
+      case "z":
+        result.timeZoneName = len < 4 ? "short" : "long";
+        break;
+      case "Z":
+      // 1..3, 4, 5: The ISO8601 varios formats
+      case "O":
+      // 1, 4: milliseconds in day short, long
+      case "v":
+      // 1, 4: generic non-location format
+      case "V":
+      // 1, 2, 3, 4: time zone ID or city
+      case "X":
+      // 1, 2, 3, 4: The ISO8601 varios formats
+      case "x":
+        throw new RangeError("`Z/O/v/V/X/x` (timeZone) patterns are not supported, use `z` instead");
+    }
+    return "";
+  }), result;
+}
+
+// ../../node_modules/@formatjs/icu-skeleton-parser/lib/regex.generated.js
+var WHITE_SPACE_REGEX = /[\t-\r \x85\u200E\u200F\u2028\u2029]/i;
+
+// ../../node_modules/@formatjs/icu-skeleton-parser/lib/number.js
+function parseNumberSkeletonFromString(skeleton) {
+  if (skeleton.length === 0)
+    throw new Error("Number skeleton cannot be empty");
+  for (var stringTokens = skeleton.split(WHITE_SPACE_REGEX).filter(function(x2) {
+    return x2.length > 0;
+  }), tokens2 = [], _i = 0, stringTokens_1 = stringTokens; _i < stringTokens_1.length; _i++) {
+    var stringToken = stringTokens_1[_i], stemAndOptions = stringToken.split("/");
+    if (stemAndOptions.length === 0)
+      throw new Error("Invalid number skeleton");
+    for (var stem = stemAndOptions[0], options2 = stemAndOptions.slice(1), _a2 = 0, options_1 = options2; _a2 < options_1.length; _a2++) {
+      var option = options_1[_a2];
+      if (option.length === 0)
+        throw new Error("Invalid number skeleton");
+    }
+    tokens2.push({ stem, options: options2 });
+  }
+  return tokens2;
+}
+function icuUnitToEcma(unit) {
+  return unit.replace(/^(.*?)-/, "");
+}
+var FRACTION_PRECISION_REGEX = /^\.(?:(0+)(\*)?|(#+)|(0+)(#+))$/g, SIGNIFICANT_PRECISION_REGEX = /^(@+)?(\+|#+)?[rs]?$/g, INTEGER_WIDTH_REGEX = /(\*)(0+)|(#+)(0+)|(0+)/g, CONCISE_INTEGER_WIDTH_REGEX = /^(0+)$/;
+function parseSignificantPrecision(str) {
+  var result = {};
+  return str[str.length - 1] === "r" ? result.roundingPriority = "morePrecision" : str[str.length - 1] === "s" && (result.roundingPriority = "lessPrecision"), str.replace(SIGNIFICANT_PRECISION_REGEX, function(_2, g1, g2) {
+    return typeof g2 != "string" ? (result.minimumSignificantDigits = g1.length, result.maximumSignificantDigits = g1.length) : g2 === "+" ? result.minimumSignificantDigits = g1.length : g1[0] === "#" ? result.maximumSignificantDigits = g1.length : (result.minimumSignificantDigits = g1.length, result.maximumSignificantDigits = g1.length + (typeof g2 == "string" ? g2.length : 0)), "";
+  }), result;
+}
+function parseSign(str) {
+  switch (str) {
+    case "sign-auto":
+      return {
+        signDisplay: "auto"
+      };
+    case "sign-accounting":
+    case "()":
+      return {
+        currencySign: "accounting"
+      };
+    case "sign-always":
+    case "+!":
+      return {
+        signDisplay: "always"
+      };
+    case "sign-accounting-always":
+    case "()!":
+      return {
+        signDisplay: "always",
+        currencySign: "accounting"
+      };
+    case "sign-except-zero":
+    case "+?":
+      return {
+        signDisplay: "exceptZero"
+      };
+    case "sign-accounting-except-zero":
+    case "()?":
+      return {
+        signDisplay: "exceptZero",
+        currencySign: "accounting"
+      };
+    case "sign-never":
+    case "+_":
+      return {
+        signDisplay: "never"
+      };
+  }
+}
+function parseConciseScientificAndEngineeringStem(stem) {
+  var result;
+  if (stem[0] === "E" && stem[1] === "E" ? (result = {
+    notation: "engineering"
+  }, stem = stem.slice(2)) : stem[0] === "E" && (result = {
+    notation: "scientific"
+  }, stem = stem.slice(1)), result) {
+    var signDisplay = stem.slice(0, 2);
+    if (signDisplay === "+!" ? (result.signDisplay = "always", stem = stem.slice(2)) : signDisplay === "+?" && (result.signDisplay = "exceptZero", stem = stem.slice(2)), !CONCISE_INTEGER_WIDTH_REGEX.test(stem))
+      throw new Error("Malformed concise eng/scientific notation");
+    result.minimumIntegerDigits = stem.length;
+  }
+  return result;
+}
+function parseNotationOptions(opt) {
+  var result = {}, signOpts = parseSign(opt);
+  return signOpts || result;
+}
+function parseNumberSkeleton(tokens2) {
+  for (var result = {}, _i = 0, tokens_1 = tokens2; _i < tokens_1.length; _i++) {
+    var token = tokens_1[_i];
+    switch (token.stem) {
+      case "percent":
+      case "%":
+        result.style = "percent";
+        continue;
+      case "%x100":
+        result.style = "percent", result.scale = 100;
+        continue;
+      case "currency":
+        result.style = "currency", result.currency = token.options[0];
+        continue;
+      case "group-off":
+      case ",_":
+        result.useGrouping = !1;
+        continue;
+      case "precision-integer":
+      case ".":
+        result.maximumFractionDigits = 0;
+        continue;
+      case "measure-unit":
+      case "unit":
+        result.style = "unit", result.unit = icuUnitToEcma(token.options[0]);
+        continue;
+      case "compact-short":
+      case "K":
+        result.notation = "compact", result.compactDisplay = "short";
+        continue;
+      case "compact-long":
+      case "KK":
+        result.notation = "compact", result.compactDisplay = "long";
+        continue;
+      case "scientific":
+        result = __assign(__assign(__assign({}, result), { notation: "scientific" }), token.options.reduce(function(all, opt2) {
+          return __assign(__assign({}, all), parseNotationOptions(opt2));
+        }, {}));
+        continue;
+      case "engineering":
+        result = __assign(__assign(__assign({}, result), { notation: "engineering" }), token.options.reduce(function(all, opt2) {
+          return __assign(__assign({}, all), parseNotationOptions(opt2));
+        }, {}));
+        continue;
+      case "notation-simple":
+        result.notation = "standard";
+        continue;
+      // https://github.com/unicode-org/icu/blob/master/icu4c/source/i18n/unicode/unumberformatter.h
+      case "unit-width-narrow":
+        result.currencyDisplay = "narrowSymbol", result.unitDisplay = "narrow";
+        continue;
+      case "unit-width-short":
+        result.currencyDisplay = "code", result.unitDisplay = "short";
+        continue;
+      case "unit-width-full-name":
+        result.currencyDisplay = "name", result.unitDisplay = "long";
+        continue;
+      case "unit-width-iso-code":
+        result.currencyDisplay = "symbol";
+        continue;
+      case "scale":
+        result.scale = parseFloat(token.options[0]);
+        continue;
+      case "rounding-mode-floor":
+        result.roundingMode = "floor";
+        continue;
+      case "rounding-mode-ceiling":
+        result.roundingMode = "ceil";
+        continue;
+      case "rounding-mode-down":
+        result.roundingMode = "trunc";
+        continue;
+      case "rounding-mode-up":
+        result.roundingMode = "expand";
+        continue;
+      case "rounding-mode-half-even":
+        result.roundingMode = "halfEven";
+        continue;
+      case "rounding-mode-half-down":
+        result.roundingMode = "halfTrunc";
+        continue;
+      case "rounding-mode-half-up":
+        result.roundingMode = "halfExpand";
+        continue;
+      // https://unicode-org.github.io/icu/userguide/format_parse/numbers/skeletons.html#integer-width
+      case "integer-width":
+        if (token.options.length > 1)
+          throw new RangeError("integer-width stems only accept a single optional option");
+        token.options[0].replace(INTEGER_WIDTH_REGEX, function(_2, g1, g2, g3, g4, g5) {
+          if (g1)
+            result.minimumIntegerDigits = g2.length;
+          else {
+            if (g3 && g4)
+              throw new Error("We currently do not support maximum integer digits");
+            if (g5)
+              throw new Error("We currently do not support exact integer digits");
+          }
+          return "";
+        });
+        continue;
+    }
+    if (CONCISE_INTEGER_WIDTH_REGEX.test(token.stem)) {
+      result.minimumIntegerDigits = token.stem.length;
+      continue;
+    }
+    if (FRACTION_PRECISION_REGEX.test(token.stem)) {
+      if (token.options.length > 1)
+        throw new RangeError("Fraction-precision stems only accept a single optional option");
+      token.stem.replace(FRACTION_PRECISION_REGEX, function(_2, g1, g2, g3, g4, g5) {
+        return g2 === "*" ? result.minimumFractionDigits = g1.length : g3 && g3[0] === "#" ? result.maximumFractionDigits = g3.length : g4 && g5 ? (result.minimumFractionDigits = g4.length, result.maximumFractionDigits = g4.length + g5.length) : (result.minimumFractionDigits = g1.length, result.maximumFractionDigits = g1.length), "";
+      });
+      var opt = token.options[0];
+      opt === "w" ? result = __assign(__assign({}, result), { trailingZeroDisplay: "stripIfInteger" }) : opt && (result = __assign(__assign({}, result), parseSignificantPrecision(opt)));
+      continue;
+    }
+    if (SIGNIFICANT_PRECISION_REGEX.test(token.stem)) {
+      result = __assign(__assign({}, result), parseSignificantPrecision(token.stem));
+      continue;
+    }
+    var signOpts = parseSign(token.stem);
+    signOpts && (result = __assign(__assign({}, result), signOpts));
+    var conciseScientificAndEngineeringOpts = parseConciseScientificAndEngineeringStem(token.stem);
+    conciseScientificAndEngineeringOpts && (result = __assign(__assign({}, result), conciseScientificAndEngineeringOpts));
+  }
+  return result;
+}
+
+// ../../node_modules/@formatjs/icu-messageformat-parser/lib/time-data.generated.js
+var timeData = {
+  "001": [
+    "H",
+    "h"
+  ],
+  419: [
+    "h",
+    "H",
+    "hB",
+    "hb"
+  ],
+  AC: [
+    "H",
+    "h",
+    "hb",
+    "hB"
+  ],
+  AD: [
+    "H",
+    "hB"
+  ],
+  AE: [
+    "h",
+    "hB",
+    "hb",
+    "H"
+  ],
+  AF: [
+    "H",
+    "hb",
+    "hB",
+    "h"
+  ],
+  AG: [
+    "h",
+    "hb",
+    "H",
+    "hB"
+  ],
+  AI: [
+    "H",
+    "h",
+    "hb",
+    "hB"
+  ],
+  AL: [
+    "h",
+    "H",
+    "hB"
+  ],
+  AM: [
+    "H",
+    "hB"
+  ],
+  AO: [
+    "H",
+    "hB"
+  ],
+  AR: [
+    "h",
+    "H",
+    "hB",
+    "hb"
+  ],
+  AS: [
+    "h",
+    "H"
+  ],
+  AT: [
+    "H",
+    "hB"
+  ],
+  AU: [
+    "h",
+    "hb",
+    "H",
+    "hB"
+  ],
+  AW: [
+    "H",
+    "hB"
+  ],
+  AX: [
+    "H"
+  ],
+  AZ: [
+    "H",
+    "hB",
+    "h"
+  ],
+  BA: [
+    "H",
+    "hB",
+    "h"
+  ],
+  BB: [
+    "h",
+    "hb",
+    "H",
+    "hB"
+  ],
+  BD: [
+    "h",
+    "hB",
+    "H"
+  ],
+  BE: [
+    "H",
+    "hB"
+  ],
+  BF: [
+    "H",
+    "hB"
+  ],
+  BG: [
+    "H",
+    "hB",
+    "h"
+  ],
+  BH: [
+    "h",
+    "hB",
+    "hb",
+    "H"
+  ],
+  BI: [
+    "H",
+    "h"
+  ],
+  BJ: [
+    "H",
+    "hB"
+  ],
+  BL: [
+    "H",
+    "hB"
+  ],
+  BM: [
+    "h",
+    "hb",
+    "H",
+    "hB"
+  ],
+  BN: [
+    "hb",
+    "hB",
+    "h",
+    "H"
+  ],
+  BO: [
+    "h",
+    "H",
+    "hB",
+    "hb"
+  ],
+  BQ: [
+    "H"
+  ],
+  BR: [
+    "H",
+    "hB"
+  ],
+  BS: [
+    "h",
+    "hb",
+    "H",
+    "hB"
+  ],
+  BT: [
+    "h",
+    "H"
+  ],
+  BW: [
+    "H",
+    "h",
+    "hb",
+    "hB"
+  ],
+  BY: [
+    "H",
+    "h"
+  ],
+  BZ: [
+    "H",
+    "h",
+    "hb",
+    "hB"
+  ],
+  CA: [
+    "h",
+    "hb",
+    "H",
+    "hB"
+  ],
+  CC: [
+    "H",
+    "h",
+    "hb",
+    "hB"
+  ],
+  CD: [
+    "hB",
+    "H"
+  ],
+  CF: [
+    "H",
+    "h",
+    "hB"
+  ],
+  CG: [
+    "H",
+    "hB"
+  ],
+  CH: [
+    "H",
+    "hB",
+    "h"
+  ],
+  CI: [
+    "H",
+    "hB"
+  ],
+  CK: [
+    "H",
+    "h",
+    "hb",
+    "hB"
+  ],
+  CL: [
+    "h",
+    "H",
+    "hB",
+    "hb"
+  ],
+  CM: [
+    "H",
+    "h",
+    "hB"
+  ],
+  CN: [
+    "H",
+    "hB",
+    "hb",
+    "h"
+  ],
+  CO: [
+    "h",
+    "H",
+    "hB",
+    "hb"
+  ],
+  CP: [
+    "H"
+  ],
+  CR: [
+    "h",
+    "H",
+    "hB",
+    "hb"
+  ],
+  CU: [
+    "h",
+    "H",
+    "hB",
+    "hb"
+  ],
+  CV: [
+    "H",
+    "hB"
+  ],
+  CW: [
+    "H",
+    "hB"
+  ],
+  CX: [
+    "H",
+    "h",
+    "hb",
+    "hB"
+  ],
+  CY: [
+    "h",
+    "H",
+    "hb",
+    "hB"
+  ],
+  CZ: [
+    "H"
+  ],
+  DE: [
+    "H",
+    "hB"
+  ],
+  DG: [
+    "H",
+    "h",
+    "hb",
+    "hB"
+  ],
+  DJ: [
+    "h",
+    "H"
+  ],
+  DK: [
+    "H"
+  ],
+  DM: [
+    "h",
+    "hb",
+    "H",
+    "hB"
+  ],
+  DO: [
+    "h",
+    "H",
+    "hB",
+    "hb"
+  ],
+  DZ: [
+    "h",
+    "hB",
+    "hb",
+    "H"
+  ],
+  EA: [
+    "H",
+    "h",
+    "hB",
+    "hb"
+  ],
+  EC: [
+    "h",
+    "H",
+    "hB",
+    "hb"
+  ],
+  EE: [
+    "H",
+    "hB"
+  ],
+  EG: [
+    "h",
+    "hB",
+    "hb",
+    "H"
+  ],
+  EH: [
+    "h",
+    "hB",
+    "hb",
+    "H"
+  ],
+  ER: [
+    "h",
+    "H"
+  ],
+  ES: [
+    "H",
+    "hB",
+    "h",
+    "hb"
+  ],
+  ET: [
+    "hB",
+    "hb",
+    "h",
+    "H"
+  ],
+  FI: [
+    "H"
+  ],
+  FJ: [
+    "h",
+    "hb",
+    "H",
+    "hB"
+  ],
+  FK: [
+    "H",
+    "h",
+    "hb",
+    "hB"
+  ],
+  FM: [
+    "h",
+    "hb",
+    "H",
+    "hB"
+  ],
+  FO: [
+    "H",
+    "h"
+  ],
+  FR: [
+    "H",
+    "hB"
+  ],
+  GA: [
+    "H",
+    "hB"
+  ],
+  GB: [
+    "H",
+    "h",
+    "hb",
+    "hB"
+  ],
+  GD: [
+    "h",
+    "hb",
+    "H",
+    "hB"
+  ],
+  GE: [
+    "H",
+    "hB",
+    "h"
+  ],
+  GF: [
+    "H",
+    "hB"
+  ],
+  GG: [
+    "H",
+    "h",
+    "hb",
+    "hB"
+  ],
+  GH: [
+    "h",
+    "H"
+  ],
+  GI: [
+    "H",
+    "h",
+    "hb",
+    "hB"
+  ],
+  GL: [
+    "H",
+    "h"
+  ],
+  GM: [
+    "h",
+    "hb",
+    "H",
+    "hB"
+  ],
+  GN: [
+    "H",
+    "hB"
+  ],
+  GP: [
+    "H",
+    "hB"
+  ],
+  GQ: [
+    "H",
+    "hB",
+    "h",
+    "hb"
+  ],
+  GR: [
+    "h",
+    "H",
+    "hb",
+    "hB"
+  ],
+  GT: [
+    "h",
+    "H",
+    "hB",
+    "hb"
+  ],
+  GU: [
+    "h",
+    "hb",
+    "H",
+    "hB"
+  ],
+  GW: [
+    "H",
+    "hB"
+  ],
+  GY: [
+    "h",
+    "hb",
+    "H",
+    "hB"
+  ],
+  HK: [
+    "h",
+    "hB",
+    "hb",
+    "H"
+  ],
+  HN: [
+    "h",
+    "H",
+    "hB",
+    "hb"
+  ],
+  HR: [
+    "H",
+    "hB"
+  ],
+  HU: [
+    "H",
+    "h"
+  ],
+  IC: [
+    "H",
+    "h",
+    "hB",
+    "hb"
+  ],
+  ID: [
+    "H"
+  ],
+  IE: [
+    "H",
+    "h",
+    "hb",
+    "hB"
+  ],
+  IL: [
+    "H",
+    "hB"
+  ],
+  IM: [
+    "H",
+    "h",
+    "hb",
+    "hB"
+  ],
+  IN: [
+    "h",
+    "H"
+  ],
+  IO: [
+    "H",
+    "h",
+    "hb",
+    "hB"
+  ],
+  IQ: [
+    "h",
+    "hB",
+    "hb",
+    "H"
+  ],
+  IR: [
+    "hB",
+    "H"
+  ],
+  IS: [
+    "H"
+  ],
+  IT: [
+    "H",
+    "hB"
+  ],
+  JE: [
+    "H",
+    "h",
+    "hb",
+    "hB"
+  ],
+  JM: [
+    "h",
+    "hb",
+    "H",
+    "hB"
+  ],
+  JO: [
+    "h",
+    "hB",
+    "hb",
+    "H"
+  ],
+  JP: [
+    "H",
+    "K",
+    "h"
+  ],
+  KE: [
+    "hB",
+    "hb",
+    "H",
+    "h"
+  ],
+  KG: [
+    "H",
+    "h",
+    "hB",
+    "hb"
+  ],
+  KH: [
+    "hB",
+    "h",
+    "H",
+    "hb"
+  ],
+  KI: [
+    "h",
+    "hb",
+    "H",
+    "hB"
+  ],
+  KM: [
+    "H",
+    "h",
+    "hB",
+    "hb"
+  ],
+  KN: [
+    "h",
+    "hb",
+    "H",
+    "hB"
+  ],
+  KP: [
+    "h",
+    "H",
+    "hB",
+    "hb"
+  ],
+  KR: [
+    "h",
+    "H",
+    "hB",
+    "hb"
+  ],
+  KW: [
+    "h",
+    "hB",
+    "hb",
+    "H"
+  ],
+  KY: [
+    "h",
+    "hb",
+    "H",
+    "hB"
+  ],
+  KZ: [
+    "H",
+    "hB"
+  ],
+  LA: [
+    "H",
+    "hb",
+    "hB",
+    "h"
+  ],
+  LB: [
+    "h",
+    "hB",
+    "hb",
+    "H"
+  ],
+  LC: [
+    "h",
+    "hb",
+    "H",
+    "hB"
+  ],
+  LI: [
+    "H",
+    "hB",
+    "h"
+  ],
+  LK: [
+    "H",
+    "h",
+    "hB",
+    "hb"
+  ],
+  LR: [
+    "h",
+    "hb",
+    "H",
+    "hB"
+  ],
+  LS: [
+    "h",
+    "H"
+  ],
+  LT: [
+    "H",
+    "h",
+    "hb",
+    "hB"
+  ],
+  LU: [
+    "H",
+    "h",
+    "hB"
+  ],
+  LV: [
+    "H",
+    "hB",
+    "hb",
+    "h"
+  ],
+  LY: [
+    "h",
+    "hB",
+    "hb",
+    "H"
+  ],
+  MA: [
+    "H",
+    "h",
+    "hB",
+    "hb"
+  ],
+  MC: [
+    "H",
+    "hB"
+  ],
+  MD: [
+    "H",
+    "hB"
+  ],
+  ME: [
+    "H",
+    "hB",
+    "h"
+  ],
+  MF: [
+    "H",
+    "hB"
+  ],
+  MG: [
+    "H",
+    "h"
+  ],
+  MH: [
+    "h",
+    "hb",
+    "H",
+    "hB"
+  ],
+  MK: [
+    "H",
+    "h",
+    "hb",
+    "hB"
+  ],
+  ML: [
+    "H"
+  ],
+  MM: [
+    "hB",
+    "hb",
+    "H",
+    "h"
+  ],
+  MN: [
+    "H",
+    "h",
+    "hb",
+    "hB"
+  ],
+  MO: [
+    "h",
+    "hB",
+    "hb",
+    "H"
+  ],
+  MP: [
+    "h",
+    "hb",
+    "H",
+    "hB"
+  ],
+  MQ: [
+    "H",
+    "hB"
+  ],
+  MR: [
+    "h",
+    "hB",
+    "hb",
+    "H"
+  ],
+  MS: [
+    "H",
+    "h",
+    "hb",
+    "hB"
+  ],
+  MT: [
+    "H",
+    "h"
+  ],
+  MU: [
+    "H",
+    "h"
+  ],
+  MV: [
+    "H",
+    "h"
+  ],
+  MW: [
+    "h",
+    "hb",
+    "H",
+    "hB"
+  ],
+  MX: [
+    "h",
+    "H",
+    "hB",
+    "hb"
+  ],
+  MY: [
+    "hb",
+    "hB",
+    "h",
+    "H"
+  ],
+  MZ: [
+    "H",
+    "hB"
+  ],
+  NA: [
+    "h",
+    "H",
+    "hB",
+    "hb"
+  ],
+  NC: [
+    "H",
+    "hB"
+  ],
+  NE: [
+    "H"
+  ],
+  NF: [
+    "H",
+    "h",
+    "hb",
+    "hB"
+  ],
+  NG: [
+    "H",
+    "h",
+    "hb",
+    "hB"
+  ],
+  NI: [
+    "h",
+    "H",
+    "hB",
+    "hb"
+  ],
+  NL: [
+    "H",
+    "hB"
+  ],
+  NO: [
+    "H",
+    "h"
+  ],
+  NP: [
+    "H",
+    "h",
+    "hB"
+  ],
+  NR: [
+    "H",
+    "h",
+    "hb",
+    "hB"
+  ],
+  NU: [
+    "H",
+    "h",
+    "hb",
+    "hB"
+  ],
+  NZ: [
+    "h",
+    "hb",
+    "H",
+    "hB"
+  ],
+  OM: [
+    "h",
+    "hB",
+    "hb",
+    "H"
+  ],
+  PA: [
+    "h",
+    "H",
+    "hB",
+    "hb"
+  ],
+  PE: [
+    "h",
+    "H",
+    "hB",
+    "hb"
+  ],
+  PF: [
+    "H",
+    "h",
+    "hB"
+  ],
+  PG: [
+    "h",
+    "H"
+  ],
+  PH: [
+    "h",
+    "hB",
+    "hb",
+    "H"
+  ],
+  PK: [
+    "h",
+    "hB",
+    "H"
+  ],
+  PL: [
+    "H",
+    "h"
+  ],
+  PM: [
+    "H",
+    "hB"
+  ],
+  PN: [
+    "H",
+    "h",
+    "hb",
+    "hB"
+  ],
+  PR: [
+    "h",
+    "H",
+    "hB",
+    "hb"
+  ],
+  PS: [
+    "h",
+    "hB",
+    "hb",
+    "H"
+  ],
+  PT: [
+    "H",
+    "hB"
+  ],
+  PW: [
+    "h",
+    "H"
+  ],
+  PY: [
+    "h",
+    "H",
+    "hB",
+    "hb"
+  ],
+  QA: [
+    "h",
+    "hB",
+    "hb",
+    "H"
+  ],
+  RE: [
+    "H",
+    "hB"
+  ],
+  RO: [
+    "H",
+    "hB"
+  ],
+  RS: [
+    "H",
+    "hB",
+    "h"
+  ],
+  RU: [
+    "H"
+  ],
+  RW: [
+    "H",
+    "h"
+  ],
+  SA: [
+    "h",
+    "hB",
+    "hb",
+    "H"
+  ],
+  SB: [
+    "h",
+    "hb",
+    "H",
+    "hB"
+  ],
+  SC: [
+    "H",
+    "h",
+    "hB"
+  ],
+  SD: [
+    "h",
+    "hB",
+    "hb",
+    "H"
+  ],
+  SE: [
+    "H"
+  ],
+  SG: [
+    "h",
+    "hb",
+    "H",
+    "hB"
+  ],
+  SH: [
+    "H",
+    "h",
+    "hb",
+    "hB"
+  ],
+  SI: [
+    "H",
+    "hB"
+  ],
+  SJ: [
+    "H"
+  ],
+  SK: [
+    "H"
+  ],
+  SL: [
+    "h",
+    "hb",
+    "H",
+    "hB"
+  ],
+  SM: [
+    "H",
+    "h",
+    "hB"
+  ],
+  SN: [
+    "H",
+    "h",
+    "hB"
+  ],
+  SO: [
+    "h",
+    "H"
+  ],
+  SR: [
+    "H",
+    "hB"
+  ],
+  SS: [
+    "h",
+    "hb",
+    "H",
+    "hB"
+  ],
+  ST: [
+    "H",
+    "hB"
+  ],
+  SV: [
+    "h",
+    "H",
+    "hB",
+    "hb"
+  ],
+  SX: [
+    "H",
+    "h",
+    "hb",
+    "hB"
+  ],
+  SY: [
+    "h",
+    "hB",
+    "hb",
+    "H"
+  ],
+  SZ: [
+    "h",
+    "hb",
+    "H",
+    "hB"
+  ],
+  TA: [
+    "H",
+    "h",
+    "hb",
+    "hB"
+  ],
+  TC: [
+    "h",
+    "hb",
+    "H",
+    "hB"
+  ],
+  TD: [
+    "h",
+    "H",
+    "hB"
+  ],
+  TF: [
+    "H",
+    "h",
+    "hB"
+  ],
+  TG: [
+    "H",
+    "hB"
+  ],
+  TH: [
+    "H",
+    "h"
+  ],
+  TJ: [
+    "H",
+    "h"
+  ],
+  TL: [
+    "H",
+    "hB",
+    "hb",
+    "h"
+  ],
+  TM: [
+    "H",
+    "h"
+  ],
+  TN: [
+    "h",
+    "hB",
+    "hb",
+    "H"
+  ],
+  TO: [
+    "h",
+    "H"
+  ],
+  TR: [
+    "H",
+    "hB"
+  ],
+  TT: [
+    "h",
+    "hb",
+    "H",
+    "hB"
+  ],
+  TW: [
+    "hB",
+    "hb",
+    "h",
+    "H"
+  ],
+  TZ: [
+    "hB",
+    "hb",
+    "H",
+    "h"
+  ],
+  UA: [
+    "H",
+    "hB",
+    "h"
+  ],
+  UG: [
+    "hB",
+    "hb",
+    "H",
+    "h"
+  ],
+  UM: [
+    "h",
+    "hb",
+    "H",
+    "hB"
+  ],
+  US: [
+    "h",
+    "hb",
+    "H",
+    "hB"
+  ],
+  UY: [
+    "h",
+    "H",
+    "hB",
+    "hb"
+  ],
+  UZ: [
+    "H",
+    "hB",
+    "h"
+  ],
+  VA: [
+    "H",
+    "h",
+    "hB"
+  ],
+  VC: [
+    "h",
+    "hb",
+    "H",
+    "hB"
+  ],
+  VE: [
+    "h",
+    "H",
+    "hB",
+    "hb"
+  ],
+  VG: [
+    "h",
+    "hb",
+    "H",
+    "hB"
+  ],
+  VI: [
+    "h",
+    "hb",
+    "H",
+    "hB"
+  ],
+  VN: [
+    "H",
+    "h"
+  ],
+  VU: [
+    "h",
+    "H"
+  ],
+  WF: [
+    "H",
+    "hB"
+  ],
+  WS: [
+    "h",
+    "H"
+  ],
+  XK: [
+    "H",
+    "hB",
+    "h"
+  ],
+  YE: [
+    "h",
+    "hB",
+    "hb",
+    "H"
+  ],
+  YT: [
+    "H",
+    "hB"
+  ],
+  ZA: [
+    "H",
+    "h",
+    "hb",
+    "hB"
+  ],
+  ZM: [
+    "h",
+    "hb",
+    "H",
+    "hB"
+  ],
+  ZW: [
+    "H",
+    "h"
+  ],
+  "af-ZA": [
+    "H",
+    "h",
+    "hB",
+    "hb"
+  ],
+  "ar-001": [
+    "h",
+    "hB",
+    "hb",
+    "H"
+  ],
+  "ca-ES": [
+    "H",
+    "h",
+    "hB"
+  ],
+  "en-001": [
+    "h",
+    "hb",
+    "H",
+    "hB"
+  ],
+  "en-HK": [
+    "h",
+    "hb",
+    "H",
+    "hB"
+  ],
+  "en-IL": [
+    "H",
+    "h",
+    "hb",
+    "hB"
+  ],
+  "en-MY": [
+    "h",
+    "hb",
+    "H",
+    "hB"
+  ],
+  "es-BR": [
+    "H",
+    "h",
+    "hB",
+    "hb"
+  ],
+  "es-ES": [
+    "H",
+    "h",
+    "hB",
+    "hb"
+  ],
+  "es-GQ": [
+    "H",
+    "h",
+    "hB",
+    "hb"
+  ],
+  "fr-CA": [
+    "H",
+    "h",
+    "hB"
+  ],
+  "gl-ES": [
+    "H",
+    "h",
+    "hB"
+  ],
+  "gu-IN": [
+    "hB",
+    "hb",
+    "h",
+    "H"
+  ],
+  "hi-IN": [
+    "hB",
+    "h",
+    "H"
+  ],
+  "it-CH": [
+    "H",
+    "h",
+    "hB"
+  ],
+  "it-IT": [
+    "H",
+    "h",
+    "hB"
+  ],
+  "kn-IN": [
+    "hB",
+    "h",
+    "H"
+  ],
+  "ml-IN": [
+    "hB",
+    "h",
+    "H"
+  ],
+  "mr-IN": [
+    "hB",
+    "hb",
+    "h",
+    "H"
+  ],
+  "pa-IN": [
+    "hB",
+    "hb",
+    "h",
+    "H"
+  ],
+  "ta-IN": [
+    "hB",
+    "h",
+    "hb",
+    "H"
+  ],
+  "te-IN": [
+    "hB",
+    "h",
+    "H"
+  ],
+  "zu-ZA": [
+    "H",
+    "hB",
+    "hb",
+    "h"
+  ]
+};
+
+// ../../node_modules/@formatjs/icu-messageformat-parser/lib/date-time-pattern-generator.js
+function getBestPattern(skeleton, locale) {
+  for (var skeletonCopy = "", patternPos = 0; patternPos < skeleton.length; patternPos++) {
+    var patternChar = skeleton.charAt(patternPos);
+    if (patternChar === "j") {
+      for (var extraLength = 0; patternPos + 1 < skeleton.length && skeleton.charAt(patternPos + 1) === patternChar; )
+        extraLength++, patternPos++;
+      var hourLen = 1 + (extraLength & 1), dayPeriodLen = extraLength < 2 ? 1 : 3 + (extraLength >> 1), dayPeriodChar = "a", hourChar = getDefaultHourSymbolFromLocale(locale);
+      for ((hourChar == "H" || hourChar == "k") && (dayPeriodLen = 0); dayPeriodLen-- > 0; )
+        skeletonCopy += dayPeriodChar;
+      for (; hourLen-- > 0; )
+        skeletonCopy = hourChar + skeletonCopy;
+    } else patternChar === "J" ? skeletonCopy += "H" : skeletonCopy += patternChar;
+  }
+  return skeletonCopy;
+}
+function getDefaultHourSymbolFromLocale(locale) {
+  var hourCycle = locale.hourCycle;
+  if (hourCycle === void 0 && // @ts-ignore hourCycle(s) is not identified yet
+  locale.hourCycles && // @ts-ignore
+  locale.hourCycles.length && (hourCycle = locale.hourCycles[0]), hourCycle)
+    switch (hourCycle) {
+      case "h24":
+        return "k";
+      case "h23":
+        return "H";
+      case "h12":
+        return "h";
+      case "h11":
+        return "K";
+      default:
+        throw new Error("Invalid hourCycle");
+    }
+  var languageTag = locale.language, regionTag;
+  languageTag !== "root" && (regionTag = locale.maximize().region);
+  var hourCycles = timeData[regionTag || ""] || timeData[languageTag || ""] || timeData["".concat(languageTag, "-001")] || timeData["001"];
+  return hourCycles[0];
+}
+
+// ../../node_modules/@formatjs/icu-messageformat-parser/lib/parser.js
+var _a, SPACE_SEPARATOR_START_REGEX = new RegExp("^".concat(SPACE_SEPARATOR_REGEX.source, "*")), SPACE_SEPARATOR_END_REGEX = new RegExp("".concat(SPACE_SEPARATOR_REGEX.source, "*$"));
+function createLocation(start, end) {
+  return { start, end };
+}
+var hasNativeStartsWith = !!String.prototype.startsWith && "_a".startsWith("a", 1), hasNativeFromCodePoint = !!String.fromCodePoint, hasNativeFromEntries = !!Object.fromEntries, hasNativeCodePointAt = !!String.prototype.codePointAt, hasTrimStart = !!String.prototype.trimStart, hasTrimEnd = !!String.prototype.trimEnd, hasNativeIsSafeInteger = !!Number.isSafeInteger, isSafeInteger = hasNativeIsSafeInteger ? Number.isSafeInteger : function(n3) {
+  return typeof n3 == "number" && isFinite(n3) && Math.floor(n3) === n3 && Math.abs(n3) <= 9007199254740991;
+}, REGEX_SUPPORTS_U_AND_Y = !0;
+try {
+  re = RE("([^\\p{White_Space}\\p{Pattern_Syntax}]*)", "yu"), REGEX_SUPPORTS_U_AND_Y = ((_a = re.exec("a")) === null || _a === void 0 ? void 0 : _a[0]) === "a";
+} catch {
+  REGEX_SUPPORTS_U_AND_Y = !1;
+}
+var re, startsWith = hasNativeStartsWith ? (
+  // Native
+  function(s2, search, position) {
+    return s2.startsWith(search, position);
+  }
+) : (
+  // For IE11
+  function(s2, search, position) {
+    return s2.slice(position, position + search.length) === search;
+  }
+), fromCodePoint = hasNativeFromCodePoint ? String.fromCodePoint : (
+  // IE11
+  function() {
+    for (var codePoints = [], _i = 0; _i < arguments.length; _i++)
+      codePoints[_i] = arguments[_i];
+    for (var elements = "", length = codePoints.length, i2 = 0, code; length > i2; ) {
+      if (code = codePoints[i2++], code > 1114111)
+        throw RangeError(code + " is not a valid code point");
+      elements += code < 65536 ? String.fromCharCode(code) : String.fromCharCode(((code -= 65536) >> 10) + 55296, code % 1024 + 56320);
+    }
+    return elements;
+  }
+), fromEntries = (
+  // native
+  hasNativeFromEntries ? Object.fromEntries : (
+    // Ponyfill
+    function(entries) {
+      for (var obj = {}, _i = 0, entries_1 = entries; _i < entries_1.length; _i++) {
+        var _a2 = entries_1[_i], k2 = _a2[0], v2 = _a2[1];
+        obj[k2] = v2;
+      }
+      return obj;
+    }
+  )
+), codePointAt = hasNativeCodePointAt ? (
+  // Native
+  function(s2, index) {
+    return s2.codePointAt(index);
+  }
+) : (
+  // IE 11
+  function(s2, index) {
+    var size = s2.length;
+    if (!(index < 0 || index >= size)) {
+      var first = s2.charCodeAt(index), second;
+      return first < 55296 || first > 56319 || index + 1 === size || (second = s2.charCodeAt(index + 1)) < 56320 || second > 57343 ? first : (first - 55296 << 10) + (second - 56320) + 65536;
+    }
+  }
+), trimStart = hasTrimStart ? (
+  // Native
+  function(s2) {
+    return s2.trimStart();
+  }
+) : (
+  // Ponyfill
+  function(s2) {
+    return s2.replace(SPACE_SEPARATOR_START_REGEX, "");
+  }
+), trimEnd = hasTrimEnd ? (
+  // Native
+  function(s2) {
+    return s2.trimEnd();
+  }
+) : (
+  // Ponyfill
+  function(s2) {
+    return s2.replace(SPACE_SEPARATOR_END_REGEX, "");
+  }
+);
+function RE(s2, flag) {
+  return new RegExp(s2, flag);
+}
+var matchIdentifierAtIndex;
+REGEX_SUPPORTS_U_AND_Y ? (IDENTIFIER_PREFIX_RE_1 = RE("([^\\p{White_Space}\\p{Pattern_Syntax}]*)", "yu"), matchIdentifierAtIndex = function(s2, index) {
+  var _a2;
+  IDENTIFIER_PREFIX_RE_1.lastIndex = index;
+  var match = IDENTIFIER_PREFIX_RE_1.exec(s2);
+  return (_a2 = match[1]) !== null && _a2 !== void 0 ? _a2 : "";
+}) : matchIdentifierAtIndex = function(s2, index) {
+  for (var match = []; ; ) {
+    var c2 = codePointAt(s2, index);
+    if (c2 === void 0 || _isWhiteSpace(c2) || _isPatternSyntax(c2))
+      break;
+    match.push(c2), index += c2 >= 65536 ? 2 : 1;
+  }
+  return fromCodePoint.apply(void 0, match);
+};
+var IDENTIFIER_PREFIX_RE_1, Parser = (
+  /** @class */
+  (function() {
+    function Parser2(message, options2) {
+      options2 === void 0 && (options2 = {}), this.message = message, this.position = { offset: 0, line: 1, column: 1 }, this.ignoreTag = !!options2.ignoreTag, this.locale = options2.locale, this.requiresOtherClause = !!options2.requiresOtherClause, this.shouldParseSkeletons = !!options2.shouldParseSkeletons;
+    }
+    return Parser2.prototype.parse = function() {
+      if (this.offset() !== 0)
+        throw Error("parser can only be used once");
+      return this.parseMessage(0, "", !1);
+    }, Parser2.prototype.parseMessage = function(nestingLevel, parentArgType, expectingCloseTag) {
+      for (var elements = []; !this.isEOF(); ) {
+        var char = this.char();
+        if (char === 123) {
+          var result = this.parseArgument(nestingLevel, expectingCloseTag);
+          if (result.err)
+            return result;
+          elements.push(result.val);
+        } else {
+          if (char === 125 && nestingLevel > 0)
+            break;
+          if (char === 35 && (parentArgType === "plural" || parentArgType === "selectordinal")) {
+            var position = this.clonePosition();
+            this.bump(), elements.push({
+              type: TYPE.pound,
+              location: createLocation(position, this.clonePosition())
+            });
+          } else if (char === 60 && !this.ignoreTag && this.peek() === 47) {
+            if (expectingCloseTag)
+              break;
+            return this.error(ErrorKind.UNMATCHED_CLOSING_TAG, createLocation(this.clonePosition(), this.clonePosition()));
+          } else if (char === 60 && !this.ignoreTag && _isAlpha(this.peek() || 0)) {
+            var result = this.parseTag(nestingLevel, parentArgType);
+            if (result.err)
+              return result;
+            elements.push(result.val);
+          } else {
+            var result = this.parseLiteral(nestingLevel, parentArgType);
+            if (result.err)
+              return result;
+            elements.push(result.val);
+          }
+        }
+      }
+      return { val: elements, err: null };
+    }, Parser2.prototype.parseTag = function(nestingLevel, parentArgType) {
+      var startPosition = this.clonePosition();
+      this.bump();
+      var tagName = this.parseTagName();
+      if (this.bumpSpace(), this.bumpIf("/>"))
+        return {
+          val: {
+            type: TYPE.literal,
+            value: "<".concat(tagName, "/>"),
+            location: createLocation(startPosition, this.clonePosition())
+          },
+          err: null
+        };
+      if (this.bumpIf(">")) {
+        var childrenResult = this.parseMessage(nestingLevel + 1, parentArgType, !0);
+        if (childrenResult.err)
+          return childrenResult;
+        var children = childrenResult.val, endTagStartPosition = this.clonePosition();
+        if (this.bumpIf("</")) {
+          if (this.isEOF() || !_isAlpha(this.char()))
+            return this.error(ErrorKind.INVALID_TAG, createLocation(endTagStartPosition, this.clonePosition()));
+          var closingTagNameStartPosition = this.clonePosition(), closingTagName = this.parseTagName();
+          return tagName !== closingTagName ? this.error(ErrorKind.UNMATCHED_CLOSING_TAG, createLocation(closingTagNameStartPosition, this.clonePosition())) : (this.bumpSpace(), this.bumpIf(">") ? {
+            val: {
+              type: TYPE.tag,
+              value: tagName,
+              children,
+              location: createLocation(startPosition, this.clonePosition())
+            },
+            err: null
+          } : this.error(ErrorKind.INVALID_TAG, createLocation(endTagStartPosition, this.clonePosition())));
+        } else
+          return this.error(ErrorKind.UNCLOSED_TAG, createLocation(startPosition, this.clonePosition()));
+      } else
+        return this.error(ErrorKind.INVALID_TAG, createLocation(startPosition, this.clonePosition()));
+    }, Parser2.prototype.parseTagName = function() {
+      var startOffset = this.offset();
+      for (this.bump(); !this.isEOF() && _isPotentialElementNameChar(this.char()); )
+        this.bump();
+      return this.message.slice(startOffset, this.offset());
+    }, Parser2.prototype.parseLiteral = function(nestingLevel, parentArgType) {
+      for (var start = this.clonePosition(), value = ""; ; ) {
+        var parseQuoteResult = this.tryParseQuote(parentArgType);
+        if (parseQuoteResult) {
+          value += parseQuoteResult;
+          continue;
+        }
+        var parseUnquotedResult = this.tryParseUnquoted(nestingLevel, parentArgType);
+        if (parseUnquotedResult) {
+          value += parseUnquotedResult;
+          continue;
+        }
+        var parseLeftAngleResult = this.tryParseLeftAngleBracket();
+        if (parseLeftAngleResult) {
+          value += parseLeftAngleResult;
+          continue;
+        }
+        break;
+      }
+      var location2 = createLocation(start, this.clonePosition());
+      return {
+        val: { type: TYPE.literal, value, location: location2 },
+        err: null
+      };
+    }, Parser2.prototype.tryParseLeftAngleBracket = function() {
+      return !this.isEOF() && this.char() === 60 && (this.ignoreTag || // If at the opening tag or closing tag position, bail.
+      !_isAlphaOrSlash(this.peek() || 0)) ? (this.bump(), "<") : null;
+    }, Parser2.prototype.tryParseQuote = function(parentArgType) {
+      if (this.isEOF() || this.char() !== 39)
+        return null;
+      switch (this.peek()) {
+        case 39:
+          return this.bump(), this.bump(), "'";
+        // '{', '<', '>', '}'
+        case 123:
+        case 60:
+        case 62:
+        case 125:
+          break;
+        case 35:
+          if (parentArgType === "plural" || parentArgType === "selectordinal")
+            break;
+          return null;
+        default:
+          return null;
+      }
+      this.bump();
+      var codePoints = [this.char()];
+      for (this.bump(); !this.isEOF(); ) {
+        var ch = this.char();
+        if (ch === 39)
+          if (this.peek() === 39)
+            codePoints.push(39), this.bump();
+          else {
+            this.bump();
+            break;
+          }
+        else
+          codePoints.push(ch);
+        this.bump();
+      }
+      return fromCodePoint.apply(void 0, codePoints);
+    }, Parser2.prototype.tryParseUnquoted = function(nestingLevel, parentArgType) {
+      if (this.isEOF())
+        return null;
+      var ch = this.char();
+      return ch === 60 || ch === 123 || ch === 35 && (parentArgType === "plural" || parentArgType === "selectordinal") || ch === 125 && nestingLevel > 0 ? null : (this.bump(), fromCodePoint(ch));
+    }, Parser2.prototype.parseArgument = function(nestingLevel, expectingCloseTag) {
+      var openingBracePosition = this.clonePosition();
+      if (this.bump(), this.bumpSpace(), this.isEOF())
+        return this.error(ErrorKind.EXPECT_ARGUMENT_CLOSING_BRACE, createLocation(openingBracePosition, this.clonePosition()));
+      if (this.char() === 125)
+        return this.bump(), this.error(ErrorKind.EMPTY_ARGUMENT, createLocation(openingBracePosition, this.clonePosition()));
+      var value = this.parseIdentifierIfPossible().value;
+      if (!value)
+        return this.error(ErrorKind.MALFORMED_ARGUMENT, createLocation(openingBracePosition, this.clonePosition()));
+      if (this.bumpSpace(), this.isEOF())
+        return this.error(ErrorKind.EXPECT_ARGUMENT_CLOSING_BRACE, createLocation(openingBracePosition, this.clonePosition()));
+      switch (this.char()) {
+        // Simple argument: `{name}`
+        case 125:
+          return this.bump(), {
+            val: {
+              type: TYPE.argument,
+              // value does not include the opening and closing braces.
+              value,
+              location: createLocation(openingBracePosition, this.clonePosition())
+            },
+            err: null
+          };
+        // Argument with options: `{name, format, ...}`
+        case 44:
+          return this.bump(), this.bumpSpace(), this.isEOF() ? this.error(ErrorKind.EXPECT_ARGUMENT_CLOSING_BRACE, createLocation(openingBracePosition, this.clonePosition())) : this.parseArgumentOptions(nestingLevel, expectingCloseTag, value, openingBracePosition);
+        default:
+          return this.error(ErrorKind.MALFORMED_ARGUMENT, createLocation(openingBracePosition, this.clonePosition()));
+      }
+    }, Parser2.prototype.parseIdentifierIfPossible = function() {
+      var startingPosition = this.clonePosition(), startOffset = this.offset(), value = matchIdentifierAtIndex(this.message, startOffset), endOffset = startOffset + value.length;
+      this.bumpTo(endOffset);
+      var endPosition = this.clonePosition(), location2 = createLocation(startingPosition, endPosition);
+      return { value, location: location2 };
+    }, Parser2.prototype.parseArgumentOptions = function(nestingLevel, expectingCloseTag, value, openingBracePosition) {
+      var _a2, typeStartPosition = this.clonePosition(), argType = this.parseIdentifierIfPossible().value, typeEndPosition = this.clonePosition();
+      switch (argType) {
+        case "":
+          return this.error(ErrorKind.EXPECT_ARGUMENT_TYPE, createLocation(typeStartPosition, typeEndPosition));
+        case "number":
+        case "date":
+        case "time": {
+          this.bumpSpace();
+          var styleAndLocation = null;
+          if (this.bumpIf(",")) {
+            this.bumpSpace();
+            var styleStartPosition = this.clonePosition(), result = this.parseSimpleArgStyleIfPossible();
+            if (result.err)
+              return result;
+            var style = trimEnd(result.val);
+            if (style.length === 0)
+              return this.error(ErrorKind.EXPECT_ARGUMENT_STYLE, createLocation(this.clonePosition(), this.clonePosition()));
+            var styleLocation = createLocation(styleStartPosition, this.clonePosition());
+            styleAndLocation = { style, styleLocation };
+          }
+          var argCloseResult = this.tryParseArgumentClose(openingBracePosition);
+          if (argCloseResult.err)
+            return argCloseResult;
+          var location_1 = createLocation(openingBracePosition, this.clonePosition());
+          if (styleAndLocation && startsWith(styleAndLocation?.style, "::", 0)) {
+            var skeleton = trimStart(styleAndLocation.style.slice(2));
+            if (argType === "number") {
+              var result = this.parseNumberSkeletonFromString(skeleton, styleAndLocation.styleLocation);
+              return result.err ? result : {
+                val: { type: TYPE.number, value, location: location_1, style: result.val },
+                err: null
+              };
+            } else {
+              if (skeleton.length === 0)
+                return this.error(ErrorKind.EXPECT_DATE_TIME_SKELETON, location_1);
+              var dateTimePattern = skeleton;
+              this.locale && (dateTimePattern = getBestPattern(skeleton, this.locale));
+              var style = {
+                type: SKELETON_TYPE.dateTime,
+                pattern: dateTimePattern,
+                location: styleAndLocation.styleLocation,
+                parsedOptions: this.shouldParseSkeletons ? parseDateTimeSkeleton(dateTimePattern) : {}
+              }, type = argType === "date" ? TYPE.date : TYPE.time;
+              return {
+                val: { type, value, location: location_1, style },
+                err: null
+              };
+            }
+          }
+          return {
+            val: {
+              type: argType === "number" ? TYPE.number : argType === "date" ? TYPE.date : TYPE.time,
+              value,
+              location: location_1,
+              style: (_a2 = styleAndLocation?.style) !== null && _a2 !== void 0 ? _a2 : null
+            },
+            err: null
+          };
+        }
+        case "plural":
+        case "selectordinal":
+        case "select": {
+          var typeEndPosition_1 = this.clonePosition();
+          if (this.bumpSpace(), !this.bumpIf(","))
+            return this.error(ErrorKind.EXPECT_SELECT_ARGUMENT_OPTIONS, createLocation(typeEndPosition_1, __assign({}, typeEndPosition_1)));
+          this.bumpSpace();
+          var identifierAndLocation = this.parseIdentifierIfPossible(), pluralOffset = 0;
+          if (argType !== "select" && identifierAndLocation.value === "offset") {
+            if (!this.bumpIf(":"))
+              return this.error(ErrorKind.EXPECT_PLURAL_ARGUMENT_OFFSET_VALUE, createLocation(this.clonePosition(), this.clonePosition()));
+            this.bumpSpace();
+            var result = this.tryParseDecimalInteger(ErrorKind.EXPECT_PLURAL_ARGUMENT_OFFSET_VALUE, ErrorKind.INVALID_PLURAL_ARGUMENT_OFFSET_VALUE);
+            if (result.err)
+              return result;
+            this.bumpSpace(), identifierAndLocation = this.parseIdentifierIfPossible(), pluralOffset = result.val;
+          }
+          var optionsResult = this.tryParsePluralOrSelectOptions(nestingLevel, argType, expectingCloseTag, identifierAndLocation);
+          if (optionsResult.err)
+            return optionsResult;
+          var argCloseResult = this.tryParseArgumentClose(openingBracePosition);
+          if (argCloseResult.err)
+            return argCloseResult;
+          var location_2 = createLocation(openingBracePosition, this.clonePosition());
+          return argType === "select" ? {
+            val: {
+              type: TYPE.select,
+              value,
+              options: fromEntries(optionsResult.val),
+              location: location_2
+            },
+            err: null
+          } : {
+            val: {
+              type: TYPE.plural,
+              value,
+              options: fromEntries(optionsResult.val),
+              offset: pluralOffset,
+              pluralType: argType === "plural" ? "cardinal" : "ordinal",
+              location: location_2
+            },
+            err: null
+          };
+        }
+        default:
+          return this.error(ErrorKind.INVALID_ARGUMENT_TYPE, createLocation(typeStartPosition, typeEndPosition));
+      }
+    }, Parser2.prototype.tryParseArgumentClose = function(openingBracePosition) {
+      return this.isEOF() || this.char() !== 125 ? this.error(ErrorKind.EXPECT_ARGUMENT_CLOSING_BRACE, createLocation(openingBracePosition, this.clonePosition())) : (this.bump(), { val: !0, err: null });
+    }, Parser2.prototype.parseSimpleArgStyleIfPossible = function() {
+      for (var nestedBraces = 0, startPosition = this.clonePosition(); !this.isEOF(); ) {
+        var ch = this.char();
+        switch (ch) {
+          case 39: {
+            this.bump();
+            var apostrophePosition = this.clonePosition();
+            if (!this.bumpUntil("'"))
+              return this.error(ErrorKind.UNCLOSED_QUOTE_IN_ARGUMENT_STYLE, createLocation(apostrophePosition, this.clonePosition()));
+            this.bump();
+            break;
+          }
+          case 123: {
+            nestedBraces += 1, this.bump();
+            break;
+          }
+          case 125: {
+            if (nestedBraces > 0)
+              nestedBraces -= 1;
+            else
+              return {
+                val: this.message.slice(startPosition.offset, this.offset()),
+                err: null
+              };
+            break;
+          }
+          default:
+            this.bump();
+            break;
+        }
+      }
+      return {
+        val: this.message.slice(startPosition.offset, this.offset()),
+        err: null
+      };
+    }, Parser2.prototype.parseNumberSkeletonFromString = function(skeleton, location2) {
+      var tokens2 = [];
+      try {
+        tokens2 = parseNumberSkeletonFromString(skeleton);
+      } catch {
+        return this.error(ErrorKind.INVALID_NUMBER_SKELETON, location2);
+      }
+      return {
+        val: {
+          type: SKELETON_TYPE.number,
+          tokens: tokens2,
+          location: location2,
+          parsedOptions: this.shouldParseSkeletons ? parseNumberSkeleton(tokens2) : {}
+        },
+        err: null
+      };
+    }, Parser2.prototype.tryParsePluralOrSelectOptions = function(nestingLevel, parentArgType, expectCloseTag, parsedFirstIdentifier) {
+      for (var _a2, hasOtherClause = !1, options2 = [], parsedSelectors = /* @__PURE__ */ new Set(), selector = parsedFirstIdentifier.value, selectorLocation = parsedFirstIdentifier.location; ; ) {
+        if (selector.length === 0) {
+          var startPosition = this.clonePosition();
+          if (parentArgType !== "select" && this.bumpIf("=")) {
+            var result = this.tryParseDecimalInteger(ErrorKind.EXPECT_PLURAL_ARGUMENT_SELECTOR, ErrorKind.INVALID_PLURAL_ARGUMENT_SELECTOR);
+            if (result.err)
+              return result;
+            selectorLocation = createLocation(startPosition, this.clonePosition()), selector = this.message.slice(startPosition.offset, this.offset());
+          } else
+            break;
+        }
+        if (parsedSelectors.has(selector))
+          return this.error(parentArgType === "select" ? ErrorKind.DUPLICATE_SELECT_ARGUMENT_SELECTOR : ErrorKind.DUPLICATE_PLURAL_ARGUMENT_SELECTOR, selectorLocation);
+        selector === "other" && (hasOtherClause = !0), this.bumpSpace();
+        var openingBracePosition = this.clonePosition();
+        if (!this.bumpIf("{"))
+          return this.error(parentArgType === "select" ? ErrorKind.EXPECT_SELECT_ARGUMENT_SELECTOR_FRAGMENT : ErrorKind.EXPECT_PLURAL_ARGUMENT_SELECTOR_FRAGMENT, createLocation(this.clonePosition(), this.clonePosition()));
+        var fragmentResult = this.parseMessage(nestingLevel + 1, parentArgType, expectCloseTag);
+        if (fragmentResult.err)
+          return fragmentResult;
+        var argCloseResult = this.tryParseArgumentClose(openingBracePosition);
+        if (argCloseResult.err)
+          return argCloseResult;
+        options2.push([
+          selector,
+          {
+            value: fragmentResult.val,
+            location: createLocation(openingBracePosition, this.clonePosition())
+          }
+        ]), parsedSelectors.add(selector), this.bumpSpace(), _a2 = this.parseIdentifierIfPossible(), selector = _a2.value, selectorLocation = _a2.location;
+      }
+      return options2.length === 0 ? this.error(parentArgType === "select" ? ErrorKind.EXPECT_SELECT_ARGUMENT_SELECTOR : ErrorKind.EXPECT_PLURAL_ARGUMENT_SELECTOR, createLocation(this.clonePosition(), this.clonePosition())) : this.requiresOtherClause && !hasOtherClause ? this.error(ErrorKind.MISSING_OTHER_CLAUSE, createLocation(this.clonePosition(), this.clonePosition())) : { val: options2, err: null };
+    }, Parser2.prototype.tryParseDecimalInteger = function(expectNumberError, invalidNumberError) {
+      var sign = 1, startingPosition = this.clonePosition();
+      this.bumpIf("+") || this.bumpIf("-") && (sign = -1);
+      for (var hasDigits = !1, decimal = 0; !this.isEOF(); ) {
+        var ch = this.char();
+        if (ch >= 48 && ch <= 57)
+          hasDigits = !0, decimal = decimal * 10 + (ch - 48), this.bump();
+        else
+          break;
+      }
+      var location2 = createLocation(startingPosition, this.clonePosition());
+      return hasDigits ? (decimal *= sign, isSafeInteger(decimal) ? { val: decimal, err: null } : this.error(invalidNumberError, location2)) : this.error(expectNumberError, location2);
+    }, Parser2.prototype.offset = function() {
+      return this.position.offset;
+    }, Parser2.prototype.isEOF = function() {
+      return this.offset() === this.message.length;
+    }, Parser2.prototype.clonePosition = function() {
+      return {
+        offset: this.position.offset,
+        line: this.position.line,
+        column: this.position.column
+      };
+    }, Parser2.prototype.char = function() {
+      var offset2 = this.position.offset;
+      if (offset2 >= this.message.length)
+        throw Error("out of bound");
+      var code = codePointAt(this.message, offset2);
+      if (code === void 0)
+        throw Error("Offset ".concat(offset2, " is at invalid UTF-16 code unit boundary"));
+      return code;
+    }, Parser2.prototype.error = function(kind, location2) {
+      return {
+        val: null,
+        err: {
+          kind,
+          message: this.message,
+          location: location2
+        }
+      };
+    }, Parser2.prototype.bump = function() {
+      if (!this.isEOF()) {
+        var code = this.char();
+        code === 10 ? (this.position.line += 1, this.position.column = 1, this.position.offset += 1) : (this.position.column += 1, this.position.offset += code < 65536 ? 1 : 2);
+      }
+    }, Parser2.prototype.bumpIf = function(prefix) {
+      if (startsWith(this.message, prefix, this.offset())) {
+        for (var i2 = 0; i2 < prefix.length; i2++)
+          this.bump();
+        return !0;
+      }
+      return !1;
+    }, Parser2.prototype.bumpUntil = function(pattern) {
+      var currentOffset = this.offset(), index = this.message.indexOf(pattern, currentOffset);
+      return index >= 0 ? (this.bumpTo(index), !0) : (this.bumpTo(this.message.length), !1);
+    }, Parser2.prototype.bumpTo = function(targetOffset) {
+      if (this.offset() > targetOffset)
+        throw Error("targetOffset ".concat(targetOffset, " must be greater than or equal to the current offset ").concat(this.offset()));
+      for (targetOffset = Math.min(targetOffset, this.message.length); ; ) {
+        var offset2 = this.offset();
+        if (offset2 === targetOffset)
+          break;
+        if (offset2 > targetOffset)
+          throw Error("targetOffset ".concat(targetOffset, " is at invalid UTF-16 code unit boundary"));
+        if (this.bump(), this.isEOF())
+          break;
+      }
+    }, Parser2.prototype.bumpSpace = function() {
+      for (; !this.isEOF() && _isWhiteSpace(this.char()); )
+        this.bump();
+    }, Parser2.prototype.peek = function() {
+      if (this.isEOF())
+        return null;
+      var code = this.char(), offset2 = this.offset(), nextCode = this.message.charCodeAt(offset2 + (code >= 65536 ? 2 : 1));
+      return nextCode ?? null;
+    }, Parser2;
+  })()
+);
+function _isAlpha(codepoint) {
+  return codepoint >= 97 && codepoint <= 122 || codepoint >= 65 && codepoint <= 90;
+}
+function _isAlphaOrSlash(codepoint) {
+  return _isAlpha(codepoint) || codepoint === 47;
+}
+function _isPotentialElementNameChar(c2) {
+  return c2 === 45 || c2 === 46 || c2 >= 48 && c2 <= 57 || c2 === 95 || c2 >= 97 && c2 <= 122 || c2 >= 65 && c2 <= 90 || c2 == 183 || c2 >= 192 && c2 <= 214 || c2 >= 216 && c2 <= 246 || c2 >= 248 && c2 <= 893 || c2 >= 895 && c2 <= 8191 || c2 >= 8204 && c2 <= 8205 || c2 >= 8255 && c2 <= 8256 || c2 >= 8304 && c2 <= 8591 || c2 >= 11264 && c2 <= 12271 || c2 >= 12289 && c2 <= 55295 || c2 >= 63744 && c2 <= 64975 || c2 >= 65008 && c2 <= 65533 || c2 >= 65536 && c2 <= 983039;
+}
+function _isWhiteSpace(c2) {
+  return c2 >= 9 && c2 <= 13 || c2 === 32 || c2 === 133 || c2 >= 8206 && c2 <= 8207 || c2 === 8232 || c2 === 8233;
+}
+function _isPatternSyntax(c2) {
+  return c2 >= 33 && c2 <= 35 || c2 === 36 || c2 >= 37 && c2 <= 39 || c2 === 40 || c2 === 41 || c2 === 42 || c2 === 43 || c2 === 44 || c2 === 45 || c2 >= 46 && c2 <= 47 || c2 >= 58 && c2 <= 59 || c2 >= 60 && c2 <= 62 || c2 >= 63 && c2 <= 64 || c2 === 91 || c2 === 92 || c2 === 93 || c2 === 94 || c2 === 96 || c2 === 123 || c2 === 124 || c2 === 125 || c2 === 126 || c2 === 161 || c2 >= 162 && c2 <= 165 || c2 === 166 || c2 === 167 || c2 === 169 || c2 === 171 || c2 === 172 || c2 === 174 || c2 === 176 || c2 === 177 || c2 === 182 || c2 === 187 || c2 === 191 || c2 === 215 || c2 === 247 || c2 >= 8208 && c2 <= 8213 || c2 >= 8214 && c2 <= 8215 || c2 === 8216 || c2 === 8217 || c2 === 8218 || c2 >= 8219 && c2 <= 8220 || c2 === 8221 || c2 === 8222 || c2 === 8223 || c2 >= 8224 && c2 <= 8231 || c2 >= 8240 && c2 <= 8248 || c2 === 8249 || c2 === 8250 || c2 >= 8251 && c2 <= 8254 || c2 >= 8257 && c2 <= 8259 || c2 === 8260 || c2 === 8261 || c2 === 8262 || c2 >= 8263 && c2 <= 8273 || c2 === 8274 || c2 === 8275 || c2 >= 8277 && c2 <= 8286 || c2 >= 8592 && c2 <= 8596 || c2 >= 8597 && c2 <= 8601 || c2 >= 8602 && c2 <= 8603 || c2 >= 8604 && c2 <= 8607 || c2 === 8608 || c2 >= 8609 && c2 <= 8610 || c2 === 8611 || c2 >= 8612 && c2 <= 8613 || c2 === 8614 || c2 >= 8615 && c2 <= 8621 || c2 === 8622 || c2 >= 8623 && c2 <= 8653 || c2 >= 8654 && c2 <= 8655 || c2 >= 8656 && c2 <= 8657 || c2 === 8658 || c2 === 8659 || c2 === 8660 || c2 >= 8661 && c2 <= 8691 || c2 >= 8692 && c2 <= 8959 || c2 >= 8960 && c2 <= 8967 || c2 === 8968 || c2 === 8969 || c2 === 8970 || c2 === 8971 || c2 >= 8972 && c2 <= 8991 || c2 >= 8992 && c2 <= 8993 || c2 >= 8994 && c2 <= 9e3 || c2 === 9001 || c2 === 9002 || c2 >= 9003 && c2 <= 9083 || c2 === 9084 || c2 >= 9085 && c2 <= 9114 || c2 >= 9115 && c2 <= 9139 || c2 >= 9140 && c2 <= 9179 || c2 >= 9180 && c2 <= 9185 || c2 >= 9186 && c2 <= 9254 || c2 >= 9255 && c2 <= 9279 || c2 >= 9280 && c2 <= 9290 || c2 >= 9291 && c2 <= 9311 || c2 >= 9472 && c2 <= 9654 || c2 === 9655 || c2 >= 9656 && c2 <= 9664 || c2 === 9665 || c2 >= 9666 && c2 <= 9719 || c2 >= 9720 && c2 <= 9727 || c2 >= 9728 && c2 <= 9838 || c2 === 9839 || c2 >= 9840 && c2 <= 10087 || c2 === 10088 || c2 === 10089 || c2 === 10090 || c2 === 10091 || c2 === 10092 || c2 === 10093 || c2 === 10094 || c2 === 10095 || c2 === 10096 || c2 === 10097 || c2 === 10098 || c2 === 10099 || c2 === 10100 || c2 === 10101 || c2 >= 10132 && c2 <= 10175 || c2 >= 10176 && c2 <= 10180 || c2 === 10181 || c2 === 10182 || c2 >= 10183 && c2 <= 10213 || c2 === 10214 || c2 === 10215 || c2 === 10216 || c2 === 10217 || c2 === 10218 || c2 === 10219 || c2 === 10220 || c2 === 10221 || c2 === 10222 || c2 === 10223 || c2 >= 10224 && c2 <= 10239 || c2 >= 10240 && c2 <= 10495 || c2 >= 10496 && c2 <= 10626 || c2 === 10627 || c2 === 10628 || c2 === 10629 || c2 === 10630 || c2 === 10631 || c2 === 10632 || c2 === 10633 || c2 === 10634 || c2 === 10635 || c2 === 10636 || c2 === 10637 || c2 === 10638 || c2 === 10639 || c2 === 10640 || c2 === 10641 || c2 === 10642 || c2 === 10643 || c2 === 10644 || c2 === 10645 || c2 === 10646 || c2 === 10647 || c2 === 10648 || c2 >= 10649 && c2 <= 10711 || c2 === 10712 || c2 === 10713 || c2 === 10714 || c2 === 10715 || c2 >= 10716 && c2 <= 10747 || c2 === 10748 || c2 === 10749 || c2 >= 10750 && c2 <= 11007 || c2 >= 11008 && c2 <= 11055 || c2 >= 11056 && c2 <= 11076 || c2 >= 11077 && c2 <= 11078 || c2 >= 11079 && c2 <= 11084 || c2 >= 11085 && c2 <= 11123 || c2 >= 11124 && c2 <= 11125 || c2 >= 11126 && c2 <= 11157 || c2 === 11158 || c2 >= 11159 && c2 <= 11263 || c2 >= 11776 && c2 <= 11777 || c2 === 11778 || c2 === 11779 || c2 === 11780 || c2 === 11781 || c2 >= 11782 && c2 <= 11784 || c2 === 11785 || c2 === 11786 || c2 === 11787 || c2 === 11788 || c2 === 11789 || c2 >= 11790 && c2 <= 11798 || c2 === 11799 || c2 >= 11800 && c2 <= 11801 || c2 === 11802 || c2 === 11803 || c2 === 11804 || c2 === 11805 || c2 >= 11806 && c2 <= 11807 || c2 === 11808 || c2 === 11809 || c2 === 11810 || c2 === 11811 || c2 === 11812 || c2 === 11813 || c2 === 11814 || c2 === 11815 || c2 === 11816 || c2 === 11817 || c2 >= 11818 && c2 <= 11822 || c2 === 11823 || c2 >= 11824 && c2 <= 11833 || c2 >= 11834 && c2 <= 11835 || c2 >= 11836 && c2 <= 11839 || c2 === 11840 || c2 === 11841 || c2 === 11842 || c2 >= 11843 && c2 <= 11855 || c2 >= 11856 && c2 <= 11857 || c2 === 11858 || c2 >= 11859 && c2 <= 11903 || c2 >= 12289 && c2 <= 12291 || c2 === 12296 || c2 === 12297 || c2 === 12298 || c2 === 12299 || c2 === 12300 || c2 === 12301 || c2 === 12302 || c2 === 12303 || c2 === 12304 || c2 === 12305 || c2 >= 12306 && c2 <= 12307 || c2 === 12308 || c2 === 12309 || c2 === 12310 || c2 === 12311 || c2 === 12312 || c2 === 12313 || c2 === 12314 || c2 === 12315 || c2 === 12316 || c2 === 12317 || c2 >= 12318 && c2 <= 12319 || c2 === 12320 || c2 === 12336 || c2 === 64830 || c2 === 64831 || c2 >= 65093 && c2 <= 65094;
+}
+
+// ../../node_modules/@formatjs/icu-messageformat-parser/lib/index.js
+function pruneLocation(els) {
+  els.forEach(function(el) {
+    if (delete el.location, isSelectElement(el) || isPluralElement(el))
+      for (var k2 in el.options)
+        delete el.options[k2].location, pruneLocation(el.options[k2].value);
+    else isNumberElement(el) && isNumberSkeleton(el.style) || (isDateElement(el) || isTimeElement(el)) && isDateTimeSkeleton(el.style) ? delete el.style.location : isTagElement(el) && pruneLocation(el.children);
+  });
+}
+function parse(message, opts) {
+  opts === void 0 && (opts = {}), opts = __assign({ shouldParseSkeletons: !0, requiresOtherClause: !0 }, opts);
+  var result = new Parser(message, opts).parse();
+  if (result.err) {
+    var error = SyntaxError(ErrorKind[result.err.kind]);
+    throw error.location = result.err.location, error.originalMessage = result.err.message, error;
+  }
+  return opts?.captureLocation || pruneLocation(result.val), result.val;
+}
+
+// ../../node_modules/intl-messageformat/lib/src/error.js
+var ErrorCode;
+(function(ErrorCode2) {
+  ErrorCode2.MISSING_VALUE = "MISSING_VALUE", ErrorCode2.INVALID_VALUE = "INVALID_VALUE", ErrorCode2.MISSING_INTL_API = "MISSING_INTL_API";
+})(ErrorCode || (ErrorCode = {}));
+var FormatError = (
+  /** @class */
+  (function(_super) {
+    __extends(FormatError2, _super);
+    function FormatError2(msg, code, originalMessage) {
+      var _this = _super.call(this, msg) || this;
+      return _this.code = code, _this.originalMessage = originalMessage, _this;
+    }
+    return FormatError2.prototype.toString = function() {
+      return "[formatjs Error: ".concat(this.code, "] ").concat(this.message);
+    }, FormatError2;
+  })(Error)
+);
+var InvalidValueError = (
+  /** @class */
+  (function(_super) {
+    __extends(InvalidValueError2, _super);
+    function InvalidValueError2(variableId, value, options2, originalMessage) {
+      return _super.call(this, 'Invalid values for "'.concat(variableId, '": "').concat(value, '". Options are "').concat(Object.keys(options2).join('", "'), '"'), ErrorCode.INVALID_VALUE, originalMessage) || this;
+    }
+    return InvalidValueError2;
+  })(FormatError)
+);
+var InvalidValueTypeError = (
+  /** @class */
+  (function(_super) {
+    __extends(InvalidValueTypeError2, _super);
+    function InvalidValueTypeError2(value, type, originalMessage) {
+      return _super.call(this, 'Value for "'.concat(value, '" must be of type ').concat(type), ErrorCode.INVALID_VALUE, originalMessage) || this;
+    }
+    return InvalidValueTypeError2;
+  })(FormatError)
+);
+var MissingValueError = (
+  /** @class */
+  (function(_super) {
+    __extends(MissingValueError2, _super);
+    function MissingValueError2(variableId, originalMessage) {
+      return _super.call(this, 'The intl string context variable "'.concat(variableId, '" was not provided to the string "').concat(originalMessage, '"'), ErrorCode.MISSING_VALUE, originalMessage) || this;
+    }
+    return MissingValueError2;
+  })(FormatError)
+);
+
+// ../../node_modules/intl-messageformat/lib/src/formatters.js
+var PART_TYPE;
+(function(PART_TYPE2) {
+  PART_TYPE2[PART_TYPE2.literal = 0] = "literal", PART_TYPE2[PART_TYPE2.object = 1] = "object";
+})(PART_TYPE || (PART_TYPE = {}));
+function mergeLiteral(parts) {
+  return parts.length < 2 ? parts : parts.reduce(function(all, part) {
+    var lastPart = all[all.length - 1];
+    return !lastPart || lastPart.type !== PART_TYPE.literal || part.type !== PART_TYPE.literal ? all.push(part) : lastPart.value += part.value, all;
+  }, []);
+}
+function isFormatXMLElementFn(el) {
+  return typeof el == "function";
+}
+function formatToParts(els, locales, formatters, formats, values, currentPluralValue, originalMessage) {
+  if (els.length === 1 && isLiteralElement(els[0]))
+    return [
+      {
+        type: PART_TYPE.literal,
+        value: els[0].value
+      }
+    ];
+  for (var result = [], _i = 0, els_1 = els; _i < els_1.length; _i++) {
+    var el = els_1[_i];
+    if (isLiteralElement(el)) {
+      result.push({
+        type: PART_TYPE.literal,
+        value: el.value
+      });
+      continue;
+    }
+    if (isPoundElement(el)) {
+      typeof currentPluralValue == "number" && result.push({
+        type: PART_TYPE.literal,
+        value: formatters.getNumberFormat(locales).format(currentPluralValue)
+      });
+      continue;
+    }
+    var varName = el.value;
+    if (!(values && varName in values))
+      throw new MissingValueError(varName, originalMessage);
+    var value = values[varName];
+    if (isArgumentElement(el)) {
+      (!value || typeof value == "string" || typeof value == "number") && (value = typeof value == "string" || typeof value == "number" ? String(value) : ""), result.push({
+        type: typeof value == "string" ? PART_TYPE.literal : PART_TYPE.object,
+        value
+      });
+      continue;
+    }
+    if (isDateElement(el)) {
+      var style = typeof el.style == "string" ? formats.date[el.style] : isDateTimeSkeleton(el.style) ? el.style.parsedOptions : void 0;
+      result.push({
+        type: PART_TYPE.literal,
+        value: formatters.getDateTimeFormat(locales, style).format(value)
+      });
+      continue;
+    }
+    if (isTimeElement(el)) {
+      var style = typeof el.style == "string" ? formats.time[el.style] : isDateTimeSkeleton(el.style) ? el.style.parsedOptions : formats.time.medium;
+      result.push({
+        type: PART_TYPE.literal,
+        value: formatters.getDateTimeFormat(locales, style).format(value)
+      });
+      continue;
+    }
+    if (isNumberElement(el)) {
+      var style = typeof el.style == "string" ? formats.number[el.style] : isNumberSkeleton(el.style) ? el.style.parsedOptions : void 0;
+      style && style.scale && (value = value * (style.scale || 1)), result.push({
+        type: PART_TYPE.literal,
+        value: formatters.getNumberFormat(locales, style).format(value)
+      });
+      continue;
+    }
+    if (isTagElement(el)) {
+      var children = el.children, value_1 = el.value, formatFn = values[value_1];
+      if (!isFormatXMLElementFn(formatFn))
+        throw new InvalidValueTypeError(value_1, "function", originalMessage);
+      var parts = formatToParts(children, locales, formatters, formats, values, currentPluralValue), chunks = formatFn(parts.map(function(p2) {
+        return p2.value;
+      }));
+      Array.isArray(chunks) || (chunks = [chunks]), result.push.apply(result, chunks.map(function(c2) {
+        return {
+          type: typeof c2 == "string" ? PART_TYPE.literal : PART_TYPE.object,
+          value: c2
+        };
+      }));
+    }
+    if (isSelectElement(el)) {
+      var opt = el.options[value] || el.options.other;
+      if (!opt)
+        throw new InvalidValueError(el.value, value, Object.keys(el.options), originalMessage);
+      result.push.apply(result, formatToParts(opt.value, locales, formatters, formats, values));
+      continue;
+    }
+    if (isPluralElement(el)) {
+      var opt = el.options["=".concat(value)];
+      if (!opt) {
+        if (!Intl.PluralRules)
+          throw new FormatError(`Intl.PluralRules is not available in this environment.
+Try polyfilling it using "@formatjs/intl-pluralrules"
+`, ErrorCode.MISSING_INTL_API, originalMessage);
+        var rule = formatters.getPluralRules(locales, { type: el.pluralType }).select(value - (el.offset || 0));
+        opt = el.options[rule] || el.options.other;
+      }
+      if (!opt)
+        throw new InvalidValueError(el.value, value, Object.keys(el.options), originalMessage);
+      result.push.apply(result, formatToParts(opt.value, locales, formatters, formats, values, value - (el.offset || 0)));
+      continue;
+    }
+  }
+  return mergeLiteral(result);
+}
+
+// ../../node_modules/intl-messageformat/lib/src/core.js
+function mergeConfig(c1, c2) {
+  return c2 ? __assign(__assign(__assign({}, c1 || {}), c2 || {}), Object.keys(c1).reduce(function(all, k2) {
+    return all[k2] = __assign(__assign({}, c1[k2]), c2[k2] || {}), all;
+  }, {})) : c1;
+}
+function mergeConfigs(defaultConfig, configs) {
+  return configs ? Object.keys(defaultConfig).reduce(function(all, k2) {
+    return all[k2] = mergeConfig(defaultConfig[k2], configs[k2]), all;
+  }, __assign({}, defaultConfig)) : defaultConfig;
+}
+function createFastMemoizeCache(store2) {
+  return {
+    create: function() {
+      return {
+        get: function(key) {
+          return store2[key];
+        },
+        set: function(key, value) {
+          store2[key] = value;
+        }
+      };
+    }
+  };
+}
+function createDefaultFormatters(cache) {
+  return cache === void 0 && (cache = {
+    number: {},
+    dateTime: {},
+    pluralRules: {}
+  }), {
+    getNumberFormat: memoize(function() {
+      for (var _a2, args = [], _i = 0; _i < arguments.length; _i++)
+        args[_i] = arguments[_i];
+      return new ((_a2 = Intl.NumberFormat).bind.apply(_a2, __spreadArray([void 0], args, !1)))();
+    }, {
+      cache: createFastMemoizeCache(cache.number),
+      strategy: strategies.variadic
+    }),
+    getDateTimeFormat: memoize(function() {
+      for (var _a2, args = [], _i = 0; _i < arguments.length; _i++)
+        args[_i] = arguments[_i];
+      return new ((_a2 = Intl.DateTimeFormat).bind.apply(_a2, __spreadArray([void 0], args, !1)))();
+    }, {
+      cache: createFastMemoizeCache(cache.dateTime),
+      strategy: strategies.variadic
+    }),
+    getPluralRules: memoize(function() {
+      for (var _a2, args = [], _i = 0; _i < arguments.length; _i++)
+        args[_i] = arguments[_i];
+      return new ((_a2 = Intl.PluralRules).bind.apply(_a2, __spreadArray([void 0], args, !1)))();
+    }, {
+      cache: createFastMemoizeCache(cache.pluralRules),
+      strategy: strategies.variadic
+    })
+  };
+}
+var IntlMessageFormat = (
+  /** @class */
+  (function() {
+    function IntlMessageFormat2(message, locales, overrideFormats, opts) {
+      locales === void 0 && (locales = IntlMessageFormat2.defaultLocale);
+      var _this = this;
+      if (this.formatterCache = {
+        number: {},
+        dateTime: {},
+        pluralRules: {}
+      }, this.format = function(values) {
+        var parts = _this.formatToParts(values);
+        if (parts.length === 1)
+          return parts[0].value;
+        var result = parts.reduce(function(all, part) {
+          return !all.length || part.type !== PART_TYPE.literal || typeof all[all.length - 1] != "string" ? all.push(part.value) : all[all.length - 1] += part.value, all;
+        }, []);
+        return result.length <= 1 ? result[0] || "" : result;
+      }, this.formatToParts = function(values) {
+        return formatToParts(_this.ast, _this.locales, _this.formatters, _this.formats, values, void 0, _this.message);
+      }, this.resolvedOptions = function() {
+        var _a3;
+        return {
+          locale: ((_a3 = _this.resolvedLocale) === null || _a3 === void 0 ? void 0 : _a3.toString()) || Intl.NumberFormat.supportedLocalesOf(_this.locales)[0]
+        };
+      }, this.getAst = function() {
+        return _this.ast;
+      }, this.locales = locales, this.resolvedLocale = IntlMessageFormat2.resolveLocale(locales), typeof message == "string") {
+        if (this.message = message, !IntlMessageFormat2.__parse)
+          throw new TypeError("IntlMessageFormat.__parse must be set to process `message` of type `string`");
+        var _a2 = opts || {}, formatters = _a2.formatters, parseOpts = __rest(_a2, ["formatters"]);
+        this.ast = IntlMessageFormat2.__parse(message, __assign(__assign({}, parseOpts), { locale: this.resolvedLocale }));
+      } else
+        this.ast = message;
+      if (!Array.isArray(this.ast))
+        throw new TypeError("A message must be provided as a String or AST.");
+      this.formats = mergeConfigs(IntlMessageFormat2.formats, overrideFormats), this.formatters = opts && opts.formatters || createDefaultFormatters(this.formatterCache);
+    }
+    return Object.defineProperty(IntlMessageFormat2, "defaultLocale", {
+      get: function() {
+        return IntlMessageFormat2.memoizedDefaultLocale || (IntlMessageFormat2.memoizedDefaultLocale = new Intl.NumberFormat().resolvedOptions().locale), IntlMessageFormat2.memoizedDefaultLocale;
+      },
+      enumerable: !1,
+      configurable: !0
+    }), IntlMessageFormat2.memoizedDefaultLocale = null, IntlMessageFormat2.resolveLocale = function(locales) {
+      if (!(typeof Intl.Locale > "u")) {
+        var supportedLocales = Intl.NumberFormat.supportedLocalesOf(locales);
+        return supportedLocales.length > 0 ? new Intl.Locale(supportedLocales[0]) : new Intl.Locale(typeof locales == "string" ? locales : locales[0]);
+      }
+    }, IntlMessageFormat2.__parse = parse, IntlMessageFormat2.formats = {
+      number: {
+        integer: {
+          maximumFractionDigits: 0
+        },
+        currency: {
+          style: "currency"
+        },
+        percent: {
+          style: "percent"
+        }
+      },
+      date: {
+        short: {
+          month: "numeric",
+          day: "numeric",
+          year: "2-digit"
+        },
+        medium: {
+          month: "short",
+          day: "numeric",
+          year: "numeric"
+        },
+        long: {
+          month: "long",
+          day: "numeric",
+          year: "numeric"
+        },
+        full: {
+          weekday: "long",
+          month: "long",
+          day: "numeric",
+          year: "numeric"
+        }
+      },
+      time: {
+        short: {
+          hour: "numeric",
+          minute: "numeric"
+        },
+        medium: {
+          hour: "numeric",
+          minute: "numeric",
+          second: "numeric"
+        },
+        long: {
+          hour: "numeric",
+          minute: "numeric",
+          second: "numeric",
+          timeZoneName: "short"
+        },
+        full: {
+          hour: "numeric",
+          minute: "numeric",
+          second: "numeric",
+          timeZoneName: "short"
+        }
+      }
+    }, IntlMessageFormat2;
+  })()
+);
+
+// ../../node_modules/@react-aria/i18n/dist/useMessageFormatter.mjs
+init_react();
+
+// ../../node_modules/@react-aria/i18n/dist/useLocalizedStringFormatter.mjs
+init_react();
+
+// ../../node_modules/@react-aria/i18n/dist/useListFormatter.mjs
+init_react();
+
+// ../../node_modules/@internationalized/date/dist/string.mjs
+var $fae977aafc393c5c$var$requiredDurationTimeGroups = [
+  "hours",
+  "minutes",
+  "seconds"
+], $fae977aafc393c5c$var$requiredDurationGroups = [
+  "years",
+  "months",
+  "weeks",
+  "days",
+  ...$fae977aafc393c5c$var$requiredDurationTimeGroups
+];
+
+// ../../node_modules/@internationalized/date/dist/HebrewCalendar.mjs
+var $7c5f6fbf42389787$var$HOUR_PARTS = 1080, $7c5f6fbf42389787$var$DAY_PARTS = 24 * $7c5f6fbf42389787$var$HOUR_PARTS, $7c5f6fbf42389787$var$MONTH_DAYS = 29, $7c5f6fbf42389787$var$MONTH_FRACT = 12 * $7c5f6fbf42389787$var$HOUR_PARTS + 793, $7c5f6fbf42389787$var$MONTH_PARTS = $7c5f6fbf42389787$var$MONTH_DAYS * $7c5f6fbf42389787$var$DAY_PARTS + $7c5f6fbf42389787$var$MONTH_FRACT;
+
+// ../../node_modules/@react-aria/i18n/dist/useDateFormatter.mjs
+init_react();
+
+// ../../node_modules/@internationalized/number/dist/NumberFormatter.mjs
+var $488c6ddbf4ef74c2$var$supportsSignDisplay = !1;
+try {
+  $488c6ddbf4ef74c2$var$supportsSignDisplay = new Intl.NumberFormat("de-DE", {
+    signDisplay: "exceptZero"
+  }).resolvedOptions().signDisplay === "exceptZero";
+} catch {
+}
+var $488c6ddbf4ef74c2$var$supportsUnit = !1;
+try {
+  $488c6ddbf4ef74c2$var$supportsUnit = new Intl.NumberFormat("de-DE", {
+    style: "unit",
+    unit: "degree"
+  }).resolvedOptions().style === "unit";
+} catch {
+}
+
+// ../../node_modules/@internationalized/number/dist/NumberParser.mjs
+var $6c7bd7858deea686$var$CURRENCY_SIGN_REGEX = new RegExp("^.*\\(.*\\).*$");
+
+// ../../node_modules/@react-aria/i18n/dist/useNumberFormatter.mjs
+init_react();
+
+// ../../node_modules/@react-aria/i18n/dist/useFilter.mjs
+init_react();
+
+// ../../node_modules/@react-aria/overlays/dist/useOverlayPosition.mjs
+var $2a41e45df1593e64$var$visualViewport = typeof document < "u" ? window.visualViewport : null;
+function $2a41e45df1593e64$export$d39e1813b3bdd0e1(props) {
+  let { direction } = $18f2051aff69b9bf$export$43bb16f9c6d9e3f7(), { arrowSize, targetRef, overlayRef, arrowRef, scrollRef = overlayRef, placement = "bottom", containerPadding = 12, shouldFlip = !0, boundaryElement = typeof document < "u" ? document.body : null, offset: offset2 = 0, crossOffset = 0, shouldUpdatePosition = !0, isOpen = !0, onClose, maxHeight, arrowBoundaryOffset = 0 } = props, [position, setPosition] = useState(null), deps = [
+    shouldUpdatePosition,
+    placement,
+    overlayRef.current,
+    targetRef.current,
+    arrowRef?.current,
+    scrollRef.current,
+    containerPadding,
+    shouldFlip,
+    boundaryElement,
+    offset2,
+    crossOffset,
+    isOpen,
+    direction,
+    maxHeight,
+    arrowBoundaryOffset,
+    arrowSize
+  ], lastScale = useRef($2a41e45df1593e64$var$visualViewport?.scale);
+  useEffect(() => {
+    isOpen && (lastScale.current = $2a41e45df1593e64$var$visualViewport?.scale);
+  }, [
+    isOpen
+  ]);
+  let updatePosition = useCallback(() => {
+    if (shouldUpdatePosition === !1 || !isOpen || !overlayRef.current || !targetRef.current || !boundaryElement || $2a41e45df1593e64$var$visualViewport?.scale !== lastScale.current) return;
+    let anchor = null;
+    if (scrollRef.current && scrollRef.current.contains(document.activeElement)) {
+      var _document_activeElement;
+      let anchorRect = (_document_activeElement = document.activeElement) === null || _document_activeElement === void 0 ? void 0 : _document_activeElement.getBoundingClientRect(), scrollRect = scrollRef.current.getBoundingClientRect();
+      var _anchorRect_top;
+      if (anchor = {
+        type: "top",
+        offset: ((_anchorRect_top = anchorRect?.top) !== null && _anchorRect_top !== void 0 ? _anchorRect_top : 0) - scrollRect.top
+      }, anchor.offset > scrollRect.height / 2) {
+        anchor.type = "bottom";
+        var _anchorRect_bottom;
+        anchor.offset = ((_anchorRect_bottom = anchorRect?.bottom) !== null && _anchorRect_bottom !== void 0 ? _anchorRect_bottom : 0) - scrollRect.bottom;
+      }
+    }
+    let overlay = overlayRef.current;
+    if (!maxHeight && overlayRef.current) {
+      var _window_visualViewport;
+      overlay.style.top = "0px", overlay.style.bottom = "";
+      var _window_visualViewport_height;
+      overlay.style.maxHeight = ((_window_visualViewport_height = (_window_visualViewport = window.visualViewport) === null || _window_visualViewport === void 0 ? void 0 : _window_visualViewport.height) !== null && _window_visualViewport_height !== void 0 ? _window_visualViewport_height : window.innerHeight) + "px";
+    }
+    let position2 = $edcf132a9284368a$export$b3ceb0cbf1056d98({
+      placement: $2a41e45df1593e64$var$translateRTL(placement, direction),
+      overlayNode: overlayRef.current,
+      targetNode: targetRef.current,
+      scrollNode: scrollRef.current || overlayRef.current,
+      padding: containerPadding,
+      shouldFlip,
+      boundaryElement,
+      offset: offset2,
+      crossOffset,
+      maxHeight,
+      arrowSize: arrowSize ?? (arrowRef?.current ? $edcf132a9284368a$export$4b834cebd9e5cebe(arrowRef.current, !0).width : 0),
+      arrowBoundaryOffset
+    });
+    if (position2.position) {
+      if (overlay.style.top = "", overlay.style.bottom = "", overlay.style.left = "", overlay.style.right = "", Object.keys(position2.position).forEach((key) => overlay.style[key] = position2.position[key] + "px"), overlay.style.maxHeight = position2.maxHeight != null ? position2.maxHeight + "px" : "", anchor && document.activeElement && scrollRef.current) {
+        let anchorRect = document.activeElement.getBoundingClientRect(), scrollRect = scrollRef.current.getBoundingClientRect(), newOffset = anchorRect[anchor.type] - scrollRect[anchor.type];
+        scrollRef.current.scrollTop += newOffset - anchor.offset;
+      }
+      setPosition(position2);
+    }
+  }, deps);
+  $f0a04ccd8dbdd83b$export$e5c5a5f917a5871c(updatePosition, deps), $2a41e45df1593e64$var$useResize(updatePosition), $9daab02d461809db$export$683480f191c0e3ea({
+    ref: overlayRef,
+    onResize: updatePosition
+  }), $9daab02d461809db$export$683480f191c0e3ea({
+    ref: targetRef,
+    onResize: updatePosition
+  });
+  let isResizing = useRef(!1);
+  $f0a04ccd8dbdd83b$export$e5c5a5f917a5871c(() => {
+    let timeout, onResize = () => {
+      isResizing.current = !0, clearTimeout(timeout), timeout = setTimeout(() => {
+        isResizing.current = !1;
+      }, 500), updatePosition();
+    }, onScroll = () => {
+      isResizing.current && onResize();
+    };
+    return $2a41e45df1593e64$var$visualViewport?.addEventListener("resize", onResize), $2a41e45df1593e64$var$visualViewport?.addEventListener("scroll", onScroll), () => {
+      $2a41e45df1593e64$var$visualViewport?.removeEventListener("resize", onResize), $2a41e45df1593e64$var$visualViewport?.removeEventListener("scroll", onScroll);
+    };
+  }, [
+    updatePosition
+  ]);
+  let close = useCallback(() => {
+    isResizing.current || onClose?.();
+  }, [
+    onClose,
+    isResizing
+  ]);
+  $dd149f63282afbbf$export$18fc8428861184da({
+    triggerRef: targetRef,
+    isOpen,
+    onClose: onClose && close
+  });
+  var _position_maxHeight, _position_placement, _position_triggerAnchorPoint;
+  return {
+    overlayProps: {
+      style: {
+        position: position ? "absolute" : "fixed",
+        top: position ? void 0 : 0,
+        left: position ? void 0 : 0,
+        zIndex: 1e5,
+        ...position?.position,
+        maxHeight: (_position_maxHeight = position?.maxHeight) !== null && _position_maxHeight !== void 0 ? _position_maxHeight : "100vh"
+      }
+    },
+    placement: (_position_placement = position?.placement) !== null && _position_placement !== void 0 ? _position_placement : null,
+    triggerAnchorPoint: (_position_triggerAnchorPoint = position?.triggerAnchorPoint) !== null && _position_triggerAnchorPoint !== void 0 ? _position_triggerAnchorPoint : null,
+    arrowProps: {
+      "aria-hidden": "true",
+      role: "presentation",
+      style: {
+        left: position?.arrowOffsetLeft,
+        top: position?.arrowOffsetTop
+      }
+    },
+    updatePosition
+  };
+}
+function $2a41e45df1593e64$var$useResize(onResize) {
+  $f0a04ccd8dbdd83b$export$e5c5a5f917a5871c(() => (window.addEventListener("resize", onResize, !1), () => {
+    window.removeEventListener("resize", onResize, !1);
+  }), [
+    onResize
+  ]);
+}
+function $2a41e45df1593e64$var$translateRTL(position, direction) {
+  return direction === "rtl" ? position.replace("start", "right").replace("end", "left") : position.replace("start", "left").replace("end", "right");
+}
+
+// ../../node_modules/@react-aria/focus/dist/FocusScope.mjs
+init_react();
+var $9bf71ea28793e738$var$FocusContext = react_default.createContext(null);
+function $9bf71ea28793e738$var$isElementInScope(element, scope2) {
+  return !element || !scope2 ? !1 : scope2.some((node) => node.contains(element));
+}
+var $9bf71ea28793e738$var$Tree = class _$9bf71ea28793e738$var$Tree {
+  get size() {
+    return this.fastMap.size;
+  }
+  getTreeNode(data) {
+    return this.fastMap.get(data);
+  }
+  addTreeNode(scopeRef, parent, nodeToRestore) {
+    let parentNode = this.fastMap.get(parent ?? null);
+    if (!parentNode) return;
+    let node = new $9bf71ea28793e738$var$TreeNode({
+      scopeRef
+    });
+    parentNode.addChild(node), node.parent = parentNode, this.fastMap.set(scopeRef, node), nodeToRestore && (node.nodeToRestore = nodeToRestore);
+  }
+  addNode(node) {
+    this.fastMap.set(node.scopeRef, node);
+  }
+  removeTreeNode(scopeRef) {
+    if (scopeRef === null) return;
+    let node = this.fastMap.get(scopeRef);
+    if (!node) return;
+    let parentNode = node.parent;
+    for (let current of this.traverse()) current !== node && node.nodeToRestore && current.nodeToRestore && node.scopeRef && node.scopeRef.current && $9bf71ea28793e738$var$isElementInScope(current.nodeToRestore, node.scopeRef.current) && (current.nodeToRestore = node.nodeToRestore);
+    let children = node.children;
+    parentNode && (parentNode.removeChild(node), children.size > 0 && children.forEach((child) => parentNode && parentNode.addChild(child))), this.fastMap.delete(node.scopeRef);
+  }
+  // Pre Order Depth First
+  *traverse(node = this.root) {
+    if (node.scopeRef != null && (yield node), node.children.size > 0) for (let child of node.children) yield* this.traverse(child);
+  }
+  clone() {
+    var _node_parent;
+    let newTree = new _$9bf71ea28793e738$var$Tree();
+    var _node_parent_scopeRef;
+    for (let node of this.traverse()) newTree.addTreeNode(node.scopeRef, (_node_parent_scopeRef = (_node_parent = node.parent) === null || _node_parent === void 0 ? void 0 : _node_parent.scopeRef) !== null && _node_parent_scopeRef !== void 0 ? _node_parent_scopeRef : null, node.nodeToRestore);
+    return newTree;
+  }
+  constructor() {
+    this.fastMap = /* @__PURE__ */ new Map(), this.root = new $9bf71ea28793e738$var$TreeNode({
+      scopeRef: null
+    }), this.fastMap.set(null, this.root);
+  }
+}, $9bf71ea28793e738$var$TreeNode = class {
+  addChild(node) {
+    this.children.add(node), node.parent = this;
+  }
+  removeChild(node) {
+    this.children.delete(node), node.parent = void 0;
+  }
+  constructor(props) {
+    this.children = /* @__PURE__ */ new Set(), this.contain = !1, this.scopeRef = props.scopeRef;
+  }
+}, $9bf71ea28793e738$export$d06fae2ee68b101e = new $9bf71ea28793e738$var$Tree();
+
+// ../../node_modules/@react-aria/focus/dist/useFocusRing.mjs
+init_react();
+
+// ../../node_modules/@react-aria/focus/dist/FocusRing.mjs
+init_react();
+
+// ../../node_modules/@react-aria/focus/dist/useHasTabbableChild.mjs
+init_react();
+
+// ../../node_modules/@react-aria/overlays/dist/useOverlay.mjs
+init_react();
+
+// ../../node_modules/@react-aria/overlays/dist/useOverlayTrigger.mjs
+init_react();
+
+// ../../node_modules/@react-aria/overlays/dist/usePreventScroll.mjs
+var $49c51c25361d4cd2$var$visualViewport = typeof document < "u" && window.visualViewport;
+
+// ../../node_modules/@react-aria/overlays/dist/PortalProvider.mjs
+init_react();
+var $96b38030c423d352$export$60d741e20e0aa309 = createContext({});
+function $96b38030c423d352$export$9fc1347d4195ccb3() {
+  var _useContext;
+  return (_useContext = useContext($96b38030c423d352$export$60d741e20e0aa309)) !== null && _useContext !== void 0 ? _useContext : {};
+}
+
+// ../../node_modules/@react-aria/overlays/dist/useModal.mjs
+init_react();
+var $f57aed4a881a3485$var$Context = react_default.createContext(null);
+function $f57aed4a881a3485$export$178405afcd8c5eb(props) {
+  let { children } = props, parent = useContext($f57aed4a881a3485$var$Context), [modalCount, setModalCount] = useState(0), context = useMemo(() => ({
+    parent,
+    modalCount,
+    addModal() {
+      setModalCount((count) => count + 1), parent && parent.addModal();
+    },
+    removeModal() {
+      setModalCount((count) => count - 1), parent && parent.removeModal();
+    }
+  }), [
+    parent,
+    modalCount
+  ]);
+  return react_default.createElement($f57aed4a881a3485$var$Context.Provider, {
+    value: context
+  }, children);
+}
+function $f57aed4a881a3485$export$d9aaed4c3ece1bc0() {
+  let context = useContext($f57aed4a881a3485$var$Context);
+  return {
+    modalProviderProps: {
+      "aria-hidden": context && context.modalCount > 0 ? !0 : void 0
+    }
+  };
+}
+function $f57aed4a881a3485$var$OverlayContainerDOM(props) {
+  let { modalProviderProps } = $f57aed4a881a3485$export$d9aaed4c3ece1bc0();
+  return react_default.createElement("div", {
+    "data-overlay-container": !0,
+    ...props,
+    ...modalProviderProps
+  });
+}
+function $f57aed4a881a3485$export$bf688221f59024e5(props) {
+  return react_default.createElement($f57aed4a881a3485$export$178405afcd8c5eb, null, react_default.createElement($f57aed4a881a3485$var$OverlayContainerDOM, props));
+}
+function $f57aed4a881a3485$export$b47c3594eab58386(props) {
+  let isSSR = $b5e257d569688ac6$export$535bd6ca7f90a273(), { portalContainer = isSSR ? null : document.body, ...rest2 } = props, { getContainer } = $96b38030c423d352$export$9fc1347d4195ccb3();
+  if (!props.portalContainer && getContainer && (portalContainer = getContainer()), react_default.useEffect(() => {
+    if (portalContainer?.closest("[data-overlay-container]")) throw new Error("An OverlayContainer must not be inside another container. Please change the portalContainer prop.");
+  }, [
+    portalContainer
+  ]), !portalContainer) return null;
+  let contents = react_default.createElement($f57aed4a881a3485$export$bf688221f59024e5, rest2);
+  return react_dom_default.createPortal(contents, portalContainer);
+}
+
+// ../../node_modules/@react-aria/overlays/dist/ar-AE.mjs
+var $773d5888b972f1cf$exports = {};
+$773d5888b972f1cf$exports = {
+  dismiss: "\u062A\u062C\u0627\u0647\u0644"
+};
+
+// ../../node_modules/@react-aria/overlays/dist/bg-BG.mjs
+var $d11f19852b941573$exports = {};
+$d11f19852b941573$exports = {
+  dismiss: "\u041E\u0442\u0445\u0432\u044A\u0440\u043B\u044F\u043D\u0435"
+};
+
+// ../../node_modules/@react-aria/overlays/dist/cs-CZ.mjs
+var $b983974c2ee1efb3$exports = {};
+$b983974c2ee1efb3$exports = {
+  dismiss: "Odstranit"
+};
+
+// ../../node_modules/@react-aria/overlays/dist/da-DK.mjs
+var $5809cc9d4e92de73$exports = {};
+$5809cc9d4e92de73$exports = {
+  dismiss: "Luk"
+};
+
+// ../../node_modules/@react-aria/overlays/dist/de-DE.mjs
+var $c68c2e4fc74398d1$exports = {};
+$c68c2e4fc74398d1$exports = {
+  dismiss: "Schlie\xDFen"
+};
+
+// ../../node_modules/@react-aria/overlays/dist/el-GR.mjs
+var $0898b4c153db2b77$exports = {};
+$0898b4c153db2b77$exports = {
+  dismiss: "\u0391\u03C0\u03CC\u03C1\u03C1\u03B9\u03C8\u03B7"
+};
+
+// ../../node_modules/@react-aria/overlays/dist/en-US.mjs
+var $6d74810286a15183$exports = {};
+$6d74810286a15183$exports = {
+  dismiss: "Dismiss"
+};
+
+// ../../node_modules/@react-aria/overlays/dist/es-ES.mjs
+var $309d73dc65f78055$exports = {};
+$309d73dc65f78055$exports = {
+  dismiss: "Descartar"
+};
+
+// ../../node_modules/@react-aria/overlays/dist/et-EE.mjs
+var $44ad94f7205cf593$exports = {};
+$44ad94f7205cf593$exports = {
+  dismiss: "L\xF5peta"
+};
+
+// ../../node_modules/@react-aria/overlays/dist/fi-FI.mjs
+var $7c28f5687f0779a9$exports = {};
+$7c28f5687f0779a9$exports = {
+  dismiss: "Hylk\xE4\xE4"
+};
+
+// ../../node_modules/@react-aria/overlays/dist/fr-FR.mjs
+var $e6d75df4b68bd73a$exports = {};
+$e6d75df4b68bd73a$exports = {
+  dismiss: "Rejeter"
+};
+
+// ../../node_modules/@react-aria/overlays/dist/he-IL.mjs
+var $87505c9dab186d0f$exports = {};
+$87505c9dab186d0f$exports = {
+  dismiss: "\u05D4\u05EA\u05E2\u05DC\u05DD"
+};
+
+// ../../node_modules/@react-aria/overlays/dist/hr-HR.mjs
+var $553439c3ffb3e492$exports = {};
+$553439c3ffb3e492$exports = {
+  dismiss: "Odbaci"
+};
+
+// ../../node_modules/@react-aria/overlays/dist/hu-HU.mjs
+var $74cf411061b983a2$exports = {};
+$74cf411061b983a2$exports = {
+  dismiss: "Elutas\xEDt\xE1s"
+};
+
+// ../../node_modules/@react-aria/overlays/dist/it-IT.mjs
+var $e933f298574dc435$exports = {};
+$e933f298574dc435$exports = {
+  dismiss: "Ignora"
+};
+
+// ../../node_modules/@react-aria/overlays/dist/ja-JP.mjs
+var $ac91fc9fe02f71f6$exports = {};
+$ac91fc9fe02f71f6$exports = {
+  dismiss: "\u9589\u3058\u308B"
+};
+
+// ../../node_modules/@react-aria/overlays/dist/ko-KR.mjs
+var $52b96f86422025af$exports = {};
+$52b96f86422025af$exports = {
+  dismiss: "\uBB34\uC2DC"
+};
+
+// ../../node_modules/@react-aria/overlays/dist/lt-LT.mjs
+var $c0d724c3e51dafa6$exports = {};
+$c0d724c3e51dafa6$exports = {
+  dismiss: "Atmesti"
+};
+
+// ../../node_modules/@react-aria/overlays/dist/lv-LV.mjs
+var $c92899672a3fe72e$exports = {};
+$c92899672a3fe72e$exports = {
+  dismiss: "Ner\u0101d\u012Bt"
+};
+
+// ../../node_modules/@react-aria/overlays/dist/nb-NO.mjs
+var $9f576b39d8e7a9d6$exports = {};
+$9f576b39d8e7a9d6$exports = {
+  dismiss: "Lukk"
+};
+
+// ../../node_modules/@react-aria/overlays/dist/nl-NL.mjs
+var $9d025808aeec81a7$exports = {};
+$9d025808aeec81a7$exports = {
+  dismiss: "Negeren"
+};
+
+// ../../node_modules/@react-aria/overlays/dist/pl-PL.mjs
+var $fce709921e2c0fa6$exports = {};
+$fce709921e2c0fa6$exports = {
+  dismiss: "Zignoruj"
+};
+
+// ../../node_modules/@react-aria/overlays/dist/pt-BR.mjs
+var $2599cf0c4ab37f59$exports = {};
+$2599cf0c4ab37f59$exports = {
+  dismiss: "Descartar"
+};
+
+// ../../node_modules/@react-aria/overlays/dist/pt-PT.mjs
+var $3c220ae7ef8a35fd$exports = {};
+$3c220ae7ef8a35fd$exports = {
+  dismiss: "Dispensar"
+};
+
+// ../../node_modules/@react-aria/overlays/dist/ro-RO.mjs
+var $93562b5094072f54$exports = {};
+$93562b5094072f54$exports = {
+  dismiss: "Revocare"
+};
+
+// ../../node_modules/@react-aria/overlays/dist/ru-RU.mjs
+var $cd9e2abd0d06c7b4$exports = {};
+$cd9e2abd0d06c7b4$exports = {
+  dismiss: "\u041F\u0440\u043E\u043F\u0443\u0441\u0442\u0438\u0442\u044C"
+};
+
+// ../../node_modules/@react-aria/overlays/dist/sk-SK.mjs
+var $45375701f409adf1$exports = {};
+$45375701f409adf1$exports = {
+  dismiss: "Zru\u0161i\u0165"
+};
+
+// ../../node_modules/@react-aria/overlays/dist/sl-SI.mjs
+var $27fab53a576de9dd$exports = {};
+$27fab53a576de9dd$exports = {
+  dismiss: "Opusti"
+};
+
+// ../../node_modules/@react-aria/overlays/dist/sr-SP.mjs
+var $4438748d9952e7c7$exports = {};
+$4438748d9952e7c7$exports = {
+  dismiss: "Odbaci"
+};
+
+// ../../node_modules/@react-aria/overlays/dist/sv-SE.mjs
+var $0936d7347ef4da4c$exports = {};
+$0936d7347ef4da4c$exports = {
+  dismiss: "Avvisa"
+};
+
+// ../../node_modules/@react-aria/overlays/dist/tr-TR.mjs
+var $29700c92185d38f8$exports = {};
+$29700c92185d38f8$exports = {
+  dismiss: "Kapat"
+};
+
+// ../../node_modules/@react-aria/overlays/dist/uk-UA.mjs
+var $662ccaf2be4c25b3$exports = {};
+$662ccaf2be4c25b3$exports = {
+  dismiss: "\u0421\u043A\u0430\u0441\u0443\u0432\u0430\u0442\u0438"
+};
+
+// ../../node_modules/@react-aria/overlays/dist/zh-CN.mjs
+var $d80a27deda7cdb3c$exports = {};
+$d80a27deda7cdb3c$exports = {
+  dismiss: "\u53D6\u6D88"
+};
+
+// ../../node_modules/@react-aria/overlays/dist/zh-TW.mjs
+var $2b2734393847c884$exports = {};
+$2b2734393847c884$exports = {
+  dismiss: "\u95DC\u9589"
+};
+
+// ../../node_modules/@react-aria/overlays/dist/intlStrings.mjs
+var $a2f21f5f14f60553$exports = {};
+$a2f21f5f14f60553$exports = {
+  "ar-AE": $773d5888b972f1cf$exports,
+  "bg-BG": $d11f19852b941573$exports,
+  "cs-CZ": $b983974c2ee1efb3$exports,
+  "da-DK": $5809cc9d4e92de73$exports,
+  "de-DE": $c68c2e4fc74398d1$exports,
+  "el-GR": $0898b4c153db2b77$exports,
+  "en-US": $6d74810286a15183$exports,
+  "es-ES": $309d73dc65f78055$exports,
+  "et-EE": $44ad94f7205cf593$exports,
+  "fi-FI": $7c28f5687f0779a9$exports,
+  "fr-FR": $e6d75df4b68bd73a$exports,
+  "he-IL": $87505c9dab186d0f$exports,
+  "hr-HR": $553439c3ffb3e492$exports,
+  "hu-HU": $74cf411061b983a2$exports,
+  "it-IT": $e933f298574dc435$exports,
+  "ja-JP": $ac91fc9fe02f71f6$exports,
+  "ko-KR": $52b96f86422025af$exports,
+  "lt-LT": $c0d724c3e51dafa6$exports,
+  "lv-LV": $c92899672a3fe72e$exports,
+  "nb-NO": $9f576b39d8e7a9d6$exports,
+  "nl-NL": $9d025808aeec81a7$exports,
+  "pl-PL": $fce709921e2c0fa6$exports,
+  "pt-BR": $2599cf0c4ab37f59$exports,
+  "pt-PT": $3c220ae7ef8a35fd$exports,
+  "ro-RO": $93562b5094072f54$exports,
+  "ru-RU": $cd9e2abd0d06c7b4$exports,
+  "sk-SK": $45375701f409adf1$exports,
+  "sl-SI": $27fab53a576de9dd$exports,
+  "sr-SP": $4438748d9952e7c7$exports,
+  "sv-SE": $0936d7347ef4da4c$exports,
+  "tr-TR": $29700c92185d38f8$exports,
+  "uk-UA": $662ccaf2be4c25b3$exports,
+  "zh-CN": $d80a27deda7cdb3c$exports,
+  "zh-TW": $2b2734393847c884$exports
+};
+
+// ../../node_modules/@react-aria/overlays/dist/DismissButton.mjs
+init_react();
+
+// ../../node_modules/@react-aria/visually-hidden/dist/VisuallyHidden.mjs
+init_react();
+
+// ../../node_modules/@react-aria/overlays/dist/ariaHideOutside.mjs
+var $5e3802645cc19319$var$supportsInert = typeof HTMLElement < "u" && "inert" in HTMLElement.prototype;
+
+// ../../node_modules/@react-aria/overlays/dist/usePopover.mjs
+init_react();
+
+// ../../node_modules/@react-aria/overlays/dist/Overlay.mjs
+init_react();
+var $337b884510726a0d$export$a2200b96afd16271 = react_default.createContext(null);
+
+// ../../node_modules/@react-aria/overlays/dist/useModalOverlay.mjs
+init_react();
+
+// ../../node_modules/@react-stately/tooltip/dist/useTooltipTriggerState.mjs
+init_react();
+
+// ../../node_modules/@react-stately/overlays/dist/useOverlayTriggerState.mjs
+init_react();
+function $fc909762b330b746$export$61c6a8c84e605fb6(props) {
+  let [isOpen, setOpen] = $458b0a5536c1a7cf$export$40bfa8c7b0832715(props.isOpen, props.defaultOpen || !1, props.onOpenChange), open = useCallback(() => {
+    setOpen(!0);
+  }, [
+    setOpen
+  ]), close = useCallback(() => {
+    setOpen(!1);
+  }, [
+    setOpen
+  ]), toggle = useCallback(() => {
+    setOpen(!isOpen);
+  }, [
+    setOpen,
+    isOpen
+  ]);
+  return {
+    isOpen,
+    setOpen,
+    open,
+    close,
+    toggle
+  };
+}
+
+// ../../node_modules/@react-stately/tooltip/dist/useTooltipTriggerState.mjs
+var $8796f90736e175cb$var$TOOLTIP_DELAY = 1500, $8796f90736e175cb$var$TOOLTIP_COOLDOWN = 500, $8796f90736e175cb$var$tooltips = {}, $8796f90736e175cb$var$tooltipId = 0, $8796f90736e175cb$var$globalWarmedUp = !1, $8796f90736e175cb$var$globalWarmUpTimeout = null, $8796f90736e175cb$var$globalCooldownTimeout = null;
+function $8796f90736e175cb$export$4d40659c25ecb50b(props = {}) {
+  let { delay: delay2 = $8796f90736e175cb$var$TOOLTIP_DELAY, closeDelay = $8796f90736e175cb$var$TOOLTIP_COOLDOWN } = props, { isOpen, open, close } = $fc909762b330b746$export$61c6a8c84e605fb6(props), id = useMemo(() => `${++$8796f90736e175cb$var$tooltipId}`, []), closeTimeout = useRef(null), closeCallback = useRef(close), ensureTooltipEntry = () => {
+    $8796f90736e175cb$var$tooltips[id] = hideTooltip;
+  }, closeOpenTooltips = () => {
+    for (let hideTooltipId in $8796f90736e175cb$var$tooltips) hideTooltipId !== id && ($8796f90736e175cb$var$tooltips[hideTooltipId](!0), delete $8796f90736e175cb$var$tooltips[hideTooltipId]);
+  }, showTooltip = () => {
+    closeTimeout.current && clearTimeout(closeTimeout.current), closeTimeout.current = null, closeOpenTooltips(), ensureTooltipEntry(), $8796f90736e175cb$var$globalWarmedUp = !0, open(), $8796f90736e175cb$var$globalWarmUpTimeout && (clearTimeout($8796f90736e175cb$var$globalWarmUpTimeout), $8796f90736e175cb$var$globalWarmUpTimeout = null), $8796f90736e175cb$var$globalCooldownTimeout && (clearTimeout($8796f90736e175cb$var$globalCooldownTimeout), $8796f90736e175cb$var$globalCooldownTimeout = null);
+  }, hideTooltip = (immediate) => {
+    immediate || closeDelay <= 0 ? (closeTimeout.current && clearTimeout(closeTimeout.current), closeTimeout.current = null, closeCallback.current()) : closeTimeout.current || (closeTimeout.current = setTimeout(() => {
+      closeTimeout.current = null, closeCallback.current();
+    }, closeDelay)), $8796f90736e175cb$var$globalWarmUpTimeout && (clearTimeout($8796f90736e175cb$var$globalWarmUpTimeout), $8796f90736e175cb$var$globalWarmUpTimeout = null), $8796f90736e175cb$var$globalWarmedUp && ($8796f90736e175cb$var$globalCooldownTimeout && clearTimeout($8796f90736e175cb$var$globalCooldownTimeout), $8796f90736e175cb$var$globalCooldownTimeout = setTimeout(() => {
+      delete $8796f90736e175cb$var$tooltips[id], $8796f90736e175cb$var$globalCooldownTimeout = null, $8796f90736e175cb$var$globalWarmedUp = !1;
+    }, Math.max($8796f90736e175cb$var$TOOLTIP_COOLDOWN, closeDelay)));
+  }, warmupTooltip = () => {
+    closeOpenTooltips(), ensureTooltipEntry(), !isOpen && !$8796f90736e175cb$var$globalWarmUpTimeout && !$8796f90736e175cb$var$globalWarmedUp ? $8796f90736e175cb$var$globalWarmUpTimeout = setTimeout(() => {
+      $8796f90736e175cb$var$globalWarmUpTimeout = null, $8796f90736e175cb$var$globalWarmedUp = !0, showTooltip();
+    }, delay2) : isOpen || showTooltip();
+  };
+  return useEffect(() => {
+    closeCallback.current = close;
+  }, [
+    close
+  ]), useEffect(() => () => {
+    closeTimeout.current && clearTimeout(closeTimeout.current), $8796f90736e175cb$var$tooltips[id] && delete $8796f90736e175cb$var$tooltips[id];
+  }, [
+    id
+  ]), {
+    isOpen,
+    open: (immediate) => {
+      !immediate && delay2 > 0 && !closeTimeout.current ? warmupTooltip() : showTooltip();
+    },
+    close: hideTooltip
+  };
+}
+
+// ../../node_modules/react-aria-components/dist/Tooltip.mjs
+init_react();
+var $4e3b923658d69c60$export$7a7623236eec67fa = createContext(null), $4e3b923658d69c60$export$39ae08fa83328b12 = createContext(null);
+function $4e3b923658d69c60$export$8c610744efcf8a1d(props) {
+  let state = $8796f90736e175cb$export$4d40659c25ecb50b(props), ref = useRef(null), { triggerProps, tooltipProps } = $4e1b34546679e357$export$a6da6c504e4bba8b(props, state, ref);
+  return react_default.createElement($64fa3d84918910a7$export$2881499e37b75b9a, {
+    values: [
+      [
+        $4e3b923658d69c60$export$7a7623236eec67fa,
+        state
+      ],
+      [
+        $4e3b923658d69c60$export$39ae08fa83328b12,
+        {
+          ...tooltipProps,
+          triggerRef: ref
+        }
+      ]
+    ]
+  }, react_default.createElement($f645667febf57a63$export$13f3202a3e5ddd5, {
+    ...triggerProps,
+    ref
+  }, props.children));
+}
+var $4e3b923658d69c60$export$28c660c63b792dea = forwardRef(function({ UNSTABLE_portalContainer, ...props }, ref) {
+  [props, ref] = $64fa3d84918910a7$export$29f1550f4b0d4415(props, ref, $4e3b923658d69c60$export$39ae08fa83328b12);
+  let contextState = useContext($4e3b923658d69c60$export$7a7623236eec67fa), localState = $8796f90736e175cb$export$4d40659c25ecb50b(props), state = props.isOpen != null || props.defaultOpen != null || !contextState ? localState : contextState, isExiting = $d3f049242431219c$export$45fda7c47f93fd48(ref, state.isOpen) || props.isExiting || !1;
+  return !state.isOpen && !isExiting ? null : react_default.createElement($f57aed4a881a3485$export$b47c3594eab58386, {
+    portalContainer: UNSTABLE_portalContainer
+  }, react_default.createElement($4e3b923658d69c60$var$TooltipInner, {
+    ...props,
+    tooltipRef: ref,
+    isExiting
+  }));
+});
+function $4e3b923658d69c60$var$TooltipInner(props) {
+  let state = useContext($4e3b923658d69c60$export$7a7623236eec67fa), arrowRef = useRef(null), { overlayProps, arrowProps, placement, triggerAnchorPoint } = $2a41e45df1593e64$export$d39e1813b3bdd0e1({
+    placement: props.placement || "top",
+    targetRef: props.triggerRef,
+    overlayRef: props.tooltipRef,
+    arrowRef,
+    offset: props.offset,
+    crossOffset: props.crossOffset,
+    isOpen: state.isOpen,
+    arrowBoundaryOffset: props.arrowBoundaryOffset,
+    shouldFlip: props.shouldFlip,
+    containerPadding: props.containerPadding,
+    onClose: () => state.close(!0)
+  }), isEntering = $d3f049242431219c$export$6d3443f2c48bfc20(props.tooltipRef, !!placement) || props.isEntering || !1, renderProps = $64fa3d84918910a7$export$4d86445c2cf5e3({
+    ...props,
+    defaultClassName: "react-aria-Tooltip",
+    values: {
+      placement,
+      isEntering,
+      isExiting: props.isExiting,
+      state
+    }
+  });
+  props = $3ef42575df84b30b$export$9d1611c77c2fe928(props, overlayProps);
+  let { tooltipProps } = $326e436e94273fe1$export$1c4b08e0eca38426(props, state), DOMProps = $65484d02dcb7eb3e$export$457c3d6518dd4c6f(props, {
+    global: !0
+  });
+  return react_default.createElement("div", {
+    ...$3ef42575df84b30b$export$9d1611c77c2fe928(DOMProps, renderProps, tooltipProps),
+    ref: props.tooltipRef,
+    style: {
+      ...overlayProps.style,
+      "--trigger-anchor-point": triggerAnchorPoint ? `${triggerAnchorPoint.x}px ${triggerAnchorPoint.y}px` : void 0,
+      ...renderProps.style
+    },
+    "data-placement": placement ?? void 0,
+    "data-entering": isEntering || void 0,
+    "data-exiting": props.isExiting || void 0
+  }, react_default.createElement($44f671af83e7d9e0$export$2de4954e8ae13b9f.Provider, {
+    value: {
+      ...arrowProps,
+      placement,
+      ref: arrowRef
+    }
+  }, renderProps.children));
+}
+
+// src/components/components/shared/overlayHelpers.tsx
+init_react();
+var import_memoizerific = __toESM(require_memoizerific(), 1);
+var convertToReactAriaPlacement2 = (0, import_memoizerific.default)(1e3)((p2) => p2 === "left-end" ? "left bottom" : p2 === "right-end" ? "right bottom" : p2 === "left-start" ? "left top" : p2 === "right-start" ? "right top" : p2.replace("-", " ")), Container5 = styled.div({
+  width: 500,
+  height: 500,
+  paddingTop: 100,
+  overflowY: "scroll",
+  background: "#eee",
+  position: "relative"
+}), Trigger = forwardRef((props, ref) => react_default.createElement(
+  "button",
+  {
+    ...props,
+    ref,
+    style: {
+      width: 120,
+      height: 50,
+      margin: 10
+    }
+  }
+));
+Trigger.displayName = "Trigger";
+
+// src/components/components/tooltip/TooltipProvider.tsx
+var TooltipProvider2 = ({
+  triggerOnFocusOnly = !1,
+  placement: placementProp = "top",
+  offset: offset2 = 8,
+  tooltip,
+  children,
+  defaultVisible,
+  startOpen,
+  delayShow = 400,
+  delayHide = 200,
+  visible,
+  onVisibleChange,
+  ...props
+}) => {
+  let placement = convertToReactAriaPlacement2(placementProp), child = react_default.Children.only(children);
+  startOpen !== void 0 && deprecate("The `startOpen` prop is deprecated. Please use `defaultVisible` instead.");
+  let [isOpen, setIsOpen] = useState(defaultVisible ?? startOpen ?? !1), onOpenChange = useCallback(
+    (isOpen2) => {
+      setIsOpen(isOpen2), onVisibleChange?.(isOpen2);
+    },
+    [onVisibleChange]
+  );
+  return react_default.createElement(
+    $4e3b923658d69c60$export$8c610744efcf8a1d,
+    {
+      delay: delayShow,
+      closeDelay: delayHide,
+      isOpen: visible ?? isOpen,
+      onOpenChange,
+      trigger: triggerOnFocusOnly ? "focus" : void 0,
+      ...props
+    },
+    react_default.createElement($f645667febf57a63$export$35a3bebf7ef2d934, null, react_default.cloneElement(child, { "aria-describedby": null })),
+    react_default.createElement(
+      $4e3b923658d69c60$export$28c660c63b792dea,
+      {
+        "data-testid": "tooltip",
+        placement,
+        offset: offset2,
+        onOpenChange,
+        style: { outline: "none" },
+        ...props
+      },
+      tooltip
+    )
+  );
+};
+
+// src/manager/components/layout/Drag.tsx
+var oppositePosition = {
+  left: "right",
+  right: "left",
+  top: "bottom",
+  bottom: "top"
+}, Drag = forwardRef(function(props, ref) {
+  let {
+    overlapping,
+    position,
+    "aria-label": ariaLabel,
+    "aria-valuenow": ariaValueNow,
+    "aria-valuemax": ariaValueMax,
+    ...rest2
+  } = props, orientation = position === "left" || position === "right" ? "vertical" : "horizontal", tooltipNote = orientation === "vertical" ? "\u2190 \u2192 to resize" : "\u2191 \u2193 to resize";
+  return react_default.createElement(
+    TooltipProvider2,
+    {
+      triggerOnFocusOnly: !0,
+      placement: oppositePosition[position],
+      tooltip: react_default.createElement(TooltipNote2, { note: tooltipNote })
+    },
+    react_default.createElement(
+      DragHandle,
+      {
+        ref,
+        $orientation: orientation,
+        $overlapping: overlapping,
+        $position: position,
+        role: "separator",
+        tabIndex: 0,
+        "aria-orientation": orientation,
+        "aria-label": ariaLabel,
+        "aria-valuenow": ariaValueNow,
+        "aria-valuemin": 0,
+        "aria-valuemax": ariaValueMax,
+        ...rest2
+      }
+    )
+  );
+}), DragHandle = styled.div(
+  ({ theme }) => ({
+    position: "absolute",
+    opacity: 0,
+    transition: "opacity 0.2s ease-in-out",
+    zIndex: 100,
+    "&:after": {
+      content: '""',
+      display: "block",
+      backgroundColor: theme.color.secondary
+    },
+    "&:hover": {
+      opacity: 1
+    }
+  }),
+  ({ theme, $orientation = "vertical" }) => ({
+    "&:focus-visible": {
+      opacity: 1,
+      outline: "2px solid transparent",
+      ...$orientation === "horizontal" ? { height: 7 } : { width: 7 },
+      boxShadow: `inset 0 0 0 4px ${theme.color.secondary}`,
+      "@media (forced-colors: active)": {
+        outline: "2px solid Highlight"
+      }
+    }
+  }),
+  ({ $orientation = "vertical", $overlapping = !0, $position = "left" }) => $orientation === "vertical" ? {
+    // This is an old code smell, where 10px matches the sidebar and 13px matches the addon panel.
+    // It should be tidied up at some point.
+    width: $overlapping ? $position === "left" ? 10 : 13 : 7,
+    height: "100%",
+    top: 0,
+    right: $position === "left" ? -7 : void 0,
+    left: $position === "right" ? -7 : void 0,
+    "&:after": {
+      width: 1,
+      height: "100%",
+      marginLeft: $position === "left" ? 3 : 6
+    },
+    "&:hover": {
+      cursor: "col-resize"
+    }
+  } : {
+    width: "100%",
+    height: $overlapping ? 13 : 7,
+    top: $position === "bottom" ? -7 : void 0,
+    bottom: $position === "top" ? -7 : void 0,
+    left: 0,
+    "&:after": {
+      width: "100%",
+      height: 1,
+      marginTop: 6
+    },
+    "&:hover": {
+      cursor: "row-resize"
+    }
+  }
+);
+
+// src/manager/components/layout/PanelContainer.tsx
+var Container6 = styled.div(({ theme, position }) => ({
+  gridArea: "panel",
+  position: "relative",
+  backgroundColor: theme.appContentBg,
+  borderTop: position === "bottom" ? `1px solid ${theme.appBorderColor}` : void 0,
+  borderLeft: position === "right" ? `1px solid ${theme.appBorderColor}` : void 0
+})), PanelSlot = styled.div({
+  height: "100%"
+}), PanelContainer = react_default.memo(function(props) {
+  let { children, bottomPanelHeight, rightPanelWidth, panelMaxSize, panelResizerRef, position } = props, shouldHidePanelContent = position === "bottom" ? bottomPanelHeight === 0 : rightPanelWidth === 0;
+  return react_default.createElement(Container6, { position }, react_default.createElement(
+    Drag,
+    {
+      ref: panelResizerRef,
+      position,
+      overlapping: position === "bottom" ? !!bottomPanelHeight : !!rightPanelWidth,
+      "aria-label": "Addon panel resize handle",
+      "aria-valuenow": position === "bottom" ? bottomPanelHeight : rightPanelWidth,
+      "aria-valuemax": panelMaxSize
+    }
+  ), react_default.createElement(
+    PanelSlot,
+    {
+      hidden: shouldHidePanelContent ? !0 : void 0,
+      "aria-hidden": shouldHidePanelContent ? !0 : void 0
+    },
+    children
+  ));
+});
+
+// src/manager/components/layout/SidebarContainer.tsx
+init_react();
+var Container7 = styled.div(({ theme }) => ({
+  backgroundColor: theme.appBg,
+  gridArea: "sidebar",
+  position: "relative",
+  borderRight: `1px solid ${theme.appBorderColor}`
+})), SidebarSlot = styled.div({
+  height: "100%"
+}), SidebarContainer = react_default.memo(function(props) {
+  let { children, navSize, sidebarMaxWidth, sidebarResizerRef } = props, shouldHideSidebarContent = navSize === 0;
+  return react_default.createElement(Container7, null, react_default.createElement(
+    SidebarSlot,
+    {
+      hidden: shouldHideSidebarContent ? !0 : void 0,
+      "aria-hidden": shouldHideSidebarContent ? !0 : void 0
+    },
+    children
+  ), react_default.createElement(
+    Drag,
+    {
+      ref: sidebarResizerRef,
+      position: "left",
+      "aria-label": "Sidebar resize handle",
+      "aria-valuenow": navSize,
+      "aria-valuemax": sidebarMaxWidth
+    }
+  ));
+});
+
 // src/manager/components/layout/useDragging.ts
 init_react();
-var SNAP_THRESHOLD_PX = 30, SIDEBAR_MIN_WIDTH_PX = 240, RIGHT_PANEL_MIN_WIDTH_PX = 270, MIN_WIDTH_STIFFNESS = 0.9;
+var SNAP_THRESHOLD_PX = 30, STIFFNESS = 0.9, KEYBOARD_STEP_PX = 10, KEYBOARD_SHIFT_MULTIPLIER = 5, RESIZE_KEYS = ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End"];
 function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
 }
 function interpolate(relativeValue, min, max) {
   return min + (max - min) * relativeValue;
 }
+function computeSidebarMaxWidth(panelPosition, rightPanelWidth, showPanel) {
+  if (typeof window > "u")
+    return 0;
+  let panelWidth = showPanel ? panelPosition === "right" ? rightPanelWidth : 360 : 0;
+  return Math.max(window.innerWidth - 100 - panelWidth, 0);
+}
+function computePanelMaxSize(panelPosition, navSize) {
+  return typeof window > "u" ? 0 : Math.max(panelPosition === "bottom" ? window.innerHeight - 40 : window.innerWidth - 100 - navSize, 0);
+}
+function applyResizeKeyboard(state, sizeKey, key, step, minSize, maxSize, increaseKey, decreaseKey) {
+  let currentSize = state[sizeKey];
+  switch (key) {
+    case increaseKey:
+      return { ...state, [sizeKey]: clamp(currentSize + step, minSize, maxSize) };
+    case decreaseKey:
+      let effectivelyComputed = clamp(currentSize - step, 0, maxSize);
+      return { ...state, [sizeKey]: effectivelyComputed < minSize ? 0 : effectivelyComputed };
+    case "Home":
+      return { ...state, [sizeKey]: 0 };
+    case "End":
+      return { ...state, [sizeKey]: maxSize };
+    default:
+      return state;
+  }
+}
 function useDragging({
   setState,
-  isPanelShown,
-  isDesktop
+  showPanel,
+  isDesktop,
+  navSize,
+  rightPanelWidth,
+  panelPosition
 }) {
-  let panelResizerRef = useRef(null), sidebarResizerRef = useRef(null);
+  let panelResizerRef = useRef(null), sidebarResizerRef = useRef(null), sidebarMaxWidth = computeSidebarMaxWidth(panelPosition, rightPanelWidth, showPanel), panelMaxSize = computePanelMaxSize(panelPosition, navSize);
   return useEffect(() => {
-    let panelResizer = panelResizerRef.current, sidebarResizer = sidebarResizerRef.current, previewIframe = document.querySelector("#storybook-preview-iframe"), draggedElement = null, onDragStart = (e2) => {
-      e2.preventDefault(), setState((state) => ({
+    let panelResizer = panelResizerRef.current, sidebarResizer = sidebarResizerRef.current, draggedElement = null, onDragStart = (e2) => {
+      e2.preventDefault(), e2.currentTarget === panelResizer ? draggedElement = panelResizer : e2.currentTarget === sidebarResizer && (draggedElement = sidebarResizer), setState((state) => ({
         ...state,
-        isDragging: !0
-      })), e2.currentTarget === panelResizer ? draggedElement = panelResizer : e2.currentTarget === sidebarResizer && (draggedElement = sidebarResizer), window.addEventListener("mousemove", onDrag), window.addEventListener("mouseup", onDragEnd), previewIframe && (previewIframe.style.pointerEvents = "none");
-    }, onDragEnd = (e2) => {
-      setState((state) => draggedElement === sidebarResizer && state.navSize < SIDEBAR_MIN_WIDTH_PX && state.navSize > 0 ? {
-        ...state,
-        isDragging: !1,
-        navSize: SIDEBAR_MIN_WIDTH_PX
-      } : draggedElement === panelResizer && state.panelPosition === "right" && state.rightPanelWidth < RIGHT_PANEL_MIN_WIDTH_PX && state.rightPanelWidth > 0 ? {
-        ...state,
-        isDragging: !1,
-        rightPanelWidth: RIGHT_PANEL_MIN_WIDTH_PX
-      } : {
-        ...state,
-        isDragging: !1
-      }), window.removeEventListener("mousemove", onDrag), window.removeEventListener("mouseup", onDragEnd), previewIframe?.removeAttribute("style"), draggedElement = null;
+        isDragging: !0,
+        dragCursor: draggedElement === panelResizer && state.panelPosition === "bottom" ? "row-resize" : "col-resize"
+      })), window.addEventListener("mousemove", onDrag), window.addEventListener("mouseup", onDragEnd);
+    }, onDragEnd = () => {
+      setState((state) => {
+        if (draggedElement === sidebarResizer && state.navSize < 240 && state.navSize > 0)
+          return {
+            ...state,
+            isDragging: !1,
+            navSize: 240
+          };
+        if (draggedElement === panelResizer) {
+          if (state.panelPosition === "right" && state.rightPanelWidth < 270 && state.rightPanelWidth > 0)
+            return {
+              ...state,
+              isDragging: !1,
+              rightPanelWidth: 270
+            };
+          if (state.panelPosition === "bottom" && state.bottomPanelHeight < 40 && state.bottomPanelHeight > 0)
+            return {
+              ...state,
+              isDragging: !1,
+              bottomPanelHeight: 40
+            };
+        }
+        return {
+          ...state,
+          isDragging: !1
+        };
+      }), window.removeEventListener("mousemove", onDrag), window.removeEventListener("mouseup", onDragEnd), draggedElement = null;
     }, onDrag = (e2) => {
       if (e2.buttons === 0) {
-        onDragEnd(e2);
+        onDragEnd();
         return;
       }
       setState((state) => {
@@ -4372,13 +10150,16 @@ function useDragging({
           return sidebarDragX === state.navSize ? state : sidebarDragX <= SNAP_THRESHOLD_PX ? {
             ...state,
             navSize: 0
-          } : sidebarDragX <= SIDEBAR_MIN_WIDTH_PX ? {
+          } : sidebarDragX <= 240 ? {
             ...state,
-            navSize: interpolate(MIN_WIDTH_STIFFNESS, sidebarDragX, SIDEBAR_MIN_WIDTH_PX)
+            navSize: interpolate(STIFFNESS, sidebarDragX, 240)
           } : {
             ...state,
-            // @ts-expect-error (non strict)
-            navSize: clamp(sidebarDragX, 0, e2.view.innerWidth)
+            navSize: clamp(
+              sidebarDragX,
+              0,
+              computeSidebarMaxWidth(state.panelPosition, state.rightPanelWidth, showPanel)
+            )
           };
         }
         if (draggedElement === panelResizer) {
@@ -4388,44 +10169,68 @@ function useDragging({
           ) : (
             // @ts-expect-error (non strict)
             e2.view.innerWidth - e2.clientX
-          );
-          if (panelDragSize === state[sizeAxisState])
-            return state;
-          if (panelDragSize <= SNAP_THRESHOLD_PX)
-            return {
-              ...state,
-              [sizeAxisState]: 0
-            };
-          if (state.panelPosition === "right" && panelDragSize <= RIGHT_PANEL_MIN_WIDTH_PX)
-            return {
-              ...state,
-              [sizeAxisState]: interpolate(
-                MIN_WIDTH_STIFFNESS,
-                panelDragSize,
-                RIGHT_PANEL_MIN_WIDTH_PX
-              )
-            };
-          let sizeAxisMax = (
-            // @ts-expect-error (non strict)
-            state.panelPosition === "bottom" ? e2.view.innerHeight : e2.view.innerWidth
-          );
-          return {
+          ), minimumSize = state.panelPosition === "bottom" ? 40 : 270;
+          return panelDragSize === state[sizeAxisState] ? state : panelDragSize <= SNAP_THRESHOLD_PX ? {
             ...state,
-            [sizeAxisState]: clamp(panelDragSize, 0, sizeAxisMax)
+            [sizeAxisState]: 0
+          } : panelDragSize <= minimumSize ? {
+            ...state,
+            [sizeAxisState]: interpolate(STIFFNESS, panelDragSize, minimumSize)
+          } : {
+            ...state,
+            [sizeAxisState]: clamp(
+              panelDragSize,
+              0,
+              computePanelMaxSize(state.panelPosition, state.navSize)
+            )
           };
         }
         return state;
       });
+    }, onSidebarKeyDown = (e2) => {
+      if (!RESIZE_KEYS.includes(e2.key))
+        return;
+      e2.preventDefault();
+      let step = e2.shiftKey ? KEYBOARD_STEP_PX * KEYBOARD_SHIFT_MULTIPLIER : KEYBOARD_STEP_PX;
+      setState(
+        (state) => applyResizeKeyboard(
+          state,
+          "navSize",
+          e2.key,
+          step,
+          240,
+          computeSidebarMaxWidth(state.panelPosition, state.rightPanelWidth, showPanel),
+          "ArrowRight",
+          "ArrowLeft"
+        )
+      );
+    }, onPanelKeyDown = (e2) => {
+      if (!RESIZE_KEYS.includes(e2.key))
+        return;
+      e2.preventDefault();
+      let step = e2.shiftKey ? KEYBOARD_STEP_PX * KEYBOARD_SHIFT_MULTIPLIER : KEYBOARD_STEP_PX;
+      setState(
+        (state) => applyResizeKeyboard(
+          state,
+          state.panelPosition === "bottom" ? "bottomPanelHeight" : "rightPanelWidth",
+          e2.key,
+          step,
+          state.panelPosition === "bottom" ? 40 : 270,
+          computePanelMaxSize(state.panelPosition, state.navSize),
+          state.panelPosition === "bottom" ? "ArrowUp" : "ArrowLeft",
+          state.panelPosition === "bottom" ? "ArrowDown" : "ArrowRight"
+        )
+      );
     };
-    return panelResizer?.addEventListener("mousedown", onDragStart), sidebarResizer?.addEventListener("mousedown", onDragStart), () => {
-      panelResizer?.removeEventListener("mousedown", onDragStart), sidebarResizer?.removeEventListener("mousedown", onDragStart), previewIframe?.removeAttribute("style");
+    return panelResizer?.addEventListener("mousedown", onDragStart), sidebarResizer?.addEventListener("mousedown", onDragStart), panelResizer?.addEventListener("keydown", onPanelKeyDown), sidebarResizer?.addEventListener("keydown", onSidebarKeyDown), () => {
+      panelResizer?.removeEventListener("mousedown", onDragStart), sidebarResizer?.removeEventListener("mousedown", onDragStart), panelResizer?.removeEventListener("keydown", onPanelKeyDown), sidebarResizer?.removeEventListener("keydown", onSidebarKeyDown);
     };
   }, [
     // we need to rerun this effect when the panel is shown/hidden or when changing between mobile/desktop to re-attach the event listeners
-    isPanelShown,
+    showPanel,
     isDesktop,
     setState
-  ]), { panelResizerRef, sidebarResizerRef };
+  ]), { panelResizerRef, sidebarResizerRef, sidebarMaxWidth, panelMaxSize };
 }
 
 // src/manager/components/layout/useLandmarkIndicator.ts
@@ -4441,17 +10246,11 @@ function findActiveLandmarkElement() {
   }
   return landmarkElement;
 }
-function useLandmarkIndicator() {
-  let theme = useTheme(), currentAnimationRef = useRef(null);
-  useEffect(() => {
-    let handleKeyDown = (e2) => {
-      if (e2.key !== "F6")
-        return;
-      let landmarkElement = findActiveLandmarkElement();
-      if (!landmarkElement)
-        return;
-      currentAnimationRef.current && (currentAnimationRef.current.cancel(), currentAnimationRef.current = null);
-      let animation = landmarkElement.animate(
+function useRegionFocusAnimation() {
+  let theme = useTheme(), reducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)"), currentAnimationRef = useRef(null);
+  return (elementToAnimate) => {
+    if (elementToAnimate && (currentAnimationRef.current && (currentAnimationRef.current.cancel(), currentAnimationRef.current = null), !reducedMotion)) {
+      let animation = elementToAnimate.animate(
         [{ border: `2px solid ${theme.color.primary}` }, { border: "2px solid transparent" }],
         {
           duration: 1500,
@@ -4461,15 +10260,26 @@ function useLandmarkIndicator() {
       currentAnimationRef.current = animation, animation.onfinish = () => {
         currentAnimationRef.current = null;
       };
+    }
+  };
+}
+function useLandmarkIndicator() {
+  let animateLandmark = useRegionFocusAnimation();
+  useEffect(() => {
+    let handleKeyDown = (e2) => {
+      if (e2.key !== "F6")
+        return;
+      let landmarkElement = findActiveLandmarkElement();
+      landmarkElement && animateLandmark(landmarkElement);
     };
     return document.addEventListener("keydown", handleKeyDown, { capture: !0 }), () => {
       document.removeEventListener("keydown", handleKeyDown, { capture: !0 });
     };
-  }, [theme.color.primary]);
+  }, [animateLandmark]);
 }
 
 // src/manager/components/layout/Layout.tsx
-var MINIMUM_CONTENT_WIDTH_PX = 100, layoutStateIsEqual = (state, other) => state.navSize === other.navSize && state.bottomPanelHeight === other.bottomPanelHeight && state.rightPanelWidth === other.rightPanelWidth && state.panelPosition === other.panelPosition, useLayoutSyncingState = ({
+var layoutStateIsEqual = (state, other) => state.navSize === other.navSize && state.bottomPanelHeight === other.bottomPanelHeight && state.rightPanelWidth === other.rightPanelWidth && state.panelPosition === other.panelPosition, useLayoutSyncingState = ({
   api,
   managerLayoutState,
   setManagerLayoutState,
@@ -4478,7 +10288,8 @@ var MINIMUM_CONTENT_WIDTH_PX = 100, layoutStateIsEqual = (state, other) => state
 }) => {
   let prevManagerLayoutStateRef = react_default.useRef(managerLayoutState), [internalDraggingSizeState, setInternalDraggingSizeState] = useState({
     ...managerLayoutState,
-    isDragging: !1
+    isDragging: !1,
+    dragCursor: "col-resize"
   });
   useEffect(() => {
     internalDraggingSizeState.isDragging || // don't interrupt user's drag
@@ -4497,11 +10308,14 @@ var MINIMUM_CONTENT_WIDTH_PX = 100, layoutStateIsEqual = (state, other) => state
       ...nextState
     }, setManagerLayoutState(nextState);
   }, [internalDraggingSizeState, setManagerLayoutState]);
-  let isPagesShown = managerLayoutState.viewMode !== "story" && managerLayoutState.viewMode !== "docs", isPanelShown = managerLayoutState.viewMode === "story" && !hasTab, { panelResizerRef, sidebarResizerRef } = useDragging({
+  let isPagesShown = isPagesViewMode(managerLayoutState.viewMode), isPanelShown = managerLayoutState.viewMode === "story" && !hasTab, { navSize, rightPanelWidth, bottomPanelHeight } = internalDraggingSizeState.isDragging ? internalDraggingSizeState : managerLayoutState, customisedNavSize = api.getNavSizeWithCustomisations?.(navSize) ?? navSize, customisedShowPanel = api.getShowPanelWithCustomisations?.(isPanelShown) ?? isPanelShown, { panelResizerRef, sidebarResizerRef, sidebarMaxWidth, panelMaxSize } = useDragging({
     setState: setInternalDraggingSizeState,
-    isPanelShown,
-    isDesktop
-  }), { navSize, rightPanelWidth, bottomPanelHeight } = internalDraggingSizeState.isDragging ? internalDraggingSizeState : managerLayoutState, customisedNavSize = api.getNavSizeWithCustomisations?.(navSize) ?? navSize, customisedShowPanel = api.getShowPanelWithCustomisations?.(isPanelShown) ?? isPanelShown;
+    isDesktop,
+    navSize: customisedNavSize,
+    showPanel: customisedShowPanel,
+    rightPanelWidth,
+    panelPosition: managerLayoutState.panelPosition
+  });
   return {
     navSize: customisedNavSize,
     rightPanelWidth,
@@ -4509,54 +10323,96 @@ var MINIMUM_CONTENT_WIDTH_PX = 100, layoutStateIsEqual = (state, other) => state
     panelPosition: managerLayoutState.panelPosition,
     panelResizerRef,
     sidebarResizerRef,
+    sidebarMaxWidth,
+    panelMaxSize,
     showPages: isPagesShown,
     showPanel: customisedShowPanel,
-    isDragging: internalDraggingSizeState.isDragging
+    isDragging: internalDraggingSizeState.isDragging,
+    dragCursor: internalDraggingSizeState.dragCursor
   };
-}, MainContentMatcher = ({ children }) => react_default.createElement(Match, { path: /(^\/story|docs|onboarding\/|^\/$)/, startsWith: !1 }, ({ match }) => react_default.createElement(ContentContainer, { shown: !!match }, children)), OrderedMobileNavigation = styled(MobileNavigation)({
+}, OrderedMobileNavigation = styled(MobileNavigation)({
   order: 1
 }), Layout = ({ managerLayoutState, setManagerLayoutState, hasTab, ...slots }) => {
-  let { isDesktop, isMobile: isMobile2 } = useLayout(), api = useStorybookApi(), {
+  let { isDesktop, isMobile: isMobile2 } = useLayout(), api = useStorybookApi();
+  useStorybookState();
+  let showSidebar = api.getNavAvailability() === "shown", {
     navSize,
     rightPanelWidth,
     bottomPanelHeight,
     panelPosition,
     panelResizerRef,
     sidebarResizerRef,
+    sidebarMaxWidth,
+    panelMaxSize,
     showPages,
     showPanel,
-    isDragging
+    isDragging,
+    dragCursor
   } = useLayoutSyncingState({ api, managerLayoutState, setManagerLayoutState, isDesktop, hasTab });
   return useLandmarkIndicator(), react_default.createElement(
     LayoutContainer,
     {
       panelPosition: managerLayoutState.panelPosition,
       showPanel,
+      showSidebar,
       style: {
         "--nav-width": `${navSize}px`,
         "--right-panel-width": `${rightPanelWidth}px`,
         "--bottom-panel-height": `${bottomPanelHeight}px`
       }
     },
-    showPages && react_default.createElement(PagesContainer, null, slots.slotPages),
-    react_default.createElement(react_default.Fragment, null, isDesktop && react_default.createElement(SidebarContainer, null, react_default.createElement(Drag, { ref: sidebarResizerRef }), slots.slotSidebar), isMobile2 && react_default.createElement(
+    react_default.createElement(react_default.Fragment, null, isDesktop && showSidebar && react_default.createElement(
+      SidebarContainer,
+      {
+        navSize,
+        sidebarMaxWidth,
+        sidebarResizerRef
+      },
+      slots.slotSidebar
+    ), isMobile2 && !showPages && react_default.createElement(
       OrderedMobileNavigation,
       {
         menu: slots.slotSidebar,
         panel: slots.slotPanel,
+        showMenu: showSidebar,
         showPanel
       }
-    ), react_default.createElement(MainContentMatcher, null, slots.slotMain), isDesktop && showPanel && react_default.createElement(PanelContainer, { position: panelPosition }, react_default.createElement(
-      Drag,
+    ), react_default.createElement(
+      MainAreaContainer,
       {
-        orientation: panelPosition === "bottom" ? "horizontal" : "vertical",
-        overlapping: panelPosition === "bottom" ? !!bottomPanelHeight : !!rightPanelWidth,
-        position: panelPosition === "bottom" ? "left" : "right",
-        ref: panelResizerRef
+        showPages,
+        slotMain: slots.slotMain,
+        slotPages: slots.slotPages
       }
-    ), slots.slotPanel), isMobile2 && react_default.createElement(Notifications, null))
+    ), slots.slotOverlay && react_default.createElement(ContentOverlayCell, null, slots.slotOverlay), isDesktop && showPanel && react_default.createElement(
+      PanelContainer,
+      {
+        bottomPanelHeight,
+        rightPanelWidth,
+        panelMaxSize,
+        panelResizerRef,
+        position: panelPosition
+      },
+      slots.slotPanel
+    ), isMobile2 && !showPages && react_default.createElement(Notifications, null)),
+    isDragging && react_default.createElement(DragShield, { style: { cursor: dragCursor } })
   );
-}, LayoutContainer = styled.div(({ panelPosition, showPanel }) => ({
+}, ContentOverlayCell = styled.div({
+  position: "absolute",
+  inset: 0,
+  pointerEvents: "none",
+  zIndex: 2,
+  [MEDIA_DESKTOP_BREAKPOINT]: {
+    position: "relative",
+    inset: "auto",
+    gridArea: "content"
+  }
+}), DragShield = styled.div({
+  position: "fixed",
+  inset: 0,
+  zIndex: 10
+}), LayoutContainer = styled.div(({ panelPosition, showPanel, showSidebar }) => ({
+  position: "relative",
   width: "100%",
   height: ["100vh", "100dvh"],
   overflow: "hidden",
@@ -4566,103 +10422,1437 @@ var MINIMUM_CONTENT_WIDTH_PX = 100, layoutStateIsEqual = (state, other) => state
   [MEDIA_DESKTOP_BREAKPOINT]: {
     display: "grid",
     gap: 0,
-    // This uses CSS variables to prevent Emotion from generating a new CSS className for every possible value
-    gridTemplateColumns: `minmax(0, var(--nav-width)) minmax(${MINIMUM_CONTENT_WIDTH_PX}px, 1fr) minmax(0, var(--right-panel-width))`,
+    gridTemplateColumns: showSidebar ? `minmax(0, var(--nav-width)) minmax(${100}px, 1fr) minmax(0, var(--right-panel-width))` : `minmax(${100}px, 1fr) minmax(0, var(--right-panel-width))`,
     gridTemplateRows: "1fr minmax(0, var(--bottom-panel-height))",
-    gridTemplateAreas: showPanel ? panelPosition === "right" ? `"sidebar content panel"
-                  "sidebar content panel"` : `"sidebar content content"
-                "sidebar panel   panel"` : `"sidebar content content"
-                  "sidebar content content"`
+    gridTemplateAreas: !showSidebar && !showPanel ? `"content content"
+                "content content"` : !showSidebar && showPanel ? panelPosition === "right" ? `"content panel"
+                  "content panel"` : `"content content"
+                "panel   panel"` : showPanel ? panelPosition === "right" ? `"sidebar content panel"
+                "sidebar content panel"` : `"sidebar content content"
+              "sidebar panel   panel"` : `"sidebar content content"
+                "sidebar content content"`
   }
-})), SidebarContainer = styled.div(({ theme }) => ({
-  backgroundColor: theme.appBg,
-  gridArea: "sidebar",
-  position: "relative",
-  borderRight: `1px solid ${theme.appBorderColor}`
-})), ContentContainer = styled.div(({ theme, shown }) => ({
-  flex: 1,
-  position: "relative",
-  backgroundColor: theme.appContentBg,
-  display: shown ? "grid" : "none",
-  // This is needed to make the content container fill the available space
-  overflow: "auto",
-  [MEDIA_DESKTOP_BREAKPOINT]: {
-    flex: "auto",
-    gridArea: "content"
+}));
+
+// src/manager/components/review/components/ReviewPersistentLayer.tsx
+init_react();
+
+// src/manager/components/review/screens/ReviewSummaryHost.tsx
+init_react();
+
+// src/shared/review/events.ts
+var REVIEW_NAMESPACE = "storybook/review", REVIEW_EVENTS = {
+  // tab → core-server: a review page (summary or detail) was viewed; forwarded to telemetry.
+  PAGEVIEW: `${REVIEW_NAMESPACE}/pageview`
+};
+
+// src/manager/components/review/constants.ts
+var PAGE_ID = `${REVIEW_NAMESPACE}/page`, REVIEW_CHANGES_URL = "/review/", REVIEW_MODE_SESSION_KEY = `${REVIEW_NAMESPACE}/review-mode`, PRE_REVIEW_RETURN_KEY = `${REVIEW_NAMESPACE}/pre-review-return`, AUTO_ENTERED_SESSION_KEY = `${REVIEW_NAMESPACE}/auto-entered`, autoEnteredLatchValue = (createdAt) => String(createdAt ?? "unknown"), VISITED_REVIEW_CREATED_AT_KEY = `${REVIEW_NAMESPACE}/visited-created-at`, NOTIFIED_REVIEW_CREATED_AT_KEY = `${REVIEW_NAMESPACE}/notified-created-at`, REVIEW_AVAILABLE_NOTIFICATION_ID = `${REVIEW_NAMESPACE}/review-available`, reviewAvailableNotificationId = (createdAt) => `${REVIEW_AVAILABLE_NOTIFICATION_ID}/${createdAt}`;
+
+// src/manager/components/review/review-context.ts
+init_react();
+var noop2 = () => {
+}, emptyReviewContextValue = {
+  review: null,
+  pendingReview: null,
+  storyInfo: {},
+  flattenedEntries: [],
+  newlyAddedStoryIds: /* @__PURE__ */ new Set(),
+  activeEntry: null,
+  activeIndex: -1,
+  isSummaryVisible: !1,
+  banner: null,
+  isInReviewMode: !1,
+  openSummary: noop2,
+  openEntry: noop2,
+  leaveReview: noop2,
+  dismiss: noop2
+}, ReviewContext = createContext(emptyReviewContextValue), useReviewContext = () => useContext(ReviewContext);
+
+// src/manager/components/review/session-store.ts
+var sessionStore = {
+  read(key) {
+    try {
+      return sessionStorage.getItem(key);
+    } catch {
+      return null;
+    }
+  },
+  write(key, value) {
+    try {
+      sessionStorage.setItem(key, value);
+    } catch {
+    }
+  },
+  remove(key) {
+    try {
+      sessionStorage.removeItem(key);
+    } catch {
+    }
   }
-})), PagesContainer = styled.div(({ theme }) => ({
+};
+
+// src/manager/components/review/screens/SummaryScreen.tsx
+init_react();
+
+// src/manager/components/review/components/AttentionBanner.tsx
+init_react();
+
+// src/manager/components/review/components/CopyButton.tsx
+init_react();
+function CopyButton({
+  children,
+  childrenOnCopy,
+  content,
+  onCopy,
+  ariaLabel,
+  ariaLabelOnCopy,
+  duration,
+  ...buttonProps
+}) {
+  let { children: buttonChildren, buttonProps: copyButtonProps } = useCopyButton({
+    children,
+    childrenOnCopy,
+    content,
+    onCopy,
+    ariaLabel,
+    ariaLabelOnCopy,
+    duration
+  });
+  return react_default.createElement(Button, { ...buttonProps, ...copyButtonProps }, buttonChildren);
+}
+
+// src/manager/components/review/components/AttentionBanner.tsx
+var STALE_REFRESH_PROMPT = "Generate a fresh review including my latest changes using the review-create tool.", Region = styled.div({
+  flexShrink: 0
+}), Bar2 = styled.div(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: 8,
+  flexShrink: 0,
+  padding: "4px 16px",
+  background: theme.background.hoverable,
+  color: theme.color.defaultText,
+  borderBottom: `1px solid ${theme.appBorderColor}`,
+  fontSize: theme.typography.size.s2,
+  minHeight: 40
+})), PopoverContent = styled.div({
+  padding: 15,
+  width: 280,
+  boxSizing: "border-box"
+}), Title = styled.div(({ theme }) => ({
+  fontWeight: theme.typography.weight.bold
+})), Message = styled.div(({ theme }) => ({
+  color: theme.color.defaultText,
+  lineHeight: "18px",
   display: "flex",
   flexDirection: "column",
-  gridRowStart: "sidebar-start",
-  gridRowEnd: "-1",
-  gridColumnStart: "sidebar-end",
-  gridColumnEnd: "-1",
-  backgroundColor: theme.appContentBg,
-  zIndex: 1
-})), PanelContainer = styled.div(
-  ({ theme, position }) => ({
-    gridArea: "panel",
-    position: "relative",
-    backgroundColor: theme.appContentBg,
-    borderTop: position === "bottom" ? `1px solid ${theme.appBorderColor}` : void 0,
-    borderLeft: position === "right" ? `1px solid ${theme.appBorderColor}` : void 0,
-    "& > aside": {
-      overflow: "hidden"
+  alignItems: "flex-start",
+  gap: 8
+})), Prompt = styled.p(({ theme }) => ({
+  margin: 0,
+  fontFamily: theme.typography.fonts.mono,
+  fontSize: theme.typography.size.s1 - 1,
+  padding: "6px 10px",
+  background: theme.background.app,
+  boxShadow: `inset 0 0 0 1px ${theme.appBorderColor}`,
+  borderRadius: theme.appBorderRadius
+})), AttentionBanner = (props) => {
+  let { kind } = props, regionRef = useRef(null), { landmarkProps } = useLandmark(
+    { role: "region", "aria-label": "Review status" },
+    regionRef
+  );
+  if (kind === "pending-update") {
+    let { onAccept } = props;
+    return react_default.createElement(Region, { ref: regionRef, ...landmarkProps }, react_default.createElement(Bar2, { role: "status", "aria-live": "polite" }, react_default.createElement("span", null, "A new review is available."), react_default.createElement(Button, { variant: "solid", padding: "small", onClick: onAccept }, "Update")));
+  }
+  return react_default.createElement(Region, { ref: regionRef, ...landmarkProps }, react_default.createElement(Bar2, { role: "status", "aria-live": "polite" }, react_default.createElement("span", null, "Code changes detected. This review may be stale.", " ", react_default.createElement(
+    PopoverProvider,
+    {
+      ariaLabel: "Prompt to refresh stale review",
+      placement: "bottom",
+      padding: 0,
+      popover: react_default.createElement(PopoverContent, null, react_default.createElement(Message, null, react_default.createElement(Title, null, "Prompt for your agent to refresh this review:"), react_default.createElement(Prompt, null, STALE_REFRESH_PROMPT), react_default.createElement(
+        CopyButton,
+        {
+          appearance: "agentic",
+          padding: "small",
+          ariaLabel: "Copy prompt to refresh this review",
+          ariaLabelOnCopy: "Prompt copied to clipboard",
+          content: STALE_REFRESH_PROMPT,
+          childrenOnCopy: react_default.createElement(react_default.Fragment, null, react_default.createElement(CheckIcon, null), " Copy prompt")
+        },
+        react_default.createElement(CopyIcon, null),
+        "Copy prompt"
+      )))
+    },
+    react_default.createElement(Link, null, react_default.createElement("strong", null, "Ask your agent to refresh it."))
+  ))));
+};
+
+// src/manager/components/review/components/CollectionGrid.tsx
+init_react();
+
+// src/viewport/constants.ts
+var ADDON_ID = "storybook/viewport", PARAM_KEY = "viewport", PANEL_ID = `${ADDON_ID}/panel`, TOOL_ID = `${ADDON_ID}/tool`, RESPONSIVE_VIEWPORT_VALUE = "100pct-100pct";
+
+// src/shared/constants/iframe-resize.ts
+var IFRAME_RESIZE_CONTEXT = "iframe.resize", IFRAME_RESIZE_REQUEST_CONTEXT = "iframe.resize.request", isPositiveFinite = (value) => typeof value == "number" && Number.isFinite(value) && value > 0, parseViewport = (value) => {
+  if (!value || typeof value != "object")
+    return;
+  let viewport = value;
+  if (typeof viewport.name != "string" || typeof viewport.value != "string")
+    return;
+  let parsed = {
+    name: viewport.name,
+    value: viewport.value
+  };
+  if (viewport.width !== void 0) {
+    if (!isPositiveFinite(viewport.width))
+      return;
+    parsed.width = viewport.width;
+  }
+  if (viewport.height !== void 0) {
+    if (!isPositiveFinite(viewport.height))
+      return;
+    parsed.height = viewport.height;
+  }
+  return parsed;
+}, parseIframeResizeMessage = (data) => {
+  try {
+    let parsed = typeof data == "string" ? JSON.parse(data) : data;
+    if (parsed?.context !== IFRAME_RESIZE_CONTEXT || !isPositiveFinite(parsed.width) || !isPositiveFinite(parsed.height))
+      return null;
+    let viewport = parseViewport(parsed.viewport);
+    return parsed.viewport !== void 0 && viewport === void 0 ? null : {
+      width: parsed.width,
+      height: parsed.height,
+      ...viewport ? { viewport } : {}
+    };
+  } catch {
+    return null;
+  }
+}, hasFixedViewportDimensions = (viewport) => !!viewport && viewport.value !== RESPONSIVE_VIEWPORT_VALUE && typeof viewport.width == "number" && viewport.width > 0 && typeof viewport.height == "number" && viewport.height > 0, iframeResizeViewportsEqual = (left, right) => left === right ? !0 : !left || !right ? !left && !right : left.name === right.name && left.value === right.value && left.width === right.width && left.height === right.height, iframeResizeDimensionsEqual = (left, right) => !left || left.width !== right.width || left.height !== right.height ? !1 : iframeResizeViewportsEqual(left.viewport, right.viewport);
+
+// src/manager/components/review/review-types.ts
+var fallbackStoryInfo = (storyId) => {
+  let separator = storyId.indexOf("--");
+  return separator === -1 ? { title: storyId, name: "Story" } : {
+    title: storyId.slice(0, separator),
+    name: storyId.slice(separator + 2) || "Story"
+  };
+};
+
+// src/manager/components/review/components/usePreviewThumbnail.ts
+init_react();
+
+// src/manager/components/review/components/previewScheduler.ts
+var activePreviewLoads = 0, previewQueue = [];
+function startTask(task) {
+  task.state = "started", activePreviewLoads += 1, task.deadline = setTimeout(() => releaseTask(task), 1500), task.start();
+}
+function startQueuedPreviews() {
+  for (; activePreviewLoads < 3 && previewQueue.length > 0; )
+    startTask(previewQueue.shift());
+}
+function releaseTask(task) {
+  task.state !== "released" && (task.state === "started" ? (clearTimeout(task.deadline), activePreviewLoads -= 1) : previewQueue.splice(previewQueue.indexOf(task), 1), task.state = "released", startQueuedPreviews());
+}
+function enqueuePreview(start) {
+  let task = { start, state: "queued" };
+  return previewQueue.push(task), startQueuedPreviews(), {
+    forceStart: () => {
+      task.state === "queued" && (previewQueue.splice(previewQueue.indexOf(task), 1), startTask(task));
+    },
+    release: () => releaseTask(task)
+  };
+}
+
+// src/manager/components/review/components/previewThumbnailState.ts
+var initialThumbnailState = {
+  phase: "idle",
+  src: void 0,
+  dimensions: null,
+  bootId: 0
+}, isThumbnailLoading = ({ phase }) => phase === "queued" || phase === "booting" || phase === "measured", thumbnailReducer = (state, event) => {
+  switch (event.type) {
+    case "enqueued":
+      return { ...state, phase: "queued", dimensions: null };
+    case "started":
+      return state.phase !== "queued" ? state : { ...state, phase: "booting", src: event.src, bootId: state.bootId + 1 };
+    case "resized": {
+      if (state.phase === "booting" || state.phase === "measured") {
+        let unchanged = iframeResizeDimensionsEqual(state.dimensions, event.dimensions);
+        return state.phase === "measured" && unchanged ? state : {
+          ...state,
+          phase: "measured",
+          dimensions: unchanged ? state.dimensions : event.dimensions
+        };
+      }
+      return state.phase === "settled" ? iframeResizeDimensionsEqual(state.dimensions, event.dimensions) ? state : { ...state, dimensions: event.dimensions } : state;
     }
-  })
-), Drag = styled.div(
-  ({ theme }) => ({
+    case "settled":
+      return state.phase === "booting" || state.phase === "measured" ? { ...state, phase: "settled" } : state;
+    case "evicted":
+      return state.phase === "idle" ? state : { ...initialThumbnailState, bootId: state.bootId };
+  }
+};
+
+// src/manager/components/review/components/usePreviewThumbnail.ts
+var PREVIEW_SCALE_SETTLE_FALLBACK_MS = 1500 * 3, PREVIEW_MOUNT_ROOT_MARGIN = "50% 0px", PREVIEW_EVICT_ROOT_MARGIN = "150% 0px", getScrollRoot = (element) => {
+  let radixViewport = element.closest("[data-radix-scroll-area-viewport]");
+  if (radixViewport)
+    return radixViewport;
+  let current = element.parentElement;
+  for (; current; ) {
+    let { overflowY } = window.getComputedStyle(current);
+    if (overflowY === "auto" || overflowY === "scroll")
+      return current;
+    current = current.parentElement;
+  }
+  return null;
+}, usePreviewThumbnail = ({
+  storyId,
+  getPreviewHref,
+  summaryHidden = !1
+}) => {
+  let cellRef = useRef(null), iframeRef = useRef(null), [isInView, setIsInView] = useState(!1), [state, dispatch] = useReducer(thumbnailReducer, initialThumbnailState), handleRef = useRef(null), settleRafRef = useRef({ raf1: 0, raf2: 0 }), { src, bootId } = state;
+  useEffect(() => {
+    let host = cellRef.current;
+    if (!host || summaryHidden)
+      return;
+    let scrollRoot = getScrollRoot(host), root2 = scrollRoot && scrollRoot.clientHeight > 0 ? scrollRoot : null, mountObserver = new IntersectionObserver(
+      ([entry]) => {
+        entry.isIntersecting && setIsInView(!0);
+      },
+      { root: root2, rootMargin: PREVIEW_MOUNT_ROOT_MARGIN }
+    ), evictObserver = new IntersectionObserver(
+      ([entry]) => {
+        entry.isIntersecting || setIsInView(!1);
+      },
+      { root: root2, rootMargin: PREVIEW_EVICT_ROOT_MARGIN }
+    );
+    return mountObserver.observe(host), evictObserver.observe(host), () => {
+      mountObserver.disconnect(), evictObserver.disconnect();
+    };
+  }, [summaryHidden]), useEffect(() => {
+    isInView || dispatch({ type: "evicted" });
+  }, [isInView]), useEffect(() => {
+    if (!isInView)
+      return;
+    let previewHref = getPreviewHref(storyId);
+    dispatch({ type: "enqueued" });
+    let handle = enqueuePreview(() => {
+      dispatch({ type: "started", src: previewHref });
+    });
+    return handleRef.current = handle, () => {
+      handle.release(), handleRef.current = null;
+    };
+  }, [isInView, storyId, getPreviewHref]), useEffect(() => {
+    if (!src)
+      return;
+    let timer = setTimeout(() => dispatch({ type: "settled" }), PREVIEW_SCALE_SETTLE_FALLBACK_MS);
+    return () => clearTimeout(timer);
+  }, [bootId, src]);
+  let handleResize = useCallback((dimensions) => {
+    dispatch({ type: "resized", dimensions }), cancelAnimationFrame(settleRafRef.current.raf1), cancelAnimationFrame(settleRafRef.current.raf2), settleRafRef.current.raf1 = requestAnimationFrame(() => {
+      settleRafRef.current.raf2 = requestAnimationFrame(() => {
+        dispatch({ type: "settled" });
+      });
+    });
+  }, []);
+  useEffect(() => {
+    let rafs = settleRafRef.current;
+    return () => {
+      cancelAnimationFrame(rafs.raf1), cancelAnimationFrame(rafs.raf2);
+    };
+  }, []), useLayoutEffect(() => {
+    if (!src)
+      return;
+    let iframe = iframeRef.current;
+    if (!iframe)
+      return;
+    let onMessage = (event) => {
+      if (event.source === null || event.source !== iframe.contentWindow)
+        return;
+      let dimensions = parseIframeResizeMessage(event.data);
+      dimensions && handleResize(dimensions);
+    };
+    window.addEventListener("message", onMessage);
+    let requestRemeasure = () => {
+      try {
+        iframe.contentWindow?.postMessage(
+          JSON.stringify({ context: IFRAME_RESIZE_REQUEST_CONTEXT }),
+          "*"
+        );
+      } catch {
+      }
+    };
+    return requestRemeasure(), iframe.addEventListener("load", requestRemeasure), () => {
+      window.removeEventListener("message", onMessage), iframe.removeEventListener("load", requestRemeasure);
+    };
+  }, [src, handleResize]);
+  let finishCurrent = useCallback(() => {
+    handleRef.current?.release();
+  }, []), forceStartCurrent = useCallback(() => {
+    handleRef.current?.forceStart();
+  }, []);
+  return {
+    cellRef,
+    iframeRef,
+    src,
+    isPreviewLoading: isThumbnailLoading(state),
+    rememberedDimensions: state.dimensions,
+    forceStartCurrent,
+    finishCurrent
+  };
+};
+
+// src/manager/components/review/components/CollectionGrid.tsx
+var band = (cols) => {
+  let cap = cols * 2;
+  return {
+    gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`,
+    [`&:not([data-show-all]):has(> [data-cell]:nth-child(${cap + 1})) > [data-cell]:nth-child(n + ${cap})`]: {
+      display: "none"
+    },
+    [`&:not([data-show-all]):has(> [data-cell]:nth-child(${cap + 1})) > [data-review-all]`]: {
+      display: "flex"
+    }
+  };
+}, GridContainer = styled.div({
+  containerType: "inline-size",
+  containerName: "review-grid"
+}), Grid = styled.div({
+  display: "grid",
+  alignItems: "stretch",
+  gap: 12,
+  padding: 12,
+  gridTemplateColumns: "minmax(0, 1fr)",
+  "@container review-grid (max-width: 629.98px)": band(1),
+  "@container review-grid (min-width: 630px) and (max-width: 844.98px)": band(2),
+  "@container review-grid (min-width: 845px) and (max-width: 1259.98px)": band(3),
+  "@container review-grid (min-width: 1260px)": band(4)
+}), Cell = styled.div({
+  display: "flex",
+  flexDirection: "column",
+  minWidth: 0,
+  overflow: "hidden"
+}), FrameShell = styled.div({
+  width: "100%",
+  minWidth: 0,
+  maxWidth: "100%",
+  aspectRatio: "3 / 2",
+  position: "relative"
+}), DEFAULT_CONTENT_WIDTH = 300, THUMBNAIL_BOOTSTRAP_SCALE = 0.5, getPreviewFrameLayout = (dimensions) => dimensions ? hasFixedViewportDimensions(dimensions.viewport) ? {
+  style: {
+    "--vp-w": dimensions.viewport.width,
+    "--vp-h": dimensions.viewport.height
+  },
+  viewportFill: !0
+} : { style: { "--content-w": dimensions.width }, viewportFill: !1 } : {
+  style: { "--scale": THUMBNAIL_BOOTSTRAP_SCALE },
+  viewportFill: !1
+}, Frame = styled.a(({ theme }) => ({
+  position: "absolute",
+  inset: 0,
+  display: "block",
+  boxSizing: "border-box",
+  containerType: "inline-size",
+  containerName: "preview-frame",
+  "--content-w": DEFAULT_CONTENT_WIDTH,
+  "--fit-w": "calc(100cqw / (var(--content-w) * 1px))",
+  "--fit": "min(1, var(--fit-w))",
+  "--scale": "max(0.5, min(1, round(down, var(--fit), 0.25)))",
+  "--vp-scale": "calc(100cqw / (var(--vp-w) * 1px))",
+  borderRadius: 6,
+  overflow: "hidden",
+  background: theme.background.app,
+  border: `1px solid ${theme.appBorderColor}`,
+  transition: "border-color 120ms ease",
+  textDecoration: "none",
+  outline: "none",
+  "& [data-preview-scale]": {
     position: "absolute",
-    opacity: 0,
-    transition: "opacity 0.2s ease-in-out",
-    zIndex: 100,
-    "&:after": {
-      content: '""',
-      display: "block",
-      backgroundColor: theme.color.secondary
-    },
-    "&:hover": {
-      opacity: 1
-    }
-  }),
-  ({ orientation = "vertical", overlapping = !0, position = "left" }) => orientation === "vertical" ? {
-    width: overlapping ? position === "left" ? 10 : 13 : 7,
-    height: "100%",
     top: 0,
-    right: position === "left" ? -7 : void 0,
-    left: position === "right" ? -7 : void 0,
-    "&:after": {
-      width: 1,
-      height: "100%",
-      marginLeft: position === "left" ? 3 : 6
-    },
-    "&:hover": {
-      cursor: "col-resize"
-    }
-  } : {
-    width: "100%",
-    height: overlapping ? 13 : 7,
-    top: -7,
     left: 0,
-    "&:after": {
-      width: "100%",
-      height: 1,
-      marginTop: 6
+    transformOrigin: "top left"
+  },
+  "&[data-viewport-fill] [data-preview-scale]": {
+    width: "calc(var(--vp-w) * 1px)",
+    height: "calc(var(--vp-h) * 1px)",
+    transform: "scale(var(--vp-scale))"
+  },
+  "&:not([data-viewport-fill]) [data-preview-scale]": {
+    width: "calc(100% / var(--scale))",
+    height: "calc(100% / var(--scale))",
+    transform: "scale(var(--scale))"
+  },
+  "&[href]:hover": {
+    borderColor: theme.color.secondary
+  },
+  "&:focus-visible": {
+    outline: `${theme.barSelectedColor} solid 2px`,
+    outlineOffset: -2
+  }
+})), Preview = styled.iframe(({ theme }) => ({
+  display: "block",
+  width: "100%",
+  height: "100%",
+  background: theme.background.preview,
+  border: 0,
+  pointerEvents: "none"
+})), PreviewLoading = styled.div(({ theme }) => ({
+  position: "absolute",
+  inset: 0,
+  zIndex: 1,
+  display: "grid",
+  placeItems: "center",
+  background: theme.background.app,
+  pointerEvents: "none"
+})), ActionBar2 = styled.div({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  gap: 8,
+  minHeight: 36,
+  marginTop: "auto"
+}), Label = styled.div({
+  display: "flex",
+  alignItems: "center",
+  gap: 4,
+  flex: 1,
+  minWidth: 0,
+  marginLeft: 10,
+  overflow: "hidden"
+}), LabelComponent = styled.span({
+  fontWeight: 700,
+  whiteSpace: "nowrap",
+  flexShrink: 0,
+  maxWidth: "60%",
+  overflow: "hidden",
+  textOverflow: "ellipsis"
+}), LabelSeparator = styled.span(({ theme }) => ({
+  color: theme.textMutedColor,
+  flexShrink: 0
+})), LabelStory = styled.span({
+  whiteSpace: "nowrap",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  marginRight: 4
+}), NewBadge = styled(Badge)({
+  flexShrink: 0
+}), ReviewAllCell = styled(Cell)({
+  display: "none"
+}), ReviewAllShell = styled.div({
+  width: "100%",
+  minWidth: 0,
+  maxWidth: "100%",
+  aspectRatio: "3 / 2",
+  minHeight: 50
+}), ReviewAllFrame = styled.div(({ theme }) => ({
+  display: "grid",
+  placeItems: "center",
+  width: "100%",
+  height: "100%",
+  boxSizing: "border-box",
+  borderRadius: 6,
+  background: theme.background.app,
+  border: `1px dashed ${theme.appBorderColor}`
+})), deriveStoryInfo = (info) => ({
+  component: info.title.split("/").pop() ?? info.title,
+  name: info.name
+}), StoryPreviewCell = ({ storyId, href, info, getPreviewHref, summaryHidden = !1 }) => {
+  let {
+    cellRef,
+    iframeRef,
+    src,
+    isPreviewLoading,
+    rememberedDimensions,
+    forceStartCurrent,
+    finishCurrent
+  } = usePreviewThumbnail({ storyId, getPreviewHref, summaryHidden }), { component, name } = deriveStoryInfo(info), readableTitle = `${component} \u2013 ${name}`, { style: frameStyle, viewportFill } = getPreviewFrameLayout(rememberedDimensions), preview = src ? react_default.createElement("div", { "data-preview-scale": !0 }, react_default.createElement(
+    Preview,
+    {
+      ref: iframeRef,
+      title: readableTitle,
+      src,
+      "data-content-width": rememberedDimensions?.width,
+      "data-content-height": rememberedDimensions?.height,
+      tabIndex: -1,
+      scrolling: "no",
+      onLoad: finishCurrent,
+      onError: finishCurrent
+    }
+  )) : null;
+  return react_default.createElement(Cell, { ref: cellRef, role: "listitem", "data-cell": !0, "data-testid": "review-collection-grid-cell" }, react_default.createElement(FrameShell, null, react_default.createElement(
+    Frame,
+    {
+      as: href ? "a" : "div",
+      ...href ? { href } : {},
+      "data-testid": "review-collection-grid-frame",
+      "data-viewport-fill": viewportFill || void 0,
+      style: frameStyle,
+      "aria-label": href ? `Review story ${readableTitle}` : void 0,
+      onMouseEnter: forceStartCurrent,
+      onFocus: forceStartCurrent
     },
-    "&:hover": {
-      cursor: "row-resize"
+    isPreviewLoading ? react_default.createElement(PreviewLoading, { "data-testid": "review-preview-loading" }, react_default.createElement(Loader, null)) : null,
+    preview
+  )), react_default.createElement(ActionBar2, null, react_default.createElement(Label, null, react_default.createElement(LabelComponent, null, component), react_default.createElement(LabelSeparator, null, "/"), react_default.createElement(LabelStory, null, name), info.changeStatus === "new" || info.isNewlyAdded ? react_default.createElement(NewBadge, { status: "positive", compact: !0 }, "New") : null)));
+}, CollectionGrid = ({
+  storyIds,
+  getStoryHref: getStoryHref2,
+  getStoryPreviewHref,
+  showAll = !1,
+  onShowAll,
+  storyInfo,
+  summaryHidden = !1
+}) => react_default.createElement(GridContainer, null, react_default.createElement(Grid, { role: "list", "data-show-all": showAll || void 0, "data-testid": "review-collection-grid" }, storyIds.map((storyId, storyIndex) => {
+  let info = storyInfo[storyId] ?? fallbackStoryInfo(storyId);
+  return react_default.createElement(
+    StoryPreviewCell,
+    {
+      key: storyId,
+      storyId,
+      href: getStoryHref2?.(storyId, storyIndex),
+      info,
+      getPreviewHref: getStoryPreviewHref,
+      summaryHidden
+    }
+  );
+}), react_default.createElement(ReviewAllCell, { role: "presentation", "data-review-all": !0 }, react_default.createElement(ReviewAllShell, null, react_default.createElement(ReviewAllFrame, null, react_default.createElement(Button, { size: "medium", onClick: () => onShowAll?.() }, "Review all ", storyIds.length))), react_default.createElement(ActionBar2, { "aria-hidden": "true" }))));
+
+// src/manager/components/review/components/Markdown.tsx
+init_react();
+var createInlinePattern = () => /(\*\*([\s\S]+?)\*\*|\*([\s\S]+?)\*|_([\s\S]+?)_|`([\s\S]+?)`)/g, parseInline = (text) => {
+  let nodes = [], pattern = createInlinePattern(), lastIndex = 0, key = 0, match;
+  for (; (match = pattern.exec(text)) !== null; ) {
+    match.index > lastIndex && nodes.push(text.slice(lastIndex, match.index));
+    let [token, , bold, italicStar, italicUnderscore, code] = match;
+    bold !== void 0 ? nodes.push(react_default.createElement("strong", { key: key++ }, parseInline(bold))) : italicStar !== void 0 ? nodes.push(react_default.createElement("em", { key: key++ }, parseInline(italicStar))) : italicUnderscore !== void 0 ? nodes.push(react_default.createElement("em", { key: key++ }, parseInline(italicUnderscore))) : code !== void 0 && nodes.push(react_default.createElement("code", { key: key++ }, code)), lastIndex = match.index + token.length;
+  }
+  return lastIndex < text.length && nodes.push(text.slice(lastIndex)), nodes;
+}, Markdown = ({ children }) => {
+  let paragraphs = children.split(/\n{2,}/).filter((paragraph) => paragraph.trim() !== "");
+  return react_default.createElement(react_default.Fragment, null, paragraphs.map((paragraph, index) => react_default.createElement("p", { key: index }, parseInline(paragraph))));
+};
+
+// src/manager/components/review/components/ReviewHeader.tsx
+init_react();
+var Root = styled.header(({ theme, $variant }) => ({
+  containerType: "inline-size",
+  containerName: "review-header",
+  display: "flex",
+  flexDirection: "column",
+  flexShrink: 0,
+  width: "100%",
+  background: $variant === "toolbar" ? theme.barBg : theme.background.content,
+  color: theme.color.defaultText,
+  ...$variant === "page" ? { borderBottom: `1px solid ${theme.appBorderColor}` } : {}
+})), TopRow = styled.div(({ $variant }) => ({
+  display: "flex",
+  flexWrap: "wrap",
+  flexDirection: "row",
+  alignItems: "center",
+  gap: 8,
+  padding: $variant === "toolbar" ? "16px 16px 8px 16px" : "16px",
+  minHeight: 40
+})), Main = styled.div({
+  display: "flex",
+  flexDirection: "row",
+  alignItems: "center",
+  gap: 8,
+  flex: "1 1 auto",
+  minWidth: 0
+}), Leading = styled.div({
+  display: "flex",
+  alignItems: "center",
+  alignSelf: "flex-start",
+  flexShrink: 0
+}), TextBlock = styled.div({
+  display: "flex",
+  flexDirection: "column",
+  flexGrow: 1,
+  minWidth: 0
+}), Title2 = styled.h1(({ theme }) => ({
+  margin: "2px 0",
+  minWidth: 0,
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  whiteSpace: "nowrap",
+  fontSize: theme.typography.size.m1,
+  fontWeight: theme.typography.weight.bold,
+  lineHeight: "24px"
+})), Subtitle = styled.div(({ theme }) => ({
+  display: "flex",
+  flexWrap: "wrap",
+  alignItems: "center",
+  gap: 8,
+  color: theme.textMutedColor,
+  fontSize: theme.typography.size.s2,
+  lineHeight: "20px"
+})), Actions = styled.div({
+  display: "flex",
+  flexWrap: "wrap",
+  alignItems: "center",
+  justifyContent: "flex-end",
+  gap: 6,
+  flex: "0 1 auto",
+  marginLeft: "auto"
+}), SecondRow = styled.div({
+  display: "flex",
+  alignItems: "center",
+  gap: 8,
+  padding: "0 16px 2px 16px",
+  minHeight: 39
+}), ReviewHeader = ({
+  leading,
+  title: title2,
+  subtitle,
+  actions,
+  secondRow,
+  variant = "page"
+}) => {
+  let titleId = $bdb11010cef70236$export$f680877a34711e37(), regionRef = useRef(null), { landmarkProps } = useLandmark({ "aria-labelledby": titleId, role: "banner" }, regionRef);
+  return react_default.createElement(Root, { $variant: variant, ref: regionRef, ...landmarkProps }, react_default.createElement(TopRow, { $variant: variant }, react_default.createElement(Main, null, leading ? react_default.createElement(Leading, null, leading) : null, react_default.createElement(TextBlock, null, react_default.createElement(Title2, { id: titleId }, title2), subtitle ? react_default.createElement(Subtitle, null, subtitle) : null)), actions ? react_default.createElement(Actions, null, actions) : null), secondRow ? react_default.createElement(SecondRow, null, secondRow) : null);
+};
+
+// src/manager/components/review/review-navigation.ts
+var prettifyComponentId = (componentId) => componentId.split(/[-/]/).filter(Boolean).map((part) => part.charAt(0).toUpperCase() + part.slice(1)).join(" "), buildReviewChangesSummaryHref = () => `?path=${REVIEW_CHANGES_URL}`, STORYBOOK_ROOT_HREF = "/", buildSummaryBackHref = (returnSearch) => returnSearch || STORYBOOK_ROOT_HREF, REVIEW_SUMMARY_BACK_ATTR = "data-review-summary-back", buildReviewStoryTarget = (entry) => `/story/${entry.storyId}&${REVIEW_COLLECTION_QUERY_PARAM}=${entry.collectionIndex}`, buildReviewStoryHref = (entry) => `?path=${buildReviewStoryTarget(entry)}`, parseReviewStoryHref = (href) => {
+  if (!href.startsWith("?path=/story/"))
+    return null;
+  let query = href.startsWith("?") ? href.slice(1) : href, params = new URLSearchParams(query), path = params.get("path");
+  if (!path?.startsWith("/story/"))
+    return null;
+  let storyId = path.slice(7), collectionIndex = parseCollectionIndex(
+    params.get(REVIEW_COLLECTION_QUERY_PARAM) ?? void 0
+  );
+  return !storyId || collectionIndex === void 0 ? null : { storyId, collectionIndex };
+}, isReviewReturnSearch = (search) => {
+  let normalized = search.startsWith("?") ? search.slice(1) : search, params = new URLSearchParams(normalized), path = params.get("path") ?? "";
+  return isReviewSummaryPath(path) || path.startsWith(REVIEW_CHANGES_URL) ? !0 : path.startsWith("/story/") && params.has(REVIEW_COLLECTION_QUERY_PARAM);
+}, parseStoryIdFromPath = (path) => path.startsWith("/story/") && path.slice(7) || null, parseCollectionIndex = (value) => {
+  if (value === void 0 || !/^\d+$/.test(value))
+    return;
+  let parsed = Number(value);
+  return Number.isInteger(parsed) ? parsed : void 0;
+}, resolveActiveNavEntry = (entries, storyId, collectionIndex) => {
+  if (entries.length === 0)
+    return null;
+  if (collectionIndex !== void 0) {
+    let exact = entries.find(
+      (entry) => entry.storyId === storyId && entry.collectionIndex === collectionIndex
+    );
+    if (exact)
+      return exact;
+  }
+  return entries.find((entry) => entry.storyId === storyId) ?? null;
+}, resolveNavIndex = (entries, active) => entries.findIndex(
+  (entry) => entry.storyId === active.storyId && entry.collectionIndex === active.collectionIndex
+);
+
+// src/manager/components/review/screens/SummaryScreen.tsx
+var MarkdownWrapper = styled(DocumentWrapper)(({ theme }) => ({
+  color: theme.color.defaultText,
+  p: {
+    margin: 0
+  },
+  "p + p": {
+    marginTop: 10
+  },
+  code: {
+    color: "inherit",
+    verticalAlign: "text-bottom",
+    fontSize: "0.85em",
+    margin: 0,
+    padding: "0 4px",
+    background: "transparent",
+    border: "none",
+    boxShadow: `inset 0 0 0 1px ${theme.appBorderColor}`,
+    borderRadius: theme.appBorderRadius
+  }
+})), Page = styled.div(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+  height: "100dvh",
+  minHeight: 0,
+  overflow: "hidden",
+  background: theme.background.app,
+  color: theme.color.defaultText,
+  fontFamily: theme.typography.fonts.base,
+  fontSize: theme.typography.size.s2
+})), Empty = styled.div(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+  gap: 16,
+  alignItems: "center",
+  justifyContent: "center",
+  height: "100dvh",
+  color: theme.color.defaultText,
+  "& > div": {
+    display: "flex",
+    alignItems: "center",
+    gap: 8
+  }
+})), ListScroll = styled.div({
+  flex: 1,
+  minHeight: 0
+}), Main2 = styled.main({
+  display: "flex",
+  flexDirection: "column",
+  gap: 12,
+  padding: 12,
+  // Cards must keep their intrinsic height so the list scrolls; without this
+  // the default flex-shrink collapses them to fit the viewport and Card's
+  // overflow:hidden clips the content at the bottom.
+  "& > *": {
+    flexShrink: 0
+  }
+}), SummaryCard = styled(Card)({
+  display: "flex",
+  alignItems: "flex-start",
+  padding: "9px 12px",
+  gap: 10,
+  svg: {
+    flexShrink: 0,
+    marginTop: 4
+  }
+}), SummaryLandmark = ({ children }) => {
+  let asideRef = useRef(null), { landmarkProps } = useLandmark(
+    { role: "complementary", "aria-label": "Summary" },
+    asideRef
+  );
+  return react_default.createElement("aside", { ref: asideRef, ...landmarkProps }, children);
+}, SummaryContent = styled(MarkdownWrapper)({
+  flex: 1,
+  minWidth: 0,
+  // Keep the "Summary:" heading and the first description paragraph on the same
+  // line, matching the previous inline "**Summary:** …" rendering.
+  "& > p:first-of-type": {
+    display: "inline"
+  }
+}), SummaryHeading = styled.h2(({ theme }) => ({
+  // Double the ampersand to outrank the DocumentWrapper's `.wrapper h2` rule
+  // (specificity 0,1,1), which would otherwise enlarge this and add a bottom
+  // border, so the label stays identical to the inline bold it replaces.
+  "&&": {
+    display: "inline",
+    margin: 0,
+    padding: 0,
+    fontSize: "inherit",
+    fontWeight: theme.typography.weight.bold,
+    lineHeight: "inherit",
+    color: "inherit",
+    border: "none"
+  }
+})), CardHead = styled.div({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  gap: 8,
+  padding: "6px 10px 6px 12px",
+  minHeight: 40,
+  cursor: "pointer"
+}), CardTitle = styled.h2(({ theme }) => ({
+  minWidth: 0,
+  margin: 0,
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  whiteSpace: "nowrap",
+  fontSize: "inherit",
+  fontWeight: theme.typography.weight.bold,
+  lineHeight: "20px",
+  color: theme.color.defaultText
+})), CardControls = styled.div({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "flex-end",
+  gap: 6,
+  flexShrink: 0
+}), CardCount = styled.span(({ theme }) => ({
+  minWidth: 28,
+  fontFamily: theme.typography.fonts.mono,
+  fontSize: theme.typography.size.s2 - 1,
+  lineHeight: "20px",
+  textAlign: "center",
+  color: theme.textMutedColor
+})), ToggleChevronIcon = styled(ChevronSmallDownIcon)({
+  transition: "transform 160ms ease"
+}), CardRationale = styled(MarkdownWrapper)(({ theme }) => ({
+  color: theme.textMutedColor,
+  margin: "0 12px"
+})), Footer = styled.div(({ theme }) => ({
+  color: theme.textMutedColor,
+  padding: "10px 10px 30px",
+  fontSize: theme.typography.size.s2,
+  textAlign: "center",
+  textWrap: "balance"
+})), CollectionLandmark = ({
+  titleId,
+  children
+}) => {
+  let regionRef = useRef(null), { landmarkProps } = useLandmark({ role: "region", "aria-labelledby": titleId }, regionRef);
+  return react_default.createElement("section", { ref: regionRef, ...landmarkProps }, children);
+}, FooterLandmark = ({ children }) => {
+  let regionRef = useRef(null), { landmarkProps } = useLandmark(
+    { role: "contentinfo", "aria-label": "About this review" },
+    regionRef
+  );
+  return react_default.createElement(Footer, { as: "section", ref: regionRef, ...landmarkProps }, children);
+}, pluralize = (count, singular, plural = `${singular}s`) => `${count} ${count === 1 ? singular : plural}`, formatCreatedAgo = (createdAt, nowMs) => {
+  let elapsedMs = Math.max(0, nowMs - createdAt);
+  if (elapsedMs < 6e4)
+    return "just now";
+  let elapsedMinutes = Math.floor(elapsedMs / 6e4);
+  return elapsedMinutes < 60 ? `${elapsedMinutes}m ago` : `${Math.floor(elapsedMinutes / 60)}h ago`;
+}, SummaryScreen = ({
+  state,
+  storyInfo = {},
+  getStoryPreviewHref,
+  banner = null,
+  summaryHidden = !1,
+  onDismiss,
+  returnSearch = null
+}) => {
+  let [expandedCollections, setExpandedCollections] = useState(() => /* @__PURE__ */ new Set()), [showAllCollections, setShowAllCollections] = useState(() => /* @__PURE__ */ new Set()), [showNewOnly, setShowNewOnly] = useState(!1), [nowMs, setNowMs] = useState(() => Date.now());
+  useEffect(() => {
+    let intervalId = window.setInterval(() => {
+      setNowMs(Date.now());
+    }, 1e4);
+    return () => window.clearInterval(intervalId);
+  }, []), useLayoutEffect(() => {
+    if (!state) {
+      setExpandedCollections(/* @__PURE__ */ new Set()), setShowAllCollections(/* @__PURE__ */ new Set());
+      return;
+    }
+    setExpandedCollections(new Set(state.collections.map((_2, index) => index))), setShowAllCollections(/* @__PURE__ */ new Set());
+  }, [state?.createdAt]);
+  let newStoryCount = useMemo(
+    () => new Set(
+      (state?.collections ?? []).flatMap((c2) => c2.storyIds).filter((id) => storyInfo[id]?.isNewlyAdded)
+    ).size,
+    [state, storyInfo]
+  ), visibleCollections = useMemo(
+    () => (state?.collections ?? []).map((collection, index) => {
+      let storyIds = showNewOnly ? collection.storyIds.filter((id) => storyInfo[id]?.isNewlyAdded) : collection.storyIds;
+      return { collection, index, storyIds };
+    }).filter((entry) => entry.storyIds.length > 0),
+    [state?.collections, showNewOnly, storyInfo]
+  );
+  if (!state)
+    return react_default.createElement(Empty, null, react_default.createElement("span", null, "Waiting for the agent to display a review\u2026"), react_default.createElement("div", null, react_default.createElement(
+      CopyButton,
+      {
+        appearance: "agentic",
+        padding: "small",
+        ariaLabel: "Copy prompt to refresh this review",
+        ariaLabelOnCopy: "Prompt copied to clipboard",
+        content: "Generate a Storybook review including my latest changes using the review-create tool.",
+        childrenOnCopy: react_default.createElement(react_default.Fragment, null, react_default.createElement(CheckIcon, null), " Copy prompt")
+      },
+      react_default.createElement(CopyIcon, null),
+      "Copy prompt"
+    ), react_default.createElement(Button, { padding: "small", onClick: onDismiss, ariaLabel: "Close review screen" }, react_default.createElement(CloseIcon, null), "Close")));
+  let storyCount = new Set(state.collections.flatMap((collection) => collection.storyIds)).size, createdAgo = state.createdAt ? formatCreatedAgo(state.createdAt, nowMs) : null, toggleCollection = (index) => {
+    setExpandedCollections((previous) => {
+      let next = new Set(previous);
+      return next.has(index) ? next.delete(index) : next.add(index), next;
+    });
+  }, markCollectionShowAll = (index) => {
+    setShowAllCollections(
+      (previous) => previous.has(index) ? previous : new Set(previous).add(index)
+    );
+  };
+  return react_default.createElement(Page, null, banner && react_default.createElement(AttentionBanner, { ...banner }), react_default.createElement(
+    ReviewHeader,
+    {
+      leading: react_default.createElement(Button, { variant: "ghost", size: "small", padding: "small", ariaLabel: "Exit review", asChild: !0 }, react_default.createElement("a", { href: buildSummaryBackHref(returnSearch), [REVIEW_SUMMARY_BACK_ATTR]: "" }, react_default.createElement(ChevronSmallLeftIcon, null), react_default.createElement(StorybookIcon, null))),
+      title: state.title,
+      subtitle: react_default.createElement(react_default.Fragment, null, react_default.createElement("span", null, "Showing ", pluralize(storyCount, "story", "stories"), " for quick review"), createdAgo ? react_default.createElement(react_default.Fragment, null, react_default.createElement("span", null, "\u2022"), react_default.createElement("span", null, createdAgo)) : null),
+      actions: newStoryCount > 0 ? react_default.createElement(
+        ToggleButton,
+        {
+          variant: "ghost",
+          size: "small",
+          padding: "small",
+          ariaLabel: !1,
+          tooltip: "Toggle filtering of new stories",
+          pressed: showNewOnly,
+          onClick: () => setShowNewOnly((v2) => !v2)
+        },
+        newStoryCount,
+        " new"
+      ) : null
+    }
+  ), react_default.createElement(ListScroll, null, react_default.createElement(ScrollArea, { vertical: !0 }, react_default.createElement(Main2, null, react_default.createElement(SummaryLandmark, null, react_default.createElement(SummaryCard, { color: "agentic" }, react_default.createElement(WandIcon, null), react_default.createElement(SummaryContent, null, react_default.createElement(SummaryHeading, null, "Summary:"), " ", react_default.createElement(Markdown, null, state.description)))), visibleCollections.length === 0 ? react_default.createElement(Footer, null, showNewOnly ? "No new stories found." : "No collections found.") : visibleCollections.map(({ collection, index, storyIds }) => {
+    let isExpanded = expandedCollections.has(index), titleId = `review-collection-title-${index}`;
+    return react_default.createElement(CollectionLandmark, { key: `${collection.title}-${index}`, titleId }, react_default.createElement(Card, null, react_default.createElement(
+      Collapsible,
+      {
+        collapsed: !isExpanded,
+        summary: react_default.createElement(CardHead, { onClick: () => toggleCollection(index) }, react_default.createElement(CardTitle, { id: titleId }, collection.title), react_default.createElement(CardControls, null, react_default.createElement(
+          CardCount,
+          {
+            "aria-label": pluralize(storyIds.length, "story", "stories")
+          },
+          storyIds.length
+        ), react_default.createElement(
+          IconButton,
+          {
+            variant: "ghost",
+            size: "small",
+            padding: "small",
+            ariaLabel: isExpanded ? `Collapse collection ${collection.title}` : `Expand collection ${collection.title}`,
+            "aria-expanded": isExpanded,
+            onClick: (event) => {
+              event.stopPropagation(), toggleCollection(index);
+            }
+          },
+          react_default.createElement(
+            ToggleChevronIcon,
+            {
+              style: { transform: `rotate(${isExpanded ? -180 : 0}deg)` }
+            }
+          )
+        )))
+      },
+      collection.rationale ? react_default.createElement(CardRationale, null, react_default.createElement(Markdown, null, collection.rationale)) : null,
+      react_default.createElement(
+        CollectionGrid,
+        {
+          storyIds,
+          showAll: showAllCollections.has(index),
+          onShowAll: () => markCollectionShowAll(index),
+          storyInfo,
+          getStoryHref: (storyId) => buildReviewStoryHref({ collectionIndex: index, storyId }),
+          getStoryPreviewHref,
+          summaryHidden
+        }
+      )
+    )));
+  }), react_default.createElement(FooterLandmark, null, "This review shows the ", pluralize(storyCount, "story", "stories"), " most relevant for you to spot-check right now. Because this is AI-curated, results may be inaccurate or incomplete.")))));
+};
+
+// src/manager/components/review/screens/ReviewSummaryHost.tsx
+var SummaryHost = styled.div(({ $visible }) => ({
+  position: "absolute",
+  inset: 0,
+  display: "flex",
+  flexDirection: "column",
+  overflow: "hidden",
+  visibility: $visible ? "visible" : "hidden",
+  pointerEvents: $visible ? "auto" : "none"
+})), ReviewSummaryHost = () => {
+  let api = useStorybookApi(), { review, storyInfo, banner, isInReviewMode, isSummaryVisible, dismiss } = useReviewContext(), getStoryPreviewHref = useCallback(
+    (storyId) => api.getStoryHrefs(storyId, { embed: !0, freeze: !0 }).previewHref,
+    [api]
+  );
+  return !isSummaryVisible && !isInReviewMode ? null : react_default.createElement(
+    SummaryHost,
+    {
+      ref: (node) => {
+        node && (node.inert = !isSummaryVisible);
+      },
+      $visible: isSummaryVisible,
+      "aria-hidden": isSummaryVisible ? void 0 : !0,
+      "data-review-summary": isSummaryVisible ? "visible" : "hidden"
+    },
+    react_default.createElement(
+      SummaryScreen,
+      {
+        state: review,
+        storyInfo,
+        getStoryPreviewHref,
+        banner,
+        summaryHidden: !isSummaryVisible,
+        onDismiss: dismiss,
+        returnSearch: sessionStore.read(PRE_REVIEW_RETURN_KEY)
+      }
+    )
+  );
+};
+
+// src/manager/components/review/useReviewNavigationInterceptor.ts
+init_react();
+var isReviewStoryHref = (href) => href.startsWith("?path=/story/") && href.includes(`${REVIEW_COLLECTION_QUERY_PARAM}=`), isReviewSummaryHref = (href) => href === buildReviewChangesSummaryHref(), useReviewNavigationInterceptor = () => {
+  let { openSummary, openEntry, leaveReview } = useReviewContext();
+  useEffect(() => {
+    let onClick = (event) => {
+      if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)
+        return;
+      let { target } = event, anchor = target instanceof Element ? target.closest("a") : null, href = anchor?.getAttribute("href");
+      if (!href)
+        return;
+      if (anchor?.hasAttribute(REVIEW_SUMMARY_BACK_ATTR)) {
+        event.preventDefault(), leaveReview();
+        return;
+      }
+      if (!isReviewStoryHref(href) && !isReviewSummaryHref(href))
+        return;
+      if (event.preventDefault(), isReviewSummaryHref(href)) {
+        openSummary();
+        return;
+      }
+      let entry = parseReviewStoryHref(href);
+      entry && openEntry(entry);
+    };
+    return document.addEventListener("click", onClick), () => document.removeEventListener("click", onClick);
+  }, [openSummary, openEntry, leaveReview]);
+};
+
+// src/manager/components/review/components/ReviewNotification.tsx
+init_react();
+
+// src/manager/components/review/review-notification.ts
+var isUnseen = (createdAt) => createdAt !== void 0 && sessionStore.read(VISITED_REVIEW_CREATED_AT_KEY) !== String(createdAt), readVisitedCreatedAt = () => {
+  let raw = sessionStore.read(VISITED_REVIEW_CREATED_AT_KEY);
+  if (raw === null)
+    return;
+  let visited = Number(raw);
+  return Number.isFinite(visited) ? visited : void 0;
+}, isSupersededByVisit = (createdAt) => {
+  let visited = readVisitedCreatedAt();
+  return createdAt !== void 0 && visited !== void 0 && visited > createdAt;
+}, readNotifiedCreatedAt = () => {
+  let raw = sessionStore.read(NOTIFIED_REVIEW_CREATED_AT_KEY);
+  if (raw === null)
+    return;
+  let notified = Number(raw);
+  return Number.isFinite(notified) ? notified : void 0;
+}, isOnReviewRoute = (path, collectionIndex) => isReviewSummaryPath(path) || path.startsWith("/story/") && collectionIndex !== void 0, shouldSkipArrivalNotification = (path, collectionIndex, review, displayed, deferred) => isOnReviewRoute(path, collectionIndex) ? deferred?.createdAt !== void 0 && deferred.createdAt === review.createdAt ? !0 : displayed?.createdAt !== void 0 && displayed.createdAt === review.createdAt : !1, pickReviewToNotify = (displayed, deferred) => deferred?.createdAt !== void 0 && isUnseen(deferred.createdAt) ? deferred : displayed?.createdAt !== void 0 && isUnseen(displayed.createdAt) && !isSupersededByVisit(displayed.createdAt) ? displayed : null, shouldAutoAcceptOnRoute = (path, collectionIndex, candidate, displayed, deferred) => {
+  let createdAt = candidate.createdAt;
+  return !(createdAt === void 0 || !isUnseen(createdAt) || displayed?.createdAt !== createdAt || !isOnReviewRoute(path, collectionIndex) || deferred?.createdAt !== void 0 && deferred.createdAt !== displayed.createdAt);
+}, clearReviewNotifications = (api, ...createdAts) => {
+  for (let createdAt of new Set(
+    createdAts.filter((value) => value != null)
+  ))
+    api.clearNotification(reviewAvailableNotificationId(createdAt));
+  api.clearNotification(REVIEW_AVAILABLE_NOTIFICATION_ID);
+}, acceptReviewNotification = (api, createdAt) => {
+  createdAt !== void 0 && (clearReviewNotifications(api, createdAt), sessionStore.write(VISITED_REVIEW_CREATED_AT_KEY, String(createdAt)), sessionStore.write(NOTIFIED_REVIEW_CREATED_AT_KEY, String(createdAt)));
+}, clearReviewNotificationsOnDismiss = (api, displayed, deferred) => {
+  clearReviewNotifications(api, displayed?.createdAt, deferred?.createdAt, readNotifiedCreatedAt()), sessionStore.remove(VISITED_REVIEW_CREATED_AT_KEY), sessionStore.remove(NOTIFIED_REVIEW_CREATED_AT_KEY);
+}, claimNotificationSlot = (api, createdAt, ...extraCreatedAts) => !isUnseen(createdAt) || readNotifiedCreatedAt() === createdAt ? !1 : (clearReviewNotifications(api, readNotifiedCreatedAt(), ...extraCreatedAts), sessionStore.write(NOTIFIED_REVIEW_CREATED_AT_KEY, String(createdAt)), !0), readCollectionIndex = (queryParams) => parseCollectionIndex(queryParams?.[REVIEW_COLLECTION_QUERY_PARAM]);
+
+// src/manager/components/review/components/ReviewNotification.tsx
+var ReviewNotification = () => {
+  let api = useStorybookApi(), { path, customQueryParams } = useStorybookState(), { review: displayed, pendingReview: deferred, banner, openSummary } = useReviewContext(), collectionIndex = readCollectionIndex(customQueryParams), deferredRef = useRef(deferred);
+  deferredRef.current = deferred;
+  let bannerRef = useRef(banner);
+  bannerRef.current = banner;
+  let handleNotificationClick = useCallback(
+    (createdAt) => {
+      let pendingReview = deferredRef.current, currentBanner = bannerRef.current;
+      if (pendingReview?.createdAt === createdAt && currentBanner?.kind === "pending-update") {
+        currentBanner.onAccept();
+        return;
+      }
+      acceptReviewNotification(api, createdAt), openSummary();
+    },
+    [api, openSummary]
+  );
+  return useLayoutEffect(() => {
+    let review = pickReviewToNotify(displayed, deferred);
+    if (!review)
+      return;
+    if (shouldAutoAcceptOnRoute(path, collectionIndex, review, displayed, deferred)) {
+      acceptReviewNotification(api, review.createdAt);
+      return;
+    }
+    if (shouldSkipArrivalNotification(path, collectionIndex, review, displayed, deferred))
+      return;
+    let createdAt = review.createdAt;
+    createdAt === void 0 || !claimNotificationSlot(api, createdAt, displayed?.createdAt, deferred?.createdAt) || api.addNotification({
+      id: reviewAvailableNotificationId(createdAt),
+      content: {
+        headline: "New review available",
+        subHeadline: review.title ?? "Open the curated review to spot-check your changes"
+      },
+      icon: react_default.createElement(WandIcon, null),
+      onClick: ({ onDismiss }) => {
+        handleNotificationClick(createdAt), onDismiss();
+      }
+    });
+  }, [api, collectionIndex, handleNotificationClick, displayed, deferred, path]), null;
+};
+
+// src/manager/components/review/components/ReviewPersistentLayer.tsx
+var ReviewPersistentLayer = () => (useReviewNavigationInterceptor(), react_default.createElement(react_default.Fragment, null, react_default.createElement(ReviewNotification, null), react_default.createElement(ReviewSummaryHost, null)));
+
+// src/manager/components/review/components/ReviewProvider.tsx
+init_react();
+
+// global-externals:storybook/internal/types
+var types_default = __STORYBOOK_TYPES__, { Addon_TypesEnum, CHANGE_DETECTION_STATUS_TYPE_ID, CoreWebpackCompiler, Feature, NON_AGGREGATED_STATUS_TYPE_IDS, REVIEW_EVENTS: REVIEW_EVENTS2, REVIEW_NAMESPACE: REVIEW_NAMESPACE2, REVIEW_STATUS_TYPE_ID, SupportedBuilder, SupportedFramework, SupportedLanguage, SupportedRenderer } = __STORYBOOK_TYPES__;
+
+// src/manager/components/review/review-status.ts
+var REVIEWING_STATUS_VALUE = "status-value:reviewing", collectReviewStoryIds = (review) => {
+  let storyIds = /* @__PURE__ */ new Set();
+  for (let collection of review.collections)
+    for (let storyId of collection.storyIds)
+      storyIds.add(storyId);
+  return storyIds;
+}, createReviewStatus = (storyId) => ({
+  storyId,
+  typeId: REVIEW_STATUS_TYPE_ID,
+  value: REVIEWING_STATUS_VALUE,
+  title: "",
+  description: "",
+  sidebarContextMenu: !1
+}), applyReviewStatuses = (statusStore2, storyIds) => {
+  statusStore2.unset(), storyIds.size > 0 && statusStore2.set([...storyIds].map(createReviewStatus));
+}, clearReviewStatuses = (statusStore2) => {
+  statusStore2.unset();
+};
+
+// src/manager/components/review/review-mode.ts
+var FILTERS_SNAPSHOT_SESSION_KEY = `${REVIEW_NAMESPACE}/filters-snapshot`, stripReviewingStatusFilter = (filters) => ({
+  ...filters,
+  includedStatusFilters: filters.includedStatusFilters.filter(
+    (value) => value !== REVIEWING_STATUS_VALUE
+  ),
+  excludedStatusFilters: filters.excludedStatusFilters.filter(
+    (value) => value !== REVIEWING_STATUS_VALUE
+  )
+}), readJson = (key) => {
+  let raw = sessionStore.read(key);
+  if (raw === null)
+    return null;
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
+}, enterReviewMode = async (api, filters, mode) => {
+  if (!mode.isActive()) {
+    sessionStore.write(
+      FILTERS_SNAPSHOT_SESSION_KEY,
+      JSON.stringify(stripReviewingStatusFilter(filters))
+    ), mode.setActive(!0);
+    try {
+      await api.setAllTagFilters([], []), await api.setAllStatusFilters([REVIEWING_STATUS_VALUE], []);
+    } catch (error) {
+      throw mode.setActive(!1), sessionStore.remove(FILTERS_SNAPSHOT_SESSION_KEY), error;
     }
   }
-);
+}, exitReviewMode = async (api, mode) => {
+  let filters = readJson(FILTERS_SNAPSHOT_SESSION_KEY);
+  if (filters) {
+    let restored = stripReviewingStatusFilter(filters);
+    await api.setAllTagFilters(restored.includedTagFilters, restored.excludedTagFilters), await api.setAllStatusFilters(restored.includedStatusFilters, restored.excludedStatusFilters);
+  } else
+    await api.removeStatusFilters([REVIEWING_STATUS_VALUE]);
+  sessionStore.remove(FILTERS_SNAPSHOT_SESSION_KEY), mode.setActive(!1);
+};
+
+// src/manager/components/review/review-actions.ts
+var navigateToReviewEntry = (api, navigate, entry, filters, mode) => {
+  enterReviewMode(api, filters, mode), api.setQueryParams({ [REVIEW_COLLECTION_QUERY_PARAM]: String(entry.collectionIndex) }), navigate(buildReviewStoryTarget(entry));
+}, navigateToReviewSummary = (api, navigate, filters, mode) => {
+  enterReviewMode(api, filters, mode), api.setQueryParams({ [REVIEW_COLLECTION_QUERY_PARAM]: null }), navigate(REVIEW_CHANGES_URL);
+}, navigateOutOfReview = async (api, navigate, returnSearch, mode, { visitCreatedAt, onExitingChange } = {}) => {
+  api.setQueryParams({ [REVIEW_COLLECTION_QUERY_PARAM]: null }), onExitingChange?.(!0);
+  try {
+    if (await exitReviewMode(api, mode), visitCreatedAt !== void 0 && acceptReviewNotification(api, visitCreatedAt), returnSearch && !isReviewReturnSearch(returnSearch)) {
+      navigate(returnSearch.startsWith("?") ? returnSearch : `?${returnSearch}`, { plain: !0 });
+      return;
+    }
+    api.selectFirstStory();
+  } finally {
+    onExitingChange?.(!1);
+  }
+}, dismissReview = async () => {
+  try {
+    await getService("core/review", { internal: !0 }).commands.dismissReview(void 0);
+  } catch (error) {
+    logger.error("Failed to dismiss review", error);
+  }
+}, acceptPendingReview = async (api, navigate, filters, mode, pending) => {
+  if (pending) {
+    try {
+      await getService("core/review", { internal: !0 }).commands.acceptPending(void 0);
+    } catch (error) {
+      logger.error("Failed to accept pending review", error);
+      return;
+    }
+    acceptReviewNotification(api, pending.createdAt), sessionStore.write(AUTO_ENTERED_SESSION_KEY, autoEnteredLatchValue(pending.createdAt)), enterReviewMode(api, filters, mode), navigate(buildReviewChangesSummaryHref(), { plain: !0 });
+  }
+};
+
+// src/manager/components/review/review-story-info.ts
+var getStoryChangeStatus = (allStatuses, storyId) => {
+  let changeValue = Object.values(allStatuses[storyId] ?? {}).find(
+    (status) => status.typeId === CHANGE_DETECTION_STATUS_TYPE_ID
+  )?.value;
+  if (changeValue === "status-value:new")
+    return "new";
+  if (changeValue === "status-value:modified")
+    return "modified";
+}, buildNewlyAddedStoryIds = (state, allStatuses) => {
+  let ids = /* @__PURE__ */ new Set(), isChangeDetectedNew = (storyId) => Object.values(allStatuses[storyId] ?? {}).some((status) => status.value === "status-value:new");
+  for (let collection of state.collections)
+    for (let storyId of collection.storyIds)
+      isChangeDetectedNew(storyId) && ids.add(storyId);
+  return ids;
+}, resolveStoryTitleAndName = (storyId, internalIndex, index, api) => {
+  let fromInternal = internalIndex?.entries[storyId];
+  if (fromInternal?.type === "story" && fromInternal.title)
+    return { title: fromInternal.title, name: fromInternal.name };
+  let direct = index?.[storyId], entry = direct?.type === "story" ? direct : index ? api.findLeafEntry(index, storyId) : void 0;
+  return entry?.type === "story" && entry.title ? { title: entry.title, name: entry.name } : fallbackStoryInfo(storyId);
+}, buildStoryInfo = (state, index, internalIndex, api, allStatuses, newlyAddedStoryIds) => {
+  let info = {};
+  for (let collection of state.collections)
+    for (let storyId of collection.storyIds)
+      storyId in info || (info[storyId] = {
+        ...resolveStoryTitleAndName(storyId, internalIndex, index, api),
+        isNewlyAdded: newlyAddedStoryIds.has(storyId) || void 0,
+        changeStatus: getStoryChangeStatus(allStatuses, storyId)
+      });
+  return info;
+};
+
+// src/manager/components/review/useReviewFiltersRef.ts
+init_react();
+var useReviewFiltersRef = () => {
+  let { includedStatusFilters, excludedStatusFilters, includedTagFilters, excludedTagFilters } = useStorybookState(), filtersRef = useRef({
+    includedStatusFilters: [],
+    excludedStatusFilters: [],
+    includedTagFilters: [],
+    excludedTagFilters: []
+  });
+  return filtersRef.current = {
+    includedStatusFilters: includedStatusFilters ?? [],
+    excludedStatusFilters: excludedStatusFilters ?? [],
+    includedTagFilters: includedTagFilters ?? [],
+    excludedTagFilters: excludedTagFilters ?? []
+  }, filtersRef;
+};
+
+// src/manager/components/review/components/ReviewProvider.tsx
+var reviewStatusStore = experimental_getStatusStore(REVIEW_STATUS_TYPE_ID), EMPTY_ENTRIES = [], ReviewProvider = ({ children }) => {
+  let api = useStorybookApi(), navigate = useNavigate(), { index, internal_index, path, viewMode, customQueryParams, location: location2 } = useStorybookState(), reviewService = getService("core/review", { internal: !0 }), { data: currentData } = useServiceQuery(reviewService.queries.current), { data: pendingData } = useServiceQuery(reviewService.queries.pending), { data: entriesData } = useServiceQuery(reviewService.queries.flattenedEntries), { data: bannerKind } = useServiceQuery(reviewService.queries.bannerKind), review = currentData ?? null, pendingReview = pendingData ?? null, flattenedEntries = entriesData ?? EMPTY_ENTRIES, [isInReviewMode, setIsInReviewMode] = useState(
+    () => sessionStore.read(REVIEW_MODE_SESSION_KEY) === "1"
+  ), isInReviewModeRef = useRef(isInReviewMode), mode = useMemo(
+    () => ({
+      isActive: () => isInReviewModeRef.current,
+      setActive: (active) => {
+        isInReviewModeRef.current = active, active ? sessionStore.write(REVIEW_MODE_SESSION_KEY, "1") : sessionStore.remove(REVIEW_MODE_SESSION_KEY), setIsInReviewMode(active);
+      }
+    }),
+    []
+  ), isExitingRef = useRef(!1), setExiting = useCallback((exiting) => {
+    isExitingRef.current = exiting;
+  }, []), lastPageviewKeyRef = useRef(null), lastProjectedRef = useRef({ current: null, pending: null }), collectionParam = customQueryParams?.[REVIEW_COLLECTION_QUERY_PARAM], filtersRef = useReviewFiltersRef(), isSummaryVisible = isReviewSummaryPath(path), isSummaryVisibleRef = useRef(isSummaryVisible);
+  isSummaryVisibleRef.current = isSummaryVisible, useEffect(() => {
+    if (currentData === void 0)
+      return;
+    let previous = lastProjectedRef.current;
+    if (lastProjectedRef.current = { current: currentData, pending: pendingData ?? null }, currentData === null) {
+      if (previous.current === null && previous.pending === null)
+        return;
+      clearReviewStatuses(reviewStatusStore), sessionStore.remove(AUTO_ENTERED_SESSION_KEY), clearReviewNotificationsOnDismiss(api, previous.current, previous.pending), (isInReviewModeRef.current || isSummaryVisibleRef.current) && navigateOutOfReview(api, navigate, sessionStore.read(PRE_REVIEW_RETURN_KEY), mode, {
+        onExitingChange: setExiting
+      });
+      return;
+    }
+  }, [api, navigate, mode, setExiting, currentData, pendingData]), useEffect(() => {
+    review && applyReviewStatuses(reviewStatusStore, collectReviewStoryIds(review));
+  }, [review]);
+  let allStatuses = experimental_useStatusStore(), newlyAddedStoryIds = useMemo(
+    () => review ? buildNewlyAddedStoryIds(review, allStatuses) : /* @__PURE__ */ new Set(),
+    [allStatuses, review]
+  ), storyInfo = useMemo(
+    () => review ? buildStoryInfo(review, index, internal_index, api, allStatuses, newlyAddedStoryIds) : {},
+    [allStatuses, api, index, internal_index, newlyAddedStoryIds, review]
+  ), collectionIndex = parseCollectionIndex(collectionParam), storyIdFromPath = parseStoryIdFromPath(path), activeEntry = review && storyIdFromPath ? resolveActiveNavEntry(flattenedEntries, storyIdFromPath, collectionIndex) : null, activeIndex = activeEntry ? resolveNavIndex(flattenedEntries, activeEntry) : -1, openSummary = useCallback(() => {
+    navigateToReviewSummary(api, navigate, filtersRef.current, mode);
+  }, [api, navigate, filtersRef, mode]), openEntry = useCallback(
+    (entry) => {
+      navigateToReviewEntry(api, navigate, entry, filtersRef.current, mode);
+    },
+    [api, navigate, filtersRef, mode]
+  ), reviewCreatedAt = review?.createdAt, leaveReview = useCallback(() => {
+    navigateOutOfReview(api, navigate, sessionStore.read(PRE_REVIEW_RETURN_KEY), mode, {
+      visitCreatedAt: reviewCreatedAt,
+      onExitingChange: setExiting
+    });
+  }, [api, navigate, mode, reviewCreatedAt, setExiting]), hasReview = review !== null, dismiss = useCallback(() => {
+    if (!hasReview) {
+      navigateOutOfReview(api, navigate, sessionStore.read(PRE_REVIEW_RETURN_KEY), mode, {
+        onExitingChange: setExiting
+      });
+      return;
+    }
+    dismissReview();
+  }, [api, navigate, mode, hasReview, setExiting]), onAcceptPendingUpdate = useCallback(() => {
+    acceptPendingReview(api, navigate, filtersRef.current, mode, pendingReview);
+  }, [api, navigate, filtersRef, mode, pendingReview]), banner = useMemo(
+    () => bannerKind === "pending-update" ? { kind: "pending-update", onAccept: onAcceptPendingUpdate } : bannerKind === "stale" ? { kind: "stale" } : null,
+    [bannerKind, onAcceptPendingUpdate]
+  );
+  useEffect(() => {
+    if (!review) {
+      lastPageviewKeyRef.current = null;
+      return;
+    }
+    let page = null, key = null;
+    isSummaryVisible ? (page = "summary", key = "summary") : isInReviewMode && activeEntry && (page = "detail", key = `detail:${activeEntry.storyId}`), !(!page || key === lastPageviewKeyRef.current) && (lastPageviewKeyRef.current = key, api.emit(REVIEW_EVENTS.PAGEVIEW, { page, reviewCreatedAt: review.createdAt }));
+  }, [review, isSummaryVisible, isInReviewMode, activeEntry, api]), useEffect(() => {
+    if (!review || !isSummaryVisible || mode.isActive() || isExitingRef.current)
+      return;
+    let latch = autoEnteredLatchValue(review.createdAt);
+    sessionStore.read(AUTO_ENTERED_SESSION_KEY) !== latch && (sessionStore.write(AUTO_ENTERED_SESSION_KEY, latch), enterReviewMode(api, filtersRef.current, mode));
+  }, [review, isSummaryVisible, api, filtersRef, mode]), useEffect(() => {
+    if (isInReviewMode || viewMode !== "story" && viewMode !== "docs")
+      return;
+    let search = location2?.search;
+    search && !isReviewReturnSearch(search) && sessionStore.write(PRE_REVIEW_RETURN_KEY, search);
+  }, [isInReviewMode, viewMode, location2?.search]);
+  let value = useMemo(
+    () => ({
+      review,
+      pendingReview,
+      storyInfo,
+      flattenedEntries,
+      newlyAddedStoryIds,
+      activeEntry,
+      activeIndex,
+      isSummaryVisible,
+      banner,
+      isInReviewMode,
+      openSummary,
+      openEntry,
+      leaveReview,
+      dismiss
+    }),
+    [
+      review,
+      pendingReview,
+      storyInfo,
+      flattenedEntries,
+      newlyAddedStoryIds,
+      activeEntry,
+      activeIndex,
+      isSummaryVisible,
+      banner,
+      isInReviewMode,
+      openSummary,
+      openEntry,
+      leaveReview,
+      dismiss
+    ]
+  );
+  return react_default.createElement(ReviewContext.Provider, { value }, children);
+};
 
 // src/manager/container/Panel.tsx
 init_react();
 
-// global-externals:storybook/internal/types
-var types_default = __STORYBOOK_TYPES__, { Addon_TypesEnum, CoreWebpackCompiler, Feature, SupportedBuilder, SupportedFramework, SupportedLanguage, SupportedRenderer } = __STORYBOOK_TYPES__;
-
 // src/core-events/index.ts
-var events = /* @__PURE__ */ ((events2) => (events2.CHANNEL_WS_DISCONNECT = "channelWSDisconnect", events2.CHANNEL_CREATED = "channelCreated", events2.CONFIG_ERROR = "configError", events2.STORY_INDEX_INVALIDATED = "storyIndexInvalidated", events2.STORY_SPECIFIED = "storySpecified", events2.SET_CONFIG = "setConfig", events2.SET_STORIES = "setStories", events2.SET_INDEX = "setIndex", events2.SET_CURRENT_STORY = "setCurrentStory", events2.CURRENT_STORY_WAS_SET = "currentStoryWasSet", events2.FORCE_RE_RENDER = "forceReRender", events2.FORCE_REMOUNT = "forceRemount", events2.PRELOAD_ENTRIES = "preloadStories", events2.STORY_PREPARED = "storyPrepared", events2.DOCS_PREPARED = "docsPrepared", events2.STORY_CHANGED = "storyChanged", events2.STORY_UNCHANGED = "storyUnchanged", events2.STORY_RENDERED = "storyRendered", events2.STORY_FINISHED = "storyFinished", events2.STORY_MISSING = "storyMissing", events2.STORY_ERRORED = "storyErrored", events2.STORY_THREW_EXCEPTION = "storyThrewException", events2.STORY_RENDER_PHASE_CHANGED = "storyRenderPhaseChanged", events2.STORY_HOT_UPDATED = "storyHotUpdated", events2.PLAY_FUNCTION_THREW_EXCEPTION = "playFunctionThrewException", events2.UNHANDLED_ERRORS_WHILE_PLAYING = "unhandledErrorsWhilePlaying", events2.UPDATE_STORY_ARGS = "updateStoryArgs", events2.STORY_ARGS_UPDATED = "storyArgsUpdated", events2.RESET_STORY_ARGS = "resetStoryArgs", events2.SET_FILTER = "setFilter", events2.SET_GLOBALS = "setGlobals", events2.UPDATE_GLOBALS = "updateGlobals", events2.GLOBALS_UPDATED = "globalsUpdated", events2.REGISTER_SUBSCRIPTION = "registerSubscription", events2.PREVIEW_INITIALIZED = "previewInitialized", events2.PREVIEW_KEYDOWN = "previewKeydown", events2.PREVIEW_BUILDER_PROGRESS = "preview_builder_progress", events2.SELECT_STORY = "selectStory", events2.STORIES_COLLAPSE_ALL = "storiesCollapseAll", events2.STORIES_EXPAND_ALL = "storiesExpandAll", events2.DOCS_RENDERED = "docsRendered", events2.SHARED_STATE_CHANGED = "sharedStateChanged", events2.SHARED_STATE_SET = "sharedStateSet", events2.NAVIGATE_URL = "navigateUrl", events2.UPDATE_QUERY_PARAMS = "updateQueryParams", events2.REQUEST_WHATS_NEW_DATA = "requestWhatsNewData", events2.RESULT_WHATS_NEW_DATA = "resultWhatsNewData", events2.SET_WHATS_NEW_CACHE = "setWhatsNewCache", events2.TOGGLE_WHATS_NEW_NOTIFICATIONS = "toggleWhatsNewNotifications", events2.TELEMETRY_ERROR = "telemetryError", events2.FILE_COMPONENT_SEARCH_REQUEST = "fileComponentSearchRequest", events2.FILE_COMPONENT_SEARCH_RESPONSE = "fileComponentSearchResponse", events2.SAVE_STORY_REQUEST = "saveStoryRequest", events2.SAVE_STORY_RESPONSE = "saveStoryResponse", events2.ARGTYPES_INFO_REQUEST = "argtypesInfoRequest", events2.ARGTYPES_INFO_RESPONSE = "argtypesInfoResponse", events2.CREATE_NEW_STORYFILE_REQUEST = "createNewStoryfileRequest", events2.CREATE_NEW_STORYFILE_RESPONSE = "createNewStoryfileResponse", events2.GHOST_STORIES_REQUEST = "ghostStoriesRequest", events2.GHOST_STORIES_RESPONSE = "ghostStoriesResponse", events2.OPEN_IN_EDITOR_REQUEST = "openInEditorRequest", events2.OPEN_IN_EDITOR_RESPONSE = "openInEditorResponse", events2.MANAGER_INERT_ATTRIBUTE_CHANGED = "managerInertAttributeChanged", events2))(events || {});
+var events = /* @__PURE__ */ ((events2) => (events2.CHANNEL_WS_DISCONNECT = "channelWSDisconnect", events2.CHANNEL_CREATED = "channelCreated", events2.CONFIG_ERROR = "configError", events2.STORY_INDEX_INVALIDATED = "storyIndexInvalidated", events2.STORY_SPECIFIED = "storySpecified", events2.SET_CONFIG = "setConfig", events2.SET_STORIES = "setStories", events2.SET_INDEX = "setIndex", events2.SET_CURRENT_STORY = "setCurrentStory", events2.CURRENT_STORY_WAS_SET = "currentStoryWasSet", events2.FORCE_RE_RENDER = "forceReRender", events2.FORCE_REMOUNT = "forceRemount", events2.PRELOAD_ENTRIES = "preloadStories", events2.STORY_PREPARED = "storyPrepared", events2.DOCS_PREPARED = "docsPrepared", events2.STORY_CHANGED = "storyChanged", events2.STORY_UNCHANGED = "storyUnchanged", events2.STORY_RENDERED = "storyRendered", events2.STORY_FINISHED = "storyFinished", events2.STORY_MISSING = "storyMissing", events2.STORY_ERRORED = "storyErrored", events2.STORY_THREW_EXCEPTION = "storyThrewException", events2.STORY_RENDER_PHASE_CHANGED = "storyRenderPhaseChanged", events2.STORY_HOT_UPDATED = "storyHotUpdated", events2.PLAY_FUNCTION_THREW_EXCEPTION = "playFunctionThrewException", events2.UNHANDLED_ERRORS_WHILE_PLAYING = "unhandledErrorsWhilePlaying", events2.UPDATE_STORY_ARGS = "updateStoryArgs", events2.STORY_ARGS_UPDATED = "storyArgsUpdated", events2.RESET_STORY_ARGS = "resetStoryArgs", events2.SET_FILTER = "setFilter", events2.SET_GLOBALS = "setGlobals", events2.UPDATE_GLOBALS = "updateGlobals", events2.GLOBALS_UPDATED = "globalsUpdated", events2.REGISTER_SUBSCRIPTION = "registerSubscription", events2.PREVIEW_INITIALIZED = "previewInitialized", events2.PREVIEW_KEYDOWN = "previewKeydown", events2.PREVIEW_BUILDER_PROGRESS = "preview_builder_progress", events2.SELECT_STORY = "selectStory", events2.STORIES_COLLAPSE_ALL = "storiesCollapseAll", events2.STORIES_EXPAND_ALL = "storiesExpandAll", events2.DOCS_RENDERED = "docsRendered", events2.SHARED_STATE_CHANGED = "sharedStateChanged", events2.SHARED_STATE_SET = "sharedStateSet", events2.NAVIGATE_URL = "navigateUrl", events2.UPDATE_QUERY_PARAMS = "updateQueryParams", events2.REQUEST_WHATS_NEW_DATA = "requestWhatsNewData", events2.RESULT_WHATS_NEW_DATA = "resultWhatsNewData", events2.SET_WHATS_NEW_CACHE = "setWhatsNewCache", events2.TOGGLE_WHATS_NEW_NOTIFICATIONS = "toggleWhatsNewNotifications", events2.TELEMETRY_ERROR = "telemetryError", events2.FILE_COMPONENT_SEARCH_REQUEST = "fileComponentSearchRequest", events2.FILE_COMPONENT_SEARCH_RESPONSE = "fileComponentSearchResponse", events2.SAVE_STORY_REQUEST = "saveStoryRequest", events2.SAVE_STORY_RESPONSE = "saveStoryResponse", events2.ARGTYPES_INFO_REQUEST = "argtypesInfoRequest", events2.ARGTYPES_INFO_RESPONSE = "argtypesInfoResponse", events2.CREATE_NEW_STORYFILE_REQUEST = "createNewStoryfileRequest", events2.CREATE_NEW_STORYFILE_RESPONSE = "createNewStoryfileResponse", events2.GHOST_STORIES_REQUEST = "ghostStoriesRequest", events2.GHOST_STORIES_RESPONSE = "ghostStoriesResponse", events2.AI_SETUP_ANALYTICS_RESPONSE = "aiSetupAnalyticsResponse", events2.AI_SETUP_ANALYTICS_REQUEST = "aiSetupAnalyticsRequest", events2.OPEN_IN_EDITOR_REQUEST = "openInEditorRequest", events2.OPEN_IN_EDITOR_RESPONSE = "openInEditorResponse", events2.MANAGER_INERT_ATTRIBUTE_CHANGED = "managerInertAttributeChanged", events2.SHARE_ISOLATE_MODE = "shareIsolateMode", events2.AI_PROMPT_NUDGE = "aiPromptNudge", events2.SIDEBAR_FILTER_CHANGED = "sidebarFilterChanged", events2))(events || {});
 var {
   CHANNEL_WS_DISCONNECT: CHANNEL_WS_DISCONNECT2,
   CHANNEL_CREATED: CHANNEL_CREATED2,
@@ -4724,9 +11914,14 @@ var {
   ARGTYPES_INFO_RESPONSE: ARGTYPES_INFO_RESPONSE2,
   GHOST_STORIES_REQUEST: GHOST_STORIES_REQUEST2,
   GHOST_STORIES_RESPONSE: GHOST_STORIES_RESPONSE2,
+  AI_SETUP_ANALYTICS_RESPONSE: AI_SETUP_ANALYTICS_RESPONSE2,
+  AI_SETUP_ANALYTICS_REQUEST: AI_SETUP_ANALYTICS_REQUEST2,
   OPEN_IN_EDITOR_REQUEST: OPEN_IN_EDITOR_REQUEST2,
   OPEN_IN_EDITOR_RESPONSE: OPEN_IN_EDITOR_RESPONSE2,
-  MANAGER_INERT_ATTRIBUTE_CHANGED: MANAGER_INERT_ATTRIBUTE_CHANGED2
+  MANAGER_INERT_ATTRIBUTE_CHANGED: MANAGER_INERT_ATTRIBUTE_CHANGED2,
+  SHARE_ISOLATE_MODE: SHARE_ISOLATE_MODE2,
+  AI_PROMPT_NUDGE: AI_PROMPT_NUDGE2,
+  SIDEBAR_FILTER_CHANGED: SIDEBAR_FILTER_CHANGED2
 } = events;
 
 // src/manager/components/panel/Panel.tsx
@@ -4809,10 +12004,10 @@ var PreRenderAddons = ({ panels }) => Object.entries(panels).map(([k2, v2]) => r
     { "aria-labelledby": "storybook-panel-heading", role: "region" },
     asideRef
   );
-  return react_default.createElement(Aside, { ref: asideRef, ...landmarkProps }, react_default.createElement("h2", { id: "storybook-panel-heading", className: "sb-sr-only" }, "Addon panel"), react_default.createElement(
+  return react_default.createElement(Aside, { ref: asideRef, id: focusableUIElements.addonPanel, ...landmarkProps }, react_default.createElement("h2", { id: "storybook-panel-heading", className: "sb-sr-only" }, "Addon panel"), react_default.createElement(
     StatelessTabsView,
     {
-      id: "storybook-panel-root",
+      id: focusableUIElements.storyPanelRoot,
       showToolsWhenEmpty: !0,
       emptyState,
       selected: selectedPanel ?? void 0,
@@ -4844,7 +12039,10 @@ var Panel = (props) => {
   let { parameters, type } = story ?? {}, panelActions = useMemo(
     () => ({
       onSelect: (panel) => api.setSelectedPanel(panel),
-      toggleVisibility: () => api.togglePanel(),
+      toggleVisibility: async () => {
+        let wasPanelShown = api.getIsPanelShown();
+        api.togglePanel(), wasPanelShown && await api.focusOnUIElement(focusableUIElements.showAddonPanel) === !1 && document.body.focus();
+      },
       togglePosition: () => api.togglePanelPosition()
     }),
     [api]
@@ -4873,10 +12071,158 @@ var Panel = (props) => {
 
 // src/manager/container/Preview.tsx
 init_react();
-var import_memoizerific = __toESM(require_memoizerific(), 1);
+var import_memoizerific2 = __toESM(require_memoizerific(), 1);
 
 // src/manager/components/preview/Preview.tsx
 init_react();
+
+// src/manager/components/review/components/ReviewToolbarHeader.tsx
+init_react();
+
+// src/manager/components/review/components/ReviewCollectionPicker.tsx
+init_react();
+var derivePickerLabel = (storyId, info) => {
+  if (info)
+    return { component: info.title.split("/").pop() ?? info.title, story: info.name };
+  let [componentId, ...rest2] = storyId.split("--");
+  return {
+    component: prettifyComponentId(componentId),
+    story: prettifyComponentId(rest2.join("--")) || "Story"
+  };
+}, ReviewCollectionPicker = ({
+  entries,
+  activeEntry,
+  storyInfo,
+  children
+}) => {
+  let { openEntry } = useReviewContext(), options2 = entries.map((entry, index) => {
+    let { component, story } = derivePickerLabel(entry.storyId, storyInfo[entry.storyId]);
+    return { value: index, title: component, description: story };
+  }), activeValue = resolveNavIndex(entries, activeEntry), [nextStory, setNextStory] = react_default.useState(void 0);
+  return useEffect(() => {
+    nextStory && openEntry(nextStory);
+  }, [nextStory, openEntry]), react_default.createElement(
+    Select,
+    {
+      ariaLabel: "Select story",
+      size: "small",
+      padding: "small",
+      options: options2,
+      defaultOptions: activeValue >= 0 ? activeValue : void 0,
+      showSelectedOptionTitle: !1,
+      onSelect: (value) => {
+        let entry = typeof value == "number" ? entries[value] : void 0;
+        setNextStory(entry);
+      }
+    },
+    children
+  );
+};
+
+// src/manager/components/review/components/ReviewToolbarHeader.tsx
+var Root2 = styled.div(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+  flexShrink: 0,
+  width: "100%",
+  background: theme.background.content,
+  zIndex: 4
+})), HeaderWrap = styled.div({
+  position: "relative",
+  flexShrink: 0
+}), ProgressBar = styled.div(({ theme }) => ({
+  position: "absolute",
+  top: 0,
+  left: 0,
+  zIndex: 1,
+  width: "100%",
+  height: 3,
+  overflow: "hidden",
+  background: theme.background.app
+})), ProgressFill = styled.div(({ theme }) => ({
+  position: "absolute",
+  insetBlock: 0,
+  left: 0,
+  background: theme.color.secondary,
+  transition: "width 200ms ease"
+})), SubtitleStrong = styled.span(({ theme }) => ({
+  fontWeight: 700,
+  color: theme.color.defaultText
+})), SubtitleSeparator = styled.span(({ theme }) => ({
+  color: theme.color.defaultText
+})), SubtitleText = styled.span(({ theme }) => ({
+  color: theme.color.defaultText
+})), Counter = styled.span(({ theme }) => ({
+  fontVariantNumeric: "tabular-nums",
+  fontFamily: theme.typography.fonts.mono,
+  fontWeight: theme.typography.weight.regular
+})), NavButton = ({
+  entry,
+  ariaLabel,
+  icon
+}) => entry ? react_default.createElement(Button, { variant: "ghost", size: "small", padding: "small", ariaLabel, asChild: !0 }, react_default.createElement("a", { href: buildReviewStoryHref(entry) }, icon)) : react_default.createElement(Button, { variant: "ghost", size: "small", padding: "small", ariaLabel, disabled: !0 }, icon), componentName = (componentTitle) => componentTitle.split("/").map((part) => part.trim()).filter(Boolean).pop() ?? componentTitle, ReviewToolbarHeader = () => {
+  let {
+    review,
+    banner,
+    storyInfo,
+    flattenedEntries,
+    newlyAddedStoryIds,
+    activeEntry,
+    activeIndex
+  } = useReviewContext();
+  if (!review || !activeEntry || activeIndex < 0)
+    return null;
+  let collectionTitle = review.collections[activeEntry.collectionIndex]?.title ?? "Review", totalStories = flattenedEntries.length, hasPrevious = activeIndex > 0, hasNext = activeIndex < totalStories - 1, previousEntry = hasPrevious ? flattenedEntries[activeIndex - 1] : null, nextEntry = hasNext ? flattenedEntries[activeIndex + 1] : null, progress = totalStories > 1 ? activeIndex / (totalStories - 1) : 0, currentStoryInfo = storyInfo[activeEntry.storyId], isNewlyAdded = newlyAddedStoryIds.has(activeEntry.storyId), metadataSubtitle = currentStoryInfo?.title && currentStoryInfo.name ? react_default.createElement(react_default.Fragment, null, react_default.createElement(SubtitleStrong, null, componentName(currentStoryInfo.title)), react_default.createElement(SubtitleSeparator, null, "/"), react_default.createElement(SubtitleText, null, currentStoryInfo.name)) : null, subtitle = metadataSubtitle || isNewlyAdded ? react_default.createElement(react_default.Fragment, null, metadataSubtitle, isNewlyAdded ? react_default.createElement(Badge, { status: "positive" }, "New") : null) : void 0;
+  return react_default.createElement(Root2, { "data-testid": "review-toolbar-header" }, banner && react_default.createElement(AttentionBanner, { ...banner }), react_default.createElement(HeaderWrap, null, react_default.createElement(
+    ProgressBar,
+    {
+      role: "progressbar",
+      "aria-label": "Review progress",
+      "aria-valuenow": activeIndex + 1,
+      "aria-valuemin": 1,
+      "aria-valuemax": totalStories,
+      "data-testid": "review-progress"
+    },
+    react_default.createElement(
+      ProgressFill,
+      {
+        "data-testid": "review-progress-fill",
+        style: { width: `${progress * 100}%` }
+      }
+    )
+  ), react_default.createElement(
+    ReviewHeader,
+    {
+      variant: "toolbar",
+      leading: react_default.createElement(Button, { variant: "ghost", size: "small", padding: "small", ariaLabel: "Back to review", asChild: !0 }, react_default.createElement("a", { href: buildReviewChangesSummaryHref() }, react_default.createElement(ChevronSmallLeftIcon, null), react_default.createElement(WandIcon, null))),
+      title: collectionTitle,
+      subtitle,
+      actions: react_default.createElement(react_default.Fragment, null, react_default.createElement(
+        ReviewCollectionPicker,
+        {
+          entries: flattenedEntries,
+          activeEntry,
+          storyInfo
+        },
+        react_default.createElement(Counter, null, activeIndex + 1, "/", totalStories)
+      ), react_default.createElement(
+        NavButton,
+        {
+          entry: previousEntry,
+          ariaLabel: "Previous story",
+          icon: react_default.createElement(ChevronSmallLeftIcon, null)
+        }
+      ), react_default.createElement(
+        NavButton,
+        {
+          entry: nextEntry,
+          ariaLabel: "Next story",
+          icon: react_default.createElement(ChevronSmallRightIcon, null)
+        }
+      ))
+    }
+  )));
+};
 
 // src/manager/components/preview/FramesRenderer.tsx
 init_react();
@@ -4886,9 +12232,6 @@ init_react();
 
 // src/viewport/useViewport.ts
 init_react();
-
-// src/viewport/constants.ts
-var ADDON_ID = "storybook/viewport", PARAM_KEY = "viewport", PANEL_ID = `${ADDON_ID}/panel`, TOOL_ID = `${ADDON_ID}/tool`;
 
 // src/viewport/defaults.ts
 var MINIMAL_VIEWPORTS = {
@@ -4926,25 +12269,30 @@ var MINIMAL_VIEWPORTS = {
   }
 };
 
-// src/viewport/useViewport.ts
-var URL_VALUE_PATTERN = /^([0-9]{1,4})([a-z]{0,4})-([0-9]{1,4})([a-z]{0,4})$/, VIEWPORT_MIN_WIDTH = 40, VIEWPORT_MIN_HEIGHT = 40, cycle = (viewports, current, direction = 1) => {
-  let keys = Object.keys(viewports), nextIndex = (current ? keys.indexOf(current) : -1) + direction;
-  return nextIndex < 0 ? keys[keys.length - 1] : nextIndex >= keys.length ? keys[0] : keys[nextIndex];
-}, normalizeGlobal = (value, defaultIsRotated) => typeof value == "string" ? { value, isRotated: defaultIsRotated } : { value: value?.value, isRotated: value?.isRotated ?? defaultIsRotated }, parseGlobals = (globals, storyGlobals, userGlobals, options2, lastSelectedOption, disable, viewMode) => {
+// src/viewport/resolveViewport.ts
+var VIEWPORT_MIN_WIDTH = 40, VIEWPORT_MIN_HEIGHT = 40, URL_VALUE_PATTERN = /^([0-9]{1,4})([a-z]{0,4})-([0-9]{1,4})([a-z]{0,4})$/, normalizeGlobal = (value, defaultIsRotated) => typeof value == "string" ? { value, isRotated: defaultIsRotated } : { value: value?.value, isRotated: value?.isRotated ?? defaultIsRotated }, resolveViewport = ({
+  globals,
+  storyGlobals,
+  userGlobals,
+  options: options2,
+  lastSelectedOption,
+  disable = !1,
+  viewMode
+}) => {
   if (viewMode !== "story")
     return {
       name: "Responsive",
       type: "desktop",
       width: "100%",
       height: "100%",
-      value: "100pct-100pct",
+      value: RESPONSIVE_VIEWPORT_VALUE,
       option: void 0,
       isCustom: !1,
       isDefault: !0,
       isLocked: !0,
       isRotated: !1
     };
-  let global2 = normalizeGlobal(globals?.[PARAM_KEY]), userGlobal = normalizeGlobal(userGlobals?.[PARAM_KEY]), storyGlobal = normalizeGlobal(storyGlobals?.[PARAM_KEY]), value = userGlobal?.value ?? storyGlobal?.value ?? global2?.value, isRotated = userGlobal?.isRotated ?? storyGlobal?.isRotated ?? global2?.isRotated ?? !1, keys = Object.keys(options2), isLocked = disable || PARAM_KEY in storyGlobals || !keys.length, [match, vx, ux, vy, uy] = value?.match(URL_VALUE_PATTERN) || [];
+  let global2 = normalizeGlobal(globals?.[PARAM_KEY]), userGlobal = normalizeGlobal(userGlobals?.[PARAM_KEY]), storyGlobal = normalizeGlobal(storyGlobals?.[PARAM_KEY]), storyHasViewport = PARAM_KEY in storyGlobals, primaryGlobal = storyHasViewport ? storyGlobal : userGlobal, secondaryGlobal = storyHasViewport ? userGlobal : storyGlobal, value = primaryGlobal?.value ?? secondaryGlobal?.value ?? global2?.value, isRotated = primaryGlobal?.isRotated ?? secondaryGlobal?.isRotated ?? global2?.isRotated ?? !1, keys = Object.keys(options2), isLocked = disable || PARAM_KEY in storyGlobals || !keys.length, [match, vx, ux, vy, uy] = value?.match(URL_VALUE_PATTERN) || [];
   if (match) {
     let x2 = ux && ux !== "px" ? vx : Math.max(Number(vx), VIEWPORT_MIN_WIDTH), y2 = uy && uy !== "px" ? vy : Math.max(Number(vy), VIEWPORT_MIN_HEIGHT), width = `${x2}${ux === "pct" ? "%" : ux || "px"}`, height = `${y2}${uy === "pct" ? "%" : uy || "px"}`, selection = lastSelectedOption ? options2[lastSelectedOption] : void 0;
     return {
@@ -4980,37 +12328,50 @@ var URL_VALUE_PATTERN = /^([0-9]{1,4})([a-z]{0,4})-([0-9]{1,4})([a-z]{0,4})$/, V
     type: "desktop",
     width: "100%",
     height: "100%",
-    value: "100pct-100pct",
+    value: RESPONSIVE_VIEWPORT_VALUE,
     option: void 0,
     isCustom: !1,
     isDefault: !0,
     isLocked,
     isRotated: !1
   };
-}, useViewport = () => {
-  let api = useStorybookApi(), { viewMode } = api.getUrlState(), lastSelectedOption = useRef(), parameter = useParameter(PARAM_KEY), [globals, updateGlobals, storyGlobals, userGlobals] = useGlobals(), { options: options2 = MINIMAL_VIEWPORTS, disable = !1 } = parameter || {}, { name, type, width, height, value, option, isCustom, isDefault, isLocked, isRotated } = parseGlobals(
+};
+
+// src/viewport/useViewport.ts
+var cycle = (viewports, current, direction = 1) => {
+  let keys = Object.keys(viewports), nextIndex = (current ? keys.indexOf(current) : -1) + direction;
+  return nextIndex < 0 ? keys[keys.length - 1] : nextIndex >= keys.length ? keys[0] : keys[nextIndex];
+}, normalizeGlobal2 = (value, defaultIsRotated) => typeof value == "string" ? { value, isRotated: defaultIsRotated } : { value: value?.value, isRotated: value?.isRotated ?? defaultIsRotated }, useViewport = () => {
+  let api = useStorybookApi(), { viewMode } = api.getUrlState(), lastSelectedOption = useRef(), parameter = useParameter(PARAM_KEY), [globals, updateGlobals, storyGlobals, userGlobals] = useGlobals();
+  useEffect(() => {
+    if (parameter && "defaultViewport" in parameter) {
+      let value2 = parameter.defaultViewport;
+      deprecate(
+        `The \`viewport.defaultViewport\` parameter was removed in Storybook 10. Use \`globals: { viewport: ${JSON.stringify(value2)} }\` instead, or run \`npx storybook automigrate\` to update your code automatically.`
+      );
+    }
+  }, [parameter]);
+  let { options: options2 = MINIMAL_VIEWPORTS, disable = !1 } = parameter || {}, { name, type, width, height, value, option, isCustom, isDefault, isLocked, isRotated } = resolveViewport({
     globals,
     storyGlobals,
     userGlobals,
-    options2,
-    lastSelectedOption.current,
+    options: options2,
+    lastSelectedOption: lastSelectedOption.current,
     disable,
     viewMode
-  ), update2 = useCallback(
-    (input) => updateGlobals({ [PARAM_KEY]: normalizeGlobal(input, !1) }),
+  }), update2 = useCallback(
+    (input) => updateGlobals({ [PARAM_KEY]: normalizeGlobal2(input, !1) }),
     [updateGlobals]
   ), resize = useCallback(
     (width2, height2) => {
-      let w2 = width2.replace(/px$/, "").replace(/%$/, "pct"), h2 = height2.replace(/px$/, "").replace(/%$/, "pct"), value2 = isRotated ? `${h2}-${w2}` : `${w2}-${h2}`, [match, vx, ux, vy, uy] = value2.match(URL_VALUE_PATTERN) || [];
-      match && (ux || Number(vx) >= 40) && (uy || Number(vy) >= 40) && update2({ value: match, isRotated });
+      let w2 = width2.replace(/px$/, "").replace(/%$/, "pct"), h2 = height2.replace(/px$/, "").replace(/%$/, "pct"), value2 = isRotated ? `${h2}-${w2}` : `${w2}-${h2}`;
+      update2({ value: value2, isRotated });
     },
     [update2, isRotated]
   );
   return useEffect(() => {
-    PARAM_KEY in storyGlobals && (update2(normalizeGlobal(storyGlobals?.[PARAM_KEY], !1)), lastSelectedOption.current = void 0);
-  }, [storyGlobals, update2]), useEffect(() => {
-    option && (Object.hasOwn(options2, option) ? lastSelectedOption.current = option : (lastSelectedOption.current = void 0, update2(normalizeGlobal(storyGlobals?.[PARAM_KEY], !1))));
-  }, [storyGlobals, options2, option, update2]), useEffect(() => {
+    parameter && option && (Object.hasOwn(options2, option) ? lastSelectedOption.current = option : (lastSelectedOption.current = void 0, PARAM_KEY in storyGlobals || update2({ value: void 0, isRotated: !1 })));
+  }, [parameter, storyGlobals, options2, option, update2]), useEffect(() => {
     api.setAddonShortcut(ADDON_ID, {
       label: "Next viewport",
       defaultShortcut: ["alt", "V"],
@@ -5129,6 +12490,9 @@ var Wrapper = styled.div(
         outline: "none"
       }
     },
+    "input:disabled": {
+      background: "transparent"
+    },
     "input + div": {
       paddingInline: 0,
       fontSize: "inherit"
@@ -5136,6 +12500,10 @@ var Wrapper = styled.div(
     "&:has(input:focus-visible)": {
       outline: `2px solid ${theme.color.secondary}`,
       outlineOffset: -2
+    },
+    "&:has(input:disabled)": {
+      background: theme.base === "light" ? theme.color.lighter : theme.input.background,
+      cursor: "not-allowed"
     },
     ...after2 && { paddingRight: 2 },
     ...before2 && { paddingLeft: 2 }
@@ -5148,6 +12516,7 @@ var Wrapper = styled.div(
   setValue,
   minValue = -1 / 0,
   maxValue = 1 / 0,
+  step = 1,
   unit: fixedUnit,
   baseUnit = fixedUnit,
   className,
@@ -5190,11 +12559,14 @@ var Wrapper = styled.div(
         return;
       e2.preventDefault();
       let { number, unit } = parseValue(inputValue);
-      Number.isNaN(number) || (updateValue(`${e2.key === "ArrowUp" ? number + 1 : number - 1}${unit}`), setInputSelection());
+      if (!Number.isNaN(number)) {
+        let delta = e2.shiftKey ? step * 10 : step;
+        updateValue(`${e2.key === "ArrowUp" ? number + delta : number - delta}${unit}`), setInputSelection();
+      }
     }, input = inputRef.current;
     if (input)
       return input.addEventListener("keydown", handleKeyDown), () => input.removeEventListener("keydown", handleKeyDown);
-  }, [inputValue, parseValue, updateValue, setInputSelection]), react_default.createElement(Wrapper, { after: after2, before: before2, className, style }, before2 && react_default.createElement("div", null, before2), label && react_default.createElement("label", { htmlFor: id, className: "sb-sr-only" }, label), react_default.createElement(
+  }, [inputValue, parseValue, setInputSelection, step, updateValue]), react_default.createElement(Wrapper, { after: after2, before: before2, className, style }, before2 && react_default.createElement("div", null, before2), label && react_default.createElement("label", { htmlFor: id, className: "sb-sr-only" }, label), react_default.createElement(
     Form.Input,
     {
       ...props,
@@ -5294,7 +12666,7 @@ var ViewportWrapper = styled.div(({ active, isDefault, theme }) => ({
   iframe: {
     pointerEvents: dragging === "none" ? "auto" : "none"
   }
-})), DragHandle = styled.div(
+})), DragHandle2 = styled.div(
   { display: "none" },
   ({ theme, isDefault }) => !isDefault && {
     display: "block",
@@ -5367,10 +12739,7 @@ var ViewportWrapper = styled.div(({ active, isDefault, theme }) => ({
   width: 85,
   height: 28,
   minHeight: 28
-}), parseNumber = (value) => {
-  let [match, number, unit] = value.match(/^(\d+(?:\.\d+)?)(\%|[a-z]{0,4})?$/) || [];
-  return match ? { number: Number(number), unit } : void 0;
-}, Viewport = ({
+}), Viewport = ({
   active,
   id,
   src,
@@ -5406,15 +12775,19 @@ var ViewportWrapper = styled.div(({ active, isDefault, theme }) => ({
     return handles.forEach((el) => el?.addEventListener("mousedown", onStart)), () => handles.forEach((el) => el?.removeEventListener("mousedown", onStart));
   }, [resize, scale]);
   let dimensions = useMemo(() => {
-    let { number: nx, unit: ux = "px" } = parseNumber(width) ?? { number: 0, unit: "px" }, { number: ny, unit: uy = "px" } = parseNumber(height) ?? { number: 0, unit: "px" }, frameWidth = Math.max(VIEWPORT_MIN_WIDTH, nx * scale), frameHeight = Math.max(VIEWPORT_MIN_HEIGHT, ny * scale);
+    let [, nx = "", ux = "px"] = width.match(/^(\d+(?:\.\d+)?)(\%|[a-z]{1,4})?$/) || [], [, ny = "", uy = "px"] = height.match(/^(\d+(?:\.\d+)?)(\%|[a-z]{1,4})?$/) || [];
     return {
       frame: {
-        width: `${frameWidth}${ux}`,
-        height: `${frameHeight}${uy}`
+        width: `calc(${width} * ${scale})`,
+        height: `calc(${height} * ${scale})`
       },
       display: {
-        width: `${nx}${ux === "px" ? "" : ux}`,
-        height: `${ny}${uy === "px" ? "" : uy}`
+        width: `${nx || width}${ux === "px" ? "" : ux}`,
+        height: `${ny || height}${uy === "px" ? "" : uy}`
+      },
+      locked: {
+        width: !nx || !ny,
+        height: !nx || !ny
       }
     };
   }, [width, height, scale]);
@@ -5427,7 +12800,8 @@ var ViewportWrapper = styled.div(({ active, isDefault, theme }) => ({
       before: react_default.createElement(ActionList.Action, { size: "small", readOnly: !0, "aria-hidden": !0 }, "W"),
       value: width,
       minValue: 0,
-      setValue: (value) => resize(value, height)
+      setValue: (value) => resize(value, height),
+      disabled: dimensions.locked.width
     }
   ), react_default.createElement(
     ActionList.Button,
@@ -5448,7 +12822,8 @@ var ViewportWrapper = styled.div(({ active, isDefault, theme }) => ({
       before: react_default.createElement(ActionList.Action, { size: "small", readOnly: !0, "aria-hidden": !0 }, "H"),
       value: height,
       minValue: 0,
-      setValue: (value) => resize(width, value)
+      setValue: (value) => resize(width, value),
+      disabled: dimensions.locked.height
     }
   ), isCustom && lastSelectedOption && react_default.createElement(
     ActionList.Button,
@@ -5475,15 +12850,15 @@ var ViewportWrapper = styled.div(({ active, isDefault, theme }) => ({
         style: {
           height: `${1 / scale * 100}%`,
           width: `${1 / scale * 100}%`,
-          transform: `scale(${scale})`,
+          transform: scale !== 1 ? `scale(${scale})` : "none",
           transformOrigin: "top left"
         }
       },
       react_default.createElement(IFrame, { allowFullScreen: !0, active, key: id, id, title: id, src, scale: 1 }),
       !isDefault && react_default.createElement(react_default.Fragment, null, react_default.createElement(ScrollEdge, { "data-edge": "right" }), react_default.createElement(ScrollEdge, { "data-edge": "bottom" }), react_default.createElement(ScrollEdge, { "data-edge": "both" }))
     ),
-    react_default.createElement(
-      DragHandle,
+    !dimensions.locked.width && react_default.createElement(
+      DragHandle2,
       {
         ref: dragRefX,
         isDefault,
@@ -5491,8 +12866,8 @@ var ViewportWrapper = styled.div(({ active, isDefault, theme }) => ({
         "data-value": dimensions.display.width
       }
     ),
-    react_default.createElement(
-      DragHandle,
+    !dimensions.locked.height && react_default.createElement(
+      DragHandle2,
       {
         ref: dragRefY,
         isDefault,
@@ -5500,7 +12875,7 @@ var ViewportWrapper = styled.div(({ active, isDefault, theme }) => ({
         "data-value": dimensions.display.height
       }
     ),
-    react_default.createElement(DragHandle, { ref: dragRefXY, isDefault, "data-side": "both" })
+    !dimensions.locked.width && !dimensions.locked.height && react_default.createElement(DragHandle2, { ref: dragRefXY, isDefault, "data-side": "both" })
   ));
 };
 
@@ -5522,7 +12897,7 @@ var getActive = (refId, refs) => refId && refs[refId] ? `storybook-ref-${refId}`
   }
 })), whenSidebarIsVisible = ({ api, state }) => ({
   isFullscreen: api.getIsFullscreen(),
-  isNavShown: api.getIsNavShown(),
+  isNavShown: api.getNavAvailability() === "shown",
   selectedStoryId: state.storyId
 }), styles = {
   '#root [data-is-storybook="false"]': {
@@ -5543,11 +12918,11 @@ var getActive = (refId, refs) => refId && refs[refId] ? `storybook-ref-${refId}`
   let version3 = refs[refId]?.version, active = getActive(refId, refs), { current: frames } = useRef({}), refsToLoad = Object.values(refs).filter((ref) => ref.type === "auto-inject" || ref.id === refId, {});
   return frames["storybook-preview-iframe"] || (frames["storybook-preview-iframe"] = api.getStoryHrefs(storyId, {
     queryParams: { ...queryParams, ...version3 && { version: version3 } },
-    refId,
+    refId: void 0,
     viewMode
   }).previewHref), refsToLoad.forEach((ref) => {
     let id = `storybook-ref-${ref.id}`;
-    frames[id]?.startsWith(ref.url) || (frames[id] = api.getStoryHrefs(storyId, {
+    frames[id]?.startsWith(`${ref.url.replace(/\/?$/, "/")}iframe.html`) || (frames[id] = api.getStoryHrefs(storyId, {
       queryParams: { ...queryParams, ...version3 && { version: version3 } },
       refId: ref.id,
       viewMode
@@ -5562,7 +12937,8 @@ var fullScreenMapper = ({ api, state }) => ({
   isFullscreen: api.getIsFullscreen(),
   shortcut: api.getShortcutKeys().fullScreen,
   hasPanel: Object.keys(api.getElements(Addon_TypesEnum.PANEL)).length > 0,
-  singleStory: state.singleStory
+  singleStory: state.singleStory,
+  isNavUnavailable: api.getNavAvailability() === "unavailable"
 }), fullScreenTool = {
   title: "fullscreen",
   id: "fullscreen",
@@ -5571,7 +12947,7 @@ var fullScreenMapper = ({ api, state }) => ({
   match: (p2) => ["story", "docs"].includes(p2.viewMode),
   render: () => {
     let { isMobile: isMobile2 } = useLayout();
-    return isMobile2 ? null : react_default.createElement(Consumer, { filter: fullScreenMapper }, ({ toggle, isFullscreen, shortcut, hasPanel, singleStory }) => (!singleStory || singleStory && hasPanel) && react_default.createElement(
+    return isMobile2 ? null : react_default.createElement(Consumer, { filter: fullScreenMapper }, ({ toggle, isFullscreen, shortcut, hasPanel, singleStory, isNavUnavailable }) => !isNavUnavailable && (!singleStory || singleStory && hasPanel) && react_default.createElement(
       Button,
       {
         key: "full",
@@ -5673,13 +13049,13 @@ var PreviewContainer = styled.div({
   width: "100%",
   height: "100%",
   overflow: "hidden"
-}), FrameWrap = styled.main({
+}), FrameWrap = styled.main(({ theme }) => ({
   overflow: "auto",
   width: "100%",
   zIndex: 3,
-  background: "transparent",
+  background: theme.background.app,
   flex: 1
-}), CanvasWrap = styled.div(
+})), CanvasWrap = styled.div(
   {
     alignContent: "center",
     alignItems: "center",
@@ -5689,8 +13065,8 @@ var PreviewContainer = styled.div({
     gridTemplateColumns: "100%",
     gridTemplateRows: "100%",
     position: "relative",
-    minWidth: "100%",
-    minHeight: "100%"
+    width: "100%",
+    height: "100%"
   },
   ({ show }) => ({ display: show ? "grid" : "none" })
 ), UnstyledLink = styled(Link2)({
@@ -5766,12 +13142,16 @@ var Wrapper2 = styled.span(({ theme }) => ({
   "& + &": {
     marginLeft: 6
   }
-})), Shortcut = ({ keys }) => react_default.createElement(Wrapper2, null, keys.map((key) => react_default.createElement(Key, { key }, shortcutToHumanString([key]))));
+})), Shortcut = ({ keys }) => react_default.createElement(Wrapper2, null, (keys ?? []).map((key) => react_default.createElement(Key, { key }, shortcutToHumanString([key]))));
 
 // src/manager/components/preview/tools/zoom.tsx
-var ZOOM_LEVELS = [0.25, 0.5, 0.75, 0.9, 1, 1.1, 1.25, 1.5, 2, 3, 4, 8], INITIAL_ZOOM_LEVEL = 1, ZoomButton = styled(Button)({
+var ZOOM_LEVELS = [0.25, 0.5, 0.75, 0.9, 1, 1.1, 1.25, 1.5, 2, 3, 4, 8], INITIAL_ZOOM_LEVEL = 1, ZoomButton = styled(ToggleButton)({
   minWidth: 48
-}), Context = createContext({ value: INITIAL_ZOOM_LEVEL, set: (v2) => {
+}), ZoomResetButton = styled(ActionList.Button)(
+  ({ $isInitialValue }) => ({
+    visibility: $isInitialValue ? "hidden" : void 0
+  })
+), Context = createContext({ value: INITIAL_ZOOM_LEVEL, set: (v2) => {
 } }), ZoomInput = styled(NumericInput)({
   input: {
     width: 100
@@ -5788,7 +13168,7 @@ var ZOOM_LEVELS = [0.25, 0.5, 0.75, 0.9, 1, 1.1, 1.25, 1.5, 2, 3, 4, 8], INITIAL
     let { children, shouldScale } = this.props, { set } = this, { value } = this.state;
     return react_default.createElement(Context.Provider, { value: { value: shouldScale ? value : INITIAL_ZOOM_LEVEL, set } }, children);
   }
-}, Zoom2 = memo(function({ value, zoomIn, zoomOut, zoomTo }) {
+}, Zoom2 = memo(function({ value, zoomIn, zoomOut, zoomTo, zoomBy }) {
   let inputRef = useRef(null);
   return react_default.createElement(
     PopoverProvider,
@@ -5805,13 +13185,14 @@ var ZOOM_LEVELS = [0.25, 0.5, 0.75, 0.9, 1, 1.1, 1.25, 1.5, 2, 3, 4, 8], INITIAL
           unit: "%",
           before: react_default.createElement(ActionList.Button, { size: "small", padding: "small", readOnly: !0, "aria-hidden": !0 }, react_default.createElement(ZoomIcon, null)),
           after: react_default.createElement(
-            ActionList.Button,
+            ZoomResetButton,
             {
               size: "small",
               padding: "small",
-              disabled: value === INITIAL_ZOOM_LEVEL,
+              $isInitialValue: value === INITIAL_ZOOM_LEVEL,
               onClick: () => zoomTo(INITIAL_ZOOM_LEVEL),
-              ariaLabel: "Reset zoom"
+              ariaLabel: "Reset zoom",
+              "aria-hidden": value === INITIAL_ZOOM_LEVEL
             },
             react_default.createElement(UndoIcon, null)
           ),
@@ -5849,7 +13230,13 @@ var ZOOM_LEVELS = [0.25, 0.5, 0.75, 0.9, 1, 1.1, 1.25, 1.5, 2, 3, 4, 8], INITIAL
         padding: "small",
         variant: "ghost",
         ariaLabel: "Change zoom level",
-        active: value !== INITIAL_ZOOM_LEVEL
+        pressed: value !== INITIAL_ZOOM_LEVEL,
+        onKeyDown: (e2) => {
+          e2.key === "ArrowDown" ? (zoomBy(e2.getModifierState("Shift") ? -0.1 : -0.01), e2.preventDefault()) : e2.key === "ArrowUp" ? (zoomBy(e2.getModifierState("Shift") ? 0.1 : 0.01), e2.preventDefault()) : e2.key === "PageDown" ? (zoomOut(), e2.preventDefault()) : e2.key === "PageUp" ? (zoomIn(), e2.preventDefault()) : e2.key === "Home" ? (zoomTo(ZOOM_LEVELS[ZOOM_LEVELS.length - 1]), e2.preventDefault()) : e2.key === "End" && (zoomTo(ZOOM_LEVELS[0]), e2.preventDefault());
+        },
+        onWheel: (e2) => {
+          e2.deltaY < 0 ? zoomIn() : e2.deltaY > 0 && zoomOut(), e2.preventDefault();
+        }
       },
       Math.round(value * 100),
       "%"
@@ -5862,7 +13249,13 @@ var ZOOM_LEVELS = [0.25, 0.5, 0.75, 0.9, 1, 1.1, 1.25, 1.5, 2, 3, 4, 8], INITIAL
   }, [set, value]), zoomOut = useCallback(() => {
     let lowerZoomLevel = ZOOM_LEVELS.findLast((level) => level < value);
     lowerZoomLevel && set(lowerZoomLevel);
-  }, [set, value]), zoomTo = useCallback(
+  }, [set, value]), zoomBy = useCallback(
+    (delta) => {
+      let min = ZOOM_LEVELS[0], max = ZOOM_LEVELS[ZOOM_LEVELS.length - 1];
+      set(Math.max(min, Math.min(max, value + delta)));
+    },
+    [set, value]
+  ), zoomTo = useCallback(
     (value2) => {
       set(value2);
     },
@@ -5890,7 +13283,7 @@ var ZOOM_LEVELS = [0.25, 0.5, 0.75, 0.9, 1, 1.1, 1.25, 1.5, 2, 3, 4, 8], INITIAL
       actionName: "zoomOut",
       action: zoomOut
     });
-  }, [api, zoomIn, zoomOut, zoomTo]), react_default.createElement(Zoom2, { key: "zoom", value, zoomIn, zoomOut, zoomTo });
+  }, [api, zoomIn, zoomOut, zoomTo]), react_default.createElement(Zoom2, { key: "zoom", value, zoomIn, zoomOut, zoomTo, zoomBy });
 }), zoomTool = {
   title: "zoom",
   id: "zoom",
@@ -5918,7 +13311,7 @@ var canvasMapper = ({ state, api }) => ({
   route: ({ storyId, refId }) => refId ? `/story/${refId}_${storyId}` : `/story/${storyId}`,
   match: ({ viewMode }) => !!(viewMode && viewMode.match(/^(story|docs)$/)),
   render: () => null
-}), Preview = react_default.memo(function(props) {
+}), Preview2 = react_default.memo(function(props) {
   let {
     api,
     id: previewId,
@@ -5933,7 +13326,9 @@ var canvasMapper = ({ state, api }) => ({
     toolsExtra,
     tabs,
     wrappers,
-    tabId
+    tabId,
+    path,
+    queryParams
   } = props, tabState = useTabsState({
     selected: tabId ?? "canvas",
     onSelectionChange: (key) => {
@@ -5947,7 +13342,7 @@ var canvasMapper = ({ state, api }) => ({
     }))
   });
   tabs.length > 1 && deprecate("Addon tabs are deprecated and will be removed in Storybook 11.");
-  let tabContent = tabs.find((tab) => tab.id === tabId)?.render, shouldScale = viewMode === "story", { showToolbar } = options2, customisedShowToolbar = api.getShowToolbarWithCustomisations(showToolbar), previousStoryId = useRef(storyId);
+  let tabContent = tabs.find((tab) => tab.id === tabId)?.render, shouldScale = viewMode === "story", { showToolbar } = options2, customisedShowToolbar = api.getShowToolbarWithCustomisations(showToolbar), isReviewCollectionStory = isReviewFeatureEnabled(scope.FEATURES) && isReviewCollectionStoryRoute(path, queryParams), previousStoryId = useRef(storyId);
   useEffect(() => {
     if (entry && viewMode) {
       if (storyId === previousStoryId.current)
@@ -5966,7 +13361,7 @@ var canvasMapper = ({ state, api }) => ({
     { "aria-labelledby": "main-preview-heading", role: "main" },
     mainRef
   );
-  return react_default.createElement(Fragment, null, previewId === "main" && react_default.createElement(W, { key: "description" }, react_default.createElement("title", null, description)), react_default.createElement(ZoomProvider, { shouldScale }, react_default.createElement(PreviewContainer, null, react_default.createElement(
+  return react_default.createElement(Fragment, null, previewId === "main" && react_default.createElement(W, { key: "description" }, react_default.createElement("title", null, description)), react_default.createElement(ZoomProvider, { shouldScale }, react_default.createElement(PreviewContainer, null, customisedShowToolbar && isReviewCollectionStory ? react_default.createElement(ReviewToolbarHeader, null) : null, react_default.createElement(
     ToolbarComp,
     {
       key: "tools",
@@ -6043,24 +13438,33 @@ function filterTabs(panels, parameters) {
 
 // src/manager/components/preview/tools/addons.tsx
 init_react();
-var menuMapper = ({ api, state }) => ({
+var SHOW_ADDON_PANEL_BUTTON_ID = "storybook-show-addon-panel", menuMapper = ({ api, state }) => ({
   isVisible: api.getIsPanelShown(),
   singleStory: state.singleStory,
   panelPosition: state.layout.panelPosition,
-  toggle: () => api.togglePanel()
+  showPanel: async (forceFocus) => {
+    api.togglePanel(!0), api.focusOnUIElement(focusableUIElements.addonPanel, {
+      forceFocus,
+      poll: !0
+    });
+  }
 }), addonsTool = {
   title: "addons",
   id: "addons",
   type: types.TOOL,
   match: ({ viewMode, tabId }) => viewMode === "story" && !tabId,
-  render: () => react_default.createElement(Consumer, { filter: menuMapper }, ({ isVisible, toggle, singleStory, panelPosition }) => !singleStory && !isVisible && react_default.createElement(react_default.Fragment, null, react_default.createElement(
+  render: () => react_default.createElement(Consumer, { filter: menuMapper }, ({ isVisible, showPanel, singleStory, panelPosition }) => !singleStory && !isVisible && react_default.createElement(react_default.Fragment, null, react_default.createElement(
     Button,
     {
       padding: "small",
       variant: "ghost",
       ariaLabel: "Show addon panel",
+      id: SHOW_ADDON_PANEL_BUTTON_ID,
       key: "addons",
-      onClick: toggle
+      onClick: () => showPanel(!1),
+      onKeyDown: (e2) => {
+        (e2.key === "Enter" || e2.key === " ") && (e2.preventDefault(), showPanel(!0));
+      }
     },
     panelPosition === "bottom" ? react_default.createElement(BottomBarIcon, null) : react_default.createElement(SidebarAltIcon, null)
   )))
@@ -6069,23 +13473,32 @@ var menuMapper = ({ api, state }) => ({
 // src/manager/components/preview/tools/menu.tsx
 init_react();
 var menuMapper2 = ({ api, state }) => ({
-  isVisible: api.getIsNavShown(),
+  navAvailability: api.getNavAvailability(),
   singleStory: state.singleStory,
-  toggle: () => api.toggleNav()
+  showSidebar: async (forceFocus) => {
+    api.toggleNav(!0), api.focusOnUIElement(focusableUIElements.sidebarRegion, {
+      forceFocus,
+      poll: !0
+    });
+  }
 }), menuTool = {
   title: "menu",
   id: "menu",
   type: types.TOOL,
   // @ts-expect-error (non strict)
   match: ({ viewMode }) => ["story", "docs"].includes(viewMode),
-  render: () => react_default.createElement(Consumer, { filter: menuMapper2 }, ({ isVisible, toggle, singleStory }) => !singleStory && !isVisible && react_default.createElement(react_default.Fragment, null, react_default.createElement(
+  render: () => react_default.createElement(Consumer, { filter: menuMapper2 }, ({ navAvailability, showSidebar, singleStory }) => !singleStory && navAvailability === "hidden" && react_default.createElement(react_default.Fragment, null, react_default.createElement(
     Button,
     {
       padding: "small",
       variant: "ghost",
       ariaLabel: "Show sidebar",
+      id: focusableUIElements.showSidebar,
       key: "menu",
-      onClick: toggle
+      onClick: () => showSidebar(!1),
+      onKeyDown: (e2) => {
+        (e2.key === "Enter" || e2.key === " ") && (e2.preventDefault(), showSidebar(!0));
+      }
     },
     react_default.createElement(MenuIcon, null)
   ), react_default.createElement(Separator, null)))
@@ -6168,7 +13581,6 @@ var StyledAnimatedButton = styled(Button)(({ theme, animating, disabled }) => ({
 
 // src/manager/components/preview/tools/share.tsx
 init_react();
-var import_copy_to_clipboard = __toESM(require_copy_to_clipboard(), 1);
 
 // ../../node_modules/qrcode.react/lib/esm/index.js
 init_react();
@@ -6403,36 +13815,36 @@ var qrcodegen;
         throw new RangeError("Mask value out of range");
       for (let y2 = 0; y2 < this.size; y2++)
         for (let x2 = 0; x2 < this.size; x2++) {
-          let invert;
+          let invert2;
           switch (mask) {
             case 0:
-              invert = (x2 + y2) % 2 == 0;
+              invert2 = (x2 + y2) % 2 == 0;
               break;
             case 1:
-              invert = y2 % 2 == 0;
+              invert2 = y2 % 2 == 0;
               break;
             case 2:
-              invert = x2 % 3 == 0;
+              invert2 = x2 % 3 == 0;
               break;
             case 3:
-              invert = (x2 + y2) % 3 == 0;
+              invert2 = (x2 + y2) % 3 == 0;
               break;
             case 4:
-              invert = (Math.floor(x2 / 3) + Math.floor(y2 / 2)) % 2 == 0;
+              invert2 = (Math.floor(x2 / 3) + Math.floor(y2 / 2)) % 2 == 0;
               break;
             case 5:
-              invert = x2 * y2 % 2 + x2 * y2 % 3 == 0;
+              invert2 = x2 * y2 % 2 + x2 * y2 % 3 == 0;
               break;
             case 6:
-              invert = (x2 * y2 % 2 + x2 * y2 % 3) % 2 == 0;
+              invert2 = (x2 * y2 % 2 + x2 * y2 % 3) % 2 == 0;
               break;
             case 7:
-              invert = ((x2 + y2) % 2 + x2 * y2 % 3) % 2 == 0;
+              invert2 = ((x2 + y2) % 2 + x2 * y2 % 3) % 2 == 0;
               break;
             default:
               throw new Error("Unreachable");
           }
-          !this.isFunction[y2][x2] && invert && (this.modules[y2][x2] = !this.modules[y2][x2]);
+          !this.isFunction[y2][x2] && invert2 && (this.modules[y2][x2] = !this.modules[y2][x2]);
         }
     }
     // Calculates and returns the penalty score based on state of this QR Code's current modules.
@@ -6825,7 +14237,7 @@ var SUPPORTS_PATH2D = (function() {
   return !0;
 })(), QRCodeCanvas = react_default.forwardRef(
   function(props, forwardedRef) {
-    let _a = props, {
+    let _a2 = props, {
       value,
       size = DEFAULT_SIZE,
       level = DEFAULT_LEVEL,
@@ -6836,7 +14248,7 @@ var SUPPORTS_PATH2D = (function() {
       boostLevel,
       marginSize,
       imageSettings
-    } = _a, _b = __objRest(_a, [
+    } = _a2, _b = __objRest(_a2, [
       "value",
       "size",
       "level",
@@ -6918,7 +14330,7 @@ var SUPPORTS_PATH2D = (function() {
 QRCodeCanvas.displayName = "QRCodeCanvas";
 var QRCodeSVG = react_default.forwardRef(
   function(props, forwardedRef) {
-    let _a = props, {
+    let _a2 = props, {
       value,
       size = DEFAULT_SIZE,
       level = DEFAULT_LEVEL,
@@ -6930,7 +14342,7 @@ var QRCodeSVG = react_default.forwardRef(
       title: title2,
       marginSize,
       imageSettings
-    } = _a, otherProps = __objRest(_a, [
+    } = _a2, otherProps = __objRest(_a2, [
       "value",
       "size",
       "level",
@@ -6998,89 +14410,86 @@ QRCodeSVG.displayName = "QRCodeSVG";
 var mapper3 = ({ api, state }) => {
   let { storyId, refId } = state;
   return { api, refId, storyId };
-}, QRContainer = styled.div(() => ({
+}, QRContainer = styled.div(
+  () => ({
+    display: "flex",
+    flexDirection: "column",
+    padding: 8,
+    width: 300,
+    maxWidth: 300,
+    gap: 8
+  })
+), QRRow = styled.div(() => ({
   display: "flex",
-  alignItems: "center",
-  padding: 8,
-  maxWidth: 200
+  alignItems: "center"
+})), ShareLinkInput = styled.input(({ theme }) => ({
+  width: "100%",
+  border: `1px solid ${theme.appBorderColor}`,
+  borderRadius: 4,
+  padding: "6px 8px",
+  fontSize: theme.typography.size.s1,
+  color: theme.color.defaultText,
+  backgroundColor: theme.background.app,
+  outline: "none",
+  textOverflow: "ellipsis",
+  overflow: "hidden",
+  whiteSpace: "nowrap",
+  "&:focus": {
+    borderColor: theme.color.secondary
+  }
 })), QRImageContainer = styled.div(() => ({
   width: 64,
   height: 64,
   marginRight: 12,
   backgroundColor: "white",
   padding: 2
-})), QRImage = ({ value }) => {
-  let theme = useTheme();
-  return react_default.createElement(QRImageContainer, null, react_default.createElement(QRCodeSVG, { value, marginSize: 0, size: 60, fgColor: theme.color.darkest }));
-}, QRContent = styled.div(() => ({})), QRTitle = styled.div(({ theme }) => ({
+}));
+var QRContent = styled.div(() => ({})), QRTitle = styled.div(({ theme }) => ({
   fontWeight: theme.typography.weight.bold,
   fontSize: theme.typography.size.s1,
   marginBottom: 4
 })), QRDescription = styled.div(({ theme }) => ({
   fontSize: theme.typography.size.s1,
   color: theme.textMutedColor
-})), ShareMenu = react_default.memo(function({
-  api,
-  storyId,
-  refId
-}) {
-  let shortcutKeys = api.getShortcutKeys(), enableShortcuts = !!shortcutKeys, [copied, setCopied] = useState(!1), copyStoryLink = shortcutKeys?.copyStoryLink, openInIsolation = shortcutKeys?.openInIsolation, links = useMemo(() => {
-    let copyTitle = copied ? "Copied!" : "Copy story link", originHrefs = api.getStoryHrefs(storyId, { base: "origin", refId }), networkHrefs = api.getStoryHrefs(storyId, { base: "network", refId });
-    return [
-      [
-        {
-          id: "copy-link",
-          title: copyTitle,
-          icon: react_default.createElement(LinkIcon, null),
-          right: enableShortcuts ? react_default.createElement(Shortcut, { keys: copyStoryLink }) : null,
-          onClick: () => {
-            (0, import_copy_to_clipboard.default)(originHrefs.managerHref), setCopied(!0), setTimeout(() => setCopied(!1), 2e3);
-          }
-        },
-        {
-          id: "open-new-tab",
-          title: "Open in isolation mode",
-          icon: react_default.createElement(ShareAltIcon, null),
-          right: enableShortcuts ? react_default.createElement(Shortcut, { keys: openInIsolation }) : null,
-          href: originHrefs.previewHref,
-          target: "_blank",
-          rel: "noopener noreferrer"
-        }
-      ],
-      [
-        {
-          id: "qr-section",
-          content: react_default.createElement(QRContainer, null, react_default.createElement(QRImage, { value: networkHrefs.managerHref }), react_default.createElement(QRContent, null, react_default.createElement(QRTitle, null, "Scan to open"), react_default.createElement(QRDescription, null, scope.CONFIG_TYPE === "DEVELOPMENT" ? "Device must be on the same network." : "View story on another device.")))
-        }
-      ]
-    ];
-  }, [api, storyId, refId, copied, enableShortcuts, copyStoryLink, openInIsolation]);
-  return react_default.createElement(TooltipLinkList, { links, style: { width: 240 } });
-}), shareTool = {
-  title: "share",
-  id: "share",
-  type: types.TOOL,
+})), isolationModeTool = {
+  title: "isolation mode",
+  id: "isolationMode",
+  type: types.TOOLEXTRA,
   match: ({ viewMode, tabId }) => viewMode === "story" && !tabId,
   render: () => react_default.createElement(Consumer, { filter: mapper3 }, ({ api, storyId, refId }) => storyId ? react_default.createElement(
-    PopoverProvider,
+    Button,
     {
-      hasChrome: !0,
-      placement: "bottom",
-      padding: 0,
-      popover: react_default.createElement(ShareMenu, { api, storyId, refId })
+      padding: "small",
+      variant: "ghost",
+      ariaLabel: "Open in isolation mode",
+      tooltip: "Open in isolation mode",
+      onClick: () => {
+        let originHrefs = api.getStoryHrefs(storyId, {
+          base: "origin",
+          refId,
+          inheritArgs: !0
+        });
+        window.open(originHrefs.previewHref, "_blank", "noopener,noreferrer"), api.emit(SHARE_ISOLATE_MODE, originHrefs.previewHref);
+      }
     },
-    react_default.createElement(Button, { padding: "small", variant: "ghost", ariaLabel: "Share", tooltip: "Share..." }, react_default.createElement(ShareIcon, null))
+    react_default.createElement(PopOutIcon, null)
   ) : null)
 };
 
 // src/manager/container/Preview.tsx
-var defaultTabs = [createCanvasTab()], defaultTools = [menuTool, remountTool], defaultToolsExtra = [zoomTool, addonsTool, fullScreenTool, shareTool, openInEditorTool], emptyTabsList = [], memoizedTabs = (0, import_memoizerific.default)(1)(
+var defaultTabs = [createCanvasTab()], defaultTools = [menuTool, remountTool], defaultToolsExtra = [
+  isolationModeTool,
+  zoomTool,
+  addonsTool,
+  fullScreenTool,
+  openInEditorTool
+], emptyTabsList = [], memoizedTabs = (0, import_memoizerific2.default)(1)(
   (_2, tabElements, parameters, showTabs) => showTabs ? filterTabs([...defaultTabs, ...Object.values(tabElements)], parameters) : emptyTabsList
-), memoizedTools = (0, import_memoizerific.default)(1)(
+), memoizedTools = (0, import_memoizerific2.default)(1)(
   (_2, toolElements, filterProps) => filterToolsSide([...defaultTools, ...Object.values(toolElements)], ...filterProps)
-), memoizedExtra = (0, import_memoizerific.default)(1)(
+), memoizedExtra = (0, import_memoizerific2.default)(1)(
   (_2, extraElements, filterProps) => filterToolsSide([...defaultToolsExtra, ...Object.values(extraElements)], ...filterProps)
-), memoizedWrapper = (0, import_memoizerific.default)(1)((_2, previewElements) => [
+), memoizedWrapper = (0, import_memoizerific2.default)(1)((_2, previewElements) => [
   ...defaultWrappers,
   ...Object.values(previewElements)
 ]), { PREVIEW_URL } = scope, splitTitleAddExtraSpace = (input) => input.split("/").join(" / ").replace(/\s\s/, " "), getDescription = (item) => {
@@ -7116,6 +14525,7 @@ var defaultTabs = [createCanvasTab()], defaultTools = [menuTool, remountTool], d
     refs,
     storyId,
     baseUrl: PREVIEW_URL || "iframe.html",
+    path,
     queryParams: customQueryParams,
     tools,
     toolsExtra,
@@ -7132,7 +14542,7 @@ var defaultTabs = [createCanvasTab()], defaultTools = [menuTool, remountTool], d
     tabId
   };
 }, PreviewConnected = react_default.memo(function(props) {
-  return react_default.createElement(Consumer, { filter: mapper4 }, (fromState) => react_default.createElement(Preview, { ...props, ...fromState }));
+  return react_default.createElement(Consumer, { filter: mapper4 }, (fromState) => react_default.createElement(Preview2, { ...props, ...fromState }));
 }), Preview_default = PreviewConnected;
 
 // src/manager/container/Sidebar.tsx
@@ -7205,7 +14615,7 @@ var Shape = styled.svg(({ color: color2 }) => ({
   to {
     transform: translateY(50px);
   }
-`, Container5 = styled.div({
+`, Container8 = styled.div({
   position: "absolute",
   display: "flex",
   flexDirection: "row",
@@ -7236,7 +14646,7 @@ var Shape = styled.svg(({ color: color2 }) => ({
     let rect = anchorRef.current?.getBoundingClientRect();
     rect && (setLeft(rect.left + rect.width / 2), setTop(rect.top + rect.height / 2));
   }, []), react_default.createElement("div", { ref: anchorRef }, react_default.createElement(Anchor, null), createPortal(
-    react_default.createElement(Container5, { style: { top: top + "px", left: left + "px" } }, shapes.map((Particle, index) => {
+    react_default.createElement(Container8, { style: { top: top + "px", left: left + "px" } }, shapes.map((Particle, index) => {
       let angle = 360 / NUM_OF_PARTICLES * index + random(-JITTER, JITTER), distance = random(50, 80), rotation = random(-360, 360), style = {
         "--angle": angle + "deg",
         "--distance": distance + "px",
@@ -7261,7 +14671,7 @@ var slideIn2 = keyframes({
     transform: "translateY(var(--slide-out-to))",
     opacity: 0
   }
-}), Container6 = styled.div({
+}), Container9 = styled.div({
   display: "inline-grid",
   gridTemplateColumns: "1fr",
   justifyContent: "center",
@@ -7292,7 +14702,7 @@ var slideIn2 = keyframes({
   ...props
 }) => {
   let textRef = useRef(text), [staleValue, setStaleValue] = useState(text), isAnimating = text !== staleValue, reverse = isAnimating && numericCompare(staleValue, text);
-  return textRef.current = text, react_default.createElement(Container6, { ...props }, isAnimating && react_default.createElement(
+  return textRef.current = text, react_default.createElement(Container9, { ...props }, isAnimating && react_default.createElement(
     Text2,
     {
       "aria-hidden": !0,
@@ -7349,7 +14759,7 @@ function partialImpl(func, placeholder, ...partialArgs) {
   };
   return func.prototype && (partialed.prototype = Object.create(func.prototype)), partialed;
 }
-var placeholderSymbol = Symbol("partial.placeholder");
+var placeholderSymbol = /* @__PURE__ */ Symbol("partial.placeholder");
 partial.placeholder = placeholderSymbol;
 
 // ../../node_modules/es-toolkit/dist/function/partialRight.mjs
@@ -7363,7 +14773,7 @@ function partialRightImpl(func, placeholder, ...partialArgs) {
   };
   return func.prototype && (partialedRight.prototype = Object.create(func.prototype)), partialedRight;
 }
-var placeholderSymbol2 = Symbol("partialRight.placeholder");
+var placeholderSymbol2 = /* @__PURE__ */ Symbol("partialRight.placeholder");
 partialRight.placeholder = placeholderSymbol2;
 
 // ../../node_modules/es-toolkit/dist/function/retry.mjs
@@ -7410,7 +14820,7 @@ var storeOptions = {
     watching: !1,
     cancelling: !1,
     fatalError: void 0,
-    indexUrl: void 0,
+    index: { entries: {}, v: 5 },
     previewAnnotations: [],
     currentRun: {
       triggeredBy: void 0,
@@ -7418,6 +14828,10 @@ var storeOptions = {
         coverage: !1,
         a11y: !1
       },
+      componentTestStatuses: [],
+      a11yStatuses: [],
+      a11yReports: {},
+      reports: {},
       componentTestCount: {
         success: 0,
         error: 0
@@ -7437,9 +14851,320 @@ var storeOptions = {
   }
 };
 var STORE_CHANNEL_EVENT_NAME = `UNIVERSAL_STORE:${storeOptions.id}`;
+var TRIGGER_TEST_RUN_REQUEST = `${ADDON_ID5}/trigger-test-run-request`, TRIGGER_TEST_RUN_RESPONSE = `${ADDON_ID5}/trigger-test-run-response`;
+
+// src/storybook-error.ts
+function parseErrorCode({
+  code,
+  category
+}) {
+  let paddedCode = String(code).padStart(4, "0");
+  return `SB_${category}_${paddedCode}`;
+}
+function appendErrorRef(url) {
+  if (/^(?!.*storybook\.js\.org)|[?&]ref=error\b/.test(url))
+    return url;
+  try {
+    let urlObj = new URL(url);
+    return urlObj.searchParams.set("ref", "error"), urlObj.toString();
+  } catch {
+    return url;
+  }
+}
+var StorybookError = class _StorybookError extends Error {
+  constructor(props) {
+    super(
+      _StorybookError.getFullMessage(props),
+      props.cause === void 0 ? void 0 : { cause: props.cause }
+    );
+    /**
+     * Data associated with the error. Used to provide additional information in the error message or
+     * to be passed to telemetry.
+     */
+    this.data = {};
+    /** Flag used to easily determine if the error originates from Storybook. */
+    this.fromStorybook = !0;
+    /**
+     * Flag used to determine if the error is handled by us and should therefore not be shown to the
+     * user.
+     */
+    this.isHandledError = !1;
+    /**
+     * A collection of sub errors which relate to a parent error.
+     *
+     * Sub-errors are used to represent multiple related errors that occurred together. When a
+     * StorybookError with sub-errors is sent to telemetry, both the parent error and each sub-error
+     * are sent as separate telemetry events. This allows for better error tracking and debugging.
+     *
+     * @example
+     *
+     * ```ts
+     * const error1 = new SomeError();
+     * const error2 = new AnotherError();
+     * const parentError = new ParentError({
+     *   // ... other props
+     *   subErrors: [error1, error2],
+     * });
+     * ```
+     */
+    this.subErrors = [];
+    this.category = props.category, this.documentation = props.documentation ?? !1, this.code = props.code, this.isHandledError = props.isHandledError ?? !1, this.agentFacing = props.agentFacing ?? !1, this.name = props.name, this.subErrors = props.subErrors ?? [];
+  }
+  get fullErrorCode() {
+    return parseErrorCode({ code: this.code, category: this.category });
+  }
+  /** Overrides the default `Error.name` property in the format: SB_<CATEGORY>_<CODE>. */
+  get name() {
+    let errorName = this._name || this.constructor.name;
+    return `${this.fullErrorCode} (${errorName})`;
+  }
+  set name(name) {
+    this._name = name;
+  }
+  /** Generates the error message along with additional documentation link (if applicable). */
+  static getFullMessage({
+    documentation,
+    code,
+    category,
+    message
+  }) {
+    let page;
+    return documentation === !0 ? page = `https://storybook.js.org/error/${parseErrorCode({ code, category })}?ref=error` : typeof documentation == "string" ? page = appendErrorRef(documentation) : Array.isArray(documentation) && (page = `
+${documentation.map((doc) => `	- ${appendErrorRef(doc)}`).join(`
+`)}`), `${message}${page != null ? `
+
+More info: ${page}
+` : ""}`;
+  }
+};
+
+// src/manager-errors.ts
+var StatusTypeIdMismatchError2 = class extends StorybookError {
+  constructor(data) {
+    super({
+      name: "StatusTypeIdMismatchError",
+      category: "MANAGER_API" /* MANAGER_API */,
+      code: 1,
+      message: `Status has typeId "${data.status.typeId}" but was added to store with typeId "${data.typeId}". Full status: ${JSON.stringify(
+        data.status,
+        null,
+        2
+      )}`
+    });
+    this.data = data;
+  }
+}, UniversalStoreFollowerTimeoutError2 = class extends StorybookError {
+  constructor(followerId) {
+    super({
+      name: "UniversalStoreFollowerTimeoutError",
+      category: "MANAGER_UNIVERSAL-STORE" /* MANAGER_UNIVERSAL_STORE */,
+      code: 1,
+      message: `Timed out waiting for leader state for UniversalStore follower with id: '${followerId}'. Ensure a leader with the same id exists and is reachable before creating a follower.`
+    });
+  }
+};
+
+// ../../node_modules/ts-dedent/esm/index.js
+function dedent(templ) {
+  for (var values = [], _i = 1; _i < arguments.length; _i++)
+    values[_i - 1] = arguments[_i];
+  var strings = Array.from(typeof templ == "string" ? [templ] : templ);
+  strings[strings.length - 1] = strings[strings.length - 1].replace(/\r?\n([\t ]*)$/, "");
+  var indentLengths = strings.reduce(function(arr, str) {
+    var matches = str.match(/\n([\t ]+|(?!\s).)/g);
+    return matches ? arr.concat(matches.map(function(match) {
+      var _a2, _b;
+      return (_b = (_a2 = match.match(/[\t ]/g)) === null || _a2 === void 0 ? void 0 : _a2.length) !== null && _b !== void 0 ? _b : 0;
+    })) : arr;
+  }, []);
+  if (indentLengths.length) {
+    var pattern_1 = new RegExp(`
+[	 ]{` + Math.min.apply(Math, indentLengths) + "}", "g");
+    strings = strings.map(function(str) {
+      return str.replace(pattern_1, `
+`);
+    });
+  }
+  strings[0] = strings[0].replace(/^\r?\n/, "");
+  var string = strings[0];
+  return values.forEach(function(value, i2) {
+    var endentations = string.match(/(?:^|\n)( *)$/), endentation = endentations ? endentations[1] : "", indentedValue = value;
+    typeof value == "string" && value.includes(`
+`) && (indentedValue = String(value).split(`
+`).map(function(str, i3) {
+      return i3 === 0 ? str : "" + endentation + str;
+    }).join(`
+`)), string += indentedValue + strings[i2 + 1];
+  }), string;
+}
+
+// src/preview-errors.ts
+var StatusTypeIdMismatchError3 = class extends StorybookError {
+  constructor(data) {
+    super({
+      name: "StatusTypeIdMismatchError",
+      category: "PREVIEW_API" /* PREVIEW_API */,
+      code: 16,
+      message: `Status has typeId "${data.status.typeId}" but was added to store with typeId "${data.typeId}". Full status: ${JSON.stringify(
+        data.status,
+        null,
+        2
+      )}`
+    });
+    this.data = data;
+  }
+};
+
+// src/server-errors.ts
+var import_picocolors = __toESM(require_picocolors_browser(), 1);
+var StatusTypeIdMismatchError4 = class extends StorybookError {
+  constructor(data) {
+    super({
+      name: "StatusTypeIdMismatchError",
+      category: "CORE-SERVER" /* CORE_SERVER */,
+      code: 16,
+      message: `Status has typeId "${data.status.typeId}" but was added to store with typeId "${data.typeId}". Full status: ${JSON.stringify(
+        data.status,
+        null,
+        2
+      )}`
+    });
+    this.data = data;
+  }
+};
+
+// src/shared/status-store/index.ts
+var STATUS_VALUE_PREFIX = "status-value:";
+var statusValueShortName = (value) => value === "status-value:affected" ? "related" : value.slice(STATUS_VALUE_PREFIX.length), statusValueDescription = (value) => ({
+  "status-value:pending": "Stories with pending status",
+  "status-value:success": "Stories with passing tests",
+  "status-value:new": "Newly added stories",
+  "status-value:modified": "Stories closely linked to code changes",
+  "status-value:affected": "Stories likely to be affected by code changes",
+  "status-value:reviewing": "Stories included in the active review",
+  "status-value:warning": "Stories with warnings",
+  "status-value:error": "Stories with failing tests",
+  "status-value:unknown": "Stories with unknown status"
+})[value];
+var UNIVERSAL_STATUS_STORE_OPTIONS = {
+  id: "storybook/status",
+  leader: !0,
+  initialState: {}
+}, StatusStoreEventType = {
+  SELECT: "select"
+};
+function countStatusesByValue(allStatuses) {
+  let counts = {};
+  for (let statusByTypeId of Object.values(allStatuses))
+    for (let status of Object.values(statusByTypeId))
+      counts[status.value] = (counts[status.value] ?? 0) + 1;
+  return counts;
+}
+function createStatusStore({
+  universalStatusStore: universalStatusStore2,
+  useUniversalStore: useUniversalStore2,
+  environment
+}) {
+  let fullStatusStore2 = {
+    getAll() {
+      return universalStatusStore2.getState();
+    },
+    set(statuses) {
+      universalStatusStore2.setState((state) => {
+        let newState = { ...state };
+        for (let status of statuses) {
+          let { storyId, typeId } = status;
+          newState[storyId] = { ...newState[storyId] ?? {}, [typeId]: status };
+        }
+        return newState;
+      });
+    },
+    onAllStatusChange(listener) {
+      return universalStatusStore2.onStateChange((state, prevState) => {
+        listener(state, prevState);
+      });
+    },
+    onSelect(listener) {
+      return universalStatusStore2.subscribe(StatusStoreEventType.SELECT, (event) => {
+        listener(event.payload);
+      });
+    },
+    selectStatuses: (statuses) => {
+      universalStatusStore2.send({ type: StatusStoreEventType.SELECT, payload: statuses });
+    },
+    unset(storyIds) {
+      if (!storyIds) {
+        universalStatusStore2.setState({});
+        return;
+      }
+      universalStatusStore2.setState((state) => {
+        let newState = { ...state };
+        for (let storyId of storyIds)
+          delete newState[storyId];
+        return newState;
+      });
+    },
+    typeId: void 0
+  }, getStatusStoreByTypeId2 = (typeId) => ({
+    getAll: fullStatusStore2.getAll,
+    set(statuses) {
+      universalStatusStore2.setState((state) => {
+        let newState = { ...state };
+        for (let status of statuses) {
+          let { storyId } = status;
+          if (status.typeId !== typeId)
+            switch (environment) {
+              case "server":
+                throw new StatusTypeIdMismatchError4({
+                  status,
+                  typeId
+                });
+              case "manager":
+                throw new StatusTypeIdMismatchError2({
+                  status,
+                  typeId
+                });
+              default:
+                throw new StatusTypeIdMismatchError3({
+                  status,
+                  typeId
+                });
+            }
+          newState[storyId] = { ...newState[storyId] ?? {}, [typeId]: status };
+        }
+        return newState;
+      });
+    },
+    onAllStatusChange: fullStatusStore2.onAllStatusChange,
+    onSelect(listener) {
+      return universalStatusStore2.subscribe(StatusStoreEventType.SELECT, (event) => {
+        event.payload.some((status) => status.typeId === typeId) && listener(event.payload);
+      });
+    },
+    unset(storyIds) {
+      universalStatusStore2.setState((state) => {
+        let newState = { ...state };
+        for (let storyId in newState)
+          if (newState[storyId]?.[typeId] && (!storyIds || storyIds?.includes(storyId))) {
+            let { [typeId]: omittedStatus, ...storyStatusesWithoutTypeId } = newState[storyId];
+            newState[storyId] = storyStatusesWithoutTypeId;
+          }
+        return newState;
+      });
+    },
+    typeId
+  });
+  return useUniversalStore2 ? {
+    getStatusStoreByTypeId: getStatusStoreByTypeId2,
+    fullStatusStore: fullStatusStore2,
+    universalStatusStore: universalStatusStore2,
+    useStatusStore: (selector) => useUniversalStore2(universalStatusStore2, selector)[0]
+  } : { getStatusStoreByTypeId: getStatusStoreByTypeId2, fullStatusStore: fullStatusStore2, universalStatusStore: universalStatusStore2 };
+}
 
 // src/cli/AddonVitestService.constants.ts
 var SUPPORTED_FRAMEWORKS = [
+  "angular-vite" /* ANGULAR_VITE */,
   "html-vite" /* HTML_VITE */,
   "nextjs-vite" /* NEXTJS_VITE */,
   "preact-vite" /* PREACT_VITE */,
@@ -7449,7 +15174,8 @@ var SUPPORTED_FRAMEWORKS = [
   "svelte-vite" /* SVELTE_VITE */,
   "sveltekit" /* SVELTEKIT */,
   "vue3-vite" /* VUE3_VITE */,
-  "web-components-vite" /* WEB_COMPONENTS_VITE */
+  "web-components-vite" /* WEB_COMPONENTS_VITE */,
+  "tanstack-react" /* TANSTACK_REACT */
 ];
 
 // src/docs-tools/shared.ts
@@ -7466,7 +15192,7 @@ init_react();
 function isOfType(type) {
   return (value) => typeof value === type;
 }
-var isFunction = isOfType("function"), isNull = (value) => value === null, isRegex = (value) => Object.prototype.toString.call(value).slice(8, -1) === "RegExp", isObject = (value) => !isUndefined(value) && !isNull(value) && (isFunction(value) || typeof value == "object"), isUndefined = isOfType("undefined");
+var isFunction2 = isOfType("function"), isNull2 = (value) => value === null, isRegex = (value) => Object.prototype.toString.call(value).slice(8, -1) === "RegExp", isObject = (value) => !isUndefined2(value) && !isNull2(value) && (isFunction2(value) || typeof value == "object"), isUndefined2 = isOfType("undefined");
 function equalArray(left, right) {
   let { length } = left;
   if (length !== right.length)
@@ -7806,9 +15532,9 @@ init_react();
 var import_prop_types2 = __toESM(require_prop_types());
 
 // ../../node_modules/popper.js/dist/esm/popper.js
-var isBrowser = typeof window < "u" && typeof document < "u" && typeof navigator < "u", timeoutDuration = (function() {
+var isBrowser2 = typeof window < "u" && typeof document < "u" && typeof navigator < "u", timeoutDuration = (function() {
   for (var longerTimeoutBrowsers = ["Edge", "Trident", "Firefox"], i2 = 0; i2 < longerTimeoutBrowsers.length; i2 += 1)
-    if (isBrowser && navigator.userAgent.indexOf(longerTimeoutBrowsers[i2]) >= 0)
+    if (isBrowser2 && navigator.userAgent.indexOf(longerTimeoutBrowsers[i2]) >= 0)
       return 1;
   return 0;
 })();
@@ -7828,8 +15554,8 @@ function taskDebounce(fn) {
     }, timeoutDuration));
   };
 }
-var supportsMicroTasks = isBrowser && window.Promise, debounce2 = supportsMicroTasks ? microtaskDebounce : taskDebounce;
-function isFunction2(functionToCheck) {
+var supportsMicroTasks = isBrowser2 && window.Promise, debounce2 = supportsMicroTasks ? microtaskDebounce : taskDebounce;
+function isFunction3(functionToCheck) {
   var getType = {};
   return functionToCheck && getType.toString.call(functionToCheck) === "[object Function]";
 }
@@ -7858,7 +15584,7 @@ function getScrollParent(element) {
 function getReferenceNode(reference) {
   return reference && reference.referenceNode ? reference.referenceNode : reference;
 }
-var isIE11 = isBrowser && !!(window.MSInputMethodContext && document.documentMode), isIE10 = isBrowser && /MSIE 10/.test(navigator.userAgent);
+var isIE11 = isBrowser2 && !!(window.MSInputMethodContext && document.documentMode), isIE10 = isBrowser2 && /MSIE 10/.test(navigator.userAgent);
 function isIE(version3) {
   return version3 === 11 ? isIE11 : version3 === 10 ? isIE10 : isIE11 || isIE10;
 }
@@ -7907,8 +15633,8 @@ function getBordersSize(styles2, axis) {
 function getSize(axis, body, html, computedStyle) {
   return Math.max(body["offset" + axis], body["scroll" + axis], html["client" + axis], html["offset" + axis], html["scroll" + axis], isIE(10) ? parseInt(html["offset" + axis]) + parseInt(computedStyle["margin" + (axis === "Height" ? "Top" : "Left")]) + parseInt(computedStyle["margin" + (axis === "Height" ? "Bottom" : "Right")]) : 0);
 }
-function getWindowSizes(document10) {
-  var body = document10.body, html = document10.documentElement, computedStyle = isIE(10) && getComputedStyle(html);
+function getWindowSizes(document11) {
+  var body = document11.body, html = document11.documentElement, computedStyle = isIE(10) && getComputedStyle(html);
   return {
     height: getSize("Height", body, html, computedStyle),
     width: getSize("Width", body, html, computedStyle)
@@ -8111,7 +15837,7 @@ function runModifiers(modifiers2, data, ends) {
   return modifiersToRun.forEach(function(modifier) {
     modifier.function && console.warn("`modifier.function` is deprecated, use `modifier.fn`!");
     var fn = modifier.function || modifier.fn;
-    modifier.enabled && isFunction2(fn) && (data.offsets.popper = getClientRect(data.offsets.popper), data.offsets.reference = getClientRect(data.offsets.reference), data = fn(data, modifier));
+    modifier.enabled && isFunction3(fn) && (data.offsets.popper = getClientRect(data.offsets.popper), data.offsets.reference = getClientRect(data.offsets.reference), data = fn(data, modifier));
   }), data;
 }
 function update() {
@@ -8201,7 +15927,7 @@ function getRoundedOffsets(data, shouldRound) {
     right: horizontalToInteger(popper.right)
   };
 }
-var isFirefox = isBrowser && /Firefox/i.test(navigator.userAgent);
+var isFirefox = isBrowser2 && /Firefox/i.test(navigator.userAgent);
 function computeStyle(data, options2) {
   var x2 = options2.x, y2 = options2.y, popper = data.offsets.popper, legacyGpuAccelerationOption = find(data.instance.modifiers, function(modifier) {
     return modifier.name === "applyStyle";
@@ -8297,15 +16023,7 @@ function toValue(str, measurement, popperOffsets, referenceOffsets) {
     return str;
   if (unit.indexOf("%") === 0) {
     var element = void 0;
-    switch (unit) {
-      case "%p":
-        element = popperOffsets;
-        break;
-      case "%":
-      case "%r":
-      default:
-        element = referenceOffsets;
-    }
+    unit === "%p" ? element = popperOffsets : element = referenceOffsets;
     var rect = getClientRect(element);
     return rect[measurement] / 100 * value;
   } else if (unit === "vh" || unit === "vw") {
@@ -8765,7 +16483,7 @@ var modifiers = {
     }).sort(function(a2, b2) {
       return a2.order - b2.order;
     }), this.modifiers.forEach(function(modifierOptions) {
-      modifierOptions.enabled && isFunction2(modifierOptions.onLoad) && modifierOptions.onLoad(_this.reference, _this.popper, _this.options, modifierOptions, _this.state);
+      modifierOptions.enabled && isFunction3(modifierOptions.onLoad) && modifierOptions.onLoad(_this.reference, _this.popper, _this.options, modifierOptions, _this.state);
     }), this.update();
     var eventsEnabled = this.options.eventsEnabled;
     eventsEnabled && this.enableEventListeners(), this.state.eventsEnabled = eventsEnabled;
@@ -8996,13 +16714,13 @@ function isOfType4(type) {
     return typeof value === type;
   };
 }
-var isFunction3 = isOfType4("function"), isNull2 = function(value) {
+var isFunction4 = isOfType4("function"), isNull3 = function(value) {
   return value === null;
 }, isRegex2 = function(value) {
   return Object.prototype.toString.call(value).slice(8, -1) === "RegExp";
 }, isObject2 = function(value) {
-  return !isUndefined2(value) && !isNull2(value) && (isFunction3(value) || typeof value == "object");
-}, isUndefined2 = isOfType4("undefined");
+  return !isUndefined3(value) && !isNull3(value) && (isFunction4(value) || typeof value == "object");
+}, isUndefined3 = isOfType4("undefined");
 
 // ../../node_modules/tree-changes/node_modules/@gilbarbara/deep-equal/esm/index.js
 var __values = function(o3) {
@@ -9033,7 +16751,7 @@ function equalArrayBuffer2(left, right) {
   return !0;
 }
 function equalMap2(left, right) {
-  var e_1, _a, e_2, _b;
+  var e_1, _a2, e_2, _b;
   if (left.size !== right.size)
     return !1;
   try {
@@ -9046,7 +16764,7 @@ function equalMap2(left, right) {
     e_1 = { error: e_1_1 };
   } finally {
     try {
-      _d && !_d.done && (_a = _c.return) && _a.call(_c);
+      _d && !_d.done && (_a2 = _c.return) && _a2.call(_c);
     } finally {
       if (e_1) throw e_1.error;
     }
@@ -9069,7 +16787,7 @@ function equalMap2(left, right) {
   return !0;
 }
 function equalSet2(left, right) {
-  var e_3, _a;
+  var e_3, _a2;
   if (left.size !== right.size)
     return !1;
   try {
@@ -9082,7 +16800,7 @@ function equalSet2(left, right) {
     e_3 = { error: e_3_1 };
   } finally {
     try {
-      _c && !_c.done && (_a = _b.return) && _a.call(_b);
+      _c && !_c.done && (_a2 = _b.return) && _a2.call(_b);
     } finally {
       if (e_3) throw e_3.error;
     }
@@ -9323,8 +17041,8 @@ function compareValues2(previousData, data, options2) {
     return esm_default2.primitive(d2) && esm_default2.defined(d2);
   }) && (type === "added" ? !esm_default2.defined(left) && esm_default2.defined(right) : esm_default2.defined(left) && !esm_default2.defined(right));
 }
-function getIterables2(previousData, data, _a) {
-  var _b = _a === void 0 ? {} : _a, key = _b.key, left = nested2(previousData, key), right = nested2(data, key);
+function getIterables2(previousData, data, _a2) {
+  var _b = _a2 === void 0 ? {} : _a2, key = _b.key, left = nested2(previousData, key), right = nested2(data, key);
   if (!isSameType2(left, right))
     throw new TypeError("Inputs have different types");
   if (!canHaveLength2(left, right))
@@ -9332,8 +17050,8 @@ function getIterables2(previousData, data, _a) {
   return [left, right].every(esm_default2.plainObject) && (left = Object.keys(left), right = Object.keys(right)), [left, right];
 }
 function hasEntry2(input) {
-  return function(_a) {
-    var key = _a[0], value = _a[1];
+  return function(_a2) {
+    var key = _a2[0], value = _a2[1];
     return esm_default2.array(input) ? equal2(input, value) || input.some(function(d2) {
       return equal2(d2, value) || esm_default2.array(value) && isEqualPredicate2(value)(d2);
     }) : esm_default2.plainObject(input) && input[key] ? !!input[key] && equal2(input[key], value) : equal2(input, value);
@@ -9427,14 +17145,14 @@ function treeChanges2(previousData, data) {
     }
   }, emptied = function(key) {
     try {
-      var _a = getIterables2(previousData, data, { key }), left = _a[0], right = _a[1];
+      var _a2 = getIterables2(previousData, data, { key }), left = _a2[0], right = _a2[1];
       return !!left.length && !right.length;
     } catch {
       return !1;
     }
   }, filled = function(key) {
     try {
-      var _a = getIterables2(previousData, data, { key }), left = _a[0], right = _a[1];
+      var _a2 = getIterables2(previousData, data, { key }), left = _a2[0], right = _a2[1];
       return !left.length && !!right.length;
     } catch {
       return !1;
@@ -9458,23 +17176,23 @@ function treeChanges2(previousData, data) {
 }
 
 // ../../node_modules/react-floater/es/index.js
-function ownKeys(e2, r3) {
+function ownKeys(e2, r4) {
   var t2 = Object.keys(e2);
   if (Object.getOwnPropertySymbols) {
     var o3 = Object.getOwnPropertySymbols(e2);
-    r3 && (o3 = o3.filter(function(r4) {
-      return Object.getOwnPropertyDescriptor(e2, r4).enumerable;
+    r4 && (o3 = o3.filter(function(r5) {
+      return Object.getOwnPropertyDescriptor(e2, r5).enumerable;
     })), t2.push.apply(t2, o3);
   }
   return t2;
 }
 function _objectSpread2(e2) {
-  for (var r3 = 1; r3 < arguments.length; r3++) {
-    var t2 = arguments[r3] != null ? arguments[r3] : {};
-    r3 % 2 ? ownKeys(Object(t2), !0).forEach(function(r4) {
-      _defineProperty(e2, r4, t2[r4]);
-    }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e2, Object.getOwnPropertyDescriptors(t2)) : ownKeys(Object(t2)).forEach(function(r4) {
-      Object.defineProperty(e2, r4, Object.getOwnPropertyDescriptor(t2, r4));
+  for (var r4 = 1; r4 < arguments.length; r4++) {
+    var t2 = arguments[r4] != null ? arguments[r4] : {};
+    r4 % 2 ? ownKeys(Object(t2), !0).forEach(function(r5) {
+      _defineProperty(e2, r5, t2[r5]);
+    }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e2, Object.getOwnPropertyDescriptors(t2)) : ownKeys(Object(t2)).forEach(function(r5) {
+      Object.defineProperty(e2, r5, Object.getOwnPropertyDescriptor(t2, r5));
     });
   }
   return e2;
@@ -9591,14 +17309,14 @@ function _toPropertyKey(arg) {
   return typeof key == "symbol" ? key : String(key);
 }
 var DEFAULTS = { flip: { padding: 20 }, preventOverflow: { padding: 10 } }, VALIDATOR_ARG_ERROR_MESSAGE = "The typeValidator argument must be a function with the signature function(props, propName, componentName).", MESSAGE_ARG_ERROR_MESSAGE = "The error message is optional, but must be a string if provided.";
-function propIsRequired(condition, props, propName, componentName) {
-  return typeof condition == "boolean" ? condition : typeof condition == "function" ? condition(props, propName, componentName) : condition ? !!condition : !1;
+function propIsRequired(condition, props, propName, componentName2) {
+  return typeof condition == "boolean" ? condition : typeof condition == "function" ? condition(props, propName, componentName2) : condition ? !!condition : !1;
 }
 function propExists(props, propName) {
   return Object.hasOwnProperty.call(props, propName);
 }
-function missingPropError(props, propName, componentName, message) {
-  return message ? new Error(message) : new Error("Required ".concat(props[propName], " `").concat(propName, "` was not specified in `").concat(componentName, "`."));
+function missingPropError(props, propName, componentName2, message) {
+  return message ? new Error(message) : new Error("Required ".concat(props[propName], " `").concat(propName, "` was not specified in `").concat(componentName2, "`."));
 }
 function guardAgainstInvalidArgTypes(typeValidator, message) {
   if (typeof typeValidator != "function")
@@ -9607,10 +17325,10 @@ function guardAgainstInvalidArgTypes(typeValidator, message) {
     throw new TypeError(MESSAGE_ARG_ERROR_MESSAGE);
 }
 function isRequiredIf(typeValidator, condition, message) {
-  return guardAgainstInvalidArgTypes(typeValidator, message), function(props, propName, componentName) {
+  return guardAgainstInvalidArgTypes(typeValidator, message), function(props, propName, componentName2) {
     for (var _len = arguments.length, rest2 = new Array(_len > 3 ? _len - 3 : 0), _key = 3; _key < _len; _key++)
       rest2[_key - 3] = arguments[_key];
-    return propIsRequired(condition, props, propName, componentName) ? propExists(props, propName) ? typeValidator.apply(void 0, [props, propName, componentName].concat(rest2)) : missingPropError(props, propName, componentName, message) : typeValidator.apply(void 0, [props, propName, componentName].concat(rest2));
+    return propIsRequired(condition, props, propName, componentName2) ? propExists(props, propName) ? typeValidator.apply(void 0, [props, propName, componentName2].concat(rest2)) : missingPropError(props, propName, componentName2, message) : typeValidator.apply(void 0, [props, propName, componentName2].concat(rest2));
   };
 }
 var STATUS2 = { INIT: "init", IDLE: "idle", OPENING: "opening", OPEN: "open", CLOSING: "closing", ERROR: "error" }, isReact16 = react_dom_default.createPortal !== void 0;
@@ -9640,7 +17358,7 @@ function once3(element, event, cb) {
     cb(e2), off(element, event, _nextCB);
   }, on(element, event, _nextCB, capture);
 }
-function noop2() {
+function noop3() {
 }
 var ReactFloaterPortal = (function(_React$Component) {
   _inherits(ReactFloaterPortal2, _React$Component);
@@ -9876,7 +17594,7 @@ _defineProperty(ReactFloater, "propTypes", { autoOpen: import_prop_types2.defaul
 }), content: isRequiredIf(import_prop_types2.default.node, function(props) {
   return !props.component;
 }), debug: import_prop_types2.default.bool, disableAnimation: import_prop_types2.default.bool, disableFlip: import_prop_types2.default.bool, disableHoverToClick: import_prop_types2.default.bool, event: import_prop_types2.default.oneOf(["hover", "click"]), eventDelay: import_prop_types2.default.number, footer: import_prop_types2.default.node, getPopper: import_prop_types2.default.func, hideArrow: import_prop_types2.default.bool, id: import_prop_types2.default.oneOfType([import_prop_types2.default.string, import_prop_types2.default.number]), offset: import_prop_types2.default.number, open: import_prop_types2.default.bool, options: import_prop_types2.default.object, placement: import_prop_types2.default.oneOf(["top", "top-start", "top-end", "bottom", "bottom-start", "bottom-end", "left", "left-start", "left-end", "right", "right-start", "right-end", "auto", "center"]), showCloseButton: import_prop_types2.default.bool, style: import_prop_types2.default.object, styles: import_prop_types2.default.object, target: import_prop_types2.default.oneOfType([import_prop_types2.default.object, import_prop_types2.default.string]), title: import_prop_types2.default.node, wrapperOptions: import_prop_types2.default.shape({ offset: import_prop_types2.default.number, placement: import_prop_types2.default.oneOf(["top", "top-start", "top-end", "bottom", "bottom-start", "bottom-end", "left", "left-start", "left-end", "right", "right-start", "right-end", "auto"]), position: import_prop_types2.default.bool }) });
-_defineProperty(ReactFloater, "defaultProps", { autoOpen: !1, callback: noop2, debug: !1, disableAnimation: !1, disableFlip: !1, disableHoverToClick: !1, event: "click", eventDelay: 0.4, getPopper: noop2, hideArrow: !1, offset: 15, placement: "bottom", showCloseButton: !1, styles: {}, target: null, wrapperOptions: { position: !1 } });
+_defineProperty(ReactFloater, "defaultProps", { autoOpen: !1, callback: noop3, debug: !1, disableAnimation: !1, disableFlip: !1, disableHoverToClick: !1, event: "click", eventDelay: 0.4, getPopper: noop3, hideArrow: !1, offset: 15, placement: "bottom", showCloseButton: !1, styles: {}, target: null, wrapperOptions: { position: !1 } });
 
 // ../../node_modules/react-joyride/dist/index.mjs
 init_react();
@@ -9923,8 +17641,8 @@ var STATUS3 = {
   ERROR: "error"
 };
 function canUseDOM2() {
-  var _a;
-  return !!(typeof window < "u" && ((_a = window.document) != null && _a.createElement));
+  var _a2;
+  return !!(typeof window < "u" && ((_a2 = window.document) != null && _a2.createElement));
 }
 function getClientRect2(element) {
   return element ? element.getBoundingClientRect() : null;
@@ -9991,7 +17709,7 @@ function hasPosition(el, type = "fixed") {
   return nodeName === "BODY" || nodeName === "HTML" ? !1 : styles2 && styles2.position === type ? !0 : el.parentNode ? hasPosition(el.parentNode, type) : !1;
 }
 function isElementVisible(element) {
-  var _a;
+  var _a2;
   if (!element)
     return !1;
   let parentElement = element;
@@ -10001,13 +17719,13 @@ function isElementVisible(element) {
       if (display === "none" || visibility === "hidden")
         return !1;
     }
-    parentElement = (_a = parentElement.parentElement) != null ? _a : null;
+    parentElement = (_a2 = parentElement.parentElement) != null ? _a2 : null;
   }
   return !0;
 }
 function getElementPosition(element, offset2, skipFix) {
-  var _a, _b, _c;
-  let elementRect = getClientRect2(element), parent = getScrollParent2(element, skipFix), hasScrollParent = hasCustomScrollParent(element, skipFix), isFixedTarget = hasPosition(element), parentTop = 0, top = (_a = elementRect?.top) != null ? _a : 0;
+  var _a2, _b, _c;
+  let elementRect = getClientRect2(element), parent = getScrollParent2(element, skipFix), hasScrollParent = hasCustomScrollParent(element, skipFix), isFixedTarget = hasPosition(element), parentTop = 0, top = (_a2 = elementRect?.top) != null ? _a2 : 0;
   if (hasScrollParent && isFixedTarget) {
     let offsetTop = (_b = element?.offsetTop) != null ? _b : 0, parentScrollTop = (_c = parent?.scrollTop) != null ? _c : 0;
     top = offsetTop - parentScrollTop;
@@ -10015,17 +17733,17 @@ function getElementPosition(element, offset2, skipFix) {
   return Math.floor(top - offset2);
 }
 function getScrollTo(element, offset2, skipFix) {
-  var _a;
+  var _a2;
   if (!element)
     return 0;
-  let { offsetTop = 0, scrollTop = 0 } = (_a = (0, import_scrollparent.default)(element)) != null ? _a : {}, top = element.getBoundingClientRect().top + scrollTop;
+  let { offsetTop = 0, scrollTop = 0 } = (_a2 = (0, import_scrollparent.default)(element)) != null ? _a2 : {}, top = element.getBoundingClientRect().top + scrollTop;
   offsetTop && (hasCustomScrollParent(element, skipFix) || hasCustomOffsetParent(element)) && (top -= offsetTop);
   let output = Math.floor(top - offset2);
   return output < 0 ? 0 : output;
 }
 function scrollDocument() {
-  var _a;
-  return (_a = document.scrollingElement) != null ? _a : document.documentElement;
+  var _a2;
+  return (_a2 = document.scrollingElement) != null ? _a2 : document.documentElement;
 }
 function scrollTo(value, options2) {
   let { duration, element } = options2;
@@ -10057,7 +17775,7 @@ function hasValidKeys(object, keys) {
   return !src_default.plainObject(object) || !src_default.array(keys) ? !1 : Object.keys(object).every((d2) => keys.includes(d2));
 }
 function hexToRGB(hex) {
-  let shorthandRegex = /^#?([\da-f])([\da-f])([\da-f])$/i, properHex = hex.replace(shorthandRegex, (_m, r3, g2, b2) => r3 + r3 + g2 + g2 + b2 + b2), result = /^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/i.exec(properHex);
+  let shorthandRegex = /^#?([\da-f])([\da-f])([\da-f])$/i, properHex = hex.replace(shorthandRegex, (_m, r4, g2, b2) => r4 + r4 + g2 + g2 + b2 + b2), result = /^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/i.exec(properHex);
   return result ? [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)] : [];
 }
 function hideBeacon(step) {
@@ -10078,7 +17796,7 @@ function log2({ data, debug = !1, title: title2, warn = !1 }) {
 function objectKeys(input) {
   return Object.keys(input);
 }
-function omit(input, ...filter) {
+function omit2(input, ...filter) {
   if (!src_default.plainObject(input))
     throw new TypeError("Expected an object");
   let output = {};
@@ -10086,7 +17804,7 @@ function omit(input, ...filter) {
     ({}).hasOwnProperty.call(input, key) && (filter.includes(key) || (output[key] = input[key]));
   return output;
 }
-function pick(input, ...filter) {
+function pick2(input, ...filter) {
   if (!src_default.plainObject(input))
     throw new TypeError("Expected an object");
   if (!filter.length)
@@ -10203,8 +17921,8 @@ var defaultFloaterProps = {
   position: "absolute"
 };
 function getStyles2(props, step) {
-  var _a, _b, _c, _d, _e;
-  let { floaterProps, styles: styles2 } = props, mergedFloaterProps = (0, import_deepmerge3.default)((_a = step.floaterProps) != null ? _a : {}, floaterProps ?? {}), mergedStyles = (0, import_deepmerge3.default)(styles2 ?? {}, (_b = step.styles) != null ? _b : {}), options2 = (0, import_deepmerge3.default)(defaultOptions2, mergedStyles.options || {}), hideBeacon2 = step.placement === "center" || step.disableBeacon, { width } = options2;
+  var _a2, _b, _c, _d, _e;
+  let { floaterProps, styles: styles2 } = props, mergedFloaterProps = (0, import_deepmerge3.default)((_a2 = step.floaterProps) != null ? _a2 : {}, floaterProps ?? {}), mergedStyles = (0, import_deepmerge3.default)(styles2 ?? {}, (_b = step.styles) != null ? _b : {}), options2 = (0, import_deepmerge3.default)(defaultOptions2, mergedStyles.options || {}), hideBeacon2 = step.placement === "center" || step.disableBeacon, { width } = options2;
   window.innerWidth > 480 && (width = 380), "width" in options2 && (width = typeof options2.width == "number" && window.innerWidth < options2.width ? window.innerWidth - 30 : options2.width);
   let overlay = {
     bottom: 0,
@@ -10342,7 +18060,7 @@ function getStyles2(props, step) {
   return (0, import_deepmerge3.default)(defaultStyles, mergedStyles);
 }
 function getTourProps(props) {
-  return pick(
+  return pick2(
     props,
     "beaconComponent",
     "disableCloseOnEsc",
@@ -10363,7 +18081,7 @@ function getTourProps(props) {
   );
 }
 function getMergedStep(props, currentStep) {
-  var _a, _b, _c, _d, _e, _f;
+  var _a2, _b, _c, _d, _e, _f;
   let step = currentStep ?? {}, mergedStep = import_deepmerge2.default.all([defaultStep, getTourProps(props), step], {
     isMergeableObject: src_default.plainObject
   }), mergedStyles = getStyles2(props, mergedStep), scrollParent2 = hasCustomScrollParent(
@@ -10371,14 +18089,14 @@ function getMergedStep(props, currentStep) {
     mergedStep.disableScrollParentFix
   ), floaterProps = import_deepmerge2.default.all([
     defaultFloaterProps,
-    (_a = props.floaterProps) != null ? _a : {},
+    (_a2 = props.floaterProps) != null ? _a2 : {},
     (_b = mergedStep.floaterProps) != null ? _b : {}
   ]);
   return floaterProps.offset = mergedStep.offset, floaterProps.styles = (0, import_deepmerge2.default)((_c = floaterProps.styles) != null ? _c : {}, mergedStyles.floaterStyles), floaterProps.offset += (_e = (_d = props.spotlightPadding) != null ? _d : mergedStep.spotlightPadding) != null ? _e : 0, mergedStep.placementBeacon && floaterProps.wrapperOptions && (floaterProps.wrapperOptions.placement = mergedStep.placementBeacon), scrollParent2 && floaterProps.options.preventOverflow && (floaterProps.options.preventOverflow.boundariesElement = "window"), {
     ...mergedStep,
     locale: import_deepmerge2.default.all([defaultLocale, (_f = props.locale) != null ? _f : {}, mergedStep.locale || {}]),
     floaterProps,
-    styles: omit(mergedStyles, "floaterStyles")
+    styles: omit2(mergedStyles, "floaterStyles")
   };
 }
 function validateStep(step, debug = !1) {
@@ -10410,7 +18128,7 @@ var defaultState = {
   origin: null,
   size: 0,
   status: STATUS3.IDLE
-}, validKeys = objectKeys(omit(defaultState, "controlled", "size")), Store = class {
+}, validKeys = objectKeys(omit2(defaultState, "controlled", "size")), Store = class {
   constructor(options2) {
     __publicField(this, "beaconPopper"), __publicField(this, "tooltipPopper"), __publicField(this, "data", /* @__PURE__ */ new Map()), __publicField(this, "listener"), __publicField(this, "store", /* @__PURE__ */ new Map()), __publicField(this, "addListener", (listener) => {
       this.listener = listener;
@@ -10483,7 +18201,7 @@ var defaultState = {
         status: STATUS3.PAUSED
       });
     }), __publicField(this, "update", (state) => {
-      var _a, _b;
+      var _a2, _b;
       if (!hasValidKeys(state, validKeys))
         throw new Error(`State is not valid. Valid keys: ${validKeys.join(", ")}`);
       this.setState({
@@ -10491,7 +18209,7 @@ var defaultState = {
           {
             ...this.getState(),
             ...state,
-            action: (_a = state.action) != null ? _a : ACTIONS.UPDATE,
+            action: (_a2 = state.action) != null ? _a2 : ACTIONS.UPDATE,
             origin: (_b = state.origin) != null ? _b : null
           },
           !0
@@ -10524,10 +18242,10 @@ var defaultState = {
     } : { ...defaultState };
   }
   getNextState(state, force = !1) {
-    var _a, _b, _c, _d, _e;
+    var _a2, _b, _c, _d, _e;
     let { action, controlled, index, size, status } = this.getState(), newIndex = src_default.number(state.index) ? state.index : index, nextIndex = controlled && !force ? index : Math.min(Math.max(newIndex, 0), size);
     return {
-      action: (_a = state.action) != null ? _a : action,
+      action: (_a2 = state.action) != null ? _a2 : action,
       controlled,
       index: nextIndex,
       lifecycle: (_b = state.lifecycle) != null ? _b : LIFECYCLE.INIT,
@@ -10621,20 +18339,20 @@ var Spotlight_default = JoyrideSpotlight, JoyrideOverlay = class extends Compone
     this.scrollParent = getScrollParent2(element ?? document.body, disableScrollParentFix, !0), this.isActive = !0, window.addEventListener("resize", this.handleResize);
   }
   componentDidUpdate(previousProps) {
-    var _a;
+    var _a2;
     let { disableScrollParentFix, lifecycle, spotlightClicks, target } = this.props, { changed } = treeChanges(previousProps, this.props);
     if (changed("target") || changed("disableScrollParentFix")) {
       let element = getElement(target);
       this.scrollParent = getScrollParent2(element ?? document.body, disableScrollParentFix, !0);
     }
-    changed("lifecycle", LIFECYCLE.TOOLTIP) && ((_a = this.scrollParent) == null || _a.addEventListener("scroll", this.handleScroll, { passive: !0 }), setTimeout(() => {
+    changed("lifecycle", LIFECYCLE.TOOLTIP) && ((_a2 = this.scrollParent) == null || _a2.addEventListener("scroll", this.handleScroll, { passive: !0 }), setTimeout(() => {
       let { isScrolling } = this.state;
       isScrolling || this.updateState({ showSpotlight: !0 });
     }, 100)), (changed("spotlightClicks") || changed("disableOverlay") || changed("lifecycle")) && (spotlightClicks && lifecycle === LIFECYCLE.TOOLTIP ? window.addEventListener("mousemove", this.handleMouseMove, !1) : lifecycle !== LIFECYCLE.TOOLTIP && window.removeEventListener("mousemove", this.handleMouseMove));
   }
   componentWillUnmount() {
-    var _a;
-    this.isActive = !1, window.removeEventListener("mousemove", this.handleMouseMove), window.removeEventListener("resize", this.handleResize), clearTimeout(this.resizeTimeout), clearTimeout(this.scrollTimeout), (_a = this.scrollParent) == null || _a.removeEventListener("scroll", this.handleScroll);
+    var _a2;
+    this.isActive = !1, window.removeEventListener("mousemove", this.handleMouseMove), window.removeEventListener("resize", this.handleResize), clearTimeout(this.resizeTimeout), clearTimeout(this.scrollTimeout), (_a2 = this.scrollParent) == null || _a2.removeEventListener("scroll", this.handleScroll);
   }
   get overlayStyles() {
     let { mouseOverSpotlight } = this.state, { disableOverlayClose, placement, styles: styles2 } = this.props, baseStyles = styles2.overlay;
@@ -10646,7 +18364,7 @@ var Spotlight_default = JoyrideSpotlight, JoyrideOverlay = class extends Compone
     };
   }
   get spotlightStyles() {
-    var _a, _b, _c;
+    var _a2, _b, _c;
     let { showSpotlight } = this.state, {
       disableScrollParentFix = !1,
       spotlightClicks,
@@ -10656,7 +18374,7 @@ var Spotlight_default = JoyrideSpotlight, JoyrideOverlay = class extends Compone
     } = this.props, element = getElement(target), elementRect = getClientRect2(element), isFixedTarget = hasPosition(element), top = getElementPosition(element, spotlightPadding, disableScrollParentFix);
     return {
       ...isLegacy() ? styles2.spotlightLegacy : styles2.spotlight,
-      height: Math.round(((_a = elementRect?.height) != null ? _a : 0) + spotlightPadding * 2),
+      height: Math.round(((_a2 = elementRect?.height) != null ? _a2 : 0) + spotlightPadding * 2),
       left: Math.round(((_b = elementRect?.left) != null ? _b : 0) - spotlightPadding),
       opacity: showSpotlight ? 1 : 0,
       pointerEvents: spotlightClicks ? "none" : "auto",
@@ -11018,12 +18736,12 @@ var Container_default = JoyrideTooltipContainer, JoyrideTooltip = class extends 
     }), __publicField(this, "setTooltipRef", (element) => {
       this.tooltip = element;
     }), __publicField(this, "setPopper", (popper, type) => {
-      var _a;
+      var _a2;
       let { action, lifecycle, step, store: store2 } = this.props;
       type === "wrapper" ? store2.setPopper("beacon", popper) : store2.setPopper("tooltip", popper), store2.getPopper("beacon") && (store2.getPopper("tooltip") || step.placement === "center") && lifecycle === LIFECYCLE.INIT && store2.update({
         action,
         lifecycle: LIFECYCLE.READY
-      }), (_a = step.floaterProps) != null && _a.getPopper && step.floaterProps.getPopper(popper, type);
+      }), (_a2 = step.floaterProps) != null && _a2.getPopper && step.floaterProps.getPopper(popper, type);
     }), __publicField(this, "renderTooltip", (renderProps) => {
       let { continuous, helpers, index, size, step } = this.props;
       return createElement(
@@ -11050,7 +18768,7 @@ var Container_default = JoyrideTooltipContainer, JoyrideTooltip = class extends 
     });
   }
   componentDidUpdate(previousProps) {
-    var _a;
+    var _a2;
     let {
       action,
       callback,
@@ -11102,11 +18820,11 @@ var Container_default = JoyrideTooltipContainer, JoyrideTooltip = class extends 
       ...state,
       step,
       type: EVENTS.TOOLTIP
-    }), shouldScroll2 && this.tooltip && (this.scope = new Scope(this.tooltip, { selector: "[data-action=primary]" }), this.scope.setFocus())), changedFrom("lifecycle", [LIFECYCLE.TOOLTIP, LIFECYCLE.INIT], LIFECYCLE.INIT) && ((_a = this.scope) == null || _a.removeScope(), store2.cleanupPoppers());
+    }), shouldScroll2 && this.tooltip && (this.scope = new Scope(this.tooltip, { selector: "[data-action=primary]" }), this.scope.setFocus())), changedFrom("lifecycle", [LIFECYCLE.TOOLTIP, LIFECYCLE.INIT], LIFECYCLE.INIT) && ((_a2 = this.scope) == null || _a2.removeScope(), store2.cleanupPoppers());
   }
   componentWillUnmount() {
-    var _a;
-    (_a = this.scope) == null || _a.removeScope();
+    var _a2;
+    (_a2 = this.scope) == null || _a2.removeScope();
   }
   get open() {
     let { lifecycle, step } = this.props;
@@ -11282,8 +19000,8 @@ var Container_default = JoyrideTooltipContainer, JoyrideTooltip = class extends 
       scrollY = scrollY >= 0 ? scrollY : 0, status === STATUS3.RUNNING && scrollTo(scrollY, { element: scrollParent2, duration: scrollDuration }).then(
         () => {
           setTimeout(() => {
-            var _a;
-            (_a = this.store.getPopper("tooltip")) == null || _a.instance.update();
+            var _a2;
+            (_a2 = this.store.getPopper("tooltip")) == null || _a2.instance.update();
           }, 10);
         }
       );
@@ -11599,6 +19317,12 @@ var LocationMonitor = {
   return useEffect(() => LocationMonitor.subscribe((location2) => setHash(location2.hash)), []), hash.slice(1);
 };
 
+// src/shared/utils/ai-prompts.ts
+var DEFAULT_STORYBOOK_EXECUTOR = "npx storybook";
+function getAiSetupPrompt(executor = DEFAULT_STORYBOOK_EXECUTOR) {
+  return `Run \`${executor} ai setup\` and follow its instructions precisely.`;
+}
+
 // src/shared/checklist-store/checklistData.tsx
 var CodeWrapper = styled.div(({ theme }) => ({
   alignSelf: "stretch",
@@ -11627,6 +19351,21 @@ var CodeWrapper = styled.div(({ theme }) => ({
       id: "basics",
       title: "Storybook basics",
       items: [
+        {
+          id: "aiSetup",
+          label: "Set up with AI",
+          icon: WandIcon,
+          available: ({ storeState }) => !!storeState.aiOptIn && storeState.items.aiSetup?.status !== "done",
+          criteria: "ai setup command has not been run yet",
+          showOnGuidePage: !1,
+          action: {
+            label: "Copy prompt",
+            copyContent: getAiSetupPrompt(),
+            onClick: ({ api }) => {
+              api.emit(AI_PROMPT_NUDGE, { id: "setup", origin: "onboarding-checklist-side" });
+            }
+          }
+        },
         {
           id: "guidedTour",
           label: "Take the guided tour",
@@ -11897,6 +19636,48 @@ export default {
       ]
     },
     {
+      id: "share",
+      title: "Share",
+      items: [
+        {
+          id: "shareStorybook",
+          label: "Share your Storybook for feedback",
+          available: () => addons.experimental_getRegisteredAddons(Addon_TypesEnum.TOOLEXTRA).includes("chromaui/addon-visual-tests/share-tool"),
+          criteria: "User has shared their Storybook",
+          subscribe: ({ api, done }) => {
+            let SHARE_PROGRESS_KEY = "chromaui/addon-visual-tests/shareProgress";
+            return api.on("experimental_useSharedState_setValue", (key, value) => {
+              key === SHARE_PROGRESS_KEY && value?.status === "complete" && done();
+            });
+          },
+          action: {
+            label: "Share",
+            onClick: () => document.getElementById("chromatic-share-button")?.click()
+          },
+          content: () => react_default.createElement(react_default.Fragment, null, react_default.createElement("p", null, "Share your Storybook with your team in one click using Chromatic. Click the", " ", react_default.createElement("strong", null, "Share"), " button in the toolbar to publish and get a shareable link."), react_default.createElement("strong", null, "Take it further"), react_default.createElement("p", null, "Read the", " ", react_default.createElement(Link, { href: "https://www.chromatic.com/docs/sharing", target: "_blank", withArrow: !0 }, "sharing documentation")))
+        },
+        {
+          id: "publishStorybook",
+          label: "Publish your Storybook for feedback",
+          available: () => !addons.experimental_getRegisteredAddons(Addon_TypesEnum.TOOLEXTRA).includes("chromaui/addon-visual-tests/share-tool"),
+          criteria: "User has published their Storybook",
+          content: ({ api }) => react_default.createElement(react_default.Fragment, null, react_default.createElement("p", null, "Publishing your Storybook is easy and unlocks super clear review cycles and other collaborative workflows."), react_default.createElement("p", null, "Run ", react_default.createElement("code", null, "npx storybook build"), " in CI and deploy it using services like", " ", react_default.createElement(Link, { href: "https://chromatic.com", target: "_blank" }, "Chromatic"), ",", " ", react_default.createElement(Link, { href: "https://vercel.com", target: "_blank", rel: "noopener noreferrer" }, "Vercel"), ", or", " ", react_default.createElement(Link, { href: "https://www.netlify.com", target: "_blank", rel: "noopener noreferrer" }, "Netlify"), "."), react_default.createElement("strong", null, "Take it further"), react_default.createElement("p", null, "Read the", " ", react_default.createElement(
+            Link,
+            {
+              href: api.getDocsUrl({
+                subpath: "sharing/publish-storybook",
+                renderer: !0,
+                ref: "guide"
+              }),
+              target: "_blank",
+              withArrow: !0
+            },
+            "publishing documentation"
+          )))
+        }
+      ]
+    },
+    {
       id: "testing",
       title: "Testing",
       items: [
@@ -12041,7 +19822,7 @@ export const Disabled: Story = {
     await userEvent.click(button);
     
     // \u{1F447} Make assertions
-    await expect(button).toBeDisabled();
+    await expect(button).toHaveAttribute('aria-disabled', 'true');
     await expect(args.onClick).not.toHaveBeenCalled();
   }
 };`), react_default.createElement("p", null, "You can interact with and debug each step defined in a play function within the Interactions panel."), react_default.createElement(
@@ -12331,7 +20112,7 @@ export default meta;`), react_default.createElement("p", null, "That tag can als
             },
             "doc blocks"
           ), ") write a usage guide for your project."), react_default.createElement(CodeSnippet, { language: "jsx" }, `{ /* introduction.mdx */ }
-import { Meta, Title, Subtitle, Description } from '@storybook/addon-docs/blocks';
+import { Meta, Title, Subtitle } from '@storybook/addon-docs/blocks';
 
 <Meta title="Get started" />
  
@@ -12339,10 +20120,8 @@ import { Meta, Title, Subtitle, Description } from '@storybook/addon-docs/blocks
 
 <Subtitle>It's really awesome</Subtitle>
 
-<Description>
-  My Awesome Project is designed to work with Your Awesome Project seamlessly.
-  Follow this guide and you'll be ready in no time.
-</Description>
+My Awesome Project is designed to work with Your Awesome Project seamlessly.
+Follow this guide and you'll be ready in no time.
 
 ## Install
 
@@ -12360,32 +20139,6 @@ npm install @my/awesome-project
             },
             "MDX documentation"
           ), " ", "to learn:"), react_default.createElement("ul", null, react_default.createElement("li", null, "How to reference stories in your content"), react_default.createElement("li", null, "How to import and display markdown files, such as READMEs")))
-        },
-        {
-          id: "publishStorybook",
-          label: "Publish your Storybook to share",
-          criteria: "Have some form of `storybook build` in the project's CI config",
-          content: ({ api }) => react_default.createElement(react_default.Fragment, null, react_default.createElement("p", null, "Publishing your Storybook is easy and unlocks super clear review cycles and other collaborative workflows."), react_default.createElement("p", null, "Run ", react_default.createElement("code", null, "npx storybook build"), " in CI and deploy it using services like", " ", react_default.createElement(Link, { href: "https://chromatic.com", target: "_blank" }, "Chromatic"), ",", " ", react_default.createElement(Link, { href: "https://vercel.com", target: "_blank", rel: "noopener noreferrer" }, "Vercel"), ", or", " ", react_default.createElement(Link, { href: "https://www.netlify.com", target: "_blank", rel: "noopener noreferrer" }, "Netlify"), "."), react_default.createElement(
-            "img",
-            {
-              src: api.getDocsUrl({
-                asset: "sharing/prbadge-publish.png",
-                ref: "guide"
-              }),
-              alt: "PR check for publish action"
-            }
-          ), react_default.createElement("strong", null, "Take it further"), react_default.createElement("p", null, "Read the", " ", react_default.createElement(
-            Link,
-            {
-              href: api.getDocsUrl({
-                subpath: "sharing/publish-storybook",
-                renderer: !0,
-                ref: "guide"
-              }),
-              target: "_blank"
-            },
-            "publishing documentation"
-          ), " ", "to learn:"), react_default.createElement("ul", null, react_default.createElement("li", null, "How to configure the built Storybook (e.g. performance optimizations)"), react_default.createElement("li", null, "How to use your published Storybook to collaborate with colleagues")))
         }
       ]
     }
@@ -12421,7 +20174,7 @@ var subscriptions = /* @__PURE__ */ new Map(), useStoryIndex = () => {
       ({ items: items2, id: sectionId, title: sectionTitle }, sectionIndex) => items2.map(({ id, ...item }, itemIndex) => [id, { id, itemIndex, sectionId, sectionIndex, sectionTitle, ...item }])
     )
   ), []), allItems = useMemo(() => Object.values(itemsById).map((item) => {
-    let { status: status2, mutedAt } = items[item.id], isOpen = status2 === "open", isAccepted = status2 === "accepted", isDone = status2 === "done", isCompleted = isAccepted || isDone, isSkipped = !isCompleted && checkSkipped(item, itemsById, items), isMuted = !!mutedAt || !!widget.disable, isAvailable = isCompleted ? item.afterCompletion !== "unavailable" : checkAvailable(item, itemsById, { api, index, item }), isLockedBy = checkLockedBy(item, itemsById, items), isImmutable = isCompleted && item.afterCompletion === "immutable";
+    let { status: status2, mutedAt } = items[item.id], isOpen = status2 === "open", isAccepted = status2 === "accepted", isDone = status2 === "done", isCompleted = isAccepted || isDone, isSkipped = !isCompleted && checkSkipped(item, itemsById, items), isMuted = !!mutedAt || !!widget.disable, isAvailable = isCompleted ? item.afterCompletion !== "unavailable" : checkAvailable(item, itemsById, { api, index, item, storeState: checklistState }), isLockedBy = checkLockedBy(item, itemsById, items), isImmutable = isCompleted && item.afterCompletion === "immutable";
     return {
       ...item,
       isAvailable,
@@ -12435,7 +20188,7 @@ var subscriptions = /* @__PURE__ */ new Map(), useStoryIndex = () => {
       isSkipped,
       isMuted
     };
-  }), [itemsById, items, widget, api, index]), itemCollections = useMemo(() => {
+  }), [itemsById, items, widget, api, index, checklistState]), itemCollections = useMemo(() => {
     let availableItems = allItems.filter((item) => item.isAvailable), openItems = availableItems.filter((item) => item.isOpen), readyItems = openItems.filter((item) => item.isReady), nextItems = Object.values(
       readyItems.reduce((acc, item) => (acc[item.sectionId] ??= [], acc[item.sectionId].push({ ...item, itemIndex: acc[item.sectionId].length }), acc), {})
     ).flat().sort((a2, b2) => a2.itemIndex - b2.itemIndex).slice(0, 3).sort((a2, b2) => a2.sectionIndex - b2.sectionIndex), progress = availableItems.length ? Math.round((availableItems.length - openItems.length) / availableItems.length * 100) : 100;
@@ -12478,6 +20231,100 @@ var subscriptions = /* @__PURE__ */ new Map(), useStoryIndex = () => {
     ...checklistState
   };
 };
+
+// src/shared/useCopyButton.ts
+init_react();
+
+// ../../node_modules/@react-aria/live-announcer/dist/LiveAnnouncer.mjs
+var $319e236875307eab$var$liveAnnouncer = null;
+function $319e236875307eab$export$a9b970dcc4ae71a9(message, assertiveness = "assertive", timeout = 7e3) {
+  $319e236875307eab$var$liveAnnouncer ? $319e236875307eab$var$liveAnnouncer.announce(message, assertiveness, timeout) : ($319e236875307eab$var$liveAnnouncer = new $319e236875307eab$var$LiveAnnouncer(), (typeof IS_REACT_ACT_ENVIRONMENT == "boolean" ? IS_REACT_ACT_ENVIRONMENT : typeof jest < "u") ? $319e236875307eab$var$liveAnnouncer.announce(message, assertiveness, timeout) : setTimeout(() => {
+    $319e236875307eab$var$liveAnnouncer?.isAttached() && $319e236875307eab$var$liveAnnouncer?.announce(message, assertiveness, timeout);
+  }, 100));
+}
+function $319e236875307eab$export$d10ae4f68404609a(assertiveness) {
+  $319e236875307eab$var$liveAnnouncer && $319e236875307eab$var$liveAnnouncer.clear(assertiveness);
+}
+var $319e236875307eab$var$LiveAnnouncer = class {
+  isAttached() {
+    var _this_node;
+    return (_this_node = this.node) === null || _this_node === void 0 ? void 0 : _this_node.isConnected;
+  }
+  createLog(ariaLive) {
+    let node = document.createElement("div");
+    return node.setAttribute("role", "log"), node.setAttribute("aria-live", ariaLive), node.setAttribute("aria-relevant", "additions"), node;
+  }
+  destroy() {
+    this.node && (document.body.removeChild(this.node), this.node = null);
+  }
+  announce(message, assertiveness = "assertive", timeout = 7e3) {
+    var _this_assertiveLog, _this_politeLog;
+    if (!this.node) return;
+    let node = document.createElement("div");
+    typeof message == "object" ? (node.setAttribute("role", "img"), node.setAttribute("aria-labelledby", message["aria-labelledby"])) : node.textContent = message, assertiveness === "assertive" ? (_this_assertiveLog = this.assertiveLog) === null || _this_assertiveLog === void 0 || _this_assertiveLog.appendChild(node) : (_this_politeLog = this.politeLog) === null || _this_politeLog === void 0 || _this_politeLog.appendChild(node), message !== "" && setTimeout(() => {
+      node.remove();
+    }, timeout);
+  }
+  clear(assertiveness) {
+    this.node && ((!assertiveness || assertiveness === "assertive") && this.assertiveLog && (this.assertiveLog.innerHTML = ""), (!assertiveness || assertiveness === "polite") && this.politeLog && (this.politeLog.innerHTML = ""));
+  }
+  constructor() {
+    this.node = null, this.assertiveLog = null, this.politeLog = null, typeof document < "u" && (this.node = document.createElement("div"), this.node.dataset.liveAnnouncer = "true", Object.assign(this.node.style, {
+      border: 0,
+      clip: "rect(0 0 0 0)",
+      clipPath: "inset(50%)",
+      height: "1px",
+      margin: "-1px",
+      overflow: "hidden",
+      padding: 0,
+      position: "absolute",
+      width: "1px",
+      whiteSpace: "nowrap"
+    }), this.assertiveLog = this.createLog("assertive"), this.node.appendChild(this.assertiveLog), this.politeLog = this.createLog("polite"), this.node.appendChild(this.politeLog), document.body.prepend(this.node));
+  }
+};
+
+// src/shared/useCopyButton.ts
+function useCopyButton2({
+  children = "Copy",
+  childrenOnCopy = "Copied!",
+  content,
+  onCopy,
+  ariaLabel = !1,
+  ariaLabelOnCopy = !1,
+  duration = 3e3
+}) {
+  let [copied, setCopied] = useState(!1), timerRef = useRef(null);
+  useEffect(
+    () => () => {
+      timerRef.current && clearTimeout(timerRef.current);
+    },
+    []
+  );
+  let handleClick = useCallback(
+    (e2) => {
+      timerRef.current && clearTimeout(timerRef.current);
+      let announcement = typeof ariaLabelOnCopy == "string" ? ariaLabelOnCopy : "Copied to clipboard";
+      navigator.clipboard?.writeText(content).then(() => {
+        onCopy?.(e2), setCopied(!0), $319e236875307eab$export$a9b970dcc4ae71a9(announcement, "polite"), timerRef.current = setTimeout(() => {
+          setCopied(!1), $319e236875307eab$export$d10ae4f68404609a("polite"), timerRef.current = null;
+        }, duration);
+      });
+    },
+    [content, onCopy, ariaLabelOnCopy, duration]
+  );
+  return {
+    // @ts-expect-error - TypeScript is not realising T is constrained identically in both interfaces.
+    children: copied ? childrenOnCopy : children,
+    buttonProps: useMemo(
+      () => ({
+        onClick: handleClick,
+        ariaLabel: copied ? ariaLabelOnCopy : ariaLabel
+      }),
+      [handleClick, copied, ariaLabelOnCopy, ariaLabel]
+    )
+  };
+}
 
 // src/manager/components/sidebar/ChecklistWidget.tsx
 var fadeScaleIn = keyframes`
@@ -12580,6 +20427,19 @@ var fadeScaleIn = keyframes`
     react_default.createElement(ActionList.Icon, null, react_default.createElement(ListUnorderedIcon, null)),
     children
   );
+}, CopyButton2 = ({
+  label,
+  copyContent,
+  onClick,
+  ...props
+}) => {
+  let { children: copyChildren, buttonProps: copyButtonProps } = useCopyButton2({
+    children: label,
+    childrenOnCopy: react_default.createElement(react_default.Fragment, null, react_default.createElement(CheckIcon, null), " Copied!"),
+    onCopy: onClick,
+    content: copyContent
+  });
+  return react_default.createElement(ActionList.Button, { ...props, ...copyButtonProps }, copyChildren);
 }, ChecklistWidget = () => {
   let api = useStorybookApi(), { loaded, ready, allItems, nextItems, progress, accept, mute, items } = useChecklist(), [renderItems, setRenderItems] = useState(nextItems), [animated, setAnimated] = useState(!1);
   useEffect(() => {
@@ -12623,7 +20483,7 @@ var fadeScaleIn = keyframes`
         {
           ...toggleProps,
           id: "checklist-module-collapse-toggle",
-          ariaLabel: `${isCollapsed ? "Expand" : "Collapse"} onboarding checklist`
+          ariaLabel: `${isCollapsed ? "Expand" : "Collapse"} onboarding guide`
         },
         react_default.createElement(
           ChevronSmallUpIcon,
@@ -12638,6 +20498,7 @@ var fadeScaleIn = keyframes`
       ), loaded && react_default.createElement(
         PopoverProvider,
         {
+          ariaLabel: "Onboarding guide menu",
           padding: 0,
           popover: ({ onHide }) => react_default.createElement(ActionList, null, react_default.createElement(ActionList.Item, null, react_default.createElement(OpenGuideButton, { afterClick: onHide }, react_default.createElement(ActionList.Text, null, "Open full guide"))), react_default.createElement(ActionList.Item, null, react_default.createElement(
             ActionList.Action,
@@ -12677,9 +20538,22 @@ var fadeScaleIn = keyframes`
           ariaLabel: `Open onboarding guide for ${item.label}`,
           onClick: () => api.navigate(`/settings/guide#${item.id}`)
         },
-        react_default.createElement(ActionList.Icon, null, item.isCompleted && animated ? react_default.createElement(Particles, { anchor: Checked, key: item.id }) : react_default.createElement(StatusFailIcon, null)),
+        react_default.createElement(ActionList.Icon, null, item.isCompleted && animated ? react_default.createElement(Particles, { anchor: Checked, key: item.id }) : item.icon ? react_default.createElement(item.icon, null) : react_default.createElement(CircleHollowIcon, null)),
         react_default.createElement(ActionList.Text, null, react_default.createElement(ItemLabel, { isCompleted: item.isCompleted, isSkipped: item.isSkipped }, item.label))
-      ), item.action && react_default.createElement(
+      ), item.action && (item.action.copyContent ? react_default.createElement(
+        CopyButton2,
+        {
+          "data-target-id": item.id,
+          label: item.action.label,
+          copyContent: item.action.copyContent,
+          onClick: (e2) => {
+            e2.stopPropagation(), item.action?.onClick({
+              api,
+              accept: () => accept(item.id)
+            });
+          }
+        }
+      ) : react_default.createElement(
         ActionList.Button,
         {
           "data-target-id": item.id,
@@ -12692,7 +20566,7 @@ var fadeScaleIn = keyframes`
           }
         },
         item.action.label
-      ))
+      )))
     ))
   ))) : null;
 };
@@ -12747,9 +20621,9 @@ init_react();
 function memo2(getDeps, fn, opts) {
   let deps = opts.initialDeps ?? [], result;
   function memoizedFunction() {
-    var _a, _b, _c, _d;
+    var _a2, _b, _c, _d;
     let depTime;
-    opts.key && ((_a = opts.debug) != null && _a.call(opts)) && (depTime = Date.now());
+    opts.key && ((_a2 = opts.debug) != null && _a2.call(opts)) && (depTime = Date.now());
     let newDeps = getDeps();
     if (!(newDeps.length !== deps.length || newDeps.some((dep, index) => deps[index] !== dep)))
       return result;
@@ -12872,9 +20746,9 @@ var elementScroll = (offset2, {
   adjustments = 0,
   behavior
 }, instance) => {
-  var _a, _b;
+  var _a2, _b;
   let toOffset = offset2 + adjustments;
-  (_b = (_a = instance.scrollElement) == null ? void 0 : _a.scrollTo) == null || _b.call(_a, {
+  (_b = (_a2 = instance.scrollElement) == null ? void 0 : _a2.scrollTo) == null || _b.call(_a2, {
     [instance.options.horizontal ? "left" : "top"]: toOffset,
     behavior
   });
@@ -12891,16 +20765,16 @@ var elementScroll = (offset2, {
       }));
       return {
         disconnect: () => {
-          var _a;
-          (_a = get2()) == null || _a.disconnect(), _ro = null;
+          var _a2;
+          (_a2 = get2()) == null || _a2.disconnect(), _ro = null;
         },
         observe: (target) => {
-          var _a;
-          return (_a = get2()) == null ? void 0 : _a.observe(target, { box: "border-box" });
+          var _a2;
+          return (_a2 = get2()) == null ? void 0 : _a2.observe(target, { box: "border-box" });
         },
         unobserve: (target) => {
-          var _a;
-          return (_a = get2()) == null ? void 0 : _a.unobserve(target);
+          var _a2;
+          return (_a2 = get2()) == null ? void 0 : _a2.unobserve(target);
         }
       };
     })(), this.range = null, this.setOptions = (opts2) => {
@@ -12934,8 +20808,8 @@ var elementScroll = (offset2, {
         ...opts2
       };
     }, this.notify = (sync) => {
-      var _a, _b;
-      (_b = (_a = this.options).onChange) == null || _b.call(_a, this, sync);
+      var _a2, _b;
+      (_b = (_a2 = this.options).onChange) == null || _b.call(_a2, this, sync);
     }, this.maybeNotify = memo2(
       () => (this.calculateRange(), [
         this.isScrolling,
@@ -12959,14 +20833,14 @@ var elementScroll = (offset2, {
     }, this._didMount = () => () => {
       this.cleanup();
     }, this._willUpdate = () => {
-      var _a;
+      var _a2;
       let scrollElement = this.options.enabled ? this.options.getScrollElement() : null;
       if (this.scrollElement !== scrollElement) {
         if (this.cleanup(), !scrollElement) {
           this.maybeNotify();
           return;
         }
-        this.scrollElement = scrollElement, this.scrollElement && "ownerDocument" in this.scrollElement ? this.targetWindow = this.scrollElement.ownerDocument.defaultView : this.targetWindow = ((_a = this.scrollElement) == null ? void 0 : _a.window) ?? null, this.elementsCache.forEach((cached) => {
+        this.scrollElement = scrollElement, this.scrollElement && "ownerDocument" in this.scrollElement ? this.targetWindow = this.scrollElement.ownerDocument.defaultView : this.targetWindow = ((_a2 = this.scrollElement) == null ? void 0 : _a2.window) ?? null, this.elementsCache.forEach((cached) => {
           this.observer.observe(cached);
         }), this._scrollToOffset(this.getScrollOffset(), {
           adjustments: void 0,
@@ -13195,12 +21069,12 @@ var elementScroll = (offset2, {
         behavior
       });
     }, this.getTotalSize = () => {
-      var _a;
+      var _a2;
       let measurements = this.getMeasurements(), end;
       if (measurements.length === 0)
         end = this.options.paddingStart;
       else if (this.options.lanes === 1)
-        end = ((_a = measurements[measurements.length - 1]) == null ? void 0 : _a.end) ?? 0;
+        end = ((_a2 = measurements[measurements.length - 1]) == null ? void 0 : _a2.end) ?? 0;
       else {
         let endByLane = Array(this.options.lanes).fill(null), endIndex = measurements.length - 1;
         for (; endIndex >= 0 && endByLane.some((val) => val === null); ) {
@@ -13277,8 +21151,8 @@ function useVirtualizerBase(options2) {
   let rerender = useReducer(() => ({}), {})[1], resolvedOptions = {
     ...options2,
     onChange: (instance2, sync) => {
-      var _a;
-      sync ? flushSync(rerender) : rerender(), (_a = options2.onChange) == null || _a.call(options2, instance2, sync);
+      var _a2;
+      sync ? flushSync(rerender) : rerender(), (_a2 = options2.onChange) == null || _a2.call(options2, instance2, sync);
     }
   }, [instance] = useState(
     () => new Virtualizer(resolvedOptions)
@@ -13867,14 +21741,14 @@ var MODAL_HEIGHT = 418, ModalStyled = styled(Modal)(() => ({
   );
 };
 
-// src/manager/components/sidebar/FileSearchModal.utils.tsx
-async function trySelectNewStory(selectStory, storyId, attempt = 1) {
+// src/manager/utils/trySelectStory.ts
+async function trySelectStory(selectStory, storyId, attempt = 1) {
   if (attempt > 10)
     throw new Error("We could not select the new story. Please try again.");
   try {
-    await selectStory(storyId);
+    selectStory(storyId);
   } catch {
-    return await new Promise((resolve) => setTimeout(resolve, 500)), trySelectNewStory(selectStory, storyId, attempt + 1);
+    return await new Promise((resolve) => setTimeout(resolve, 500)), trySelectStory(selectStory, storyId, attempt + 1);
   }
 }
 
@@ -13907,14 +21781,14 @@ var isRendererReact = scope.STORYBOOK_RENDERER === "react", CreateNewStoryFileMo
     }), onOpenChange(!1);
   }, [api, onOpenChange]), handleFileSearch = useCallback(() => {
     setLoading(!0);
-    let channel = addons.getChannel(), set = (data) => {
-      data.id === fileSearchQueryDeferred && (data.success ? setSearchResults(data.payload.files) : setError({ error: data.error }), channel.off(FILE_COMPONENT_SEARCH_RESPONSE, set), setLoading(!1), emittedValue.current = null);
+    let channel2 = addons.getChannel(), set = (data) => {
+      data.id === fileSearchQueryDeferred && (data.success ? setSearchResults(data.payload.files) : setError({ error: data.error }), channel2.off(FILE_COMPONENT_SEARCH_RESPONSE, set), setLoading(!1), emittedValue.current = null);
     };
-    return channel.on(FILE_COMPONENT_SEARCH_RESPONSE, set), fileSearchQueryDeferred !== "" && emittedValue.current !== fileSearchQueryDeferred ? (emittedValue.current = fileSearchQueryDeferred, channel.emit(FILE_COMPONENT_SEARCH_REQUEST, {
+    return channel2.on(FILE_COMPONENT_SEARCH_RESPONSE, set), fileSearchQueryDeferred !== "" && emittedValue.current !== fileSearchQueryDeferred ? (emittedValue.current = fileSearchQueryDeferred, channel2.emit(FILE_COMPONENT_SEARCH_REQUEST, {
       id: fileSearchQueryDeferred,
       payload: {}
     })) : (setSearchResults(null), setLoading(!1)), () => {
-      channel.off(FILE_COMPONENT_SEARCH_RESPONSE, set);
+      channel2.off(FILE_COMPONENT_SEARCH_RESPONSE, set);
     };
   }, [fileSearchQueryDeferred]), handleCreateNewStory = useCallback(
     async ({
@@ -13925,7 +21799,7 @@ var isRendererReact = scope.STORYBOOK_RENDERER === "react", CreateNewStoryFileMo
       selectedItemId
     }) => {
       try {
-        let channel = addons.getChannel(), createNewStoryResult = await experimental_requestResponse(channel, CREATE_NEW_STORYFILE_REQUEST, CREATE_NEW_STORYFILE_RESPONSE, {
+        let channel2 = addons.getChannel(), createNewStoryResult = await experimental_requestResponse(channel2, CREATE_NEW_STORYFILE_REQUEST, CREATE_NEW_STORYFILE_RESPONSE, {
           componentExportName,
           componentFilePath,
           componentIsDefaultExport,
@@ -13933,17 +21807,13 @@ var isRendererReact = scope.STORYBOOK_RENDERER === "react", CreateNewStoryFileMo
         });
         setError(null);
         let storyId = createNewStoryResult.storyId;
-        await trySelectNewStory(api.selectStory, storyId), handleSuccessfullyCreatedStory(componentExportName), handleFileSearch();
+        await trySelectStory(api.selectStory, storyId), handleSuccessfullyCreatedStory(componentExportName), handleFileSearch();
       } catch (e2) {
-        switch (e2?.payload?.type) {
-          case "STORY_FILE_EXISTS":
-            let err = e2;
-            await trySelectNewStory(api.selectStory, err.payload.kind), handleStoryAlreadyExists();
-            break;
-          default:
-            setError({ selectedItemId, error: e2?.message });
-            break;
-        }
+        if (e2?.payload?.type === "STORY_FILE_EXISTS") {
+          let err = e2;
+          await trySelectStory(api.selectStory, err.payload.kind), handleStoryAlreadyExists();
+        } else
+          setError({ selectedItemId, error: e2?.message });
       }
     },
     [api?.selectStory, handleSuccessfullyCreatedStory, handleFileSearch, handleStoryAlreadyExists]
@@ -14003,18 +21873,50 @@ var HighlightStyles = ({ refId, itemId }) => react_default.createElement(
 // src/manager/components/sidebar/Refs.tsx
 init_react();
 
+// src/shared/constants/tags.ts
+var Tag2 = {
+  /** Indicates that autodocs should be generated for this component */
+  AUTODOCS: "autodocs",
+  /** MDX documentation attached to a component's stories file */
+  ATTACHED_MDX: "attached-mdx",
+  /** Standalone MDX documentation not attached to stories */
+  UNATTACHED_MDX: "unattached-mdx",
+  /** Story has a play function */
+  PLAY_FN: "play-fn",
+  /** Story has a test function */
+  TEST_FN: "test-fn",
+  /** Development environment tag */
+  DEV: "dev",
+  /** Test environment tag */
+  TEST: "test",
+  /** Manifest generation tag */
+  MANIFEST: "manifest"
+}, BUILT_IN_FILTERS = {
+  _docs: (entry, excluded) => excluded ? entry.type !== "docs" : entry.type === "docs",
+  _play: (entry, excluded) => excluded ? entry.type !== "story" || !entry.tags?.includes(Tag2.PLAY_FN) : entry.type === "story" && !!entry.tags?.includes(Tag2.PLAY_FN),
+  _test: (entry, excluded) => excluded ? entry.type !== "story" || entry.subtype !== "test" : entry.type === "story" && entry.subtype === "test"
+}, USER_TAG_FILTER = (tag) => (entry, excluded) => excluded ? !entry.tags?.includes(tag) : !!entry.tags?.includes(tag);
+
+// src/shared/utils/story-index-filters.ts
+var getActiveFilterCount = ({
+  includedTagFilters,
+  excludedTagFilters,
+  includedStatusFilters,
+  excludedStatusFilters
+}) => (includedTagFilters?.length ?? 0) + (excludedTagFilters?.length ?? 0) + (includedStatusFilters?.length ?? 0) + (excludedStatusFilters?.length ?? 0);
+
 // src/manager/utils/tree.ts
-var import_memoizerific2 = __toESM(require_memoizerific(), 1);
-var { document: document2, window: globalWindow } = scope, createId = (itemId, refId) => !refId || refId === DEFAULT_REF_ID ? itemId : `${refId}_${itemId}`, getLink = (item, refId) => `${document2.location.pathname}?path=/${item.type}/${createId(item.id, refId)}`;
-var get = (0, import_memoizerific2.default)(1e3)((id, dataset) => dataset[id]), getParent = (0, import_memoizerific2.default)(1e3)((id, dataset) => {
+var import_memoizerific3 = __toESM(require_memoizerific(), 1);
+var { document: document3, window: globalWindow } = scope, createId = (itemId, refId) => !refId || refId === DEFAULT_REF_ID ? itemId : `${refId}_${itemId}`, getLink = (item, refId) => `${document3.location.pathname}?path=/${item.type}/${createId(item.id, refId)}`;
+var get = (0, import_memoizerific3.default)(1e3)((id, dataset) => dataset[id]), getParent = (0, import_memoizerific3.default)(1e3)((id, dataset) => {
   let item = get(id, dataset);
   return item && item.type !== "root" ? get(item.parent, dataset) : void 0;
-}), getParents = (0, import_memoizerific2.default)(1e3)((id, dataset) => {
+}), getParents = (0, import_memoizerific3.default)(1e3)((id, dataset) => {
   let parent = getParent(id, dataset);
   return parent ? [parent, ...getParents(parent.id, dataset)] : [];
-}), getAncestorIds2 = (0, import_memoizerific2.default)(1e3)(
+}), getAncestorIds2 = (0, import_memoizerific3.default)(1e3)(
   (data, id) => getParents(id, data).map((item) => item.id)
-), getDescendantIds = (0, import_memoizerific2.default)(1e3)((data, id, skipLeafs) => {
+), getDescendantIds = (0, import_memoizerific3.default)(1e3)((data, id, skipLeafs) => {
   let entry = data[id];
   return !entry || !("children" in entry) || !entry.children ? [] : entry.children.reduce((acc, childId) => {
     let child = data[childId];
@@ -14036,13 +21938,13 @@ var scrollIntoView = (element, center = !1) => {
   let { top, bottom } = element.getBoundingClientRect();
   if (!top || !bottom)
     return;
-  let bottomOffset = document2?.querySelector("#sidebar-bottom-wrapper")?.getBoundingClientRect().top || globalWindow.innerHeight || document2.documentElement.clientHeight;
+  let bottomOffset = document3?.querySelector("#sidebar-bottom-wrapper")?.getBoundingClientRect().top || globalWindow.innerHeight || document3.documentElement.clientHeight;
   bottom > bottomOffset && element.scrollIntoView({ block: center ? "center" : "nearest" });
-}, getStateType = (isLoading, isAuthRequired, isError, isEmpty) => {
+}, getStateType = (isLoading, isAuthRequired, isError2, isEmpty) => {
   switch (!0) {
     case isAuthRequired:
       return "auth";
-    case isError:
+    case isError2:
       return "error";
     case isLoading:
       return "loading";
@@ -14051,7 +21953,7 @@ var scrollIntoView = (element, center = !1) => {
     default:
       return "ready";
   }
-}, isAncestor = (element, maybeAncestor) => !element || !maybeAncestor ? !1 : element === maybeAncestor ? !0 : isAncestor(element.parentElement || void 0, maybeAncestor), removeNoiseFromName = (storyName) => storyName.replaceAll(/(\s|-|_)/gi, ""), isStoryHoistable = (storyName, componentName) => removeNoiseFromName(storyName) === removeNoiseFromName(componentName);
+}, isAncestor = (element, maybeAncestor) => !element || !maybeAncestor ? !1 : element === maybeAncestor ? !0 : isAncestor(element.parentElement || void 0, maybeAncestor), removeNoiseFromName = (storyName) => storyName.replaceAll(/(\s|-|_)/gi, ""), isStoryHoistable = (storyName, componentName2) => removeNoiseFromName(storyName) === removeNoiseFromName(componentName2);
 
 // src/manager/components/sidebar/RefBlocks.tsx
 init_react();
@@ -14100,6 +22002,10 @@ var NoResults2 = styled.div(({ theme }) => ({
   small: {
     color: theme.textMutedColor,
     fontSize: `${theme.typography.size.s1}px`
+  },
+  button: {
+    marginTop: 8,
+    alignSelf: "center"
   }
 }));
 
@@ -14151,38 +22057,58 @@ var { window: globalWindow2 } = scope, TextStyle = styled.div(({ theme }) => ({
   return react_default.createElement(Contained, null, react_default.createElement(Spaced, null, react_default.createElement(TextStyle, null, "Oh no! Something went wrong loading this Storybook.", react_default.createElement("br", null), react_default.createElement(
     PopoverProvider,
     {
+      ariaLabel: "Error details",
       hasCloseButton: !0,
       offset: isMobile2 ? 0 : 8,
       placement: isMobile2 ? "bottom-end" : "bottom-start",
       popover: react_default.createElement(ErrorDisplay, { isMobile: isMobile2 }, react_default.createElement(ErrorFormatter, { error }))
     },
-    react_default.createElement(Link, { isButton: !0 }, "View error ", react_default.createElement(ChevronDownIcon, null))
+    react_default.createElement(Link, null, "View error ", react_default.createElement(ChevronDownIcon, null))
   ), " ", react_default.createElement(Link, { href: "https://storybook.js.org/docs?ref=ui", cancel: !1, target: "_blank" }, "View docs"))));
 }, FlexSpaced = styled(Spaced)({
   display: "flex"
 }), WideSpaced = styled(Spaced)({
   flex: 1
-}), EmptyBlock = ({ isMain, hasEntries }) => react_default.createElement(Contained, null, react_default.createElement(FlexSpaced, { col: 1 }, react_default.createElement(WideSpaced, null, hasEntries ? react_default.createElement(NoResults2, null, react_default.createElement("strong", null, "No stories found"), react_default.createElement("small", null, "Your selected filters did not match any stories.")) : isMain ? react_default.createElement(Text3, null, "Oh no! Your Storybook is empty. This can happen when:", react_default.createElement("ul", null, react_default.createElement("li", null, "Your", " ", react_default.createElement(
-  Link,
-  {
-    href: "https://storybook.js.org/docs/api/main-config/main-config-stories?ref=ui",
-    cancel: !1,
-    target: "_blank"
-  },
-  "stories glob configuration"
-), " ", "does not match any files.", " "), react_default.createElement("li", null, "You have", " ", react_default.createElement(
-  Link,
-  {
-    href: "https://storybook.js.org/docs/writing-stories?ref=ui",
-    cancel: !1,
-    target: "_blank"
-  },
-  "no stories defined"
-), " ", "in your story files.", " "))) : react_default.createElement(Text3, null, "This composed Storybook is empty. Perhaps no stories match your selected filters.")))), LoaderBlock = ({ isMain }) => react_default.createElement(Contained, null, react_default.createElement(Loader2, { size: isMain ? 17 : 5 }));
+}), EmptyBlock = ({
+  isMain,
+  hasEntries,
+  activeFilterCount
+}) => {
+  let api = useStorybookApi();
+  return react_default.createElement(Contained, null, react_default.createElement(FlexSpaced, { col: 1 }, react_default.createElement(WideSpaced, null, hasEntries ? react_default.createElement(NoResults2, null, react_default.createElement("strong", null, "No stories found"), activeFilterCount > 0 ? react_default.createElement("small", null, "Your selected filters did not match any stories.") : react_default.createElement("small", null, "Try adding some stories!"), activeFilterCount > 0 ? react_default.createElement(
+    Button,
+    {
+      ariaLabel: !1,
+      size: "small",
+      variant: "outline",
+      onClick: async () => {
+        await api.setAllTagFilters([], []), await api.resetStatusFilters();
+      }
+    },
+    react_default.createElement(SweepIcon, null),
+    "Clear filters"
+  ) : null) : isMain ? react_default.createElement(Text3, null, "Oh no! Your Storybook is empty. This can happen when:", react_default.createElement("ul", null, react_default.createElement("li", null, "Your", " ", react_default.createElement(
+    Link,
+    {
+      href: "https://storybook.js.org/docs/api/main-config/main-config-stories?ref=ui",
+      cancel: !1,
+      target: "_blank"
+    },
+    "stories glob configuration"
+  ), " ", "does not match any files.", " "), react_default.createElement("li", null, "You have", " ", react_default.createElement(
+    Link,
+    {
+      href: "https://storybook.js.org/docs/writing-stories?ref=ui",
+      cancel: !1,
+      target: "_blank"
+    },
+    "no stories defined"
+  ), " ", "in your story files.", " "))) : react_default.createElement(Text3, null, "This composed Storybook is empty. Perhaps no stories match your selected filters."))));
+}, LoaderBlock = ({ isMain }) => react_default.createElement(Contained, null, react_default.createElement(Loader2, { size: isMain ? 17 : 5 }));
 
 // src/manager/components/sidebar/RefIndicator.tsx
 init_react();
-var { document: document3, window: globalWindow3 } = scope, IndicatorPlacement = styled.div(({ theme }) => ({
+var { document: document4, window: globalWindow3 } = scope, IndicatorPlacement = styled.div(({ theme }) => ({
   height: 16,
   display: "flex",
   alignItems: "center",
@@ -14234,7 +22160,7 @@ var { document: document3, window: globalWindow3 } = scope, IndicatorPlacement =
     marginRight: 10,
     flex: "unset"
   }
-})), Message = ({ href, blank = !0, children, onClick }) => react_default.createElement(StyledMessage, { href, target: blank ? "_blank" : void 0, onClick }, children), MessageWrapper = styled.div(
+})), Message2 = ({ href, blank = !0, children, onClick }) => react_default.createElement(StyledMessage, { href, target: blank ? "_blank" : void 0, onClick }, children), MessageWrapper = styled.div(
   ({ isMobile: isMobile2 }) => ({
     width: isMobile2 ? "calc(100vw - 20px)" : 280,
     boxSizing: "border-box",
@@ -14265,6 +22191,7 @@ var { document: document3, window: globalWindow3 } = scope, IndicatorPlacement =
       return react_default.createElement(IndicatorPlacement, { ref: forwardedRef }, react_default.createElement(
         PopoverProvider,
         {
+          ariaLabel: "Composed Storybook status",
           placement: isMobile2 ? "bottom" : "bottom-start",
           padding: 0,
           popover: () => react_default.createElement(MessageWrapper, { isMobile: isMobile2 }, react_default.createElement(Spaced, { row: 0 }, state === "loading" && react_default.createElement(LoadingMessage, { url: ref.url }), (state === "error" || state === "empty") && react_default.createElement(ErrorOccurredMessage, { url: ref.url }), state === "ready" && react_default.createElement(react_default.Fragment, null, react_default.createElement(ReadyMessage, { url: ref.url, componentCount, leafCount }), ref.sourceUrl && react_default.createElement(SourceCodeMessage, { url: ref.sourceUrl })), state === "auth" && react_default.createElement(LoginRequiredMessage, { ...ref }), ref.type === "auto-inject" && state !== "error" && react_default.createElement(PerformanceDegradedMessage, null), state !== "loading" && react_default.createElement(ReadDocsMessage, null)))
@@ -14304,10 +22231,10 @@ var { document: document3, window: globalWindow3 } = scope, IndicatorPlacement =
   )
 ), ReadyMessage = ({ url, componentCount, leafCount }) => {
   let theme = useTheme();
-  return react_default.createElement(Message, { href: url.replace(/\/?$/, "/index.html") }, react_default.createElement(GlobeIcon, { color: theme.color.secondary }), react_default.createElement("div", null, react_default.createElement(MessageTitle, null, "View external Storybook"), react_default.createElement("div", null, "Explore ", componentCount, " components and ", leafCount, " stories in a new browser tab.")));
+  return react_default.createElement(Message2, { href: url.replace(/\/?$/, "/index.html") }, react_default.createElement(GlobeIcon, { color: theme.color.secondary }), react_default.createElement("div", null, react_default.createElement(MessageTitle, null, "View external Storybook"), react_default.createElement("div", null, "Explore ", componentCount, " components and ", leafCount, " stories in a new browser tab.")));
 }, SourceCodeMessage = ({ url }) => {
   let theme = useTheme();
-  return react_default.createElement(Message, { href: url }, react_default.createElement(MarkupIcon, { color: theme.color.secondary }), react_default.createElement("div", null, react_default.createElement(MessageTitle, null, "View source code")));
+  return react_default.createElement(Message2, { href: url }, react_default.createElement(MarkupIcon, { color: theme.color.secondary }), react_default.createElement("div", null, react_default.createElement(MessageTitle, null, "View source code")));
 }, LoginRequiredMessage = ({ loginUrl, id }) => {
   let theme = useTheme(), open = useCallback(
     (e2) => {
@@ -14317,24 +22244,24 @@ var { document: document3, window: globalWindow3 } = scope, IndicatorPlacement =
         `storybook_auth_${id}`,
         "resizable,scrollbars"
       ), timer = setInterval(() => {
-        childWindow ? childWindow.closed && (clearInterval(timer), document3.location.reload()) : clearInterval(timer);
+        childWindow ? childWindow.closed && (clearInterval(timer), document4.location.reload()) : clearInterval(timer);
       }, 1e3);
     },
     [id, loginUrl]
   );
-  return react_default.createElement(Message, { onClick: open, blank: !1 }, react_default.createElement(LockIcon, { color: theme.color.gold }), react_default.createElement("div", null, react_default.createElement(MessageTitle, null, "Log in required"), react_default.createElement("div", null, "You need to authenticate to view this Storybook's components.")));
+  return react_default.createElement(Message2, { onClick: open, blank: !1 }, react_default.createElement(LockIcon, { color: theme.color.gold }), react_default.createElement("div", null, react_default.createElement(MessageTitle, null, "Log in required"), react_default.createElement("div", null, "You need to authenticate to view this Storybook's components.")));
 }, ReadDocsMessage = () => {
   let theme = useTheme();
-  return react_default.createElement(Message, { href: "https://storybook.js.org/docs/sharing/storybook-composition?ref=ui" }, react_default.createElement(DocumentIcon, { color: theme.color.green }), react_default.createElement("div", null, react_default.createElement(MessageTitle, null, "Read Composition docs"), react_default.createElement("div", null, "Learn how to combine multiple Storybooks into one.")));
+  return react_default.createElement(Message2, { href: "https://storybook.js.org/docs/sharing/storybook-composition?ref=ui" }, react_default.createElement(DocumentIcon, { color: theme.color.green }), react_default.createElement("div", null, react_default.createElement(MessageTitle, null, "Read Composition docs"), react_default.createElement("div", null, "Learn how to combine multiple Storybooks into one.")));
 }, ErrorOccurredMessage = ({ url }) => {
   let theme = useTheme();
-  return react_default.createElement(Message, { href: url.replace(/\/?$/, "/index.html") }, react_default.createElement(AlertIcon, { color: theme.color.negative }), react_default.createElement("div", null, react_default.createElement(MessageTitle, null, "Something went wrong"), react_default.createElement("div", null, "This external Storybook didn't load. Debug it in a new tab now.")));
+  return react_default.createElement(Message2, { href: url.replace(/\/?$/, "/index.html") }, react_default.createElement(AlertIcon, { color: theme.color.negative }), react_default.createElement("div", null, react_default.createElement(MessageTitle, null, "Something went wrong"), react_default.createElement("div", null, "This external Storybook didn't load. Debug it in a new tab now.")));
 }, LoadingMessage = ({ url }) => {
   let theme = useTheme();
-  return react_default.createElement(Message, { href: url.replace(/\/?$/, "/index.html") }, react_default.createElement(TimeIcon, { color: theme.color.secondary }), react_default.createElement("div", null, react_default.createElement(MessageTitle, null, "Please wait"), react_default.createElement("div", null, "This Storybook is loading.")));
+  return react_default.createElement(Message2, { href: url.replace(/\/?$/, "/index.html") }, react_default.createElement(TimeIcon, { color: theme.color.secondary }), react_default.createElement("div", null, react_default.createElement(MessageTitle, null, "Please wait"), react_default.createElement("div", null, "This Storybook is loading.")));
 }, PerformanceDegradedMessage = () => {
   let theme = useTheme();
-  return react_default.createElement(Message, { href: "https://storybook.js.org/docs/sharing/storybook-composition?ref=ui" }, react_default.createElement(LightningIcon, { color: theme.color.gold }), react_default.createElement("div", null, react_default.createElement(MessageTitle, null, "Reduce lag"), react_default.createElement("div", null, "Learn how to speed up Composition performance.")));
+  return react_default.createElement(Message2, { href: "https://storybook.js.org/docs/sharing/storybook-composition?ref=ui" }, react_default.createElement(LightningIcon, { color: theme.color.gold }), react_default.createElement("div", null, react_default.createElement(MessageTitle, null, "Reduce lag"), react_default.createElement("div", null, "Learn how to speed up Composition performance.")));
 };
 
 // src/manager/components/sidebar/Tree.tsx
@@ -14342,7 +22269,7 @@ init_react();
 
 // src/manager/utils/status.tsx
 init_react();
-var import_memoizerific3 = __toESM(require_memoizerific(), 1);
+var import_memoizerific4 = __toESM(require_memoizerific(), 1);
 
 // src/manager/components/sidebar/IconSymbols.tsx
 init_react();
@@ -14353,7 +22280,7 @@ var Svg2 = styled.svg`
   display: inline-block;
   shape-rendering: inherit;
   vertical-align: middle;
-`, GROUP_ID = "icon--group", COMPONENT_ID = "icon--component", DOCUMENT_ID = "icon--document", STORY_ID = "icon--story", TEST_ID = "icon--test", SUCCESS_ID = "icon--success", ERROR_ID = "icon--error", WARNING_ID = "icon--warning", DOT_ID = "icon--dot", IconSymbols = () => react_default.createElement(Svg2, { "data-chromatic": "ignore" }, react_default.createElement("symbol", { id: GROUP_ID }, react_default.createElement(
+`, GROUP_ID = "icon--group", COMPONENT_ID = "icon--component", DOCUMENT_ID = "icon--document", STORY_ID = "icon--story", TEST_ID = "icon--test", SUCCESS_ID = "icon--success", ERROR_ID = "icon--error", WARNING_ID = "icon--warning", DOT_ID = "icon--dot", NEW_ID = "icon--new", MODIFIED_ID = "icon--modified", AFFECTED_ID = "icon--affected", REVIEWING_ID = "icon--reviewing", IconSymbols = () => react_default.createElement(Svg2, { "data-chromatic": "ignore" }, react_default.createElement("symbol", { id: GROUP_ID }, react_default.createElement(
   "path",
   {
     fillRule: "evenodd",
@@ -14423,7 +22350,13 @@ var Svg2 = styled.svg`
     d: "M7.206 3.044a.498.498 0 01.23.212l3.492 5.985a.494.494 0 01.006.507.497.497 0 01-.443.252H3.51a.499.499 0 01-.437-.76l3.492-5.984a.497.497 0 01.642-.212zM7 4.492L4.37 9h5.26L7 4.492z",
     fill: "currentColor"
   }
-)), react_default.createElement("symbol", { id: DOT_ID }, react_default.createElement("circle", { cx: "3", cy: "3", r: "3", fill: "currentColor" }))), UseSymbol = ({ type }) => type === "group" ? react_default.createElement("use", { xlinkHref: `#${GROUP_ID}` }) : type === "component" ? react_default.createElement("use", { xlinkHref: `#${COMPONENT_ID}` }) : type === "document" ? react_default.createElement("use", { xlinkHref: `#${DOCUMENT_ID}` }) : type === "story" ? react_default.createElement("use", { xlinkHref: `#${STORY_ID}` }) : type === "test" ? react_default.createElement("use", { xlinkHref: `#${TEST_ID}` }) : type === "success" ? react_default.createElement("use", { xlinkHref: `#${SUCCESS_ID}` }) : type === "error" ? react_default.createElement("use", { xlinkHref: `#${ERROR_ID}` }) : type === "warning" ? react_default.createElement("use", { xlinkHref: `#${WARNING_ID}` }) : type === "dot" ? react_default.createElement("use", { xlinkHref: `#${DOT_ID}` }) : null;
+)), react_default.createElement("symbol", { id: DOT_ID }, react_default.createElement("circle", { cx: "3", cy: "3", r: "3", fill: "currentColor" })), react_default.createElement("symbol", { id: NEW_ID }, react_default.createElement("rect", { x: "6", y: "3.5", width: "2", height: "7", rx: "1", fill: "currentColor" }), react_default.createElement("rect", { x: "3.5", y: "6", width: "7", height: "2", rx: "1", fill: "currentColor" })), react_default.createElement("symbol", { id: MODIFIED_ID }, react_default.createElement("circle", { cx: "7", cy: "7", r: "3", fill: "currentColor" })), react_default.createElement("symbol", { id: AFFECTED_ID }, react_default.createElement("circle", { cx: "7", cy: "7", r: "3", fill: "currentColor" })), react_default.createElement("symbol", { id: REVIEWING_ID }, react_default.createElement(
+  "path",
+  {
+    d: "M7.052 3.004c.01 0 .02 0 .03.002.004 0 .01.003.015.004a.493.493 0 01.051.013l.043.015a.497.497 0 01.089.049l.03.023c.015.012.029.023.042.036.012.012.023.026.035.04l.023.03c.01.015.019.03.027.047.008.014.016.028.022.043.006.014.01.028.015.043.005.017.01.034.013.051l.005.017.03.182A3.5 3.5 0 0010.4 6.476l.182.03c.005 0 .01.003.016.004a.494.494 0 01.051.013l.043.015a.503.503 0 01.089.049l.03.023c.015.012.029.023.042.036.012.012.023.026.035.04l.023.03c.01.015.019.03.027.047.008.014.016.028.022.043l.014.04.014.054.005.017c.002.01 0 .019.001.028.002.018.004.036.004.054 0 .018-.002.035-.004.053v.03l-.006.015a.479.479 0 01-.013.051l-.015.043a.507.507 0 01-.049.089l-.023.03-.035.042-.042.035-.03.023a.503.503 0 01-.046.027c-.014.008-.028.016-.043.022-.014.006-.028.01-.043.015a.491.491 0 01-.051.013l-.016.005-.182.03A3.5 3.5 0 007.522 10.4l-.03.182c0 .005-.004.01-.005.016a.491.491 0 01-.013.051l-.015.043a.503.503 0 01-.049.089l-.023.03-.035.042-.041.035-.03.023a.507.507 0 01-.047.027c-.014.008-.028.016-.043.022-.014.006-.028.01-.043.015a.479.479 0 01-.051.013l-.016.005c-.01.002-.02 0-.03.001-.017.002-.034.004-.052.004-.018 0-.036-.002-.054-.004h-.028c-.006-.002-.011-.005-.017-.006a.503.503 0 01-.051-.013l-.043-.015a.505.505 0 01-.089-.049l-.03-.023c-.015-.012-.029-.023-.041-.035-.013-.013-.024-.027-.036-.042l-.023-.03a.503.503 0 01-.027-.046c-.008-.014-.016-.028-.022-.043-.006-.014-.01-.028-.015-.043a.494.494 0 01-.013-.051l-.004-.016-.03-.182a3.5 3.5 0 00-2.877-2.877l-.182-.03c-.006 0-.011-.004-.017-.005a.493.493 0 01-.051-.013l-.043-.015a.492.492 0 01-.089-.049l-.03-.023c-.015-.012-.029-.023-.041-.035-.013-.013-.024-.027-.036-.041l-.023-.03a.497.497 0 01-.027-.047c-.008-.014-.016-.028-.022-.043-.006-.013-.01-.028-.015-.043a.493.493 0 01-.013-.051l-.004-.016c-.002-.01-.001-.02-.002-.03C3.002 7.035 3 7.018 3 7c0-.018.002-.036.004-.054 0-.009 0-.019.002-.028 0-.006.003-.011.004-.017l.015-.054.013-.04a.498.498 0 01.049-.089l.023-.03.026-.032.02-.02.03-.025.03-.023a.498.498 0 01.047-.027c.014-.008.028-.016.043-.022.014-.006.028-.01.043-.015A.493.493 0 013.4 6.51l.017-.004.182-.03a3.5 3.5 0 002.877-2.877l.03-.182c0-.006.003-.011.004-.017a.493.493 0 01.013-.051l.015-.043a.498.498 0 01.049-.089l.023-.03.026-.032.02-.02.03-.025.03-.023a.498.498 0 01.047-.027c.014-.008.028-.016.043-.022.014-.006.028-.01.043-.015A.493.493 0 016.9 3.01l.017-.004c.01-.002.019-.001.028-.002C6.963 3.002 6.981 3 7 3c.018 0 .035.002.053.004z",
+    fill: "currentColor"
+  }
+))), UseSymbol = ({ type }) => type === "group" ? react_default.createElement("use", { xlinkHref: `#${GROUP_ID}` }) : type === "component" ? react_default.createElement("use", { xlinkHref: `#${COMPONENT_ID}` }) : type === "document" ? react_default.createElement("use", { xlinkHref: `#${DOCUMENT_ID}` }) : type === "story" ? react_default.createElement("use", { xlinkHref: `#${STORY_ID}` }) : type === "test" ? react_default.createElement("use", { xlinkHref: `#${TEST_ID}` }) : type === "success" ? react_default.createElement("use", { xlinkHref: `#${SUCCESS_ID}` }) : type === "error" ? react_default.createElement("use", { xlinkHref: `#${ERROR_ID}` }) : type === "warning" ? react_default.createElement("use", { xlinkHref: `#${WARNING_ID}` }) : type === "dot" ? react_default.createElement("use", { xlinkHref: `#${DOT_ID}` }) : type === "new" ? react_default.createElement("use", { xlinkHref: `#${NEW_ID}` }) : type === "reviewing" ? react_default.createElement("use", { xlinkHref: `#${REVIEWING_ID}` }) : type === "modified" ? react_default.createElement("use", { xlinkHref: `#${MODIFIED_ID}` }) : type === "affected" ? react_default.createElement("use", { xlinkHref: `#${AFFECTED_ID}` }) : null;
 
 // src/manager/utils/status.tsx
 var SmallIcons = styled(CircleIcon)({
@@ -14439,35 +22372,122 @@ var SmallIcons = styled(CircleIcon)({
   "status-value:unknown",
   "status-value:pending",
   "status-value:success",
+  "status-value:affected",
+  "status-value:reviewing",
+  "status-value:modified",
+  "status-value:new",
   "status-value:warning",
   "status-value:error"
-], getStatus = (0, import_memoizerific3.default)(5)((theme, status) => ({
-  "status-value:unknown": [null, null],
-  "status-value:pending": [react_default.createElement(LoadingIcons, { key: "icon" }), "currentColor"],
-  "status-value:success": [
-    react_default.createElement("svg", { key: "icon", viewBox: "0 0 14 14", width: "14", height: "14" }, react_default.createElement(UseSymbol, { type: "success" })),
-    "currentColor"
-  ],
-  "status-value:warning": [
-    react_default.createElement("svg", { key: "icon", viewBox: "0 0 14 14", width: "14", height: "14" }, react_default.createElement(UseSymbol, { type: "warning" })),
-    theme.fgColor.warning
-  ],
-  "status-value:error": [
-    react_default.createElement("svg", { key: "icon", viewBox: "0 0 14 14", width: "14", height: "14" }, react_default.createElement(UseSymbol, { type: "error" })),
-    theme.fgColor.negative
-  ]
-})[status]), getMostCriticalStatusValue = (statusValues) => statusPriority.reduce(
+], getStatus = (0, import_memoizerific4.default)(10)((theme, status) => {
+  let defaultIconColor = theme.base === "light" ? curriedTransparentize$1(0.3, theme.color.defaultText) : curriedTransparentize$1(0.6, theme.color.defaultText);
+  return {
+    "status-value:unknown": {
+      icon: null,
+      iconColor: defaultIconColor,
+      textColor: null
+    },
+    "status-value:pending": {
+      icon: react_default.createElement(LoadingIcons, { key: "icon" }),
+      iconColor: defaultIconColor,
+      textColor: "currentColor"
+    },
+    "status-value:success": {
+      icon: react_default.createElement("svg", { key: "icon", viewBox: "0 0 14 14", width: "14", height: "14" }, react_default.createElement(UseSymbol, { type: "success" })),
+      iconColor: theme.color.positive,
+      textColor: "currentColor"
+    },
+    "status-value:new": {
+      icon: react_default.createElement("svg", { key: "icon", viewBox: "0 0 14 14", width: "14", height: "14" }, react_default.createElement(UseSymbol, { type: "new" })),
+      iconColor: theme.fgColor.accent,
+      textColor: null
+    },
+    "status-value:modified": {
+      icon: react_default.createElement("svg", { key: "icon", viewBox: "0 0 14 14", width: "14", height: "14" }, react_default.createElement(UseSymbol, { type: "modified" })),
+      iconColor: theme.fgColor.accent,
+      textColor: null
+    },
+    "status-value:affected": {
+      icon: react_default.createElement("svg", { key: "icon", viewBox: "0 0 14 14", width: "14", height: "14" }, react_default.createElement(UseSymbol, { type: "affected" })),
+      iconColor: theme.fgColor.accent,
+      textColor: null
+    },
+    "status-value:reviewing": {
+      icon: react_default.createElement("svg", { key: "icon", viewBox: "0 0 14 14", width: "14", height: "14" }, react_default.createElement(UseSymbol, { type: "reviewing" })),
+      iconColor: theme.fgColor.agentic,
+      textColor: null
+    },
+    "status-value:warning": {
+      icon: react_default.createElement("svg", { key: "icon", viewBox: "0 0 14 14", width: "14", height: "14" }, react_default.createElement(UseSymbol, { type: "warning" })),
+      iconColor: theme.color.warning,
+      textColor: theme.fgColor.warning
+    },
+    "status-value:error": {
+      icon: react_default.createElement("svg", { key: "icon", viewBox: "0 0 14 14", width: "14", height: "14" }, react_default.createElement(UseSymbol, { type: "error" })),
+      iconColor: theme.color.negative,
+      textColor: theme.fgColor.negative
+    }
+  }[status];
+}), shouldShowChangeStatus = (changeStatus, isModifiedFilterActive) => changeStatus !== "status-value:unknown" && changeStatus !== "status-value:affected" && (changeStatus !== "status-value:modified" || isModifiedFilterActive), isAggregatedTestStatus = (status) => !NON_AGGREGATED_STATUS_TYPE_IDS.includes(status.typeId);
+function getSidebarVisibleStatus({
+  theme,
+  item,
+  statuses,
+  groupDualStatus,
+  isModifiedFilterActive
+}) {
+  let statusByType = statuses ?? {};
+  if (item.type === "group" || item.type === "component" || item.type === "story" && item.children && item.children.length > 0) {
+    let { changeStatus: localChange, testStatus: localTest } = getChangeDetectionStatus(statusByType), groupDual = groupDualStatus?.[item.id] ?? {
+      change: "status-value:unknown",
+      test: "status-value:unknown"
+    }, branchChange = getMostCriticalStatusValue([localChange, groupDual.change]), branchTest = getMostCriticalStatusValue([localTest, groupDual.test]);
+    return shouldShowChangeStatus(branchChange, isModifiedFilterActive) ? { icon: getStatus(theme, branchChange).icon, status: branchChange } : { icon: getStatus(theme, branchTest).icon, status: branchTest };
+  }
+  if (item.type === "story" && !(item.children && item.children.length > 0) && item.subtype !== "test" || item.type === "docs") {
+    let { changeStatus, testStatus } = getChangeDetectionStatus(statusByType);
+    return shouldShowChangeStatus(changeStatus, isModifiedFilterActive) ? { icon: getStatus(theme, changeStatus).icon, status: changeStatus } : { icon: getStatus(theme, testStatus).icon, status: testStatus };
+  }
+  let leafStatuses = Object.values(statusByType).filter(
+    (status) => isAggregatedTestStatus(status) || status.value === "status-value:new"
+  ), leafStatus = getMostCriticalStatusValue(leafStatuses.map((s2) => s2.value));
+  return { icon: getStatus(theme, leafStatus).icon, status: leafStatus };
+}
+function getChangeDetectionStatus(statuses) {
+  let changeValues = Object.values(statuses).filter((status) => status.typeId === CHANGE_DETECTION_STATUS_TYPE_ID).map((status) => status.value), testValues = Object.values(statuses).filter(isAggregatedTestStatus).map((status) => status.value);
+  return {
+    changeStatus: getMostCriticalStatusValue(changeValues),
+    testStatus: getMostCriticalStatusValue(testValues)
+  };
+}
+var getMostCriticalStatusValue = (statusValues) => statusPriority.reduce(
   (acc, value) => statusValues.includes(value) ? value : acc,
   "status-value:unknown"
-);
+), statusesExcludingReview = (statuses) => statuses.filter((status) => status.typeId !== REVIEW_STATUS_TYPE_ID);
 function getGroupStatus(collapsedData, allStatuses) {
   return Object.values(collapsedData).reduce((acc, item) => {
     if (item.type === "group" || item.type === "component" || item.type === "story") {
       let leafs = getDescendantIds(collapsedData, item.id, !1).map((id) => collapsedData[id]).filter((i2) => i2.type === "story"), combinedStatus = getMostCriticalStatusValue(
-        // @ts-expect-error (non strict)
-        leafs.flatMap((story) => Object.values(allStatuses[story.id] || {})).map((s2) => s2.value)
+        statusesExcludingReview(
+          leafs.flatMap(
+            (story) => Object.values(allStatuses[story.id] || {})
+          )
+        ).map((s2) => s2.value)
       );
       combinedStatus && (acc[item.id] = combinedStatus);
+    }
+    return acc;
+  }, {});
+}
+function getGroupDualStatus(collapsedData, allStatuses) {
+  return Object.values(collapsedData).reduce((acc, item) => {
+    if (item.type === "group" || item.type === "component" || item.type === "story") {
+      let allDescendantStatuses = getDescendantIds(collapsedData, item.id, !1).map((id) => collapsedData[id]).filter((i2) => i2.type === "story").flatMap(
+        (story) => Object.values(allStatuses[story.id] || {})
+      ), changeValues = allDescendantStatuses.filter((s2) => s2.typeId === CHANGE_DETECTION_STATUS_TYPE_ID).map((s2) => s2.value), testValues = allDescendantStatuses.filter(isAggregatedTestStatus).map((s2) => s2.value);
+      acc[item.id] = {
+        change: getMostCriticalStatusValue(changeValues),
+        test: getMostCriticalStatusValue(testValues)
+      };
     }
     return acc;
   }, {});
@@ -14475,22 +22495,12 @@ function getGroupStatus(collapsedData, allStatuses) {
 
 // src/manager/components/sidebar/ContextMenu.tsx
 init_react();
-var import_copy_to_clipboard2 = __toESM(require_copy_to_clipboard(), 1);
 
 // src/manager/components/sidebar/StatusButton.tsx
 init_react();
-var withStatusColor = ({ theme, status }) => {
-  let defaultColor = theme.base === "light" ? curriedTransparentize$1(0.3, theme.color.defaultText) : curriedTransparentize$1(0.6, theme.color.defaultText);
-  return {
-    color: {
-      "status-value:pending": defaultColor,
-      "status-value:success": theme.color.positive,
-      "status-value:error": theme.color.negative,
-      "status-value:warning": theme.color.warning,
-      "status-value:unknown": defaultColor
-    }[status]
-  };
-}, StatusLabel = styled.div(withStatusColor, {
+var withStatusColor = ({ theme, status }) => ({
+  color: getStatus(theme, status).iconColor ?? void 0
+}), StatusLabel = styled.div(withStatusColor, {
   margin: 3
 }), StyledButton = styled(Button)(
   withStatusColor,
@@ -14530,10 +22540,6 @@ var withStatusColor = ({ theme, status }) => {
 ), StatusButton = forwardRef((props, ref) => react_default.createElement(StyledButton, { variant: "ghost", padding: "small", ...props, ref }));
 StatusButton.displayName = "StatusButton";
 
-// src/manager/components/sidebar/StatusContext.tsx
-init_react();
-var StatusContext = createContext({});
-
 // src/manager/components/sidebar/ContextMenu.tsx
 var empty = {
   onMouseEnter: () => {
@@ -14548,14 +22554,17 @@ var empty = {
   "&:focus-visible": {
     outlineOffset: -2
   }
-}), useContextMenu = (context, links, api) => {
-  let [hoverCount, setHoverCount] = useState(0), [isOpen, setIsOpen] = useState(!1), [copyText, setCopyText] = react_default.useState("Copy story name"), { allStatuses, groupStatus } = useContext(StatusContext), shortcutKeys = api.getShortcutKeys(), enableShortcuts = !!shortcutKeys, topLinks = useMemo(() => {
+}), useContextMenu = (context, links, api, visibleStatus) => {
+  let [hoverCount, setHoverCount] = useState(0), [isOpen, setIsOpen] = useState(!1), exportName = context && "exportName" in context ? context.exportName ?? "" : "", { children: copyText, buttonProps: copyButtonProps } = useCopyButton2({
+    children: "Copy story name",
+    content: exportName
+  }), openInEditorShortcut = api.getShortcutKeys()?.openInEditor, topLinks = useMemo(() => {
     let defaultLinks = [];
     return context && "importPath" in context && context.importPath && defaultLinks.push({
       id: "open-in-editor",
       title: "Open in editor",
       icon: react_default.createElement(EditorIcon, null),
-      right: enableShortcuts ? react_default.createElement(Shortcut, { keys: shortcutKeys.openInEditor }) : null,
+      right: openInEditorShortcut ? react_default.createElement(Shortcut, { keys: openInEditorShortcut }) : null,
       onClick: (e2) => {
         context.importPath && (e2.preventDefault(), api.openInEditor({ file: context.importPath }));
       }
@@ -14569,12 +22578,10 @@ var empty = {
       //     <Shortcut keys={shortcutKeys.copyStoryName} />
       //   ) : null,
       onClick: (e2) => {
-        e2.preventDefault(), (0, import_copy_to_clipboard2.default)(context.exportName), setCopyText("Copied!"), setTimeout(() => {
-          setCopyText("Copy story name");
-        }, 2e3);
+        e2.preventDefault(), copyButtonProps.onClick(e2);
       }
     }), defaultLinks;
-  }, [api, context, copyText, enableShortcuts, shortcutKeys]), handlers = useMemo(() => ({
+  }, [api, context, copyText, copyButtonProps, openInEditorShortcut]), handlers = useMemo(() => ({
     onMouseEnter: () => {
       setHoverCount((c2) => c2 + 1);
     },
@@ -14587,25 +22594,13 @@ var empty = {
   }), []), providerLinks = useMemo(() => {
     let registeredTestProviders = api.getElements(Addon_TypesEnum.experimental_TEST_PROVIDER);
     return hoverCount ? generateTestProviderLinks(registeredTestProviders, context) : [];
-  }, [api, context, hoverCount]), shouldRender = !context.refId && (providerLinks.length > 0 || links.length > 0 || topLinks.length > 0), isLeafNode = context.type === "story" || context.type === "docs", itemStatus = useMemo(() => {
-    let status = "status-value:unknown";
-    if (!context)
-      return status;
-    if (isLeafNode) {
-      let values = Object.values(allStatuses?.[context.id] || {}).map((s2) => s2.value);
-      status = getMostCriticalStatusValue(values);
-    }
-    if (!isLeafNode) {
-      let groupValue = groupStatus && groupStatus[context.id];
-      status = groupValue === "status-value:success" || groupValue === void 0 ? "status-value:unknown" : groupValue;
-    }
-    return status;
-  }, [allStatuses, groupStatus, context, isLeafNode]), MenuIcon2 = useMemo(() => context.type !== "story" && context.type !== "docs" ? itemStatus !== "status-value:success" && itemStatus !== "status-value:unknown" ? react_default.createElement("svg", { key: "icon", viewBox: "0 0 6 6", width: "6", height: "6" }, react_default.createElement(UseSymbol, { type: "dot" })) : react_default.createElement(EllipsisIcon, null) : itemStatus === "status-value:error" ? react_default.createElement("svg", { key: "icon", viewBox: "0 0 14 14", width: "14", height: "14" }, react_default.createElement(UseSymbol, { type: "error" })) : itemStatus === "status-value:warning" ? react_default.createElement("svg", { key: "icon", viewBox: "0 0 14 14", width: "14", height: "14" }, react_default.createElement(UseSymbol, { type: "warning" })) : itemStatus === "status-value:success" ? react_default.createElement("svg", { key: "icon", viewBox: "0 0 14 14", width: "14", height: "14" }, react_default.createElement(UseSymbol, { type: "success" })) : react_default.createElement(EllipsisIcon, null), [itemStatus, context.type]);
+  }, [api, context, hoverCount]), shouldRender = !context.refId && (providerLinks.length > 0 || links.length > 0 || topLinks.length > 0), buttonStatus = visibleStatus?.status ?? "status-value:unknown", menuIcon = visibleStatus?.icon ?? react_default.createElement(EllipsisIcon, null);
   return useMemo(() => globalThis.CONFIG_TYPE !== "DEVELOPMENT" ? empty : {
     onMouseEnter: handlers.onMouseEnter,
     node: shouldRender ? react_default.createElement(
       PopoverProvider,
       {
+        ariaLabel: "Context menu",
         placement: "bottom-end",
         defaultVisible: !1,
         visible: isOpen,
@@ -14621,13 +22616,13 @@ var empty = {
           "data-testid": "context-menu",
           ariaLabel: "Open context menu",
           type: "button",
-          status: itemStatus,
+          status: buttonStatus,
           onClick: handlers.onOpen
         },
-        MenuIcon2
+        menuIcon
       )
     ) : null
-  }, [context, handlers, isOpen, shouldRender, links, topLinks, itemStatus, MenuIcon2]);
+  }, [context, handlers, isOpen, shouldRender, links, topLinks, buttonStatus, menuIcon]);
 }, LiveContextMenu = ({
   context,
   links,
@@ -14649,6 +22644,10 @@ function generateTestProviderLinks(registeredTestProviders, context) {
     } : null;
   }).filter(Boolean);
 }
+
+// src/manager/components/sidebar/StatusContext.tsx
+init_react();
+var StatusContext = createContext({});
 
 // src/manager/components/sidebar/TreeNode.tsx
 init_react();
@@ -14675,14 +22674,12 @@ var CollapseIconWrapper = styled.div(({ theme, isExpanded }) => ({
 )));
 
 // src/manager/components/sidebar/TreeNode.tsx
-var TypeIcon2 = styled.svg(
-  ({ theme, type }) => ({
-    width: 14,
-    height: 14,
-    flex: "0 0 auto",
-    color: type === "group" ? theme.base === "dark" ? theme.color.primary : theme.color.ultraviolet : type === "component" ? theme.color.secondary : type === "document" ? theme.base === "dark" ? theme.color.gold : "#ff8300" : type === "story" ? theme.color.seafoam : type === "test" ? theme.color.green : "currentColor"
-  })
-), commonNodeStyles = ({
+var TypeIcon2 = styled.svg(({ theme, type }) => ({
+  width: 14,
+  height: 14,
+  flex: "0 0 auto",
+  color: type === "group" ? theme.base === "dark" ? theme.color.primary : theme.color.ultraviolet : type === "component" ? theme.color.secondary : type === "document" ? theme.base === "dark" ? theme.color.gold : "#ff8300" : type === "story" ? theme.color.seafoam : type === "heading" ? theme.color.secondary : type === "test" ? theme.color.green : "currentColor"
+})), commonNodeStyles = ({
   theme,
   depth = 0,
   isExpandable = !1
@@ -14788,7 +22785,7 @@ var codeToKeyMap = {
 }, matchesKeyCode = (code, event) => event.code ? event.code === code : event.key === codeToKeyMap[code];
 
 // src/manager/components/sidebar/useExpanded.ts
-var { document: document4 } = scope, initializeExpanded = ({
+var { document: document5 } = scope, initializeExpanded = ({
   refId,
   data,
   initialExpanded,
@@ -14802,7 +22799,7 @@ var { document: document4 } = scope, initializeExpanded = ({
     (acc, id) => Object.assign(acc, { [id]: id in initialExpanded ? initialExpanded[id] : !0 }),
     {}
   );
-}, noop3 = () => {
+}, noop4 = () => {
 }, useExpanded = ({
   containerRef,
   isBrowsing,
@@ -14850,8 +22847,8 @@ var { document: document4 } = scope, initializeExpanded = ({
   }, [data]);
   return useEffect(() => api ? (api.on(STORIES_COLLAPSE_ALL, collapseAll), api.on(STORIES_EXPAND_ALL, expandAll), () => {
     api.off(STORIES_COLLAPSE_ALL, collapseAll), api.off(STORIES_EXPAND_ALL, expandAll);
-  }) : noop3, [api, collapseAll, expandAll]), useEffect(() => {
-    let menuElement = document4.getElementById("storybook-explorer-menu"), navigateTree = throttle((event) => {
+  }) : noop4, [api, collapseAll, expandAll]), useEffect(() => {
+    let menuElement = document5.getElementById("storybook-explorer-menu"), navigateTree = throttle((event) => {
       let highlightedItemId = highlightedRef.current?.refId === refId && highlightedRef.current?.itemId;
       if (!isBrowsing || !containerRef.current || !highlightedItemId || event.repeat || !matchesModifiers(!1, event))
         return;
@@ -14887,7 +22884,7 @@ var { document: document4 } = scope, initializeExpanded = ({
       }
       isArrowRight && (isExpanded === "false" ? updateExpanded({ ids: [highlightedItemId], value: !0 }) : isExpanded === "true" && updateExpanded({ ids: getDescendantIds(data, highlightedItemId, !0), value: !0 }));
     }, 60);
-    return document4.addEventListener("keydown", navigateTree), () => document4.removeEventListener("keydown", navigateTree);
+    return document5.addEventListener("keydown", navigateTree), () => document5.removeEventListener("keydown", navigateTree);
   }, [
     containerRef,
     isBrowsing,
@@ -14967,36 +22964,15 @@ var CollapseButton = styled(Button)(({ theme }) => ({
       width: "auto"
     }
   }
-})), SuccessStatusIcon = (props) => {
-  let theme = useTheme();
-  return react_default.createElement(StatusPassIcon, { ...props, color: theme.color.positive });
-}, ErrorStatusIcon = (props) => {
-  let theme = useTheme();
-  return react_default.createElement(StatusFailIcon, { ...props, color: theme.color.negative });
-}, WarnStatusIcon = (props) => {
-  let theme = useTheme();
-  return react_default.createElement(StatusWarnIcon, { ...props, color: theme.color.warning });
-}, PendingStatusIcon = (props) => {
-  let theme = useTheme();
-  return react_default.createElement(SyncIcon, { ...props, size: 12, color: theme.color.defaultText });
-}, StatusIconMap = {
-  "status-value:success": react_default.createElement(SuccessStatusIcon, null),
-  "status-value:error": react_default.createElement(ErrorStatusIcon, null),
-  "status-value:warning": react_default.createElement(WarnStatusIcon, null),
-  "status-value:pending": react_default.createElement(PendingStatusIcon, null),
-  "status-value:unknown": null
-};
-var statusOrder = [
-  "status-value:success",
-  "status-value:error",
-  "status-value:warning",
-  "status-value:pending",
-  "status-value:unknown"
-], Node2 = react_default.memo(function(props) {
+})), StatusSlots = styled.div({
+  display: "flex",
+  alignItems: "center"
+});
+var getStatusLabel = (status) => status.split(":")[1].replace(/^./, (char) => char.toUpperCase()), Node2 = react_default.memo(function(props) {
   let {
     item,
     statuses,
-    groupStatus,
+    groupDualStatus,
     refId,
     docsMode,
     isOrphan,
@@ -15007,25 +22983,32 @@ var statusOrder = [
     isExpanded,
     setExpanded,
     onSelectStoryId,
-    api
-  } = props, theme = useTheme(), { isDesktop, isMobile: isMobile2, setMobileMenuOpen } = useLayout();
-  if (!isDisplayed)
-    return null;
-  let statusLinks = useMemo(() => item.type === "story" || item.type === "docs" ? Object.entries(statuses).filter(([, status]) => status.sidebarContextMenu !== !1).sort((a2, b2) => statusOrder.indexOf(a2[1].value) - statusOrder.indexOf(b2[1].value)).map(([typeId, status]) => ({
+    api,
+    isModifiedFilterActive
+  } = props, theme = useTheme(), { isDesktop, isMobile: isMobile2 } = useLayout(), statusLinks = useMemo(() => item.type === "story" || item.type === "docs" ? Object.entries(statuses).filter(([, status]) => status.sidebarContextMenu !== !1).filter(([, status]) => status.typeId !== REVIEW_STATUS_TYPE_ID).sort((a2, b2) => statusPriority.indexOf(a2[1].value) - statusPriority.indexOf(b2[1].value)).map(([typeId, status]) => ({
     id: typeId,
     title: status.title,
     description: status.description,
     "aria-label": `Test status for ${status.title}: ${status.value}`,
-    icon: StatusIconMap[status.value],
+    icon: getStatus(theme, status.value).icon,
     onClick: () => {
       onSelectStoryId(item.id), internal_fullStatusStore.selectStatuses([status]);
     }
-  })) : [], [item.id, item.type, onSelectStoryId, statuses]), id = createId(item.id, refId), contextMenu = refId === "storybook_internal" ? useContextMenu(item, statusLinks, api) : { node: null, onMouseEnter: () => {
-  } };
+  })) : [], [item.id, item.type, onSelectStoryId, statuses, theme]), visibleStatus = useMemo(
+    () => getSidebarVisibleStatus({
+      theme,
+      item,
+      statuses,
+      groupDualStatus,
+      isModifiedFilterActive
+    }),
+    [theme, item, statuses, groupDualStatus, isModifiedFilterActive]
+  ), contextMenu = useContextMenu(item, statusLinks, api, visibleStatus);
+  refId !== "storybook_internal" && (contextMenu = { node: null, onMouseEnter: () => {
+  } });
+  let id = createId(item.id, refId);
   if (item.type === "story" && !("children" in item && item.children) && (!("subtype" in item) || item.subtype !== "test") || item.type === "docs") {
-    let LeafNode3 = item.type === "docs" ? DocumentNode : StoryLeafNode, statusValue = getMostCriticalStatusValue(
-      Object.values(statuses || {}).map((s2) => s2.value)
-    ), [icon, textColor] = getStatus(theme, statusValue);
+    let LeafNode3 = item.type === "docs" ? DocumentNode : StoryLeafNode, { changeStatus, testStatus } = getChangeDetectionStatus(statuses || {}), leafChangeIcon = shouldShowChangeStatus(changeStatus, isModifiedFilterActive) ? getStatus(theme, changeStatus).icon : null, { icon: testIcon } = getStatus(theme, testStatus), overallStoryStatus = getMostCriticalStatusValue([changeStatus, testStatus]), { textColor } = getStatus(theme, overallStoryStatus);
     return react_default.createElement(
       LeafNodeStyleWrapper,
       {
@@ -15047,7 +23030,7 @@ var statusOrder = [
           id,
           depth: isOrphan ? item.depth : item.depth - 1,
           onClick: (event) => {
-            event.preventDefault(), onSelectStoryId(item.id), isMobile2 && setMobileMenuOpen(!1);
+            event.preventDefault(), onSelectStoryId(item.id), isMobile2 && api.setMobileNavigation(!1);
           },
           ...item.type === "docs" && { docsMode }
         },
@@ -15055,16 +23038,46 @@ var statusOrder = [
       ),
       isSelected && react_default.createElement(SkipToContentLink, { asChild: !0, ariaLabel: !1 }, react_default.createElement("a", { href: "#storybook-preview-wrapper" }, "Skip to content")),
       contextMenu.node,
-      icon ? react_default.createElement(
+      leafChangeIcon && testIcon ? react_default.createElement(StatusSlots, null, react_default.createElement(
         StatusButton,
         {
-          ariaLabel: `Test status: ${statusValue.replace("status-value:", "")}`,
-          "data-testid": "tree-status-button",
+          ariaLabel: `Change status: ${getStatusLabel(changeStatus)}`,
+          "data-testid": "tree-change-status-button",
           type: "button",
-          status: statusValue,
+          status: changeStatus,
           selectedItem: isSelected
         },
-        icon
+        leafChangeIcon
+      ), react_default.createElement(
+        StatusButton,
+        {
+          ariaLabel: `Test status: ${getStatusLabel(testStatus)}`,
+          "data-testid": "tree-status-button",
+          type: "button",
+          status: testStatus,
+          selectedItem: isSelected
+        },
+        testIcon
+      )) : leafChangeIcon ? react_default.createElement(
+        StatusButton,
+        {
+          ariaLabel: `Change status: ${getStatusLabel(changeStatus)}`,
+          "data-testid": "tree-change-status-button",
+          type: "button",
+          status: changeStatus,
+          selectedItem: isSelected
+        },
+        leafChangeIcon
+      ) : testIcon ? react_default.createElement(
+        StatusButton,
+        {
+          ariaLabel: `Test status: ${getStatusLabel(testStatus)}`,
+          "data-testid": "tree-status-button",
+          type: "button",
+          status: testStatus,
+          selectedItem: isSelected
+        },
+        testIcon
       ) : null
     );
   }
@@ -15109,20 +23122,13 @@ var statusOrder = [
         isFullyExpanded ? react_default.createElement(CollapseIcon, null) : react_default.createElement(ExpandAltIcon, null)
       )
     );
-  let itemStatus = getMostCriticalStatusValue(Object.values(statuses || {}).map((s2) => s2.value)), [itemIcon, itemColor] = getStatus(theme, itemStatus), itemStatusButton = itemIcon ? react_default.createElement(
-    StatusButton,
-    {
-      ariaLabel: `Test status: ${itemStatus.replace("status-value:", "")}`,
-      "data-testid": "tree-status-button",
-      role: "status",
-      type: "button",
-      status: itemStatus,
-      selectedItem: isSelected
-    },
-    itemIcon
-  ) : null;
   if (item.type === "component" || item.type === "group" || item.type === "story" && "children" in item && item.children) {
-    let { children = [] } = item, BranchNode2 = { component: ComponentNode, group: GroupNode, story: StoryBranchNode }[item.type], status = getMostCriticalStatusValue([itemStatus, groupStatus?.[item.id]]), color2 = status ? getStatus(theme, status)[1] : null, showBranchStatus = status === "status-value:error" || status === "status-value:warning";
+    let { children = [] } = item, BranchNode2 = { component: ComponentNode, group: GroupNode, story: StoryBranchNode }[item.type], { changeStatus: localChange, testStatus: localTest } = getChangeDetectionStatus(
+      statuses || {}
+    ), groupDual = groupDualStatus?.[item.id] || {
+      change: "status-value:unknown",
+      test: "status-value:unknown"
+    }, branchChange = getMostCriticalStatusValue([localChange, groupDual.change]), branchTest = getMostCriticalStatusValue([localTest, groupDual.test]), branchChangeIcon = shouldShowChangeStatus(branchChange, isModifiedFilterActive) ? getStatus(theme, branchChange).icon : null, branchTestIcon = getStatus(theme, branchTest).icon, overallStatus = getMostCriticalStatusValue([branchChange, branchTest]), color2 = overallStatus ? getStatus(theme, overallStatus).textColor : null;
     return react_default.createElement(
       LeafNodeStyleWrapper,
       {
@@ -15160,20 +23166,65 @@ var statusOrder = [
       ),
       isSelected && react_default.createElement(SkipToContentLink, { asChild: !0, ariaLabel: !1 }, react_default.createElement("a", { href: "#storybook-preview-wrapper" }, "Skip to content")),
       contextMenu.node,
-      showBranchStatus ? react_default.createElement(
+      branchChangeIcon && branchTestIcon ? react_default.createElement(StatusSlots, null, react_default.createElement(
         StatusButton,
         {
-          ariaLabel: `Test status: ${status.replace("status-value:", "")}`,
-          "data-testid": "tree-status-button",
+          ariaLabel: `Change status: ${getStatusLabel(branchChange)}`,
+          "data-testid": "tree-change-status-button",
           type: "button",
-          status,
+          status: branchChange,
           selectedItem: isSelected
         },
-        react_default.createElement("svg", { key: "icon", viewBox: "0 0 6 6", width: "6", height: "6", type: "dot" }, react_default.createElement(UseSymbol, { type: "dot" }))
-      ) : itemStatusButton
+        branchChangeIcon
+      ), react_default.createElement(
+        StatusButton,
+        {
+          ariaLabel: `Test status: ${getStatusLabel(branchTest)}`,
+          "data-testid": "tree-status-button",
+          type: "button",
+          status: branchTest,
+          selectedItem: isSelected
+        },
+        branchTestIcon
+      )) : branchChangeIcon ? react_default.createElement(
+        StatusButton,
+        {
+          ariaLabel: `Change status: ${getStatusLabel(branchChange)}`,
+          "data-testid": "tree-change-status-button",
+          type: "button",
+          status: branchChange,
+          selectedItem: isSelected
+        },
+        branchChangeIcon
+      ) : branchTestIcon ? react_default.createElement(
+        StatusButton,
+        {
+          ariaLabel: `Test status: ${getStatusLabel(branchTest)}`,
+          "data-testid": "tree-status-button",
+          type: "button",
+          status: branchTest,
+          selectedItem: isSelected
+        },
+        branchTestIcon
+      ) : null
     );
   }
-  let isTest = item.type === "story" && item.subtype === "test", LeafNode2 = isTest ? TestNode : { docs: DocumentNode, story: StoryLeafNode }[item.type], nodeType = isTest ? "test" : { docs: "document", story: "story" }[item.type];
+  let isTest = item.type === "story" && item.subtype === "test", LeafNode2 = isTest ? TestNode : { docs: DocumentNode, story: StoryLeafNode }[item.type], nodeType = isTest ? "test" : { docs: "document", story: "story" }[item.type], leafStatuses = Object.fromEntries(
+    Object.entries(statuses || {}).filter(
+      ([, status]) => status.typeId !== CHANGE_DETECTION_STATUS_TYPE_ID || status.value === "status-value:new"
+    )
+  ), leafStatus = getMostCriticalStatusValue(Object.values(leafStatuses).map((s2) => s2.value)), { icon: leafIcon, textColor: leafColor } = getStatus(theme, leafStatus), leafStatusButton = leafIcon ? react_default.createElement(
+    StatusButton,
+    {
+      ariaLabel: `Status: ${getStatusLabel(leafStatus)}`,
+      "data-testid": "tree-status-button",
+      role: "status",
+      type: "button",
+      status: leafStatus,
+      selectedItem: isSelected
+    },
+    leafIcon
+  ) : null;
   return react_default.createElement(
     LeafNodeStyleWrapper,
     {
@@ -15190,21 +23241,21 @@ var statusOrder = [
     react_default.createElement(
       LeafNode2,
       {
-        style: itemColor && !isSelected ? { color: itemColor } : {},
+        style: leafColor && !isSelected ? { color: leafColor } : {},
         href: getLink(item, refId),
         id,
         depth: isOrphan ? item.depth : item.depth - 1,
         onClick: (event) => {
-          event.preventDefault(), onSelectStoryId(item.id), isMobile2 && setMobileMenuOpen(!1);
+          event.preventDefault(), onSelectStoryId(item.id), isMobile2 && api.setMobileNavigation(!1);
         }
       },
       item.renderLabel?.(item, api) || item.name
     ),
     isSelected && react_default.createElement(SkipToContentLink, { ariaLabel: !1, asChild: !0 }, react_default.createElement("a", { href: "#storybook-preview-wrapper" }, "Skip to content")),
     contextMenu.node,
-    itemStatusButton
+    leafStatusButton
   );
-}), Root = react_default.memo(function({
+}), Root3 = react_default.memo(function({
   setExpanded,
   isFullyExpanded,
   expandableDescendants,
@@ -15234,7 +23285,7 @@ var statusOrder = [
   selectedStoryId,
   onSelectStoryId
 }) {
-  let containerRef = useRef(null), api = useStorybookApi(), [rootIds, orphanIds, initialExpanded] = useMemo(
+  let containerRef = useRef(null), api = useStorybookApi(), isModifiedFilterActive = (useStorybookState().includedStatusFilters ?? []).includes("status-value:modified"), [rootIds, orphanIds, initialExpanded] = useMemo(
     () => Object.keys(data).reduce(
       (acc, id) => {
         let item = data[id];
@@ -15293,6 +23344,9 @@ var statusOrder = [
   }), groupStatus = useMemo(
     () => getGroupStatus(collapsedData, allStatuses ?? {}),
     [collapsedData, allStatuses]
+  ), groupDualStatus = useMemo(
+    () => getGroupDualStatus(collapsedData, allStatuses ?? {}),
+    [collapsedData, allStatuses]
   ), treeItems = useMemo(() => collapsedItems.map((itemId) => {
     let item = collapsedData[itemId], id = createId(itemId, refId);
     if (item.type === "root") {
@@ -15300,7 +23354,7 @@ var statusOrder = [
       return (
         // @ts-expect-error (TODO)
         react_default.createElement(
-          Root,
+          Root3,
           {
             api,
             key: id,
@@ -15314,7 +23368,8 @@ var statusOrder = [
             setExpanded,
             isFullyExpanded,
             expandableDescendants: descendants,
-            onSelectStoryId
+            onSelectStoryId,
+            isModifiedFilterActive
           }
         )
       );
@@ -15328,7 +23383,7 @@ var statusOrder = [
         key: id,
         item,
         statuses: allStatuses?.[itemId] ?? {},
-        groupStatus,
+        groupDualStatus,
         refId,
         docsMode,
         isOrphan: orphanIds.some((oid) => itemId === oid || itemId.startsWith(`${oid}-`)),
@@ -15336,7 +23391,8 @@ var statusOrder = [
         isSelected: selectedStoryId === itemId,
         isExpanded: !!expanded[itemId],
         setExpanded,
-        onSelectStoryId
+        onSelectStoryId,
+        isModifiedFilterActive
       }
     );
   }), [
@@ -15347,7 +23403,8 @@ var statusOrder = [
     docsMode,
     expandableDescendants,
     expanded,
-    groupStatus,
+    groupDualStatus,
+    isModifiedFilterActive,
     onSelectStoryId,
     orphanIds,
     refId,
@@ -15399,7 +23456,7 @@ var Wrapper6 = styled.div(({ isMain }) => ({
     }
   }
 })), Ref = react_default.memo(function(props) {
-  let { docsOptions } = useStorybookState(), api = useStorybookApi(), {
+  let storybookState = useStorybookState(), api = useStorybookApi(), {
     filteredIndex: index,
     id: refId,
     title: title2 = refId,
@@ -15415,11 +23472,11 @@ var Wrapper6 = styled.div(({ isMain }) => ({
     indexError,
     previewInitialized,
     allStatuses
-  } = props, length = useMemo(() => index ? Object.keys(index).length : 0, [index]), indicatorRef = useRef(null), isMain = refId === DEFAULT_REF_ID, isLoading = isLoadingMain || (type === "auto-inject" && !previewInitialized || type === "server-checked") || type === "unknown", state = getStateType(isLoading, !!loginUrl && length === 0, !!indexError, !isLoading && length === 0), [isExpanded, setExpanded] = useState(expanded);
+  } = props, length = useMemo(() => index ? Object.keys(index).length : 0, [index]), indicatorRef = useRef(null), isMain = refId === DEFAULT_REF_ID, isLoading = isLoadingMain || (type === "auto-inject" && !previewInitialized || type === "server-checked") || type === "unknown", isError2 = !!indexError, isEmpty = !isLoading && length === 0, isAuthRequired = !!loginUrl && length === 0, activeFilterCount = getActiveFilterCount(storybookState), state = getStateType(isLoading, isAuthRequired, isError2, isEmpty), [isExpanded, setExpanded] = useState(expanded);
   useEffect(() => {
     index && selectedStoryId && index[selectedStoryId] && setExpanded(!0);
-  }, [setExpanded, index, selectedStoryId]);
-  let handleClick = useCallback(() => setExpanded((value) => !value), [setExpanded]), setHighlightedItemId = useCallback(
+  }, [index, selectedStoryId]);
+  let handleClick = useCallback(() => setExpanded((value) => !value), []), setHighlightedItemId = useCallback(
     (itemId) => setHighlighted({ itemId, refId }),
     [setHighlighted, refId]
   ), onSelectStoryId = useCallback(
@@ -15434,7 +23491,14 @@ var Wrapper6 = styled.div(({ isMain }) => ({
     },
     react_default.createElement(CollapseButton2, { "data-action": "collapse-ref", onClick: handleClick }, react_default.createElement(CollapseIcon2, { isExpanded }), react_default.createElement(RefTitle, { title: title2 }, title2)),
     react_default.createElement(RefIndicator, { ...props, state, ref: indicatorRef })
-  ), isExpanded && react_default.createElement(Wrapper6, { "data-title": title2, isMain }, state === "auth" && react_default.createElement(AuthBlock, { id: refId, loginUrl }), state === "error" && react_default.createElement(ErrorBlock, { error: indexError }), state === "loading" && react_default.createElement(LoaderBlock, { isMain }), state === "empty" && react_default.createElement(EmptyBlock, { isMain, hasEntries }), state === "ready" && react_default.createElement(
+  ), isExpanded && react_default.createElement(Wrapper6, { "data-title": title2, isMain }, state === "auth" && react_default.createElement(AuthBlock, { id: refId, loginUrl }), state === "error" && react_default.createElement(ErrorBlock, { error: indexError }), state === "loading" && react_default.createElement(LoaderBlock, { isMain }), state === "empty" && react_default.createElement(
+    EmptyBlock,
+    {
+      isMain,
+      hasEntries,
+      activeFilterCount
+    }
+  ), state === "ready" && react_default.createElement(
     Tree,
     {
       allStatuses,
@@ -15442,7 +23506,7 @@ var Wrapper6 = styled.div(({ isMain }) => ({
       isMain,
       refId,
       data: index,
-      docsMode: docsOptions.docsMode,
+      docsMode: storybookState.docsOptions.docsMode,
       selectedStoryId,
       onSelectStoryId,
       highlightedRef,
@@ -15453,8 +23517,8 @@ var Wrapper6 = styled.div(({ isMain }) => ({
 
 // src/manager/components/sidebar/useHighlighted.ts
 init_react();
-var { document: document5, window: globalWindow4 } = scope, fromSelection = (selection) => selection ? { itemId: selection.storyId, refId: selection.refId } : null, scrollToSelector = (selector, options2 = {}, _attempt = 1) => {
-  let { containerRef, center = !1, attempts = 3, delay: delay2 = 500 } = options2, element = (containerRef ? containerRef.current : document5)?.querySelector(selector);
+var { document: document6, window: globalWindow4 } = scope, fromSelection = (selection) => selection ? { itemId: selection.storyId, refId: selection.refId } : null, scrollToSelector = (selector, options2 = {}, _attempt = 1) => {
+  let { containerRef, center = !1, attempts = 3, delay: delay2 = 500 } = options2, element = (containerRef ? containerRef.current : document6)?.querySelector(selector);
   element ? scrollIntoView(element, center) : _attempt <= attempts && setTimeout(scrollToSelector, delay2, selector, options2, _attempt + 1);
 }, useHighlighted = ({
   containerRef,
@@ -15481,7 +23545,7 @@ var { document: document5, window: globalWindow4 } = scope, fromSelection = (sel
       center: !0
     });
   }, [containerRef, selected, updateHighlighted]), useEffect(() => {
-    let menuElement = document5.getElementById("storybook-explorer-menu"), lastRequestId, navigateTree = (event) => {
+    let menuElement = document6.getElementById("storybook-explorer-menu"), lastRequestId, navigateTree = (event) => {
       if (isLoading || !isBrowsing || !containerRef.current || !matchesModifiers(!1, event))
         return;
       let isArrowUp = matchesKeyCode("ArrowUp", event), isArrowDown = matchesKeyCode("ArrowDown", event);
@@ -15507,7 +23571,7 @@ var { document: document5, window: globalWindow4 } = scope, fromSelection = (sel
         }
       });
     };
-    return document5.addEventListener("keydown", navigateTree), () => document5.removeEventListener("keydown", navigateTree);
+    return document6.addEventListener("keydown", navigateTree), () => document6.removeEventListener("keydown", navigateTree);
   }, [api, containerRef, isLoading, isBrowsing, highlightedRef, highlightElement]), [highlighted, updateHighlighted, highlightedRef];
 };
 
@@ -15560,6 +23624,366 @@ var Explorer = react_default.memo(function({
     ))
   );
 });
+
+// src/manager/components/sidebar/Filter.tsx
+init_react();
+
+// src/manager/components/sidebar/FilterPanel.tsx
+init_react();
+
+// src/manager/components/sidebar/FilterPanelLink.tsx
+init_react();
+var MutedText = styled.span(({ theme }) => ({
+  color: theme.textMutedColor
+})), StatusIcon2 = styled.span(({ $iconColor }) => ({
+  display: "contents",
+  color: $iconColor ?? void 0,
+  "> svg": {
+    transform: "scale(1.3)"
+  }
+})), createFilterLink = ({
+  id,
+  type,
+  title: title2,
+  tooltip,
+  count,
+  icon,
+  isIncluded,
+  isExcluded,
+  onCheckboxChange,
+  onInvert
+}) => {
+  let isChecked = isIncluded || isExcluded, toggleLabel = `${type} filter: ${isExcluded ? `exclude ${title2}` : title2}`, toggleTooltip = tooltip ?? `${isChecked ? "Remove" : "Add"} ${type} filter: ${title2}`, invertButtonLabel = `${isExcluded ? "Include" : "Exclude"} ${type}: ${title2}`;
+  return {
+    id: `filter-${type}-${id}`,
+    content: react_default.createElement(ActionList.HoverItem, { targetId: `filter-${type}-${id}` }, react_default.createElement(ActionList.Action, { as: "label", ariaLabel: !1, tabIndex: -1, tooltip: toggleTooltip }, react_default.createElement(ActionList.Icon, null, isExcluded ? react_default.createElement(DeleteIcon, null) : isIncluded ? null : icon, react_default.createElement(
+      Form.Checkbox,
+      {
+        checked: isChecked,
+        onChange: onCheckboxChange,
+        "data-tag": title2,
+        "aria-label": toggleLabel
+      }
+    )), react_default.createElement(ActionList.Text, null, react_default.createElement("span", null, title2, isExcluded && react_default.createElement(MutedText, null, " (excluded)"))), isExcluded ? react_default.createElement("s", null, count) : react_default.createElement("span", null, count)), react_default.createElement(
+      ActionList.Button,
+      {
+        "data-target-id": `filter-${type}-${id}`,
+        ariaLabel: invertButtonLabel,
+        onClick: onInvert
+      },
+      react_default.createElement("span", { style: { minWidth: 45 } }, isExcluded ? "Include" : "Exclude")
+    ))
+  };
+};
+
+// src/manager/components/sidebar/FilterPanel.utils.ts
+var BUILT_IN_TAGS = /* @__PURE__ */ new Set([
+  "dev",
+  "test",
+  "autodocs",
+  "attached-mdx",
+  "unattached-mdx",
+  "play-fn",
+  "test-fn",
+  "manifest"
+]), STATUS_DISPLAY_ORDER = [
+  "status-value:new",
+  "status-value:modified",
+  "status-value:affected",
+  "status-value:reviewing"
+], areFiltersEqual = (left, right) => left.length === right.length && (/* @__PURE__ */ new Set([...left, ...right])).size === left.length, getFilterFunction = (tag) => Object.hasOwn(BUILT_IN_FILTERS, tag) ? BUILT_IN_FILTERS[tag] : USER_TAG_FILTER(tag);
+
+// src/manager/components/sidebar/useFilterData.tsx
+init_react();
+var BUILT_IN_FILTER_DEFS = [
+  { id: "_docs", title: "Documentation", icon: react_default.createElement(DocumentIcon, { color: color.gold }), tag: "_docs" },
+  { id: "_play", title: "Play", icon: react_default.createElement(PlayHollowIcon, { color: color.seafoam }), tag: "_play" },
+  { id: "_test", title: "Testing", icon: react_default.createElement(BeakerIcon, { color: color.green }), tag: "_test" }
+];
+function useTagFilterEntries(indexJson) {
+  return useMemo(() => {
+    let entries = Object.values(indexJson.entries), userTagsCounts = entries.reduce((acc, entry) => (entry.tags?.forEach((tag) => {
+      BUILT_IN_TAGS.has(tag) || (acc[tag] = (acc[tag] || 0) + 1);
+    }), acc), {}), tagEntries = Object.entries(userTagsCounts).map(([tag, count]) => ({
+      id: tag,
+      type: "tag",
+      title: tag,
+      count,
+      icon: null
+    })), getBuiltInCount = (filterFn) => entries.filter((entry) => filterFn?.(entry)).length;
+    return { builtInEntries: BUILT_IN_FILTER_DEFS.map((def) => ({
+      id: def.id,
+      type: "built-in",
+      title: def.title,
+      icon: def.icon,
+      count: getBuiltInCount(getFilterFunction(def.tag))
+    })), tagEntries };
+  }, [indexJson.entries]);
+}
+function useStatusFilterEntries(allStatuses) {
+  return useMemo(() => {
+    let changeDetectionEnabled = !!globalThis?.FEATURES?.changeDetection, counts = countStatusesByValue(allStatuses), reviewingCount = counts["status-value:reviewing"] ?? 0;
+    return !changeDetectionEnabled && reviewingCount === 0 ? [] : (changeDetectionEnabled ? STATUS_DISPLAY_ORDER : ["status-value:reviewing"]).map((statusValue) => ({
+      statusValue,
+      shortName: statusValueShortName(statusValue),
+      description: statusValueDescription(statusValue),
+      count: counts[statusValue] ?? 0
+    })).filter((entry) => entry.statusValue !== "status-value:reviewing" || entry.count > 0);
+  }, [allStatuses]);
+}
+
+// src/manager/components/sidebar/FilterPanel.tsx
+var Wrapper7 = styled.div({
+  minWidth: 240,
+  maxWidth: 300,
+  maxHeight: 15.5 * 32 + 8,
+  // 15.5 items at 32px each + 8px padding
+  overflow: "hidden",
+  overflowY: "auto",
+  scrollbarWidth: "thin"
+}), FilterPanel = ({
+  api,
+  indexJson,
+  defaultIncludedFilters,
+  defaultExcludedFilters,
+  includedFilters,
+  excludedFilters,
+  allStatuses,
+  includedStatusFilters,
+  excludedStatusFilters
+}) => {
+  let theme = useTheme(), { builtInEntries, tagEntries } = useTagFilterEntries(indexJson), statusEntries = useStatusFilterEntries(allStatuses), toTagFilterItem = useCallback(
+    (entry) => {
+      if (entry.count === 0 && entry.type === "built-in") return null;
+      let isIncluded = includedFilters.includes(entry.id), isExcluded = excludedFilters.includes(entry.id), isChecked = isIncluded || isExcluded;
+      return {
+        id: entry.id,
+        type: entry.type,
+        title: entry.title,
+        count: entry.count,
+        icon: entry.icon,
+        isIncluded,
+        isExcluded,
+        onCheckboxChange: () => {
+          isChecked ? api.removeTagFilters([entry.id]) : api.addTagFilters([entry.id], !1);
+        },
+        onInvert: () => api.addTagFilters([entry.id], !isExcluded)
+      };
+    },
+    [api, includedFilters, excludedFilters]
+  ), toStatusFilterItem = useCallback(
+    (entry) => {
+      let isRelated = entry.statusValue === "status-value:affected", shortName = isRelated ? "related" : entry.shortName, isIncluded = includedStatusFilters.includes(entry.statusValue), isExcluded = excludedStatusFilters.includes(entry.statusValue), isChecked = isIncluded || isExcluded, { icon: statusIconEl, iconColor } = getStatus(theme, entry.statusValue), icon = isRelated ? react_default.createElement("span", { "aria-hidden": "true" }) : statusIconEl ? react_default.createElement(StatusIcon2, { $iconColor: iconColor }, statusIconEl) : null;
+      return {
+        id: shortName,
+        type: "status",
+        title: shortName.charAt(0).toUpperCase() + shortName.slice(1),
+        tooltip: entry.description,
+        count: entry.count,
+        icon,
+        isIncluded,
+        isExcluded,
+        onCheckboxChange: () => {
+          isChecked ? api.removeStatusFilters([entry.statusValue]) : api.addStatusFilters([entry.statusValue], !1);
+        },
+        onInvert: () => api.addStatusFilters([entry.statusValue], !isExcluded)
+      };
+    },
+    [api, includedStatusFilters, excludedStatusFilters, theme]
+  ), builtInItems = useMemo(
+    () => builtInEntries.sort((a2, b2) => a2.id.localeCompare(b2.id)).map(toTagFilterItem).filter((f2) => f2 !== null),
+    [builtInEntries, toTagFilterItem]
+  ), tagItems = useMemo(
+    () => tagEntries.sort((a2, b2) => a2.id.localeCompare(b2.id)).map(toTagFilterItem).filter((f2) => f2 !== null),
+    [tagEntries, toTagFilterItem]
+  ), statusItems = useMemo(
+    () => statusEntries.map(toStatusFilterItem),
+    [statusEntries, toStatusFilterItem]
+  ), changeDetectionStatusItems = useMemo(
+    () => statusItems.filter((item) => item.id !== "reviewing"),
+    [statusItems]
+  ), reviewingStatusItems = useMemo(
+    () => statusItems.filter((item) => item.id === "reviewing"),
+    [statusItems]
+  ), filterIds = useMemo(
+    () => [...builtInEntries.map((e2) => e2.id), ...tagEntries.map((e2) => e2.id)],
+    [builtInEntries, tagEntries]
+  ), setAllFilters = useCallback(
+    (selected) => api.setAllTagFilters(selected ? filterIds : [], []),
+    [api, filterIds]
+  ), isDefaultSelection = areFiltersEqual(includedFilters, defaultIncludedFilters) && areFiltersEqual(excludedFilters, defaultExcludedFilters), hasDefaultSelection = defaultIncludedFilters.length > 0 || defaultExcludedFilters.length > 0, isNothingSelectedYet = includedFilters.length === 0 && excludedFilters.length === 0 && includedStatusFilters.length === 0 && excludedStatusFilters.length === 0, hasItems = builtInItems.length > 0 || tagItems.length > 0;
+  return react_default.createElement(Wrapper7, null, hasItems && react_default.createElement(ActionList, { as: "div" }, react_default.createElement(ActionList.Item, { as: "div" }, isNothingSelectedYet ? react_default.createElement(
+    ActionList.Button,
+    {
+      ariaLabel: !1,
+      id: "select-all",
+      key: "select-all",
+      onClick: () => setAllFilters(!0)
+    },
+    react_default.createElement(BatchAcceptIcon, null),
+    react_default.createElement(ActionList.Text, null, "Select all")
+  ) : react_default.createElement(
+    ActionList.Button,
+    {
+      ariaLabel: !1,
+      id: "deselect-all",
+      key: "deselect-all",
+      onClick: async () => {
+        await setAllFilters(!1), await api.resetStatusFilters();
+      }
+    },
+    react_default.createElement(SweepIcon, null),
+    react_default.createElement(ActionList.Text, null, "Clear filters")
+  ), hasDefaultSelection && react_default.createElement(
+    ActionList.Button,
+    {
+      id: "reset-filters",
+      key: "reset-filters",
+      onClick: () => api.resetTagFilters(),
+      ariaLabel: "Reset filters",
+      tooltip: "Reset to default selection",
+      disabled: isDefaultSelection
+    },
+    react_default.createElement(UndoIcon, null)
+  ))), reviewingStatusItems.length > 0 && react_default.createElement(ActionList, null, reviewingStatusItems.map((item) => {
+    let link = createFilterLink(item);
+    return react_default.createElement(Fragment, { key: link.id }, link.content);
+  })), builtInItems.length > 0 && react_default.createElement(ActionList, null, builtInItems.map((item) => {
+    let link = createFilterLink(item);
+    return react_default.createElement(Fragment, { key: link.id }, link.content);
+  })), changeDetectionStatusItems.length > 0 && react_default.createElement(ActionList, null, changeDetectionStatusItems.map((item) => {
+    let link = createFilterLink(item);
+    return react_default.createElement(Fragment, { key: link.id }, link.content);
+  })), tagItems.length > 0 && react_default.createElement(ActionList, null, tagItems.map((item) => {
+    let link = createFilterLink(item);
+    return react_default.createElement(Fragment, { key: link.id }, link.content);
+  })), tagItems.length === 0 && react_default.createElement(ActionList, { as: "div" }, react_default.createElement(ActionList.Item, { as: "div" }, react_default.createElement(
+    ActionList.Link,
+    {
+      ariaLabel: !1,
+      href: api.getDocsUrl({ subpath: "writing-stories/tags#custom-tags" }),
+      target: "_blank"
+    },
+    react_default.createElement(ActionList.Icon, null, react_default.createElement(DocumentIcon, null)),
+    react_default.createElement(ActionList.Text, null, react_default.createElement("span", null, "Learn how to add tags")),
+    react_default.createElement(ActionList.Icon, null, react_default.createElement(ShareAltIcon, null))
+  ))));
+};
+
+// src/manager/components/sidebar/Filter.tsx
+var StyledButton2 = styled(Button)(({ $isHighlighted, theme }) => ({
+  "&:focus-visible": {
+    outlineOffset: 4
+  },
+  ...$isHighlighted && {
+    background: theme.background.hoverable,
+    color: theme.color.secondary
+  }
+})), TagSelected = styled(Badge)(({ theme }) => ({
+  position: "absolute",
+  top: 7,
+  right: 7,
+  transform: "translate(50%, -50%)",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  padding: 3,
+  height: 6,
+  minWidth: 6,
+  lineHeight: "px",
+  boxShadow: `${theme.barSelectedColor} 0 0 0 1px inset`,
+  fontSize: theme.typography.size.s1 - 1,
+  background: theme.barSelectedColor,
+  color: theme.color.inverseText
+})), filterMapper = ({ api, state }) => ({
+  api,
+  indexJson: state.internal_index,
+  activeFilterCount: getActiveFilterCount(state),
+  defaultIncludedFilters: state.defaultIncludedTagFilters,
+  defaultExcludedFilters: state.defaultExcludedTagFilters,
+  includedFilters: state.includedTagFilters,
+  excludedFilters: state.excludedTagFilters,
+  includedStatusFilters: state.includedStatusFilters ?? [],
+  excludedStatusFilters: state.excludedStatusFilters ?? []
+}), FilterInner = ({
+  api,
+  indexJson,
+  activeFilterCount,
+  defaultIncludedFilters,
+  defaultExcludedFilters,
+  includedFilters,
+  excludedFilters,
+  includedStatusFilters,
+  excludedStatusFilters
+}) => {
+  let [expanded, setExpanded] = useState(!1), allStatuses = experimental_useStatusStore(), handleToggleExpand = useCallback(
+    (event) => {
+      event.preventDefault(), setExpanded(!expanded);
+    },
+    [expanded]
+  );
+  return react_default.createElement(
+    PopoverProvider,
+    {
+      ariaLabel: "Tag filters",
+      placement: "bottom",
+      onVisibleChange: setExpanded,
+      offset: 8,
+      padding: 0,
+      popover: () => react_default.createElement(
+        FilterPanel,
+        {
+          api,
+          indexJson,
+          defaultIncludedFilters,
+          defaultExcludedFilters,
+          includedFilters,
+          excludedFilters,
+          allStatuses,
+          includedStatusFilters,
+          excludedStatusFilters
+        }
+      )
+    },
+    react_default.createElement(
+      StyledButton2,
+      {
+        key: "tags",
+        ariaLabel: activeFilterCount ? `${activeFilterCount} active tag ${activeFilterCount !== 1 ? "filters" : "filter"}` : "Tag filters",
+        ariaDescription: "Filter the items shown in a sidebar based on the tags applied to them.",
+        variant: "ghost",
+        padding: "small",
+        $isHighlighted: activeFilterCount > 0,
+        onClick: handleToggleExpand
+      },
+      react_default.createElement(FilterIcon, null),
+      activeFilterCount > 0 && react_default.createElement(TagSelected, null)
+    )
+  );
+}, Filter = () => react_default.createElement(Consumer, { filter: filterMapper }, ({
+  api,
+  indexJson,
+  activeFilterCount,
+  defaultIncludedFilters,
+  defaultExcludedFilters,
+  includedFilters,
+  excludedFilters,
+  includedStatusFilters,
+  excludedStatusFilters
+}) => indexJson ? react_default.createElement(
+  FilterInner,
+  {
+    api,
+    indexJson,
+    activeFilterCount,
+    defaultIncludedFilters,
+    defaultExcludedFilters,
+    includedFilters,
+    excludedFilters,
+    includedStatusFilters,
+    excludedStatusFilters
+  }
+) : null);
 
 // src/manager/components/sidebar/Heading.tsx
 init_react();
@@ -15637,12 +24061,12 @@ var buttonStyleAdditions = ({
       box-shadow: 0 0 0 2px ${curriedTransparentize$1(0.88, theme.color.secondary)};
     }
   `}
-`, Container7 = styled.div({
+`, Container10 = styled.div({
   minWidth: 250
 }), SidebarButton = styled(Button)(buttonStyleAdditions), SidebarToggleButton = styled(ToggleButton)(buttonStyleAdditions), MenuButtonGroup = styled.div({
   display: "flex",
   gap: 6
-}), SidebarMenuList = ({ menu, onHide }) => react_default.createElement(Container7, null, menu.filter((links) => links.length).flatMap((links) => react_default.createElement(ActionList, { key: links.map((link) => link.id).join("_") }, links.map((link) => {
+}), SidebarMenuList = ({ menu, onHide }) => react_default.createElement(Container10, null, menu.filter((links) => links.length).flatMap((links) => react_default.createElement(ActionList, { key: links.map((link) => link.id).join("_") }, links.map((link) => {
   let linkContent = react_default.createElement(react_default.Fragment, null, (link.icon || link.input) && react_default.createElement(ActionList.Icon, null, link.icon || link.input), (link.title || link.center) && react_default.createElement(ActionList.Text, null, link.title || link.center), link.right);
   return react_default.createElement(ActionList.Item, { key: link.id, active: link.active }, react_default.createElement(
     ActionList.Action,
@@ -15676,7 +24100,7 @@ var buttonStyleAdditions = ({
     ) : linkContent
   ));
 })))), SidebarMenu = ({ menu, isHighlighted, onClick }) => {
-  let [isTooltipVisible, setIsTooltipVisible] = useState(!1), { isMobile: isMobile2, setMobileMenuOpen } = useLayout();
+  let [isTooltipVisible, setIsTooltipVisible] = useState(!1), { isMobile: isMobile2 } = useLayout(), api = useStorybookApi();
   return isMobile2 ? react_default.createElement(MenuButtonGroup, null, react_default.createElement(
     SidebarButton,
     {
@@ -15698,13 +24122,14 @@ var buttonStyleAdditions = ({
       variant: "ghost",
       ariaLabel: "Close menu",
       highlighted: !1,
-      onClick: () => setMobileMenuOpen(!1),
+      onClick: () => api.setMobileNavigation(!1),
       isMobile: !0
     },
     react_default.createElement(CloseIcon, null)
   )) : react_default.createElement(
     PopoverProvider,
     {
+      ariaLabel: "Storybook menu",
       placement: "bottom-start",
       padding: 0,
       popover: ({ onHide }) => react_default.createElement(SidebarMenuList, { onHide, menu }),
@@ -15789,16 +24214,74 @@ var BrandArea = styled.div(({ theme }) => ({
   ...props
 }) => react_default.createElement(HeadingWrapper, { ...props }, skipLinkHref && react_default.createElement(SkipToCanvasLink, { ariaLabel: !1, asChild: !0 }, react_default.createElement("a", { href: skipLinkHref, tabIndex: 0 }, "Skip to content")), react_default.createElement(BrandArea, null, react_default.createElement(Brand, null)), react_default.createElement(SidebarMenu, { menu, isHighlighted: menuHighlighted, onClick: onMenuClick }));
 
+// src/manager/components/sidebar/ReviewWidget.tsx
+init_react();
+var HEADING_ID = "storybook-review-widget-heading", Region2 = styled.section({
+  width: "100%"
+}), HeaderContent = styled(ActionList.Text)({
+  display: "flex",
+  flexDirection: "row",
+  justifyContent: "flex-start",
+  alignItems: "center",
+  gap: 6,
+  // Reserve room for the dismiss button, which is positioned in the top-right
+  // corner so it comes last in the tab order (after the review action).
+  paddingRight: 24
+}), HeaderTitle = styled.h2(({ theme }) => ({
+  margin: 0,
+  color: theme.color.defaultText,
+  fontWeight: theme.typography.weight.bold,
+  fontSize: theme.typography.size.s1,
+  lineHeight: `${theme.typography.size.s3}px`
+})), AgenticIcon = styled(WandIcon)(({ theme }) => ({
+  color: theme.fgColor.agentic
+})), DismissButton = styled(ActionList.Button)({
+  position: "absolute",
+  top: 4,
+  right: 4,
+  zIndex: 1
+}), DismissIcon = styled(CloseAltIcon)({
+  padding: 1
+}), useActiveReviewStoryCount = () => {
+  let { review } = useReviewContext();
+  return useMemo(() => review ? collectReviewStoryIds(review).size : 0, [review]);
+}, useActiveReviewTitle = () => {
+  let { review } = useReviewContext();
+  return review?.title ?? null;
+}, ReviewWidget = () => {
+  let api = useStorybookApi(), { openSummary, dismiss } = useReviewContext(), storyCount = useActiveReviewStoryCount(), reviewTitle = useActiveReviewTitle(), regionRef = useRef(null), { landmarkProps } = useLandmark(
+    { role: "region", "aria-labelledby": HEADING_ID },
+    regionRef
+  );
+  if (!api.getIsNavShown() || storyCount === 0)
+    return null;
+  let onOpen = () => {
+    openSummary();
+  }, onDismiss = (event) => {
+    event.stopPropagation(), dismiss();
+  }, storyLabel = storyCount === 1 ? "story" : "stories";
+  return react_default.createElement(Region2, { ref: regionRef, ...landmarkProps }, react_default.createElement(Card, { color: "agentic", outlineAnimation: "spin", id: "storybook-review-widget" }, react_default.createElement(ActionList, { as: "div" }, react_default.createElement(ActionList.Item, { as: "div" }, react_default.createElement(HeaderContent, null, react_default.createElement(AgenticIcon, { "aria-hidden": !0 }), react_default.createElement(HeaderTitle, { id: HEADING_ID }, "Quick review")))), react_default.createElement(ActionList, { as: "div" }, react_default.createElement(ActionList.Item, { as: "div" }, react_default.createElement(
+    ActionList.Action,
+    {
+      ariaLabel: reviewTitle ? `Review ${storyCount} ${storyLabel}: ${reviewTitle}` : `Review ${storyCount} ${storyLabel}`,
+      disableAllTooltips: !0,
+      appearance: "agentic",
+      onClick: onOpen
+    },
+    react_default.createElement(ActionList.Text, null, react_default.createElement("strong", null, "Review ", storyCount, " ", storyLabel), reviewTitle ? react_default.createElement("small", null, reviewTitle) : null)
+  ))), react_default.createElement(DismissButton, { appearance: "agentic", ariaLabel: "Dismiss review", onClick: onDismiss }, react_default.createElement(DismissIcon, null))));
+}, ReviewWidget_default = ReviewWidget;
+
 // src/manager/components/sidebar/Search.tsx
 init_react();
 
 // ../../node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js
-function _objectWithoutPropertiesLoose2(r3, e2) {
-  if (r3 == null) return {};
+function _objectWithoutPropertiesLoose2(r4, e2) {
+  if (r4 == null) return {};
   var t2 = {};
-  for (var n3 in r3) if ({}.hasOwnProperty.call(r3, n3)) {
+  for (var n3 in r4) if ({}.hasOwnProperty.call(r4, n3)) {
     if (e2.indexOf(n3) !== -1) continue;
-    t2[n3] = r3[n3];
+    t2[n3] = r4[n3];
   }
   return t2;
 }
@@ -15825,13 +24308,13 @@ var t = (t2) => typeof t2 == "object" && t2 != null && t2.nodeType === 1, e = (t
     })(t2);
   }
   return !1;
-}, o2 = (t2, e2, n3, o3, l3, r3, i2, s2) => r3 < t2 && i2 > e2 || r3 > t2 && i2 < e2 ? 0 : r3 <= t2 && s2 <= n3 || i2 >= e2 && s2 >= n3 ? r3 - t2 - o3 : i2 > e2 && s2 < n3 || r3 < t2 && s2 > n3 ? i2 - e2 + l3 : 0, l2 = (t2) => {
+}, o2 = (t2, e2, n3, o3, l3, r4, i2, s2) => r4 < t2 && i2 > e2 || r4 > t2 && i2 < e2 ? 0 : r4 <= t2 && s2 <= n3 || i2 >= e2 && s2 >= n3 ? r4 - t2 - o3 : i2 > e2 && s2 < n3 || r4 < t2 && s2 > n3 ? i2 - e2 + l3 : 0, l2 = (t2) => {
   let e2 = t2.parentElement;
   return e2 ?? (t2.getRootNode().host || null);
-}, r2 = (e2, r3) => {
+}, r3 = (e2, r4) => {
   var i2, s2, d2, h2;
   if (typeof document > "u") return [];
-  let { scrollMode: c2, block: f2, inline: u2, boundary: a2, skipOverflowHiddenElements: g2 } = r3, p2 = typeof a2 == "function" ? a2 : (t2) => t2 !== a2;
+  let { scrollMode: c2, block: f2, inline: u2, boundary: a2, skipOverflowHiddenElements: g2 } = r4, p2 = typeof a2 == "function" ? a2 : (t2) => t2 !== a2;
   if (!t(e2)) throw new TypeError("Invalid target");
   let m2 = document.scrollingElement || document.documentElement, w2 = [], W2 = e2;
   for (; t(W2) && p2(W2); ) {
@@ -15846,41 +24329,30 @@ var t = (t2) => typeof t2 == "object" && t2 != null && t2.nodeType === 1, e = (t
     return { top: parseFloat(e3.scrollMarginTop) || 0, right: parseFloat(e3.scrollMarginRight) || 0, bottom: parseFloat(e3.scrollMarginBottom) || 0, left: parseFloat(e3.scrollMarginLeft) || 0 };
   })(e2), k2 = f2 === "start" || f2 === "nearest" ? x2 - T3 : f2 === "end" ? I2 + F2 : x2 + v2 / 2 - T3 + F2, D2 = u2 === "center" ? R2 + E2 / 2 - V + B2 : u2 === "end" ? C2 + B2 : R2 - V, L3 = [];
   for (let t2 = 0; t2 < w2.length; t2++) {
-    let e3 = w2[t2], { height: l3, width: r4, top: i3, right: s3, bottom: d3, left: h3 } = e3.getBoundingClientRect();
+    let e3 = w2[t2], { height: l3, width: r5, top: i3, right: s3, bottom: d3, left: h3 } = e3.getBoundingClientRect();
     if (c2 === "if-needed" && x2 >= 0 && R2 >= 0 && I2 <= H7 && C2 <= b2 && (e3 === m2 && !n2(e3) || x2 >= i3 && I2 <= d3 && R2 >= h3 && C2 <= s3)) return L3;
-    let a3 = getComputedStyle(e3), g3 = parseInt(a3.borderLeftWidth, 10), p3 = parseInt(a3.borderTopWidth, 10), W3 = parseInt(a3.borderRightWidth, 10), T4 = parseInt(a3.borderBottomWidth, 10), B3 = 0, F3 = 0, V2 = "offsetWidth" in e3 ? e3.offsetWidth - e3.clientWidth - g3 - W3 : 0, S2 = "offsetHeight" in e3 ? e3.offsetHeight - e3.clientHeight - p3 - T4 : 0, X = "offsetWidth" in e3 ? e3.offsetWidth === 0 ? 0 : r4 / e3.offsetWidth : 0, Y2 = "offsetHeight" in e3 ? e3.offsetHeight === 0 ? 0 : l3 / e3.offsetHeight : 0;
+    let a3 = getComputedStyle(e3), g3 = parseInt(a3.borderLeftWidth, 10), p3 = parseInt(a3.borderTopWidth, 10), W3 = parseInt(a3.borderRightWidth, 10), T4 = parseInt(a3.borderBottomWidth, 10), B3 = 0, F3 = 0, V2 = "offsetWidth" in e3 ? e3.offsetWidth - e3.clientWidth - g3 - W3 : 0, S2 = "offsetHeight" in e3 ? e3.offsetHeight - e3.clientHeight - p3 - T4 : 0, X = "offsetWidth" in e3 ? e3.offsetWidth === 0 ? 0 : r5 / e3.offsetWidth : 0, Y2 = "offsetHeight" in e3 ? e3.offsetHeight === 0 ? 0 : l3 / e3.offsetHeight : 0;
     if (m2 === e3) B3 = f2 === "start" ? k2 : f2 === "end" ? k2 - H7 : f2 === "nearest" ? o2(M2, M2 + H7, H7, p3, T4, M2 + k2, M2 + k2 + v2, v2) : k2 - H7 / 2, F3 = u2 === "start" ? D2 : u2 === "center" ? D2 - b2 / 2 : u2 === "end" ? D2 - b2 : o2(y2, y2 + b2, b2, g3, W3, y2 + D2, y2 + D2 + E2, E2), B3 = Math.max(0, B3 + M2), F3 = Math.max(0, F3 + y2);
     else {
-      B3 = f2 === "start" ? k2 - i3 - p3 : f2 === "end" ? k2 - d3 + T4 + S2 : f2 === "nearest" ? o2(i3, d3, l3, p3, T4 + S2, k2, k2 + v2, v2) : k2 - (i3 + l3 / 2) + S2 / 2, F3 = u2 === "start" ? D2 - h3 - g3 : u2 === "center" ? D2 - (h3 + r4 / 2) + V2 / 2 : u2 === "end" ? D2 - s3 + W3 + V2 : o2(h3, s3, r4, g3, W3 + V2, D2, D2 + E2, E2);
+      B3 = f2 === "start" ? k2 - i3 - p3 : f2 === "end" ? k2 - d3 + T4 + S2 : f2 === "nearest" ? o2(i3, d3, l3, p3, T4 + S2, k2, k2 + v2, v2) : k2 - (i3 + l3 / 2) + S2 / 2, F3 = u2 === "start" ? D2 - h3 - g3 : u2 === "center" ? D2 - (h3 + r5 / 2) + V2 / 2 : u2 === "end" ? D2 - s3 + W3 + V2 : o2(h3, s3, r5, g3, W3 + V2, D2, D2 + E2, E2);
       let { scrollLeft: t3, scrollTop: n3 } = e3;
-      B3 = Y2 === 0 ? 0 : Math.max(0, Math.min(n3 + B3 / Y2, e3.scrollHeight - l3 / Y2 + S2)), F3 = X === 0 ? 0 : Math.max(0, Math.min(t3 + F3 / X, e3.scrollWidth - r4 / X + V2)), k2 += n3 - B3, D2 += t3 - F3;
+      B3 = Y2 === 0 ? 0 : Math.max(0, Math.min(n3 + B3 / Y2, e3.scrollHeight - l3 / Y2 + S2)), F3 = X === 0 ? 0 : Math.max(0, Math.min(t3 + F3 / X, e3.scrollWidth - r5 / X + V2)), k2 += n3 - B3, D2 += t3 - F3;
     }
     L3.push({ el: e3, top: B3, left: F3 });
   }
   return L3;
 };
 
-// ../../node_modules/tslib/tslib.es6.mjs
-var __assign = function() {
-  return __assign = Object.assign || function(t2) {
-    for (var s2, i2 = 1, n3 = arguments.length; i2 < n3; i2++) {
-      s2 = arguments[i2];
-      for (var p2 in s2) Object.prototype.hasOwnProperty.call(s2, p2) && (t2[p2] = s2[p2]);
-    }
-    return t2;
-  }, __assign.apply(this, arguments);
-};
-
 // ../../node_modules/downshift/dist/downshift.esm.js
 var idCounter = 0;
 function cbToCb(cb) {
-  return typeof cb == "function" ? cb : noop4;
+  return typeof cb == "function" ? cb : noop5;
 }
-function noop4() {
+function noop5() {
 }
 function scrollIntoView2(node, menuNode) {
   if (node) {
-    var actions = r2(node, {
+    var actions = r3(node, {
       boundary: menuNode,
       block: "nearest",
       scrollMode: "if-needed"
@@ -16496,7 +24968,7 @@ var unknown = 0, mouseUp = 1, itemMouseEnter = 2, keyDownArrowUp = 3, keyDownArr
     }, _proto.componentWillUnmount = function() {
       this.cleanup();
     }, _proto.render = function() {
-      var children = unwrapArray(this.props.children, noop4);
+      var children = unwrapArray(this.props.children, noop5);
       this.clearItems(), this.getRootProps.called = !1, this.getRootProps.refKey = void 0, this.getRootProps.suppressRefError = void 0, this.getMenuProps.called = !1, this.getMenuProps.refKey = void 0, this.getMenuProps.suppressRefError = void 0, this.getLabelProps.called = !1, this.getInputProps.called = !1;
       var element = unwrapArray(children(this.getStateAndHelpers()));
       if (!element)
@@ -16514,12 +24986,12 @@ var unknown = 0, mouseUp = 1, itemMouseEnter = 2, keyDownArrowUp = 3, keyDownArr
     itemToString: function(i2) {
       return i2 == null ? "" : String(i2);
     },
-    onStateChange: noop4,
-    onInputValueChange: noop4,
-    onUserAction: noop4,
-    onChange: noop4,
-    onSelect: noop4,
-    onOuterClick: noop4,
+    onStateChange: noop5,
+    onInputValueChange: noop5,
+    onUserAction: noop5,
+    onChange: noop5,
+    onSelect: noop5,
+    onOuterClick: noop5,
     selectedItemChanged: function(prevItem, item) {
       return prevItem !== item;
     },
@@ -16557,8 +25029,8 @@ function invokeOnChangeHandler(key, action, state, newState) {
 function stateReducer(s2, a2) {
   return a2.changes;
 }
-var updateA11yStatus = debounce4(function(status, document10) {
-  setStatus(status, document10);
+var updateA11yStatus = debounce4(function(status, document11) {
+  setStatus(status, document11);
 }, 200), useIsomorphicLayoutEffect2 = typeof window < "u" && typeof window.document < "u" && typeof window.document.createElement < "u" ? useLayoutEffect : useEffect, useElementIds = "useId" in react_default ? function(_ref) {
   var id = _ref.id, labelId = _ref.labelId, menuId = _ref.menuId, getItemId = _ref.getItemId, toggleButtonId = _ref.toggleButtonId, inputId = _ref.inputId, reactId = "downshift-" + react_default.useId();
   id || (id = reactId);
@@ -16677,7 +25149,7 @@ function useMouseAndTouchTracker(environment, handleBlur, downshiftElementsRefs)
   });
   return useEffect(function() {
     if (!environment)
-      return noop4;
+      return noop5;
     var downshiftElements = downshiftElementsRefs.map(function(ref) {
       return ref.current;
     });
@@ -16702,21 +25174,21 @@ function useMouseAndTouchTracker(environment, handleBlur, downshiftElementsRefs)
   }, [downshiftElementsRefs, environment, handleBlur]), mouseAndTouchTrackersRef.current;
 }
 var useGetterPropsCalledChecker = function() {
-  return noop4;
+  return noop5;
 };
 function useA11yMessageStatus(getA11yStatusMessage2, options2, dependencyArray, environment) {
   environment === void 0 && (environment = {});
-  var document10 = environment.document, isInitialMount = useIsInitialMount();
+  var document11 = environment.document, isInitialMount = useIsInitialMount();
   useEffect(function() {
-    if (!(!getA11yStatusMessage2 || isInitialMount || !document10)) {
+    if (!(!getA11yStatusMessage2 || isInitialMount || !document11)) {
       var status = getA11yStatusMessage2(options2);
-      updateA11yStatus(status, document10);
+      updateA11yStatus(status, document11);
     }
   }, dependencyArray), useEffect(function() {
     return function() {
-      updateA11yStatus.cancel(), cleanupStatusDiv(document10);
+      updateA11yStatus.cancel(), cleanupStatusDiv(document11);
     };
-  }, [document10]);
+  }, [document11]);
 }
 function useScrollIntoView(_ref3) {
   var highlightedIndex = _ref3.highlightedIndex, isOpen = _ref3.isOpen, itemRefs = _ref3.itemRefs, getItemNodeFromIndex = _ref3.getItemNodeFromIndex, menuElement = _ref3.menuElement, scrollIntoViewProp = _ref3.scrollIntoView, shouldScrollRef = useRef(!0);
@@ -16724,7 +25196,7 @@ function useScrollIntoView(_ref3) {
     highlightedIndex < 0 || !isOpen || !Object.keys(itemRefs.current).length || (shouldScrollRef.current === !1 ? shouldScrollRef.current = !0 : scrollIntoViewProp(getItemNodeFromIndex(highlightedIndex), menuElement));
   }, [highlightedIndex]), shouldScrollRef;
 }
-var useControlPropsValidator = noop4;
+var useControlPropsValidator = noop5;
 function getChangesOnSelection(props, highlightedIndex, inputValue) {
   var _props$items;
   inputValue === void 0 && (inputValue = !0);
@@ -16850,8 +25322,8 @@ function downshiftCommonReducer(state, action, stateChangeTypes2) {
   }
   return _extends({}, state, changes);
 }
-function getItemIndexByCharacterKey(_a) {
-  for (var keysSoFar = _a.keysSoFar, highlightedIndex = _a.highlightedIndex, items = _a.items, itemToString2 = _a.itemToString, isItemDisabled2 = _a.isItemDisabled, lowerCasedKeysSoFar = keysSoFar.toLowerCase(), index = 0; index < items.length; index++) {
+function getItemIndexByCharacterKey(_a2) {
+  for (var keysSoFar = _a2.keysSoFar, highlightedIndex = _a2.highlightedIndex, items = _a2.items, itemToString2 = _a2.itemToString, isItemDisabled2 = _a2.isItemDisabled, lowerCasedKeysSoFar = keysSoFar.toLowerCase(), index = 0; index < items.length; index++) {
     var offsetIndex = (index + highlightedIndex + (keysSoFar.length < 2 ? 1 : 0)) % items.length, item = items[offsetIndex];
     if (item !== void 0 && itemToString2(item).toLowerCase().startsWith(lowerCasedKeysSoFar) && !isItemDisabled2(item, offsetIndex))
       return offsetIndex;
@@ -16860,7 +25332,7 @@ function getItemIndexByCharacterKey(_a) {
 }
 var propTypes$2 = __assign(__assign({}, commonDropdownPropTypes), { items: import_prop_types3.default.array.isRequired, isItemDisabled: import_prop_types3.default.func }), defaultProps$2 = __assign(__assign({}, defaultProps$3), { isItemDisabled: function() {
   return !1;
-} }), validatePropTypes$2 = noop4, ToggleButtonClick$1 = 0, ToggleButtonKeyDownArrowDown = 1, ToggleButtonKeyDownArrowUp = 2, ToggleButtonKeyDownCharacter = 3, ToggleButtonKeyDownEscape = 4, ToggleButtonKeyDownHome = 5, ToggleButtonKeyDownEnd = 6, ToggleButtonKeyDownEnter = 7, ToggleButtonKeyDownSpaceButton = 8, ToggleButtonKeyDownPageUp = 9, ToggleButtonKeyDownPageDown = 10, ToggleButtonBlur = 11, MenuMouseLeave$1 = 12, ItemMouseMove$1 = 13, ItemClick$1 = 14, FunctionToggleMenu$1 = 15, FunctionOpenMenu$1 = 16, FunctionCloseMenu$1 = 17, FunctionSetHighlightedIndex$1 = 18, FunctionSelectItem$1 = 19, FunctionSetInputValue$1 = 20, FunctionReset$2 = 21, stateChangeTypes$2 = Object.freeze({
+} }), validatePropTypes$2 = noop5, ToggleButtonClick$1 = 0, ToggleButtonKeyDownArrowDown = 1, ToggleButtonKeyDownArrowUp = 2, ToggleButtonKeyDownCharacter = 3, ToggleButtonKeyDownEscape = 4, ToggleButtonKeyDownHome = 5, ToggleButtonKeyDownEnd = 6, ToggleButtonKeyDownEnter = 7, ToggleButtonKeyDownSpaceButton = 8, ToggleButtonKeyDownPageUp = 9, ToggleButtonKeyDownPageDown = 10, ToggleButtonBlur = 11, MenuMouseLeave$1 = 12, ItemMouseMove$1 = 13, ItemClick$1 = 14, FunctionToggleMenu$1 = 15, FunctionOpenMenu$1 = 16, FunctionCloseMenu$1 = 17, FunctionSetHighlightedIndex$1 = 18, FunctionSelectItem$1 = 19, FunctionSetInputValue$1 = 20, FunctionReset$2 = 21, stateChangeTypes$2 = Object.freeze({
   __proto__: null,
   FunctionCloseMenu: FunctionCloseMenu$1,
   FunctionOpenMenu: FunctionOpenMenu$1,
@@ -17263,7 +25735,7 @@ function useControlledReducer(reducer, props, createInitialState, isStateEqual2)
     }
   }, [state.selectedItem, props.selectedItem]), [getState2(state, props), dispatch];
 }
-var validatePropTypes$1 = noop4, defaultProps$1 = _extends({}, defaultProps$3, {
+var validatePropTypes$1 = noop5, defaultProps$1 = _extends({}, defaultProps$3, {
   isItemDisabled: function() {
     return !1;
   }
@@ -17643,7 +26115,7 @@ var propTypes = {
   environment: defaultProps$3.environment,
   keyNavigationNext: "ArrowRight",
   keyNavigationPrevious: "ArrowLeft"
-}, validatePropTypes = noop4, SelectedItemClick = 0, SelectedItemKeyDownDelete = 1, SelectedItemKeyDownBackspace = 2, SelectedItemKeyDownNavigationNext = 3, SelectedItemKeyDownNavigationPrevious = 4, DropdownKeyDownNavigationPrevious = 5, DropdownKeyDownBackspace = 6, DropdownClick = 7, FunctionAddSelectedItem = 8, FunctionRemoveSelectedItem = 9, FunctionSetSelectedItems = 10, FunctionSetActiveIndex = 11, FunctionReset = 12, stateChangeTypes = Object.freeze({
+}, validatePropTypes = noop5, SelectedItemClick = 0, SelectedItemKeyDownDelete = 1, SelectedItemKeyDownBackspace = 2, SelectedItemKeyDownNavigationNext = 3, SelectedItemKeyDownNavigationPrevious = 4, DropdownKeyDownNavigationPrevious = 5, DropdownKeyDownBackspace = 6, DropdownClick = 7, FunctionAddSelectedItem = 8, FunctionRemoveSelectedItem = 9, FunctionSetSelectedItems = 10, FunctionSetActiveIndex = 11, FunctionReset = 12, stateChangeTypes = Object.freeze({
   __proto__: null,
   DropdownClick,
   DropdownKeyDownBackspace,
@@ -17872,7 +26344,7 @@ function isSearchResult(x2) {
 }
 
 // src/manager/components/sidebar/Search.tsx
-var { document: document6 } = scope, DEFAULT_MAX_SEARCH_RESULTS = 50, options = {
+var { document: document7 } = scope, DEFAULT_MAX_SEARCH_RESULTS = 50, options = {
   shouldSort: !0,
   tokenize: !0,
   findAllMatches: !0,
@@ -17884,8 +26356,9 @@ var { document: document6 } = scope, DEFAULT_MAX_SEARCH_RESULTS = 50, options = 
   maxPatternLength: 32,
   minMatchCharLength: 1,
   keys: [
-    { name: "name", weight: 0.7 },
-    { name: "path", weight: 0.3 }
+    { name: "name", weight: 0.6 },
+    { name: "path", weight: 0.3 },
+    { name: "anchors.title", weight: 0.1 }
   ]
 }, SearchBar = styled.div({
   display: "flex",
@@ -17970,7 +26443,7 @@ var { document: document6 } = scope, DEFAULT_MAX_SEARCH_RESULTS = 50, options = 
   flexShrink: 0
 })), FocusKeyCmd = styled.span({
   fontSize: "14px"
-}), Actions = styled.div({
+}), Actions2 = styled.div({
   display: "flex",
   alignItems: "center",
   gap: 2
@@ -17981,29 +26454,54 @@ var { document: document6 } = scope, DEFAULT_MAX_SEARCH_RESULTS = 50, options = 
   getLastViewed,
   initialQuery = "",
   searchBarContent,
-  searchFieldContent
+  searchFieldContent,
+  belowSearchContent
 }) {
   let api = useStorybookApi(), inputRef = useRef(null), [inputPlaceholder, setPlaceholder] = useState("Find components"), [allComponents, showAllComponents] = useState(!1), searchShortcut = api ? shortcutToHumanString(api.getShortcutKeys().search) : "/", makeFuse = useCallback(() => {
-    let list = dataset.entries.reduce((acc, [refId, { index, allStatuses }]) => {
-      let groupStatus = getGroupStatus(index || {}, allStatuses ?? {});
-      return index && acc.push(
-        ...Object.values(index).map((item) => {
-          let storyStatuses = allStatuses?.[item.id], mostCriticalStatusValue = storyStatuses ? getMostCriticalStatusValue(Object.values(storyStatuses).map((s2) => s2.value)) : null;
-          return {
-            ...searchItem(item, dataset.hash[refId]),
-            status: mostCriticalStatusValue ?? groupStatus[item.id] ?? null
-          };
-        })
-      ), acc;
-    }, []);
+    let list = [];
+    for (let [refId, { index, allStatuses }] of dataset.entries) {
+      if (!index)
+        continue;
+      let groupStatus = getGroupStatus(index || {}, allStatuses ?? {}), datasetValues = Object.values(index);
+      for (let datasetValue of datasetValues) {
+        let storyStatuses = allStatuses?.[datasetValue.id], status = (storyStatuses ? getMostCriticalStatusValue(
+          Object.values(storyStatuses).filter((status2) => status2.typeId !== REVIEW_STATUS_TYPE_ID).map((status2) => status2.value)
+        ) : null) ?? groupStatus[datasetValue.id] ?? null;
+        if (datasetValue.type !== "docs" || !globalThis?.FEATURES?.experimentalSearchDocsHeadings) {
+          list.push({
+            ...searchItem(datasetValue, dataset.hash[refId]),
+            status
+          });
+          continue;
+        }
+        let { anchors, ...baseSearchItem } = searchItem(datasetValue, dataset.hash[refId]);
+        list.push({
+          ...baseSearchItem,
+          status
+        }), anchors?.forEach((anchor) => {
+          let namePostfix = baseSearchItem.path?.[0] === anchor.title ? "" : ` / ${anchor.title}`;
+          list.push({
+            ...baseSearchItem,
+            anchors: [anchor],
+            // Fuse requires unique ids, so suffix the entry id with the anchor's DOM id
+            id: `${datasetValue.id}#${anchor.id}`,
+            name: `${datasetValue.name}${namePostfix}`,
+            status
+          });
+        });
+      }
+    }
     return new import_fuse.default(list, options);
   }, [dataset]), getResults = useCallback(
     (input) => {
       let fuse = makeFuse();
       if (!input)
         return [];
-      let results = [], resultIds = /* @__PURE__ */ new Set(), distinctResults = fuse.search(input).filter(({ item }) => !(item.type === "component" || item.type === "docs" || item.type === "story") || // @ts-expect-error (non strict)
-      resultIds.has(item.parent) ? !1 : (resultIds.add(item.id), !0));
+      let results = [], resultIds = /* @__PURE__ */ new Set(), allMatches = fuse.search(input).filter(({ item }) => item.type === "component" || item.type === "docs" || item.type === "story"), docsParentIds = /* @__PURE__ */ new Set();
+      allMatches.forEach(({ item }) => {
+        item.type === "docs" && item.parent && docsParentIds.add(item.parent);
+      });
+      let pendingDocsReplacements = /* @__PURE__ */ new Set(), distinctResults = allMatches.filter(({ item }) => item.type === "component" && docsParentIds.has(item.id) ? (resultIds.has(item.id) || (resultIds.add(item.id), pendingDocsReplacements.add(item.id)), !1) : item.type === "docs" && item.parent && pendingDocsReplacements.has(item.parent) ? (pendingDocsReplacements.delete(item.parent), resultIds.add(item.id), !0) : resultIds.has(item.parent) ? !1 : (resultIds.add(item.id), item.type === "docs" && item.parent && resultIds.add(item.parent), !0));
       return distinctResults.length && (results = distinctResults.slice(0, allComponents ? 1e3 : DEFAULT_MAX_SEARCH_RESULTS), distinctResults.length > DEFAULT_MAX_SEARCH_RESULTS && !allComponents && results.push({
         showAll: () => showAllComponents(!0),
         totalCount: distinctResults.length,
@@ -18013,12 +26511,18 @@ var { document: document6 } = scope, DEFAULT_MAX_SEARCH_RESULTS = 50, options = 
     [allComponents, makeFuse]
   ), onSelect = useCallback(
     (selectedItem) => {
-      if (isSearchResult(selectedItem)) {
-        let { id, refId } = selectedItem.item;
-        api?.selectStory(id, void 0, { ref: refId !== DEFAULT_REF_ID && refId }), inputRef.current.blur(), showAllComponents(!1);
-        return;
+      if (selectedItem) {
+        if (isSearchResult(selectedItem)) {
+          let { id: rawId, refId } = selectedItem.item, [storyId, anchor] = rawId.split("#");
+          api?.selectStory(storyId, void 0, {
+            // @ts-expect-error (non strict)
+            ref: refId !== DEFAULT_REF_ID && refId,
+            scrollTo: anchor
+          }), inputRef.current.blur(), showAllComponents(!1);
+          return;
+        }
+        isExpandType(selectedItem) && selectedItem.showAll();
       }
-      isExpandType(selectedItem) && selectedItem.showAll();
     },
     [api]
   ), onInputValueChange = useCallback((inputValue, stateAndHelpers) => {
@@ -18032,7 +26536,7 @@ var { document: document6 } = scope, DEFAULT_MAX_SEARCH_RESULTS = 50, options = 
             // Prevent clearing the input on blur
             inputValue: state.inputValue,
             // Return to the tree view after selecting an item
-            isOpen: state.inputValue && !state.selectedItem
+            isOpen: !!state.inputValue && !state.selectedItem
           };
         case Downshift.stateChangeTypes.mouseUp:
           return state;
@@ -18047,97 +26551,108 @@ var { document: document6 } = scope, DEFAULT_MAX_SEARCH_RESULTS = 50, options = 
     },
     []
   ), { isMobile: isMobile2 } = useLayout(), searchLandmarkRef = useRef(null), { landmarkProps } = useLandmark({ role: "search" }, searchLandmarkRef);
-  return (
-    // @ts-expect-error (non strict)
-    react_default.createElement(
-      Downshift,
-      {
-        initialInputValue: initialQuery,
-        stateReducer: stateReducer2,
-        itemToString: (result) => result?.item?.name || "",
-        scrollIntoView: (e2) => scrollIntoView(e2),
-        onSelect,
-        onInputValueChange
-      },
-      ({
-        isOpen,
-        openMenu,
-        closeMenu,
-        inputValue,
-        getInputProps,
-        getItemProps,
-        getLabelProps,
-        getMenuProps,
-        getRootProps,
-        highlightedIndex,
-        reset
-      }) => {
-        let input = inputValue ? inputValue.trim() : "", results = input ? getResults(input) : [], lastViewed = !input && getLastViewed();
-        lastViewed && lastViewed.length && (results = lastViewed.reduce((acc, { storyId, refId }) => {
-          let data = dataset.hash[refId];
-          if (data && data.index && data.index[storyId]) {
-            let story = data.index[storyId], item = story.type === "story" ? data.index[story.parent] : story;
-            acc.some((res) => res.item.refId === refId && res.item.id === item.id) || acc.push({ item: searchItem(item, dataset.hash[refId]), matches: [], score: 0 });
-          }
-          return acc;
-        }, []));
-        let inputId = "storybook-explorer-searchfield", inputProps = getInputProps({
-          id: inputId,
-          ref: inputRef,
-          required: !0,
-          type: "search",
-          placeholder: inputPlaceholder,
-          onFocus: () => {
-            openMenu(), setPlaceholder("Type to find...");
-          },
-          onBlur: () => setPlaceholder("Find components"),
-          onKeyDown: (e2) => {
-            e2.key === "Escape" && inputValue.length === 0 && inputRef.current.blur();
-          }
-        }), labelProps = getLabelProps({
-          htmlFor: inputId
-        });
-        return react_default.createElement(react_default.Fragment, null, react_default.createElement(ScreenReaderLabel, { ...labelProps }, "Search for components"), react_default.createElement(SearchBar, { ref: searchLandmarkRef, ...landmarkProps }, react_default.createElement(
-          SearchField2,
-          {
-            ...getRootProps({ refKey: "" }, { suppressRefError: !0 }),
-            isMobile: isMobile2,
-            className: "search-field"
-          },
-          react_default.createElement(IconWrapper, null, react_default.createElement(SearchIcon, null)),
-          react_default.createElement(Input, { ...inputProps, isMobile: isMobile2 }),
-          !isMobile2 && enableShortcuts && !isOpen && react_default.createElement(FocusKey, null, searchShortcut === "\u2318 K" ? react_default.createElement(react_default.Fragment, null, react_default.createElement(FocusKeyCmd, null, "\u2318"), "K") : searchShortcut),
-          react_default.createElement(Actions, null, input && react_default.createElement(
-            Button,
-            {
-              padding: "small",
-              variant: "ghost",
-              ariaLabel: "Clear search",
-              onClick: () => {
-                reset({ inputValue: "" }), closeMenu(), inputRef.current?.focus();
+  return react_default.createElement(
+    Downshift,
+    {
+      initialInputValue: initialQuery,
+      stateReducer: stateReducer2,
+      itemToString: (result) => result?.item?.name || "",
+      scrollIntoView: (e2) => scrollIntoView(e2),
+      onSelect,
+      onInputValueChange
+    },
+    ({
+      isOpen,
+      openMenu,
+      closeMenu,
+      inputValue,
+      getInputProps,
+      getItemProps,
+      getLabelProps,
+      getMenuProps,
+      getRootProps,
+      highlightedIndex,
+      reset
+    }) => {
+      let input = inputValue ? inputValue.trim() : "", results = input ? getResults(input) : [], lastViewed = !input && getLastViewed();
+      lastViewed && lastViewed.length && (results = lastViewed.reduce((acc, { storyId, refId, anchor }) => {
+        let data = dataset.hash[refId];
+        if (data && data.index && data.index[storyId]) {
+          let story = data.index[storyId], item = story.type === "story" ? data.index[story.parent] : story, entryId = anchor ? `${item.id}#${anchor}` : item.id;
+          if (!acc.some((res) => res.item.refId === refId && res.item.id === entryId)) {
+            let baseItem = searchItem(item, dataset.hash[refId]), resultItem = baseItem;
+            if (anchor && item.type === "docs") {
+              let matchingAnchor = item.anchors?.find((a2) => a2.id === anchor);
+              if (matchingAnchor) {
+                let namePostfix = baseItem.path?.[0] === matchingAnchor.title ? "" : ` / ${matchingAnchor.title}`;
+                resultItem = {
+                  ...baseItem,
+                  id: entryId,
+                  name: `${item.name}${namePostfix}`
+                };
               }
-            },
-            react_default.createElement(CloseIcon, null)
-          ), searchFieldContent)
-        ), searchBarContent), react_default.createElement(FocusContainer, { tabIndex: 0, id: "storybook-explorer-menu" }, children({
-          query: input,
-          results,
-          isNavVisible: !isOpen && document6.activeElement !== inputRef.current,
-          isNavReachable: !isOpen || input.length === 0,
-          isSearchResultRendered: isOpen,
-          closeMenu,
-          getMenuProps,
-          getItemProps,
-          highlightedIndex
-        })));
-      }
-    )
+            }
+            acc.push({ item: resultItem, matches: [], score: 0 });
+          }
+        }
+        return acc;
+      }, []));
+      let inputId = "storybook-explorer-searchfield", inputProps = getInputProps({
+        id: inputId,
+        ref: inputRef,
+        required: !0,
+        type: "search",
+        placeholder: inputPlaceholder,
+        onFocus: () => {
+          openMenu(), setPlaceholder("Type to find...");
+        },
+        onBlur: () => setPlaceholder("Find components"),
+        onKeyDown: (e2) => {
+          e2.key === "Escape" && inputValue.length === 0 && inputRef.current.blur();
+        }
+      }), labelProps = getLabelProps({
+        htmlFor: inputId
+      });
+      return react_default.createElement(react_default.Fragment, null, react_default.createElement(ScreenReaderLabel, { ...labelProps }, "Search for components"), react_default.createElement(SearchBar, { ref: searchLandmarkRef, ...landmarkProps }, react_default.createElement(
+        SearchField2,
+        {
+          ...getRootProps({ refKey: "" }, { suppressRefError: !0 }),
+          isMobile: isMobile2,
+          className: "search-field"
+        },
+        react_default.createElement(IconWrapper, null, react_default.createElement(SearchIcon, null)),
+        react_default.createElement(Input, { ...inputProps, isMobile: isMobile2 }),
+        !isMobile2 && enableShortcuts && !isOpen && react_default.createElement(FocusKey, null, searchShortcut === "\u2318 K" ? react_default.createElement(react_default.Fragment, null, react_default.createElement(FocusKeyCmd, null, "\u2318"), "K") : searchShortcut),
+        react_default.createElement(Actions2, null, input && react_default.createElement(
+          Button,
+          {
+            padding: "small",
+            variant: "ghost",
+            ariaLabel: "Clear search",
+            onClick: () => {
+              reset({ inputValue: "" }), closeMenu(), inputRef.current?.focus();
+            }
+          },
+          react_default.createElement(CloseIcon, null)
+        ), searchFieldContent)
+      ), searchBarContent), !isOpen && belowSearchContent, react_default.createElement(FocusContainer, { tabIndex: 0, id: "storybook-explorer-menu" }, children({
+        query: input,
+        results,
+        isNavVisible: !isOpen && document7.activeElement !== inputRef.current,
+        isNavReachable: !isOpen || input.length === 0,
+        isSearchResultRendered: isOpen,
+        closeMenu,
+        getMenuProps,
+        getItemProps,
+        highlightedIndex
+      })));
+    }
   );
 });
 
 // src/manager/components/sidebar/SearchResults.tsx
 init_react();
-var { document: document7 } = scope, ResultsList = styled.ol({
+var { document: document8 } = scope, ResultsList = styled.ol({
   listStyle: "none",
   margin: 0,
   padding: 0
@@ -18208,7 +26723,7 @@ var { document: document7 } = scope, ResultsList = styled.ol({
     { cursor: 0, nodes: [] }
   );
   return react_default.createElement("span", null, result);
-}), Title = styled.div({
+}), Title3 = styled.div({
   display: "grid",
   justifyContent: "start",
   gridAutoColumns: "auto",
@@ -18233,7 +26748,8 @@ var { document: document7 } = scope, ResultsList = styled.ol({
   },
   "& > span + span": {
     "&:before": {
-      content: "' / '"
+      content: "' / '",
+      whiteSpace: "pre"
     }
   }
 })), Result = react_default.memo(function({ item, matches, onClick, ...props }) {
@@ -18246,8 +26762,8 @@ var { document: document7 } = scope, ResultsList = styled.ol({
   useEffect(() => {
     api && props.isHighlighted && item.type === "component" && api.emit(PRELOAD_ENTRIES, { ids: [item.children[0]] }, { options: { target: item.refId } });
   }, [api, props.isHighlighted, item]);
-  let nameMatch = matches.find((match) => match.key === "name"), pathMatches = matches.filter((match) => match.key === "path"), [icon] = item.status ? getStatus(theme, item.status) : [];
-  return react_default.createElement(ResultRow, { ...props, onClick: click }, react_default.createElement(IconWrapper2, null, item.type === "component" && react_default.createElement(TypeIcon2, { viewBox: "0 0 14 14", width: "14", height: "14", type: "component" }, react_default.createElement(UseSymbol, { type: "component" })), item.type === "story" && react_default.createElement(TypeIcon2, { viewBox: "0 0 14 14", width: "14", height: "14", type: item.subtype }, react_default.createElement(UseSymbol, { type: item.subtype })), !(item.type === "component" || item.type === "story") && react_default.createElement(TypeIcon2, { viewBox: "0 0 14 14", width: "14", height: "14", type: "document" }, react_default.createElement(UseSymbol, { type: "document" }))), react_default.createElement(ResultRowContent, { className: "search-result-item--label" }, react_default.createElement(Title, null, react_default.createElement(Highlight, { match: nameMatch }, item.name)), react_default.createElement(Path, null, item.path.map((group, index) => react_default.createElement("span", { key: index }, react_default.createElement(Highlight, { match: pathMatches.find((match) => match.arrayIndex === index) }, group))))), item.status ? react_default.createElement(StatusLabel, { status: item.status }, icon) : null);
+  let nameMatch = matches.find((match) => match.key === "name"), pathMatches = matches.filter((match) => match.key === "path"), icon = item.status ? getStatus(theme, item.status).icon : null;
+  return react_default.createElement(ResultRow, { ...props, onClick: click }, react_default.createElement(IconWrapper2, null, item.type === "component" && react_default.createElement(TypeIcon2, { viewBox: "0 0 14 14", width: "14", height: "14", type: "component" }, react_default.createElement(UseSymbol, { type: "component" })), item.type === "story" && react_default.createElement(TypeIcon2, { viewBox: "0 0 14 14", width: "14", height: "14", type: item.subtype }, react_default.createElement(UseSymbol, { type: item.subtype })), !(item.type === "component" || item.type === "story") && react_default.createElement(TypeIcon2, { viewBox: "0 0 14 14", width: "14", height: "14", type: "document" }, react_default.createElement(UseSymbol, { type: "document" }))), react_default.createElement(ResultRowContent, { className: "search-result-item--label" }, react_default.createElement(Title3, null, react_default.createElement(Highlight, { match: nameMatch }, item.name)), react_default.createElement(Path, null, item.path.map((group, index) => react_default.createElement("span", { key: index }, react_default.createElement(Highlight, { match: pathMatches.find((match) => match.arrayIndex === index) }, group))))), item.status ? react_default.createElement(StatusLabel, { status: item.status }, icon) : null);
 }), SearchResults = react_default.memo(function({
   query,
   results,
@@ -18268,7 +26784,7 @@ var { document: document7 } = scope, ResultsList = styled.ol({
         event.preventDefault(), closeMenu();
       }
     };
-    return document7.addEventListener("keydown", handleEscape), () => document7.removeEventListener("keydown", handleEscape);
+    return document8.addEventListener("keydown", handleEscape), () => document8.removeEventListener("keydown", handleEscape);
   }, [closeMenu, enableShortcuts, isLoading]);
   let mouseOverHandler = useCallback((event) => {
     if (!api)
@@ -18313,6 +26829,519 @@ var { document: document7 } = scope, ResultsList = styled.ol({
     );
   }));
 });
+
+// src/manager/components/sidebar/ShowChangesButton.tsx
+init_react();
+
+// src/shared/universal-store/instances.ts
+var instances = /* @__PURE__ */ new Map();
+
+// src/shared/universal-store/index.ts
+var CHANNEL_EVENT_PREFIX = "UNIVERSAL_STORE:", ProgressState = {
+  PENDING: "PENDING",
+  RESOLVED: "RESOLVED",
+  REJECTED: "REJECTED"
+}, _UniversalStore = class _UniversalStore {
+  constructor(options2, environmentOverrides) {
+    /** Enable debug logs for this store */
+    this.debugging = !1;
+    // TODO: narrow type of listeners based on event type
+    this.listeners = /* @__PURE__ */ new Map([["*", /* @__PURE__ */ new Set()]]);
+    /** Gets the current state */
+    this.getState = () => (this.debug("getState", { state: this.state }), this.state);
+    /**
+     * Subscribes to store events
+     *
+     * @returns A function to unsubscribe
+     */
+    this.subscribe = (eventTypeOrListener, maybeListener) => {
+      let subscribesToAllEvents = typeof eventTypeOrListener == "function", eventType = subscribesToAllEvents ? "*" : eventTypeOrListener, listener = subscribesToAllEvents ? eventTypeOrListener : maybeListener;
+      if (this.debug("subscribe", { eventType, listener }), !listener)
+        throw new TypeError(
+          `Missing first subscribe argument, or second if first is the event type, when subscribing to a UniversalStore with id '${this.id}'`
+        );
+      return this.listeners.has(eventType) || this.listeners.set(eventType, /* @__PURE__ */ new Set()), this.listeners.get(eventType).add(listener), () => {
+        this.debug("unsubscribe", { eventType, listener }), this.listeners.has(eventType) && (this.listeners.get(eventType).delete(listener), this.listeners.get(eventType)?.size === 0 && this.listeners.delete(eventType));
+      };
+    };
+    /** Sends a custom event to the other stores */
+    this.send = (event) => {
+      if (this.debug("send", { event }), this.status !== _UniversalStore.Status.READY)
+        throw new TypeError(
+          dedent`Cannot send event before store is ready. You can get the current status with store.status,
+        or await store.readyPromise to wait for the store to be ready before sending events.
+        ${JSON.stringify(
+            {
+              event,
+              id: this.id,
+              actor: this.actor,
+              environment: this.environment
+            },
+            null,
+            2
+          )}`
+        );
+      this.emitToListeners(event, { actor: this.actor }), this.emitToChannel(event, { actor: this.actor });
+    };
+    if (this.debugging = options2.debug ?? !1, !_UniversalStore.isInternalConstructing)
+      throw new TypeError(
+        "UniversalStore is not constructable - use UniversalStore.create() instead"
+      );
+    if (_UniversalStore.isInternalConstructing = !1, this.id = options2.id, this.actorId = Date.now().toString(36) + Math.random().toString(36).substring(2), this.actorType = options2.leader ? _UniversalStore.ActorType.LEADER : _UniversalStore.ActorType.FOLLOWER, this.state = options2.initialState, this.channelEventName = `${CHANNEL_EVENT_PREFIX}${this.id}`, this.debug("constructor", {
+      options: options2,
+      environmentOverrides,
+      channelEventName: this.channelEventName
+    }), this.actor.type === _UniversalStore.ActorType.LEADER)
+      this.syncing = {
+        state: ProgressState.RESOLVED,
+        promise: Promise.resolve()
+      };
+    else {
+      let syncingResolve, syncingReject, syncingPromise = new Promise((resolve, reject) => {
+        syncingResolve = () => {
+          this.syncing.state === ProgressState.PENDING && (this.syncing.state = ProgressState.RESOLVED, resolve());
+        }, syncingReject = (reason) => {
+          this.syncing.state === ProgressState.PENDING && (this.syncing.state = ProgressState.REJECTED, reject(reason));
+        };
+      });
+      this.syncing = {
+        state: ProgressState.PENDING,
+        promise: syncingPromise,
+        resolve: syncingResolve,
+        reject: syncingReject
+      };
+    }
+    this.getState = this.getState.bind(this), this.setState = this.setState.bind(this), this.subscribe = this.subscribe.bind(this), this.onStateChange = this.onStateChange.bind(this), this.send = this.send.bind(this), this.emitToChannel = this.emitToChannel.bind(this), this.prepareThis = this.prepareThis.bind(this), this.emitToListeners = this.emitToListeners.bind(this), this.handleChannelEvents = this.handleChannelEvents.bind(this), this.debug = this.debug.bind(this), this.channel = environmentOverrides?.channel ?? _UniversalStore.preparation.channel, this.environment = environmentOverrides?.environment ?? _UniversalStore.preparation.environment, this.channel && this.environment ? (environmentOverrides || _UniversalStore.preparation.resolve({
+      channel: this.channel,
+      environment: this.environment
+    }), this.prepareThis({ channel: this.channel, environment: this.environment })) : _UniversalStore.preparation.promise.then(this.prepareThis);
+  }
+  /** The environment this realm was prepared as, or `undefined` before `__prepare`. */
+  static get preparedEnvironment() {
+    return _UniversalStore.preparation.environment;
+  }
+  static setupPreparationPromise() {
+    let resolveRef, rejectRef, promise = new Promise(
+      (resolve, reject) => {
+        resolveRef = (args) => {
+          resolve(args);
+        }, rejectRef = (...args) => {
+          reject(args);
+        };
+      }
+    );
+    _UniversalStore.preparation = {
+      resolve: resolveRef,
+      reject: rejectRef,
+      promise
+    };
+  }
+  /** The actor object representing the store instance with a unique ID and a type */
+  get actor() {
+    return Object.freeze({
+      id: this.actorId,
+      type: this.actorType,
+      environment: this.environment ?? _UniversalStore.Environment.UNKNOWN
+    });
+  }
+  /**
+   * The current state of the store, that signals both if the store is prepared by Storybook and
+   * also - in the case of a follower - if the state has been synced with the leader's state.
+   */
+  get status() {
+    if (!this.channel || !this.environment)
+      return _UniversalStore.Status.UNPREPARED;
+    switch (this.syncing?.state) {
+      case ProgressState.PENDING:
+      case void 0:
+        return _UniversalStore.Status.SYNCING;
+      case ProgressState.REJECTED:
+        return _UniversalStore.Status.ERROR;
+      case ProgressState.RESOLVED:
+      default:
+        return _UniversalStore.Status.READY;
+    }
+  }
+  /**
+   * A promise that resolves when the store is fully ready. A leader will be ready when the store
+   * has been prepared by Storybook, which is almost instantly.
+   *
+   * A follower will be ready when the state has been synced with the leader's state, within a few
+   * hundred milliseconds.
+   */
+  untilReady() {
+    let preparation = this.channel && this.environment ? Promise.resolve() : _UniversalStore.preparation.promise;
+    return Promise.all([preparation, this.syncing?.promise]);
+  }
+  /** Creates a new instance of UniversalStore */
+  static create(options2) {
+    if (!options2 || typeof options2?.id != "string")
+      throw new TypeError("id is required and must be a string, when creating a UniversalStore");
+    options2.debug && console.debug(
+      dedent`[UniversalStore]
+        create`,
+      { options: options2 }
+    );
+    let existing = instances.get(options2.id);
+    if (existing)
+      return console.warn(dedent`UniversalStore with id "${options2.id}" already exists in this environment, re-using existing.
+        You should reuse the existing instance instead of trying to create a new one.`), existing;
+    _UniversalStore.isInternalConstructing = !0;
+    let store2 = new _UniversalStore(options2);
+    return instances.set(options2.id, store2), store2;
+  }
+  /**
+   * Used by Storybook to set the channel for all instances of UniversalStore in the given
+   * environment.
+   *
+   * @internal
+   */
+  static __prepare(channel2, environment) {
+    _UniversalStore.preparation.channel = channel2, _UniversalStore.preparation.environment = environment, _UniversalStore.preparation.resolve({ channel: channel2, environment });
+  }
+  /**
+   * Updates the store's state
+   *
+   * Either a new state or a state updater function can be passed to the method.
+   */
+  setState(updater) {
+    let previousState = this.state, newState = typeof updater == "function" ? updater(previousState) : updater;
+    if (this.debug("setState", { newState, previousState, updater }), this.status !== _UniversalStore.Status.READY)
+      throw new TypeError(
+        dedent`Cannot set state before store is ready. You can get the current status with store.status,
+        or await store.readyPromise to wait for the store to be ready before sending events.
+        ${JSON.stringify(
+          {
+            newState,
+            id: this.id,
+            actor: this.actor,
+            environment: this.environment
+          },
+          null,
+          2
+        )}`
+      );
+    this.state = newState;
+    let event = {
+      type: _UniversalStore.InternalEventType.SET_STATE,
+      payload: {
+        state: newState,
+        previousState
+      }
+    };
+    this.emitToChannel(event, { actor: this.actor }), this.emitToListeners(event, { actor: this.actor });
+  }
+  /**
+   * Subscribes to state changes
+   *
+   * @returns Unsubscribe function
+   */
+  onStateChange(listener) {
+    return this.debug("onStateChange", { listener }), this.subscribe(
+      _UniversalStore.InternalEventType.SET_STATE,
+      ({ payload }, eventInfo) => {
+        listener(payload.state, payload.previousState, eventInfo);
+      }
+    );
+  }
+  emitToChannel(event, eventInfo) {
+    this.debug("emitToChannel", { event, eventInfo, channel: !!this.channel }), this.channel?.emit(this.channelEventName, {
+      event,
+      eventInfo
+    });
+  }
+  prepareThis({
+    channel: channel2,
+    environment
+  }) {
+    this.channel = channel2, this.environment = environment, this.debug("prepared", { channel: !!channel2, environment }), this.channel.on(this.channelEventName, this.handleChannelEvents), this.actor.type === _UniversalStore.ActorType.LEADER ? this.emitToChannel(
+      { type: _UniversalStore.InternalEventType.LEADER_CREATED },
+      { actor: this.actor }
+    ) : (this.emitToChannel(
+      { type: _UniversalStore.InternalEventType.FOLLOWER_CREATED },
+      { actor: this.actor }
+    ), this.emitToChannel(
+      { type: _UniversalStore.InternalEventType.EXISTING_STATE_REQUEST },
+      { actor: this.actor }
+    ), setTimeout(() => {
+      this.syncing.reject(new UniversalStoreFollowerTimeoutError2(this.id));
+    }, 1e3));
+  }
+  emitToListeners(event, eventInfo) {
+    let eventTypeListeners = this.listeners.get(event.type), everythingListeners = this.listeners.get("*");
+    this.debug("emitToListeners", {
+      event,
+      eventInfo,
+      eventTypeListeners,
+      everythingListeners
+    }), [...eventTypeListeners ?? [], ...everythingListeners ?? []].forEach(
+      (listener) => listener(event, eventInfo)
+    );
+  }
+  handleChannelEvents(channelEvent) {
+    let { event, eventInfo } = channelEvent;
+    if ([eventInfo.actor.id, eventInfo.forwardingActor?.id].includes(this.actor.id)) {
+      this.debug("handleChannelEvents: Ignoring event from self", { channelEvent });
+      return;
+    } else if (this.syncing?.state === ProgressState.PENDING && event.type !== _UniversalStore.InternalEventType.EXISTING_STATE_RESPONSE) {
+      this.debug("handleChannelEvents: Ignoring event while syncing", { channelEvent });
+      return;
+    }
+    if (this.debug("handleChannelEvents", { channelEvent }), this.actor.type === _UniversalStore.ActorType.LEADER) {
+      let shouldForwardEvent = !0;
+      switch (event.type) {
+        case _UniversalStore.InternalEventType.EXISTING_STATE_REQUEST:
+          shouldForwardEvent = !1;
+          let responseEvent = {
+            type: _UniversalStore.InternalEventType.EXISTING_STATE_RESPONSE,
+            payload: this.state
+          };
+          this.debug("handleChannelEvents: responding to existing state request", {
+            responseEvent
+          }), this.emitToChannel(responseEvent, { actor: this.actor }), this.emitToListeners(responseEvent, { actor: this.actor });
+          break;
+        case _UniversalStore.InternalEventType.LEADER_CREATED:
+          shouldForwardEvent = !1, this.syncing.state = ProgressState.REJECTED, this.debug("handleChannelEvents: erroring due to second leader being created", {
+            event
+          }), console.error(
+            dedent`Detected multiple UniversalStore leaders created with the same id "${this.id}".
+            Only one leader can exists at a time, your stores are now in an invalid state.
+            Leaders detected:
+            this: ${JSON.stringify(this.actor, null, 2)}
+            other: ${JSON.stringify(eventInfo.actor, null, 2)}`
+          );
+          break;
+      }
+      shouldForwardEvent && (this.debug("handleChannelEvents: forwarding event", { channelEvent }), this.emitToChannel(event, { actor: eventInfo.actor, forwardingActor: this.actor }));
+    }
+    if (this.actor.type === _UniversalStore.ActorType.FOLLOWER)
+      switch (event.type) {
+        case _UniversalStore.InternalEventType.EXISTING_STATE_RESPONSE:
+          if (this.debug("handleChannelEvents: Setting state from leader's existing state response", {
+            event
+          }), this.syncing?.state !== ProgressState.PENDING)
+            break;
+          this.syncing.resolve?.();
+          let setStateEvent = {
+            type: _UniversalStore.InternalEventType.SET_STATE,
+            payload: {
+              state: event.payload,
+              previousState: this.state
+            }
+          };
+          this.state = event.payload, this.emitToListeners(setStateEvent, eventInfo);
+          break;
+      }
+    event.type === _UniversalStore.InternalEventType.SET_STATE && (this.debug("handleChannelEvents: Setting state", { event }), this.state = event.payload.state), this.emitToListeners(event, { actor: eventInfo.actor });
+  }
+  debug(message, data) {
+    this.debugging && console.debug(
+      dedent`[UniversalStore::${this.id}::${this.environment ?? _UniversalStore.Environment.UNKNOWN}]
+        ${message}`,
+      JSON.stringify(
+        {
+          data,
+          actor: this.actor,
+          state: this.state,
+          status: this.status
+        },
+        null,
+        2
+      )
+    );
+  }
+  /**
+   * Used to reset the static fields of the UniversalStore class when cleaning up tests
+   *
+   * @internal
+   */
+  static __reset() {
+    _UniversalStore.preparation.reject(new Error("reset")), _UniversalStore.setupPreparationPromise(), _UniversalStore.isInternalConstructing = !1;
+  }
+};
+/**
+ * Defines the possible actor types in the store system
+ *
+ * @readonly
+ */
+_UniversalStore.ActorType = {
+  LEADER: "LEADER",
+  FOLLOWER: "FOLLOWER"
+}, /**
+ * Defines the possible environments the store can run in
+ *
+ * @readonly
+ */
+_UniversalStore.Environment = {
+  SERVER: "SERVER",
+  MANAGER: "MANAGER",
+  PREVIEW: "PREVIEW",
+  UNKNOWN: "UNKNOWN",
+  MOCK: "MOCK"
+}, /**
+ * Internal event types used for store synchronization
+ *
+ * @readonly
+ */
+_UniversalStore.InternalEventType = {
+  EXISTING_STATE_REQUEST: "__EXISTING_STATE_REQUEST",
+  EXISTING_STATE_RESPONSE: "__EXISTING_STATE_RESPONSE",
+  SET_STATE: "__SET_STATE",
+  LEADER_CREATED: "__LEADER_CREATED",
+  FOLLOWER_CREATED: "__FOLLOWER_CREATED"
+}, _UniversalStore.Status = {
+  UNPREPARED: "UNPREPARED",
+  SYNCING: "SYNCING",
+  READY: "READY",
+  ERROR: "ERROR"
+}, // This is used to check if constructor was called from the static factory create()
+_UniversalStore.isInternalConstructing = !1, _UniversalStore.setupPreparationPromise();
+var UniversalStore = _UniversalStore;
+
+// src/shared/universal-store/use-universal-store-manager.ts
+init_react();
+var useUniversalStore = (universalStore, selector) => {
+  let snapshotRef = useRef(
+    selector ? selector(universalStore.getState()) : universalStore.getState()
+  ), subscribe = useCallback(
+    (listener) => universalStore.onStateChange((state2, previousState) => {
+      if (!selector) {
+        snapshotRef.current = state2, listener();
+        return;
+      }
+      let selectedState = selector(state2), selectedPreviousState = selector(previousState);
+      !isEqual(selectedState, selectedPreviousState) && (snapshotRef.current = selectedState, listener());
+    }),
+    [universalStore, selector]
+  ), getSnapshot = useCallback(() => {
+    let currentState = universalStore.getState(), selectedState = selector ? selector(currentState) : currentState;
+    return isEqual(selectedState, snapshotRef.current) || (snapshotRef.current = selectedState), snapshotRef.current;
+  }, [universalStore, selector]);
+  return [useSyncExternalStore(subscribe, getSnapshot), universalStore.setState];
+};
+
+// src/manager-api/stores/status.ts
+var statusStore = createStatusStore({
+  universalStatusStore: UniversalStore.create({
+    ...UNIVERSAL_STATUS_STORE_OPTIONS,
+    leader: globalThis.CONFIG_TYPE === "PRODUCTION"
+  }),
+  useUniversalStore,
+  environment: "manager"
+}), { fullStatusStore, getStatusStoreByTypeId, useStatusStore, universalStatusStore } = statusStore;
+
+// src/manager-api/modules/statuses.ts
+var computeStatusFilterFn = (includedStatusFilters, excludedStatusFilters) => (entry) => {
+  if (!includedStatusFilters.length && !excludedStatusFilters.length)
+    return !0;
+  let storyStatuses = (fullStatusStore.getAll() ?? {})[entry.id], storyStatusValues = storyStatuses ? Object.values(storyStatuses).map((s2) => s2.value) : [], passesInclude = !includedStatusFilters.length || includedStatusFilters.some((v2) => storyStatusValues.includes(v2)), passesExclude = !excludedStatusFilters.length || excludedStatusFilters.every((v2) => !storyStatusValues.includes(v2));
+  return passesInclude && passesExclude;
+};
+
+// src/manager-api/modules/tags.ts
+var import_memoizerific5 = __toESM(require_memoizerific(), 1);
+var getDefaultTagsFromPreset = (0, import_memoizerific5.default)(1)((presets) => {
+  let presetEntries = Object.entries(presets);
+  return {
+    included: presetEntries.filter(([, option]) => option.defaultFilterSelection === "include").map(([tag]) => tag),
+    excluded: presetEntries.filter(([, option]) => option.defaultFilterSelection === "exclude").map(([tag]) => tag)
+  };
+});
+var computeTagsFilterFn = (includedTagFilters, excludedTagFilters) => {
+  let computeFilterFunctions = (set) => Object.values(
+    set.reduce(
+      (acc, tag) => (Object.hasOwn(BUILT_IN_FILTERS, tag) ? acc["built-in"].push(BUILT_IN_FILTERS[tag]) : acc.user.push(USER_TAG_FILTER(tag)), acc),
+      { "built-in": [], user: [] }
+    )
+  ).filter((group) => group.length > 0);
+  return (item) => {
+    let included = computeFilterFunctions(includedTagFilters), excluded = computeFilterFunctions(excludedTagFilters);
+    return (!included.length || included.every((group) => group.some((filterFn) => filterFn(item, !1)))) && (!excluded.length || excluded.every((group) => group.every((filterFn) => filterFn(item, !0))));
+  };
+};
+
+// src/manager/components/sidebar/ShowChangesButton.tsx
+var Wrapper8 = styled.div({
+  display: "flex",
+  alignItems: "center",
+  gap: 4,
+  marginTop: -8
+}), StyledCTA = styled(ToggleButton)({
+  flex: 1,
+  justifyContent: "flex-start"
+}), StyledIcon = styled.svg(({ theme }) => ({
+  color: theme.fgColor.accent
+})), NEW = "status-value:new", MOD = "status-value:modified", ShowChangesButton = () => {
+  let api = useStorybookApi(), {
+    internal_index: index,
+    includedStatusFilters: rawIncludedStatusFilters,
+    excludedStatusFilters: rawExcludedStatusFilters,
+    includedTagFilters: rawIncludedTagFilters,
+    excludedTagFilters: rawExcludedTagFilters
+  } = useStorybookState(), allStatuses = experimental_useStatusStore(), activeReviewStoryCount = useActiveReviewStoryCount(), { newCount, modifiedCount } = useMemo(() => {
+    if (!index)
+      return { newCount: 0, modifiedCount: 0 };
+    let includedStatusFilters2 = rawIncludedStatusFilters ?? [], excludedStatusFilters2 = rawExcludedStatusFilters ?? [], includedTagFilters = rawIncludedTagFilters ?? [], excludedTagFilters = rawExcludedTagFilters ?? [], contextualIncludedStatuses = includedStatusFilters2.filter((s2) => s2 !== NEW && s2 !== MOD), contextualExcludedStatuses = excludedStatusFilters2.filter((s2) => s2 !== NEW && s2 !== MOD), tagFilterFn = computeTagsFilterFn(includedTagFilters, excludedTagFilters), statusFilterFn = computeStatusFilterFn(
+      contextualIncludedStatuses,
+      contextualExcludedStatuses
+    ), next = 0, modified = 0, entries = index.entries ?? {};
+    for (let [storyId, statusesByType] of Object.entries(allStatuses)) {
+      let entry = entries[storyId];
+      if (!entry)
+        continue;
+      let entryWithStatuses = { ...entry, statuses: statusesByType };
+      if (!tagFilterFn(entryWithStatuses) || !statusFilterFn(entryWithStatuses))
+        continue;
+      let statuses = Object.values(statusesByType);
+      statuses.some(({ value }) => value === NEW) && (next += 1), statuses.some(({ value }) => value === MOD) && (modified += 1);
+    }
+    return { newCount: next, modifiedCount: modified };
+  }, [
+    index,
+    allStatuses,
+    rawIncludedStatusFilters,
+    rawExcludedStatusFilters,
+    rawIncludedTagFilters,
+    rawExcludedTagFilters
+  ]), includedStatusFilters = rawIncludedStatusFilters ?? [], excludedStatusFilters = rawExcludedStatusFilters ?? [], isActive = includedStatusFilters.includes(NEW) && includedStatusFilters.includes(MOD);
+  if (!globalThis.FEATURES?.changeDetection || activeReviewStoryCount > 0 || newCount === 0 && modifiedCount === 0)
+    return null;
+  let clearFilters = () => {
+    let nextIncluded = includedStatusFilters.filter((s2) => s2 !== NEW && s2 !== MOD), nextExcluded = excludedStatusFilters.filter((s2) => s2 !== NEW && s2 !== MOD);
+    api.setAllStatusFilters(nextIncluded, nextExcluded);
+  }, onClick = () => {
+    if (isActive)
+      clearFilters();
+    else {
+      let nextIncluded = Array.from(/* @__PURE__ */ new Set([...includedStatusFilters, NEW, MOD])), nextExcluded = excludedStatusFilters.filter((s2) => s2 !== NEW && s2 !== MOD);
+      api.setAllStatusFilters(nextIncluded, nextExcluded);
+    }
+  }, onClearClick = (e2) => {
+    e2.stopPropagation(), clearFilters();
+  }, changeKinds = newCount > 0 && modifiedCount > 0 ? "new and modified" : newCount > 0 ? "new" : "modified", label = `${isActive ? "Showing" : "Show"} ${changeKinds} stories`, ariaLabel = `${label} since last commit`;
+  return react_default.createElement(Wrapper8, null, react_default.createElement(
+    StyledCTA,
+    {
+      variant: "ghost",
+      padding: "small",
+      pressed: isActive,
+      ariaLabel,
+      onClick
+    },
+    react_default.createElement(StyledIcon, { viewBox: "0 0 14 14", width: "14", height: "14", "aria-hidden": !0 }, react_default.createElement(UseSymbol, { type: "modified" })),
+    label
+  ), isActive && react_default.createElement(
+    Button,
+    {
+      variant: "ghost",
+      padding: "small",
+      size: "small",
+      onClick: onClearClick,
+      ariaLabel: "Clear"
+    },
+    react_default.createElement(UndoIcon, null)
+  ));
+};
 
 // src/manager/components/sidebar/SidebarBottom.tsx
 init_react();
@@ -18360,7 +27389,7 @@ var DEFAULT_HEIGHT = 500, HoverCard2 = styled(Card)({
 })), Content3 = styled.div({
   display: "flex",
   flexDirection: "column"
-}), Bar2 = styled.div(({ onClick }) => ({
+}), Bar3 = styled.div(({ onClick }) => ({
   display: "flex",
   width: "100%",
   cursor: onClick ? "pointer" : "default",
@@ -18495,7 +27524,7 @@ var DEFAULT_HEIGHT = 500, HoverCard2 = styled(Card)({
       outlineAttrs: landmarkProps
     },
     react_default.createElement("h2", { id: "storybook-testing-widget-heading", className: "sb-sr-only" }, "Component tests"),
-    react_default.createElement(Bar2, { ...hasTestProviders ? { onClick: (e2) => toggleCollapsed(e2) } : {} }, react_default.createElement(Action, null, hasTestProviders && react_default.createElement(
+    react_default.createElement(Bar3, { ...hasTestProviders ? { onClick: (e2) => toggleCollapsed(e2) } : {} }, react_default.createElement(Action, null, hasTestProviders && react_default.createElement(
       Optional,
       {
         content: react_default.createElement(RunButton, { isRunning, onRunAll }, isRunning ? "Running..." : "Run tests"),
@@ -18630,7 +27659,7 @@ var SIDEBAR_BOTTOM_SPACER_ID = "sidebar-bottom-spacer", SIDEBAR_BOTTOM_WRAPPER_I
     }
   }, []), useEffect(() => {
     let filter = getFilter(warningCount > 0 && warningsActive, errorCount > 0 && errorsActive);
-    api.experimental_setFilter("sidebar-bottom-filter", filter);
+    api.experimental_setFilters({ "sidebar-bottom-filter": filter });
   }, [api, warningCount, errorCount, warningsActive, errorsActive]), !warningCount && !errorCount && Object.values(registeredTestProviders).length === 0 && notifications.length === 0 ? null : react_default.createElement(Fragment, null, react_default.createElement(Spacer, { id: SIDEBAR_BOTTOM_SPACER_ID, ref: spacerRef }), react_default.createElement(Content4, { id: SIDEBAR_BOTTOM_WRAPPER_ID, ref: wrapperRef }, react_default.createElement(NotificationList, { notifications, clearNotification: api.clearNotification }), isDevelopment && react_default.createElement(
     TestingWidget,
     {
@@ -18641,7 +27670,7 @@ var SIDEBAR_BOTTOM_SPACER_ID = "sidebar-bottom-spacer", SIDEBAR_BOTTOM_WRAPPER_I
       },
       hasStatuses,
       clearStatuses: () => {
-        internal_fullStatusStore.unset(), internal_fullTestProviderStore.clearAll(), setErrorsActive(!1), setWarningsActive(!1);
+        api.clearStatuses(), setErrorsActive(!1), setWarningsActive(!1);
       },
       errorCount,
       errorsActive,
@@ -18678,266 +27707,16 @@ var SIDEBAR_BOTTOM_SPACER_ID = "sidebar-bottom-spacer", SIDEBAR_BOTTOM_WRAPPER_I
   );
 };
 
-// src/manager/components/sidebar/TagsFilter.tsx
-init_react();
-
-// src/manager/components/sidebar/TagsFilterPanel.tsx
-init_react();
-var groupByType = (filters) => filters.reduce(
-  (acc, filter) => (acc[filter.type] = acc[filter.type] || [], acc[filter.type].push(filter), acc),
-  {}
-), Wrapper7 = styled.div({
-  minWidth: 240,
-  maxWidth: 300,
-  maxHeight: 15.5 * 32 + 8,
-  // 15.5 items at 32px each + 8px padding
-  overflow: "hidden",
-  overflowY: "auto",
-  scrollbarWidth: "thin"
-}), MutedText = styled.span(({ theme }) => ({
-  color: theme.textMutedColor
-})), TagsFilterPanel = ({
-  api,
-  filtersById,
-  includedFilters,
-  excludedFilters,
-  toggleFilter,
-  setAllFilters,
-  resetFilters,
-  isDefaultSelection,
-  hasDefaultSelection
-}) => {
-  let ref = useRef(null), renderLink = ({
-    id,
-    type,
-    title: title2,
-    icon,
-    count
-  }) => {
-    let onToggle = (selected, excluded) => toggleFilter(id, selected, excluded), isIncluded = includedFilters.has(id), isExcluded = excludedFilters.has(id), isChecked = isIncluded || isExcluded, toggleLabel = `${type} filter: ${isExcluded ? `exclude ${title2}` : title2}`, toggleTooltip = `${isChecked ? "Remove" : "Add"} ${type} filter: ${title2}`, invertButtonLabel = `${isExcluded ? "Include" : "Exclude"} ${type}: ${title2}`;
-    if (!(count === 0 && type === "built-in"))
-      return {
-        id: `filter-${type}-${id}`,
-        content: react_default.createElement(ActionList.HoverItem, { targetId: `filter-${type}-${id}` }, react_default.createElement(ActionList.Action, { as: "label", ariaLabel: !1, tabIndex: -1, tooltip: toggleTooltip }, react_default.createElement(ActionList.Icon, null, isExcluded ? react_default.createElement(DeleteIcon, null) : isIncluded ? null : icon, react_default.createElement(
-          Form.Checkbox,
-          {
-            checked: isChecked,
-            onChange: () => onToggle(!isChecked),
-            "data-tag": title2,
-            "aria-label": toggleLabel
-          }
-        )), react_default.createElement(ActionList.Text, null, react_default.createElement("span", null, title2, isExcluded && react_default.createElement(MutedText, null, " (excluded)"))), isExcluded ? react_default.createElement("s", null, count) : react_default.createElement("span", null, count)), react_default.createElement(
-          ActionList.Button,
-          {
-            "data-target-id": `filter-${type}-${id}`,
-            ariaLabel: invertButtonLabel,
-            onClick: () => onToggle(!0, !isExcluded)
-          },
-          react_default.createElement("span", { style: { minWidth: 45 } }, isExcluded ? "Include" : "Exclude")
-        ))
-      };
-  }, groups = groupByType(Object.values(filtersById)), links = Object.values(groups).map(
-    (group) => group.sort((a2, b2) => a2.id.localeCompare(b2.id)).map((filter) => renderLink(filter)).filter((value) => !!value)
-  ).filter((value) => value.length > 0), hasItems = links.length > 0, hasUserTags = Object.values(filtersById).some(({ type }) => type === "tag"), isNothingSelectedYet = includedFilters.size === 0 && excludedFilters.size === 0;
-  return react_default.createElement(Wrapper7, { ref }, hasItems && react_default.createElement(ActionList, { as: "div" }, react_default.createElement(ActionList.Item, { as: "div" }, isNothingSelectedYet ? react_default.createElement(
-    ActionList.Button,
-    {
-      ariaLabel: !1,
-      id: "select-all",
-      key: "select-all",
-      onClick: () => setAllFilters(!0)
-    },
-    react_default.createElement(BatchAcceptIcon, null),
-    react_default.createElement(ActionList.Text, null, "Select all")
-  ) : react_default.createElement(
-    ActionList.Button,
-    {
-      ariaLabel: !1,
-      id: "deselect-all",
-      key: "deselect-all",
-      onClick: () => setAllFilters(!1)
-    },
-    react_default.createElement(SweepIcon, null),
-    react_default.createElement(ActionList.Text, null, "Clear filters")
-  ), hasDefaultSelection && react_default.createElement(
-    ActionList.Button,
-    {
-      id: "reset-filters",
-      key: "reset-filters",
-      onClick: resetFilters,
-      ariaLabel: "Reset filters",
-      tooltip: "Reset to default selection",
-      disabled: isDefaultSelection
-    },
-    react_default.createElement(UndoIcon, null)
-  ))), links.map((group) => react_default.createElement(ActionList, { key: group.map((link) => link.id).join("_") }, group.map((link) => react_default.createElement(Fragment, { key: link.id }, link.content)))), !hasUserTags && react_default.createElement(ActionList, { as: "div" }, react_default.createElement(ActionList.Item, { as: "div" }, react_default.createElement(
-    ActionList.Link,
-    {
-      ariaLabel: !1,
-      href: api.getDocsUrl({ subpath: "writing-stories/tags#custom-tags" }),
-      target: "_blank"
-    },
-    react_default.createElement(ActionList.Icon, null, react_default.createElement(DocumentIcon, null)),
-    react_default.createElement(ActionList.Text, null, react_default.createElement("span", null, "Learn how to add tags")),
-    react_default.createElement(ActionList.Icon, null, react_default.createElement(ShareAltIcon, null))
-  ))));
-};
-
-// src/manager/components/sidebar/TagsFilter.tsx
-var TAGS_FILTER = "tags-filter", BUILT_IN_TAGS = new Set(Object.values(Tag)), StyledButton2 = styled(Button)(({ isHighlighted, theme }) => ({
-  "&:focus-visible": {
-    outlineOffset: 4
-  },
-  ...isHighlighted && {
-    background: theme.background.hoverable,
-    color: theme.color.secondary
-  }
-})), add = (set, id) => {
-  let copy3 = new Set(set);
-  return copy3.add(id), copy3;
-}, remove = (set, id) => {
-  let copy3 = new Set(set);
-  return copy3.delete(id), copy3;
-}, equal3 = (left, right) => left.size === right.size && (/* @__PURE__ */ new Set([...left, ...right])).size === left.size, TagSelected = styled(Badge)(({ theme }) => ({
-  position: "absolute",
-  top: 7,
-  right: 7,
-  transform: "translate(50%, -50%)",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  padding: 3,
-  height: 6,
-  minWidth: 6,
-  lineHeight: "px",
-  boxShadow: `${theme.barSelectedColor} 0 0 0 1px inset`,
-  fontSize: theme.typography.size.s1 - 1,
-  background: theme.barSelectedColor,
-  color: theme.color.inverseText
-})), TagsFilter = ({ api, indexJson, tagPresets }) => {
-  let filtersById = useMemo(() => {
-    let userTagsCounts = Object.values(indexJson.entries).reduce(
-      (acc, entry) => (entry.tags?.forEach((tag) => {
-        BUILT_IN_TAGS.has(tag) || (acc[tag] = (acc[tag] || 0) + 1);
-      }), acc),
-      {}
-    ), userFilters = Object.fromEntries(
-      Object.entries(userTagsCounts).map(([tag, count]) => [tag, { id: tag, type: "tag", title: tag, count, filterFn: (entry, excluded) => excluded ? !entry.tags?.includes(tag) : !!entry.tags?.includes(tag) }])
-    ), withCount = (filterFn) => ({
-      count: Object.values(indexJson.entries).filter((entry) => filterFn(entry)).length,
-      filterFn
-    }), builtInFilters = {
-      _docs: {
-        id: "_docs",
-        type: "built-in",
-        title: "Documentation",
-        icon: react_default.createElement(DocumentIcon, { color: color.gold }),
-        ...withCount(
-          (entry, excluded) => excluded ? entry.type !== "docs" : entry.type === "docs"
-        )
-      },
-      _play: {
-        id: "_play",
-        type: "built-in",
-        title: "Play",
-        icon: react_default.createElement(PlayHollowIcon, { color: color.seafoam }),
-        ...withCount(
-          (entry, excluded) => excluded ? entry.type !== "story" || !entry.tags?.includes(Tag.PLAY_FN) : entry.type === "story" && !!entry.tags?.includes(Tag.PLAY_FN)
-        )
-      },
-      _test: {
-        id: "_test",
-        type: "built-in",
-        title: "Testing",
-        icon: react_default.createElement(BeakerIcon, { color: color.green }),
-        ...withCount(
-          (entry, excluded) => excluded ? entry.type !== "story" || entry.subtype !== "test" : entry.type === "story" && entry.subtype === "test"
-        )
-      }
-    };
-    return { ...userFilters, ...builtInFilters };
-  }, [indexJson.entries]), { defaultIncluded, defaultExcluded } = useMemo(() => Object.entries(tagPresets).reduce(
-    (acc, [tag, { defaultFilterSelection }]) => (defaultFilterSelection === "include" ? acc.defaultIncluded.add(tag) : defaultFilterSelection === "exclude" && acc.defaultExcluded.add(tag), acc),
-    { defaultIncluded: /* @__PURE__ */ new Set(), defaultExcluded: /* @__PURE__ */ new Set() }
-  ), [tagPresets]), [includedFilters, setIncludedFilters] = useState(new Set(defaultIncluded)), [excludedFilters, setExcludedFilters] = useState(new Set(defaultExcluded)), [expanded, setExpanded] = useState(!1), tagsActive = includedFilters.size > 0 || excludedFilters.size > 0, resetFilters = useCallback(() => {
-    setIncludedFilters(new Set(defaultIncluded)), setExcludedFilters(new Set(defaultExcluded));
-  }, [defaultIncluded, defaultExcluded]);
-  useEffect(resetFilters, [resetFilters]), useEffect(() => {
-    api.experimental_setFilter(TAGS_FILTER, (item) => {
-      let included = Object.values(
-        groupByType(Array.from(includedFilters).map((id) => filtersById[id]))
-      ), excluded = Object.values(
-        groupByType(Array.from(excludedFilters).map((id) => filtersById[id]))
-      );
-      return (!included.length || included.every((group) => group.some(({ filterFn }) => filterFn(item, !1)))) && (!excluded.length || excluded.every((group) => group.every(({ filterFn }) => filterFn(item, !0))));
-    });
-  }, [api, includedFilters, excludedFilters, filtersById]);
-  let toggleFilter = useCallback(
-    (id, selected, excluded) => {
-      excluded === !0 ? (setExcludedFilters(add(excludedFilters, id)), setIncludedFilters(remove(includedFilters, id))) : excluded === !1 || selected ? (setIncludedFilters(add(includedFilters, id)), setExcludedFilters(remove(excludedFilters, id))) : (setIncludedFilters(remove(includedFilters, id)), setExcludedFilters(remove(excludedFilters, id)));
-    },
-    [includedFilters, excludedFilters]
-  ), setAllFilters = useCallback(
-    (selected) => {
-      setIncludedFilters(selected ? new Set(Object.keys(filtersById)) : /* @__PURE__ */ new Set()), setExcludedFilters(/* @__PURE__ */ new Set());
-    },
-    [filtersById]
-  ), handleToggleExpand = useCallback(
-    (event) => {
-      event.preventDefault(), setExpanded(!expanded);
-    },
-    [expanded, setExpanded]
-  );
-  return react_default.createElement(
-    PopoverProvider,
-    {
-      placement: "bottom",
-      onVisibleChange: setExpanded,
-      offset: 8,
-      padding: 0,
-      popover: () => react_default.createElement(
-        TagsFilterPanel,
-        {
-          api,
-          filtersById,
-          includedFilters,
-          excludedFilters,
-          toggleFilter,
-          setAllFilters,
-          resetFilters,
-          isDefaultSelection: equal3(includedFilters, defaultIncluded) && equal3(excludedFilters, defaultExcluded),
-          hasDefaultSelection: defaultIncluded.size > 0 || defaultExcluded.size > 0
-        }
-      )
-    },
-    react_default.createElement(
-      StyledButton2,
-      {
-        key: "tags",
-        ariaLabel: "Tag filters",
-        ariaDescription: "Filter the items shown in a sidebar based on the tags applied to them.",
-        "aria-haspopup": "dialog",
-        variant: "ghost",
-        padding: "small",
-        isHighlighted: tagsActive,
-        onClick: handleToggleExpand
-      },
-      react_default.createElement(FilterIcon, null),
-      includedFilters.size + excludedFilters.size > 0 && react_default.createElement(TagSelected, null)
-    )
-  );
-};
-
 // src/manager/components/sidebar/useLastViewed.ts
 init_react();
 var import_store2 = __toESM(require_store2(), 1), save = debounce((value) => import_store2.default.set("lastViewedStoryIds", value), 1e3), useLastViewed = (selection) => {
   let initialLastViewedStoryIds = useMemo(() => {
     let items = import_store2.default.get("lastViewedStoryIds");
     return !items || !Array.isArray(items) ? [] : items.some((item) => typeof item == "object" && item.storyId && item.refId) ? items : [];
-  }, [import_store2.default]), lastViewedRef = useRef(initialLastViewedStoryIds), updateLastViewed = useCallback(
+  }, []), lastViewedRef = useRef(initialLastViewedStoryIds), updateLastViewed = useCallback(
     (story) => {
       let items = lastViewedRef.current, index = items.findIndex(
-        ({ storyId, refId }) => storyId === story.storyId && refId === story.refId
+        ({ storyId, refId, anchor }) => storyId === story.storyId && refId === story.refId && anchor === story.anchor
       );
       index !== 0 && (index === -1 ? lastViewedRef.current = [story, ...items] : lastViewedRef.current = [story, ...items.slice(0, index), ...items.slice(index + 1)], save(lastViewedRef.current));
     },
@@ -18954,7 +27733,7 @@ var import_store2 = __toESM(require_store2(), 1), save = debounce((value) => imp
 };
 
 // src/manager/components/sidebar/Sidebar.tsx
-var DEFAULT_REF_ID = "storybook_internal", Container8 = styled.header(({ theme }) => ({
+var DEFAULT_REF_ID = "storybook_internal", Container11 = styled.header(({ theme }) => ({
   position: "absolute",
   zIndex: 1,
   left: 0,
@@ -19001,6 +27780,7 @@ var DEFAULT_REF_ID = "storybook_internal", Container8 = styled.header(({ theme }
   // @ts-expect-error (non strict)
   storyId = null,
   refId = DEFAULT_REF_ID,
+  anchor,
   index,
   indexJson,
   indexError,
@@ -19014,88 +27794,97 @@ var DEFAULT_REF_ID = "storybook_internal", Container8 = styled.header(({ theme }
   onMenuClick,
   showCreateStoryButton = isDevelopment && isRendererReact2
 }) {
-  let [isFileSearchModalOpen, setIsFileSearchModalOpen] = useState(!1), selected = useMemo(() => storyId && { storyId, refId }, [storyId, refId]), dataset = useCombination(index, indexError, previewInitialized, allStatuses, refs), isLoading = !index && !indexError, hasEntries = Object.keys(indexJson?.entries ?? {}).length > 0, lastViewedProps = useLastViewed(selected), { isMobile: isMobile2 } = useLayout(), api = useStorybookApi(), tagPresets = useMemo(
-    () => Object.entries(scope.TAGS_OPTIONS ?? {}).reduce((acc, entry) => {
-      let [tag, option] = entry;
-      return acc[tag] = option, acc;
-    }, {}),
-    []
-  ), headerRef = useRef(null), { landmarkProps } = useLandmark(
+  let [isFileSearchModalOpen, setIsFileSearchModalOpen] = useState(!1), selected = useMemo(
+    () => storyId ? { storyId, refId, anchor } : null,
+    [storyId, refId, anchor]
+  ), dataset = useCombination(index, indexError, previewInitialized, allStatuses, refs), isLoading = !index && !indexError, hasEntries = Object.keys(indexJson?.entries ?? {}).length > 0, lastViewedProps = useLastViewed(selected), { isMobile: isMobile2 } = useLayout(), api = useStorybookApi(), { viewMode } = api.getUrlState(), headerRef = useRef(null), { landmarkProps } = useLandmark(
     { "aria-labelledby": "global-site-h1", role: "banner" },
     headerRef
-  );
-  return react_default.createElement(Container8, { className: "container sidebar-container", ref: headerRef, ...landmarkProps }, react_default.createElement("h1", { id: "global-site-h1", className: "sb-sr-only" }, "Storybook"), react_default.createElement(IconSymbols, null), react_default.createElement(ScrollArea, { vertical: !0, offset: 3, scrollbarSize: 6, scrollPadding: "4rem" }, react_default.createElement(Stack, null, react_default.createElement("div", null, react_default.createElement(
-    Heading2,
+  ), skipLinkHref = isPagesViewMode(viewMode) ? "#main-content-wrapper" : "#storybook-preview-wrapper", showReviewWidget = useActiveReviewStoryCount() > 0, showOnboardingChecklist = !isLoading && scope.CONFIG_TYPE === "DEVELOPMENT" && scope.FEATURES?.sidebarOnboardingChecklist !== !1 && !showReviewWidget;
+  return react_default.createElement(
+    Container11,
     {
-      className: "sidebar-header",
-      menuHighlighted,
-      menu,
-      skipLinkHref: "#storybook-preview-wrapper",
-      isLoading,
-      onMenuClick
-    }
-  ), !isLoading && scope.CONFIG_TYPE === "DEVELOPMENT" && scope.FEATURES?.sidebarOnboardingChecklist !== !1 && react_default.createElement(ChecklistWidget, null)), react_default.createElement(
-    Search,
-    {
-      dataset,
-      enableShortcuts,
-      searchBarContent: showCreateStoryButton && react_default.createElement(react_default.Fragment, null, react_default.createElement(
-        CreateNewStoryButton,
-        {
-          isMobile: isMobile2,
-          onClick: () => {
-            setIsFileSearchModalOpen(!0);
-          },
-          ariaLabel: "Create a new story",
-          variant: "outline",
-          padding: "small"
-        },
-        react_default.createElement(PlusIcon, null)
-      ), react_default.createElement(
-        CreateNewStoryFileModal,
-        {
-          open: isFileSearchModalOpen,
-          onOpenChange: setIsFileSearchModalOpen
-        }
-      )),
-      searchFieldContent: indexJson && react_default.createElement(TagsFilter, { api, indexJson, tagPresets }),
-      ...lastViewedProps
+      className: "container sidebar-container",
+      id: focusableUIElements.sidebarRegion,
+      ref: headerRef,
+      ...landmarkProps
     },
-    ({
-      query,
-      results,
-      isNavVisible,
-      isNavReachable,
-      isSearchResultRendered,
-      closeMenu,
-      getMenuProps,
-      getItemProps,
-      highlightedIndex
-    }) => react_default.createElement(react_default.Fragment, null, react_default.createElement(
-      Explorer,
+    react_default.createElement("h1", { id: "global-site-h1", className: "sb-sr-only" }, "Storybook"),
+    react_default.createElement(IconSymbols, null),
+    react_default.createElement(ScrollArea, { vertical: !0, offset: 3, scrollbarSize: 6, scrollPadding: "4rem" }, react_default.createElement(Stack, null, react_default.createElement("div", null, react_default.createElement(
+      Heading2,
+      {
+        className: "sidebar-header",
+        menuHighlighted,
+        menu,
+        skipLinkHref,
+        isLoading,
+        onMenuClick
+      }
+    ), showOnboardingChecklist ? react_default.createElement(ChecklistWidget, null) : null), !isLoading && showReviewWidget ? react_default.createElement(ReviewWidget_default, null) : null, react_default.createElement(
+      Search,
       {
         dataset,
-        selected,
-        isLoading,
-        isBrowsing: isNavVisible,
-        isHidden: !isNavReachable,
-        hasEntries
-      }
-    ), isSearchResultRendered && react_default.createElement(
-      SearchResults,
-      {
+        enableShortcuts,
+        searchBarContent: showCreateStoryButton && react_default.createElement(react_default.Fragment, null, react_default.createElement(
+          CreateNewStoryButton,
+          {
+            isMobile: isMobile2,
+            onClick: () => {
+              setIsFileSearchModalOpen(!0);
+            },
+            ariaLabel: "Create a new story",
+            variant: "outline",
+            padding: "small"
+          },
+          react_default.createElement(PlusIcon, null)
+        ), react_default.createElement(
+          CreateNewStoryFileModal,
+          {
+            open: isFileSearchModalOpen,
+            onOpenChange: setIsFileSearchModalOpen
+          }
+        )),
+        searchFieldContent: react_default.createElement(Filter, null),
+        belowSearchContent: react_default.createElement(ShowChangesButton, null),
+        ...lastViewedProps
+      },
+      ({
         query,
         results,
+        isNavVisible,
+        isNavReachable,
+        isSearchResultRendered,
         closeMenu,
         getMenuProps,
         getItemProps,
-        highlightedIndex,
-        enableShortcuts,
-        isLoading,
-        clearLastViewed: lastViewedProps.clearLastViewed
-      }
-    ))
-  )), isMobile2 || isLoading ? null : react_default.createElement(SidebarBottom, { isDevelopment })));
+        highlightedIndex
+      }) => react_default.createElement(react_default.Fragment, null, react_default.createElement(
+        Explorer,
+        {
+          dataset,
+          selected,
+          isLoading,
+          isBrowsing: isNavVisible,
+          isHidden: !isNavReachable,
+          hasEntries
+        }
+      ), isSearchResultRendered && react_default.createElement(
+        SearchResults,
+        {
+          query,
+          results,
+          closeMenu,
+          getMenuProps,
+          getItemProps,
+          highlightedIndex,
+          enableShortcuts,
+          isLoading,
+          clearLastViewed: lastViewedProps.clearLastViewed
+        }
+      ))
+    )), isMobile2 || isLoading ? null : react_default.createElement(SidebarBottom, { isDevelopment }))
+  );
 });
 
 // src/manager/container/Menu.tsx
@@ -19233,14 +28022,14 @@ var ProgressCircle2 = styled(ProgressSpinner)(({ theme }) => ({
       id: actionName,
       title: label,
       onClick: () => action(),
-      right: enableShortcuts ? react_default.createElement(Shortcut, { keys: keys[actionName] }) : null
+      right: enableShortcuts && keys[actionName] ? react_default.createElement(Shortcut, { keys: keys[actionName] }) : null
     }));
   }, [api, enableShortcuts, shortcutKeys]);
   return useMemo(
     () => [
       [
         about,
-        ...scope.CONFIG_TYPE === "DEVELOPMENT" ? [guide] : [],
+        ...scope.CONFIG_TYPE === "DEVELOPMENT" && scope.FEATURES?.menuOnboardingChecklist !== !1 ? [guide] : [],
         ...enableShortcuts ? [shortcuts] : []
       ],
       [sidebarToggle, toolbarToogle, addonsToggle, up, down, prev, next, collapse],
@@ -19274,6 +28063,7 @@ var Sidebar3 = react_default.memo(function({ onMenuClick }) {
       viewMode,
       storyId,
       refId,
+      location: location2,
       layout: { showToolbar },
       // FIXME: This is the actual `index.json` index where the `index` below
       // is actually the stories hash. We should fix this up and make it consistent.
@@ -19294,6 +28084,7 @@ var Sidebar3 = react_default.memo(function({ onMenuClick }) {
       refs,
       storyId,
       refId,
+      anchor: location2?.hash ? location2.hash.slice(1) : void 0,
       viewMode,
       showToolbar,
       isPanelShown: api.getIsPanelShown(),
@@ -19317,9 +28108,12 @@ var Sidebar3 = react_default.memo(function({ onMenuClick }) {
 }), Sidebar_default = Sidebar3;
 
 // src/manager/App.tsx
-var App = ({ managerLayoutState, setManagerLayoutState, pages, hasTab }) => {
+var MainPreview = () => {
+  let { isSummaryVisible } = useReviewContext();
+  return isSummaryVisible ? null : react_default.createElement(Preview_default, { id: "main", withLoader: !0 });
+}, App = ({ managerLayoutState, setManagerLayoutState, pages, hasTab }) => {
   let { setMobileAboutOpen } = useLayout(), { enableShortcuts = !0 } = addons.getConfig();
-  return useEffect(() => {
+  useEffect(() => {
     document.body.setAttribute("data-shortcuts-enabled", enableShortcuts ? "true" : "false");
   }, [enableShortcuts]), useEffect(() => {
     let rootElement = document.getElementById("root");
@@ -19333,18 +28127,21 @@ var App = ({ managerLayoutState, setManagerLayoutState, pages, hasTab }) => {
       attributes: !0,
       attributeFilter: ["inert"]
     }), () => observer.disconnect();
-  }, []), react_default.createElement(react_default.Fragment, null, react_default.createElement(Global, { styles: createGlobal }), react_default.createElement(ManagerErrorBoundary, null, react_default.createElement(
+  }, []);
+  let isReviewEnabled = isReviewFeatureEnabled(scope.FEATURES), layout = react_default.createElement(
     Layout,
     {
       hasTab,
       managerLayoutState,
       setManagerLayoutState,
-      slotMain: react_default.createElement(Preview_default, { id: "main", withLoader: !0 }),
+      slotOverlay: isReviewEnabled ? react_default.createElement(ReviewPersistentLayer, null) : void 0,
+      slotMain: react_default.createElement(MainPreview, null),
       slotSidebar: react_default.createElement(Sidebar_default, { onMenuClick: () => setMobileAboutOpen((state) => !state) }),
       slotPanel: react_default.createElement(Panel_default, null),
       slotPages: pages.map(({ id, render: Content6 }) => react_default.createElement(Content6, { key: id }))
     }
-  )));
+  );
+  return react_default.createElement(react_default.Fragment, null, react_default.createElement(Global, { styles: createGlobal }), react_default.createElement(ManagerErrorBoundary, null, isReviewEnabled ? react_default.createElement(ReviewProvider, null, layout) : layout));
 };
 
 // src/manager/provider.ts
@@ -19368,7 +28165,7 @@ init_react();
 
 // src/manager/settings/About.tsx
 init_react();
-var Container9 = styled.div({
+var Container12 = styled.div({
   display: "flex",
   alignItems: "center",
   flexDirection: "column",
@@ -19382,7 +28179,7 @@ var Container9 = styled.div({
     width: "auto",
     marginRight: 8
   }
-}), Footer = styled.div(({ theme }) => ({
+}), Footer2 = styled.div(({ theme }) => ({
   marginBottom: 24,
   display: "flex",
   flexDirection: "column",
@@ -19390,7 +28187,7 @@ var Container9 = styled.div({
   color: theme.base === "light" ? theme.color.dark : theme.color.lightest,
   fontWeight: theme.typography.weight.regular,
   fontSize: theme.typography.size.s2
-})), Actions2 = styled.div({
+})), Actions3 = styled.div({
   display: "flex",
   flexDirection: "row",
   alignItems: "center",
@@ -19405,7 +28202,7 @@ var Container9 = styled.div({
   "&:hover": {
     color: theme.base === "light" ? theme.color.darkest : theme.color.lightest
   }
-})), AboutScreen = ({ onNavigateToWhatsNew }) => react_default.createElement(Container9, null, react_default.createElement(Header, null, react_default.createElement(StorybookLogo, { alt: "Storybook" })), react_default.createElement(UpgradeBlock, { onNavigateToWhatsNew }), react_default.createElement(Footer, null, react_default.createElement(Actions2, null, react_default.createElement(Button, { ariaLabel: !1, asChild: !0 }, react_default.createElement("a", { href: "https://github.com/storybookjs/storybook" }, react_default.createElement(GithubIcon, null), "GitHub")), react_default.createElement(Button, { ariaLabel: !1, asChild: !0 }, react_default.createElement("a", { href: "https://storybook.js.org/docs?ref=ui" }, react_default.createElement(DocumentIcon, { style: { display: "inline", marginRight: 5 } }), "Documentation"))), react_default.createElement("div", null, "Open source software maintained by", " ", react_default.createElement(StyledLink, { href: "https://www.chromatic.com/" }, "Chromatic"), " and the", " ", react_default.createElement(StyledLink, { href: "https://github.com/storybookjs/storybook/graphs/contributors" }, "Storybook Community"))));
+})), AboutScreen = ({ onNavigateToWhatsNew }) => react_default.createElement(Container12, null, react_default.createElement(Header, null, react_default.createElement(StorybookLogo, { alt: "Storybook" })), react_default.createElement(UpgradeBlock, { onNavigateToWhatsNew }), react_default.createElement(Footer2, null, react_default.createElement(Actions3, null, react_default.createElement(Button, { ariaLabel: !1, asChild: !0 }, react_default.createElement("a", { href: "https://github.com/storybookjs/storybook" }, react_default.createElement(GithubIcon, null), "GitHub")), react_default.createElement(Button, { ariaLabel: !1, asChild: !0 }, react_default.createElement("a", { href: "https://storybook.js.org/docs?ref=ui" }, react_default.createElement(DocumentIcon, { style: { display: "inline", marginRight: 5 } }), "Documentation"))), react_default.createElement("div", null, "Open source software maintained by", " ", react_default.createElement(StyledLink, { href: "https://www.chromatic.com/" }, "Chromatic"), " and the", " ", react_default.createElement(StyledLink, { href: "https://github.com/storybookjs/storybook/graphs/contributors" }, "Storybook Community"))));
 
 // src/manager/settings/AboutPage.tsx
 var NotificationClearer = class extends Component {
@@ -19603,7 +28400,7 @@ var Sections = styled.ol(({ theme }) => ({
       color: theme.color.mediumdark
     }
   }
-})), StatusIcon2 = styled.div(({ theme }) => ({
+})), StatusIcon3 = styled.div(({ theme }) => ({
   position: "relative",
   flex: "0 0 auto",
   minHeight: 16,
@@ -19642,7 +28439,7 @@ var Sections = styled.ol(({ theme }) => ({
   width: visible ? "auto" : 0,
   height: visible ? 18 : 16,
   transition: "all var(--transition-duration, 0.2s)"
-})), Actions3 = styled.div({
+})), Actions4 = styled.div({
   alignSelf: "flex-end",
   flexDirection: "row-reverse",
   display: "flex",
@@ -19657,11 +28454,23 @@ var Sections = styled.ol(({ theme }) => ({
     transform: "rotate(var(--toggle-button-rotate))",
     transition: "transform var(--transition-duration, 0.2s)"
   }
-}), Checklist = ({
+}), ChecklistCopyButton = ({
+  label,
+  copyContent,
+  onClick
+}) => {
+  let { children: copyChildren, buttonProps: copyButtonProps } = useCopyButton2({
+    children: label,
+    onCopy: onClick,
+    content: copyContent
+  });
+  return react_default.createElement(Button, { variant: "solid", size: "small", ...copyButtonProps }, copyChildren);
+}, Checklist = ({
   availableItems,
   accept,
   skip,
-  reset
+  reset,
+  forceCollapsed = !1
 }) => {
   let api = useStorybookApi(), locationHash = useLocationHash(), { itemsById, sectionsById } = useMemo(
     () => availableItems.reduce(
@@ -19675,13 +28484,13 @@ var Sections = styled.ol(({ theme }) => ({
     [availableItems]
   ), sections = useMemo(
     () => Object.values(sectionsById).map(({ id, title: title2, itemIds }) => {
-      let items = itemIds.map((id2) => itemsById[id2]), progress = items.reduce((acc, item) => item.isOpen ? acc : acc + 1, 0) / items.length * 100;
+      let items = itemIds.map((id2) => itemsById[id2]).filter(({ showOnGuidePage }) => showOnGuidePage !== !1), progress = items.reduce((acc, item) => item.isOpen ? acc : acc + 1, 0) / items.length * 100;
       return { id, title: title2, items, progress };
     }),
     [itemsById, sectionsById]
   );
   return react_default.createElement(Sections, null, sections.map(({ id, title: title2, items, progress }) => {
-    let collapsed = progress === 100 && items.every((item) => item.id !== locationHash);
+    let collapsed = forceCollapsed || progress === 100 && items.every((item) => item.id !== locationHash);
     return react_default.createElement("li", { key: id }, react_default.createElement(Focus.Proxy, { targetId: `toggle-${id}` }, react_default.createElement(
       Collapsible,
       {
@@ -19693,9 +28502,9 @@ var Sections = styled.ol(({ theme }) => ({
             isCollapsed,
             onClick: toggleCollapsed
           },
-          react_default.createElement(StatusIcon2, null, react_default.createElement(Checked2, { "data-visible": progress === 100 })),
+          react_default.createElement(StatusIcon3, null, react_default.createElement(Checked2, { "data-visible": progress === 100 })),
           react_default.createElement(SectionHeading, null, title2),
-          react_default.createElement(Actions3, null, react_default.createElement(
+          react_default.createElement(Actions4, null, react_default.createElement(
             ToggleButton2,
             {
               ...toggleProps,
@@ -19737,9 +28546,9 @@ var Sections = styled.ol(({ theme }) => ({
                     isCollapsed: isCollapsed2 || !itemContent,
                     onClick: itemContent ? toggleCollapsed : void 0
                   },
-                  react_default.createElement(StatusIcon2, null, react_default.createElement(Checked2, { "data-visible": isChecked }), react_default.createElement(Skipped, { visible: isSkipped }, "Skipped")),
+                  react_default.createElement(StatusIcon3, null, react_default.createElement(Checked2, { "data-visible": isChecked }), react_default.createElement(Skipped, { visible: isSkipped }, "Skipped")),
                   react_default.createElement(ItemHeading, { skipped: isSkipped }, item.label),
-                  react_default.createElement(Actions3, null, itemContent && react_default.createElement(
+                  react_default.createElement(Actions4, null, itemContent && react_default.createElement(
                     ToggleButton2,
                     {
                       ...toggleProps,
@@ -19760,7 +28569,17 @@ var Sections = styled.ol(({ theme }) => ({
                       readOnly: !0
                     },
                     react_default.createElement(LockIcon, null)
-                  ), isOpen && !isLocked && item.action && react_default.createElement(
+                  ), isOpen && !isLocked && item.action && (item.action.copyContent ? react_default.createElement(
+                    ChecklistCopyButton,
+                    {
+                      label: item.action.label,
+                      copyContent: item.action.copyContent,
+                      onClick: () => item.action.onClick({
+                        api,
+                        accept: () => accept(item.id)
+                      })
+                    }
+                  ) : react_default.createElement(
                     Button,
                     {
                       ariaLabel: !1,
@@ -19774,7 +28593,7 @@ var Sections = styled.ol(({ theme }) => ({
                       }
                     },
                     item.action.label
-                  ), isOpen && !isLocked && !item.action && !item.subscribe && react_default.createElement(
+                  )), isOpen && !isLocked && !item.action && !item.subscribe && react_default.createElement(
                     Button,
                     {
                       ariaLabel: !1,
@@ -19820,8 +28639,58 @@ var Sections = styled.ol(({ theme }) => ({
   }));
 };
 
+// src/manager/settings/Checklist/AiSetupBlock.tsx
+init_react();
+var AiCtaCard = styled.div(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+  padding: "10px 10px 10px 15px",
+  border: `1px solid ${theme.base === "dark" ? theme.color.darker : theme.color.border}`,
+  borderRadius: 8,
+  background: theme.background.content
+})), AiCtaHeadingRow = styled.div({
+  display: "flex",
+  alignItems: "center",
+  gap: 10
+}), AiCtaHeading = styled.h2(({ theme, $skipped }) => ({
+  flex: 1,
+  margin: 0,
+  color: $skipped ? theme.textMutedColor : theme.color.defaultText,
+  fontSize: theme.typography.size.s2,
+  fontWeight: theme.typography.weight.bold,
+  textWrap: "pretty"
+})), AiCtaDescription = styled.p(({ theme }) => ({
+  margin: 0,
+  color: theme.color.defaultText,
+  fontSize: theme.typography.size.s2,
+  fontWeight: theme.typography.weight.regular,
+  marginTop: 8
+})), AiCtaActions = styled.div({
+  display: "flex",
+  gap: 8,
+  justifyContent: "flex-end",
+  marginTop: 12
+}), CopyButton3 = ({ api }) => {
+  let { children: buttonChildren, buttonProps } = useCopyButton2({
+    children: "Copy prompt",
+    childrenOnCopy: react_default.createElement(react_default.Fragment, null, react_default.createElement(CheckIcon, null), " Copied!"),
+    content: getAiSetupPrompt(),
+    onCopy: () => {
+      api.emit(AI_PROMPT_NUDGE, { id: "setup", origin: "onboarding-guide-page" });
+    }
+  });
+  return react_default.createElement(Button, { variant: "solid", size: "medium", ...buttonProps }, buttonChildren);
+}, AiSetupBlock = ({
+  item,
+  reset,
+  skip
+}) => {
+  let api = useStorybookApi();
+  return !item.isDone && !item.isAccepted && !item.isCompleted ? react_default.createElement(AiCtaCard, null, react_default.createElement(AiCtaHeadingRow, null, item.isSkipped && react_default.createElement(StatusIcon3, null, react_default.createElement(Skipped, { visible: !0 }, "Skipped")), react_default.createElement(AiCtaHeading, { $skipped: item.isSkipped }, "Set up Storybook with AI"), item.isSkipped && react_default.createElement(Button, { ariaLabel: "Undo", variant: "ghost", padding: "small", onClick: () => reset(item.id) }, react_default.createElement(UndoIcon, null))), react_default.createElement(Collapsible.Content, { collapsed: item.isSkipped }, react_default.createElement(AiCtaDescription, null, "Run a prompt in your AI agent to analyze your codebase, configure decorators and mocks, write sample stories for your UI components, and verify everything works."), react_default.createElement(AiCtaActions, null, react_default.createElement(Button, { variant: "ghost", size: "medium", ariaLabel: !1, onClick: () => skip(item.id) }, "Skip"), react_default.createElement(CopyButton3, { api })))) : null;
+};
+
 // src/manager/settings/GuidePage.tsx
-var Container10 = styled.div(({ theme }) => ({
+var Container13 = styled.div(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
   maxWidth: 600,
@@ -19843,8 +28712,8 @@ var Container10 = styled.div(({ theme }) => ({
     margin: 0
   }
 })), GuidePage = () => {
-  let checklist = useChecklist();
-  return react_default.createElement(Container10, null, react_default.createElement(Intro, null, react_default.createElement("h1", null, "Guide"), react_default.createElement("p", null, "Whether you're just getting started or looking for ways to level up, this checklist will help you make the most of your Storybook.")), react_default.createElement(Checklist, { ...checklist }), scope.FEATURES?.sidebarOnboardingChecklist !== !1 && react_default.createElement(react_default.Fragment, null, checklist.openItems.length === 0 ? react_default.createElement("center", null, "Your work here is done!") : checklist.widget.disable || checklist.openItems.every((item) => item.isMuted) ? react_default.createElement("center", null, "Want to see this in the sidebar?", " ", react_default.createElement(Link, { onClick: () => checklist.disable(!1) }, "Show in sidebar")) : react_default.createElement("center", null, "Don't want to see this in the sidebar?", " ", react_default.createElement(Link, { onClick: () => checklist.mute(checklist.allItems.map(({ id }) => id)) }, "Remove from sidebar"))));
+  let checklist = useChecklist(), aiSetupItem = checklist.availableItems.find((item) => item.id === "aiSetup");
+  return react_default.createElement(Container13, null, react_default.createElement(Intro, null, react_default.createElement("h1", null, "Guide"), react_default.createElement("p", null, "Whether you're just getting started or looking for ways to level up, this checklist will help you make the most of your Storybook.")), aiSetupItem && react_default.createElement(AiSetupBlock, { item: aiSetupItem, reset: checklist.reset, skip: checklist.skip }), react_default.createElement(Checklist, { ...checklist, forceCollapsed: aiSetupItem?.isOpen }), scope.FEATURES?.sidebarOnboardingChecklist !== !1 && react_default.createElement(react_default.Fragment, null, checklist.openItems.length === 0 ? react_default.createElement("center", null, "Your work here is done!") : checklist.widget.disable || checklist.openItems.every((item) => item.isMuted) ? react_default.createElement("center", null, "Want to see this in the sidebar?", " ", react_default.createElement(Link, { onClick: () => checklist.disable(!1) }, "Show in sidebar")) : react_default.createElement("center", null, "Don't want to see this in the sidebar?", " ", react_default.createElement(Link, { onClick: () => checklist.mute(checklist.allItems.map(({ id }) => id)) }, "Remove from sidebar"))));
 };
 
 // src/manager/settings/ShortcutsPage.tsx
@@ -19855,7 +28724,7 @@ init_react();
 
 // src/manager/settings/SettingsFooter.tsx
 init_react();
-var Footer2 = styled.div(({ theme }) => ({
+var Footer3 = styled.div(({ theme }) => ({
   display: "flex",
   paddingTop: 20,
   marginTop: 20,
@@ -19864,7 +28733,7 @@ var Footer2 = styled.div(({ theme }) => ({
   "& > * + *": {
     marginLeft: 20
   }
-})), SettingsFooter = (props) => react_default.createElement(Footer2, { ...props }, react_default.createElement(Link, { secondary: !0, href: "https://storybook.js.org?ref=ui", cancel: !1, target: "_blank" }, "Docs"), react_default.createElement(Link, { secondary: !0, href: "https://github.com/storybookjs/storybook", cancel: !1, target: "_blank" }, "GitHub"), react_default.createElement(
+})), SettingsFooter = (props) => react_default.createElement(Footer3, { ...props }, react_default.createElement(Link, { secondary: !0, href: "https://storybook.js.org?ref=ui", cancel: !1, target: "_blank" }, "Docs"), react_default.createElement(Link, { secondary: !0, href: "https://github.com/storybookjs/storybook", cancel: !1, target: "_blank" }, "GitHub"), react_default.createElement(
   Link,
   {
     secondary: !0,
@@ -19936,7 +28805,7 @@ var Header2 = styled.header(({ theme }) => ({
     height: 14,
     width: 14
   }
-), Container11 = styled.div(({ theme }) => ({
+), Container14 = styled.div(({ theme }) => ({
   fontSize: theme.typography.size.s2,
   padding: "3rem 20px",
   maxWidth: 600,
@@ -20091,7 +28960,7 @@ var ShortcutsScreen = class extends Component {
   }
   render() {
     let layout = this.renderKeyForm();
-    return react_default.createElement(Container11, null, react_default.createElement(Header2, null, "Keyboard shortcuts"), layout, react_default.createElement(
+    return react_default.createElement(Container14, null, react_default.createElement(Header2, null, "Keyboard shortcuts"), layout, react_default.createElement(
       Button,
       {
         ariaLabel: !1,
@@ -20139,14 +29008,14 @@ var Centered = styled.div({
 }), LoaderWrapper2 = styled.div({
   position: "relative",
   height: "32px"
-}), Message2 = styled.div(({ theme }) => ({
+}), Message3 = styled.div(({ theme }) => ({
   paddingTop: "12px",
   color: theme.textMutedColor,
   maxWidth: "295px",
   margin: "0 auto",
   fontSize: `${theme.typography.size.s1}px`,
   lineHeight: "16px"
-})), Container12 = styled.div(({ theme }) => ({
+})), Container15 = styled.div(({ theme }) => ({
   position: "absolute",
   width: "100%",
   height: 40,
@@ -20161,12 +29030,13 @@ var Centered = styled.div({
 })), WhatsNewFooter = ({
   isNotificationsEnabled,
   onToggleNotifications,
-  onCopyLink
+  copyContent
 }) => {
-  let theme = useTheme(), [copyText, setCopyText] = useState("Copy Link"), copyLink = () => {
-    onCopyLink(), setCopyText("Copied!"), setTimeout(() => setCopyText("Copy Link"), 4e3);
-  };
-  return react_default.createElement(Container12, null, react_default.createElement("div", { style: { display: "flex", alignItems: "center", gap: 10 } }, react_default.createElement(HeartIcon, { color: theme.color.mediumdark }), react_default.createElement("div", null, "Share this with your team."), react_default.createElement(Button, { ariaLabel: !1, onClick: copyLink, size: "small", variant: "ghost" }, copyText)), isNotificationsEnabled ? react_default.createElement(Button, { ariaLabel: !1, size: "small", variant: "ghost", onClick: onToggleNotifications }, react_default.createElement(EyeCloseIcon, null), "Hide notifications") : react_default.createElement(Button, { ariaLabel: !1, size: "small", variant: "ghost", onClick: onToggleNotifications }, react_default.createElement(EyeIcon, null), "Show notifications"));
+  let theme = useTheme(), { children: copyText, buttonProps: copyButtonProps } = useCopyButton2({
+    children: "Copy Link",
+    content: copyContent
+  });
+  return react_default.createElement(Container15, null, react_default.createElement("div", { style: { display: "flex", alignItems: "center", gap: 10 } }, react_default.createElement(HeartIcon, { color: theme.color.mediumdark }), react_default.createElement("div", null, "Share this with your team."), react_default.createElement(Button, { size: "small", variant: "ghost", ...copyButtonProps }, copyText)), isNotificationsEnabled ? react_default.createElement(Button, { ariaLabel: !1, size: "small", variant: "ghost", onClick: onToggleNotifications }, react_default.createElement(EyeCloseIcon, null), "Hide notifications") : react_default.createElement(Button, { ariaLabel: !1, size: "small", variant: "ghost", onClick: onToggleNotifications }, react_default.createElement(EyeIcon, null), "Show notifications"));
 }, Iframe = styled.iframe(
   {
     position: "absolute",
@@ -20187,12 +29057,12 @@ var Centered = styled.div({
   width: 32,
   height: 32,
   margin: "0 auto"
-})), WhatsNewLoader = () => react_default.createElement(Centered, null, react_default.createElement(LoaderWrapper2, null, react_default.createElement(Loader, null)), react_default.createElement(Message2, null, "Loading...")), MaxWaitTimeMessaging = () => react_default.createElement(Centered, null, react_default.createElement(AlertIcon2, null), react_default.createElement(Message2, null, "The page couldn't be loaded. Check your internet connection and try again.")), PureWhatsNewScreen = ({
+})), WhatsNewLoader = () => react_default.createElement(Centered, null, react_default.createElement(LoaderWrapper2, null, react_default.createElement(Loader, null)), react_default.createElement(Message3, null, "Loading...")), MaxWaitTimeMessaging = () => react_default.createElement(Centered, null, react_default.createElement(AlertIcon2, null), react_default.createElement(Message3, null, "The page couldn't be loaded. Check your internet connection and try again.")), PureWhatsNewScreen = ({
   didHitMaxWaitTime,
   isLoaded,
   onLoad,
   url,
-  onCopyLink,
+  copyContent,
   onToggleNotifications,
   isNotificationsEnabled
 }) => react_default.createElement(Fragment, null, !isLoaded && !didHitMaxWaitTime && react_default.createElement(WhatsNewLoader, null), didHitMaxWaitTime ? react_default.createElement(MaxWaitTimeMessaging, null) : react_default.createElement(react_default.Fragment, null, react_default.createElement(Iframe, { isLoaded, onLoad, src: url, title: "What's new?" }), react_default.createElement(
@@ -20200,7 +29070,7 @@ var Centered = styled.div({
   {
     isNotificationsEnabled,
     onToggleNotifications,
-    onCopyLink
+    copyContent
   }
 ))), MAX_WAIT_TIME = 1e4, WhatsNewScreen = () => {
   let api = useStorybookApi(), state = useStorybookState(), { whatsNewData } = state, [isLoaded, setLoaded] = useState(!1), [didHitMaxWaitTime, setDidHitMaxWaitTime] = useState(!1);
@@ -20220,9 +29090,7 @@ var Centered = styled.div({
       },
       url: whatsNewData.url,
       isNotificationsEnabled,
-      onCopyLink: () => {
-        navigator.clipboard?.writeText(whatsNewData.blogUrl ?? whatsNewData.url);
-      },
+      copyContent: whatsNewData.blogUrl ?? whatsNewData.url,
       onToggleNotifications: () => {
         isNotificationsEnabled ? scope.confirm("All update notifications will no longer be shown. Are you sure?") && api.toggleWhatsNewNotifications() : api.toggleWhatsNewNotifications();
       }
@@ -20234,7 +29102,7 @@ var Centered = styled.div({
 var WhatsNewPage = () => react_default.createElement(WhatsNewScreen, null);
 
 // src/manager/settings/index.tsx
-var { document: document8 } = scope, Content5 = styled(ScrollArea)(({ theme }) => ({
+var { document: document9 } = scope, Content5 = styled(ScrollArea)(({ theme }) => ({
   background: theme.background.content
 })), SidebarToggle = styled.div({
   // Extra specificity is necessary here
@@ -20251,9 +29119,9 @@ var { document: document8 } = scope, Content5 = styled(ScrollArea)(({ theme }) =
     let handleEscape = (event) => {
       !enableShortcuts || event.repeat || matchesModifiers(!1, event) && matchesKeyCode("Escape", event) && (event.preventDefault(), onClose());
     };
-    return document8.addEventListener("keydown", handleEscape), () => document8.removeEventListener("keydown", handleEscape);
+    return document9.addEventListener("keydown", handleEscape), () => document9.removeEventListener("keydown", handleEscape);
   }, [enableShortcuts, onClose]);
-  let tabs = useMemo(() => {
+  let api = useStorybookApi(), toolsExtra = Object.values(api.getElements(Addon_TypesEnum.TOOLEXTRA)), tabs = useMemo(() => {
     let tabsToInclude = [
       {
         id: "about",
@@ -20261,7 +29129,7 @@ var { document: document8 } = scope, Content5 = styled(ScrollArea)(({ theme }) =
         children: react_default.createElement(RouteWrapper, { path: "about" }, react_default.createElement(AboutPage, { key: "about" }))
       }
     ];
-    return scope.CONFIG_TYPE === "DEVELOPMENT" && tabsToInclude.push({
+    return scope.CONFIG_TYPE === "DEVELOPMENT" && scope.FEATURES?.menuOnboardingChecklist !== !1 && tabsToInclude.push({
       id: "guide",
       title: "Guide",
       children: react_default.createElement(RouteWrapper, { path: "guide" }, react_default.createElement(GuidePage, { key: "guide" }))
@@ -20281,7 +29149,7 @@ var { document: document8 } = scope, Content5 = styled(ScrollArea)(({ theme }) =
       TabsView,
       {
         tabs,
-        tools: react_default.createElement(react_default.Fragment, null, react_default.createElement(SidebarToggle, null, menuTool.render({})), react_default.createElement(
+        tools: react_default.createElement(react_default.Fragment, null, react_default.createElement(SidebarToggle, null, menuTool.render({})), toolsExtra.map((item) => react_default.createElement(react_default.Fragment, { key: item.id }, item.render({}))), react_default.createElement(
           Button,
           {
             padding: "small",
@@ -20318,7 +29186,7 @@ var { document: document8 } = scope, Content5 = styled(ScrollArea)(({ theme }) =
 // src/manager/index.tsx
 ThemeProvider.displayName = "ThemeProvider";
 q.displayName = "HelmetProvider";
-var Root3 = ({ provider }) => react_default.createElement(q, { key: "helmet.Provider" }, react_default.createElement(LocationProvider, { key: "location.provider" }, react_default.createElement(Main, { provider }))), Main = ({ provider }) => {
+var Root5 = ({ provider }) => react_default.createElement(q, { key: "helmet.Provider" }, react_default.createElement(LocationProvider, { key: "location.provider" }, react_default.createElement(Main3, { provider }))), Main3 = ({ provider }) => {
   let navigate = useNavigate();
   return react_default.createElement(Location, { key: "location.consumer" }, (locationData) => react_default.createElement(
     Provider,
@@ -20358,7 +29226,7 @@ var Root3 = ({ provider }) => react_default.createElement(q, { key: "helmet.Prov
 function renderStorybookUI(domNode, provider) {
   if (!(provider instanceof Provider2))
     throw new ProviderDoesNotExtendBaseProviderError();
-  createRoot(domNode).render(react_default.createElement(Root3, { key: "root", provider }));
+  createRoot(domNode).render(react_default.createElement(Root5, { key: "root", provider }));
 }
 
 // src/manager/runtime.tsx
@@ -20372,12 +29240,15 @@ addons.register(
     render: () => react_default.createElement(ToolbarManager, null)
   })
 );
+var channel = createBrowserChannel({ page: "manager" });
+addons.setChannel(channel);
+channel.emit(CHANNEL_CREATED);
 var ReactProvider = class extends Provider2 {
   constructor() {
-    super();
+    super(...arguments);
+    this.addons = addons;
+    this.channel = channel;
     this.wsDisconnected = !1;
-    let channel = createBrowserChannel({ page: "manager" });
-    addons.setChannel(channel), channel.emit(CHANNEL_CREATED), this.addons = addons, this.channel = channel, scope.__STORYBOOK_ADDONS_CHANNEL__ = channel;
   }
   getElements(type) {
     return this.addons.getElements(type);
@@ -20398,7 +29269,7 @@ var ReactProvider = class extends Provider2 {
       });
     });
   }
-}, { document: document9 } = scope, rootEl = document9.getElementById("root");
+}, { document: document10 } = scope, rootEl = document10.getElementById("root");
 setTimeout(() => {
   renderStorybookUI(rootEl, new ReactProvider());
 }, 0);
