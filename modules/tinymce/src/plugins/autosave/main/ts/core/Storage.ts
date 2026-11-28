@@ -46,6 +46,10 @@ const removeDraft = (editor: Editor, fire?: boolean): void => {
 };
 
 const storeDraft = (editor: Editor): void => {
+  if (!editor.initialized || editor.removed) {
+    return;
+  }
+
   const prefix = Options.getAutoSavePrefix(editor);
 
   if (!isEmpty(editor) && editor.isDirty()) {
